@@ -1,0 +1,22 @@
+node_modules
+dist
+build
+*.local
+.DS_Store
+.vite
+.turbo
+*.tsbuildinfo
+*.log
+
+# env
+.env
+.env.*
+!.env.example
+
+# ORIGINAL-GAME CONTENT — never commit (docs/architecture.md §2.2)
+/content
+/content/
+**/.cache/
+
+# claude local-only settings
+.claude/settings.local.json
