@@ -13,7 +13,9 @@ It owns:
 
 ## Status
 
-Phase 0 (master data pipeline, first release, `uma-data` package) is in progress. See the [roadmap](docs/roadmap.md).
+Phase 0 is done: `@luismlorenzana/uma-data@1.0.0` is on GitHub Packages and the first master data release
+(`d9bbb52a9cd7`) is `latest` in `gs://uma-platform-master-data`. Next is Phase 1 in uma-rpg. See the
+[roadmap](docs/roadmap.md).
 
 ## Layout
 

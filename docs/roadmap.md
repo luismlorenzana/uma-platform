@@ -5,7 +5,7 @@ The order of work across all four repos (P16). Each phase lists its exit check. 
 
 | Phase | Repo | Goal | Can overlap with | Status |
 |---|---|---|---|---|
-| 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | In progress (started 2026-10-10) |
+| 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | Done (2026-10-10) |
 | 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 | Not started |
 | 2 | uma-rpg | Hub, Farm and leveling with Phaser scenes and original art | | Not started |
 | 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | | Not started |
@@ -15,7 +15,11 @@ Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the po
 
 ## Phase 0 — uma-platform foundation
 
-**Status:** in progress since 2026-10-10.
+**Status:** done 2026-10-10. Exit check passed from a fresh clone of `6c7f691` (with the private inputs of P31):
+`pnpm data:import && pnpm assets:import && pnpm release:publish` published release `d9bbb52a9cd7` (2,299 files,
+72.5 MB) to `gs://uma-platform-master-data` and moved `channels/v1/latest.json`; a throwaway consumer installed
+`@luismlorenzana/uma-data@1.0.0` from GitHub Packages and loaded `latest` with every hash, set and the art index
+validating and no dangling references. Republishing the same release uploads nothing.
 
 - Scaffold the monorepo: pnpm, Turbo, TypeScript, Vitest, CI for lint, test and build.
 - Lift `scripts/data` and `scripts/assets` from uma-racer `origin/main`. Leave the game-only normalizers behind (flair,
@@ -36,7 +40,9 @@ the bucket, and a throwaway consumer installs `uma-data` and loads `latest` with
 - Scaffold from uma-racer's skeleton: web, API, domain, login allowlist, Firebase/GCP project, deploy workflow, PWA.
 - Port the RPG rules and tests from uma-racer `packages/domain/src/rpg/`. Replace Inspiration token rewards with the
   RPG's own rewards.
-- Write the master data adapter and serve master data through the API.
+- Write the master data adapter and serve master data through the API. Starts from `@luismlorenzana/uma-data@1.0.0`
+  (README "Use `@luismlorenzana/uma-data` in a game") and release `d9bbb52a9cd7`; a uma-platform session grants the
+  API's service account read access (infra/README.md).
 
 **Exit:** a deployed, logged-in app on the iPhone that lists Umas from master data, and the ported battle and campaign
 tests pass.
