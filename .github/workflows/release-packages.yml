@@ -50,6 +50,11 @@ jobs:
           pnpm test
           pnpm build
 
+      - name: Set a git identity for release tags
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Publish unpublished versions
         run: pnpm publish-packages
         env:
