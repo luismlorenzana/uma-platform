@@ -6,7 +6,7 @@ The order of work across all four repos (P16). Each phase lists its exit check. 
 | Phase | Repo | Goal | Can overlap with | Status |
 |---|---|---|---|---|
 | 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | Done (2026-10-10) |
-| 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 | Not started |
+| 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 | In progress (design spec, started 2026-10-10) |
 | 2 | uma-rpg | Hub, Farm and leveling with Phaser scenes and original art | | Not started |
 | 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | | Not started |
 | 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | | Not started |
@@ -34,6 +34,9 @@ validating and no dangling references. Republishing the same release uploads not
 the bucket, and a throwaway consumer installs `uma-data` and loads `latest` with validation passing.
 
 ## Phase 1 — uma-rpg foundation
+
+**Status:** the design spec has been in progress since 2026-10-10 (uma-rpg `docs/design/`: game design v0.3 and the
+item catalog). The first item icons are drawn here by `scripts/pixel-art` (P35).
 
 - **Design spec with the owner:** core loop, goals, passive farm, per-Uma leveling, Hub. Today the RPG only produces
   tokens for uma-racer; it needs its own reason to play.

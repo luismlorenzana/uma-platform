@@ -15,6 +15,7 @@
     "assets:import": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/asset-pipeline run import",
     "assets:bust-sheet": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/asset-pipeline run bust-sheet",
     "release:publish": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run publish",
+    "art:draw": "pnpm --filter @uma-platform/pixel-art run draw",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "publish-packages": "changeset publish"

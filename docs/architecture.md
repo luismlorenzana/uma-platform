@@ -155,8 +155,9 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 
 - `assets/` holds art made for these games: tilesets, Hub and farm maps (Tiled or LDtk), buildings, crops, UI frames,
   icons and effects. It's original, so it lives in git (P15).
-- Every asset comes from a **generator script** (a palette plus a pixel grid, rendered to PNG and sprite sheets with
-  `sharp`), so it can be regenerated and edited.
+- Every asset comes from a **generator script**, so it can be regenerated and edited. `scripts/pixel-art` draws
+  from code with no dependencies (`pnpm art:draw`; P35): hue-shifted six-tone ramps, dome and facet lighting, a
+  selective outline and seeded detail.
 - Uma characters use the original chibi and bust art from master data, animated with code. Original art never
   contains copied game art.
 

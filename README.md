@@ -24,6 +24,8 @@ Phase 0 is done: `@luismlorenzana/uma-data@1.0.0` is on GitHub Packages and the 
 | `packages/data` | `@luismlorenzana/uma-data`: master types, runtime parsers, release client ([master-data.md](docs/master-data.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
+| `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
+| `assets/` | **In git.** Original art for the games (item icons so far) and its previews |
 | `infra/` | GCP project and bucket runbook ([README](infra/README.md)) |
 | `content/` | **Gitignored.** Private inputs (`overrides/`) and the local release (`release/`). Never commit it |
 
