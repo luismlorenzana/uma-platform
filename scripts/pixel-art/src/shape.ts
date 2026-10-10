@@ -65,8 +65,8 @@ export class Mask {
     return m
   }
 
-  /** An ellipse; `rot` in degrees turns its long axis clockwise on screen. */
-  static ellipse(cx: number, cy: number, rx: number, ry: number, rot = 0): Mask {
+  /** An ellipse; `rot` in degrees turns its long axis clockwise on screen. `w`/`h` size the mask (items are 32×32). */
+  static ellipse(cx: number, cy: number, rx: number, ry: number, rot = 0, w = 32, h = 32): Mask {
     const r = (rot * Math.PI) / 180
     const c = Math.cos(r), s = Math.sin(r)
     return Mask.from((px, py) => {
@@ -74,15 +74,15 @@ export class Mask {
       const u = dx * c + dy * s
       const v = -dx * s + dy * c
       return (u * u) / (rx * rx) + (v * v) / (ry * ry) <= 1
-    })
+    }, w, h)
   }
 
-  static circle(cx: number, cy: number, r: number): Mask {
-    return Mask.ellipse(cx, cy, r, r)
+  static circle(cx: number, cy: number, r: number, w = 32, h = 32): Mask {
+    return Mask.ellipse(cx, cy, r, r, 0, w, h)
   }
 
-  static polygon(points: readonly Point[]): Mask {
-    return Mask.from((px, py) => pointInPolygon(px, py, points))
+  static polygon(points: readonly Point[], w = 32, h = 32): Mask {
+    return Mask.from((px, py) => pointInPolygon(px, py, points), w, h)
   }
 }
 
