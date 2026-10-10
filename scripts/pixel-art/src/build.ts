@@ -3,16 +3,17 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { hex, type RGBA } from './color.ts'
+import { hex } from './color.ts'
 import { FRUITS } from './items/fruits.ts'
 import { ORES } from './items/ores.ts'
 import type { ItemIcon } from './items/types.ts'
 import { encodePng } from './png.ts'
-import { Sprite } from './sprite.ts'
+import { drawIcon, ICON_SIZE } from './icon.ts'
+import { contactSheet } from './sheet.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..')
 const OUT = join(ROOT, 'assets', 'items')
-const SIZE = 32
+const SIZE = ICON_SIZE
 
 interface Family {
   id: string
@@ -27,43 +28,6 @@ const FAMILIES: Family[] = [
   { id: 'ores', name: 'Ores', side: 'gathering', effect: 'ATK', items: ORES },
 ]
 
-/** Legendary grades (9–10) share one visual rule in every family: glints around the item. */
-function draw(item: ItemIcon): Uint8Array {
-  const s = new Sprite(SIZE, SIZE)
-  s.shadow = { cx: 16, cy: 28, rx: 9.5, ry: 2.2, alpha: 80 }
-  item.paint(s)
-  if (item.grade >= 9) {
-    s.sparkle(5, 7, 2)
-    s.sparkle(27, 11, 1)
-    s.sparkle(6, 22, 1)
-  }
-  return s.render()
-}
-
-/** Composites scaled icons onto a background, nearest-neighbor. */
-function sheet(rows: Uint8Array[][], scale: number, pad: number, bg: RGBA, cell: RGBA): { w: number; h: number; px: Uint8Array } {
-  const cols = Math.max(...rows.map((r) => r.length))
-  const cellSize = SIZE * scale
-  const w = cols * cellSize + (cols + 1) * pad
-  const h = rows.length * cellSize + (rows.length + 1) * pad
-  const px = new Uint8Array(w * h * 4)
-  for (let i = 0; i < w * h; i++) px.set(bg, i * 4)
-  rows.forEach((row, ry) =>
-    row.forEach((icon, rx) => {
-      const ox = pad + rx * (cellSize + pad), oy = pad + ry * (cellSize + pad)
-      for (let y = 0; y < cellSize; y++)
-        for (let x = 0; x < cellSize; x++) {
-          const o = ((oy + y) * w + ox + x) * 4
-          px.set(cell, o)
-          const i = (Math.floor(y / scale) * SIZE + Math.floor(x / scale)) * 4
-          const a = (icon[i + 3] ?? 0) / 255
-          for (let k = 0; k < 3; k++) px[o + k] = Math.round((icon[i + k] ?? 0) * a + (px[o + k] ?? 0) * (1 - a))
-        }
-    }),
-  )
-  return { w, h, px }
-}
-
 const rows: Uint8Array[][] = []
 const cards: string[] = []
 for (const family of FAMILIES) {
@@ -71,7 +35,7 @@ for (const family of FAMILIES) {
   mkdirSync(dir, { recursive: true })
   const row: Uint8Array[] = []
   const items = family.items.map((item) => {
-    const px = draw(item)
+    const px = drawIcon(item)
     const png = encodePng(SIZE, SIZE, px)
     writeFileSync(join(dir, `${item.id}.png`), png)
     row.push(px)
@@ -85,7 +49,7 @@ for (const family of FAMILIES) {
 
 const previews = join(ROOT, 'assets', 'previews')
 mkdirSync(previews, { recursive: true })
-const contact = sheet(rows, 4, 12, hex('#0f141b'), hex('#18202a'))
+const contact = contactSheet(rows, 4, 12, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'items.png'), encodePng(contact.w, contact.h, contact.px))
 writeFileSync(
   join(previews, 'items.html'),
