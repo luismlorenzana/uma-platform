@@ -1,0 +1,32 @@
+{
+  "name": "uma-platform",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Shared foundation for the Uma games: master data pipeline and releases, shared packages, original art.",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "data:import": "pnpm --filter @uma-platform/data-pipeline run import",
+    "assets:import": "pnpm --filter @uma-platform/asset-pipeline run import",
+    "assets:bust-sheet": "pnpm --filter @uma-platform/asset-pipeline run bust-sheet",
+    "release:publish": "pnpm --filter @uma-platform/data-pipeline run publish",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "publish-packages": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "turbo": "^2.10.13"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

@@ -15,6 +15,104 @@ It owns:
 
 Phase 0 (master data pipeline, first release, `uma-data` package) is in progress. See the [roadmap](docs/roadmap.md).
 
+## Layout
+
+| Path | What |
+|---|---|
+| `packages/data` | `@luismlorenzana/uma-data`: master types, runtime parsers, release client ([master-data.md](docs/master-data.md)) |
+| `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
+| `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
+| `infra/` | GCP project and bucket runbook ([README](infra/README.md)) |
+| `content/` | **Gitignored.** Private inputs (`overrides/`) and the local release (`release/`). Never commit it |
+
+## Develop
+
+Node 22 and pnpm 10 (`corepack enable`).
+
+```bash
+pnpm install
+pnpm lint     # type-check every package
+pnpm test     # Vitest, synthetic fixtures only, no network
+pnpm build
+```
+
+## Make a master data release
+
+```bash
+pnpm data:import                 # GameTora datasets → content/release/data/*.json
+pnpm assets:import               # images → atlases, art and the art index
+pnpm release:publish -- --dry-run
+pnpm release:publish             # files → manifest → channels/v1/latest.json
+```
+
+The first run on a machine needs the private inputs (P31): `content/overrides/scenario-icons.json` and the owner's
+wiki art folder, staged once with `pnpm assets:import -- --source dir:~/Documents/uma-content`. Downloads are cached
+in `scripts/*/.cache/`, so later runs only fetch what's new. Publishing uses the owner's `default` gcloud
+configuration through environment variables and never changes the active one (see [infra/README.md](infra/README.md)).
+
+## Use `@luismlorenzana/uma-data` in a game
+
+The package is private on GitHub Packages. In the game repo, add an `.npmrc` (commit it; it holds no secret):
+
+```ini
+@luismlorenzana:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+**Locally**, the gh token needs `read:packages` once (`gh auth refresh -h github.com -s read:packages`), then:
+
+```bash
+NODE_AUTH_TOKEN=$(gh auth token) pnpm add -E @luismlorenzana/uma-data
+```
+
+**In CI**, give the workflow `packages: read` and pass the job's token:
+
+```yaml
+permissions:
+  contents: read
+  packages: read
+steps:
+  - uses: actions/setup-node@v6
+    with:
+      node-version: 22
+      cache: pnpm
+  - run: pnpm install --frozen-lockfile
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+A game repo's `GITHUB_TOKEN` can read the package only after the package grants that repo access: on GitHub, open the
+`uma-data` package → **Package settings** → **Manage Actions access** → add the game repo with the **Read** role.
+
+**Reading releases.** Each game's API reads the private bucket with its own read-only service account and serves the
+files to its web app through its logged-in endpoint (architecture §2.2):
+
+```ts
+import { createReleaseClient, type ReleaseSource } from '@luismlorenzana/uma-data'
+import { Storage } from '@google-cloud/storage'
+
+const bucket = new Storage().bucket('uma-platform-master-data')
+const source: ReleaseSource = {
+  read: async (path) => new Uint8Array((await bucket.file(path).download())[0]),
+}
+const { manifest, data, art } = await createReleaseClient({ source }).load() // latest within schema major 1
+```
+
+In the web app, `createFetchSource({ baseUrl: '/api/master/', init: () => ({ headers: { authorization } }) })` reads
+the same paths through the API. Tests use `@luismlorenzana/uma-data/testing` (`syntheticMasterData`,
+`buildMemoryRelease`, `createMemorySource`). Field reference: [docs/master-data.md](docs/master-data.md).
+
+Depend on an exact version (`pnpm add -E`) and upgrade on your own schedule (P9). Within schema major 1 the client
+accepts every newer release, so new characters, cards and skills arrive without a code change (P7).
+
+## Releasing a package
+
+1. A change to `packages/*` comes with a changeset: `pnpm changeset` (minor for additive schema changes, major for
+   breaking ones; see AGENTS.md).
+2. On `main`, `pnpm version-packages` bumps versions and writes the changelog; commit and push.
+3. The **Release packages** workflow publishes every version not yet on GitHub Packages, using the workflow's
+   `GITHUB_TOKEN` with `packages: write`, and pushes the release tags.
+
 ## Documentation
 
 | Doc | What |
@@ -22,4 +120,6 @@ Phase 0 (master data pipeline, first release, `uma-data` package) is in progress
 | [docs/architecture.md](docs/architecture.md) | How the repos fit together: master data, shared code, game baseline, art. **Source of truth** |
 | [docs/roadmap.md](docs/roadmap.md) | Order of work across all repos, with exit checks |
 | [docs/decisions.md](docs/decisions.md) | Cross-game decisions (append-only) |
+| [docs/master-data.md](docs/master-data.md) | Every master set and field, the release layout and the client |
+| [docs/racer-mapping.md](docs/racer-mapping.md) | uma-racer's current packs → master data, for the Phase 3 refactor |
 | [AGENTS.md](AGENTS.md) | Rules for any agent working here |

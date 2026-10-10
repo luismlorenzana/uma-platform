@@ -62,14 +62,18 @@ image sources ───────────── pnpm assets:import ─▶ 
   gitignored `/content/` folder locally and in the private bucket in production. Test fixtures are small and synthetic.
 - A release is a **content-addressed manifest**, as in uma-racer today: every file is named by its hash, the manifest
   lists them, files upload before the manifest, and old files are kept.
-- Bucket layout (draft, finalized in Phase 0):
+- Bucket layout (final, P23; every set and field is in [master-data.md](master-data.md)):
 
   ```text
-  files/<path>.<hash>.<ext>            immutable, shared across releases
-  manifests/v<major>/<version>.json    one per release
-  channels/v<major>/latest.json        points at the newest release for that schema major
+  files/data/<set>.<hash16>.json        one per master set, plus the art index (data/art.<hash16>.json)
+  files/atlases/<family>-<n>.<hash16>.webp
+  files/art/<family>/<key>.<hash16>.webp
+  manifests/v<major>/<version>.json     one per release, immutable
+  channels/v<major>/latest.json         points at the newest release for that schema major
   ```
 
+  Files and manifests are never overwritten or deleted; moving the channel is the only replace. The release client in
+  `uma-data` reads channel → manifest → files and checks every hash.
 - Each game's API service account gets **read-only** access to the bucket. Games serve master data to their web app
   through their own logged-in API, exactly as uma-racer's `/api/content/*` does now.
 
