@@ -5,8 +5,8 @@ import { GcloudStorageClient } from './gcloud-storage'
 import { publishRelease } from './publish'
 import { DEFAULT_RELEASE_DIR } from './release-dir'
 
-/** The platform's GCP project and private release bucket (infra/README.md). */
-export const DEFAULT_PROJECT = 'uma-platform'
+/** The platform's GCP project (`uma-platform` was taken) and private release bucket (infra/README.md, P34). */
+export const DEFAULT_PROJECT = 'uma-platform-lm'
 export const DEFAULT_BUCKET = 'uma-platform-master-data'
 
 function argument(name: string): string | null {

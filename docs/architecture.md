@@ -160,12 +160,12 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 - Uma characters use the original chibi and bust art from master data, animated with code. Original art never
   contains copied game art.
 
-## 6. Infrastructure (draft, set up in Phase 0)
+## 6. Infrastructure (set up in Phase 0, runbook in `infra/README.md`)
 
 | Thing | Value |
 |---|---|
-| GCP project | `uma-platform`, or the nearest available ID |
-| Bucket | Private, uniform access, public access prevention on |
+| GCP project | `uma-platform-lm` (`uma-platform` was taken, P34) |
+| Bucket | `gs://uma-platform-master-data`: private, `us-central1`, uniform access, public access prevention on |
 | Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket |
 | Publishing | From the owner's machine, with gcloud scoped by environment variables |
 

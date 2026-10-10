@@ -7,23 +7,24 @@ variables; never run `gcloud config set`.
 
 ```bash
 export CLOUDSDK_ACTIVE_CONFIG_NAME=default   # the owner's personal account
-export CLOUDSDK_CORE_PROJECT=uma-platform
+export CLOUDSDK_CORE_PROJECT=uma-platform-lm
 ```
 
 | Thing | Value |
 |---|---|
-| Project | `uma-platform` |
-| Billing | The owner's billing account used by uma-racer (linked by the owner's approval) |
-| Bucket | `gs://uma-platform-master-data`, `us-central1`, Standard, uniform bucket-level access, public access prevention enforced |
+| Project | `uma-platform-lm` ("Uma Platform"; the ID `uma-platform` is taken globally) |
+| Billing | The owner's "Amazon Card" billing account, the one uma-racer uses (linked 2026-10-10 with the owner's approval) |
+| Bucket | `gs://uma-platform-master-data`, `us-central1`, Standard, uniform bucket-level access, public access prevention enforced, default 7-day soft delete |
 | Writers | The owner's account, through `pnpm release:publish` |
 | Readers | Each game's API service account, `roles/storage.objectViewer` on the bucket only |
 
-## Set-up (done once)
+## Set-up (done 2026-10-10)
 
 ```bash
-# Owner-approved: creates the project and links billing.
-gcloud projects create uma-platform --name="Uma Platform"
-gcloud billing projects link uma-platform --billing-account=<billing-account-id>
+# Owner-approved: creates the project and links billing. A billing account links at most 5 projects by default;
+# the owner freed a slot first.
+gcloud projects create uma-platform-lm --name="Uma Platform"
+gcloud billing projects link uma-platform-lm --billing-account=0101E5-D99B49-A8B713
 
 # Inside the project.
 gcloud services enable storage.googleapis.com
