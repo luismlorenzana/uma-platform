@@ -3,17 +3,19 @@
 The order of work across all four repos (P16). Each phase lists its exit check. Architecture is in
 [architecture.md](architecture.md); decisions are in [decisions.md](decisions.md).
 
-| Phase | Repo | Goal | Can overlap with |
-|---|---|---|---|
-| 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec |
-| 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 |
-| 2 | uma-rpg | Hub, Farm and leveling with Phaser scenes and original art | |
-| 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | |
-| 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | |
+| Phase | Repo | Goal | Can overlap with | Status |
+|---|---|---|---|---|
+| 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | In progress (started 2026-10-10) |
+| 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 | Not started |
+| 2 | uma-rpg | Hub, Farm and leveling with Phaser scenes and original art | | Not started |
+| 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | | Not started |
+| 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | | Not started |
 
 Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the port isn't chasing a moving target.
 
 ## Phase 0 — uma-platform foundation
+
+**Status:** in progress since 2026-10-10.
 
 - Scaffold the monorepo: pnpm, Turbo, TypeScript, Vitest, CI for lint, test and build.
 - Lift `scripts/data` and `scripts/assets` from uma-racer `origin/main`. Leave the game-only normalizers behind (flair,

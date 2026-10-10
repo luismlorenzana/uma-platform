@@ -13,7 +13,7 @@ It owns:
 
 ## Status
 
-Phase 0 has not started. See the [roadmap](docs/roadmap.md).
+Phase 0 (master data pipeline, first release, `uma-data` package) is in progress. See the [roadmap](docs/roadmap.md).
 
 ## Documentation
 
