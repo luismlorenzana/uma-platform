@@ -6,8 +6,8 @@ The order of work across all four repos (P16). Each phase lists its exit check. 
 | Phase | Repo | Goal | Can overlap with | Status |
 |---|---|---|---|---|
 | 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | Done (2026-10-10) |
-| 1 | uma-rpg | Design spec, scaffold, RPG rules ported, master data connected | Phase 0 | In progress (design spec, started 2026-10-10) |
-| 2 | uma-rpg | Hub, Farm and leveling with Phaser scenes and original art | | Not started |
+| 1 | uma-rpg | Design spec, then slice S1: foundation and the four-page Hub on master data | Phase 0 | In progress (design done; S1 specified, 2026-10-10) |
+| 2 | uma-rpg | Slices S2–S8: collection, battles, passive layer, Learning District, cooking, equipment, Tier Finale | | Not started |
 | 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | | Not started |
 | 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | | Not started |
 
@@ -35,8 +35,10 @@ the bucket, and a throwaway consumer installs `uma-data` and loads `latest` with
 
 ## Phase 1 — uma-rpg foundation
 
-**Status:** the design spec has been in progress since 2026-10-10 (uma-rpg `docs/design/`: game design v0.3 and the
-item catalog). The first item icons are drawn here by `scripts/pixel-art` (P35).
+**Status:** the design is drafted (uma-rpg `docs/design/`: game design v0.4 and the item catalog), and the owner moved
+the Hub first: uma-rpg's [build plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/plan.md) makes **S1 the
+foundation plus the four-page Hub**, specified with tasks T001–T009. The RPG rules port moves to S3. Item icons are
+drawn here by `scripts/pixel-art` (P35).
 
 - **Design spec with the owner:** core loop, goals, passive farm, per-Uma leveling, Hub. Today the RPG only produces
   tokens for uma-racer; it needs its own reason to play.
