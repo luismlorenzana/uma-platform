@@ -1,4 +1,5 @@
-// Builds every item icon: 32×32 PNGs in assets/items/<family>/, plus a 4× contact sheet and an HTML preview.
+// Builds every item icon: 32×32 PNGs in assets/items/<family>/, plus a 4× contact sheet and an HTML preview, and the
+// published atlas (packages/art/items: one PNG on a 32 px grid and its JSON index, P37).
 // Run from the repo root: pnpm art:draw
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
@@ -15,6 +16,17 @@ const OUT = join(ROOT, 'assets', 'items')
 const SIZE = ICON_SIZE
 
 const rows: Uint8Array[][] = []
+// The atlas: ten grades across, one row per family side (raw, then refined), families in catalog order.
+const ATLAS_COLUMNS = 10
+const atlasRows = FAMILIES.length * 2
+const atlas = new Uint8Array(ATLAS_COLUMNS * SIZE * atlasRows * SIZE * 4)
+const frames: Record<string, { x: number; y: number; name: string; family: string; side: string; effect: string; grade: number; refined: boolean }> = {}
+function blit(px: Uint8Array, col: number, row: number): void {
+  for (let y = 0; y < SIZE; y++) {
+    const from = y * SIZE * 4
+    atlas.set(px.subarray(from, from + SIZE * 4), ((row * SIZE + y) * ATLAS_COLUMNS * SIZE + col * SIZE) * 4)
+  }
+}
 const cards: string[] = []
 function card(item: ItemIcon, uri: string): string {
   return `<figure class="${item.grade >= 9 ? 'legendary' : ''}"><img src="${uri}" width="96" height="96" alt=""><img class="x1" src="${uri}" width="32" height="32" alt=""><figcaption>${item.name}<span>Grade ${item.grade}</span></figcaption></figure>`
@@ -26,10 +38,13 @@ for (const family of FAMILIES) {
   const sections: string[] = []
   for (const [label, items] of [['Raw', family.raw], ['Refined', family.refined]] as const) {
     const row: Uint8Array[] = []
+    const atlasRow = FAMILIES.indexOf(family) * 2 + (label === 'Refined' ? 1 : 0)
     const figures = items.map((item) => {
       const px = drawIcon(item)
       const png = encodePng(SIZE, SIZE, px)
       writeFileSync(join(dir, `${item.id}.png`), png)
+      blit(px, item.grade - 1, atlasRow)
+      frames[item.id] = { x: (item.grade - 1) * SIZE, y: atlasRow * SIZE, name: item.name, family: family.id, side: family.side, effect: family.effect, grade: item.grade, refined: label === 'Refined' }
       row.push(px)
       return card(item, `data:image/png;base64,${png.toString('base64')}`)
     })
@@ -38,6 +53,11 @@ for (const family of FAMILIES) {
   }
   cards.push(`<section><h2>${family.name} <small>${family.side} · ${family.effect}</small></h2>${sections.join('')}</section>`)
 }
+
+const atlasDir = join(ROOT, 'packages', 'art', 'items')
+mkdirSync(atlasDir, { recursive: true })
+writeFileSync(join(atlasDir, 'atlas.png'), encodePng(ATLAS_COLUMNS * SIZE, atlasRows * SIZE, atlas))
+writeFileSync(join(atlasDir, 'atlas.json'), `${JSON.stringify({ schemaVersion: 1, cell: SIZE, width: ATLAS_COLUMNS * SIZE, height: atlasRows * SIZE, frames }, null, 1)}\n`)
 
 const previews = join(ROOT, 'assets', 'previews')
 mkdirSync(previews, { recursive: true })

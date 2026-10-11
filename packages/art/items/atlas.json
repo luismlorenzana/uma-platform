@@ -1,0 +1,3208 @@
+{
+ "schemaVersion": 1,
+ "cell": 32,
+ "width": 320,
+ "height": 1024,
+ "frames": {
+  "wheat": {
+   "x": 0,
+   "y": 0,
+   "name": "Wheat",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 1,
+   "refined": false
+  },
+  "oats": {
+   "x": 32,
+   "y": 0,
+   "name": "Oats",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 2,
+   "refined": false
+  },
+  "barley": {
+   "x": 64,
+   "y": 0,
+   "name": "Barley",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 3,
+   "refined": false
+  },
+  "rice": {
+   "x": 96,
+   "y": 0,
+   "name": "Rice",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 4,
+   "refined": false
+  },
+  "corn": {
+   "x": 128,
+   "y": 0,
+   "name": "Corn",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 5,
+   "refined": false
+  },
+  "rye": {
+   "x": 160,
+   "y": 0,
+   "name": "Rye",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 6,
+   "refined": false
+  },
+  "buckwheat": {
+   "x": 192,
+   "y": 0,
+   "name": "Buckwheat",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 7,
+   "refined": false
+  },
+  "wild-rice": {
+   "x": 224,
+   "y": 0,
+   "name": "Wild Rice",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 8,
+   "refined": false
+  },
+  "moonrice": {
+   "x": 256,
+   "y": 0,
+   "name": "Moonrice",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 9,
+   "refined": false
+  },
+  "sunwheat": {
+   "x": 288,
+   "y": 0,
+   "name": "Sunwheat",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 10,
+   "refined": false
+  },
+  "wheat-flour": {
+   "x": 0,
+   "y": 32,
+   "name": "Wheat Flour",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 1,
+   "refined": true
+  },
+  "rolled-oats": {
+   "x": 32,
+   "y": 32,
+   "name": "Rolled Oats",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 2,
+   "refined": true
+  },
+  "pearl-barley": {
+   "x": 64,
+   "y": 32,
+   "name": "Pearl Barley",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 3,
+   "refined": true
+  },
+  "polished-rice": {
+   "x": 96,
+   "y": 32,
+   "name": "Polished Rice",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 4,
+   "refined": true
+  },
+  "cornmeal": {
+   "x": 128,
+   "y": 32,
+   "name": "Cornmeal",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 5,
+   "refined": true
+  },
+  "rye-flour": {
+   "x": 160,
+   "y": 32,
+   "name": "Rye Flour",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 6,
+   "refined": true
+  },
+  "buckwheat-flour": {
+   "x": 192,
+   "y": 32,
+   "name": "Buckwheat Flour",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 7,
+   "refined": true
+  },
+  "hulled-wild-rice": {
+   "x": 224,
+   "y": 32,
+   "name": "Hulled Wild Rice",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 8,
+   "refined": true
+  },
+  "moonrice-flour": {
+   "x": 256,
+   "y": 32,
+   "name": "Moonrice Flour",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 9,
+   "refined": true
+  },
+  "sunwheat-flour": {
+   "x": 288,
+   "y": 32,
+   "name": "Sunwheat Flour",
+   "family": "grains",
+   "side": "farming",
+   "effect": "HP",
+   "grade": 10,
+   "refined": true
+  },
+  "apple": {
+   "x": 0,
+   "y": 64,
+   "name": "Apple",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 1,
+   "refined": false
+  },
+  "pear": {
+   "x": 32,
+   "y": 64,
+   "name": "Pear",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 2,
+   "refined": false
+  },
+  "peach": {
+   "x": 64,
+   "y": 64,
+   "name": "Peach",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 3,
+   "refined": false
+  },
+  "plum": {
+   "x": 96,
+   "y": 64,
+   "name": "Plum",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 4,
+   "refined": false
+  },
+  "orange": {
+   "x": 128,
+   "y": 64,
+   "name": "Orange",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 5,
+   "refined": false
+  },
+  "grape": {
+   "x": 160,
+   "y": 64,
+   "name": "Grape",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 6,
+   "refined": false
+  },
+  "mango": {
+   "x": 192,
+   "y": 64,
+   "name": "Mango",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 7,
+   "refined": false
+  },
+  "pomegranate": {
+   "x": 224,
+   "y": 64,
+   "name": "Pomegranate",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 8,
+   "refined": false
+  },
+  "starpeach": {
+   "x": 256,
+   "y": 64,
+   "name": "Starpeach",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 9,
+   "refined": false
+  },
+  "golden-apple": {
+   "x": 288,
+   "y": 64,
+   "name": "Golden Apple",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 10,
+   "refined": false
+  },
+  "apple-preserve": {
+   "x": 0,
+   "y": 96,
+   "name": "Apple Preserve",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 1,
+   "refined": true
+  },
+  "pear-preserve": {
+   "x": 32,
+   "y": 96,
+   "name": "Pear Preserve",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 2,
+   "refined": true
+  },
+  "peach-preserve": {
+   "x": 64,
+   "y": 96,
+   "name": "Peach Preserve",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 3,
+   "refined": true
+  },
+  "plum-preserve": {
+   "x": 96,
+   "y": 96,
+   "name": "Plum Preserve",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 4,
+   "refined": true
+  },
+  "orange-marmalade": {
+   "x": 128,
+   "y": 96,
+   "name": "Orange Marmalade",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 5,
+   "refined": true
+  },
+  "grape-jelly": {
+   "x": 160,
+   "y": 96,
+   "name": "Grape Jelly",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 6,
+   "refined": true
+  },
+  "mango-pulp": {
+   "x": 192,
+   "y": 96,
+   "name": "Mango Pulp",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 7,
+   "refined": true
+  },
+  "pomegranate-molasses": {
+   "x": 224,
+   "y": 96,
+   "name": "Pomegranate Molasses",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 8,
+   "refined": true
+  },
+  "starpeach-nectar": {
+   "x": 256,
+   "y": 96,
+   "name": "Starpeach Nectar",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 9,
+   "refined": true
+  },
+  "golden-apple-preserve": {
+   "x": 288,
+   "y": 96,
+   "name": "Golden Apple Preserve",
+   "family": "fruits",
+   "side": "farming",
+   "effect": "MP",
+   "grade": 10,
+   "refined": true
+  },
+  "carp": {
+   "x": 0,
+   "y": 128,
+   "name": "Carp",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 1,
+   "refined": false
+  },
+  "trout": {
+   "x": 32,
+   "y": 128,
+   "name": "Trout",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 2,
+   "refined": false
+  },
+  "sardine": {
+   "x": 64,
+   "y": 128,
+   "name": "Sardine",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 3,
+   "refined": false
+  },
+  "mackerel": {
+   "x": 96,
+   "y": 128,
+   "name": "Mackerel",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 4,
+   "refined": false
+  },
+  "salmon": {
+   "x": 128,
+   "y": 128,
+   "name": "Salmon",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 5,
+   "refined": false
+  },
+  "sea-bream": {
+   "x": 160,
+   "y": 128,
+   "name": "Sea Bream",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 6,
+   "refined": false
+  },
+  "eel": {
+   "x": 192,
+   "y": 128,
+   "name": "Eel",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 7,
+   "refined": false
+  },
+  "tuna": {
+   "x": 224,
+   "y": 128,
+   "name": "Tuna",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 8,
+   "refined": false
+  },
+  "silverfin": {
+   "x": 256,
+   "y": 128,
+   "name": "Silverfin",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 9,
+   "refined": false
+  },
+  "rainbow-koi": {
+   "x": 288,
+   "y": 128,
+   "name": "Rainbow Koi",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 10,
+   "refined": false
+  },
+  "carp-fillet": {
+   "x": 0,
+   "y": 160,
+   "name": "Carp Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 1,
+   "refined": true
+  },
+  "trout-fillet": {
+   "x": 32,
+   "y": 160,
+   "name": "Trout Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 2,
+   "refined": true
+  },
+  "sardine-fillet": {
+   "x": 64,
+   "y": 160,
+   "name": "Sardine Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 3,
+   "refined": true
+  },
+  "mackerel-fillet": {
+   "x": 96,
+   "y": 160,
+   "name": "Mackerel Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 4,
+   "refined": true
+  },
+  "salmon-fillet": {
+   "x": 128,
+   "y": 160,
+   "name": "Salmon Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 5,
+   "refined": true
+  },
+  "sea-bream-fillet": {
+   "x": 160,
+   "y": 160,
+   "name": "Sea Bream Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 6,
+   "refined": true
+  },
+  "eel-fillet": {
+   "x": 192,
+   "y": 160,
+   "name": "Eel Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 7,
+   "refined": true
+  },
+  "tuna-fillet": {
+   "x": 224,
+   "y": 160,
+   "name": "Tuna Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 8,
+   "refined": true
+  },
+  "silverfin-fillet": {
+   "x": 256,
+   "y": 160,
+   "name": "Silverfin Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 9,
+   "refined": true
+  },
+  "rainbow-koi-fillet": {
+   "x": 288,
+   "y": 160,
+   "name": "Rainbow Koi Fillet",
+   "family": "fish",
+   "side": "farming",
+   "effect": "ATK",
+   "grade": 10,
+   "refined": true
+  },
+  "basil": {
+   "x": 0,
+   "y": 192,
+   "name": "Basil",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 1,
+   "refined": false
+  },
+  "mint": {
+   "x": 32,
+   "y": 192,
+   "name": "Mint",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 2,
+   "refined": false
+  },
+  "rosemary": {
+   "x": 64,
+   "y": 192,
+   "name": "Rosemary",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 3,
+   "refined": false
+  },
+  "thyme": {
+   "x": 96,
+   "y": 192,
+   "name": "Thyme",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 4,
+   "refined": false
+  },
+  "ginger": {
+   "x": 128,
+   "y": 192,
+   "name": "Ginger",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 5,
+   "refined": false
+  },
+  "peppercorn": {
+   "x": 160,
+   "y": 192,
+   "name": "Peppercorn",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 6,
+   "refined": false
+  },
+  "cinnamon": {
+   "x": 192,
+   "y": 192,
+   "name": "Cinnamon",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 7,
+   "refined": false
+  },
+  "saffron": {
+   "x": 224,
+   "y": 192,
+   "name": "Saffron",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 8,
+   "refined": false
+  },
+  "mandrake": {
+   "x": 256,
+   "y": 192,
+   "name": "Mandrake",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 9,
+   "refined": false
+  },
+  "phoenix-pepper": {
+   "x": 288,
+   "y": 192,
+   "name": "Phoenix Pepper",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 10,
+   "refined": false
+  },
+  "dried-basil": {
+   "x": 0,
+   "y": 224,
+   "name": "Dried Basil",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 1,
+   "refined": true
+  },
+  "dried-mint": {
+   "x": 32,
+   "y": 224,
+   "name": "Dried Mint",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 2,
+   "refined": true
+  },
+  "dried-rosemary": {
+   "x": 64,
+   "y": 224,
+   "name": "Dried Rosemary",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 3,
+   "refined": true
+  },
+  "dried-thyme": {
+   "x": 96,
+   "y": 224,
+   "name": "Dried Thyme",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 4,
+   "refined": true
+  },
+  "ground-ginger": {
+   "x": 128,
+   "y": 224,
+   "name": "Ground Ginger",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 5,
+   "refined": true
+  },
+  "ground-pepper": {
+   "x": 160,
+   "y": 224,
+   "name": "Ground Pepper",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 6,
+   "refined": true
+  },
+  "ground-cinnamon": {
+   "x": 192,
+   "y": 224,
+   "name": "Ground Cinnamon",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 7,
+   "refined": true
+  },
+  "saffron-threads": {
+   "x": 224,
+   "y": 224,
+   "name": "Saffron Threads",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 8,
+   "refined": true
+  },
+  "mandrake-powder": {
+   "x": 256,
+   "y": 224,
+   "name": "Mandrake Powder",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 9,
+   "refined": true
+  },
+  "phoenix-spice": {
+   "x": 288,
+   "y": 224,
+   "name": "Phoenix Spice",
+   "family": "herbs-spices",
+   "side": "farming",
+   "effect": "M.ATK",
+   "grade": 10,
+   "refined": true
+  },
+  "carrot": {
+   "x": 0,
+   "y": 256,
+   "name": "Carrot",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 1,
+   "refined": false
+  },
+  "potato": {
+   "x": 32,
+   "y": 256,
+   "name": "Potato",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 2,
+   "refined": false
+  },
+  "cabbage": {
+   "x": 64,
+   "y": 256,
+   "name": "Cabbage",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 3,
+   "refined": false
+  },
+  "onion": {
+   "x": 96,
+   "y": 256,
+   "name": "Onion",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 4,
+   "refined": false
+  },
+  "tomato": {
+   "x": 128,
+   "y": 256,
+   "name": "Tomato",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 5,
+   "refined": false
+  },
+  "bell-pepper": {
+   "x": 160,
+   "y": 256,
+   "name": "Bell Pepper",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 6,
+   "refined": false
+  },
+  "eggplant": {
+   "x": 192,
+   "y": 256,
+   "name": "Eggplant",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 7,
+   "refined": false
+  },
+  "asparagus": {
+   "x": 224,
+   "y": 256,
+   "name": "Asparagus",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 8,
+   "refined": false
+  },
+  "golden-carrot": {
+   "x": 256,
+   "y": 256,
+   "name": "Golden Carrot",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 9,
+   "refined": false
+  },
+  "emperor-pumpkin": {
+   "x": 288,
+   "y": 256,
+   "name": "Emperor Pumpkin",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 10,
+   "refined": false
+  },
+  "chopped-carrot": {
+   "x": 0,
+   "y": 288,
+   "name": "Chopped Carrot",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 1,
+   "refined": true
+  },
+  "diced-potato": {
+   "x": 32,
+   "y": 288,
+   "name": "Diced Potato",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 2,
+   "refined": true
+  },
+  "shredded-cabbage": {
+   "x": 64,
+   "y": 288,
+   "name": "Shredded Cabbage",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 3,
+   "refined": true
+  },
+  "diced-onion": {
+   "x": 96,
+   "y": 288,
+   "name": "Diced Onion",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 4,
+   "refined": true
+  },
+  "tomato-puree": {
+   "x": 128,
+   "y": 288,
+   "name": "Tomato Purée",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 5,
+   "refined": true
+  },
+  "sliced-bell-pepper": {
+   "x": 160,
+   "y": 288,
+   "name": "Sliced Bell Pepper",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 6,
+   "refined": true
+  },
+  "sliced-eggplant": {
+   "x": 192,
+   "y": 288,
+   "name": "Sliced Eggplant",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 7,
+   "refined": true
+  },
+  "trimmed-asparagus": {
+   "x": 224,
+   "y": 288,
+   "name": "Trimmed Asparagus",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 8,
+   "refined": true
+  },
+  "golden-carrot-puree": {
+   "x": 256,
+   "y": 288,
+   "name": "Golden Carrot Purée",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 9,
+   "refined": true
+  },
+  "pumpkin-puree": {
+   "x": 288,
+   "y": 288,
+   "name": "Pumpkin Purée",
+   "family": "vegetables",
+   "side": "farming",
+   "effect": "DEF",
+   "grade": 10,
+   "refined": true
+  },
+  "button-mushroom": {
+   "x": 0,
+   "y": 320,
+   "name": "Button Mushroom",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 1,
+   "refined": false
+  },
+  "shiitake": {
+   "x": 32,
+   "y": 320,
+   "name": "Shiitake",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 2,
+   "refined": false
+  },
+  "oyster-mushroom": {
+   "x": 64,
+   "y": 320,
+   "name": "Oyster Mushroom",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 3,
+   "refined": false
+  },
+  "enoki": {
+   "x": 96,
+   "y": 320,
+   "name": "Enoki",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 4,
+   "refined": false
+  },
+  "chanterelle": {
+   "x": 128,
+   "y": 320,
+   "name": "Chanterelle",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 5,
+   "refined": false
+  },
+  "porcini": {
+   "x": 160,
+   "y": 320,
+   "name": "Porcini",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 6,
+   "refined": false
+  },
+  "morel": {
+   "x": 192,
+   "y": 320,
+   "name": "Morel",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 7,
+   "refined": false
+  },
+  "truffle": {
+   "x": 224,
+   "y": 320,
+   "name": "Truffle",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 8,
+   "refined": false
+  },
+  "glowcap": {
+   "x": 256,
+   "y": 320,
+   "name": "Glowcap",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 9,
+   "refined": false
+  },
+  "king-reishi": {
+   "x": 288,
+   "y": 320,
+   "name": "King Reishi",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 10,
+   "refined": false
+  },
+  "dried-button-mushroom": {
+   "x": 0,
+   "y": 352,
+   "name": "Dried Button Mushroom",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 1,
+   "refined": true
+  },
+  "dried-shiitake": {
+   "x": 32,
+   "y": 352,
+   "name": "Dried Shiitake",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 2,
+   "refined": true
+  },
+  "dried-oyster-mushroom": {
+   "x": 64,
+   "y": 352,
+   "name": "Dried Oyster Mushroom",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 3,
+   "refined": true
+  },
+  "dried-enoki": {
+   "x": 96,
+   "y": 352,
+   "name": "Dried Enoki",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 4,
+   "refined": true
+  },
+  "dried-chanterelle": {
+   "x": 128,
+   "y": 352,
+   "name": "Dried Chanterelle",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 5,
+   "refined": true
+  },
+  "dried-porcini": {
+   "x": 160,
+   "y": 352,
+   "name": "Dried Porcini",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 6,
+   "refined": true
+  },
+  "dried-morel": {
+   "x": 192,
+   "y": 352,
+   "name": "Dried Morel",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 7,
+   "refined": true
+  },
+  "shaved-truffle": {
+   "x": 224,
+   "y": 352,
+   "name": "Shaved Truffle",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 8,
+   "refined": true
+  },
+  "glowcap-powder": {
+   "x": 256,
+   "y": 352,
+   "name": "Glowcap Powder",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 9,
+   "refined": true
+  },
+  "reishi-powder": {
+   "x": 288,
+   "y": 352,
+   "name": "Reishi Powder",
+   "family": "mushrooms",
+   "side": "farming",
+   "effect": "M.DEF",
+   "grade": 10,
+   "refined": true
+  },
+  "honeycomb": {
+   "x": 0,
+   "y": 384,
+   "name": "Honeycomb",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 1,
+   "refined": false
+  },
+  "sugarcane": {
+   "x": 32,
+   "y": 384,
+   "name": "Sugarcane",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 2,
+   "refined": false
+  },
+  "sugar-beet": {
+   "x": 64,
+   "y": 384,
+   "name": "Sugar Beet",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 3,
+   "refined": false
+  },
+  "maple-sap": {
+   "x": 96,
+   "y": 384,
+   "name": "Maple Sap",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 4,
+   "refined": false
+  },
+  "cacao-pod": {
+   "x": 128,
+   "y": 384,
+   "name": "Cacao Pod",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 5,
+   "refined": false
+  },
+  "vanilla-pod": {
+   "x": 160,
+   "y": 384,
+   "name": "Vanilla Pod",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 6,
+   "refined": false
+  },
+  "agave-heart": {
+   "x": 192,
+   "y": 384,
+   "name": "Agave Heart",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 7,
+   "refined": false
+  },
+  "palm-sap": {
+   "x": 224,
+   "y": 384,
+   "name": "Palm Sap",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 8,
+   "refined": false
+  },
+  "fairy-honeycomb": {
+   "x": 256,
+   "y": 384,
+   "name": "Fairy Honeycomb",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 9,
+   "refined": false
+  },
+  "ambrosia-blossom": {
+   "x": 288,
+   "y": 384,
+   "name": "Ambrosia Blossom",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 10,
+   "refined": false
+  },
+  "honey": {
+   "x": 0,
+   "y": 416,
+   "name": "Honey",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 1,
+   "refined": true
+  },
+  "cane-sugar": {
+   "x": 32,
+   "y": 416,
+   "name": "Cane Sugar",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 2,
+   "refined": true
+  },
+  "beet-sugar": {
+   "x": 64,
+   "y": 416,
+   "name": "Beet Sugar",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 3,
+   "refined": true
+  },
+  "maple-syrup": {
+   "x": 96,
+   "y": 416,
+   "name": "Maple Syrup",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 4,
+   "refined": true
+  },
+  "chocolate": {
+   "x": 128,
+   "y": 416,
+   "name": "Chocolate",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 5,
+   "refined": true
+  },
+  "vanilla-extract": {
+   "x": 160,
+   "y": 416,
+   "name": "Vanilla Extract",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 6,
+   "refined": true
+  },
+  "agave-syrup": {
+   "x": 192,
+   "y": 416,
+   "name": "Agave Syrup",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 7,
+   "refined": true
+  },
+  "palm-sugar": {
+   "x": 224,
+   "y": 416,
+   "name": "Palm Sugar",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 8,
+   "refined": true
+  },
+  "fairy-honey": {
+   "x": 256,
+   "y": 416,
+   "name": "Fairy Honey",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 9,
+   "refined": true
+  },
+  "ambrosia": {
+   "x": 288,
+   "y": 416,
+   "name": "Ambrosia",
+   "family": "sweets",
+   "side": "farming",
+   "effect": "Speed",
+   "grade": 10,
+   "refined": true
+  },
+  "peanut": {
+   "x": 0,
+   "y": 448,
+   "name": "Peanut",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 1,
+   "refined": false
+  },
+  "sunflower-seed": {
+   "x": 32,
+   "y": 448,
+   "name": "Sunflower Seed",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 2,
+   "refined": false
+  },
+  "sesame": {
+   "x": 64,
+   "y": 448,
+   "name": "Sesame",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 3,
+   "refined": false
+  },
+  "walnut": {
+   "x": 96,
+   "y": 448,
+   "name": "Walnut",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 4,
+   "refined": false
+  },
+  "chestnut": {
+   "x": 128,
+   "y": 448,
+   "name": "Chestnut",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 5,
+   "refined": false
+  },
+  "almond": {
+   "x": 160,
+   "y": 448,
+   "name": "Almond",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 6,
+   "refined": false
+  },
+  "pistachio": {
+   "x": 192,
+   "y": 448,
+   "name": "Pistachio",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 7,
+   "refined": false
+  },
+  "macadamia": {
+   "x": 224,
+   "y": 448,
+   "name": "Macadamia",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 8,
+   "refined": false
+  },
+  "thundernut": {
+   "x": 256,
+   "y": 448,
+   "name": "Thundernut",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 9,
+   "refined": false
+  },
+  "worldseed": {
+   "x": 288,
+   "y": 448,
+   "name": "Worldseed",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 10,
+   "refined": false
+  },
+  "peanut-butter": {
+   "x": 0,
+   "y": 480,
+   "name": "Peanut Butter",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 1,
+   "refined": true
+  },
+  "sunflower-oil": {
+   "x": 32,
+   "y": 480,
+   "name": "Sunflower Oil",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 2,
+   "refined": true
+  },
+  "sesame-paste": {
+   "x": 64,
+   "y": 480,
+   "name": "Sesame Paste",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 3,
+   "refined": true
+  },
+  "walnut-paste": {
+   "x": 96,
+   "y": 480,
+   "name": "Walnut Paste",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 4,
+   "refined": true
+  },
+  "chestnut-paste": {
+   "x": 128,
+   "y": 480,
+   "name": "Chestnut Paste",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 5,
+   "refined": true
+  },
+  "almond-paste": {
+   "x": 160,
+   "y": 480,
+   "name": "Almond Paste",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 6,
+   "refined": true
+  },
+  "pistachio-paste": {
+   "x": 192,
+   "y": 480,
+   "name": "Pistachio Paste",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 7,
+   "refined": true
+  },
+  "macadamia-butter": {
+   "x": 224,
+   "y": 480,
+   "name": "Macadamia Butter",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 8,
+   "refined": true
+  },
+  "thundernut-oil": {
+   "x": 256,
+   "y": 480,
+   "name": "Thundernut Oil",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 9,
+   "refined": true
+  },
+  "worldseed-oil": {
+   "x": 288,
+   "y": 480,
+   "name": "Worldseed Oil",
+   "family": "nuts-seeds",
+   "side": "farming",
+   "effect": "Limit Break charge",
+   "grade": 10,
+   "refined": true
+  },
+  "puffbun-pelt": {
+   "x": 0,
+   "y": 512,
+   "name": "Puffbun Pelt",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 1,
+   "refined": false
+  },
+  "boarling-hide": {
+   "x": 32,
+   "y": 512,
+   "name": "Boarling Hide",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 2,
+   "refined": false
+  },
+  "wolfkin-pelt": {
+   "x": 64,
+   "y": 512,
+   "name": "Wolfkin Pelt",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 3,
+   "refined": false
+  },
+  "rock-lizard-scale": {
+   "x": 96,
+   "y": 512,
+   "name": "Rock Lizard Scale",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 4,
+   "refined": false
+  },
+  "ironback-hide": {
+   "x": 128,
+   "y": 512,
+   "name": "Ironback Hide",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 5,
+   "refined": false
+  },
+  "basilisk-scale": {
+   "x": 160,
+   "y": 512,
+   "name": "Basilisk Scale",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 6,
+   "refined": false
+  },
+  "manticore-hide": {
+   "x": 192,
+   "y": 512,
+   "name": "Manticore Hide",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 7,
+   "refined": false
+  },
+  "behemoth-hide": {
+   "x": 224,
+   "y": 512,
+   "name": "Behemoth Hide",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 8,
+   "refined": false
+  },
+  "wyvern-scale": {
+   "x": 256,
+   "y": 512,
+   "name": "Wyvern Scale",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 9,
+   "refined": false
+  },
+  "dragon-scale": {
+   "x": 288,
+   "y": 512,
+   "name": "Dragon Scale",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 10,
+   "refined": false
+  },
+  "puffbun-leather": {
+   "x": 0,
+   "y": 544,
+   "name": "Puffbun Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 1,
+   "refined": true
+  },
+  "boarling-leather": {
+   "x": 32,
+   "y": 544,
+   "name": "Boarling Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 2,
+   "refined": true
+  },
+  "wolfkin-leather": {
+   "x": 64,
+   "y": 544,
+   "name": "Wolfkin Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 3,
+   "refined": true
+  },
+  "lizard-leather": {
+   "x": 96,
+   "y": 544,
+   "name": "Lizard Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 4,
+   "refined": true
+  },
+  "ironback-leather": {
+   "x": 128,
+   "y": 544,
+   "name": "Ironback Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 5,
+   "refined": true
+  },
+  "basilisk-leather": {
+   "x": 160,
+   "y": 544,
+   "name": "Basilisk Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 6,
+   "refined": true
+  },
+  "manticore-leather": {
+   "x": 192,
+   "y": 544,
+   "name": "Manticore Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 7,
+   "refined": true
+  },
+  "behemoth-leather": {
+   "x": 224,
+   "y": 544,
+   "name": "Behemoth Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 8,
+   "refined": true
+  },
+  "wyvern-leather": {
+   "x": 256,
+   "y": 544,
+   "name": "Wyvern Leather",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 9,
+   "refined": true
+  },
+  "dragonhide": {
+   "x": 288,
+   "y": 544,
+   "name": "Dragonhide",
+   "family": "hides-scales",
+   "side": "gathering",
+   "effect": "HP",
+   "grade": 10,
+   "refined": true
+  },
+  "mist-essence": {
+   "x": 0,
+   "y": 576,
+   "name": "Mist Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 1,
+   "refined": false
+  },
+  "dew-essence": {
+   "x": 32,
+   "y": 576,
+   "name": "Dew Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 2,
+   "refined": false
+  },
+  "breeze-essence": {
+   "x": 64,
+   "y": 576,
+   "name": "Breeze Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 3,
+   "refined": false
+  },
+  "ember-essence": {
+   "x": 96,
+   "y": 576,
+   "name": "Ember Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 4,
+   "refined": false
+  },
+  "tide-essence": {
+   "x": 128,
+   "y": 576,
+   "name": "Tide Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 5,
+   "refined": false
+  },
+  "spark-essence": {
+   "x": 160,
+   "y": 576,
+   "name": "Spark Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 6,
+   "refined": false
+  },
+  "glimmer-essence": {
+   "x": 192,
+   "y": 576,
+   "name": "Glimmer Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 7,
+   "refined": false
+  },
+  "shadow-essence": {
+   "x": 224,
+   "y": 576,
+   "name": "Shadow Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 8,
+   "refined": false
+  },
+  "aether": {
+   "x": 256,
+   "y": 576,
+   "name": "Aether",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 9,
+   "refined": false
+  },
+  "prismatic-essence": {
+   "x": 288,
+   "y": 576,
+   "name": "Prismatic Essence",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 10,
+   "refined": false
+  },
+  "mist-infusion": {
+   "x": 0,
+   "y": 608,
+   "name": "Mist Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 1,
+   "refined": true
+  },
+  "dew-infusion": {
+   "x": 32,
+   "y": 608,
+   "name": "Dew Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 2,
+   "refined": true
+  },
+  "breeze-infusion": {
+   "x": 64,
+   "y": 608,
+   "name": "Breeze Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 3,
+   "refined": true
+  },
+  "ember-infusion": {
+   "x": 96,
+   "y": 608,
+   "name": "Ember Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 4,
+   "refined": true
+  },
+  "tide-infusion": {
+   "x": 128,
+   "y": 608,
+   "name": "Tide Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 5,
+   "refined": true
+  },
+  "spark-infusion": {
+   "x": 160,
+   "y": 608,
+   "name": "Spark Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 6,
+   "refined": true
+  },
+  "glimmer-infusion": {
+   "x": 192,
+   "y": 608,
+   "name": "Glimmer Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 7,
+   "refined": true
+  },
+  "shadow-infusion": {
+   "x": 224,
+   "y": 608,
+   "name": "Shadow Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 8,
+   "refined": true
+  },
+  "aether-infusion": {
+   "x": 256,
+   "y": 608,
+   "name": "Aether Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 9,
+   "refined": true
+  },
+  "prismatic-infusion": {
+   "x": 288,
+   "y": 608,
+   "name": "Prismatic Infusion",
+   "family": "essences",
+   "side": "gathering",
+   "effect": "MP",
+   "grade": 10,
+   "refined": true
+  },
+  "copper-ore": {
+   "x": 0,
+   "y": 640,
+   "name": "Copper Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 1,
+   "refined": false
+  },
+  "tin-ore": {
+   "x": 32,
+   "y": 640,
+   "name": "Tin Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 2,
+   "refined": false
+  },
+  "iron-ore": {
+   "x": 64,
+   "y": 640,
+   "name": "Iron Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 3,
+   "refined": false
+  },
+  "silver-ore": {
+   "x": 96,
+   "y": 640,
+   "name": "Silver Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 4,
+   "refined": false
+  },
+  "cobalt-ore": {
+   "x": 128,
+   "y": 640,
+   "name": "Cobalt Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 5,
+   "refined": false
+  },
+  "gold-ore": {
+   "x": 160,
+   "y": 640,
+   "name": "Gold Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 6,
+   "refined": false
+  },
+  "platinum-ore": {
+   "x": 192,
+   "y": 640,
+   "name": "Platinum Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 7,
+   "refined": false
+  },
+  "titanium-ore": {
+   "x": 224,
+   "y": 640,
+   "name": "Titanium Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 8,
+   "refined": false
+  },
+  "mythril-ore": {
+   "x": 256,
+   "y": 640,
+   "name": "Mythril Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 9,
+   "refined": false
+  },
+  "orichalcum-ore": {
+   "x": 288,
+   "y": 640,
+   "name": "Orichalcum Ore",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 10,
+   "refined": false
+  },
+  "copper-ingot": {
+   "x": 0,
+   "y": 672,
+   "name": "Copper Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 1,
+   "refined": true
+  },
+  "tin-ingot": {
+   "x": 32,
+   "y": 672,
+   "name": "Tin Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 2,
+   "refined": true
+  },
+  "iron-ingot": {
+   "x": 64,
+   "y": 672,
+   "name": "Iron Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 3,
+   "refined": true
+  },
+  "silver-ingot": {
+   "x": 96,
+   "y": 672,
+   "name": "Silver Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 4,
+   "refined": true
+  },
+  "cobalt-ingot": {
+   "x": 128,
+   "y": 672,
+   "name": "Cobalt Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 5,
+   "refined": true
+  },
+  "gold-ingot": {
+   "x": 160,
+   "y": 672,
+   "name": "Gold Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 6,
+   "refined": true
+  },
+  "platinum-ingot": {
+   "x": 192,
+   "y": 672,
+   "name": "Platinum Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 7,
+   "refined": true
+  },
+  "titanium-ingot": {
+   "x": 224,
+   "y": 672,
+   "name": "Titanium Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 8,
+   "refined": true
+  },
+  "mythril-ingot": {
+   "x": 256,
+   "y": 672,
+   "name": "Mythril Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 9,
+   "refined": true
+  },
+  "orichalcum-ingot": {
+   "x": 288,
+   "y": 672,
+   "name": "Orichalcum Ingot",
+   "family": "ores",
+   "side": "gathering",
+   "effect": "ATK",
+   "grade": 10,
+   "refined": true
+  },
+  "quartz": {
+   "x": 0,
+   "y": 704,
+   "name": "Quartz",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 1,
+   "refined": false
+  },
+  "amethyst": {
+   "x": 32,
+   "y": 704,
+   "name": "Amethyst",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 2,
+   "refined": false
+  },
+  "citrine": {
+   "x": 64,
+   "y": 704,
+   "name": "Citrine",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 3,
+   "refined": false
+  },
+  "garnet": {
+   "x": 96,
+   "y": 704,
+   "name": "Garnet",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 4,
+   "refined": false
+  },
+  "emerald": {
+   "x": 128,
+   "y": 704,
+   "name": "Emerald",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 5,
+   "refined": false
+  },
+  "sapphire": {
+   "x": 160,
+   "y": 704,
+   "name": "Sapphire",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 6,
+   "refined": false
+  },
+  "ruby": {
+   "x": 192,
+   "y": 704,
+   "name": "Ruby",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 7,
+   "refined": false
+  },
+  "diamond": {
+   "x": 224,
+   "y": 704,
+   "name": "Diamond",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 8,
+   "refined": false
+  },
+  "starstone": {
+   "x": 256,
+   "y": 704,
+   "name": "Starstone",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 9,
+   "refined": false
+  },
+  "philosophers-stone": {
+   "x": 288,
+   "y": 704,
+   "name": "Philosopher's Stone",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 10,
+   "refined": false
+  },
+  "cut-quartz": {
+   "x": 0,
+   "y": 736,
+   "name": "Cut Quartz",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 1,
+   "refined": true
+  },
+  "cut-amethyst": {
+   "x": 32,
+   "y": 736,
+   "name": "Cut Amethyst",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 2,
+   "refined": true
+  },
+  "cut-citrine": {
+   "x": 64,
+   "y": 736,
+   "name": "Cut Citrine",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 3,
+   "refined": true
+  },
+  "cut-garnet": {
+   "x": 96,
+   "y": 736,
+   "name": "Cut Garnet",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 4,
+   "refined": true
+  },
+  "cut-emerald": {
+   "x": 128,
+   "y": 736,
+   "name": "Cut Emerald",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 5,
+   "refined": true
+  },
+  "cut-sapphire": {
+   "x": 160,
+   "y": 736,
+   "name": "Cut Sapphire",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 6,
+   "refined": true
+  },
+  "cut-ruby": {
+   "x": 192,
+   "y": 736,
+   "name": "Cut Ruby",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 7,
+   "refined": true
+  },
+  "cut-diamond": {
+   "x": 224,
+   "y": 736,
+   "name": "Cut Diamond",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 8,
+   "refined": true
+  },
+  "cut-starstone": {
+   "x": 256,
+   "y": 736,
+   "name": "Cut Starstone",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 9,
+   "refined": true
+  },
+  "cut-philosophers-stone": {
+   "x": 288,
+   "y": 736,
+   "name": "Cut Philosopher's Stone",
+   "family": "crystals",
+   "side": "gathering",
+   "effect": "M.ATK",
+   "grade": 10,
+   "refined": true
+  },
+  "limestone": {
+   "x": 0,
+   "y": 768,
+   "name": "Limestone",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 1,
+   "refined": false
+  },
+  "sandstone": {
+   "x": 32,
+   "y": 768,
+   "name": "Sandstone",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 2,
+   "refined": false
+  },
+  "slate": {
+   "x": 64,
+   "y": 768,
+   "name": "Slate",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 3,
+   "refined": false
+  },
+  "granite": {
+   "x": 96,
+   "y": 768,
+   "name": "Granite",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 4,
+   "refined": false
+  },
+  "basalt": {
+   "x": 128,
+   "y": 768,
+   "name": "Basalt",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 5,
+   "refined": false
+  },
+  "marble": {
+   "x": 160,
+   "y": 768,
+   "name": "Marble",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 6,
+   "refined": false
+  },
+  "obsidian": {
+   "x": 192,
+   "y": 768,
+   "name": "Obsidian",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 7,
+   "refined": false
+  },
+  "jade": {
+   "x": 224,
+   "y": 768,
+   "name": "Jade",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 8,
+   "refined": false
+  },
+  "runestone": {
+   "x": 256,
+   "y": 768,
+   "name": "Runestone",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 9,
+   "refined": false
+  },
+  "meteorite": {
+   "x": 288,
+   "y": 768,
+   "name": "Meteorite",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 10,
+   "refined": false
+  },
+  "limestone-block": {
+   "x": 0,
+   "y": 800,
+   "name": "Limestone Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 1,
+   "refined": true
+  },
+  "sandstone-block": {
+   "x": 32,
+   "y": 800,
+   "name": "Sandstone Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 2,
+   "refined": true
+  },
+  "slate-block": {
+   "x": 64,
+   "y": 800,
+   "name": "Slate Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 3,
+   "refined": true
+  },
+  "granite-block": {
+   "x": 96,
+   "y": 800,
+   "name": "Granite Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 4,
+   "refined": true
+  },
+  "basalt-block": {
+   "x": 128,
+   "y": 800,
+   "name": "Basalt Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 5,
+   "refined": true
+  },
+  "marble-block": {
+   "x": 160,
+   "y": 800,
+   "name": "Marble Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 6,
+   "refined": true
+  },
+  "obsidian-block": {
+   "x": 192,
+   "y": 800,
+   "name": "Obsidian Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 7,
+   "refined": true
+  },
+  "jade-block": {
+   "x": 224,
+   "y": 800,
+   "name": "Jade Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 8,
+   "refined": true
+  },
+  "runestone-block": {
+   "x": 256,
+   "y": 800,
+   "name": "Runestone Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 9,
+   "refined": true
+  },
+  "meteorite-block": {
+   "x": 288,
+   "y": 800,
+   "name": "Meteorite Block",
+   "family": "stones",
+   "side": "gathering",
+   "effect": "DEF",
+   "grade": 10,
+   "refined": true
+  },
+  "flax": {
+   "x": 0,
+   "y": 832,
+   "name": "Flax",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 1,
+   "refined": false
+  },
+  "jute": {
+   "x": 32,
+   "y": 832,
+   "name": "Jute",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 2,
+   "refined": false
+  },
+  "hemp": {
+   "x": 64,
+   "y": 832,
+   "name": "Hemp",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 3,
+   "refined": false
+  },
+  "cotton": {
+   "x": 96,
+   "y": 832,
+   "name": "Cotton",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 4,
+   "refined": false
+  },
+  "wool": {
+   "x": 128,
+   "y": 832,
+   "name": "Wool",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 5,
+   "refined": false
+  },
+  "alpaca-fleece": {
+   "x": 160,
+   "y": 832,
+   "name": "Alpaca Fleece",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 6,
+   "refined": false
+  },
+  "cashmere-fleece": {
+   "x": 192,
+   "y": 832,
+   "name": "Cashmere Fleece",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 7,
+   "refined": false
+  },
+  "silk-cocoon": {
+   "x": 224,
+   "y": 832,
+   "name": "Silk Cocoon",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 8,
+   "refined": false
+  },
+  "moonsilk-cocoon": {
+   "x": 256,
+   "y": 832,
+   "name": "Moonsilk Cocoon",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 9,
+   "refined": false
+  },
+  "cloudfleece": {
+   "x": 288,
+   "y": 832,
+   "name": "Cloudfleece",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 10,
+   "refined": false
+  },
+  "linen": {
+   "x": 0,
+   "y": 864,
+   "name": "Linen",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 1,
+   "refined": true
+  },
+  "burlap": {
+   "x": 32,
+   "y": 864,
+   "name": "Burlap",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 2,
+   "refined": true
+  },
+  "hemp-cloth": {
+   "x": 64,
+   "y": 864,
+   "name": "Hemp Cloth",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 3,
+   "refined": true
+  },
+  "cotton-cloth": {
+   "x": 96,
+   "y": 864,
+   "name": "Cotton Cloth",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 4,
+   "refined": true
+  },
+  "wool-cloth": {
+   "x": 128,
+   "y": 864,
+   "name": "Wool Cloth",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 5,
+   "refined": true
+  },
+  "alpaca-cloth": {
+   "x": 160,
+   "y": 864,
+   "name": "Alpaca Cloth",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 6,
+   "refined": true
+  },
+  "cashmere-cloth": {
+   "x": 192,
+   "y": 864,
+   "name": "Cashmere Cloth",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 7,
+   "refined": true
+  },
+  "silk": {
+   "x": 224,
+   "y": 864,
+   "name": "Silk",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 8,
+   "refined": true
+  },
+  "moonsilk": {
+   "x": 256,
+   "y": 864,
+   "name": "Moonsilk",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 9,
+   "refined": true
+  },
+  "cloudweave": {
+   "x": 288,
+   "y": 864,
+   "name": "Cloudweave",
+   "family": "fibers",
+   "side": "gathering",
+   "effect": "M.DEF",
+   "grade": 10,
+   "refined": true
+  },
+  "pine-log": {
+   "x": 0,
+   "y": 896,
+   "name": "Pine Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 1,
+   "refined": false
+  },
+  "birch-log": {
+   "x": 32,
+   "y": 896,
+   "name": "Birch Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 2,
+   "refined": false
+  },
+  "cedar-log": {
+   "x": 64,
+   "y": 896,
+   "name": "Cedar Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 3,
+   "refined": false
+  },
+  "maple-log": {
+   "x": 96,
+   "y": 896,
+   "name": "Maple Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 4,
+   "refined": false
+  },
+  "oak-log": {
+   "x": 128,
+   "y": 896,
+   "name": "Oak Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 5,
+   "refined": false
+  },
+  "cherry-log": {
+   "x": 160,
+   "y": 896,
+   "name": "Cherry Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 6,
+   "refined": false
+  },
+  "mahogany-log": {
+   "x": 192,
+   "y": 896,
+   "name": "Mahogany Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 7,
+   "refined": false
+  },
+  "ebony-log": {
+   "x": 224,
+   "y": 896,
+   "name": "Ebony Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 8,
+   "refined": false
+  },
+  "elderwood-log": {
+   "x": 256,
+   "y": 896,
+   "name": "Elderwood Log",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 9,
+   "refined": false
+  },
+  "yggdrasil-branch": {
+   "x": 288,
+   "y": 896,
+   "name": "Yggdrasil Branch",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 10,
+   "refined": false
+  },
+  "pine-plank": {
+   "x": 0,
+   "y": 928,
+   "name": "Pine Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 1,
+   "refined": true
+  },
+  "birch-plank": {
+   "x": 32,
+   "y": 928,
+   "name": "Birch Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 2,
+   "refined": true
+  },
+  "cedar-plank": {
+   "x": 64,
+   "y": 928,
+   "name": "Cedar Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 3,
+   "refined": true
+  },
+  "maple-plank": {
+   "x": 96,
+   "y": 928,
+   "name": "Maple Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 4,
+   "refined": true
+  },
+  "oak-plank": {
+   "x": 128,
+   "y": 928,
+   "name": "Oak Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 5,
+   "refined": true
+  },
+  "cherry-plank": {
+   "x": 160,
+   "y": 928,
+   "name": "Cherry Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 6,
+   "refined": true
+  },
+  "mahogany-plank": {
+   "x": 192,
+   "y": 928,
+   "name": "Mahogany Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 7,
+   "refined": true
+  },
+  "ebony-plank": {
+   "x": 224,
+   "y": 928,
+   "name": "Ebony Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 8,
+   "refined": true
+  },
+  "elderwood-plank": {
+   "x": 256,
+   "y": 928,
+   "name": "Elderwood Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 9,
+   "refined": true
+  },
+  "yggdrasil-plank": {
+   "x": 288,
+   "y": 928,
+   "name": "Yggdrasil Plank",
+   "family": "woods",
+   "side": "gathering",
+   "effect": "Speed",
+   "grade": 10,
+   "refined": true
+  },
+  "seashell": {
+   "x": 0,
+   "y": 960,
+   "name": "Seashell",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 1,
+   "refined": false
+  },
+  "ammonite": {
+   "x": 32,
+   "y": 960,
+   "name": "Ammonite",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 2,
+   "refined": false
+  },
+  "trilobite": {
+   "x": 64,
+   "y": 960,
+   "name": "Trilobite",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 3,
+   "refined": false
+  },
+  "fossil-bone": {
+   "x": 96,
+   "y": 960,
+   "name": "Fossil Bone",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 4,
+   "refined": false
+  },
+  "mammoth-tusk": {
+   "x": 128,
+   "y": 960,
+   "name": "Mammoth Tusk",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 5,
+   "refined": false
+  },
+  "saber-fang": {
+   "x": 160,
+   "y": 960,
+   "name": "Saber Fang",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 6,
+   "refined": false
+  },
+  "raptor-claw": {
+   "x": 192,
+   "y": 960,
+   "name": "Raptor Claw",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 7,
+   "refined": false
+  },
+  "tyrant-tooth": {
+   "x": 224,
+   "y": 960,
+   "name": "Tyrant Tooth",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 8,
+   "refined": false
+  },
+  "titan-bone": {
+   "x": 256,
+   "y": 960,
+   "name": "Titan Bone",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 9,
+   "refined": false
+  },
+  "unicorn-horn": {
+   "x": 288,
+   "y": 960,
+   "name": "Unicorn Horn",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 10,
+   "refined": false
+  },
+  "shell-carving": {
+   "x": 0,
+   "y": 992,
+   "name": "Shell Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 1,
+   "refined": true
+  },
+  "ammonite-carving": {
+   "x": 32,
+   "y": 992,
+   "name": "Ammonite Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 2,
+   "refined": true
+  },
+  "trilobite-carving": {
+   "x": 64,
+   "y": 992,
+   "name": "Trilobite Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 3,
+   "refined": true
+  },
+  "bone-carving": {
+   "x": 96,
+   "y": 992,
+   "name": "Bone Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 4,
+   "refined": true
+  },
+  "tusk-carving": {
+   "x": 128,
+   "y": 992,
+   "name": "Tusk Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 5,
+   "refined": true
+  },
+  "fang-carving": {
+   "x": 160,
+   "y": 992,
+   "name": "Fang Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 6,
+   "refined": true
+  },
+  "claw-carving": {
+   "x": 192,
+   "y": 992,
+   "name": "Claw Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 7,
+   "refined": true
+  },
+  "tooth-carving": {
+   "x": 224,
+   "y": 992,
+   "name": "Tooth Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 8,
+   "refined": true
+  },
+  "titan-carving": {
+   "x": 256,
+   "y": 992,
+   "name": "Titan Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 9,
+   "refined": true
+  },
+  "unicorn-carving": {
+   "x": 288,
+   "y": 992,
+   "name": "Unicorn Carving",
+   "family": "bones-horns",
+   "side": "gathering",
+   "effect": "Limit Break charge",
+   "grade": 10,
+   "refined": true
+  }
+ }
+}

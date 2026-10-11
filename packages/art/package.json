@@ -1,0 +1,24 @@
+{
+  "name": "@luismlorenzana/uma-art",
+  "version": "1.0.0",
+  "description": "Original art for the Uma games, generated from code in scripts/pixel-art: item icons as one atlas plus its index. Private; personal use only.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luismlorenzana/uma-platform.git",
+    "directory": "packages/art"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "sideEffects": false,
+  "exports": {
+    "./items/atlas.png": "./items/atlas.png",
+    "./items/atlas.json": "./items/atlas.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "items",
+    "README.md"
+  ]
+}
