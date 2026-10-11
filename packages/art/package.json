@@ -1,7 +1,7 @@
 {
   "name": "@luismlorenzana/uma-art",
   "version": "1.0.0",
-  "description": "Original art for the Uma games, generated from code in scripts/pixel-art: item icons as one atlas plus its index. Private; personal use only.",
+  "description": "Original art for the Uma games, generated from code in scripts/pixel-art: item, dish and gear icons, Hub buildings and terrain tiles, each as one atlas plus its index. Private; personal use only.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
@@ -15,10 +15,22 @@
   "exports": {
     "./items/atlas.png": "./items/atlas.png",
     "./items/atlas.json": "./items/atlas.json",
+    "./dishes/atlas.png": "./dishes/atlas.png",
+    "./dishes/atlas.json": "./dishes/atlas.json",
+    "./gear/atlas.png": "./gear/atlas.png",
+    "./gear/atlas.json": "./gear/atlas.json",
+    "./buildings/atlas.png": "./buildings/atlas.png",
+    "./buildings/atlas.json": "./buildings/atlas.json",
+    "./tiles/atlas.png": "./tiles/atlas.png",
+    "./tiles/atlas.json": "./tiles/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
     "items",
+    "dishes",
+    "gear",
+    "buildings",
+    "tiles",
     "README.md"
   ]
 }
