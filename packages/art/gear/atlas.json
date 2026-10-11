@@ -1,0 +1,1507 @@
+{
+ "schemaVersion": 1,
+ "width": 320,
+ "height": 480,
+ "frames": {
+  "short-sword-g1": {
+   "x": 0,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "short-sword-g2": {
+   "x": 32,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "short-sword-g3": {
+   "x": 64,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "short-sword-g4": {
+   "x": 96,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "short-sword-g5": {
+   "x": 128,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "short-sword-g6": {
+   "x": 160,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "short-sword-g7": {
+   "x": 192,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "short-sword-g8": {
+   "x": 224,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "short-sword-g9": {
+   "x": 256,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "short-sword-g10": {
+   "x": 288,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "type": "short-sword",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "bow-g1": {
+   "x": 0,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "pine-plank"
+  },
+  "bow-g2": {
+   "x": 32,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "birch-plank"
+  },
+  "bow-g3": {
+   "x": 64,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "cedar-plank"
+  },
+  "bow-g4": {
+   "x": 96,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "maple-plank"
+  },
+  "bow-g5": {
+   "x": 128,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "oak-plank"
+  },
+  "bow-g6": {
+   "x": 160,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "cherry-plank"
+  },
+  "bow-g7": {
+   "x": 192,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "mahogany-plank"
+  },
+  "bow-g8": {
+   "x": 224,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "ebony-plank"
+  },
+  "bow-g9": {
+   "x": 256,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "elderwood-plank"
+  },
+  "bow-g10": {
+   "x": 288,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "type": "bow",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "yggdrasil-plank"
+  },
+  "spear-g1": {
+   "x": 0,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "spear-g2": {
+   "x": 32,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "spear-g3": {
+   "x": 64,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "spear-g4": {
+   "x": 96,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "spear-g5": {
+   "x": 128,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "spear-g6": {
+   "x": 160,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "spear-g7": {
+   "x": 192,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "spear-g8": {
+   "x": 224,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "spear-g9": {
+   "x": 256,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "spear-g10": {
+   "x": 288,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "type": "spear",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "axe-g1": {
+   "x": 0,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "axe-g2": {
+   "x": 32,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "axe-g3": {
+   "x": 64,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "axe-g4": {
+   "x": 96,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "axe-g5": {
+   "x": 128,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "axe-g6": {
+   "x": 160,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "axe-g7": {
+   "x": 192,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "axe-g8": {
+   "x": 224,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "axe-g9": {
+   "x": 256,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "axe-g10": {
+   "x": 288,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "type": "axe",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "mage-staff-g1": {
+   "x": 0,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "pine-plank"
+  },
+  "mage-staff-g2": {
+   "x": 32,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "birch-plank"
+  },
+  "mage-staff-g3": {
+   "x": 64,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "cedar-plank"
+  },
+  "mage-staff-g4": {
+   "x": 96,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "maple-plank"
+  },
+  "mage-staff-g5": {
+   "x": 128,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "oak-plank"
+  },
+  "mage-staff-g6": {
+   "x": 160,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "cherry-plank"
+  },
+  "mage-staff-g7": {
+   "x": 192,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "mahogany-plank"
+  },
+  "mage-staff-g8": {
+   "x": 224,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "ebony-plank"
+  },
+  "mage-staff-g9": {
+   "x": 256,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "elderwood-plank"
+  },
+  "mage-staff-g10": {
+   "x": 288,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "type": "mage-staff",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "yggdrasil-plank"
+  },
+  "arcane-staff-g1": {
+   "x": 0,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "pine-plank"
+  },
+  "arcane-staff-g2": {
+   "x": 32,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "birch-plank"
+  },
+  "arcane-staff-g3": {
+   "x": 64,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "cedar-plank"
+  },
+  "arcane-staff-g4": {
+   "x": 96,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "maple-plank"
+  },
+  "arcane-staff-g5": {
+   "x": 128,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "oak-plank"
+  },
+  "arcane-staff-g6": {
+   "x": 160,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "cherry-plank"
+  },
+  "arcane-staff-g7": {
+   "x": 192,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "mahogany-plank"
+  },
+  "arcane-staff-g8": {
+   "x": 224,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "ebony-plank"
+  },
+  "arcane-staff-g9": {
+   "x": 256,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "elderwood-plank"
+  },
+  "arcane-staff-g10": {
+   "x": 288,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "type": "arcane-staff",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "yggdrasil-plank"
+  },
+  "greatsword-g1": {
+   "x": 0,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "greatsword-g2": {
+   "x": 32,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "greatsword-g3": {
+   "x": 64,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "greatsword-g4": {
+   "x": 96,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "greatsword-g5": {
+   "x": 128,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "greatsword-g6": {
+   "x": 160,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "greatsword-g7": {
+   "x": 192,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "greatsword-g8": {
+   "x": 224,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "greatsword-g9": {
+   "x": 256,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "greatsword-g10": {
+   "x": 288,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "cleric-staff-g1": {
+   "x": 0,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "pine-plank"
+  },
+  "cleric-staff-g2": {
+   "x": 32,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "birch-plank"
+  },
+  "cleric-staff-g3": {
+   "x": 64,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "cedar-plank"
+  },
+  "cleric-staff-g4": {
+   "x": 96,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "maple-plank"
+  },
+  "cleric-staff-g5": {
+   "x": 128,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "oak-plank"
+  },
+  "cleric-staff-g6": {
+   "x": 160,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "cherry-plank"
+  },
+  "cleric-staff-g7": {
+   "x": 192,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "mahogany-plank"
+  },
+  "cleric-staff-g8": {
+   "x": 224,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "ebony-plank"
+  },
+  "cleric-staff-g9": {
+   "x": 256,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "elderwood-plank"
+  },
+  "cleric-staff-g10": {
+   "x": 288,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "type": "cleric-staff",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "yggdrasil-plank"
+  },
+  "summoner-tome-g1": {
+   "x": 0,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "linen"
+  },
+  "summoner-tome-g2": {
+   "x": 32,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "burlap"
+  },
+  "summoner-tome-g3": {
+   "x": 64,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "hemp-cloth"
+  },
+  "summoner-tome-g4": {
+   "x": 96,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "cotton-cloth"
+  },
+  "summoner-tome-g5": {
+   "x": 128,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "wool-cloth"
+  },
+  "summoner-tome-g6": {
+   "x": 160,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "alpaca-cloth"
+  },
+  "summoner-tome-g7": {
+   "x": 192,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "cashmere-cloth"
+  },
+  "summoner-tome-g8": {
+   "x": 224,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "silk"
+  },
+  "summoner-tome-g9": {
+   "x": 256,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "moonsilk"
+  },
+  "summoner-tome-g10": {
+   "x": 288,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "type": "summoner-tome",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "cloudweave"
+  },
+  "garb-g1": {
+   "x": 0,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 1,
+   "slot": "armor",
+   "material": "linen"
+  },
+  "garb-g2": {
+   "x": 32,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 2,
+   "slot": "armor",
+   "material": "burlap"
+  },
+  "garb-g3": {
+   "x": 64,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 3,
+   "slot": "armor",
+   "material": "hemp-cloth"
+  },
+  "garb-g4": {
+   "x": 96,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 4,
+   "slot": "armor",
+   "material": "cotton-cloth"
+  },
+  "garb-g5": {
+   "x": 128,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 5,
+   "slot": "armor",
+   "material": "wool-cloth"
+  },
+  "garb-g6": {
+   "x": 160,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 6,
+   "slot": "armor",
+   "material": "alpaca-cloth"
+  },
+  "garb-g7": {
+   "x": 192,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 7,
+   "slot": "armor",
+   "material": "cashmere-cloth"
+  },
+  "garb-g8": {
+   "x": 224,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 8,
+   "slot": "armor",
+   "material": "silk"
+  },
+  "garb-g9": {
+   "x": 256,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 9,
+   "slot": "armor",
+   "material": "moonsilk"
+  },
+  "garb-g10": {
+   "x": 288,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "type": "garb",
+   "grade": 10,
+   "slot": "armor",
+   "material": "cloudweave"
+  },
+  "leather-g1": {
+   "x": 0,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 1,
+   "slot": "armor",
+   "material": "puffbun-leather"
+  },
+  "leather-g2": {
+   "x": 32,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 2,
+   "slot": "armor",
+   "material": "boarling-leather"
+  },
+  "leather-g3": {
+   "x": 64,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 3,
+   "slot": "armor",
+   "material": "wolfkin-leather"
+  },
+  "leather-g4": {
+   "x": 96,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 4,
+   "slot": "armor",
+   "material": "lizard-leather"
+  },
+  "leather-g5": {
+   "x": 128,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 5,
+   "slot": "armor",
+   "material": "ironback-leather"
+  },
+  "leather-g6": {
+   "x": 160,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 6,
+   "slot": "armor",
+   "material": "basilisk-leather"
+  },
+  "leather-g7": {
+   "x": 192,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 7,
+   "slot": "armor",
+   "material": "manticore-leather"
+  },
+  "leather-g8": {
+   "x": 224,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 8,
+   "slot": "armor",
+   "material": "behemoth-leather"
+  },
+  "leather-g9": {
+   "x": 256,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 9,
+   "slot": "armor",
+   "material": "wyvern-leather"
+  },
+  "leather-g10": {
+   "x": 288,
+   "y": 320,
+   "w": 32,
+   "h": 32,
+   "type": "leather",
+   "grade": 10,
+   "slot": "armor",
+   "material": "dragonhide"
+  },
+  "mail-g1": {
+   "x": 0,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 1,
+   "slot": "armor",
+   "material": "copper-ingot"
+  },
+  "mail-g2": {
+   "x": 32,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 2,
+   "slot": "armor",
+   "material": "tin-ingot"
+  },
+  "mail-g3": {
+   "x": 64,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 3,
+   "slot": "armor",
+   "material": "iron-ingot"
+  },
+  "mail-g4": {
+   "x": 96,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 4,
+   "slot": "armor",
+   "material": "silver-ingot"
+  },
+  "mail-g5": {
+   "x": 128,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 5,
+   "slot": "armor",
+   "material": "cobalt-ingot"
+  },
+  "mail-g6": {
+   "x": 160,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 6,
+   "slot": "armor",
+   "material": "gold-ingot"
+  },
+  "mail-g7": {
+   "x": 192,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 7,
+   "slot": "armor",
+   "material": "platinum-ingot"
+  },
+  "mail-g8": {
+   "x": 224,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 8,
+   "slot": "armor",
+   "material": "titanium-ingot"
+  },
+  "mail-g9": {
+   "x": 256,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 9,
+   "slot": "armor",
+   "material": "mythril-ingot"
+  },
+  "mail-g10": {
+   "x": 288,
+   "y": 352,
+   "w": 32,
+   "h": 32,
+   "type": "mail",
+   "grade": 10,
+   "slot": "armor",
+   "material": "orichalcum-ingot"
+  },
+  "plate-g1": {
+   "x": 0,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 1,
+   "slot": "armor",
+   "material": "copper-ingot"
+  },
+  "plate-g2": {
+   "x": 32,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 2,
+   "slot": "armor",
+   "material": "tin-ingot"
+  },
+  "plate-g3": {
+   "x": 64,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 3,
+   "slot": "armor",
+   "material": "iron-ingot"
+  },
+  "plate-g4": {
+   "x": 96,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 4,
+   "slot": "armor",
+   "material": "silver-ingot"
+  },
+  "plate-g5": {
+   "x": 128,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 5,
+   "slot": "armor",
+   "material": "cobalt-ingot"
+  },
+  "plate-g6": {
+   "x": 160,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 6,
+   "slot": "armor",
+   "material": "gold-ingot"
+  },
+  "plate-g7": {
+   "x": 192,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 7,
+   "slot": "armor",
+   "material": "platinum-ingot"
+  },
+  "plate-g8": {
+   "x": 224,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 8,
+   "slot": "armor",
+   "material": "titanium-ingot"
+  },
+  "plate-g9": {
+   "x": 256,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 9,
+   "slot": "armor",
+   "material": "mythril-ingot"
+  },
+  "plate-g10": {
+   "x": 288,
+   "y": 384,
+   "w": 32,
+   "h": 32,
+   "type": "plate",
+   "grade": 10,
+   "slot": "armor",
+   "material": "orichalcum-ingot"
+  },
+  "ring-g1": {
+   "x": 0,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "ring-g2": {
+   "x": 32,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "ring-g3": {
+   "x": 64,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "ring-g4": {
+   "x": 96,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "ring-g5": {
+   "x": 128,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "ring-g6": {
+   "x": 160,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "ring-g7": {
+   "x": 192,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "ring-g8": {
+   "x": 224,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "ring-g9": {
+   "x": 256,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "ring-g10": {
+   "x": 288,
+   "y": 416,
+   "w": 32,
+   "h": 32,
+   "type": "ring",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "cut-philosophers-stone"
+  },
+  "charm-g1": {
+   "x": 0,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "shell-carving"
+  },
+  "charm-g2": {
+   "x": 32,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "ammonite-carving"
+  },
+  "charm-g3": {
+   "x": 64,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "trilobite-carving"
+  },
+  "charm-g4": {
+   "x": 96,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "bone-carving"
+  },
+  "charm-g5": {
+   "x": 128,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "tusk-carving"
+  },
+  "charm-g6": {
+   "x": 160,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "fang-carving"
+  },
+  "charm-g7": {
+   "x": 192,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "claw-carving"
+  },
+  "charm-g8": {
+   "x": 224,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "tooth-carving"
+  },
+  "charm-g9": {
+   "x": 256,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "titan-carving"
+  },
+  "charm-g10": {
+   "x": 288,
+   "y": 448,
+   "w": 32,
+   "h": 32,
+   "type": "charm",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "unicorn-carving"
+  }
+ }
+}
