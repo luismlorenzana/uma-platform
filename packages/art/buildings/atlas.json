@@ -1,0 +1,303 @@
+{
+ "schemaVersion": 1,
+ "width": 288,
+ "height": 288,
+ "frames": {
+  "fields": {
+   "x": 0,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "orchard": {
+   "x": 48,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "fishery": {
+   "x": 96,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "herb-garden": {
+   "x": 144,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "vegetable-garden": {
+   "x": 192,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "mushroom-cave": {
+   "x": 240,
+   "y": 0,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "sugar-grove": {
+   "x": 0,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "nut-grove": {
+   "x": 48,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "pantry": {
+   "x": 96,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44
+  },
+  "kitchen": {
+   "x": 144,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44,
+   "smoke": {
+    "x": 38,
+    "y": 4
+   }
+  },
+  "monster-den": {
+   "x": 192,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "ley-spring": {
+   "x": 240,
+   "y": 48,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "mine": {
+   "x": 0,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "crystal-cavern": {
+   "x": 48,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "quarry": {
+   "x": 96,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "meadow": {
+   "x": 144,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "forest": {
+   "x": 192,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "fossil-dig": {
+   "x": 240,
+   "y": 96,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "workbench": {
+   "x": 0,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "forge": {
+   "x": 48,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44,
+   "smoke": {
+    "x": 11,
+    "y": 2
+   }
+  },
+  "brawler-dojo": {
+   "x": 96,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "mage-tower": {
+   "x": 144,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "spell-blade-salle": {
+   "x": 192,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "cleric-chapel": {
+   "x": 240,
+   "y": 144,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "summoner-circle": {
+   "x": 0,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "rangers-lodge": {
+   "x": 48,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "lancers-barracks": {
+   "x": 96,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "arcane-armory": {
+   "x": 144,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "knights-bastion": {
+   "x": 192,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "stable": {
+   "x": 240,
+   "y": 192,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "party-hall": {
+   "x": 0,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "scenario-gate": {
+   "x": 48,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "warehouse": {
+   "x": 96,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "exchange": {
+   "x": 144,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "observatory": {
+   "x": 192,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "tier-finale": {
+   "x": 240,
+   "y": 240,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  }
+ }
+}
