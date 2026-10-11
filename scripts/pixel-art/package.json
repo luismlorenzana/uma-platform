@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Original pixel art generated from code (no image editing, no runtime dependencies) \u2192 assets/.",
+  "description": "Original pixel art generated from code (no image editing, no runtime dependencies) → assets/.",
   "scripts": {
     "lint": "tsc --noEmit",
-    "draw": "tsx src/build.ts",
+    "draw": "tsx src/build.ts && tsx src/dishes/build.ts && tsx src/gear/build.ts && tsx src/buildings/build.ts && tsx src/tiles/build.ts",
     "icons": "tsx src/app-icons/build.ts"
   },
   "devDependencies": {
