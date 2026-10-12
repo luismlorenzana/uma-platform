@@ -31,7 +31,7 @@ use it.
 
 `src/world/build.ts` writes the `world` atlas and previews from the RPG's `docs/design/world/map-art.md` contract.
 H06 milestone 1 is the approved five-biome visual gate; `worldFrameSpecs()` retains its 194-frame contract, and
-`worldFrameSpecs(BIOME_IDS, true)` emits the complete 310-frame family in milestone 2 (H08 backdrops are separate).
+`worldFrameSpecs(BIOME_IDS, true)` emits the complete 310-frame family in milestone 2. `maps-full.ts` adds the ten-band continent and five-island world in milestone 3 (H08 backdrops are separate).
 
 Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Roads use edge-neighbour masks;
 liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the

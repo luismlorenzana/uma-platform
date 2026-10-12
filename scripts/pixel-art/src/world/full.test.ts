@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { inflateSync } from 'node:zlib'
 import { encodePng } from '../png.ts'
 import { packWorld, worldFrames } from './atlas.ts'
 import { checkWorldFrames } from './check.ts'
@@ -9,6 +10,16 @@ import { biomeIcon } from './icons.ts'
 import { drawWorldProp, worldProp } from './props.ts'
 import { regionLayout, regionPreview } from './maps.ts'
 const bytes = (px: Uint8Array) => Buffer.from(px)
+/** Our encoder writes filter-0 RGBA rows. Compare their exact bytes, not zlib's version-specific bitstream. */
+function pngRows(png: Buffer): Buffer {
+  const data: Buffer[] = []
+  for (let at = 8; at < png.length; ) {
+    const size = png.readUInt32BE(at)
+    if (png.toString('ascii', at + 4, at + 8) === 'IDAT') data.push(png.subarray(at + 8, at + 8 + size))
+    at += size + 12
+  }
+  return inflateSync(Buffer.concat(data))
+}
 
 describe('world art part 2', () => {
   it('draws the complete 310-frame contract, including every prop, icon and ocean variant', () => {
@@ -39,10 +50,15 @@ describe('world art part 2', () => {
       expect(ponds.length, biome).toBe(BIOMES[biome].liquid ? 3 : 0)
     }
   })
-  it('matches every checked-in atlas frame and index byte-for-byte', () => {
+  it('matches every checked-in atlas pixel/index and encodes repeatably on the current runtime', () => {
     const { atlas, index } = packWorld(worldFrames(BIOME_IDS, true))
     const root = new URL('../../../../packages/art/world/', import.meta.url)
     expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: atlas.w, height: atlas.h, frames: index })
-    expect(readFileSync(new URL('atlas.png', root)).equals(encodePng(atlas.w, atlas.h, atlas.px))).toBe(true)
+    const stored = readFileSync(new URL('atlas.png', root)), encoded = encodePng(atlas.w, atlas.h, atlas.px)
+    expect([stored.readUInt32BE(16), stored.readUInt32BE(20)]).toEqual([atlas.w, atlas.h])
+    const expected = pngRows(stored), actual = pngRows(encoded)
+    const firstDifference = expected.findIndex((v, i) => v !== actual[i])
+    expect(expected.equals(actual), 'RGBA row mismatch at byte ' + firstDifference).toBe(true)
+    expect(encoded.equals(encodePng(atlas.w, atlas.h, atlas.px))).toBe(true)
   })
 })

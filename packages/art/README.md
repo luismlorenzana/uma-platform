@@ -46,10 +46,10 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
 
-## World atlas (H06, milestone 2)
+## World atlas (H06, complete)
 
 `world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. It is not versioned/published until
-all three H06 milestones pass review. The complete native-frame family contains **310 frames**: all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. Part 3 completes the continent/world preview compositions. No placeholder frames are shipped.
+all three H06 milestones pass review. The complete native-frame family contains **310 frames**: all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
 
 The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
 Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
@@ -68,10 +68,12 @@ frame positions are an implementation detail of the shelf packer.
 | `marker/capital` | 48×48, y=44 ground line |
 | `icon/<biome>` | 16×16 biome header/list symbols |
 
-`assets/previews/world.png` contains every frame at 3× plus nineteen regions and a three-band continent. `world.html`
+`assets/previews/world.png` contains every frame at 3× plus nineteen regions, a ten-band continent and a five-island world. `world.html`
 labels frames and shows 2× phone comparison plots/maps. `world-<biome>.png`, `world-continent.png` and `world-plots.png`
 are separate 2× examples; `world-markers-1x.png` shows every marker at native size. The build checks every id/size,
 ground seams, all corner/edge masks, and ground lines;
 Vitest additionally pins non-overlap, seed repeatability, filled ponds, marker shapes, and connected no-loop roads.
+
+`maps-full.ts` describes the cell/sprite/spot compositions for H07: 16×44 continent, forty 4×3 plots, five inter-band Springs, a 16×4 capital plaza; 16×22 world, five staggered 6×4 islands in their continents' two dominant biomes with corner-mask shores. `world-layouts.json` records the synthetic sample positions. No text is painted into the maps.
 
 The complete H06 contract has 310 frames (including ocean); the 19 battle horizon strips are added separately by H08.
