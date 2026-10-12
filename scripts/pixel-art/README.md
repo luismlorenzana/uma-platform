@@ -36,3 +36,12 @@ H06 milestone 1 is the approved five-biome visual gate; `worldFrameSpecs()` reta
 Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Roads use edge-neighbour masks;
 liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the
 same mask function. `world.html` provides 2× phone plots and labelled 3× frames; `pnpm art:draw` regenerates it.
+
+## Battle effects
+
+`src/fx/build.ts` adds the `fx` family: four 32 px hit poses and two familiar poses for each of the ten D86 kinds.
+The frame list in `src/fx/spec.ts` is the build contract. Impacts keep their object pixels inside the cutout; the
+last pose is readable without motion. Familiars use two bob/flap/tail poses and bounded glow, in the same house style.
+
+`fx.html` shows animated 1×/2×/4× previews, a reduced-motion final-pose toggle, and static 3×/1× cards. The package
+ships only the atlas/index; playback and summon lifetimes belong to the game.

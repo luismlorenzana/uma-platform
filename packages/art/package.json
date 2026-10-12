@@ -25,6 +25,8 @@
     "./tiles/atlas.json": "./tiles/atlas.json",
     "./world/atlas.png": "./world/atlas.png",
     "./world/atlas.json": "./world/atlas.json",
+    "./fx/atlas.png": "./fx/atlas.png",
+    "./fx/atlas.json": "./fx/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -34,6 +36,7 @@
     "buildings",
     "tiles",
     "world",
+    "fx",
     "README.md"
   ]
 }
