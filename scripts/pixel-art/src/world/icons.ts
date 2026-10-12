@@ -3,7 +3,8 @@ import { Mask, shadeDome } from '../shape.ts'
 import { Sprite } from '../sprite.ts'
 import { Img } from '../tiles/image.ts'
 import { stroke } from '../tiles/props/kit.ts'
-import type { Biome } from './spec.ts'
+import { drawWorldProp, worldProp } from './props.ts'
+import { BIOMES, type Biome } from './spec.ts'
 
 export function biomeIcon(biome: Biome): Img {
   const s = new Sprite(16, 16)
@@ -37,6 +38,12 @@ export function biomeIcon(biome: Biome): Img {
     const shard = Mask.polygon([[3, 14], [6, 6], [8, 2], [10, 7], [13, 14]], 16, 16)
     shadeDome(s, shard, ice, { bias: 0.1, relief: 0.7, contact: false })
     for (const [x, y] of [[7, 4], [6, 7], [5, 10]] as const) s.paint(x, y, ice, 5)
-  } else throw new Error(`Icon ${biome} is not drawn in this milestone`)
+  } else {
+    // The biome's signature landmark at icon scale, on a small ground chip. Native alpha is preserved.
+    const chip = s.addRamp(ramp(BIOMES[biome].base, { lift: 0.28, drop: 0.22 }))
+    shadeDome(s, Mask.ellipse(8, 13, 6, 2, 0, 16, 16), chip, { relief: 0.3, contact: false })
+    const landmark = drawWorldProp(worldProp(BIOMES[biome].props[0]!)).scaled(0.5)
+    return new Img(16, 16, s.render()).draw(landmark, 4, 15 - landmark.h)
+  }
   return new Img(16, 16, s.render())
 }

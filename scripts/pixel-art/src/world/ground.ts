@@ -1,6 +1,7 @@
 import type { GroundStyle } from '../tiles/ground.ts'
 import { groundTile } from '../tiles/ground.ts'
 import type { Img } from '../tiles/image.ts'
+import { REST_GROUND } from './ground-rest.ts'
 import type { Biome } from './spec.ts'
 
 const GROUND: Partial<Record<Biome, GroundStyle>> = {
@@ -51,7 +52,7 @@ const GROUND: Partial<Record<Biome, GroundStyle>> = {
 }
 
 export function biomeGround(biome: Biome, variant: number): Img {
-  const style = GROUND[biome]
+  const style = GROUND[biome] ?? REST_GROUND[biome as keyof typeof REST_GROUND]
   if (!style) throw new Error(`Ground ${biome} is not drawn in this milestone`)
   return groundTile(style, variant)
 }
