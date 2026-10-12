@@ -10,7 +10,7 @@ files by hand.
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
   `duo-…`, `feast-<grade>`).
-- `gear/atlas.png` / `.json`: 26 equipment types × 10 grades (32×32), id `<type>-g<grade>`; the grade's material sets
+- `gear/atlas.png` / `.json`: 34 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
   the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
 - `buildings/atlas.png` / `.json`: the 36 Hub places (48×48), id = uma-rpg place id. Frames: `{ x, y, w, h, page,
@@ -51,6 +51,29 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
+
+## D103 armor rows (H27, next release)
+
+H27 appends eight rows to the 2.0.0 gear sheet, growing it to **320×1088** without moving or repainting rows 0–25.
+The package version stays at 2.0.0 in the PR; Claude versions and publishes the minor changeset after merging.
+
+| Rows | Types, in order |
+|---|---|
+| 26–29 | `helm`, `cuirass`, `greaves`, `gauntlets` |
+| 30–33 | `circlet`, `robe`, `leggings`, `bracers` |
+
+Head, body, legs and arms share paired anchors/footprints. Physical pieces use the grade's ingot and hide colours;
+magical pieces use cloth, cut gems and carved bone. Their construction changes at grades 4 and 7, and trim/rune glow
+starts at 8, with the shared legendary glints at 9–10. Their `material` field names the recipe's first family: ingots
+for physical, cut gems for magical. Every frame keeps the full bottom-right 9×9 transparent.
+
+**Retired, retained:** Garb, Leather Armor, Mail, Plate, Ring and Charm (rows 10–15). These remain for existing
+consumers; D103's armor is not aliased onto them. Consumers adopting the new rows must read the atlas height/index
+rather than retaining the old 832px sheet height.
+
+`assets/previews/gear-armor-d103.png` shows the new eight rows at 2× on the left and those six retired rows on the
+right. Each side has grades 1–10 across. `gear-armor-d103-1x.png` shows just the new rows at native size;
+`gear.html` provides labelled cards at both 1× and 3×. Tests freeze every 2.0.0 pixel row and frame metadata hash.
 
 ## World atlas (H06, complete)
 

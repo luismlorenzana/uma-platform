@@ -18,7 +18,7 @@ export function drawGearIcon(icon: ItemIcon): Uint8Array {
 }
 
 export function checkGearContract(rows: readonly GearRow[]): void {
-  if (rows.length !== 26) throw new Error(`Expected 26 gear rows, got ${rows.length}`)
+  if (rows.length !== 34) throw new Error(`Expected 34 gear rows, got ${rows.length}`)
   const ids = new Set<string>()
   for (const row of rows) {
     if (row.icons.length !== 10 || row.type.materialByGrade.length !== 10) throw new Error(`${row.type.type}: expected ten grades and materials`)

@@ -1,4 +1,4 @@
-// The gear catalog as the art sees it: twenty-six equipment types, each in ten grades. A type's grade-g piece is made from
+// The gear catalog as the art sees it: thirty-four rows (six retired), each in ten grades. A type's grade-g piece is made from
 // the refined material at materialByGrade[g - 1] (uma-rpg's gear design), and that material colors it.
 
 export type Slot = 'weapon' | 'armor' | 'accessory'
@@ -45,6 +45,14 @@ export const GEAR_TYPES: readonly GearType[] = [
   { type: 'orb-lightning', label: 'Lightning Orb', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'orb-light', label: 'Light Orb', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'orb-dark', label: 'Dark Orb', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'helm', label: 'Helm', slot: 'armor', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'cuirass', label: 'Cuirass', slot: 'armor', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'greaves', label: 'Greaves', slot: 'armor', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'gauntlets', label: 'Gauntlets', slot: 'armor', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'circlet', label: 'Circlet', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'robe', label: 'Robe', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'leggings', label: 'Leggings', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'bracers', label: 'Bracers', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
 ]
 
 export const GRADES = 10
