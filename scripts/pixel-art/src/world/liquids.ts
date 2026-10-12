@@ -6,10 +6,10 @@ import { Img } from '../tiles/image.ts'
 import { hash2, seedOf, TILE, wrap } from '../tiles/noise.ts'
 import type { Liquid } from './spec.ts'
 
-const STYLE: Record<Liquid, { base: string; glint: string }> = {
-  water: { base: '#4388b7', glint: '#b7e3f3' }, lava: { base: '#e54920', glint: '#ffd35a' },
-  marsh: { base: '#64784d', glint: '#b7c58a' }, ice: { base: '#a7d8ed', glint: '#ffffff' },
-  void: { base: '#55416e', glint: '#b996ed' }, cloud: { base: '#dce2ea', glint: '#fff6d8' },
+const STYLE: Record<Liquid, { base: string; glint: string; bank: string }> = {
+  water: { base: '#4388b7', glint: '#b7e3f3', bank: '#8b8060' }, lava: { base: '#e54920', glint: '#ffd35a', bank: '#5b4542' },
+  marsh: { base: '#64784d', glint: '#b7c58a', bank: '#6a6250' }, ice: { base: '#71b1d0', glint: '#e9fbff', bank: '#638aa2' },
+  void: { base: '#55416e', glint: '#b996ed', bank: '#7b6090' }, cloud: { base: '#dce2ea', glint: '#fff6d8', bank: '#beb596' },
 }
 
 const smooth = (t: number) => t * t * (3 - 2 * t)
@@ -43,14 +43,36 @@ export function cornerMaskAt(on: (x: number, y: number) => boolean, x: number, y
   return (on(x, y) ? 1 : 0) | (on(x + 1, y) ? 2 : 0) | (on(x + 1, y + 1) ? 4 : 0) | (on(x, y + 1) ? 8 : 0)
 }
 
+/** 1–2 px dry bank, outside the filled wet silhouette. Rounded corners keep the rim from being a rectangle. */
+export function bankDepth(mask: number, x: number, y: number): number {
+  if (!mask || cornerWet(mask, x, y)) return 0
+  for (let d = 1; d <= 2; d++) for (let dy = -d; dy <= d; dy++) for (let dx = -d; dx <= d; dx++)
+    if (dx * dx + dy * dy <= d * d && cornerWet(mask, x + dx, y + dy)) return d
+  return 0
+}
+
 export function liquidTile(kind: Liquid, mask: number): Img {
   const spec = STYLE[kind], colors = ramp(spec.base, { lift: 0.28, drop: 0.22, hueShift: 8 })
   const glint = ramp(spec.glint, { lift: 0.25, drop: 0.18 })[3]!
+  const bank = ramp(spec.bank, { lift: 0.22, drop: 0.18, hueShift: 6 })
   const seed = seedOf(`world:liquid:${kind}:detail`)
   const img = new Img(TILE, TILE)
   for (let y = 0; y < TILE; y++)
     for (let x = 0; x < TILE; x++) {
-      if (!cornerWet(mask, x, y)) continue
+      // Project the 2 px seam strip from its endpoint pair; remote corners cannot alter a bank's second pixel.
+      let geometry = mask
+      if (y < 2) geometry = (mask & 3) | (mask & 1 ? 8 : 0) | (mask & 2 ? 4 : 0)
+      else if (y >= 14) geometry = (mask & 12) | (mask & 8 ? 1 : 0) | (mask & 4 ? 2 : 0)
+      else if (x < 2) geometry = (mask & 9) | (mask & 1 ? 2 : 0) | (mask & 8 ? 4 : 0)
+      else if (x >= 14) geometry = (mask & 6) | (mask & 2 ? 1 : 0) | (mask & 4 ? 8 : 0)
+      if (!cornerWet(geometry, x, y)) {
+        const depth = bankDepth(geometry, x, y)
+        if (depth === 1 || depth === 2) {
+          const lit = cornerWet(geometry, x + 1, y) || cornerWet(geometry, x, y + 1)
+          img.set(x, y, bank[lit ? 4 : 2]!)
+        }
+        continue
+      }
       const edge = N4.some(([dx, dy]) => !cornerWet(mask, x + dx, y + dy))
       const nx = field(mask, x - 1, y) - field(mask, x + 1, y)
       const ny = field(mask, x, y - 1) - field(mask, x, y + 1)

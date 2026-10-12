@@ -32,6 +32,27 @@ function markRoad(cells: Cells, x: number, y: number, rows: number): void {
   if (x >= 0 && x < REGION_COLS && y >= 0 && y < rows && !closesBlock(cells, x, y)) cells.add(cellKey(x, y))
 }
 
+/** Grow a filled blob from a 2×2 seed, adding overlapping 2×2 lobes, never stamping an ellipse.
+ * Every vertex remains in a full core; bounded growth keeps the narrow map's roads/markers clear. */
+export function growPond(random: () => number, px: number, py: number): Cells {
+  const block = (x: number, y: number): string[] => [cellKey(x, y), cellKey(x + 1, y), cellKey(x, y + 1), cellKey(x + 1, y + 1)]
+  const cells = new Set(block(px, py)), target = 7 + Math.floor(random() * 3)
+  for (let step = 0; step < 20 && cells.size < target; step++) {
+    const choices: string[][] = []
+    for (let y = py - 2; y <= py + 2; y++) for (let x = px - 2; x <= px + 2; x++) {
+      const lobe = block(x, y), overlap = lobe.filter((k) => cells.has(k)).length
+      if (overlap < 2 || overlap === 4) continue
+      const points = [...cells, ...lobe].map((k) => k.split(',').map(Number))
+      const xs = points.map((p) => p[0]!), ys = points.map((p) => p[1]!)
+      if (Math.max(...xs) - Math.min(...xs) > 3 || Math.max(...ys) - Math.min(...ys) > 4) continue
+      choices.push(lobe)
+    }
+    if (!choices.length) break
+    for (const k of choices[Math.floor(random() * choices.length)]!) cells.add(k)
+  }
+  return cells
+}
+
 export function regionLayout(biome: Biome, label = `world:${biome}`): RegionLayout {
   const road: Cells = new Set(), atY: number[] = []
   const rRoad = rng(`${label}:road`), offset = Math.floor(rRoad() * 3) - 1
@@ -58,16 +79,13 @@ export function regionLayout(biome: Biome, label = `world:${biome}`): RegionLayo
   if (BIOMES[biome].liquid) {
     const r = rng(`${label}:liquid`)
     for (let attempt = 0; attempt < 500 && ponds.length < 3; attempt++) {
-      const px = 1 + Math.floor(r() * 12), py = 2 + Math.floor(r() * 22)
-      const rx = r() < 0.55 ? 1.4 : 1.9, ry = biome === 'forest' ? 2.2 : r() < 0.5 ? 1.4 : 1.9
-      const patch: Cells = new Set()
-      // An elliptical vertex blob always contains its central 2×2 core. No skinny L-shaped tendrils.
-      for (let dy = -2; dy <= 3; dy++)
-        for (let dx = -2; dx <= 3; dx++)
-          if (((dx - 0.5) / rx) ** 2 + ((dy - 0.5) / ry) ** 2 <= 1) patch.add(cellKey(px + dx, py + dy))
+      const px = 1 + Math.floor(r() * (REGION_COLS - 2)), py = 1 + Math.floor(r() * (REGION_ROWS - 2))
+      const patch = growPond(r, px, py)
       const points = [...patch].map((k) => k.split(',').map(Number))
       const minX = Math.min(...points.map((p) => p[0]!)), maxX = Math.max(...points.map((p) => p[0]!))
       const minY = Math.min(...points.map((p) => p[1]!)), maxY = Math.max(...points.map((p) => p[1]!))
+      // Reject rectangles too: each accepted pond has at least one irregular inlet or lobe.
+      if (patch.size === (maxX - minX + 1) * (maxY - minY + 1)) continue
       const touches = (tx: number, ty: number) => cornerMaskAt((cx, cy) => hasCell(patch, cx, cy), tx, ty) !== 0
       let fits = true
       for (let ty = minY - 1; ty <= maxY; ty++)

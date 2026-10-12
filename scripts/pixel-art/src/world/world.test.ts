@@ -3,7 +3,7 @@ import { cornerAutotileSeams } from '../tiles/check.ts'
 import { closesBlock } from '../tiles/maps.ts'
 import { packWorld, worldFrames } from './atlas.ts'
 import { checkWorldFrames } from './check.ts'
-import { cornerMaskAt, liquidTiles } from './liquids.ts'
+import { bankDepth, cornerMaskAt, cornerWet, liquidTiles } from './liquids.ts'
 import { continentStripRoad, hasCell, regionLayout, regionPreview, sampleContinentStrip, worldVariantAt } from './maps.ts'
 import { stageMarker } from './markers.ts'
 import { BIOME_IDS, LIQUIDS, PHASE_ONE_BIOMES, STAGE_KINDS, STAGE_STATES, worldFrameSpecs } from './spec.ts'
@@ -70,6 +70,21 @@ describe('world art part 1', () => {
     }
   })
 
+  it('keeps the dry bank 1–2 px wide and makes blue ice distinct from white snow', () => {
+    for (const liquid of LIQUIDS) for (let mask = 1; mask < 16; mask++) {
+      const tile = liquidTiles(liquid)[mask]!
+      for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+        if (cornerWet(mask, x, y) || !tile.get(x, y)[3]) continue
+        expect(bankDepth(mask, x, y)).toBeGreaterThanOrEqual(1)
+        expect(bankDepth(mask, x, y)).toBeLessThanOrEqual(2)
+      }
+    }
+    const ice = liquidTiles('ice')[15]!
+    const bluePixels = Array.from({ length: 256 }, (_, i) => ice.get(i % 16, Math.floor(i / 16)))
+      .filter(([r, g, b]) => b - r > 40 && g - r > 20)
+    expect(bluePixels.length).toBeGreaterThan(150)
+  })
+
   it('distinguishes all nine kind/state markers by pixels and silhouette', () => {
     const markers = STAGE_KINDS.flatMap((k) => STAGE_STATES.map((s) => stageMarker(k, s)))
     expect(new Set(markers.map((m) => signature(m.px))).size).toBe(9)
@@ -102,6 +117,10 @@ describe('world art part 1', () => {
       expect(layout.ponds.length).toBeLessThanOrEqual(4)
       expect(layout.stages).toHaveLength(12)
       for (const pond of layout.ponds) {
+        expect(connected(pond).size).toBe(pond.size)
+        const points = [...pond].map((k) => k.split(',').map(Number))
+        const xs = points.map((p) => p[0]!), ys = points.map((p) => p[1]!)
+        expect(pond.size).toBeLessThan((Math.max(...xs) - Math.min(...xs) + 1) * (Math.max(...ys) - Math.min(...ys) + 1))
         let full = false
         for (let y = 0; y < 28; y++) for (let x = 0; x < 16; x++) {
           const mask = cornerMaskAt((cx, cy) => hasCell(pond, cx, cy), x, y)
