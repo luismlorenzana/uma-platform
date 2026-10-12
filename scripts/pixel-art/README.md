@@ -30,8 +30,8 @@ use it.
 ## World art
 
 `src/world/build.ts` writes the `world` atlas and previews from the RPG's `docs/design/world/map-art.md` contract.
-H06 milestone 1 is the five-biome visual gate; `worldFrameSpecs()` declares its 194 frames, and
-`worldFrameSpecs(BIOME_IDS, true)` declares the final 310-frame contract (H08 backdrops are separate).
+H06 milestone 1 is the approved five-biome visual gate; `worldFrameSpecs()` retains its 194-frame contract, and
+`worldFrameSpecs(BIOME_IDS, true)` emits the complete 310-frame family in milestone 2 (H08 backdrops are separate).
 
 Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Roads use edge-neighbour masks;
 liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the

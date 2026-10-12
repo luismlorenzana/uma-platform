@@ -46,13 +46,10 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
 
-## World atlas (H06, review milestone 1)
+## World atlas (H06, milestone 2)
 
 `world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. It is not versioned/published until
-all three H06 milestones pass review. This first quality gate contains **194 frames**: Meadow, Forest, Coast,
-Volcano and Glacier (four ground variants, three props and one icon each), all six liquid families and three road
-materials, all stage/frontier/Spring/flag markers, and the capital. The remaining fourteen biomes and ocean arrive in
-part 2, followed by the full continent/world preview layouts in part 3. No placeholder frames are shipped.
+all three H06 milestones pass review. The complete native-frame family contains **310 frames**: all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. Part 3 completes the continent/world preview compositions. No placeholder frames are shipped.
 
 The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
 Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
@@ -71,7 +68,7 @@ frame positions are an implementation detail of the shelf packer.
 | `marker/capital` | 48×48, y=44 ground line |
 | `icon/<biome>` | 16×16 biome header/list symbols |
 
-`assets/previews/world.png` contains every frame at 3× plus five regions and a three-band continent. `world.html`
+`assets/previews/world.png` contains every frame at 3× plus nineteen regions and a three-band continent. `world.html`
 labels frames and shows 2× phone comparison plots/maps. `world-<biome>.png`, `world-continent.png` and `world-plots.png`
 are separate 2× examples; `world-markers-1x.png` shows every marker at native size. The build checks every id/size,
 ground seams, all corner/edge masks, and ground lines;

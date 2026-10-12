@@ -1,5 +1,6 @@
 // Pure atlas assembly; builds and tests use the same frame list and packer, without importing a file-writing CLI.
 import { Img } from '../tiles/image.ts'
+import { oceanGround } from './ground-rest.ts'
 import { biomeGround } from './ground.ts'
 import { biomeIcon } from './icons.ts'
 import { liquidTile } from './liquids.ts'
@@ -13,7 +14,7 @@ export interface AtlasFrame extends FrameSpec { x: number; y: number }
 
 function drawFrame(spec: FrameSpec): Img {
   const name = spec.id.split('/').at(-1)!
-  if (spec.group === 'ground') return biomeGround(spec.biome!, Number(name.at(-1)))
+  if (spec.group === 'ground') return spec.biome ? biomeGround(spec.biome, Number(name.at(-1))) : oceanGround(Number(name.at(-1)))
   if (spec.group === 'prop') return drawWorldProp(worldProp(name))
   if (spec.group === 'icon') return biomeIcon(spec.biome!)
   const dash = name.lastIndexOf('-'), kind = name.slice(0, dash), suffix = name.slice(dash + 1)
@@ -26,8 +27,8 @@ function drawFrame(spec: FrameSpec): Img {
   return stageMarker(kind as StageKind, suffix as StageState)
 }
 
-export function worldFrames(biomes?: readonly Biome[]): WorldFrame[] {
-  return worldFrameSpecs(biomes).map((spec) => ({ ...spec, img: drawFrame(spec) }))
+export function worldFrames(biomes?: readonly Biome[], ocean = false): WorldFrame[] {
+  return worldFrameSpecs(biomes, ocean).map((spec) => ({ ...spec, img: drawFrame(spec) }))
 }
 
 /** 16 px-aligned shelves; variable-size frames retain native pixels and never overlap a tall neighbour. */

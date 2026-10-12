@@ -4,6 +4,8 @@ import { Sprite, type Shadow } from '../sprite.ts'
 import { Img } from '../tiles/image.ts'
 import { add, box, circles, foliage, stroke } from '../tiles/props/kit.ts'
 
+import { REST_PROPS } from './props-rest.ts'
+
 export interface WorldProp {
   id: string
   w: 16
@@ -190,7 +192,7 @@ const PROPS: Record<string, WorldProp> = {
 }
 
 export function worldProp(id: string): WorldProp {
-  const prop = PROPS[id]
+  const prop = PROPS[id] ?? REST_PROPS[id]
   if (!prop) throw new Error(`Unknown world prop ${id}`)
   return prop
 }
