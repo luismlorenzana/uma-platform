@@ -5,14 +5,16 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { hex } from '../color.ts'
-import { drawIcon, ICON_SIZE } from '../icon.ts'
+import { ICON_SIZE } from '../icon.ts'
 import { encodePng } from '../png.ts'
 import { contactSheet } from '../sheet.ts'
 import { GEAR } from './index.ts'
 import { GRADES } from './spec.ts'
+import { checkGearContract, drawGearIcon } from './render.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..')
 const SIZE = ICON_SIZE
+checkGearContract(GEAR)
 const W = GRADES * SIZE, H = GEAR.length * SIZE
 
 const atlas = new Uint8Array(W * H * 4)
@@ -24,7 +26,7 @@ GEAR.forEach((row, r) => {
   const icons: Uint8Array[] = []
   const figures: string[] = []
   for (const icon of row.icons) {
-    const px = drawIcon(icon)
+    const px = drawGearIcon(icon)
     const x = (icon.grade - 1) * SIZE, y = r * SIZE
     for (let k = 0; k < SIZE; k++) atlas.set(px.subarray(k * SIZE * 4, (k + 1) * SIZE * 4), ((y + k) * W + x) * 4)
     frames[icon.id] = { x, y, w: SIZE, h: SIZE, type: row.type.type, grade: icon.grade, slot: row.type.slot, material: icon.material }
@@ -47,6 +49,8 @@ const previews = join(ROOT, 'assets', 'previews')
 mkdirSync(previews, { recursive: true })
 const sheet = contactSheet(rows, 3, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'gear.png'), encodePng(sheet.w, sheet.h, sheet.px))
+const oneX = contactSheet(rows, 1, 8, hex('#0f141b'), hex('#18202a'))
+writeFileSync(join(previews, 'gear-1x.png'), encodePng(oneX.w, oneX.h, oneX.px))
 writeFileSync(
   join(previews, 'gear.html'),
   `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

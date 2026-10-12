@@ -10,8 +10,8 @@ files by hand.
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
   `duo-…`, `feast-<grade>`).
-- `gear/atlas.png` / `.json`: 15 equipment types × 10 grades (32×32), id `<type>-g<grade>`; the grade's material sets
-  the colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
+- `gear/atlas.png` / `.json`: 26 equipment types × 10 grades (32×32), id `<type>-g<grade>`; the grade's material sets
+  the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
 - `buildings/atlas.png` / `.json`: the 36 Hub places (48×48), id = uma-rpg place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
@@ -20,3 +20,28 @@ files by hand.
   `{ x, y, w, h, page, kind }`.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Gear rows in 2.0.0
+
+Breaking change: the old 15-row gear sheet is replaced by a 320×832 atlas. Consumers must update their row map and
+sheet height together. Columns are grades 1–10; `x = (grade - 1) * 32`, `y = row * 32`. Rows are zero-based:
+
+| Rows | Types, in order |
+|---|---|
+| 0–4 | `greatsword`, `axe`, `lance`, `bow`, `katana` |
+| 5–9 | `tome-fire`, `tome-ice`, `tome-lightning`, `tome-light`, `tome-dark` |
+| 10–13 | `garb`, `leather`, `mail`, `plate` |
+| 14–15 | `ring`, `charm` |
+| 16–20 | `orb-greatsword`, `orb-axe`, `orb-lance`, `orb-bow`, `orb-katana` |
+| 21–25 | `orb-fire`, `orb-ice`, `orb-lightning`, `orb-light`, `orb-dark` |
+
+The `short-sword`, `spear`, `mage-staff`, `arcane-staff`, `cleric-staff` and `summoner-tome` ids no longer exist.
+Every current gear type has its own row; a consumer no longer needs fallback art or a damage-kind badge.
+
+Arms and Arms Orb settings use the ingot ladder; Tomes and Elemental Orb settings use cut gems. Their main family
+is the first recipe family (ores or crystals). Garb keeps a cloth body, with grade-wood edging and plank metadata;
+Leather, Mail, Plate, Ring and Charm retain their hide, ingot, cut-gem and carving ladders. Elemental covers and
+spheres use the game's element colours; Arms Orb spheres stay polished steel with a recessed weapon silhouette.
+
+The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
+or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.

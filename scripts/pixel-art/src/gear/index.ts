@@ -2,24 +2,24 @@
 import type { ItemIcon } from '../items/types.ts'
 import type { Sprite } from '../sprite.ts'
 import { garb, leather, mail, plate } from './armor.ts'
-import { axe, greatsword, shortSword, spear } from './blades.ts'
+import { axe, greatsword } from './blades.ts'
+import { bow } from './bow.ts'
+import { orb } from './element-orb.ts'
+import { elementTome } from './element-tome.ts'
 import { charm, ring } from './jewelry.ts'
+import { katana } from './katana.ts'
+import { lance } from './lance.ts'
 import { GEAR_TYPES, GRADES, type GearType } from './spec.ts'
-import { summonerTome } from './tome.ts'
-import { arcaneStaff, bow, clericStaff, mageStaff } from './woods.ts'
+import { ELEMENTS, type Element, type Kind } from './symbols.ts'
 
 export type GearPainter = (s: Sprite, grade: number) => void
 
 const PAINTERS: Record<string, GearPainter> = {
-  'short-sword': shortSword,
-  bow,
-  spear,
-  axe,
-  'mage-staff': mageStaff,
-  'arcane-staff': arcaneStaff,
   greatsword,
-  'cleric-staff': clericStaff,
-  'summoner-tome': summonerTome,
+  axe,
+  lance,
+  bow,
+  katana,
   garb,
   leather,
   mail,
@@ -27,6 +27,9 @@ const PAINTERS: Record<string, GearPainter> = {
   ring,
   charm,
 }
+for (const element of Object.keys(ELEMENTS) as Element[]) PAINTERS[`tome-${element}`] = (s, g) => elementTome(s, g, element)
+for (const kind of ['greatsword', 'axe', 'lance', 'bow', 'katana', ...Object.keys(ELEMENTS)] as Kind[])
+  PAINTERS[`orb-${kind}`] = (s, g) => orb(s, g, kind)
 
 export interface GearIcon extends ItemIcon {
   type: string
