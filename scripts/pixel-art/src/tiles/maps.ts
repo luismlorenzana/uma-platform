@@ -13,7 +13,7 @@ const key = (x: number, y: number) => `${x},${y}`
 const has = (c: Cells, x: number, y: number) => c.has(key(x, y))
 
 /** True if marking (x, y) would close a 2×2 block (4-bit autotiles draw blocks as little loops, not as fills). */
-function closesBlock(c: Cells, x: number, y: number): boolean {
+export function closesBlock(c: Cells, x: number, y: number): boolean {
   for (const [dx, dy] of [[0, 0], [-1, 0], [0, -1], [-1, -1]] as const) {
     const ox = x + dx, oy = y + dy
     const cells = [[ox, oy], [ox + 1, oy], [ox, oy + 1], [ox + 1, oy + 1]].filter(([cx, cy]) => !(cx === x && cy === y))

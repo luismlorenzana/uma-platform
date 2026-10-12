@@ -2,7 +2,7 @@ import { ramp } from '../color.ts'
 import { Mask, cutStone, shadeDome, shadeFacets } from '../shape.ts'
 import { Sprite, type Shadow } from '../sprite.ts'
 import { Img } from '../tiles/image.ts'
-import { add, circles, foliage, stroke } from '../tiles/props/kit.ts'
+import { add, box, circles, foliage, stroke } from '../tiles/props/kit.ts'
 
 export interface WorldProp {
   id: string
@@ -16,6 +16,73 @@ const shortShadow: Shadow = { cx: 8, cy: 14.4, rx: 5, ry: 1.4, alpha: 72 }
 const tallShadow: Shadow = { cx: 8, cy: 30.3, rx: 5.4, ry: 1.5, alpha: 76 }
 
 const PROPS: Record<string, WorldProp> = {
+  pine: {
+    id: 'pine', w: 16, h: 32, shadow: tallShadow,
+    paint: (s) => {
+      const bark = add(s, '#805338'), leaf = add(s, '#2f6743', { lift: 0.34, drop: 0.28 })
+      box(s, 7, 18, 9, 29, 19, bark)
+      for (const [top, bottom, width] of [[3, 13, 4], [8, 19, 6], [14, 25, 7]] as const) {
+        const crown = Mask.polygon([[8, top], [8 + width, bottom - 1], [11, bottom], [8, bottom - 1], [5, bottom], [8 - width, bottom - 1]], 16, 32)
+        shadeDome(s, crown, leaf, { bias: 0.05, relief: 0.55, contact: false })
+        crown.each((x, y) => { if ((x + y * 3) % 7 === 0) s.shift(x, y, -1) })
+      }
+    },
+  },
+  stump: {
+    id: 'stump', w: 16, h: 16, shadow: shortShadow,
+    paint: (s) => {
+      const bark = add(s, '#805638'), wood = add(s, '#c79e60')
+      box(s, 4, 7, 12, 14, 8, bark, true)
+      shadeDome(s, Mask.ellipse(8, 7.5, 4.5, 2.3, 0, 16, 16), wood, { relief: 0.4, contact: false })
+      for (const [x, y] of [[6, 7], [7, 6], [9, 6], [10, 7], [9, 8], [7, 8]] as const) s.paint(x, y, wood, 2)
+      stroke(s, 4, 11, 2, 14, bark, 3); stroke(s, 12, 11, 14, 14, bark, 2)
+      for (const x of [5, 8, 11]) stroke(s, x, 10, x, 13, bark, 2)
+    },
+  },
+  mushrooms: {
+    id: 'mushrooms', w: 16, h: 16, shadow: shortShadow,
+    paint: (s) => {
+      const stem = add(s, '#e1d4b3'), cap = add(s, '#b45b45')
+      for (const [x, y, r] of [[5, 8, 3.5], [11, 10, 2.8]] as const) {
+        box(s, x - 1, y + 1, x, 14, y + 1, stem)
+        shadeDome(s, Mask.ellipse(x, y, r, r * 0.65, 0, 16, 16), cap, { relief: 0.7, contact: false })
+        s.paint(x - 1, y - 1, stem, 5); s.paint(x + 1, y, stem, 3)
+      }
+    },
+  },
+  palm: {
+    id: 'palm', w: 16, h: 32, shadow: tallShadow,
+    paint: (s) => {
+      const bark = add(s, '#a67c4c'), leaf = add(s, '#54936a', { lift: 0.32, drop: 0.3 })
+      for (let y = 10; y <= 29; y++) {
+        const x = Math.round(8 + Math.sin((y - 10) / 19 * Math.PI) * 1.2)
+        s.paint(x, y, bark, y % 3 === 0 ? 2 : 4); s.paint(x + 1, y, bark, 2)
+      }
+      const fronds = [[[8, 8], [4, 4], [1, 5], [5, 7]], [[8, 8], [11, 3], [15, 5], [11, 6]], [[8, 8], [3, 8], [1, 13], [5, 10]], [[8, 8], [12, 8], [15, 13], [11, 10]], [[8, 8], [7, 1], [5, 2], [6, 6]]] as const
+      for (const points of fronds) shadeDome(s, Mask.polygon(points, 16, 32), leaf, { bias: 0.1, relief: 0.5, contact: false })
+      const fruit = add(s, '#825131')
+      s.paint(7, 9, fruit, 4); s.paint(8, 10, fruit, 2); s.paint(9, 9, fruit, 3)
+    },
+  },
+  'shell-rock': {
+    id: 'shell-rock', w: 16, h: 16, shadow: shortShadow,
+    paint: (s) => {
+      const stone = add(s, '#b9b49d'), shell = add(s, '#f0d5b8', { lift: 0.4, drop: 0.22 })
+      shadeDome(s, Mask.polygon([[2, 13], [4, 8], [8, 7], [13, 10], [14, 14]], 16, 16), stone, { relief: 0.6, contact: false })
+      shadeDome(s, Mask.ellipse(8, 9, 3.7, 3.1, -20, 16, 16), shell, { relief: 0.5, contact: false })
+      stroke(s, 7, 7, 9, 10, shell, 2); stroke(s, 9, 10, 6, 10, shell, 3)
+      s.paint(6, 8, shell, 5)
+    },
+  },
+  driftwood: {
+    id: 'driftwood', w: 16, h: 16, shadow: shortShadow,
+    paint: (s) => {
+      const wood = add(s, '#b99769', { lift: 0.36, drop: 0.25 })
+      stroke(s, 2, 13, 13, 7, wood, 4); stroke(s, 3, 14, 14, 8, wood, 2)
+      stroke(s, 7, 10, 5, 6, wood, 3); stroke(s, 10, 9, 13, 4, wood, 4)
+      s.paint(2, 14, wood, 3); s.paint(13, 8, wood, 5)
+    },
+  },
   oak: {
     id: 'oak', w: 16, h: 32, shadow: tallShadow,
     paint: (s) => {

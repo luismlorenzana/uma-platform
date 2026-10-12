@@ -41,3 +41,21 @@ export function autotileSeams(name: string, tiles: readonly Img[], ground0: Img)
   }
   return bad
 }
+
+/** Corner-mask areas: each edge depends only on its two endpoint vertices, independent of the other corners. */
+export function cornerAutotileSeams(name: string, tiles: readonly Img[]): string[] {
+  const bad: string[] = []
+  const edges = [[N, 1, 2], [E, 2, 4], [S, 8, 4], [W, 1, 8]] as const
+  for (const [edge, a, b] of edges) {
+    const refs = new Map<number, string>()
+    for (const mask of MASKS) {
+      const tile = tiles[mask]
+      if (!tile) { bad.push(`${name}-${mask}: missing corner mask`); continue }
+      const pair = (mask & a ? 1 : 0) | (mask & b ? 2 : 0)
+      const got = strip(tile, edge), want = refs.get(pair)
+      if (want !== undefined && got !== want) bad.push(`${name}-${mask}: edge ${edge} differs for corner pair ${pair}`)
+      refs.set(pair, got)
+    }
+  }
+  return bad
+}
