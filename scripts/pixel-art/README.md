@@ -26,3 +26,10 @@ It writes all 320 item icons (16 families × 10 raw + 10 refined, in `src/items/
 
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
+
+## UI emblems and status badges
+
+`src/ui/` draws five 24×24 class emblems and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
+`spec.ts` pins the class/status keys; `atlas.ts` checks completeness, ids and native sizes before packing.
+`pnpm art:draw` also writes `assets/previews/ui.png` (3×), `ui-1x.png` and `ui.html`, with named cards and native-size
+class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes and the saved atlas contract.

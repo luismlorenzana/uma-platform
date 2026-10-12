@@ -23,6 +23,8 @@
     "./buildings/atlas.json": "./buildings/atlas.json",
     "./tiles/atlas.png": "./tiles/atlas.png",
     "./tiles/atlas.json": "./tiles/atlas.json",
+    "./ui/atlas.png": "./ui/atlas.png",
+    "./ui/atlas.json": "./ui/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -31,6 +33,7 @@
     "gear",
     "buildings",
     "tiles",
+    "ui",
     "README.md"
   ]
 }

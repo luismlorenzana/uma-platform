@@ -1,0 +1,127 @@
+{
+ "schemaVersion": 1,
+ "width": 120,
+ "height": 36,
+ "frames": {
+  "class/brawler": {
+   "x": 0,
+   "y": 0,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "brawler"
+  },
+  "class/mage": {
+   "x": 24,
+   "y": 0,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "mage"
+  },
+  "class/spellblade": {
+   "x": 48,
+   "y": 0,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "spellblade"
+  },
+  "class/cleric": {
+   "x": 72,
+   "y": 0,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "cleric"
+  },
+  "class/summoner": {
+   "x": 96,
+   "y": 0,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "summoner"
+  },
+  "status/armor-break": {
+   "x": 0,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "armor-break"
+  },
+  "status/mind-break": {
+   "x": 12,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "mind-break"
+  },
+  "status/enfeeble": {
+   "x": 24,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "enfeeble"
+  },
+  "status/shatter": {
+   "x": 36,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "shatter"
+  },
+  "status/hex": {
+   "x": 48,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "hex"
+  },
+  "status/brave": {
+   "x": 60,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "brave"
+  },
+  "status/faith": {
+   "x": 72,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "faith"
+  },
+  "status/aegis": {
+   "x": 84,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "aegis"
+  },
+  "status/breaker": {
+   "x": 96,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "breaker"
+  },
+  "status/clarity": {
+   "x": 108,
+   "y": 24,
+   "w": 12,
+   "h": 12,
+   "group": "status",
+   "key": "clarity"
+  }
+ }
+}
