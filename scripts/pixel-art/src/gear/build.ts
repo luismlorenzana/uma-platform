@@ -51,6 +51,11 @@ const sheet = contactSheet(rows, 3, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'gear.png'), encodePng(sheet.w, sheet.h, sheet.px))
 const oneX = contactSheet(rows, 1, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'gear-1x.png'), encodePng(oneX.w, oneX.h, oneX.px))
+// H27 review: the eight appended rows at left, retained Garb/Leather/Mail/Plate/Ring/Charm at right.
+const comparison = contactSheet(rows.slice(26).map((row, i) => [...row, ...(i < 6 ? rows[10 + i]! : [])]), 2, 8, hex('#0f141b'), hex('#18202a'))
+writeFileSync(join(previews, 'gear-armor-d103.png'), encodePng(comparison.w, comparison.h, comparison.px))
+const armorNative = contactSheet(rows.slice(26), 1, 8, hex('#0f141b'), hex('#18202a'))
+writeFileSync(join(previews, 'gear-armor-d103-1x.png'), encodePng(armorNative.w, armorNative.h, armorNative.px))
 writeFileSync(
   join(previews, 'gear.html'),
   `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

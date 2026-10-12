@@ -27,6 +27,16 @@ It writes all 320 item icons (16 families × 10 raw + 10 refined, in `src/items/
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## D103 armor (H27)
+
+`src/gear/armor-pieces.ts` adds paired head/body/legs/arms pieces to rows 26–33, after `orb-dark`. Do not edit or
+remove the first 26 rows. `legacy-2.0.0.json` pins their exact RGBA and frame metadata hashes from the published
+2.0.0 tag, independent of zlib compression; the saved atlas is checked against all 340 fresh painters.
+
+The 2× `gear-armor-d103.png` comparison places new rows at left, retained Garb/Leather/Mail/Plate/Ring/Charm at right.
+`gear-armor-d103-1x.png` checks all eighty additions at native size. Full `gear.png` / `gear-1x.png` / `gear.html`
+also include them. Material ladders and shared lighting/outline/shadow helpers are unchanged.
+
 ## World art
 
 `src/world/build.ts` writes the `world` atlas and previews from the RPG's `docs/design/world/map-art.md` contract.

@@ -2,6 +2,7 @@
 import type { ItemIcon } from '../items/types.ts'
 import type { Sprite } from '../sprite.ts'
 import { garb, leather, mail, plate } from './armor.ts'
+import { bracers, circlet, cuirass, gauntlets, greaves, helm, leggings, robe } from './armor-pieces.ts'
 import { axe, greatsword } from './blades.ts'
 import { bow } from './bow.ts'
 import { orb } from './element-orb.ts'
@@ -26,6 +27,7 @@ const PAINTERS: Record<string, GearPainter> = {
   plate,
   ring,
   charm,
+  helm, cuirass, greaves, gauntlets, circlet, robe, leggings, bracers,
 }
 for (const element of Object.keys(ELEMENTS) as Element[]) PAINTERS[`tome-${element}`] = (s, g) => elementTome(s, g, element)
 for (const kind of ['greatsword', 'axe', 'lance', 'bow', 'katana', ...Object.keys(ELEMENTS)] as Kind[])
