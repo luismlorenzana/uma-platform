@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "vitest run",
-    "draw": "tsx src/build.ts && tsx src/dishes/build.ts && tsx src/gear/build.ts && tsx src/buildings/build.ts && tsx src/tiles/build.ts && tsx src/world/build.ts && tsx src/fx/build.ts",
+    "draw": "tsx src/build.ts && tsx src/dishes/build.ts && tsx src/gear/build.ts && tsx src/buildings/build.ts && tsx src/tiles/build.ts && tsx src/world/build.ts && tsx src/fx/build.ts && tsx src/ui/build.ts",
     "icons": "tsx src/app-icons/build.ts"
   },
   "devDependencies": {

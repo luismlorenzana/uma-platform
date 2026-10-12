@@ -45,3 +45,10 @@ last pose is readable without motion. Familiars use two bob/flap/tail poses and 
 
 `fx.html` shows animated 1×/2×/4× previews, a reduced-motion final-pose toggle, and static 3×/1× cards. The package
 ships only the atlas/index; playback and summon lifetimes belong to the game.
+
+## UI emblems and status badges
+
+`src/ui/` draws five 24×24 class emblems and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
+`spec.ts` pins the class/status keys; `atlas.ts` checks completeness, ids and native sizes before packing.
+`pnpm art:draw` also writes `assets/previews/ui.png` (3×), `ui-1x.png` and `ui.html`, with named cards and native-size
+class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes and the saved atlas contract.

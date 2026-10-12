@@ -27,6 +27,8 @@
     "./world/atlas.json": "./world/atlas.json",
     "./fx/atlas.png": "./fx/atlas.png",
     "./fx/atlas.json": "./fx/atlas.json",
+    "./ui/atlas.png": "./ui/atlas.png",
+    "./ui/atlas.json": "./ui/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -37,6 +39,7 @@
     "tiles",
     "world",
     "fx",
+    "ui",
     "README.md"
   ]
 }
