@@ -37,15 +37,18 @@ describe('world art part 1', () => {
 
   it('packs native-size frames without overlaps and deterministically', () => {
     const frames = worldFrames(), { atlas, index } = packWorld(frames), taken = new Set<string>()
-    expect(atlas.px).toEqual(packWorld(worldFrames()).atlas.px)
+    expect(Buffer.from(atlas.px).equals(Buffer.from(packWorld(worldFrames()).atlas.px))).toBe(true)
     for (const frame of frames) {
       const at = index[frame.id]!
       expect([at.x % 16, at.y % 16]).toEqual([0, 0])
+      let overlap = false
       for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) {
         const key = `${at.x + x},${at.y + y}`
-        expect(taken.has(key)).toBe(false); taken.add(key)
-        expect(atlas.get(at.x + x, at.y + y)).toEqual(frame.img.get(x, y))
+        if (taken.has(key)) overlap = true
+        taken.add(key)
       }
+      expect(overlap, frame.id).toBe(false)
+      expect(Buffer.from(atlas.crop(at.x, at.y, frame.w, frame.h).px).equals(Buffer.from(frame.img.px)), frame.id).toBe(true)
     }
   })
 
@@ -118,11 +121,13 @@ describe('world art part 1', () => {
   })
 
   it('renders the required region and continent sizes repeatably', () => {
-    expect([sampleContinentStrip().w, sampleContinentStrip().h]).toEqual([256, 192])
+    const continent = sampleContinentStrip()
+    expect([continent.w, continent.h]).toEqual([256, 192])
     for (const biome of PHASE_ONE_BIOMES) {
       const map = regionPreview(biome)
       expect([map.w, map.h]).toEqual([256, 448])
-      expect(map.px).toEqual(regionPreview(biome).px)
+      // Native byte equality checks every pixel without millions of JS-level matcher comparisons on CI runners.
+      expect(Buffer.from(map.px).equals(Buffer.from(regionPreview(biome).px)), biome).toBe(true)
     }
   })
 })

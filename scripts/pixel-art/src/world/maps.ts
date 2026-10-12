@@ -95,14 +95,17 @@ export function sampleRegionMap(biome: Biome, ground: readonly Img[], roads: rea
       if (hasCell(road, x, y)) out.draw(roads[maskAt((cx, cy) => hasCell(road, cx, cy), x, y)]!, x * TILE, y * TILE)
     }
   const r = rng(`${label}:props`), occupied: Cells = new Set()
+  const propImages = new Map<string, Img>()
   const placed: { x: number; y: number; img: Img }[] = []
   const free = (x: number, y: number) => !hasCell(road, x, y) && !liquidMask(x, y) && !hasCell(occupied, x, y)
     && !stages.some((m) => Math.abs(m.x - x) <= 1 && Math.abs(m.y - y) <= 1)
   for (let attempt = 0; attempt < 800 && placed.length < 30; attempt++) {
     const edge = r() < 0.65, x = edge ? (r() < 0.5 ? Math.floor(r() * 3) : 13 + Math.floor(r() * 3)) : Math.floor(r() * REGION_COLS)
     const y = 1 + Math.floor(r() * (REGION_ROWS - 1)), id = spec.props[Math.floor(r() * spec.props.length)]!
-    const img = drawWorldProp(worldProp(id))
-    if (!free(x, y) || img.h > TILE && !free(x, y - 1)) continue
+    const prop = worldProp(id)
+    if (!free(x, y) || prop.h > TILE && !free(x, y - 1)) continue
+    let img = propImages.get(id)
+    if (!img) { img = drawWorldProp(prop); propImages.set(id, img) }
     placed.push({ x, y, img }); occupied.add(cellKey(x, y))
     if (img.h > TILE) occupied.add(cellKey(x, y - 1))
   }
