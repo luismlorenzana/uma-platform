@@ -1,5 +1,46 @@
 # @luismlorenzana/uma-art
 
+## 2.0.0
+
+### Major Changes
+
+- 2183563: Replace the 15-row gear atlas with 26 D86 rows (320×832; 32 px cells, grades 1–10 across). Consumers must update
+  their gear row map and sheet height. In zero-based row order:
+
+  - 0–4: greatsword, axe, lance, bow, katana.
+  - 5–9: tome-fire, tome-ice, tome-lightning, tome-light, tome-dark.
+  - 10–13: garb, leather, mail, plate.
+  - 14–15: ring, charm.
+  - 16–20: orb-greatsword, orb-axe, orb-lance, orb-bow, orb-katana.
+  - 21–25: orb-fire, orb-ice, orb-lightning, orb-light, orb-dark.
+
+  Remove short-sword, spear, mage-staff, arcane-staff, cleric-staff and summoner-tome frames. Add a cavalry Lance,
+  the approved Katana, visibly graded elemental Tomes and ten distinct Orb symbols. Arms metadata uses ingots;
+  Arcana uses cut gems; Garb uses planks with wood edging over its cloth body. The whole 9×9 accent corner is now
+  transparent and checked by the gear build. No runtime changes or third-party art are included.
+
+### Minor Changes
+
+- 7c6ca50: Add the `fx` atlas family: 60 original 32×32 frames, four target-local hit poses and two idle familiar poses for
+  each of Greatsword, Axe, Lance, Bow, Katana, Fire, Ice, Lightning, Light and Dark. Element colours match D86.
+
+  Frame ids are `hit/<kind>-0…3` and `familiar/<kind>-0…1`. The JSON includes kind, group, frame number and centre
+  anchors (16,16); all object outlines stay inside their cutout, with bounded glow. Final hit poses remain readable
+  as static reduced-motion effects. Familiars are spectral Arms, a salamander, ice wisp, thunder hawk, light sprite
+  and shadow cat. The game owns playback speed and summon lifecycle; it must retain its procedural fallback.
+
+- 63b4f63: Add a ui atlas with five original 24×24 class emblems and ten 12×12 status badges, plus an index with native sizes and class/status keys.
+- 8dab26b: Complete the world atlas with the other fourteen biomes and four ocean variants: nineteen distinct grounds, 57 props and nineteen icons, all code-drawn and deterministically checked.
+- 50dfef6: Add the world atlas family (`world/atlas.png` and `world/atlas.json`) with 16 px terrain, native-size props and map
+  markers. Liquid overlays use corner masks (NW 1, NE 2, SE 4, SW 8; frames 1–15), while roads keep edge-neighbour
+  masks (N 1, E 2, S 4, W 8; frames 0–15). The index includes group, optional biome, and place/prop ground lines.
+
+  H06 part 1 is the 194-frame five-biome visual gate: Meadow, Forest, Coast, Volcano, Glacier; all six liquids and
+  three roads; all stage, frontier, Spring, flag and capital markers. Remaining biomes/ocean and complete sample-map
+  layouts follow in parts 2–3. Claude versions and publishes only after the last milestone, not after this review gate.
+
+- 6d0cd4e: Finish and document the world atlas compositions: nineteen frontier regions, a ten-band continent with forty plots and five Springs, and a five-island world, drawn deterministically from the same indexed frames consumers use.
+
 ## 1.1.0
 
 ### Minor Changes
