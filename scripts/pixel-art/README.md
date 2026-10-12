@@ -26,3 +26,13 @@ It writes all 320 item icons (16 families × 10 raw + 10 refined, in `src/items/
 
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
+
+## World art
+
+`src/world/build.ts` writes the `world` atlas and previews from the RPG's `docs/design/world/map-art.md` contract.
+H06 milestone 1 is the five-biome visual gate; `worldFrameSpecs()` declares its 194 frames, and
+`worldFrameSpecs(BIOME_IDS, true)` declares the final 310-frame contract (H08 backdrops are separate).
+
+Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Roads use edge-neighbour masks;
+liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the
+same mask function. `world.html` provides 2× phone plots and labelled 3× frames; `pnpm art:draw` regenerates it.

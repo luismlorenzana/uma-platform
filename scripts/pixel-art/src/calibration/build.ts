@@ -11,7 +11,7 @@ import { katana } from '../gear/katana.ts'
 import { drawIcon, ICON_SIZE } from '../icon.ts'
 import type { ItemIcon } from '../items/types.ts'
 import { encodePng } from '../png.ts'
-import { autotileSeams, groundSeams } from '../tiles/check.ts'
+import { autotileSeams, cornerAutotileSeams, groundSeams } from '../tiles/check.ts'
 import { Img } from '../tiles/image.ts'
 import { TILE } from '../tiles/noise.ts'
 import { biomeGround } from '../world/ground.ts'
@@ -36,7 +36,7 @@ const roads = Object.fromEntries(ROADS.map((kind) => [kind, roadTiles(kind)])) a
 const problems: string[] = []
 for (const biome of CALIBRATION_BIOMES) problems.push(...groundSeams(biome, grounds[biome]))
 const transparent = new Img(TILE, TILE)
-for (const kind of LIQUIDS) problems.push(...autotileSeams(`liquid/${kind}`, liquids[kind], transparent))
+for (const kind of LIQUIDS) problems.push(...cornerAutotileSeams(`liquid/${kind}`, liquids[kind]))
 for (const kind of ROADS) problems.push(...autotileSeams(`road/${kind}`, roads[kind], transparent))
 if (problems.length) throw new Error(`Calibration seam check failed:\n${problems.join('\n')}`)
 
@@ -45,10 +45,10 @@ for (const biome of CALIBRATION_BIOMES) {
   grounds[biome].forEach((img, variant) => worldFrames.push({ id: `ground/${biome}-${variant}`, img }))
   for (const propId of BIOMES[biome].props) worldFrames.push({ id: `prop/${biome}/${propId}`, img: drawWorldProp(worldProp(propId)) })
 }
-for (const kind of LIQUIDS) liquids[kind].forEach((img, mask) => worldFrames.push({ id: `liquid/${kind}-${mask}`, img }))
+for (const kind of LIQUIDS) liquids[kind].forEach((img, mask) => { if (mask) worldFrames.push({ id: `liquid/${kind}-${mask}`, img }) })
 for (const kind of ROADS) roads[kind].forEach((img, mask) => worldFrames.push({ id: `road/${kind}-${mask}`, img }))
 for (const biome of CALIBRATION_BIOMES) worldFrames.push({ id: `icon/${biome}`, img: biomeIcon(biome) })
-if (worldFrames.length !== 104) throw new Error(`Expected 104 calibration world frames, got ${worldFrames.length}`)
+if (worldFrames.length !== 162) throw new Error(`Expected 162 calibration world frames, got ${worldFrames.length}`)
 
 const gearPainters = [
   { id: 'katana', paint: katana },
@@ -65,7 +65,7 @@ const gearRows = gearPainters.map((type) =>
 
 const maps = CALIBRATION_BIOMES.map((biome) => {
   const spec = BIOMES[biome]
-  return sampleRegionMap(biome, grounds[biome], roads[spec.road], liquids[spec.liquid])
+  return sampleRegionMap(biome, grounds[biome], roads[spec.road], liquids[spec.liquid!])
 })
 
 function rect(img: Img, x0: number, y0: number, w: number, h: number, color: RGBA): void {

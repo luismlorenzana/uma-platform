@@ -45,3 +45,36 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
+
+## World atlas (H06, review milestone 1)
+
+`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. It is not versioned/published until
+all three H06 milestones pass review. This first quality gate contains **194 frames**: Meadow, Forest, Coast,
+Volcano and Glacier (four ground variants, three props and one icon each), all six liquid families and three road
+materials, all stage/frontier/Spring/flag markers, and the capital. The remaining fourteen biomes and ocean arrive in
+part 2, followed by the full continent/world preview layouts in part 3. No placeholder frames are shipped.
+
+The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
+Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
+tall props and place markers 16×32, capital 48×48. Props anchor at `h - 2`, capital at y=44. Consumers read the index;
+frame positions are an implementation detail of the shelf packer.
+
+| Frames | Contract |
+|---|---|
+| `ground/<biome>-0…3` | Seamless variants in any order; all four dealt in each 2×2 preview patch |
+| `prop/<biome>/<name>` | Three per biome, selective outlines, soft shadows, declared ground line |
+| `liquid/<water\|lava\|marsh\|ice\|void\|cloud>-1…15` | Transparent **corner-mask areas**, NW 1, NE 2, SE 4, SW 8. Mask 15 is filled; no mask-0 frame |
+| `road/<dirt\|stone\|boards>-0…15` | Transparent **edge-mask networks**, N 1, E 2, S 4, W 8. Layouts never close a 2×2 road block |
+| `marker/<fight\|elite\|boss>-<locked\|open\|cleared>` | Nine kind/state symbols with lock, weapon and check glyphs |
+| `marker/frontier-0…1` | Transparent pulse rings over a stage marker; the runtime controls animation/reduced motion |
+| `marker/spring`, `marker/spring-dry`, `marker/flag`, `marker/flag-cleared` | 16×32 place/progress symbols |
+| `marker/capital` | 48×48, y=44 ground line |
+| `icon/<biome>` | 16×16 biome header/list symbols |
+
+`assets/previews/world.png` contains every frame at 3× plus five regions and a three-band continent. `world.html`
+labels frames and shows 2× phone comparison plots/maps. `world-<biome>.png`, `world-continent.png` and `world-plots.png`
+are separate 2× examples; `world-markers-1x.png` shows every marker at native size. The build checks every id/size,
+ground seams, all corner/edge masks, and ground lines;
+Vitest additionally pins non-overlap, seed repeatability, filled ponds, marker shapes, and connected no-loop roads.
+
+The complete H06 contract has 310 frames (including ocean); the 19 battle horizon strips are added separately by H08.

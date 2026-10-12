@@ -1,9 +1,9 @@
 import type { GroundStyle } from '../tiles/ground.ts'
 import { groundTile } from '../tiles/ground.ts'
 import type { Img } from '../tiles/image.ts'
-import type { CalibrationBiome } from './spec.ts'
+import type { Biome } from './spec.ts'
 
-const GROUND: Record<CalibrationBiome, GroundStyle> = {
+const GROUND: Partial<Record<Biome, GroundStyle>> = {
   meadow: {
     page: 'world:meadow',
     base: '#7fbf5a',
@@ -13,6 +13,20 @@ const GROUND: Record<CalibrationBiome, GroundStyle> = {
     darts: 52,
     spacing: 4,
     features: [[['.w.', 'wyw', '.d.']], [['.c.', 'clc', '.d.']]],
+  },
+  forest: {
+    page: 'world:forest', base: '#387643',
+    grain: { light: '#43844b', dark: '#306638', rate: 0.18 },
+    ink: { d: '#295b31', l: '#518b50', r: '#6b6741', b: '#a78c52', y: '#c5ac69' },
+    marks: [['.d', 'd.'], ['l', 'd'], ['b.', '.r'], ['.r.', 'rr.']], darts: 52, spacing: 4,
+    features: [[['r...', '.rr.', '...r']], [['.b.', 'byb', '.r.']]],
+  },
+  coast: {
+    page: 'world:coast', base: '#d7c99b',
+    grain: { light: '#e3d8b2', dark: '#c9bc8d', rate: 0.14 },
+    ink: { d: '#b8aa7c', l: '#f1e5c0', g: '#7e9c62', G: '#587d50', w: '#fff0d8' },
+    marks: [['d.d'], ['.l', 'l.'], ['.G.', 'gGg'], ['d']], darts: 40, spacing: 4.6,
+    features: [[['.w.', 'wlw']], [['.g.', 'gGg', '..G']]],
   },
   volcano: {
     page: 'world:volcano',
@@ -36,6 +50,8 @@ const GROUND: Record<CalibrationBiome, GroundStyle> = {
   },
 }
 
-export function biomeGround(biome: CalibrationBiome, variant: number): Img {
-  return groundTile(GROUND[biome], variant)
+export function biomeGround(biome: Biome, variant: number): Img {
+  const style = GROUND[biome]
+  if (!style) throw new Error(`Ground ${biome} is not drawn in this milestone`)
+  return groundTile(style, variant)
 }
