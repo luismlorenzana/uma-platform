@@ -45,3 +45,28 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
+
+## Battle effects and familiars
+
+`fx/atlas.png` / `.json` adds 60 original 32×32 frames for the ten D86 damage kinds: Greatsword, Axe, Lance, Bow,
+Katana, Fire, Ice, Lightning, Light and Dark. The sheet is 192×320: each kind has one row, four hit poses followed
+by two idle familiar poses. Consumers use ids from the JSON, not row arithmetic.
+
+- `hit/<kind>-0…3`: heavy crescent, cleaving arc, thrust spark, arrow burst, thin double slash, flame burst, shards,
+  forked bolt, radiant star and violet implosion, respectively.
+- `familiar/<kind>-0…1`: spectral Arms in a soft glow; Fire salamander, Ice wisp, Thunder hawk, Light sprite and
+  Shadow cat for the elements.
+
+The index is `{ schemaVersion: 1, width, height, frames }`. Each frame has
+`{ x, y, w, h, group, kind, frame, anchorX, anchorY }`; centre anchors are always `(16, 16)`. Object/outline pixels
+never touch the frame boundary; glow remains bounded to the same 32×32 cutout. These are target-local effects,
+not screen-wide overlays, so they can fit two rows of foes. Familiar frames have a soft ground shadow.
+
+Play hits in frame order 0–3; the last pose remains readable on its own for reduced motion. Familiar frames 0–1
+alternate their bob/wing/tail pose. The game controls duration, battle speed, lifecycle, and procedural fallback;
+there is no animation runtime in this package. H10's game integration follows publication of this family.
+
+`pnpm art:draw` regenerates `assets/previews/fx.png` (3×), `fx-1x.png` (native size), and `fx.html`. The HTML preview
+has 1×/2×/4× speed buttons and a reduced-motion final-pose toggle, and honours the OS preference as well. The build
+checks every id, size, kind/frame, readable pose and unclipped outline; Vitest pins byte repeatability and every
+checked-in index/frame. All art is drawn from code, with no third-party source images.
