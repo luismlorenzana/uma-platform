@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-art",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Original art for the Uma games, generated from code in scripts/pixel-art: item, dish and gear icons, Hub buildings and terrain tiles, each as one atlas plus its index. Private; personal use only.",
   "license": "UNLICENSED",
   "repository": {

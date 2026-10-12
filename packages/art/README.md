@@ -77,8 +77,7 @@ right. Each side has grades 1–10 across. `gear-armor-d103-1x.png` shows just t
 
 ## World atlas (H06, complete)
 
-`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. It is not versioned/published until
-all three H06 milestones pass review. The complete native-frame family contains **310 frames**: all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
+`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. All three H06 milestones have passed review. The native-frame family contains **329 frames** (310 map frames plus 19 battle backdrops): all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
 
 The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
 Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
