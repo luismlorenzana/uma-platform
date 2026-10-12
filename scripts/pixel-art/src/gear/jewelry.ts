@@ -126,7 +126,7 @@ export function ring(s: Sprite, g: number): void {
   s.shadow = { cx: 16, cy: 27.2, rx: 9, ry: 2, alpha: 80 }
   const gemMat = gemOf(g)
   const metal = use(s, BAND[g - 1] ?? GOLD)
-  const cx = 16, cy = 20.2
+  const cx = 15, cy = 20.2 // one pixel left leaves the band's outline clear of the accent corner
   const thick = g >= 4 ? 1 : 0
   const outer = Mask.ellipse(cx, cy, 7.8 + thick * 0.4, 5.6 + thick * 0.3)
   const hole = Mask.ellipse(cx, cy - 0.9, 5.4 - thick * 0.2, 3.3 - thick * 0.2)

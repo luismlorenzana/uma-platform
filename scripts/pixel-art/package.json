@@ -6,12 +6,14 @@
   "description": "Original pixel art generated from code (no image editing, no runtime dependencies) → assets/.",
   "scripts": {
     "lint": "tsc --noEmit",
+    "test": "vitest run",
     "draw": "tsx src/build.ts && tsx src/dishes/build.ts && tsx src/gear/build.ts && tsx src/buildings/build.ts && tsx src/tiles/build.ts",
     "icons": "tsx src/app-icons/build.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",
     "tsx": "^4.20.6",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
   }
 }

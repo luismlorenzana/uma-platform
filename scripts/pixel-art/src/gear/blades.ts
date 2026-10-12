@@ -1,4 +1,4 @@
-// Metal weapons (refined Ores): greatsword, short sword, spear and axe. Each lies corner to corner, hilt bottom-left,
+// Metal weapons (refined Ores): greatsword and axe. Each lies corner to corner, hilt bottom-left,
 // and its metal is the grade's ingot. Grades add fittings: a fuller, then a contrasting guard, gems, and on legendary
 // grades glowing runes or molten veins and a halo.
 import type { Sprite } from '../sprite.ts'
@@ -177,35 +177,7 @@ export function greatsword(s: Sprite, g: number): void {
     legendaryHalo(s, m.glow, 55)
   }
 }
-
-const SHORT: SwordStyle[] = [
-  { guard: 'bar', span: 5, fuller: false },
-  { guard: 'bar', span: 5, fuller: true },
-  { guard: 'droop', span: 6, fuller: true },
-  { guard: 'knobs', span: 6, fuller: true },
-  { guard: 'upturn', span: 6, fuller: true },
-  { guard: 'upturn', span: 6, fuller: true, gem: 7 },
-  { guard: 'wings', span: 7, fuller: true, gem: 6, pommelGem: true },
-  { guard: 'wings', span: 7, fuller: true, gem: 2, pommelGem: true, serrated: true },
-  { guard: 'wings', span: 7, fuller: true, gem: 8, pommelGem: true, inlay: 'rune' },
-  { guard: 'wings', span: 7, fuller: true, gem: 10, pommelGem: true, inlay: 'molten' },
-]
-
-export function shortSword(s: Sprite, g: number): void {
-  diagonalShadow(s)
-  const style = SHORT[g - 1] ?? (SHORT[0] as SwordStyle)
-  const f: Frame = { c: 32 }
-  const m = metalOf(g)
-  const metal = use(s, m)
-  paintBlade(s, f, metal, style, { from: -6, tip: 21, half: 2, taper: 0.5 })
-  paintHilt(s, f, g, style, { guardA: -8, gripFrom: -16, gripTo: -10, pommelA: -19, pommelR2: 5, setting: 3 })
-  if (style.inlay && m.glow) {
-    inlay(s, f, style.inlay, m.glow, -4, 12)
-    legendaryHalo(s, m.glow, 55)
-  }
-}
-
-/** Spear shafts and axe hafts: sturdy woods, darker and finer as the grade rises. */
+/** Axe hafts: sturdy woods, darker and finer as the grade rises. */
 const HAFT_WOOD = [4, 4, 4, 5, 6, 7, 6, 7, 8, 7]
 function haftOf(g: number): Material {
   return WOODS[HAFT_WOOD[g - 1] ?? 4] as Material
@@ -229,99 +201,6 @@ function binding(s: Sprite, f: Frame, id: number, from: number, to: number): voi
     return (a - b + 400) % 4 < 2 ? t - 1 : t
   })
 }
-
-/** A tassel knotted under a fitting, hanging straight down. */
-function tassel(s: Sprite, x: number, y: number, color: string): void {
-  const id = use(s, color, { lift: 0.35, drop: 0.3 })
-  for (const [dx, dy, t] of [[0, 0, 4], [1, 0, 3], [0, 1, 3], [1, 1, 2], [-1, 2, 4], [0, 2, 3], [1, 2, 3], [2, 2, 2], [-1, 3, 3], [1, 3, 2], [2, 3, 2], [-1, 4, 2], [1, 4, 2]] as const)
-    s.paint(x + dx, y + dy, id, t)
-}
-
-type SpearHead = 'leaf' | 'long' | 'winged' | 'partisan'
-
-interface SpearStyle {
-  head: SpearHead
-  butt?: boolean
-  wrap?: boolean
-  /** Socket in a contrasting metal. */
-  gilt?: boolean
-  tassel?: string
-  gem?: number
-}
-
-const SPEARS: SpearStyle[] = [
-  { head: 'leaf' },
-  { head: 'leaf', butt: true },
-  { head: 'leaf', butt: true, wrap: true },
-  { head: 'long', butt: true, wrap: true },
-  { head: 'long', butt: true, wrap: true, gilt: true, tassel: '#d8423a' },
-  { head: 'winged', butt: true, wrap: true, gilt: true, tassel: '#3f6fd8' },
-  { head: 'winged', butt: true, wrap: true, gilt: true, tassel: '#d8423a', gem: 6 },
-  { head: 'partisan', butt: true, wrap: true, gilt: true, tassel: '#e9dcc0', gem: 2 },
-  { head: 'partisan', butt: true, wrap: true, gilt: true, gem: 8 },
-  { head: 'partisan', butt: true, wrap: true, gilt: true, tassel: '#ffcf4a', gem: 10 },
-]
-
-export function spear(s: Sprite, g: number): void {
-  diagonalShadow(s)
-  const st = SPEARS[g - 1] ?? (SPEARS[0] as SpearStyle)
-  const f: Frame = { c: 32 }
-  const m = metalOf(g)
-  const metal = use(s, m)
-  const trim = use(s, st.gilt ? trimOf(g) : m)
-  const wood = use(s, haftOf(g))
-  const tip = 27
-  const base = st.head === 'leaf' ? 13 : 11
-  shaft(s, f, wood, -26, base - 3)
-  if (st.butt) band(s, f, trim, -27, -24, 1)
-  if (st.wrap) binding(s, f, use(s, g >= 7 ? DARK_GRIP : LEATHER_GRIP), -14, -6)
-  // The head: a leaf blade on the axis, lit half up-left, a midrib, honed edges.
-  const W = st.head === 'leaf' ? 4 : 3.4
-  const half = (a: number) => {
-    const t = (a - base) / (tip - base)
-    if (t < 0 || t > 1) return -1
-    return t < 0.3 ? W * Math.sqrt(t / 0.3) + 0.6 : W * (1 - t) / 0.7 + 0.2
-  }
-  diagPaint(s, f, metal, (a, b) => {
-    const h = half(a)
-    const d = b + 0.5
-    if (h < 0 || Math.abs(d) > h) return null
-    const edge = Math.abs(d) > h - 1
-    if (d < 0) return edge ? 5 : d === -0.5 ? 5 : 4
-    return edge ? 3 : 2
-  })
-  // Lugs or side blades at the foot of the head.
-  if (st.head === 'winged')
-    diagPaint(s, f, trim, (a, b) => (a >= base - 1 && a <= base + 1 && Math.abs(b + 0.5) <= 4.5 ? (b < -2 ? 5 : b < 0 ? 4 : b < 2 ? 3 : 2) : null))
-  if (st.head === 'partisan') {
-    diagPaint(s, f, metal, (a, b) => {
-      const d = Math.abs(b + 0.5)
-      if (d < 2 || d > 4.6) return null
-      // Each side blade sweeps toward the tip as it reaches out.
-      const lo = base - 1 + (d - 2) * 1.3, hi = base + 1 + (d - 2) * 1.3
-      if (a < lo || a > hi) return null
-      return b < 0 ? (a > hi - 1 ? 5 : 4) : a > hi - 1 ? 3 : 2
-    })
-  }
-  // The socket and its rings.
-  band(s, f, trim, base - 5, base - 1)
-  diagPaint(s, f, trim, (a, b) => (a === base - 3 && Math.abs(b + 0.5) <= 1.5 ? 2 : null))
-  if (st.gem) {
-    const [x, y] = xy(f, base - 2, -1)
-    jewel(s, x - 1, y, 2, gemOf(st.gem))
-  }
-  if (st.tassel) {
-    const [x, y] = xy(f, base - 5, 2)
-    tassel(s, x - 1, y, st.tassel)
-  }
-  if (m.glow && g >= 9) {
-    const cells: [number, number][] = []
-    for (let a = base + 2; a <= tip - 5; a++) for (const b of [-1, 0]) if ((a + b + f.c) % 2 === 0) cells.push(xy(f, a, b))
-    glowPixels(s, cells, m.glow, 0)
-    legendaryHalo(s, m.glow, 55)
-  }
-}
-
 type AxeHead = 'hatchet' | 'bearded' | 'crescent'
 
 interface AxeStyle {

@@ -1,11 +1,12 @@
-// Body armor, front view: garb (refined Fibers), leather armor (refined Hides & Scales), mail and plate (refined Ores).
+// Body armor, front view: garb (cloth with grade-wood edging), leather armor (refined Hides & Scales), mail and plate
+// (refined Ores). Garb's first recipe family is Woods in D86; its cuffs and collar carry that plank's color.
 // Four silhouettes: a robe with bell sleeves, a sleeveless strapped jerkin, a short-sleeved ring shirt, and a
 // breastplate under round pauldrons. The grade's material colors the piece; trims, belts, studs and gems add up.
 import { bloom } from '../items/refined/workbench-kit.ts'
 import { Mask, shadeDome } from '../shape.ts'
 import type { Sprite } from '../sprite.ts'
 import { gemOf, jewel, legendaryHalo } from './fittings.ts'
-import { BRONZE, CLOTHS, DARK_GRIP, GOLD, HIDES, IRON, LEATHER_GRIP, METALS, SILVER, use, type Hide, type Material } from './materials.ts'
+import { BRONZE, CLOTHS, DARK_GRIP, GOLD, HIDES, IRON, LEATHER_GRIP, METALS, SILVER, WOODS, use, type Hide, type Material } from './materials.ts'
 import { mirrored } from './template.ts'
 
 export function armorShadow(s: Sprite): void {
@@ -32,17 +33,15 @@ const GARB = mirrored(4, [
   '...........bbbbb', // 18
   '..........bbbbbb', // 19
   '..........bbbbbb', // 20
-  '.........bbbbbbb', // 21
-  '.........bbbbbbb', // 22
-  '.........bbbbbbb', // 23
-  '........bbbbbbbb', // 24
-  '........bbbbbbbb', // 25
-  '........hhhhhhhh', // 26
+  '..........bbbbbb', // 21: hem + outline stay left of the reserved accent corner
+  '..........bbbbbb', // 22
+  '..........bbbbbb', // 23
+  '..........bbbbbb', // 24
+  '..........bbbbbb', // 25
+  '..........hhhhhh', // 26
 ])
 
 interface GarbStyle {
-  /** Hem, cuff and collar band. */
-  trim?: string
   sash: string
   /** Sash ends hanging from a knot. */
   knot?: boolean
@@ -56,14 +55,14 @@ interface GarbStyle {
 const GARBS: GarbStyle[] = [
   { sash: '#8a6440' },
   { sash: '#e2cf9a', weave: 'coarse' },
-  { trim: '#7d6a4a', sash: '#8a6440', weave: 'twill' },
-  { trim: '#5f8fe0', sash: '#5f8fe0', knot: true },
-  { trim: '#b0413e', sash: '#b0413e', knot: true, weave: 'knit' },
-  { trim: '#2f8a8a', sash: '#2f8a8a', knot: true, weave: 'fuzzy', motif: 'dots' },
-  { trim: '#e8d2c4', sash: '#7a4a6a', knot: true, motif: 'vine', fringe: '#e8d2c4' },
-  { trim: '#f4c534', sash: '#f4c534', knot: true, weave: 'sheen', motif: 'vine', gem: 1 },
-  { trim: '#f4c534', sash: '#5b47a8', knot: true, weave: 'sheen', motif: 'moon', gem: 9 },
-  { trim: '#f4c534', sash: '#ffffff', knot: true, motif: 'cloud', gem: 10 },
+  { sash: '#8a6440', weave: 'twill' },
+  { sash: '#5f8fe0', knot: true },
+  { sash: '#b0413e', knot: true, weave: 'knit' },
+  { sash: '#2f8a8a', knot: true, weave: 'fuzzy', motif: 'dots' },
+  { sash: '#7a4a6a', knot: true, motif: 'vine', fringe: '#e8d2c4' },
+  { sash: '#f4c534', knot: true, weave: 'sheen', motif: 'vine', gem: 1 },
+  { sash: '#5b47a8', knot: true, weave: 'sheen', motif: 'moon', gem: 9 },
+  { sash: '#ffffff', knot: true, motif: 'cloud', gem: 10 },
 ]
 
 export function garb(s: Sprite, g: number): void {
@@ -72,7 +71,7 @@ export function garb(s: Sprite, g: number): void {
   const m: Material = CLOTHS[g - 1] ?? (CLOTHS[0] as Material)
   const cloth = use(s, m)
   const t = GARB
-  const trim = st.trim ? use(s, st.trim, { lift: 0.4, drop: 0.28 }) : cloth
+  const trim = use(s, WOODS[g - 1] ?? WOODS[0]!)
   // The inside of the back, seen through the neckline.
   t.mask('n').each((x, y) => s.paint(x, y, cloth, 1))
   shadeDome(s, t.mask('bkwh'), cloth, { bias: 0.08, relief: 0.8, contact: false })
@@ -94,9 +93,8 @@ export function garb(s: Sprite, g: number): void {
   texture(s, st.weave, t.mask('bs'), cloth)
   // Collar, cuffs and hem.
   t.mask('k').each((x, y) => s.paint(x, y, trim, x < 16 ? 4 : 3))
-  t.mask('c').each((x, y) => s.paint(x, y, trim, st.trim ? (x < 16 ? 4 : 2) : 2))
-  t.mask('h').each((x, y) => s.paint(x, y, trim, st.trim ? (x < 16 ? 4 : 3) : 2))
-  if (!st.trim) t.mask('k').each((x, y) => s.paint(x, y, cloth, x < 16 ? 4 : 2))
+  t.mask('c').each((x, y) => s.paint(x, y, trim, x < 16 ? 4 : 2))
+  t.mask('h').each((x, y) => s.paint(x, y, trim, x < 16 ? 4 : 3))
   // The sash, knotted at the front.
   const sash = use(s, st.sash, { lift: 0.4, drop: 0.28 })
   t.mask('w').each((x, y) => s.paint(x, y, sash, y === 15 ? (x < 16 ? 4 : 3) : x < 16 ? 3 : 2))
@@ -106,7 +104,7 @@ export function garb(s: Sprite, g: number): void {
   }
   if (st.fringe) {
     const fringe = use(s, st.fringe, { lift: 0.4, drop: 0.3 })
-    for (let x = 8; x <= 23; x += 2) s.paint(x, 27, fringe, x < 16 ? 4 : 3)
+    for (let x = 10; x <= 21; x += 2) s.paint(x, 27, fringe, x < 16 ? 4 : 3)
   }
   motif(s, st.motif, t.mask('b'), g)
   if (st.gem) jewel(s, 15, 8, 2, gemOf(st.gem))
@@ -173,7 +171,7 @@ const MAIL = mirrored(4, [
   '.........mmmmmmm', // 20
   '.........mmmmmmm', // 21
   '.........eeeeeee', // 22
-  '.........e.e.e.e', // 23
+  '..........ee.e.e', // 23: inset the last ring to leave its outline clear
 ])
 
 interface MailStyle {
@@ -274,7 +272,7 @@ export function plate(s: Sprite, g: number): void {
   const edge = st.edge ? use(s, st.edge) : id
   // Faulds: three lames below the waist, each lapping over the next.
   const lames = [
-    Mask.polygon([[9, 22.5], [23, 22.5], [23.4, 25.6], [8.6, 25.6]]),
+    Mask.polygon([[10, 22.5], [22, 22.5], [22, 25.6], [10, 25.6]]),
     Mask.polygon([[9.6, 20], [22.4, 20], [22.8, 23.2], [9.2, 23.2]]),
     Mask.polygon([[10.4, 17.6], [21.6, 17.6], [22, 20.6], [10, 20.6]]),
   ]
@@ -356,7 +354,7 @@ const JERKIN = mirrored(4, [
   '.......jjjj.jjjj', // 19
   '.......jjjj.jjjj', // 20
   '........jjj.jjjj', // 21
-  '........jjj.jjjj', // 22
+  '.........jj.jjjj', // 22: inset the lower tab's outline
   '............jjjj', // 23
   '............jjjj', // 24
 ])
