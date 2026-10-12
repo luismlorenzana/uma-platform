@@ -47,6 +47,13 @@ Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Ro
 liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the
 same mask function. `world.html` provides 2× phone plots and labelled 3× frames; `pnpm art:draw` regenerates it.
 
+## Battle horizons (H08)
+
+`src/world/backdrops.ts` draws transparent-sky 128×48 strips with two periodic depth layers and the biome's original
+landmarks. The last eight rows blend into actual ground tiles. `worldFrames(BIOME_IDS, true, true)` appends these
+nineteen frames after H06's 310, preserving every original frame. The build checks sizes and exact horizontal seams;
+`backdrops.png` / `backdrops.html` show two adjacent repeats per biome at 2×.
+
 ## Battle effects
 
 `src/fx/build.ts` adds the `fx` family: four 32 px hit poses and two familiar poses for each of the ten D86 kinds.

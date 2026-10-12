@@ -107,6 +107,17 @@ Vitest additionally pins non-overlap, seed repeatability, filled ponds, marker s
 
 The complete H06 contract has 310 frames (including ocean); the 19 battle horizon strips are added separately by H08.
 
+## Battle backdrops (H08)
+
+The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**
+frames on a **256×976** sheet. The original 310 positions and pixels are unchanged. Read atlas dimensions from JSON;
+do not retain the old 512px height in CSS backgrounds.
+
+Each strip has a transparent sky, two silhouette distances, biome landmarks and a foot fading into the matching
+native ground. Horizontal border RGBA bytes match exactly. `backdrops.png` / `backdrops.html` preview two adjacent
+repeats at 2×. In a game, keep a sky gradient behind it, rest its foot at the rivals' floor line and tile the biome's
+ground below. Draw this composition once per size, and darken the party's lower band for readable units and numbers.
+
 ## Battle effects and familiars
 
 `fx/atlas.png` / `.json` adds 60 original 32×32 frames for the ten D86 damage kinds: Greatsword, Axe, Lance, Bow,

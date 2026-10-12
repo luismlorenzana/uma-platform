@@ -12,7 +12,7 @@ import { continentComposition, drawComposition, sampleContinent, worldCompositio
 import { BIOME_IDS } from './spec.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..')
-const frames = worldFrames(BIOME_IDS, true), problems = checkWorldFrames(frames, BIOME_IDS, true)
+const frames = worldFrames(BIOME_IDS, true, true), problems = checkWorldFrames(frames, BIOME_IDS, true, true)
 if (problems.length) throw new Error(`World contract failed:\n${problems.join('\n')}`)
 const { atlas, index } = packWorld(frames)
 const dir = join(ROOT, 'packages', 'art', 'world'), previews = join(ROOT, 'assets', 'previews')
@@ -28,6 +28,7 @@ const groups = [
   { name: 'Stages and frontier', list: frames.filter((f) => f.group === 'marker' && f.h === 16) },
   { name: 'Springs, flags and capital', list: frames.filter((f) => f.group === 'marker' && f.h > 16) },
   { name: 'Biome icons', list: frames.filter((f) => f.group === 'icon') },
+  { name: 'Battle backdrops, two depth layers', list: frames.filter((f) => f.group === 'backdrop') },
 ]
 const maps = BIOME_IDS.map((biome) => ({ biome, img: regionPreview(biome) }))
 const continentLayout = continentComposition(sampleContinent())
@@ -78,6 +79,16 @@ for (const f of markerFrames) { markerSheet.draw(f.img, markerX, 52 - f.h); mark
 writeFileSync(join(previews, 'world-markers-1x.png'), encodePng(markerSheet.w, markerSheet.h, markerSheet.px))
 
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
+const backdrops = frames.filter((f) => f.group === 'backdrop')
+const backdropSheet = new Img(528, backdrops.length * 104 + 8).fill(BG)
+const backdropCards = backdrops.map((f, i) => {
+  const repeated = new Img(256, 48).fill(hex('#131c2b'))
+  repeated.draw(f.img, 0, 0).draw(f.img, 128, 0)
+  backdropSheet.draw(repeated.scaled(2), 8, 8 + i * 104)
+  return `<figure><figcaption>${f.id}</figcaption><img src="${uri(repeated)}" width="512" height="96" alt="${f.biome}, two repeats at 2×"></figure>`
+}).join('')
+writeFileSync(join(previews, 'backdrops.png'), encodePng(backdropSheet.w, backdropSheet.h, backdropSheet.px))
+writeFileSync(join(previews, 'backdrops.html'), `<!doctype html><html lang="en"><meta charset="utf-8"><title>Battle backdrops</title><style>body{background:#0f141b;color:#eee;font:14px system-ui}img{image-rendering:pixelated}figure{margin:16px 0}</style><h1>19 biome horizons · two repeats · 2×</h1>${backdropCards}</html>`)
 const cards = groups.map((g) => `<section><h2>${g.name}</h2><div class="cards">${g.list.map((f) => `<figure><img src="${uri(f.img)}" width="${f.w * 3}" height="${f.h * 3}" alt="${f.id}"><figcaption>${f.id}</figcaption></figure>`).join('')}</div></section>`).join('')
 const plotCards = plots.map((p) => `<figure><img src="${uri(p.img)}" width="128" height="96" alt="${p.biome}, 4 by 3 tiles at 2×"><figcaption>${p.biome}</figcaption></figure>`).join('')
 const regionCards = maps.map((m) => `<section id="${m.biome}"><h2>${m.biome}: region, 2×</h2><div class="region"><img src="${uri(m.img)}" width="512" height="896" alt="${m.biome} region at 2×"></div><details><summary>Full region, 1×</summary><img src="${uri(m.img)}" width="256" height="448" alt="${m.biome} at 1×"></details></section>`).join('')

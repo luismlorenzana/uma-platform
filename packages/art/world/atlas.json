@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 256,
- "height": 512,
+ "height": 976,
  "frames": {
   "ground/meadow-0": {
    "x": 0,
@@ -2385,6 +2385,158 @@
    "w": 16,
    "h": 16,
    "group": "icon",
+   "biome": "rift"
+  },
+  "backdrop/meadow": {
+   "x": 128,
+   "y": 496,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "meadow"
+  },
+  "backdrop/forest": {
+   "x": 0,
+   "y": 544,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "forest"
+  },
+  "backdrop/coast": {
+   "x": 128,
+   "y": 544,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "coast"
+  },
+  "backdrop/swamp": {
+   "x": 0,
+   "y": 592,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "swamp"
+  },
+  "backdrop/jungle": {
+   "x": 128,
+   "y": 592,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "jungle"
+  },
+  "backdrop/desert": {
+   "x": 0,
+   "y": 640,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "desert"
+  },
+  "backdrop/canyon": {
+   "x": 128,
+   "y": 640,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "canyon"
+  },
+  "backdrop/volcano": {
+   "x": 0,
+   "y": 688,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "volcano"
+  },
+  "backdrop/geyser": {
+   "x": 128,
+   "y": 688,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "geyser"
+  },
+  "backdrop/tundra": {
+   "x": 0,
+   "y": 736,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "tundra"
+  },
+  "backdrop/glacier": {
+   "x": 128,
+   "y": 736,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "glacier"
+  },
+  "backdrop/peaks": {
+   "x": 0,
+   "y": 784,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "peaks"
+  },
+  "backdrop/highlands": {
+   "x": 128,
+   "y": 784,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "highlands"
+  },
+  "backdrop/sky": {
+   "x": 0,
+   "y": 832,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "sky"
+  },
+  "backdrop/underworld": {
+   "x": 128,
+   "y": 832,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "underworld"
+  },
+  "backdrop/moor": {
+   "x": 0,
+   "y": 880,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "moor"
+  },
+  "backdrop/crystal": {
+   "x": 128,
+   "y": 880,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "crystal"
+  },
+  "backdrop/ruins": {
+   "x": 0,
+   "y": 928,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
+   "biome": "ruins"
+  },
+  "backdrop/rift": {
+   "x": 128,
+   "y": 928,
+   "w": 128,
+   "h": 48,
+   "group": "backdrop",
    "biome": "rift"
   }
  }
