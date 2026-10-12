@@ -7,14 +7,16 @@ import { liquidTiles } from './liquids.ts'
 import { roadTiles } from './roads.ts'
 import { LIQUIDS, PHASE_ONE_BIOMES, ROADS, worldFrameSpecs, type Biome } from './spec.ts'
 
-export function checkWorldFrames(frames: readonly WorldFrame[], biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false): string[] {
-  const wanted = new Map(worldFrameSpecs(biomes, ocean).map((s) => [s.id, s]))
+export function checkWorldFrames(frames: readonly WorldFrame[], biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false, backdrops = false): string[] {
+  const wanted = new Map(worldFrameSpecs(biomes, ocean, backdrops).map((s) => [s.id, s]))
   const seen = new Set<string>(), bad: string[] = []
   for (const frame of frames) {
     const spec = wanted.get(frame.id)
     if (!spec) bad.push(`Unexpected world frame ${frame.id}`)
     if (seen.has(frame.id)) bad.push(`Duplicate world frame ${frame.id}`)
     seen.add(frame.id)
+    if (frame.group === 'backdrop') for (let y = 0; y < frame.h; y++)
+      if (frame.img.get(0, y).some((v, i) => v !== frame.img.get(frame.w - 1, y)[i])) bad.push(`${frame.id}: horizontal seam at row ${y}`)
     if (frame.w !== spec?.w || frame.h !== spec.h || frame.img.w !== frame.w || frame.img.h !== frame.h) bad.push(`${frame.id}: wrong size`)
     if (frame.group !== spec?.group || frame.biome !== spec.biome || frame.anchorY !== spec.anchorY) bad.push(`${frame.id}: wrong metadata`)
     if (frame.anchorY !== undefined) {

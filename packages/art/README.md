@@ -77,8 +77,7 @@ right. Each side has grades 1–10 across. `gear-armor-d103-1x.png` shows just t
 
 ## World atlas (H06, complete)
 
-`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. It is not versioned/published until
-all three H06 milestones pass review. The complete native-frame family contains **310 frames**: all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
+`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. All three H06 milestones have passed review. The native-frame family contains **329 frames** (310 map frames plus 19 battle backdrops): all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
 
 The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
 Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
@@ -106,6 +105,17 @@ Vitest additionally pins non-overlap, seed repeatability, filled ponds, marker s
 `maps-full.ts` describes the cell/sprite/spot compositions for H07: 16×44 continent, forty 4×3 plots, five inter-band Springs, a 16×4 capital plaza; 16×22 world, five staggered 6×4 islands in their continents' two dominant biomes with corner-mask shores. `world-layouts.json` records the synthetic sample positions. No text is painted into the maps.
 
 The complete H06 contract has 310 frames (including ocean); the 19 battle horizon strips are added separately by H08.
+
+## Battle backdrops (H08)
+
+The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**
+frames on a **256×976** sheet. The original 310 positions and pixels are unchanged. Read atlas dimensions from JSON;
+do not retain the old 512px height in CSS backgrounds.
+
+Each strip has a transparent sky, two silhouette distances, biome landmarks and a foot fading into the matching
+native ground. Horizontal border RGBA bytes match exactly. `backdrops.png` / `backdrops.html` preview two adjacent
+repeats at 2×. In a game, keep a sky gradient behind it, rest its foot at the rivals' floor line and tile the biome's
+ground below. Draw this composition once per size, and darken the party's lower band for readable units and numbers.
 
 ## Battle effects and familiars
 
