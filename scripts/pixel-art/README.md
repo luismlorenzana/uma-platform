@@ -54,6 +54,13 @@ biomes, with locked/open/cleared states and two large frontier rings. Cleared sp
 `worldFrames(BIOME_IDS, true, true, true)` appends these 173 frames after 2.2.0's 329, preserving every old position
 and pixel. The build emits `stage-buildings-{1x,2x,sample}.png` and labelled `stage-buildings.html`.
 
+## Compact stage towers
+
+`src/world/compact-stages.ts` authors native 32px regular chess towers, elite towers and castles with the same
+biome palette as the retained 64px set. `compact-build.ts` writes the separate `world/stages-compact.{png,json}`
+sheet (173 frames, 256×704) and `stage-compact-{1x,2x,sample}.png` / labelled HTML. The old world sheet and all
+4×4 painters/previews remain unchanged; tests freeze their published 2.3.0 bytes alongside the new native contract.
+
 ## Battle horizons (H08)
 
 `src/world/backdrops.ts` draws transparent-sky 128×48 strips with two periodic depth layers and the biome's original

@@ -124,6 +124,21 @@ Vitest additionally pins non-overlap, seed repeatability, filled ponds, marker s
 
 The complete H06 contract has 310 frames (including ocean); the 19 battle horizon strips are added separately by H08.
 
+## Compact stage towers (2.4.0)
+
+`world/stages-compact.png` / `.json` adds a **separate 256×704 sheet** of 173 native **32×32 (2×2-tile)** frames.
+The existing world atlas, all 64px structures, painters and their preview PNGs/HTML remain exactly unchanged.
+Use whichever structure family fits a screen; compact art is authored at 32px, never downscaled from the 64px set.
+
+- `stage-compact/<biome>/<fight|elite|boss>-<locked|open|cleared>`: nineteen biomes × three silhouettes × three states,
+  with ground line y=28. Regular stages are low square crenellated chess towers with stonework; elite towers retain
+  their tall peaked roofs and bosses their three-tower castle. Cleared pixels are completely grayscale.
+- `stage-compact/frontier-0…1`: native 32px transparent rings for the compact footprints.
+- Same index schema as `world/atlas.json`; read the separate sheet's dimensions and coordinates from its JSON.
+
+`stage-compact-{1x,2x}.png` and `stage-compact.html` show nine states per biome. `stage-compact-sample.png` pairs
+open/cleared regular, elite and boss art for Meadow, Coast, Volcano, Glacier and Underworld at 3×.
+
 ## Battle backdrops (H08)
 
 The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**
