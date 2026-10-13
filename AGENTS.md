@@ -17,6 +17,9 @@ uma-platform is the shared foundation for the owner's personal Uma games. Read t
 - **Schema changes:** additive changes are a minor version. Anything that removes, renames or changes the meaning of a
   field is a new major, with a Changeset and a `docs/decisions.md` entry.
 - **Don't push to `main`.** Work on a `feat/…`, `fix/…` or `docs/…` branch and open a pull request.
+- **Owner-authorized agent delivery (2026-10-13):** use `gh` only for GitHub. After the required checks and CI pass,
+  merge the pull request and publish any needed package release; no further owner approval is needed. Never bypass
+  repository protection. Use worktrees outside `~/workspace`, and remove them after merging, preserving unfinished work.
 - **Don't touch infrastructure** (`.github/workflows/`, `infra/`, buckets, GCP settings) unless your task says so.
 - **Never commit secrets.**
 - Append new decision rows; never edit old ones.

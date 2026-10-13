@@ -12,7 +12,7 @@ import { continentComposition, drawComposition, sampleContinent, worldCompositio
 import { BIOME_IDS } from './spec.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..')
-const frames = worldFrames(BIOME_IDS, true, true), problems = checkWorldFrames(frames, BIOME_IDS, true, true)
+const frames = worldFrames(BIOME_IDS, true, true, true), problems = checkWorldFrames(frames, BIOME_IDS, true, true, true)
 if (problems.length) throw new Error(`World contract failed:\n${problems.join('\n')}`)
 const { atlas, index } = packWorld(frames)
 const dir = join(ROOT, 'packages', 'art', 'world'), previews = join(ROOT, 'assets', 'previews')
@@ -29,6 +29,7 @@ const groups = [
   { name: 'Springs, flags and capital', list: frames.filter((f) => f.group === 'marker' && f.h > 16) },
   { name: 'Biome icons', list: frames.filter((f) => f.group === 'icon') },
   { name: 'Battle backdrops, two depth layers', list: frames.filter((f) => f.group === 'backdrop') },
+  { name: 'Four-tile stage buildings', list: frames.filter((f) => f.group === 'stage') },
 ]
 const maps = BIOME_IDS.map((biome) => ({ biome, img: regionPreview(biome) }))
 const continentLayout = continentComposition(sampleContinent())
@@ -79,6 +80,22 @@ for (const f of markerFrames) { markerSheet.draw(f.img, markerX, 52 - f.h); mark
 writeFileSync(join(previews, 'world-markers-1x.png'), encodePng(markerSheet.w, markerSheet.h, markerSheet.px))
 
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
+const buildings = frames.filter((f) => f.group === 'stage' && f.biome)
+const buildingSheet = new Img(9 * 72 + 8, BIOME_IDS.length * 72 + 8).fill(BG)
+buildings.forEach((f,i) => buildingSheet.draw(f.img,8+(i%9)*72,8+Math.floor(i/9)*72))
+for (const scale of [1,2]) {
+  const img=buildingSheet.scaled(scale)
+  writeFileSync(join(previews,`stage-buildings-${scale}x.png`),encodePng(img.w,img.h,img.px))
+}
+const sampleBiomes=['meadow','coast','volcano','glacier','underworld']
+const sampleSheet=new Img(6*72+8,5*72+8).fill(BG)
+sampleBiomes.forEach((biome,row) => ['fight','elite','boss'].forEach((kind,col) => ['open','cleared'].forEach((state,pair) => {
+  const f=buildings.find(f=>f.id===`stage/${biome}/${kind}-${state}`)!
+  sampleSheet.draw(f.img,8+(col*2+pair)*72,8+row*72)
+})))
+const sample=sampleSheet.scaled(2)
+writeFileSync(join(previews,'stage-buildings-sample.png'),encodePng(sample.w,sample.h,sample.px))
+writeFileSync(join(previews,'stage-buildings.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><title>Stage buildings</title><style>body{background:#0f141b;color:#eee;font:14px system-ui}.row{display:flex;flex-wrap:wrap;gap:8px}img{image-rendering:pixelated}figure{margin:0}figcaption{font-size:11px}</style><h1>4×4-tile stage buildings</h1><p>Barracks, elite towers and boss strongholds. Coloured open/locked stages; fully grayscale clears. Native 64px and 2×.</p>${BIOME_IDS.map(b=>`<h2>${b}</h2><div class="row">${buildings.filter(f=>f.biome===b).map(f=>`<figure><img src="${uri(f.img)}" width="128" height="128" alt="${f.id}"><figcaption>${f.id.split('/').at(-1)}</figcaption></figure>`).join('')}</div>`).join('')}</html>`)
 const backdrops = frames.filter((f) => f.group === 'backdrop')
 const backdropSheet = new Img(528, backdrops.length * 104 + 8).fill(BG)
 const backdropCards = backdrops.map((f, i) => {
@@ -94,5 +111,5 @@ const plotCards = plots.map((p) => `<figure><img src="${uri(p.img)}" width="128"
 const regionCards = maps.map((m) => `<section id="${m.biome}"><h2>${m.biome}: region, 2×</h2><div class="region"><img src="${uri(m.img)}" width="512" height="896" alt="${m.biome} region at 2×"></div><details><summary>Full region, 1×</summary><img src="${uri(m.img)}" width="256" height="448" alt="${m.biome} at 1×"></details></section>`).join('')
 writeFileSync(join(previews, 'world.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>World atlas</title><style>
 :root{color-scheme:dark}body{margin:0;padding:8px;background:#0f141b;color:#e6e9ee;font:14px/1.4 system-ui,sans-serif}h1{font-size:20px}h2{font-size:16px;margin:24px 0 8px}p,figcaption{color:#a1acba}img{image-rendering:pixelated;display:block}figure{margin:0;padding:6px;background:#18202a;border-radius:5px}figcaption{font-size:11px;margin-top:5px}.cards,.plots{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}.region{width:min(100%,512px);overflow:hidden;border:1px solid #293545}.region img{max-width:none}@media(max-width:520px){.region img{margin-left:-96px}}.strip{overflow:auto}details{margin:10px 0}a{color:#d9c999}
-</style></head><body><h1>World atlas</h1><p>All nineteen biomes and ocean. All 329 frames are shown at 3×; comparison plots and maps are 2×. The first four stages are cleared, stage five wears the frontier ring, and the elite and boss remain locked. Original code-drawn art only.</p><nav>${BIOME_IDS.map((b) => `<a href="#${b}">${b}</a>`).join(' · ')}</nav><h2>4×3-tile plots, 2×</h2><div class="plots">${plotCards}</div><h2>Markers, native 1×</h2><img src="${uri(markerSheet)}" width="${markerSheet.w}" height="${markerSheet.h}" alt="Nine stage symbols, two rings, Springs, flags and capital at 1×"><h2>Ten continent bands and capital, 2×</h2><div class="strip"><img src="${uri(continent)}" width="512" height="1408" alt="Ten-band continent: forty biome plots, five Springs and capital"></div><h2>Five islands, 2×</h2><div class="strip"><img src="${uri(world)}" width="512" height="704" alt="Five staggered islands in deep-blue ocean"></div>${regionCards}${cards}</body></html>`)
+</style></head><body><h1>World atlas</h1><p>All nineteen biomes and ocean. All ${frames.length} frames are shown at 3×; comparison plots and maps are 2×. The first four stages are cleared, stage five wears the frontier ring, and the elite and boss remain locked. Original code-drawn art only.</p><nav>${BIOME_IDS.map((b) => `<a href="#${b}">${b}</a>`).join(' · ')}</nav><h2>4×3-tile plots, 2×</h2><div class="plots">${plotCards}</div><h2>Markers, native 1×</h2><img src="${uri(markerSheet)}" width="${markerSheet.w}" height="${markerSheet.h}" alt="Nine stage symbols, two rings, Springs, flags and capital at 1×"><h2>Ten continent bands and capital, 2×</h2><div class="strip"><img src="${uri(continent)}" width="512" height="1408" alt="Ten-band continent: forty biome plots, five Springs and capital"></div><h2>Five islands, 2×</h2><div class="strip"><img src="${uri(world)}" width="512" height="704" alt="Five staggered islands in deep-blue ocean"></div>${regionCards}${cards}</body></html>`)
 console.log(`Wrote ${frames.length} world frames (${atlas.w}×${atlas.h}) to ${relative(ROOT, dir)} and 2× previews; seams and ground lines clean`)

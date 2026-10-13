@@ -47,6 +47,13 @@ Ground/road helpers and the road `closesBlock` guard are shared with the Hub. Ro
 liquids use **corner** masks and filled vertex blobs, not the Hub's thin stream bands. Never compose the two with the
 same mask function. `world.html` provides 2× phone plots and labelled 3× frames; `pnpm art:draw` regenerates it.
 
+## Stage buildings (owner map feedback)
+
+`src/world/stage-buildings.ts` paints native 64×64 barracks, elite towers and boss strongholds for all nineteen
+biomes, with locked/open/cleared states and two large frontier rings. Cleared sprites are completely grayscale.
+`worldFrames(BIOME_IDS, true, true, true)` appends these 173 frames after 2.2.0's 329, preserving every old position
+and pixel. The build emits `stage-buildings-{1x,2x,sample}.png` and labelled `stage-buildings.html`.
+
 ## Battle horizons (H08)
 
 `src/world/backdrops.ts` draws transparent-sky 128×48 strips with two periodic depth layers and the biome's original

@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 256,
- "height": 976,
+ "height": 3792,
  "frames": {
   "ground/meadow-0": {
    "x": 0,
@@ -2538,6 +2538,1559 @@
    "h": 48,
    "group": "backdrop",
    "biome": "rift"
+  },
+  "stage/meadow/fight-locked": {
+   "x": 0,
+   "y": 976,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/fight-open": {
+   "x": 64,
+   "y": 976,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/fight-cleared": {
+   "x": 128,
+   "y": 976,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/elite-locked": {
+   "x": 192,
+   "y": 976,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/elite-open": {
+   "x": 0,
+   "y": 1040,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/elite-cleared": {
+   "x": 64,
+   "y": 1040,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/boss-locked": {
+   "x": 128,
+   "y": 1040,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/boss-open": {
+   "x": 192,
+   "y": 1040,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/meadow/boss-cleared": {
+   "x": 0,
+   "y": 1104,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "meadow",
+   "anchorY": 58
+  },
+  "stage/forest/fight-locked": {
+   "x": 64,
+   "y": 1104,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/fight-open": {
+   "x": 128,
+   "y": 1104,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/fight-cleared": {
+   "x": 192,
+   "y": 1104,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/elite-locked": {
+   "x": 0,
+   "y": 1168,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/elite-open": {
+   "x": 64,
+   "y": 1168,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/elite-cleared": {
+   "x": 128,
+   "y": 1168,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/boss-locked": {
+   "x": 192,
+   "y": 1168,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/boss-open": {
+   "x": 0,
+   "y": 1232,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/forest/boss-cleared": {
+   "x": 64,
+   "y": 1232,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "forest",
+   "anchorY": 58
+  },
+  "stage/coast/fight-locked": {
+   "x": 128,
+   "y": 1232,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/fight-open": {
+   "x": 192,
+   "y": 1232,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/fight-cleared": {
+   "x": 0,
+   "y": 1296,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/elite-locked": {
+   "x": 64,
+   "y": 1296,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/elite-open": {
+   "x": 128,
+   "y": 1296,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/elite-cleared": {
+   "x": 192,
+   "y": 1296,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/boss-locked": {
+   "x": 0,
+   "y": 1360,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/boss-open": {
+   "x": 64,
+   "y": 1360,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/coast/boss-cleared": {
+   "x": 128,
+   "y": 1360,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "coast",
+   "anchorY": 58
+  },
+  "stage/swamp/fight-locked": {
+   "x": 192,
+   "y": 1360,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/fight-open": {
+   "x": 0,
+   "y": 1424,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/fight-cleared": {
+   "x": 64,
+   "y": 1424,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/elite-locked": {
+   "x": 128,
+   "y": 1424,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/elite-open": {
+   "x": 192,
+   "y": 1424,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/elite-cleared": {
+   "x": 0,
+   "y": 1488,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/boss-locked": {
+   "x": 64,
+   "y": 1488,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/boss-open": {
+   "x": 128,
+   "y": 1488,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/swamp/boss-cleared": {
+   "x": 192,
+   "y": 1488,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "swamp",
+   "anchorY": 58
+  },
+  "stage/jungle/fight-locked": {
+   "x": 0,
+   "y": 1552,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/fight-open": {
+   "x": 64,
+   "y": 1552,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/fight-cleared": {
+   "x": 128,
+   "y": 1552,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/elite-locked": {
+   "x": 192,
+   "y": 1552,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/elite-open": {
+   "x": 0,
+   "y": 1616,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/elite-cleared": {
+   "x": 64,
+   "y": 1616,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/boss-locked": {
+   "x": 128,
+   "y": 1616,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/boss-open": {
+   "x": 192,
+   "y": 1616,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/jungle/boss-cleared": {
+   "x": 0,
+   "y": 1680,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "jungle",
+   "anchorY": 58
+  },
+  "stage/desert/fight-locked": {
+   "x": 64,
+   "y": 1680,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/fight-open": {
+   "x": 128,
+   "y": 1680,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/fight-cleared": {
+   "x": 192,
+   "y": 1680,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/elite-locked": {
+   "x": 0,
+   "y": 1744,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/elite-open": {
+   "x": 64,
+   "y": 1744,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/elite-cleared": {
+   "x": 128,
+   "y": 1744,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/boss-locked": {
+   "x": 192,
+   "y": 1744,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/boss-open": {
+   "x": 0,
+   "y": 1808,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/desert/boss-cleared": {
+   "x": 64,
+   "y": 1808,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "desert",
+   "anchorY": 58
+  },
+  "stage/canyon/fight-locked": {
+   "x": 128,
+   "y": 1808,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/fight-open": {
+   "x": 192,
+   "y": 1808,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/fight-cleared": {
+   "x": 0,
+   "y": 1872,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/elite-locked": {
+   "x": 64,
+   "y": 1872,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/elite-open": {
+   "x": 128,
+   "y": 1872,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/elite-cleared": {
+   "x": 192,
+   "y": 1872,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/boss-locked": {
+   "x": 0,
+   "y": 1936,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/boss-open": {
+   "x": 64,
+   "y": 1936,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/canyon/boss-cleared": {
+   "x": 128,
+   "y": 1936,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "canyon",
+   "anchorY": 58
+  },
+  "stage/volcano/fight-locked": {
+   "x": 192,
+   "y": 1936,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/fight-open": {
+   "x": 0,
+   "y": 2000,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/fight-cleared": {
+   "x": 64,
+   "y": 2000,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/elite-locked": {
+   "x": 128,
+   "y": 2000,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/elite-open": {
+   "x": 192,
+   "y": 2000,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/elite-cleared": {
+   "x": 0,
+   "y": 2064,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/boss-locked": {
+   "x": 64,
+   "y": 2064,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/boss-open": {
+   "x": 128,
+   "y": 2064,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/volcano/boss-cleared": {
+   "x": 192,
+   "y": 2064,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "volcano",
+   "anchorY": 58
+  },
+  "stage/geyser/fight-locked": {
+   "x": 0,
+   "y": 2128,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/fight-open": {
+   "x": 64,
+   "y": 2128,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/fight-cleared": {
+   "x": 128,
+   "y": 2128,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/elite-locked": {
+   "x": 192,
+   "y": 2128,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/elite-open": {
+   "x": 0,
+   "y": 2192,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/elite-cleared": {
+   "x": 64,
+   "y": 2192,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/boss-locked": {
+   "x": 128,
+   "y": 2192,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/boss-open": {
+   "x": 192,
+   "y": 2192,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/geyser/boss-cleared": {
+   "x": 0,
+   "y": 2256,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "geyser",
+   "anchorY": 58
+  },
+  "stage/tundra/fight-locked": {
+   "x": 64,
+   "y": 2256,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/fight-open": {
+   "x": 128,
+   "y": 2256,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/fight-cleared": {
+   "x": 192,
+   "y": 2256,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/elite-locked": {
+   "x": 0,
+   "y": 2320,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/elite-open": {
+   "x": 64,
+   "y": 2320,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/elite-cleared": {
+   "x": 128,
+   "y": 2320,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/boss-locked": {
+   "x": 192,
+   "y": 2320,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/boss-open": {
+   "x": 0,
+   "y": 2384,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/tundra/boss-cleared": {
+   "x": 64,
+   "y": 2384,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "tundra",
+   "anchorY": 58
+  },
+  "stage/glacier/fight-locked": {
+   "x": 128,
+   "y": 2384,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/fight-open": {
+   "x": 192,
+   "y": 2384,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/fight-cleared": {
+   "x": 0,
+   "y": 2448,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/elite-locked": {
+   "x": 64,
+   "y": 2448,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/elite-open": {
+   "x": 128,
+   "y": 2448,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/elite-cleared": {
+   "x": 192,
+   "y": 2448,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/boss-locked": {
+   "x": 0,
+   "y": 2512,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/boss-open": {
+   "x": 64,
+   "y": 2512,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/glacier/boss-cleared": {
+   "x": 128,
+   "y": 2512,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "glacier",
+   "anchorY": 58
+  },
+  "stage/peaks/fight-locked": {
+   "x": 192,
+   "y": 2512,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/fight-open": {
+   "x": 0,
+   "y": 2576,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/fight-cleared": {
+   "x": 64,
+   "y": 2576,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/elite-locked": {
+   "x": 128,
+   "y": 2576,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/elite-open": {
+   "x": 192,
+   "y": 2576,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/elite-cleared": {
+   "x": 0,
+   "y": 2640,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/boss-locked": {
+   "x": 64,
+   "y": 2640,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/boss-open": {
+   "x": 128,
+   "y": 2640,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/peaks/boss-cleared": {
+   "x": 192,
+   "y": 2640,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "peaks",
+   "anchorY": 58
+  },
+  "stage/highlands/fight-locked": {
+   "x": 0,
+   "y": 2704,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/fight-open": {
+   "x": 64,
+   "y": 2704,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/fight-cleared": {
+   "x": 128,
+   "y": 2704,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/elite-locked": {
+   "x": 192,
+   "y": 2704,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/elite-open": {
+   "x": 0,
+   "y": 2768,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/elite-cleared": {
+   "x": 64,
+   "y": 2768,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/boss-locked": {
+   "x": 128,
+   "y": 2768,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/boss-open": {
+   "x": 192,
+   "y": 2768,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/highlands/boss-cleared": {
+   "x": 0,
+   "y": 2832,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "highlands",
+   "anchorY": 58
+  },
+  "stage/sky/fight-locked": {
+   "x": 64,
+   "y": 2832,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/fight-open": {
+   "x": 128,
+   "y": 2832,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/fight-cleared": {
+   "x": 192,
+   "y": 2832,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/elite-locked": {
+   "x": 0,
+   "y": 2896,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/elite-open": {
+   "x": 64,
+   "y": 2896,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/elite-cleared": {
+   "x": 128,
+   "y": 2896,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/boss-locked": {
+   "x": 192,
+   "y": 2896,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/boss-open": {
+   "x": 0,
+   "y": 2960,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/sky/boss-cleared": {
+   "x": 64,
+   "y": 2960,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "sky",
+   "anchorY": 58
+  },
+  "stage/underworld/fight-locked": {
+   "x": 128,
+   "y": 2960,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/fight-open": {
+   "x": 192,
+   "y": 2960,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/fight-cleared": {
+   "x": 0,
+   "y": 3024,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/elite-locked": {
+   "x": 64,
+   "y": 3024,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/elite-open": {
+   "x": 128,
+   "y": 3024,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/elite-cleared": {
+   "x": 192,
+   "y": 3024,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/boss-locked": {
+   "x": 0,
+   "y": 3088,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/boss-open": {
+   "x": 64,
+   "y": 3088,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/underworld/boss-cleared": {
+   "x": 128,
+   "y": 3088,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "underworld",
+   "anchorY": 58
+  },
+  "stage/moor/fight-locked": {
+   "x": 192,
+   "y": 3088,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/fight-open": {
+   "x": 0,
+   "y": 3152,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/fight-cleared": {
+   "x": 64,
+   "y": 3152,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/elite-locked": {
+   "x": 128,
+   "y": 3152,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/elite-open": {
+   "x": 192,
+   "y": 3152,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/elite-cleared": {
+   "x": 0,
+   "y": 3216,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/boss-locked": {
+   "x": 64,
+   "y": 3216,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/boss-open": {
+   "x": 128,
+   "y": 3216,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/moor/boss-cleared": {
+   "x": 192,
+   "y": 3216,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "moor",
+   "anchorY": 58
+  },
+  "stage/crystal/fight-locked": {
+   "x": 0,
+   "y": 3280,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/fight-open": {
+   "x": 64,
+   "y": 3280,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/fight-cleared": {
+   "x": 128,
+   "y": 3280,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/elite-locked": {
+   "x": 192,
+   "y": 3280,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/elite-open": {
+   "x": 0,
+   "y": 3344,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/elite-cleared": {
+   "x": 64,
+   "y": 3344,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/boss-locked": {
+   "x": 128,
+   "y": 3344,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/boss-open": {
+   "x": 192,
+   "y": 3344,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/crystal/boss-cleared": {
+   "x": 0,
+   "y": 3408,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "crystal",
+   "anchorY": 58
+  },
+  "stage/ruins/fight-locked": {
+   "x": 64,
+   "y": 3408,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/fight-open": {
+   "x": 128,
+   "y": 3408,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/fight-cleared": {
+   "x": 192,
+   "y": 3408,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/elite-locked": {
+   "x": 0,
+   "y": 3472,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/elite-open": {
+   "x": 64,
+   "y": 3472,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/elite-cleared": {
+   "x": 128,
+   "y": 3472,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/boss-locked": {
+   "x": 192,
+   "y": 3472,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/boss-open": {
+   "x": 0,
+   "y": 3536,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/ruins/boss-cleared": {
+   "x": 64,
+   "y": 3536,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "ruins",
+   "anchorY": 58
+  },
+  "stage/rift/fight-locked": {
+   "x": 128,
+   "y": 3536,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/fight-open": {
+   "x": 192,
+   "y": 3536,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/fight-cleared": {
+   "x": 0,
+   "y": 3600,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/elite-locked": {
+   "x": 64,
+   "y": 3600,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/elite-open": {
+   "x": 128,
+   "y": 3600,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/elite-cleared": {
+   "x": 192,
+   "y": 3600,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/boss-locked": {
+   "x": 0,
+   "y": 3664,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/boss-open": {
+   "x": 64,
+   "y": 3664,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/rift/boss-cleared": {
+   "x": 128,
+   "y": 3664,
+   "w": 64,
+   "h": 64,
+   "group": "stage",
+   "biome": "rift",
+   "anchorY": 58
+  },
+  "stage/frontier-0": {
+   "x": 192,
+   "y": 3664,
+   "w": 64,
+   "h": 64,
+   "group": "stage"
+  },
+  "stage/frontier-1": {
+   "x": 0,
+   "y": 3728,
+   "w": 64,
+   "h": 64,
+   "group": "stage"
   }
  }
 }
