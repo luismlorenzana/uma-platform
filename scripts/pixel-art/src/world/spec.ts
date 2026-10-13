@@ -39,11 +39,11 @@ export const STAGE_KINDS = ['fight', 'elite', 'boss'] as const
 export const STAGE_STATES = ['locked', 'open', 'cleared'] as const
 export type StageKind = (typeof STAGE_KINDS)[number]
 export type StageState = (typeof STAGE_STATES)[number]
-export type Group = 'ground' | 'prop' | 'liquid' | 'road' | 'marker' | 'icon' | 'backdrop'
+export type Group = 'ground' | 'prop' | 'liquid' | 'road' | 'marker' | 'icon' | 'backdrop' | 'stage'
 export interface FrameSpec { id: string; w: number; h: number; group: Group; biome?: Biome; anchorY?: number }
 
 /** Part 1 publishes only five reviewed biomes; part 2 adds the rest and ocean, never placeholders. */
-export function worldFrameSpecs(biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false, backdrops = false): FrameSpec[] {
+export function worldFrameSpecs(biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false, backdrops = false, buildings = false): FrameSpec[] {
   const frames: FrameSpec[] = []
   for (const biome of biomes) {
     for (let v = 0; v < 4; v++) frames.push({ id: `ground/${biome}-${v}`, w: 16, h: 16, group: 'ground', biome })
@@ -64,5 +64,10 @@ export function worldFrameSpecs(biomes: readonly Biome[] = PHASE_ONE_BIOMES, oce
   frames.push({ id: 'marker/capital', w: 48, h: 48, group: 'marker', anchorY: 44 })
   for (const biome of biomes) frames.push({ id: `icon/${biome}`, w: 16, h: 16, group: 'icon', biome })
   if (backdrops) for (const biome of biomes) frames.push({ id: `backdrop/${biome}`, w: 128, h: 48, group: 'backdrop', biome })
+  if (buildings) {
+    for (const biome of biomes) for (const kind of STAGE_KINDS) for (const state of STAGE_STATES)
+      frames.push({ id: `stage/${biome}/${kind}-${state}`, w: 64, h: 64, group: 'stage', biome, anchorY: 58 })
+    for (let i=0;i<2;i++) frames.push({ id: `stage/frontier-${i}`, w: 64, h: 64, group: 'stage' })
+  }
   return frames
 }

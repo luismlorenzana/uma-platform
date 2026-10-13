@@ -77,11 +77,14 @@ right. Each side has grades 1–10 across. `gear-armor-d103-1x.png` shows just t
 
 ## World atlas (H06, complete)
 
-`world/atlas.png` / `.json` is a new original-art family for the RPG's map screens. All three H06 milestones have passed review. The native-frame family contains **329 frames** (310 map frames plus 19 battle backdrops): all nineteen biomes (four ground variants, three props and one icon each), four ocean variants, six liquid families, three road materials, all stage/frontier/Spring/flag markers and the capital. All three milestone compositions are complete. No placeholder frames are shipped.
+`world/atlas.png` / `.json` is an original-art family for the RPG's map screens. The family contains **502 frames**
+(310 original map frames, 19 battle backdrops and 173 four-tile building/frontier frames): nineteen biomes, ocean,
+six liquid families, three road materials, stage/frontier/Spring/flag markers and the capital. No placeholders.
 
 The JSON is `{ schemaVersion: 1, width, height, frames }`; each frame is `{ x, y, w, h, group, biome?, anchorY? }`.
 Coordinates are aligned to the 16 px grid, but frames have native sizes: ground/liquids/roads/icons/stages are 16×16,
-tall props and place markers 16×32, capital 48×48. Props anchor at `h - 2`, capital at y=44. Consumers read the index;
+tall props and place markers 16×32, capital 48×48, new stage buildings/frontiers 64×64. Props anchor at `h - 2`,
+capital at y=44 and stage buildings at y=58. Consumers read the index;
 frame positions are an implementation detail of the shelf packer.
 
 | Frames | Contract |
@@ -95,6 +98,21 @@ frame positions are an implementation detail of the shelf packer.
 | `marker/spring`, `marker/spring-dry`, `marker/flag`, `marker/flag-cleared` | 16×32 place/progress symbols |
 | `marker/capital` | 48×48, y=44 ground line |
 | `icon/<biome>` | 16×16 biome header/list symbols |
+| `stage/<biome>/<fight\|elite\|boss>-<locked\|open\|cleared>` | 64×64 original barracks, elite towers and strongholds; ground line y=58 |
+| `stage/frontier-0…1` | 64×64 transparent frontier pulse rings |
+
+### Four-tile destinations (2.3.0)
+
+The 173 new frames append to the 2.2.0 sheet without moving or repainting any earlier frame. The atlas is now
+**256×3792**. Read its dimensions from JSON. Stage buildings are authored at native 64px (4×4 tiles), not upscaled
+16px symbols. All nineteen biomes have matching materials and roof/detail motifs. Open buildings have lit windows
+and an open door; locked ones have dark windows and boarded doors. Cleared buildings are fully grayscale, including
+their outline and shadow. Old stage markers remain available to existing consumers.
+
+`stage-buildings-1x.png` and `stage-buildings-2x.png` show nine states per biome (rows in `BIOME_IDS` order;
+columns fight/elite/boss × locked/open/cleared). `stage-buildings.html` labels each card.
+`stage-buildings-sample.png` pairs open and cleared barracks/towers/strongholds for Meadow, Coast, Volcano,
+Glacier and Underworld at 2×. Placement and game progression remain the consumer's responsibility.
 
 `assets/previews/world.png` contains every frame at 3× plus nineteen regions, a ten-band continent and a five-island world. `world.html`
 labels frames and shows 2× phone comparison plots/maps. `world-<biome>.png`, `world-continent.png` and `world-plots.png`
@@ -109,7 +127,7 @@ The complete H06 contract has 310 frames (including ocean); the 19 battle horizo
 ## Battle backdrops (H08)
 
 The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**
-frames on a **256×976** sheet. The original 310 positions and pixels are unchanged. Read atlas dimensions from JSON;
+frames on the 2.2.0 **256×976** sheet (2.3.0 appends buildings below it). The original 310 positions and pixels are unchanged. Read atlas dimensions from JSON;
 do not retain the old 512px height in CSS backgrounds.
 
 Each strip has a transparent sky, two silhouette distances, biome landmarks and a foot fading into the matching

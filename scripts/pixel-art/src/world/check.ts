@@ -7,8 +7,8 @@ import { liquidTiles } from './liquids.ts'
 import { roadTiles } from './roads.ts'
 import { LIQUIDS, PHASE_ONE_BIOMES, ROADS, worldFrameSpecs, type Biome } from './spec.ts'
 
-export function checkWorldFrames(frames: readonly WorldFrame[], biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false, backdrops = false): string[] {
-  const wanted = new Map(worldFrameSpecs(biomes, ocean, backdrops).map((s) => [s.id, s]))
+export function checkWorldFrames(frames: readonly WorldFrame[], biomes: readonly Biome[] = PHASE_ONE_BIOMES, ocean = false, backdrops = false, buildings = false): string[] {
+  const wanted = new Map(worldFrameSpecs(biomes, ocean, backdrops, buildings).map((s) => [s.id, s]))
   const seen = new Set<string>(), bad: string[] = []
   for (const frame of frames) {
     const spec = wanted.get(frame.id)

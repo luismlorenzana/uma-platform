@@ -8,12 +8,19 @@ import { liquidTile } from './liquids.ts'
 import { capital, flag, frontierRing, spring, stageMarker } from './markers.ts'
 import { drawWorldProp, worldProp } from './props.ts'
 import { roadTile } from './roads.ts'
+import { stageBuilding, stageFrontier } from './stage-buildings.ts'
 import { worldFrameSpecs, type Biome, type FrameSpec, type Liquid, type Road, type StageKind, type StageState } from './spec.ts'
 
 export interface WorldFrame extends FrameSpec { img: Img }
 export interface AtlasFrame extends FrameSpec { x: number; y: number }
 
 function drawFrame(spec: FrameSpec): Img {
+  if (spec.group === 'stage') {
+    const name = spec.id.split('/').at(-1)!
+    if (name.startsWith('frontier-')) return stageFrontier(Number(name.at(-1)))
+    const [kind,state] = name.split('-')
+    return stageBuilding(spec.biome!, kind as StageKind, state as StageState)
+  }
   if (spec.group === 'backdrop') return backdrop(spec.biome!)
   const name = spec.id.split('/').at(-1)!
   if (spec.group === 'ground') return spec.biome ? biomeGround(spec.biome, Number(name.at(-1))) : oceanGround(Number(name.at(-1)))
@@ -29,8 +36,8 @@ function drawFrame(spec: FrameSpec): Img {
   return stageMarker(kind as StageKind, suffix as StageState)
 }
 
-export function worldFrames(biomes?: readonly Biome[], ocean = false, backdrops = false): WorldFrame[] {
-  return worldFrameSpecs(biomes, ocean, backdrops).map((spec) => ({ ...spec, img: drawFrame(spec) }))
+export function worldFrames(biomes?: readonly Biome[], ocean = false, backdrops = false, buildings = false): WorldFrame[] {
+  return worldFrameSpecs(biomes, ocean, backdrops, buildings).map((spec) => ({ ...spec, img: drawFrame(spec) }))
 }
 
 /** 16 px-aligned shelves; variable-size frames retain native pixels and never overlap a tall neighbour. */

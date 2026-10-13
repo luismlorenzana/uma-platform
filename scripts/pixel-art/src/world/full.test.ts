@@ -51,7 +51,7 @@ describe('world art part 2', () => {
     }
   })
   it('matches every checked-in atlas pixel/index and encodes repeatably on the current runtime', () => {
-    const { atlas, index } = packWorld(worldFrames(BIOME_IDS, true, true))
+    const { atlas, index } = packWorld(worldFrames(BIOME_IDS, true, true, true))
     const root = new URL('../../../../packages/art/world/', import.meta.url)
     expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: atlas.w, height: atlas.h, frames: index })
     const stored = readFileSync(new URL('atlas.png', root)), encoded = encodePng(atlas.w, atlas.h, atlas.px)

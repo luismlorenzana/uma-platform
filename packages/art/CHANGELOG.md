@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.3.0
+
+### Minor Changes
+
+- Append native 64px thematic stage buildings for all nineteen biomes, with fully grayscale cleared variants and a four-tile frontier ring. Existing world frames retain their positions and pixels.
+
 ## 2.2.0
 
 ### Minor Changes
