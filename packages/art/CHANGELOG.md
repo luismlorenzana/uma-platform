@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.4.0
+
+### Minor Changes
+
+- 6edf898: Add native 32px crenellated regular towers, elite towers and castles for compact stage maps in a separate world/stages-compact atlas. Retain every existing 64px structure, frame, painter and preview unchanged.
+
 ## 2.3.0
 
 ### Minor Changes
