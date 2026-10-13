@@ -35,5 +35,5 @@ describe('four-tile stage destinations', () => {
     const hash=(biome: typeof BIOME_IDS[number])=>createHash('sha256').update(stageBuilding(biome,'fight','open').px).digest('hex')
     expect(new Set(BIOME_IDS.map(hash)).size).toBe(19)
     expect(stageFrontier(0).px).not.toEqual(stageFrontier(1).px)
-  })
+  }, 30_000) // Exhaustive rendering/packing of 502 frames takes ~12s on the shared CI runner.
 })

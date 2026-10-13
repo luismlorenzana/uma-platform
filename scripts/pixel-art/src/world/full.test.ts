@@ -60,5 +60,5 @@ describe('world art part 2', () => {
     const firstDifference = expected.findIndex((v, i) => v !== actual[i])
     expect(expected.equals(actual), 'RGBA row mismatch at byte ' + firstDifference).toBe(true)
     expect(encoded.equals(encodePng(atlas.w, atlas.h, atlas.px))).toBe(true)
-  })
+  }, 30_000) // The 502-frame saved-atlas integration check takes ~10s on shared CI.
 })
