@@ -7,7 +7,7 @@ import { add, box, stroke } from '../tiles/props/kit.ts'
 import { BIOMES, type Biome, type StageKind, type StageState } from './spec.ts'
 
 type Theme = { wall: string; roof: string; style?: 'dome' | 'spire' | 'flat'; snow?: boolean; vines?: boolean; crystal?: boolean; bone?: boolean }
-const THEMES: Record<Biome, Theme> = {
+export const THEMES: Record<Biome, Theme> = {
   meadow: { wall: '#c7b796', roof: '#789954' }, forest: { wall: '#aa9976', roof: '#497657', vines: true },
   coast: { wall: '#d8c6a2', roof: '#508ca1' }, swamp: { wall: '#9d9f7c', roof: '#69775d', vines: true },
   jungle: { wall: '#b3a179', roof: '#467e65', vines: true }, desert: { wall: '#dac08a', roof: '#b7734d', style: 'dome' },
