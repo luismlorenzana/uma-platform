@@ -8,7 +8,7 @@ The order of work across all four repos (P16). Each phase lists its exit check. 
 | 0 | uma-platform | Master data pipeline, first release, `uma-data` package | Phase 1 design spec | Done (2026-10-10) |
 | 1 | uma-rpg | Design spec, then slice S1: foundation and the four-page Hub on master data | Phase 0 | Done (deployed, 2026-10-10) |
 | 2 | uma-rpg | Slices S2–S8: collection, battles, passive layer, Learning District, cooking, equipment, Tier Finale | | In progress (S2–S7 deployed; S8 waits on the owner, 2026-10-12) |
-| 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework Farm | | Planned (uma-racer `docs/rearchitecture/`, D321–D325, 2026-10-12) |
+| 3 | uma-racer, uma-platform | Switch to platform data, extract shared kit, strip RPG and puzzles, rework the game | | In progress (racer phase 1 done 2026-10-14; the rework's rules next; racer D321–D339) |
 | 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | | Not started |
 
 Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the port isn't chasing a moving target.
@@ -63,19 +63,34 @@ tests pass.
 
 ## Phase 3 — uma-racer refactor
 
-**Status:** planned 2026-10-12 in uma-racer's [`docs/rearchitecture/`](https://github.com/luismlorenzana/uma-racer/blob/main/docs/rearchitecture/README.md)
-(its D321–D325), in eight phases. Changes from the outline below, by the owner's direction:
-- **A full data wipe** (save generation 2) with 20 starting Uma Tickets.
-- **The RPG is deleted completely.**
-- **The Puzzles stay for now:** they are the racer's Constellation Level loop until the owner decides their future,
-  and uma-puzzle can still port from `pre-split`.
-- **The shared kit to extract:** `uma-auth`, `uma-ui`, `uma-content`, `uma-scene` (with `hub`) and `uma-idle`.
-  Save sync stays per game (a P-decision is due when the kit is extracted).
+**Status:** in progress. Planned 2026-10-12 in uma-racer's [`docs/rearchitecture/`](https://github.com/luismlorenzana/uma-racer/blob/main/docs/rearchitecture/README.md)
+(its D321–D325) and redirected 2026-10-13 by the owner's game rework, [`docs/rework/`](https://github.com/luismlorenzana/uma-racer/blob/main/docs/rework/README.md)
+(D326–D338): Race, Farm, Train, three tiers of five scenarios and World Expeditions. The racer's order of work is its
+[`08-phases.md`](https://github.com/luismlorenzana/uma-racer/blob/main/docs/rearchitecture/08-phases.md):
+1. **A sound base:** done 2026-10-14 (racer D337). The racer's API imports its own domain package, CI enforces a
+   180 KB startup budget, `@luismlorenzana/uma-data` installs from GitHub Packages, and a live manual renders from code.
+2. **The rework's rules and `sim:loop`** in the racer's domain, before any wipe (racer M033): next.
+3. **The generation-2 cutover:** one wipe, 20 starting Uma Tickets, and the RPG, the Puzzles, Spark Rivals,
+   Friendship Training, Constellation Level, card stars and tokens deleted.
+4. Push notifications, only if the owner asks (a port of uma-rpg's).
+5. **Platform master data and the shared kit** (the steps below).
+6. The Hub · 7. the Farm and Training scenes · 8. the race on Phaser · 9. World Expeditions.
 
-- **Farm rework spec with the owner:** what Farm takes over from the RPG and puzzles.
+Changes from the outline below, by the owner's direction:
+- **A full data wipe** (save generation 2) with 20 starting Uma Tickets.
+- **The RPG is deleted completely**, and **so are the Puzzles** (racer D326): the rework replaces their
+  Constellation Level loop with timed Training Hub unlocks. uma-puzzle can still port from `pre-split`.
+- **The Farm becomes uma-rpg's farming half** (racer D330): 8 families × 10 grades, the Pantry and the Kitchen, with
+  uma-art's items, dishes and `farmlands` buildings. The racer needs a small `racer` buildings family for its Hub
+  places (racer `docs/rework/11-hub-and-places.md` §10.3).
+- **The shared kit to extract:** `uma-auth`, `uma-ui`, `uma-content`, `uma-scene` (with `hub`) and `uma-idle`, in
+  the racer's phases 5–7. `uma-idle` takes one-after-another production with queues, which both games now use. Save
+  sync stays per game (a P-decision is due when the kit is extracted).
+
+- **Farm rework spec with the owner:** done, as the racer's `docs/rework/` (D326–D338).
 - Tag uma-racer before stripping (`pre-split`), so uma-puzzle can port from that point.
-- Switch to uma-platform master data and delete uma-racer's own GameTora pipeline. Game-only overlays (flair, card
-  focus, Spark Rivals) stay in uma-racer.
+- Switch to uma-platform master data and delete uma-racer's own GameTora pipeline. Game-only overlays (flair and card
+  focus) stay in uma-racer; Spark Rivals are deleted with their mode.
 - Extract shared packages from uma-rpg now that there's a second user (P11).
 - Remove the RPG and puzzles: code, API routes, save fields, content packs. No save carry-over (P4).
 - Align the Hub with the shared pattern.
