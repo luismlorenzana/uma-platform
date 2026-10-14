@@ -13,8 +13,9 @@ It owns:
 
 ## Status
 
-Phase 0 is done: `@luismlorenzana/uma-data@1.0.0` is on GitHub Packages and the first master data release
-(`d9bbb52a9cd7`) is `latest` in `gs://uma-platform-master-data`. Next is Phase 1 in uma-rpg. See the
+Phases 0 and 1 are done, and Phases 2 (uma-rpg) and 3 (the uma-racer refactor) are in progress.
+`@luismlorenzana/uma-data` and `@luismlorenzana/uma-art` are on GitHub Packages: uma-rpg uses both, and uma-racer
+installs `uma-data`. See the
 [roadmap](docs/roadmap.md).
 
 ## Layout
