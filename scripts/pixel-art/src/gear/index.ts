@@ -5,6 +5,7 @@ import { garb, leather, mail, plate } from './armor.ts'
 import { bracers, circlet, cuirass, gauntlets, greaves, helm, leggings, robe } from './armor-pieces.ts'
 import { axe, greatsword } from './blades.ts'
 import { bow } from './bow.ts'
+import { AMULETS, amulet, boots, slippers, TALISMANS, talisman } from './d124.ts'
 import { orb } from './element-orb.ts'
 import { elementTome } from './element-tome.ts'
 import { charm, ring } from './jewelry.ts'
@@ -28,7 +29,10 @@ const PAINTERS: Record<string, GearPainter> = {
   ring,
   charm,
   helm, cuirass, greaves, gauntlets, circlet, robe, leggings, bracers,
+  boots, slippers,
 }
+for (const kind of TALISMANS) PAINTERS[`talisman-${kind}`] = (s, g) => talisman(s, g, kind)
+for (const kind of AMULETS) PAINTERS[`amulet-${kind}`] = (s, g) => amulet(s, g, kind)
 for (const element of Object.keys(ELEMENTS) as Element[]) PAINTERS[`tome-${element}`] = (s, g) => elementTome(s, g, element)
 for (const kind of ['greatsword', 'axe', 'lance', 'bow', 'katana', ...Object.keys(ELEMENTS)] as Kind[])
   PAINTERS[`orb-${kind}`] = (s, g) => orb(s, g, kind)

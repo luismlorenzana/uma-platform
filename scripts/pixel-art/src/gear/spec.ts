@@ -1,4 +1,4 @@
-// The gear catalog as the art sees it: thirty-four rows (six retired), each in ten grades. A type's grade-g piece is made from
+// The gear catalog as the art sees it: forty-six rows (six retired), each in ten grades. A type's grade-g piece is made from
 // the refined material at materialByGrade[g - 1] (uma-rpg's gear design), and that material colors it.
 
 export type Slot = 'weapon' | 'armor' | 'accessory'
@@ -53,6 +53,19 @@ export const GEAR_TYPES: readonly GearType[] = [
   { type: 'robe', label: 'Robe', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'leggings', label: 'Leggings', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'bracers', label: 'Bracers', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  // H28 appends only: preserve every position in the published 2.4.0 atlas, including retired rows.
+  { type: 'boots', label: 'Boots', slot: 'armor', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'slippers', label: 'Slippers', slot: 'armor', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'talisman-vital', label: 'Vital Talisman', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'talisman-vampire', label: 'Vampire Talisman', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'talisman-bulwark', label: 'Bulwark Talisman', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'talisman-iron', label: 'Iron Talisman', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'talisman-thorn', label: 'Thorn Talisman', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'amulet-spring', label: 'Spring Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'amulet-siphon', label: 'Siphon Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'amulet-veil', label: 'Veil Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'amulet-ward', label: 'Ward Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  { type: 'amulet-mirror', label: 'Mirror Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
 ]
 
 export const GRADES = 10

@@ -37,6 +37,19 @@ The 2× `gear-armor-d103.png` comparison places new rows at left, retained Garb/
 `gear-armor-d103-1x.png` checks all eighty additions at native size. Full `gear.png` / `gear-1x.png` / `gear.html`
 also include them. Material ladders and shared lighting/outline/shadow helpers are unchanged.
 
+## D124 feet and defensive accessories (H28)
+
+`src/gear/d124.ts` appends rows 34–45: Boots, Slippers, five Talismans and five Amulets, ten grades each. Boots are
+plated sabatons; Slippers use the same staggered pair footprint in cloth with grade-gem trim. Every defensive
+pendant has its own silhouette (heart, fang, shield, anvil, thorned vine; drop, swirl, veiled crescent, rune circle,
+hand mirror), not a new symbol pasted onto the same disk. Construction changes at grades 4 and 7; glow starts at 8.
+
+`gear-d124-2x.png` / `gear-d124-1x.png` show these twelve rows, grades 1–10 across, in the order above. Labelled 1×/3×
+cards are in `gear.html`. Existing H27 previews stay byte-identical. `legacy-2.4.0.json` pins all 340 preceding frame
+metadata and pixel hashes; the same saved-atlas, deterministic-grade and clear 9×9 corner checks cover all 460 icons.
+Art's primary material metadata follows the existing Arms metal / Arcana gem ladders, with cloth and stone details;
+it is not a game recipe table.
+
 ## World art
 
 `src/world/build.ts` writes the `world` atlas and previews from the RPG's `docs/design/world/map-art.md` contract.

@@ -14,29 +14,32 @@ const ROWS = [
   'orb-greatsword', 'orb-axe', 'orb-lance', 'orb-bow', 'orb-katana',
   'orb-fire', 'orb-ice', 'orb-lightning', 'orb-light', 'orb-dark',
   'helm', 'cuirass', 'greaves', 'gauntlets', 'circlet', 'robe', 'leggings', 'bracers',
+  'boots', 'slippers', 'talisman-vital', 'talisman-vampire', 'talisman-bulwark', 'talisman-iron', 'talisman-thorn',
+  'amulet-spring', 'amulet-siphon', 'amulet-veil', 'amulet-ward', 'amulet-mirror',
 ]
 const signature = (px: Uint8Array) => Buffer.from(px).toString('base64')
 
-describe('D86/D103 gear atlas contract', () => {
-  it('pins all 34 rows and their first recipe family', () => {
+describe('D86/D103/D124 gear atlas contract', () => {
+  it('pins all 46 rows and their primary drawing material', () => {
     expect(GEAR_TYPES.map((t) => t.type)).toEqual(ROWS)
     expect(GEAR_TYPES.map((t) => t.mainFamily)).toEqual([
       ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
       'woods', 'hides-scales', 'ores', 'ores', 'crystals', 'bones-horns',
       ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
       ...Array<string>(4).fill('ores'), ...Array<string>(4).fill('crystals'),
+      'ores', 'crystals', ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
     ])
     expect(() => checkGearContract(GEAR)).not.toThrow()
-    expect(() => checkGearContract(GEAR.slice(1))).toThrow('34 gear rows')
-    expect(new Set(GEAR.flatMap((r) => r.icons.map((i) => i.id))).size).toBe(340)
+    expect(() => checkGearContract(GEAR.slice(1))).toThrow('46 gear rows')
+    expect(new Set(GEAR.flatMap((r) => r.icons.map((i) => i.id))).size).toBe(460)
   })
 
   it('matches every checked-in JSON frame, including grade material', () => {
     const atlas = JSON.parse(readFileSync(new URL('../../../../packages/art/gear/atlas.json', import.meta.url), 'utf8')) as {
       width: number; height: number; frames: Record<string, { x: number; y: number; w: number; h: number; type: string; grade: number; slot: string; material: string }>
     }
-    expect([atlas.width, atlas.height]).toEqual([320, 1088])
-    expect(Object.keys(atlas.frames)).toHaveLength(340)
+    expect([atlas.width, atlas.height]).toEqual([320, 1472])
+    expect(Object.keys(atlas.frames)).toHaveLength(460)
     GEAR.forEach((row, r) => row.icons.forEach((icon) => {
       expect(atlas.frames[icon.id]).toEqual({ x: (icon.grade - 1) * 32, y: r * 32, w: 32, h: 32, type: row.type.type, grade: icon.grade, slot: row.type.slot, material: icon.material })
     }))
