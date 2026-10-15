@@ -10,7 +10,7 @@ files by hand.
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
   `duo-…`, `feast-<grade>`).
-- `gear/atlas.png` / `.json`: 34 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
+- `gear/atlas.png` / `.json`: 46 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
   the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
 - `buildings/atlas.png` / `.json`: the 36 Hub places (48×48), id = uma-rpg place id. Frames: `{ x, y, w, h, page,
@@ -52,10 +52,9 @@ spheres use the game's element colours; Arms Orb spheres stay polished steel wit
 The build rejects object/outline pixels in the bottom-right 9×9 (`x >= 23`, `y >= 23`) and removes only soft shadows
 or glow there, so the complete corner is transparent. Its row, grade, material and clear-zone contracts are tested.
 
-## D103 armor rows (H27, next release)
+## D103 armor rows (H27, since 2.1.0)
 
 H27 appends eight rows to the 2.0.0 gear sheet, growing it to **320×1088** without moving or repainting rows 0–25.
-The package version stays at 2.0.0 in the PR; Claude versions and publishes the minor changeset after merging.
 
 | Rows | Types, in order |
 |---|---|
@@ -64,8 +63,9 @@ The package version stays at 2.0.0 in the PR; Claude versions and publishes the 
 
 Head, body, legs and arms share paired anchors/footprints. Physical pieces use the grade's ingot and hide colours;
 magical pieces use cloth, cut gems and carved bone. Their construction changes at grades 4 and 7, and trim/rune glow
-starts at 8, with the shared legendary glints at 9–10. Their `material` field names the recipe's first family: ingots
-for physical, cut gems for magical. Every frame keeps the full bottom-right 9×9 transparent.
+starts at 8, with the shared legendary glints at 9–10. Their `material` field names the primary drawing ladder:
+ingots for physical, cut gems for magical, not the game's later recipe rules. Every frame keeps the full
+bottom-right 9×9 transparent.
 
 **Retired, retained:** Garb, Leather Armor, Mail, Plate, Ring and Charm (rows 10–15). These remain for existing
 consumers; D103's armor is not aliased onto them. Consumers adopting the new rows must read the atlas height/index
@@ -74,6 +74,25 @@ rather than retaining the old 832px sheet height.
 `assets/previews/gear-armor-d103.png` shows the new eight rows at 2× on the left and those six retired rows on the
 right. Each side has grades 1–10 across. `gear-armor-d103-1x.png` shows just the new rows at native size;
 `gear.html` provides labelled cards at both 1× and 3×. Tests freeze every 2.0.0 pixel row and frame metadata hash.
+
+## Feet and defensive accessories (H28, 2.5.0)
+
+Twelve rows append after Bracers, growing the gear atlas to **320×1472**. All first 34 rows keep their positions,
+metadata and exact RGBA bytes, including every H27 piece and the six retired rows.
+
+| Rows | Types, in order |
+|---|---|
+| 34–35 | `boots`, `slippers` |
+| 36–40 | `talisman-vital`, `talisman-vampire`, `talisman-bulwark`, `talisman-iron`, `talisman-thorn` |
+| 41–45 | `amulet-spring`, `amulet-siphon`, `amulet-veil`, `amulet-ward`, `amulet-mirror` |
+
+Each row has grades 1–10. Physical gear uses the ingot ladder, magical gear the gem ladder with cloth detailing.
+Feet share a staggered pair footprint; each pendant has its own silhouette. Finishes change at grades 4 and 7,
+glow starts at 8, and glints at 9–10. Every corner stays transparent. Consumers must update their sheet height
+and use the dedicated row, not borrowed Greaves/Leggings/Charm/Ring art. No gear stats or recipes live here.
+
+`assets/previews/gear-d124-2x.png` and `gear-d124-1x.png` show the twelve rows in this order; `gear.html` has labels.
+Tests pin all 2.4.0 frames/pixels and check each new silhouette, ten distinct grades and every saved atlas pixel.
 
 ## World atlas (H06, complete)
 

@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.5.0
+
+### Minor Changes
+
+- 19eba58: Append 120 original gear icons for Boots, Slippers, five Talismans and five Amulets (H28), preserving every existing gear frame and pixel.
+
 ## 2.4.0
 
 ### Minor Changes

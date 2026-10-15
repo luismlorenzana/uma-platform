@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 320,
- "height": 1088,
+ "height": 1472,
  "frames": {
   "greatsword-g1": {
    "x": 0,
@@ -3401,6 +3401,1206 @@
    "type": "bracers",
    "grade": 10,
    "slot": "armor",
+   "material": "cut-philosophers-stone"
+  },
+  "boots-g1": {
+   "x": 0,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 1,
+   "slot": "armor",
+   "material": "copper-ingot"
+  },
+  "boots-g2": {
+   "x": 32,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 2,
+   "slot": "armor",
+   "material": "tin-ingot"
+  },
+  "boots-g3": {
+   "x": 64,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 3,
+   "slot": "armor",
+   "material": "iron-ingot"
+  },
+  "boots-g4": {
+   "x": 96,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 4,
+   "slot": "armor",
+   "material": "silver-ingot"
+  },
+  "boots-g5": {
+   "x": 128,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 5,
+   "slot": "armor",
+   "material": "cobalt-ingot"
+  },
+  "boots-g6": {
+   "x": 160,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 6,
+   "slot": "armor",
+   "material": "gold-ingot"
+  },
+  "boots-g7": {
+   "x": 192,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 7,
+   "slot": "armor",
+   "material": "platinum-ingot"
+  },
+  "boots-g8": {
+   "x": 224,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 8,
+   "slot": "armor",
+   "material": "titanium-ingot"
+  },
+  "boots-g9": {
+   "x": 256,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 9,
+   "slot": "armor",
+   "material": "mythril-ingot"
+  },
+  "boots-g10": {
+   "x": 288,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "type": "boots",
+   "grade": 10,
+   "slot": "armor",
+   "material": "orichalcum-ingot"
+  },
+  "slippers-g1": {
+   "x": 0,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 1,
+   "slot": "armor",
+   "material": "cut-quartz"
+  },
+  "slippers-g2": {
+   "x": 32,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 2,
+   "slot": "armor",
+   "material": "cut-amethyst"
+  },
+  "slippers-g3": {
+   "x": 64,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 3,
+   "slot": "armor",
+   "material": "cut-citrine"
+  },
+  "slippers-g4": {
+   "x": 96,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 4,
+   "slot": "armor",
+   "material": "cut-garnet"
+  },
+  "slippers-g5": {
+   "x": 128,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 5,
+   "slot": "armor",
+   "material": "cut-emerald"
+  },
+  "slippers-g6": {
+   "x": 160,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 6,
+   "slot": "armor",
+   "material": "cut-sapphire"
+  },
+  "slippers-g7": {
+   "x": 192,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 7,
+   "slot": "armor",
+   "material": "cut-ruby"
+  },
+  "slippers-g8": {
+   "x": 224,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 8,
+   "slot": "armor",
+   "material": "cut-diamond"
+  },
+  "slippers-g9": {
+   "x": 256,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 9,
+   "slot": "armor",
+   "material": "cut-starstone"
+  },
+  "slippers-g10": {
+   "x": 288,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "type": "slippers",
+   "grade": 10,
+   "slot": "armor",
+   "material": "cut-philosophers-stone"
+  },
+  "talisman-vital-g1": {
+   "x": 0,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "talisman-vital-g2": {
+   "x": 32,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "talisman-vital-g3": {
+   "x": 64,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "talisman-vital-g4": {
+   "x": 96,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "talisman-vital-g5": {
+   "x": 128,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "talisman-vital-g6": {
+   "x": 160,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "talisman-vital-g7": {
+   "x": 192,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "talisman-vital-g8": {
+   "x": 224,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "talisman-vital-g9": {
+   "x": 256,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "talisman-vital-g10": {
+   "x": 288,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vital",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "talisman-vampire-g1": {
+   "x": 0,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "talisman-vampire-g2": {
+   "x": 32,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "talisman-vampire-g3": {
+   "x": 64,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "talisman-vampire-g4": {
+   "x": 96,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "talisman-vampire-g5": {
+   "x": 128,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "talisman-vampire-g6": {
+   "x": 160,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "talisman-vampire-g7": {
+   "x": 192,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "talisman-vampire-g8": {
+   "x": 224,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "talisman-vampire-g9": {
+   "x": 256,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "talisman-vampire-g10": {
+   "x": 288,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-vampire",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "talisman-bulwark-g1": {
+   "x": 0,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "talisman-bulwark-g2": {
+   "x": 32,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "talisman-bulwark-g3": {
+   "x": 64,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "talisman-bulwark-g4": {
+   "x": 96,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "talisman-bulwark-g5": {
+   "x": 128,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "talisman-bulwark-g6": {
+   "x": 160,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "talisman-bulwark-g7": {
+   "x": 192,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "talisman-bulwark-g8": {
+   "x": 224,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "talisman-bulwark-g9": {
+   "x": 256,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "talisman-bulwark-g10": {
+   "x": 288,
+   "y": 1216,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-bulwark",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "talisman-iron-g1": {
+   "x": 0,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "talisman-iron-g2": {
+   "x": 32,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "talisman-iron-g3": {
+   "x": 64,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "talisman-iron-g4": {
+   "x": 96,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "talisman-iron-g5": {
+   "x": 128,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "talisman-iron-g6": {
+   "x": 160,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "talisman-iron-g7": {
+   "x": 192,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "talisman-iron-g8": {
+   "x": 224,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "talisman-iron-g9": {
+   "x": 256,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "talisman-iron-g10": {
+   "x": 288,
+   "y": 1248,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-iron",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "talisman-thorn-g1": {
+   "x": 0,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "talisman-thorn-g2": {
+   "x": 32,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "talisman-thorn-g3": {
+   "x": 64,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "talisman-thorn-g4": {
+   "x": 96,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "talisman-thorn-g5": {
+   "x": 128,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "talisman-thorn-g6": {
+   "x": 160,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "talisman-thorn-g7": {
+   "x": 192,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "talisman-thorn-g8": {
+   "x": 224,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "talisman-thorn-g9": {
+   "x": 256,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "talisman-thorn-g10": {
+   "x": 288,
+   "y": 1280,
+   "w": 32,
+   "h": 32,
+   "type": "talisman-thorn",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "amulet-spring-g1": {
+   "x": 0,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "amulet-spring-g2": {
+   "x": 32,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "amulet-spring-g3": {
+   "x": 64,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "amulet-spring-g4": {
+   "x": 96,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "amulet-spring-g5": {
+   "x": 128,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "amulet-spring-g6": {
+   "x": 160,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "amulet-spring-g7": {
+   "x": 192,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "amulet-spring-g8": {
+   "x": 224,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "amulet-spring-g9": {
+   "x": 256,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "amulet-spring-g10": {
+   "x": 288,
+   "y": 1312,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-spring",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "cut-philosophers-stone"
+  },
+  "amulet-siphon-g1": {
+   "x": 0,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "amulet-siphon-g2": {
+   "x": 32,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "amulet-siphon-g3": {
+   "x": 64,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "amulet-siphon-g4": {
+   "x": 96,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "amulet-siphon-g5": {
+   "x": 128,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "amulet-siphon-g6": {
+   "x": 160,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "amulet-siphon-g7": {
+   "x": 192,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "amulet-siphon-g8": {
+   "x": 224,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "amulet-siphon-g9": {
+   "x": 256,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "amulet-siphon-g10": {
+   "x": 288,
+   "y": 1344,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-siphon",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "cut-philosophers-stone"
+  },
+  "amulet-veil-g1": {
+   "x": 0,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "amulet-veil-g2": {
+   "x": 32,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "amulet-veil-g3": {
+   "x": 64,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "amulet-veil-g4": {
+   "x": 96,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "amulet-veil-g5": {
+   "x": 128,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "amulet-veil-g6": {
+   "x": 160,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "amulet-veil-g7": {
+   "x": 192,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "amulet-veil-g8": {
+   "x": 224,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "amulet-veil-g9": {
+   "x": 256,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "amulet-veil-g10": {
+   "x": 288,
+   "y": 1376,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-veil",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "cut-philosophers-stone"
+  },
+  "amulet-ward-g1": {
+   "x": 0,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "amulet-ward-g2": {
+   "x": 32,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "amulet-ward-g3": {
+   "x": 64,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "amulet-ward-g4": {
+   "x": 96,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "amulet-ward-g5": {
+   "x": 128,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "amulet-ward-g6": {
+   "x": 160,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "amulet-ward-g7": {
+   "x": 192,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "amulet-ward-g8": {
+   "x": 224,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "amulet-ward-g9": {
+   "x": 256,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "amulet-ward-g10": {
+   "x": 288,
+   "y": 1408,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-ward",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "cut-philosophers-stone"
+  },
+  "amulet-mirror-g1": {
+   "x": 0,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "cut-quartz"
+  },
+  "amulet-mirror-g2": {
+   "x": 32,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "cut-amethyst"
+  },
+  "amulet-mirror-g3": {
+   "x": 64,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "cut-citrine"
+  },
+  "amulet-mirror-g4": {
+   "x": 96,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "cut-garnet"
+  },
+  "amulet-mirror-g5": {
+   "x": 128,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cut-emerald"
+  },
+  "amulet-mirror-g6": {
+   "x": 160,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "cut-sapphire"
+  },
+  "amulet-mirror-g7": {
+   "x": 192,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "cut-ruby"
+  },
+  "amulet-mirror-g8": {
+   "x": 224,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "cut-diamond"
+  },
+  "amulet-mirror-g9": {
+   "x": 256,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "cut-starstone"
+  },
+  "amulet-mirror-g10": {
+   "x": 288,
+   "y": 1440,
+   "w": 32,
+   "h": 32,
+   "type": "amulet-mirror",
+   "grade": 10,
+   "slot": "accessory",
    "material": "cut-philosophers-stone"
   }
  }
