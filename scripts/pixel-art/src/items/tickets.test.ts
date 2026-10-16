@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { encodePng } from '../png.ts'
-import { hash, savedAtlas } from '../testing/atlas.ts'
+import { decodePng, hash, savedAtlas } from '../testing/atlas.ts'
 import baseline from '../ui/legacy-2.6.0.json'
 import { speedTicketItem } from './tickets.ts'
 
@@ -25,7 +25,10 @@ describe('A02 appended utility item', () => {
     const a = speedTicketItem(), b = speedTicketItem()
     expect(hash(a)).toBe(hash(b))
     expect(hash(img.crop(frame.x, frame.y, 32, 32).px)).toBe(hash(a))
-    expect(readFileSync(new URL('../../../../assets/items/tickets/speed-ticket.png', import.meta.url)).equals(encodePng(32, 32, a))).toBe(true)
+    const standalone = decodePng(readFileSync(new URL('../../../../assets/items/tickets/speed-ticket.png', import.meta.url)))
+    expect([standalone.w, standalone.h]).toEqual([32, 32])
+    expect(hash(standalone.px)).toBe(hash(a))
+    expect(encodePng(32, 32, a).equals(encodePng(32, 32, b))).toBe(true)
     for (let i = 0; i < 32; i++) for (const [x, y] of [[i, 0], [0, i], [31, i], [i, 31]] as const) expect(a[(y * 32 + x) * 4 + 3]).toBe(0)
   })
 })

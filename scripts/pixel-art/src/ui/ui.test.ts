@@ -64,7 +64,8 @@ describe('shared UI atlas (H11, A02)', () => {
     }
     const root = new URL('../../../../packages/art/ui/', import.meta.url)
     expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: 120, height: 52, frames: index })
-    expect(readFileSync(new URL('atlas.png', root)).equals(encodePng(atlas.w, atlas.h, atlas.px))).toBe(true)
+    // Different Node/zlib builds may compress identical pixels differently. Compare the saved artwork, not deflate.
+    expect(bytes(savedAtlas('ui').img).equals(bytes(atlas))).toBe(true)
   })
 
   it('rejects missing, duplicate, unexpected and wrongly sized frames', () => {
