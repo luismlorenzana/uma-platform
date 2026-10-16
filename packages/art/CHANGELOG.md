@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.6.0
+
+### Minor Changes
+
+- e3b7967: Add Card Library, Gym, Racecourse and Trophy Hall buildings, plus the Racing page's mown turf, rail-edged track and props. Preserve every existing building and terrain frame and pixel.
+
 ## 2.5.0
 
 ### Minor Changes
