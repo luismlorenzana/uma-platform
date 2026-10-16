@@ -3,7 +3,8 @@
 Original art for the Uma games, drawn from code by `scripts/pixel-art` (`pnpm art:draw` rewrites it). Never edit the
 files by hand.
 
-- `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined).
+- `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined),
+  then ungraded utility items (A02).
 - `items/atlas.json`: `{ schemaVersion: 1, cell, width, height, frames }`, where `frames[itemId]` is
   `{ x, y, name, family, side, effect, grade, refined }`. Item ids follow uma-rpg's catalog (`docs/design/items.md`).
 
@@ -18,8 +19,9 @@ files by hand.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: five class emblems (24×24) and ten status badges (12×12). The index is
-  `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>` or `status/<key>`.
+- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), three currency marks (16×16) and
+  three tier crests (12×12). The index is `{ schemaVersion: 1, width, height, frames }`, with
+  `{ x, y, w, h, group, key }` by `class/<class>`, `status/<key>`, `currency/<key>` or `tier/<1…3>`.
   Classes: Brawler, Mage, Spell Blade, Cleric and Summoner. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
   buffs gold-teal. Render at native size or a whole-number scale. Keep full class names beside emblems and full
@@ -44,6 +46,26 @@ the connection. Network layouts must never close a 2×2 road block. Tall props s
 Gate, left to right. `racing-tiles-2x.png` shows the terrain alone; `racing-hub-2x.png` composes all four Racing places
 on a 12×22-tile sample, including the reused Scenario Gate and Tier Finale. These are review layouts, not game rules.
 Vitest freezes every published 2.5.0 building/tile frame, metadata and RGBA byte in `buildings/legacy-2.5.0.json`.
+
+## Racer marks (A02, 2.7.0)
+
+The `ui` sheet grows from 120×36 to **120×52** without moving or repainting any class/status frame. The appended
+row contains `currency/prize-money` (round gold coin with a horseshoe stamp), `currency/speed-ticket` (teal horizontal
+lightning stub), `currency/uma-ticket` (vertical gold ticket with a transparent horseshoe punch), then `tier/1…3`
+(bronze, silver, gold shields with one, two, three distinct pips). Currency marks are native 16×16; crests are 12×12.
+Use a whole-number scale and retain full names/counts in the game's labels; silhouettes and pip counts do not rely
+on colour alone. Groups `currency` and `tier` extend the index's vocabulary; existing entries are unchanged.
+
+The items sheet grows from 320×1024 to **320×1056**: `speed-ticket` appends at (0, 1024), still `cell: 32`.
+Its entry is `{ x, y, name: "Speed Ticket", kind: "ticket" }`, **ungraded**, outside the material families. Existing
+320 entries keep every field and pixel; consumers of grade/family metadata should filter material entries rather
+than treating every item as a material. The 32px item and 16px HUD mark share an original code-drawn design, not a
+resized bitmap. No game economy or ticket quantities live in the package.
+
+`assets/previews/racer-marks-{1x,2x,4x}.png` shows Prize Money, Speed Ticket, Uma Ticket, Tier 1, Tier 2, Tier 3 in
+that order, on the account bar's white panel (top) and inverse dark stage (bottom). `racer-ticket-items-2x.png`
+compares the item to Wheat and Apple. `ui.html` labels every icon. H11's `ui.png` and `ui-1x.png` stay byte-identical.
+`ui/legacy-2.6.0.json` and tests freeze both preceding sheets' positions, metadata and RGBA bytes.
 
 ## Gear rows in 2.0.0
 
