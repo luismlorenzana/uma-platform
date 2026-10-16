@@ -21,7 +21,7 @@ files by hand.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), three currency marks (16×16) and
+- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), four currency marks (16×16) and
   three tier crests (12×12). The index is `{ schemaVersion: 1, width, height, frames }`, with
   `{ x, y, w, h, group, key }` by `class/<class>`, `status/<key>`, `currency/<key>` or `tier/<1…3>`.
   Classes: Brawler, Mage, Spell Blade, Cleric and Summoner. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
@@ -89,6 +89,24 @@ and exact RGBA cutout is frozen in `buildings/legacy-2.7.0.json` and tested.
 
 Review `assets/previews/gems-{1x,2x}.png`, labelled `gems.html`, `gems-planets-2x.png` (G8 against each planet's
 map colour), and `lapidary-2x.png` (Workbench, Lapidary, Forge). Preview layouts are illustrative, not game rules.
+
+## Laurel and Battle terrain (H31, 2.9.0)
+
+`currency/laurel` is a native 16×16 green wreath, sharing the RPG's `#8fd18a` hue. It fills the previously empty
+rectangle at **(84, 36)**; the UI sheet stays **120×52**, now 22 frames. All 21 preceding entries retain every
+metadata field and pixel. `src/laurel.ts` paints at the target grid, like the shared ticket painter, not by scaling
+a bitmap. Keep the game's currency name and count beside it.
+
+The sixth terrain page, `battle`, appends below Racing: four packed-earth/trampled-grass `ground-0…3` variants,
+sixteen flagstone `path-0…15` masks (N 1, E 2, S 4, W 8), and six props. `weapon-rack`, `crate` and `shield-stand`
+are 16×16; `banner`, `training-dummy` and `torch` are 16×32, standing in the lower cell. The tiles sheet is now
+**256×304**, 170 frames. All 144 preceding frames, their metadata and the old 256×256 pixels are unchanged.
+
+`assets/previews/laurel-marks-{1x,2x,4x}.png` compares Prize Money, Speed Ticket, Uma Ticket and Laurels, in that
+order, on white chips (top) and dark chips (bottom). `battle-tiles-2x.png` shows the terrain and furniture;
+`battle-hub-2x.png` composes Scenario Gate and Tier Finale with all six props. Its 12×22 layout is for review,
+not a game layout. Roads never close a 2×2 block; all furniture clears both footprints, names and paths.
+`testing/legacy-h31-2.8.0.json` freezes both preceding atlases. Game wiring and package adoption stay with Phase A.
 
 ## Gear rows in 2.0.0
 

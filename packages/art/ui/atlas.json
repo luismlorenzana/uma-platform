@@ -170,6 +170,14 @@
    "h": 12,
    "group": "tier",
    "key": "3"
+  },
+  "currency/laurel": {
+   "x": 84,
+   "y": 36,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "laurel"
   }
  }
 }
