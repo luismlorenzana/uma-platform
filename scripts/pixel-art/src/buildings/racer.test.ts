@@ -61,8 +61,8 @@ describe('A01 append-only Hub art', () => {
 
   it('appends four 48px places at anchorY 44, matches the painters and keeps every edge clear', () => {
     const { index, img } = atlas('buildings')
-    expect(PLACES.map(p => p.id).slice(36)).toEqual(['card-library', 'gym', 'racecourse', 'trophy-hall'])
-    expect(new Set(PLACES.map(p => p.id)).size).toBe(40)
+    expect(PLACES.map(p => p.id).slice(36, 40)).toEqual(['card-library', 'gym', 'racecourse', 'trophy-hall'])
+    expect(new Set(PLACES.map(p => p.id)).size).toBe(PLACES.length)
     expect(GROUND).toBe(44)
     const hashes: string[] = []
     for (const place of RACER) {

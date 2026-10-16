@@ -1,0 +1,1251 @@
+{
+ "schemaVersion": 1,
+ "width": 320,
+ "height": 320,
+ "frames": {
+  "gem-hp-1": {
+   "x": 0,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Vigor",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-2": {
+   "x": 32,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Vigor",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-3": {
+   "x": 64,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Vigor",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-4": {
+   "x": 96,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Vigor",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-5": {
+   "x": 128,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Vigor",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-6": {
+   "x": 160,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Vigor",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-7": {
+   "x": 192,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Vigor",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-8": {
+   "x": 224,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Vigor",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-9": {
+   "x": 256,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Vigor",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-hp-10": {
+   "x": 288,
+   "y": 0,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Vigor",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "hp"
+   ]
+  },
+  "gem-mp-1": {
+   "x": 0,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Spirit",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-2": {
+   "x": 32,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Spirit",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-3": {
+   "x": 64,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Spirit",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-4": {
+   "x": 96,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Spirit",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-5": {
+   "x": 128,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Spirit",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-6": {
+   "x": 160,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Spirit",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-7": {
+   "x": 192,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Spirit",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-8": {
+   "x": 224,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Spirit",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-9": {
+   "x": 256,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Spirit",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-mp-10": {
+   "x": 288,
+   "y": 32,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Spirit",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "mp"
+   ]
+  },
+  "gem-atk-1": {
+   "x": 0,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Strength",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-2": {
+   "x": 32,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Strength",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-3": {
+   "x": 64,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Strength",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-4": {
+   "x": 96,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Strength",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-5": {
+   "x": 128,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Strength",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-6": {
+   "x": 160,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Strength",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-7": {
+   "x": 192,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Strength",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-8": {
+   "x": 224,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Strength",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-9": {
+   "x": 256,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Strength",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-atk-10": {
+   "x": 288,
+   "y": 64,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Strength",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "atk"
+   ]
+  },
+  "gem-matk-1": {
+   "x": 0,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Sorcery",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-2": {
+   "x": 32,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Sorcery",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-3": {
+   "x": 64,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Sorcery",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-4": {
+   "x": 96,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Sorcery",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-5": {
+   "x": 128,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Sorcery",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-6": {
+   "x": 160,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Sorcery",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-7": {
+   "x": 192,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Sorcery",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-8": {
+   "x": 224,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Sorcery",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-9": {
+   "x": 256,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Sorcery",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-matk-10": {
+   "x": 288,
+   "y": 96,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Sorcery",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "matk"
+   ]
+  },
+  "gem-def-1": {
+   "x": 0,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Fortitude",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-2": {
+   "x": 32,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Fortitude",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-3": {
+   "x": 64,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Fortitude",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-4": {
+   "x": 96,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Fortitude",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-5": {
+   "x": 128,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Fortitude",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-6": {
+   "x": 160,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Fortitude",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-7": {
+   "x": 192,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Fortitude",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-8": {
+   "x": 224,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Fortitude",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-9": {
+   "x": 256,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Fortitude",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-def-10": {
+   "x": 288,
+   "y": 128,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Fortitude",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "def"
+   ]
+  },
+  "gem-mdef-1": {
+   "x": 0,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Resolve",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-2": {
+   "x": 32,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Resolve",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-3": {
+   "x": 64,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Resolve",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-4": {
+   "x": 96,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Resolve",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-5": {
+   "x": 128,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Resolve",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-6": {
+   "x": 160,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Resolve",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-7": {
+   "x": 192,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Resolve",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-8": {
+   "x": 224,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Resolve",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-9": {
+   "x": 256,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Resolve",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-mdef-10": {
+   "x": 288,
+   "y": 160,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Resolve",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "mdef"
+   ]
+  },
+  "gem-speed-1": {
+   "x": 0,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Swiftness",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-2": {
+   "x": 32,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Swiftness",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-3": {
+   "x": 64,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Swiftness",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-4": {
+   "x": 96,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Swiftness",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-5": {
+   "x": 128,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Swiftness",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-6": {
+   "x": 160,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Swiftness",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-7": {
+   "x": 192,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Swiftness",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-8": {
+   "x": 224,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Swiftness",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-9": {
+   "x": 256,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Swiftness",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-speed-10": {
+   "x": 288,
+   "y": 192,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Swiftness",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "speed"
+   ]
+  },
+  "gem-limit-1": {
+   "x": 0,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Quartz of Valor",
+   "kind": "moon",
+   "grade": 1,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-2": {
+   "x": 32,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Amethyst of Valor",
+   "kind": "moon",
+   "grade": 2,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-3": {
+   "x": 64,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Valor",
+   "kind": "moon",
+   "grade": 3,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-4": {
+   "x": 96,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of Valor",
+   "kind": "moon",
+   "grade": 4,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-5": {
+   "x": 128,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Emerald of Valor",
+   "kind": "moon",
+   "grade": 5,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-6": {
+   "x": 160,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of Valor",
+   "kind": "moon",
+   "grade": 6,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-7": {
+   "x": 192,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Valor",
+   "kind": "moon",
+   "grade": 7,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-8": {
+   "x": 224,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of Valor",
+   "kind": "moon",
+   "grade": 8,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-9": {
+   "x": 256,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Starstone of Valor",
+   "kind": "moon",
+   "grade": 9,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-limit-10": {
+   "x": 288,
+   "y": 224,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of Valor",
+   "kind": "moon",
+   "grade": 10,
+   "effects": [
+    "limit"
+   ]
+  },
+  "gem-hp-def-3": {
+   "x": 0,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Vigor & Fortitude",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "hp",
+    "def"
+   ]
+  },
+  "gem-hp-def-7": {
+   "x": 32,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Vigor & Fortitude",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "hp",
+    "def"
+   ]
+  },
+  "gem-def-mdef-3": {
+   "x": 64,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Fortitude & Resolve",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "def",
+    "mdef"
+   ]
+  },
+  "gem-def-mdef-7": {
+   "x": 96,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Fortitude & Resolve",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "def",
+    "mdef"
+   ]
+  },
+  "gem-mdef-mp-3": {
+   "x": 128,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Resolve & Spirit",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "mdef",
+    "mp"
+   ]
+  },
+  "gem-mdef-mp-7": {
+   "x": 160,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Resolve & Spirit",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "mdef",
+    "mp"
+   ]
+  },
+  "gem-mp-matk-3": {
+   "x": 192,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Spirit & Sorcery",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "mp",
+    "matk"
+   ]
+  },
+  "gem-mp-matk-7": {
+   "x": 224,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Spirit & Sorcery",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "mp",
+    "matk"
+   ]
+  },
+  "gem-matk-atk-3": {
+   "x": 256,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Sorcery & Strength",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "matk",
+    "atk"
+   ]
+  },
+  "gem-matk-atk-7": {
+   "x": 288,
+   "y": 256,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Sorcery & Strength",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "matk",
+    "atk"
+   ]
+  },
+  "gem-atk-speed-3": {
+   "x": 0,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Strength & Swiftness",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "atk",
+    "speed"
+   ]
+  },
+  "gem-atk-speed-7": {
+   "x": 32,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Strength & Swiftness",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "atk",
+    "speed"
+   ]
+  },
+  "gem-speed-limit-3": {
+   "x": 64,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Swiftness & Valor",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "speed",
+    "limit"
+   ]
+  },
+  "gem-speed-limit-7": {
+   "x": 96,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Swiftness & Valor",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "speed",
+    "limit"
+   ]
+  },
+  "gem-limit-hp-3": {
+   "x": 128,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Citrine of Valor & Vigor",
+   "kind": "bridge",
+   "grade": 3,
+   "effects": [
+    "limit",
+    "hp"
+   ]
+  },
+  "gem-limit-hp-7": {
+   "x": 160,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Ruby of Valor & Vigor",
+   "kind": "bridge",
+   "grade": 7,
+   "effects": [
+    "limit",
+    "hp"
+   ]
+  },
+  "gem-sun-4": {
+   "x": 192,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Garnet of the Sun",
+   "kind": "sun",
+   "grade": 4,
+   "effects": [
+    "hp",
+    "mp",
+    "atk",
+    "matk",
+    "def",
+    "mdef",
+    "speed",
+    "limit"
+   ]
+  },
+  "gem-sun-6": {
+   "x": 224,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Sapphire of the Sun",
+   "kind": "sun",
+   "grade": 6,
+   "effects": [
+    "hp",
+    "mp",
+    "atk",
+    "matk",
+    "def",
+    "mdef",
+    "speed",
+    "limit"
+   ]
+  },
+  "gem-sun-8": {
+   "x": 256,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Diamond of the Sun",
+   "kind": "sun",
+   "grade": 8,
+   "effects": [
+    "hp",
+    "mp",
+    "atk",
+    "matk",
+    "def",
+    "mdef",
+    "speed",
+    "limit"
+   ]
+  },
+  "gem-sun-10": {
+   "x": 288,
+   "y": 288,
+   "w": 32,
+   "h": 32,
+   "name": "Philosopher's Stone of the Sun",
+   "kind": "sun",
+   "grade": 10,
+   "effects": [
+    "hp",
+    "mp",
+    "atk",
+    "matk",
+    "def",
+    "mdef",
+    "speed",
+    "limit"
+   ]
+  }
+ }
+}

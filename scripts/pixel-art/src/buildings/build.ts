@@ -113,6 +113,8 @@ drawn.forEach(({ place, px }, i) => {
 })
 
 const PAGE_W = 195, PAGE_H = 350
+const reviewAt = (place: typeof PLACES[number]) => place.id === 'workbench' ? { x: .22, y: .51 }
+  : place.id === 'forge' ? { x: .78, y: .51 } : place.at
 function mockPage(page: Page): Image {
   const [grass, path] = GROUND_COLORS[page]
   const img = image(PAGE_W, PAGE_H, hex(grass))
@@ -125,7 +127,8 @@ function mockPage(page: Page): Image {
     }
   for (const { place, px } of drawn) {
     if (place.page !== page) continue
-    stamp(img, px, Math.round(place.at.x * PAGE_W - SIZE / 2), Math.round(place.at.y * PAGE_H - SIZE / 2))
+    const at = reviewAt(place)
+    stamp(img, px, Math.round(at.x * PAGE_W - SIZE / 2), Math.round(at.y * PAGE_H - SIZE / 2))
   }
   return img
 }
@@ -150,6 +153,15 @@ const comparison = image(4 * SIZE * 2 + 5 * PAD, 2 * SIZE * 2 + 3 * PAD, hex('#1
 })
 writeFileSync(join(previews, 'racer-buildings-2x.png'), encodePng(comparison.w, comparison.h, comparison.px))
 
+// H29: the new workshop in context, without shifting the old Wilds frames or the A01 comparison.
+const lapidary = image(3 * SIZE * 2 + 4 * PAD, SIZE * 2 + 2 * PAD, hex('#18251f'))
+;['workbench', 'lapidary', 'forge'].forEach((id, i) => {
+  const d = drawn.find(p => p.place.id === id)
+  if (!d) throw new Error(`Missing Lapidary reference ${id}`)
+  stamp(lapidary, d.px, PAD + i * (SIZE * 2 + PAD), PAD, 2)
+})
+writeFileSync(join(previews, 'lapidary-2x.png'), encodePng(lapidary.w, lapidary.h, lapidary.px))
+
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`
 const sprite = (id: string, scale: number) => {
@@ -166,7 +178,7 @@ const cards = PAGES.map(
 const pages = PAGES.map((page) => {
   const [grass, path] = GROUND_COLORS[page]
   const pins = PLACES.filter((p) => p.page === page)
-    .map((p) => `<div class="pin" style="left:${p.at.x * 100}%;top:${p.at.y * 100}%">${sprite(p.id, 2)}<b>${p.name}</b></div>`)
+    .map((p) => `<div class="pin" style="left:${reviewAt(p).x * 100}%;top:${reviewAt(p).y * 100}%">${sprite(p.id, 2)}<b>${p.name}</b></div>`)
     .join('')
   return `<div class="page" style="background:linear-gradient(${path},${path}) center/10px 100% no-repeat,linear-gradient(${path},${path}) center/100% 10px no-repeat,${grass}"><h3>${page}</h3>${pins}</div>`
 }).join('')

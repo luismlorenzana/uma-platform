@@ -330,6 +330,14 @@
    "h": 48,
    "page": "racing",
    "anchorY": 44
+  },
+  "lapidary": {
+   "x": 192,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
   }
  }
 }

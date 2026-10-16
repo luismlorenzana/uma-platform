@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.8.0
+
+### Minor Changes
+
+- f61920c: Add a dedicated 100-icon Star Gem atlas and append the Lapidary workshop without moving or repainting existing frames.
+
 ## 2.7.0
 
 ### Minor Changes
