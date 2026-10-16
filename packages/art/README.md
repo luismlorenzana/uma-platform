@@ -14,7 +14,9 @@ files by hand.
 - `gear/atlas.png` / `.json`: 46 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
   the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
-- `buildings/atlas.png` / `.json`: 40 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
+- `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
+  Frames: `{ x, y, w, h, name, kind, grade, effects }`.
+- `buildings/atlas.png` / `.json`: 41 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
@@ -66,6 +68,27 @@ resized bitmap. No game economy or ticket quantities live in the package.
 that order, on the account bar's white panel (top) and inverse dark stage (bottom). `racer-ticket-items-2x.png`
 compares the item to Wheat and Apple. `ui.html` labels every icon. H11's `ui.png` and `ui-1x.png` stay byte-identical.
 `ui/legacy-2.6.0.json` and tests freeze both preceding sheets' positions, metadata and RGBA bytes.
+
+## Star Gems and the Lapidary (H29, 2.8.0)
+
+The new **320×320** `gems` sheet follows uma-rpg's `GEM_IDENTITIES` order: eight ten-grade moon rows (HP, MP,
+ATK, M.ATK, DEF, M.DEF, Speed, Limit), sixteen bridges, then four Sun prisms. IDs are `gem-<effect>-<1…10>`,
+`gem-<a>-<b>-<3|7>` and `gem-sun-<4|6|8|10>`. Bridge pairs run HP–DEF, DEF–M.DEF, M.DEF–MP, MP–M.ATK,
+M.ATK–ATK, ATK–Speed, Speed–Limit, Limit–HP, each G3 then G7. Rows 8–9 wrap every ten entries.
+
+Each planet has a distinct silhouette and fixed colour: heart, drop, spear, star, shield, tablet, bolt, crescent.
+Rough stones at 1–3 gain facets at 4–6, bronze/silver settings at 7–8, then gold and shared legendary glints at
+9–10. Bridge crystals retain both planets' colours, with larger metal-mounted G7 twins. Gold Sun prisms gain
+4/6/8/10 rays. Every frame reserves a fully transparent bottom-right 9×9 corner; build checks reject object or
+outline intrusion rather than erasing it. Dishes and all existing item/gear art remain unchanged.
+
+`lapidary` appends to buildings at **(192, 288)**, 48×48 with `anchorY: 44`, `page: wilds`, no smoke. Stone walls,
+a copper/terracotta tiled roof, grinding wheel, gem sign and crystal bench distinguish this workshop from the
+violet Arcane Armory and slate Forge. The buildings sheet stays **288×336**. Every prior building's metadata
+and exact RGBA cutout is frozen in `buildings/legacy-2.7.0.json` and tested.
+
+Review `assets/previews/gems-{1x,2x}.png`, labelled `gems.html`, `gems-planets-2x.png` (G8 against each planet's
+map colour), and `lapidary-2x.png` (Workbench, Lapidary, Forge). Preview layouts are illustrative, not game rules.
 
 ## Gear rows in 2.0.0
 
