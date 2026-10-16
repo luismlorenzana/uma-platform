@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.7.0
+
+### Minor Changes
+
+- 24d4c81: Append three currency marks, three tier crests and an ungraded Speed Ticket item for the Racer Home screen. Preserve all existing UI and item frame positions, metadata and pixels.
+
 ## 2.6.0
 
 ### Minor Changes
