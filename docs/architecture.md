@@ -113,12 +113,13 @@ image sources ───────────── pnpm assets:import ─▶ 
 | Shared: one implementation, same behavior everywhere | Owned by each game: expected to diverge |
 |---|---|
 | Master data schema, validators, release client | Game rules and balance numbers |
-| Content loading: manifest, IndexedDB cache, sprite and atlas loading | Hub layout and screens |
-| React ↔ canvas scene host: lazy load, mount, pause, destroy | Farm content: what's produced, buildings, recipes |
-| Passive-generator math: rates, caps, offline accrual, timers | Leveling curves and per-Uma progression |
-| Login (Firebase + owner allowlist), save sync, app update prompt | Save format and economy |
-| Design tokens and a few UI primitives | Most UI components |
-| Original art from `assets/` | Game-only content packs |
+| Content loading: manifest, IndexedDB cache, sprite and atlas loading | Game screens: battles, races, maps of play, careers |
+| React ↔ canvas scene host, and the Hub map: terrain, buildings, place buttons, swipe (P48) | Which pages and places exist, and their content |
+| Passive-generator math: rates, caps, offline accrual, timers | Farm content: what's produced, buildings, recipes |
+| Login (Firebase + owner allowlist), save sync, app update prompt | Leveling curves and per-Uma progression |
+| Design tokens (light and dark), primitives and the app shell: top bar, bottom bar, menu, side panel, sheets (P48) | Save format and economy |
+| Uma lists: portraits, album engine, filters, sorts, pickers; the work UI (P48, phases B–C) | Game-only content packs |
+| Original art from `assets/` | |
 
 ### 3.3 Extract on second use
 
@@ -126,8 +127,9 @@ All three games get a similar Hub, farm-like passive generators and per-game Uma
 first in uma-rpg (Phase 2), kept in clearly separated folders, and extracted into uma-platform when uma-racer becomes
 the second user (Phase 3). No shared package is created before a game needs it, except `uma-data` (P11).
 
-Candidate packages, names provisional: `uma-content`, `uma-scene`, `uma-idle`, `uma-auth` (web client and NestJS
-guard), `uma-ui`.
+The shared app code ships as **one package, `@luismlorenzana/uma-kit`**, with subpath exports (P48): `/theme.css`,
+`/ui`, `/shell` and `/hub` first, then `/album`, `/roster` and `/work`. `uma-content`, `uma-idle` and `uma-auth` may
+join it as subpaths too; the [sibling plan](sibling/README.md) orders the work.
 
 ## 4. Game baseline
 

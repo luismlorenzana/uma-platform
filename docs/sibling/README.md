@@ -1,6 +1,8 @@
 # Sibling apps: one shell, two games
 
-> **Status: proposal for the owner, 2026-10-16. Nothing here is built.** The owner asked for uma-rpg and uma-racer to
+> **Status: approved 2026-10-16 (P48).** Phase 0 is dispatched to ChatGPT; Phase A is in progress, as one package,
+> `@luismlorenzana/uma-kit` (P48 replaces the provisional `uma-ui` and `uma-scene` names below with its subpaths).
+> **Before approval:** The owner asked for uma-rpg and uma-racer to
 > become true siblings: the same core functions and the same app around them, with very different games inside. This
 > folder plans that, with the app shell and the Hub first. Each page ends with recommendations; nothing is left as an
 > open question. Decisions get P-numbers when the owner approves and the work starts.

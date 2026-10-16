@@ -74,7 +74,7 @@ Each game makes these changes in its own repo, with no package. Phase A then kee
 **Goal:** the owner's two screenshots become the same app with different places in it. Same theme, top bar, bottom
 bar, menu, panels, sheets and map, all from shared code. Only labels, icons, currencies and places differ.
 
-### A1. `uma-ui` foundations
+### A1. Foundations (`uma-kit/ui`, `uma-kit/theme.css`)
 
 - **Theme:** one `theme.css` with the token names both games already use.
   - **Light** keeps uma-racer's values: page `#edf1f6`, panel `#fff`, sunken `#e4eaf2`, ink `#101a24`, gold `#d39a2b`.
@@ -128,7 +128,7 @@ migration.
 - **Side panel, place header, sheets and routing:** uma-racer's versions (`?peek=`, `?sheet=`, back or replace).
 - **The floating pill:** Collect all · N in both; uma-racer adds Check-in.
 
-### A3. `uma-scene/hub`
+### A3. The Hub map (`uma-kit/hub`)
 
 1. **Converge, then extract.** Diff the two copies (uma-rpg's `hub/` and `scene/`; uma-racer's `hub/`, which names
    each file's uma-rpg source).
@@ -203,6 +203,24 @@ No new buildings are needed: every place above already has a frame.
 | The entry bundle grows | Packages are side-effect free and tree-shake. Phaser and scenes stay lazy. The budget check runs in both CIs |
 | Dark and light double the visual check | Tokens only, no hard-coded colours. The kit page renders both modes side by side |
 | ChatGPT works in a game while the kit changes | Packets name the kit version they build on. A kit change lands between packets, not during one |
+
+### A8. Who does what (P48)
+
+| Work | Who | Where |
+|---|---|---|
+| Phase 0, uma-rpg half | ChatGPT, packet H30 | uma-rpg |
+| Phase 0, uma-racer half | ChatGPT, a packet uma-racer's session writes in its own handoff | uma-racer |
+| The `currency/laurel` mark and the `battle` tile page | ChatGPT, packet H31 (uma-rpg's handoff) | uma-platform |
+| A1–A3: `@luismlorenzana/uma-kit` (`/theme.css`, `/ui`, `/shell`, `/hub`), from uma-racer's `origin/main` at `ff8b95a` | Claude, uma-rpg session | uma-platform |
+| A4, A6.3: uma-rpg on uma-kit | Claude, uma-rpg session | uma-rpg |
+| A6.2: uma-racer on uma-kit | Claude, uma-racer session | uma-racer |
+
+**The contract between the two sessions:**
+- The kit starts as a move of uma-racer's shell and Hub code. Until uma-racer adopts it, uma-racer's session tells the
+  uma-rpg session about changes to `hub/`, `ui/` (BottomSheet, Sheet, Button, Chip, Tabs, Panel, PlaceHeader, icons,
+  UiMark) or the theme in `index.css`, so the kit carries them.
+- Kit releases are announced to the other session with what changed.
+- A game that needs a new option asks for it rather than copying a component back.
 
 ## Phase B: one Uma album
 
