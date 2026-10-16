@@ -222,65 +222,14 @@ No new buildings are needed: every place above already has a frame.
 - Kit releases are announced to the other session with what changed.
 - A game that needs a new option asks for it rather than copying a component back.
 
-## Phase B: one Uma album
+## Phases B to E
 
-- **The packages:**
-  - **`uma-roster`:** uma-racer's pure album engine (rows, facets, sorts with nulls last, presets, counts, hints), the
-    preferences (per device, saved views, the seen set) and Phase 0's level rule. It also holds a shared row builder for
-    everything that comes from master data: name, title, rarity, aptitudes, release, art keys.
-  - **`uma-ui/album`:** the Uma portrait (the bust, the icon until it loads, corner badges, dimmed when locked), the face
-    token, chibi art, the album chrome (search, sort sheet, filter tray, quick picks, tabs) and the virtual grid.
-- **Views:** icons (**5 columns** on a phone, about 68 pt tiles), cards (3 columns), list (1 column). Icons is the
-  default.
-- **If the bust isn't close enough at 5 columns,** add an `outfit-faces` family to uma-data's art: a tighter crop from
-  the same portraits. That's an additive minor release.
-- **One `UmaPicker`:** candidates, why one can't be picked, a context sort, multi-select. It replaces uma-rpg's six
-  pickers and uma-racer's ad hoc strips where a list is better.
-- **Art provider:** a game hands the album its art source. uma-racer uses its private content until its phase 5, then
-  uma-data; uma-rpg uses uma-data. The components never know which.
-- **Each game declares its album:**
-  - **uma-racer:** tier, ready, target, new, aptitudes A+.
-  - **uma-rpg:** rarity, aptitudes, sex, new, free, class.
-  - **Sorts:** the shared level sort plus each game's own (Racing and Farm; Craft and Class Rank).
-- **Adoption:** both Stables, every picker, the Observatory's Uma choice, the Halls, Manuals and party slots.
-
-## Phase C: one work UI
-
-- **`uma-ui/work`**, built on uma-racer's compact rows (D366) over a view model each game fills:
-  - the job row and the side-panel row;
-  - queue chips;
-  - speed-up (−30m, Finish · N, Buy N and finish);
-  - recall with a preview;
-  - batch size chips (by count or by duration, set by the game);
-  - the facility header with upgrade;
-  - the job sheet frame (who, what, how many);
-  - the targets strip.
-- **uma-rpg's facility page** moves to compact rows; its Forge and Lapidary icon pickers plug into the job sheet as the
-  "what" step.
-- **The rules stay in each game.** Only the words and controls are shared. Both use the same names: Collect, Repeat,
-  Speed up, Recall, Queue next.
-
-## Phase D: places, profile and getting in
-
-- **Shared frames:**
-  - the Warehouse's shelf view (tabs, grade chips, the sell sheet) and the Exchange's rows;
-  - the Account page (wallet, appearance, notifications, info rows, sign out);
-  - the Uma profile's header and tab bar.
-- **Boot gates:** splash → sign-in → boot → first launch → start page. Each game supplies its first-launch step and
-  start rule.
-- **`uma-auth`:** the lazy Firebase client and the NestJS guard (token and allowlist), in both games.
-
-## Phase E: platform plumbing
-
-- **uma-racer's phase 5:** it moves to uma-data and its art families (`racer-mapping.md`), deleting its own pipeline.
-  That's already on its plan.
-- **`uma-content`:** the release client wrapper, authenticated art fetch, the blob and Cache Storage cache, and atlas
-  sprites, with the API's content proxy as a Nest module.
-- **`uma-idle`, only if a game decides its save may move:**
-  - the work engine (a timeline, queues of 3, collect, recall, tickets) and requirements netting;
-  - uma-racer's engine is the more general start, with job kinds plugged in.
-  - Until then each game keeps its engine behind Phase C's view models.
-- **Push, if uma-racer wants it:** uma-rpg's subscription, server tick and badge become a shared `uma-push`.
+Briefed in full, with tables of what is common and what each game keeps, in [phases.md](phases.md) (2026-10-16, after
+Phase A shipped):
+- **B:** one Uma album.
+- **C:** one work UI.
+- **D:** places, profile and getting in.
+- **E:** platform plumbing.
 
 ## How it fits the plans already in place
 

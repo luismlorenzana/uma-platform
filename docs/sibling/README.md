@@ -12,7 +12,8 @@
 | This page | The verdict: can UI and core functions be coded once? How, and what it costs |
 | [structure.md](structure.md) | Both apps' full structure and features, row by row: same, variant or different |
 | [kit.md](kit.md) | Every core element and function: who uses it, how it differs, how viable sharing it is, where it lives |
-| [hub-rework.md](hub-rework.md) | The plan: a quick fix now, the Hub rework in detail, then the later phases in outline |
+| [hub-rework.md](hub-rework.md) | The plan: a quick fix now, the Hub rework in detail, Phases 0 and A in detail (both done) |
+| [phases.md](phases.md) | Phases B to E in full: what each covers, what is common and what each game keeps |
 
 Read on 2026-10-16: uma-rpg `main` at `e681b48` (live), uma-racer `origin/main` at `ff8b95a` (live release `8caac6a`,
 generation 2), uma-platform `main` at `e1258dd` (uma-art 2.8.0).
