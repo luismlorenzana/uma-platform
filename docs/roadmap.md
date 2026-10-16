@@ -15,9 +15,10 @@ Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the po
 
 **Sibling apps, approved 2026-10-16 (P48): [docs/sibling](sibling/README.md).** uma-rpg and uma-racer share one
 shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the games differ.
-- **Phase 0:** dispatched to ChatGPT, one packet per game.
-- **Phase A:** in progress. Claude's uma-rpg session builds the kit and adopts it in uma-rpg; uma-racer's session adopts
-  it in uma-racer.
+- **Phase 0:** done in uma-rpg (H30, D146); uma-racer's packet is A03.
+- **Phase A:** in progress. `@luismlorenzana/uma-kit` 0.1.1 is published (theme, primitives, shell, Hub map), and
+  uma-rpg runs on it (D147). uma-racer's session adopts it in uma-racer. The Phase A art is uma-rpg's H31: a Laurel
+  mark and the Battle tile page.
 - The racer's phases 5–7 fold into Phases A and E.
 
 ## Phase 0 — uma-platform foundation
