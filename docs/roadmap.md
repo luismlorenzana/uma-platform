@@ -15,11 +15,21 @@ Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the po
 
 **Sibling apps, approved 2026-10-16 (P48): [docs/sibling](sibling/README.md).** uma-rpg and uma-racer share one
 shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the games differ.
-- **Phase 0:** done in uma-rpg (H30, D146); uma-racer's packet is A03.
-- **Phase A:** done in code (2026-10-16). Both games run on `@luismlorenzana/uma-kit` 0.1.2 (theme, primitives, shell,
-  Hub map): uma-rpg D147 and uma-racer D367. Neither game forks the kit; changes go through a kit release. What remains
-  is uma-rpg's H31 art, a Laurel mark and the Battle tile page.
-- The racer's phases 5–7 fold into Phases A and E.
+- **Phase 0:** done in both games (uma-rpg H30, D146; uma-racer A03, its D368).
+- **Phase A:** done (2026-10-16). Both games run on `@luismlorenzana/uma-kit` (theme, primitives, shell, Hub map;
+  0.2.0 fixed the iPhone's bottom band and docked the bar, 0.3.0 added the plaza crowd), with H31's art in uma-art
+  2.9.0. Neither game forks the kit; changes go through a kit release.
+- **Phases B to E:** briefed in [phases.md](sibling/phases.md), and broken into 21 self-contained packets with parallel
+  tracks in [docs/handoff/](handoff/README.md) (P51). Ready now:
+  - SA7, the plaza crowd in uma-racer;
+  - SB1, face crops;
+  - SB2, the album engine;
+  - SB5, busts in uma-rpg's battles;
+  - SC1, the shared work engine;
+  - SD1, the server package;
+  - SD2, the places frames;
+  - SE1, uma-racer's phase 5.
+- The racer's phases 5–7 fold into Phases A and E: its phase 5 is SE1.
 
 ## Phase 0 — uma-platform foundation
 

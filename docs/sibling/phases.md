@@ -2,7 +2,8 @@
 
 > Part of the [sibling apps plan](README.md). Brief, 2026-10-16, after Phase A shipped (uma-kit 0.2.0 in both games:
 > uma-rpg D147–D149, uma-racer D367–D369). It replaces the short outlines at the end of [hub-rework.md](hub-rework.md).
-> Each phase is approved on its own.
+> Each phase is approved on its own. **The packets for every phase, with parallel tracks and states, are in
+> [docs/handoff/](../handoff/README.md)** (P51).
 
 **How to read the tables.** Each row is one element of a phase:
 - **Common:** what goes in the shared package, coded once.
