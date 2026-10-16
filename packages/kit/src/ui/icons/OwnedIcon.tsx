@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Owned (Collection). */
 export const OwnedIcon = /* @__PURE__ */ defineIcon('owned', {

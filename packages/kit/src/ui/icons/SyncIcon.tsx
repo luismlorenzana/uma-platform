@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Sync (System). */
 export const SyncIcon = /* @__PURE__ */ defineIcon('sync', {

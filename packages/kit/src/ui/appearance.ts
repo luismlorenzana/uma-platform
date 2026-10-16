@@ -2,7 +2,7 @@
 // this device's, stored under the game's prefix, and applied as `<html data-theme>` so theme.css's tokens switch. The
 // browser's theme colour follows the page colour, so the status bar area matches.
 import { useSyncExternalStore } from 'react'
-import { kitKey, readPref, subscribePrefs, writePref } from './prefs'
+import { kitKey, readPref, subscribePrefs, writePref } from './prefs.js'
 
 export type Appearance = 'system' | 'light' | 'dark'
 export const APPEARANCES: readonly Appearance[] = ['system', 'light', 'dark']

@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Search (System). */
 export const SearchIcon = /* @__PURE__ */ defineIcon('search', {

@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Locked (Collection). */
 export const LockedIcon = /* @__PURE__ */ defineIcon('locked', {

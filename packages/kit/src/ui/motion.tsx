@@ -3,11 +3,11 @@
 // number transition, instant sheets. Everything runs under `LazyMotion strict`, so only `m.*` components draw.
 import { LazyMotion, MotionConfig } from 'motion/react'
 import { useEffect, useSyncExternalStore, type ReactNode } from 'react'
-import { kitKey, readPref, subscribePrefs, writePref } from './prefs'
+import { kitKey, readPref, subscribePrefs, writePref } from './prefs.js'
 
 const QUERY = '(prefers-reduced-motion: reduce)'
 const media = (): MediaQueryList | null => (typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia(QUERY) : null)
-const loadFeatures = () => import('./motionFeatures').then((mod) => mod.default)
+const loadFeatures = () => import('./motionFeatures.js').then((mod) => mod.default)
 
 function deviceSwitch(): boolean {
   const value = readPref(kitKey('reducedMotion'))

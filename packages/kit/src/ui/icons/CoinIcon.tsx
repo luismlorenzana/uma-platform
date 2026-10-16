@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Prize Money (Currency): a two-tone coin with a horseshoe struck on its face, until uma-art draws `currency/*`. */
 export const CoinIcon = /* @__PURE__ */ defineIcon('coin', {

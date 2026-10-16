@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** End Closer (Race). */
 export const StrategyEndIcon = /* @__PURE__ */ defineIcon('strategy-end', {

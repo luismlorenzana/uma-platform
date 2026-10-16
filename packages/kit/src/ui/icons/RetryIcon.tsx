@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Retry (System). */
 export const RetryIcon = /* @__PURE__ */ defineIcon('retry', {

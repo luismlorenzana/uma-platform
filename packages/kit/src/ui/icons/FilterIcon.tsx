@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Filter (System). */
 export const FilterIcon = /* @__PURE__ */ defineIcon('filter', {

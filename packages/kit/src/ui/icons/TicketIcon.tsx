@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Speed Ticket (Currency). */
 export const TicketIcon = /* @__PURE__ */ defineIcon('ticket', {

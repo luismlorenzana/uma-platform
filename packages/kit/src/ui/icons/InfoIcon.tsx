@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** About (System): the (i) that holds a place's explanation (game/11 §1, uma-rpg D95). */
 export const InfoIcon = /* @__PURE__ */ defineIcon('info', {

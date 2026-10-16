@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Carrot (Farm): her Farming Level, beside the race flag's Uma Level. */
 export const CarrotIcon = /* @__PURE__ */ defineIcon('carrot', {

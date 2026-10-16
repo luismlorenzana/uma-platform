@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Home (Navigation). */
 export const HomeIcon = /* @__PURE__ */ defineIcon('home', {

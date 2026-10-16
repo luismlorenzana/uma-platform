@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Bond (Marks): a card's bond hearts. Stats and card types use the type tiles (D183). */
 export const HeartIcon = /* @__PURE__ */ defineIcon('heart', {

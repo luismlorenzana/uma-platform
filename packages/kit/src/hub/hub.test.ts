@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { hubGrid, placeAnchor, placeCell } from './grid'
-import { neighbourPage, swipeDirection } from './swipe'
-import { E, layTerrain, N, S, TILE_PROPS, W } from './terrain'
-import type { PlaceAt } from './types'
+import { hubGrid, placeAnchor, placeCell } from './grid.js'
+import { neighbourPage, swipeDirection } from './swipe.js'
+import { E, layTerrain, N, S, TILE_PROPS, W } from './terrain.js'
+import type { PlaceAt } from './types.js'
 
 // Two invented pages: one like uma-rpg's Wilds (a stream, a building on the road), one like uma-racer's Town (a plaza).
 const WILDS: { id: string; at: PlaceAt }[] = [

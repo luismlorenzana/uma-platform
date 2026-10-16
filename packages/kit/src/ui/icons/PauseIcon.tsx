@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Pause (System). */
 export const PauseIcon = /* @__PURE__ */ defineIcon('pause', {

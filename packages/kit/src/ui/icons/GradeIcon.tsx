@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Grade crest (Race). */
 export const GradeIcon = /* @__PURE__ */ defineIcon('grade', {

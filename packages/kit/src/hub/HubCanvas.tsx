@@ -2,9 +2,9 @@
 // unmount, paused while an overlay or sheet covers it or the page is hidden. The canvas only draws; every tap goes to the
 // DOM above it. Without a ResizeObserver (jsdom) no engine starts and the map stays its background colour.
 import { useEffect, useRef } from 'react'
-import { useKitArt } from '../ui/art'
-import type { HubGame } from './scene/createHubGame'
-import type { MapPlace, PageGround, PlaceAt } from './types'
+import { useKitArt } from '../ui/art.js'
+import type { HubGame } from './scene/createHubGame.js'
+import type { MapPlace, PageGround, PlaceAt } from './types.js'
 
 export interface HubCanvasProps {
   readonly ground: PageGround
@@ -33,7 +33,7 @@ export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMot
   useEffect(() => {
     if (typeof ResizeObserver === 'undefined') return
     let cancelled = false
-    void import('./scene/createHubGame').then(async ({ createHubGame }) => {
+    void import('./scene/createHubGame.js').then(async ({ createHubGame }) => {
       if (cancelled || !host.current) return
       const created = await createHubGame(host.current, latest.current, options.current)
       if (cancelled) {

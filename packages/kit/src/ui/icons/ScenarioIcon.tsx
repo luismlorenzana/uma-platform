@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Scenario crest (Progression). */
 export const ScenarioIcon = /* @__PURE__ */ defineIcon('scenario', {

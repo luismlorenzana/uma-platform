@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The shared app of the Uma games: theme, primitives, shell and Hub map (uma-platform P48). Private; personal use only.",
   "license": "UNLICENSED",
   "type": "module",
@@ -38,7 +38,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node scripts/check-dist.mjs",
     "prepack": "pnpm run build",
     "lint": "tsc --noEmit",
     "test": "vitest run"

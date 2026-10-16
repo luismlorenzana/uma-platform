@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Star (Marks). */
 export const StarIcon = /* @__PURE__ */ defineIcon('star', {

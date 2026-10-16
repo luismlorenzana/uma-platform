@@ -7,8 +7,8 @@
 import { m } from 'motion/react'
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
-import { CloseIcon, InfoIcon } from '../ui/icons'
-import { swipeDirection, type Point } from '../hub/swipe'
+import { CloseIcon, InfoIcon } from '../ui/icons/index.js'
+import { swipeDirection, type Point } from '../hub/swipe.js'
 
 const EASE = [0.2, 0, 0, 1] as const
 const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'

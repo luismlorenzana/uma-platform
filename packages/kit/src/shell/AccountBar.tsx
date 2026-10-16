@@ -4,9 +4,9 @@
 // supplies the values, words and links; the kit draws them the same in both games.
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
-import { AnimatedNumber } from '../ui/AnimatedNumber'
-import { OfflineIcon, WarningIcon } from '../ui/icons'
-import { UiMark } from '../ui/UiMark'
+import { AnimatedNumber } from '../ui/AnimatedNumber.js'
+import { OfflineIcon, WarningIcon } from '../ui/icons/index.js'
+import { UiMark } from '../ui/UiMark.js'
 
 export interface CurrencyChip {
   readonly key: string

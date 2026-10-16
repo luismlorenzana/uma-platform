@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Starting gate (Race). */
 export const GateIcon = /* @__PURE__ */ defineIcon('gate', {

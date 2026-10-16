@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Warning (System). */
 export const WarningIcon = /* @__PURE__ */ defineIcon('warning', {

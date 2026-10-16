@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-kit
 
+## 0.1.1
+
+### Patch Changes
+
+- Load in plain Node ESM: every relative import in `dist` carries its `.js`, so a game's Vitest can import the kit. The
+  build checks each entry.
+
 ## 0.1.0
 
 ### Minor Changes

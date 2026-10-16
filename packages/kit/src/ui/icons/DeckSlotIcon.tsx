@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Deck slot (Collection). */
 export const DeckSlotIcon = /* @__PURE__ */ defineIcon('deck-slot', {

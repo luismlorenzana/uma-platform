@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Promotion gate (Progression). */
 export const PromotionIcon = /* @__PURE__ */ defineIcon('promotion', {

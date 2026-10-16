@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Era (Collection). */
 export const EraIcon = /* @__PURE__ */ defineIcon('era', {

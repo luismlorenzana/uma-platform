@@ -3,7 +3,7 @@
 // building when the atlases can't load. One small drawer per frame, centred on (x, y) with its base 18 px below; §10.3's
 // four new drawings get theirs in the page's palette, and any other unknown frame a house in it, never an empty box.
 // They draw through `Pen`, which Phaser's Graphics already is and `svgPen` records for the DOM (`ui/BuildingSprite`).
-import type { Palette } from './palettes'
+import type { Palette } from './palettes.js'
 
 /** The drawing calls the markers use: a structural slice of Phaser's `GameObjects.Graphics`. */
 export interface Pen {

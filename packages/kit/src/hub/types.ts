@@ -1,6 +1,6 @@
 // The Hub's shapes (P48): what a game tells the kit about its pages and places. The places and pages themselves stay in
 // each game; these are only their shapes.
-import type { Palette } from './palettes'
+import type { Palette } from './palettes.js'
 
 /** Where a place stands on its page, as fractions of the map's width and height (its building's ground line). */
 export interface PlaceAt {

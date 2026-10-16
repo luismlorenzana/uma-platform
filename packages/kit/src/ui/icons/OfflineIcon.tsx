@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Offline (System). */
 export const OfflineIcon = /* @__PURE__ */ defineIcon('offline', {

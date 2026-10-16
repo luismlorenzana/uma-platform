@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Book (Navigation): uma-rpg's Learning page. */
 export const BookIcon = /* @__PURE__ */ defineIcon('book', {

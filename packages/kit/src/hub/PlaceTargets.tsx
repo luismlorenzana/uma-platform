@@ -5,10 +5,10 @@
 // map order, row by row, as the eye meets them.
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { Link } from 'react-router'
-import { LockedIcon } from '../ui/icons'
-import { BUILDING, hubDpr, hubGrid, placeAnchor, TARGET_W, type HubGrid } from './grid'
-import { Pips, type PipModel } from './Pips'
-import type { PlaceAt } from './types'
+import { LockedIcon } from '../ui/icons/index.js'
+import { BUILDING, hubDpr, hubGrid, placeAnchor, TARGET_W, type HubGrid } from './grid.js'
+import { Pips, type PipModel } from './Pips.js'
+import type { PlaceAt } from './types.js'
 
 export interface TargetModel {
   readonly id: string

@@ -3,7 +3,7 @@
 // building to it, and the DOM place links, which sit on the same spots. Unlike uma-rpg's, the grid has an odd number of
 // columns and is centred across the screen (by whole device pixels), so the trunk road and the places on it stand in the
 // middle at any width and the two sides mirror each other.
-import type { PlaceAt } from './types'
+import type { PlaceAt } from './types.js'
 
 export const ART_TILE = 16
 /** A building sprite's size and ground line, in art pixels (uma-art's `buildings` atlas: 48 × 48, `anchorY` 44). */

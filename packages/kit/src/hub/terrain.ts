@@ -4,8 +4,8 @@
 // water, buildings and label rows. Pure, so the same page always lays out the same way; the scene only draws what this
 // returns. Frame ids follow uma-art's `tiles` atlas: `<tiles>/ground-<n>`, `<tiles>/path-<mask>`, `<tiles>/water-<mask>`,
 // `<tiles>/<prop>`.
-import { placeCell } from './grid'
-import type { PlaceAt, TileProp } from './types'
+import { placeCell } from './grid.js'
+import type { PlaceAt, TileProp } from './types.js'
 
 /** Connection bits for path and water masks; a map edge counts as connected. */
 export const N = 1, E = 2, S = 4, W = 8

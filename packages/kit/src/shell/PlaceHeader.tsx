@@ -1,7 +1,7 @@
 // Every place page's header (uma-racer's `ui/PlaceHeader`; P48): Back, the name, and (i) with the place's blurb and its
 // own lines, since explanations live behind (i), never in banners. The game decides where Back goes (`useLeave`).
 import { useId, useState, type ReactNode } from 'react'
-import { ChevronLeftIcon, InfoIcon } from '../ui/icons'
+import { ChevronLeftIcon, InfoIcon } from '../ui/icons/index.js'
 
 export function PlaceHeader({ title, onBack, about, words, children }: {
   title: ReactNode

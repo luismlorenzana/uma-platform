@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import * as icons from './index'
+import * as icons from './index.js'
 
 describe('the icon set', () => {
   it('exports one icon per name, each tagged with its name', () => {

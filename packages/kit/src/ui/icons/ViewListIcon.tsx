@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** List view (System). */
 export const ViewListIcon = /* @__PURE__ */ defineIcon('view-list', {

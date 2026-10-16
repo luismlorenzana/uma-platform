@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Level up (Progression). */
 export const LevelUpIcon = /* @__PURE__ */ defineIcon('level-up', {

@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Crown (maxed) (Collection). */
 export const CrownIcon = /* @__PURE__ */ defineIcon('crown', {

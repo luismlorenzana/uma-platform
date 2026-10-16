@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Moon (Marks): a size that runs overnight, to the day's first check-in (D366). */
 export const MoonIcon = /* @__PURE__ */ defineIcon('moon', {

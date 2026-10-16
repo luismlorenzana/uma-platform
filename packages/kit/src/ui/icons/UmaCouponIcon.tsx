@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Uma Ticket (Currency). */
 export const UmaCouponIcon = /* @__PURE__ */ defineIcon('uma-coupon', {

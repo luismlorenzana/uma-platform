@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Target (Planner): the crosshair on an Uma the planner works toward (game/02 §6; the Stable's tiles, T138). */
 export const TargetIcon = /* @__PURE__ */ defineIcon('target', {

@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Skip to finish (System). */
 export const SkipIcon = /* @__PURE__ */ defineIcon('skip', {

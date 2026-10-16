@@ -2,8 +2,8 @@
 // grid with their counters (hidden at 0) and locks, in bar order, then the game's extra rows (Account, a roster view).
 // The game puts it in its own sheet, so its global-sheet registry stays its own.
 import { Link, useLocation } from 'react-router'
-import { LockedIcon } from '../ui/icons'
-import { navState } from './nav'
+import { LockedIcon } from '../ui/icons/index.js'
+import { navState } from './nav.js'
 
 export interface MenuPlace {
   readonly key: string

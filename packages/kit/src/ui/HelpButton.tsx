@@ -1,8 +1,8 @@
 // The (i) button (uma-rpg's `ui/HelpButton`; P48): explanations live behind (i), never in banners. A 44 pt target that
 // opens its text in a bottom sheet.
 import { useState, type ReactNode } from 'react'
-import { Sheet } from './BottomSheet'
-import { InfoIcon } from './icons'
+import { Sheet } from './BottomSheet.js'
+import { InfoIcon } from './icons/index.js'
 
 export function HelpButton({ title, children, className = '', label }: { title: string; children: ReactNode; className?: string; label?: string }) {
   const [open, setOpen] = useState(false)

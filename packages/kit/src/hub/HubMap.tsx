@@ -3,10 +3,10 @@
 // bar's order, with the scene's fade; a swipe that starts and ends on a link isn't a tap on it. The game renders its
 // floating pill and side panel beside it.
 import { useMemo, useRef, type ReactNode } from 'react'
-import { HubCanvas } from './HubCanvas'
-import { PlaceTargets, type TargetModel } from './PlaceTargets'
-import { neighbourPage, swipeDirection, type Point } from './swipe'
-import type { MapPlace, PageGround, PlaceAt } from './types'
+import { HubCanvas } from './HubCanvas.js'
+import { PlaceTargets, type TargetModel } from './PlaceTargets.js'
+import { neighbourPage, swipeDirection, type Point } from './swipe.js'
+import type { MapPlace, PageGround, PlaceAt } from './types.js'
 
 export interface HubMapPlace extends TargetModel {
   /** The building frame the scene draws. */

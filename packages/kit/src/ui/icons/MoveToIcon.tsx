@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Move to (System). */
 export const MoveToIcon = /* @__PURE__ */ defineIcon('move-to', {

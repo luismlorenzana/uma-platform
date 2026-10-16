@@ -4,7 +4,7 @@
 // `max(inset − 12px, 8px)` (Phase 0), not the full inset plus a margin.
 import { m } from 'motion/react'
 import { Link } from 'react-router'
-import { MenuIcon, type IconComponent } from '../ui/icons'
+import { MenuIcon, type IconComponent } from '../ui/icons/index.js'
 
 export interface BarTab {
   readonly key: string

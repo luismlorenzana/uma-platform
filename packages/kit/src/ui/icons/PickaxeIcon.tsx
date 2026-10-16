@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Pickaxe (Navigation): uma-rpg's Wilds, where every job raises Craft Level. */
 export const PickaxeIcon = /* @__PURE__ */ defineIcon('pickaxe', {

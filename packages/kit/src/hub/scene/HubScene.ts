@@ -5,11 +5,11 @@
 // text: names, pips and badges are DOM links over the canvas (uma-rpg D33). A frame the atlas lacks is drawn as its code
 // placeholder in the page's palette, and if the atlases can't load at all, every building is.
 import Phaser from 'phaser'
-import type { Atlas, AtlasIndex } from '../../ui/art'
-import { ART_TILE, hubGrid, placeAnchor } from '../grid'
-import { drawMarker, MARKER_BASE, type Ambient } from '../markers'
-import { layTerrain, pageSeed } from '../terrain'
-import type { MapPlace, PageGround, PlaceAt } from '../types'
+import type { Atlas, AtlasIndex } from '../../ui/art.js'
+import { ART_TILE, hubGrid, placeAnchor } from '../grid.js'
+import { drawMarker, MARKER_BASE, type Ambient } from '../markers.js'
+import { layTerrain, pageSeed } from '../terrain.js'
+import type { MapPlace, PageGround, PlaceAt } from '../types.js'
 
 const TILES = 'hub-tiles'
 const BUILDINGS = 'hub-buildings'

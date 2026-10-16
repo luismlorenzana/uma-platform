@@ -5,8 +5,8 @@
 import { AnimatePresence, m, useDragControls } from 'motion/react'
 import { useEffect, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { CloseIcon } from './icons'
-import { useReducedMotionSetting } from './motion'
+import { CloseIcon } from './icons/index.js'
+import { useReducedMotionSetting } from './motion.js'
 
 export interface BottomSheetProps {
   open: boolean

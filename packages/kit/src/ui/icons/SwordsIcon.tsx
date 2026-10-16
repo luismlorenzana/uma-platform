@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Crossed swords (Navigation): uma-rpg's Battle page. */
 export const SwordsIcon = /* @__PURE__ */ defineIcon('swords', {

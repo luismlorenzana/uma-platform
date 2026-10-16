@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Move down (System). */
 export const ArrowDownIcon = /* @__PURE__ */ defineIcon('arrow-down', {

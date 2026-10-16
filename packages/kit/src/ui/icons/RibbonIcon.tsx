@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Goal ribbon (Progression). */
 export const RibbonIcon = /* @__PURE__ */ defineIcon('ribbon', {

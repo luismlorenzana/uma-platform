@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Badges (Navigation). */
 export const BadgesIcon = /* @__PURE__ */ defineIcon('badges', {

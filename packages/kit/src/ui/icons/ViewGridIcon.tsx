@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Icon view (System). */
 export const ViewGridIcon = /* @__PURE__ */ defineIcon('view-grid', {

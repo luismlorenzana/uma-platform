@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Unknown (Marks). */
 export const QuestionIcon = /* @__PURE__ */ defineIcon('question', {

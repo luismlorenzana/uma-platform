@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { navState, peekPath, withParam } from './nav'
+import { navState, peekPath, withParam } from './nav.js'
 
 describe('shell navigation', () => {
   it('sets and clears one search param, keeping the path and the rest', () => {

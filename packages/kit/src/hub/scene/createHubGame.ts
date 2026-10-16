@@ -3,8 +3,8 @@
 // ResizeObserver, and no audio. `canvas` forces the Canvas renderer (preview screenshots can't capture WebGL); `debug`
 // exposes `window.__hub`.
 import Phaser from 'phaser'
-import { hubDpr } from '../grid'
-import { HubScene, type HubSceneArt, type HubSceneState } from './HubScene'
+import { hubDpr } from '../grid.js'
+import { HubScene, type HubSceneArt, type HubSceneState } from './HubScene.js'
 
 export interface HubGame {
   update(state: HubSceneState): void

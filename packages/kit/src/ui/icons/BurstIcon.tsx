@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Race feat (Marks). */
 export const BurstIcon = /* @__PURE__ */ defineIcon('burst', {

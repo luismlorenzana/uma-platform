@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Finish post (Race). */
 export const FinishIcon = /* @__PURE__ */ defineIcon('finish', {

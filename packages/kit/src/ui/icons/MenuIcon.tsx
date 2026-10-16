@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Menu (System): the bar's menu button, every place by page. */
 export const MenuIcon = /* @__PURE__ */ defineIcon('menu', {

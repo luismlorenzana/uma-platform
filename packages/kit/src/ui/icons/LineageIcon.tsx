@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Lineage (Marks). */
 export const LineageIcon = /* @__PURE__ */ defineIcon('lineage', {

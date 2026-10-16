@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Skill Points (Stats). */
 export const SkillPointsIcon = /* @__PURE__ */ defineIcon('skill-points', {

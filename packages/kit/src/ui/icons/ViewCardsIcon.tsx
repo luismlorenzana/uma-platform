@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Card view (System). */
 export const ViewCardsIcon = /* @__PURE__ */ defineIcon('view-cards', {

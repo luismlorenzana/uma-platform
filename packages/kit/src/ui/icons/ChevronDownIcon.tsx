@@ -1,4 +1,4 @@
-import { defineIcon } from './defineIcon'
+import { defineIcon } from './defineIcon.js'
 
 /** Expand (System). */
 export const ChevronDownIcon = /* @__PURE__ */ defineIcon('chevron-down', {

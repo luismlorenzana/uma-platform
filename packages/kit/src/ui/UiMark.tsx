@@ -2,7 +2,7 @@
 // like the Hub under them. A CSS sprite at a whole-number scale with crisp pixels; a 16 px mark at 16 pt lands on whole
 // device pixels at both 2× and 3×. A mark the pinned atlas lacks draws `fallback`.
 import type { ReactNode } from 'react'
-import { useKitArt } from './art'
+import { useKitArt } from './art.js'
 
 export function UiMark({ mark, scale = 1, className = '', fallback = null }: {
   /** A frame id such as `currency/uma-ticket` or `tier/2`. */
