@@ -103,9 +103,9 @@ export interface PropSprite {
 }
 
 /** Ground and networks, then props scattered on free cells and drawn in row order (tall props rise into the row above). */
-export function sampleMap(label: string, ground: readonly Img[], layers: readonly (Layer & { cells: Cells })[], props: readonly PropSprite[]): Img {
+export function sampleMap(label: string, ground: readonly Img[], layers: readonly (Layer & { cells: Cells })[], props: readonly PropSprite[], reserved: ReadonlySet<string> = new Set()): Img {
   const map = composeMap(label, MAP_COLS, MAP_ROWS, ground, layers)
-  const taken = (x: number, y: number) => layers.some((l) => has(l.cells, x, y))
+  const taken = (x: number, y: number) => reserved.has(key(x, y)) || layers.some((l) => has(l.cells, x, y))
   const besidePath = (x: number, y: number) => [[0, -1], [1, 0], [0, 1], [-1, 0]].some(([dx, dy]) => taken(x + (dx ?? 0), y + (dy ?? 0)))
   const r = rng(`${label}:props`)
   const placed: { x: number; y: number; p: PropSprite }[] = []

@@ -13,7 +13,7 @@ files by hand.
 - `gear/atlas.png` / `.json`: 46 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
   the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
-- `buildings/atlas.png` / `.json`: the 36 Hub places (48×48), id = uma-rpg place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 40 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
@@ -26,6 +26,24 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Racer Hub (A01, 2.6.0)
+
+Four buildings append after the 36 RPG places, with `anchorY: 44`: `card-library` (`town`), `gym` (`learning`),
+`racecourse` and `trophy-hall` (`racing`). Books and cards, athletic equipment, a roofed grandstand and a columned
+trophy hall distinguish them from the RPG's magical/combat halls and ring stadium. None has a chimney or `smoke`.
+The buildings sheet is **288×336**; all preceding positions and pixels are unchanged.
+
+`racing` appends below the four preceding tile pages. It supplies four cool mown-turf `ground-0…3` variants,
+sixteen raked-dirt `path-0…15` masks with white rail edging at the turf boundary, and four props: `rail` and
+`flower-box` (16×16), `furlong-post` and `pennant` (16×32). The tiles sheet is **256×256**, 144 frames; all 120
+preceding positions and pixels are unchanged. Ground variants share edge strips; joined paths have no rail across
+the connection. Network layouts must never close a 2×2 road block. Tall props stamp one row above their foot cell.
+
+`assets/previews/racer-buildings-2x.png` shows the additions above Stable, Observatory, Brawler Dojo and Scenario
+Gate, left to right. `racing-tiles-2x.png` shows the terrain alone; `racing-hub-2x.png` composes all four Racing places
+on a 12×22-tile sample, including the reused Scenario Gate and Tier Finale. These are review layouts, not game rules.
+Vitest freezes every published 2.5.0 building/tile frame, metadata and RGBA byte in `buildings/legacy-2.5.0.json`.
 
 ## Gear rows in 2.0.0
 

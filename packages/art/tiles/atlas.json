@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 256,
- "height": 208,
+ "height": 256,
  "frames": {
   "farmlands/ground-0": {
    "x": 0,
@@ -961,6 +961,198 @@
    "w": 16,
    "h": 32,
    "page": "town",
+   "kind": "prop"
+  },
+  "racing/ground-0": {
+   "x": 0,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "ground"
+  },
+  "racing/ground-1": {
+   "x": 16,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "ground"
+  },
+  "racing/ground-2": {
+   "x": 32,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "ground"
+  },
+  "racing/ground-3": {
+   "x": 48,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "ground"
+  },
+  "racing/path-0": {
+   "x": 0,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-1": {
+   "x": 16,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-2": {
+   "x": 32,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-3": {
+   "x": 48,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-4": {
+   "x": 64,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-5": {
+   "x": 80,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-6": {
+   "x": 96,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-7": {
+   "x": 112,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-8": {
+   "x": 128,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-9": {
+   "x": 144,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-10": {
+   "x": 160,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-11": {
+   "x": 176,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-12": {
+   "x": 192,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-13": {
+   "x": 208,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-14": {
+   "x": 224,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/path-15": {
+   "x": 240,
+   "y": 208,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "path"
+  },
+  "racing/rail": {
+   "x": 64,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "prop"
+  },
+  "racing/flower-box": {
+   "x": 80,
+   "y": 224,
+   "w": 16,
+   "h": 16,
+   "page": "racing",
+   "kind": "prop"
+  },
+  "racing/furlong-post": {
+   "x": 96,
+   "y": 224,
+   "w": 16,
+   "h": 32,
+   "page": "racing",
+   "kind": "prop"
+  },
+  "racing/pennant": {
+   "x": 112,
+   "y": 224,
+   "w": 16,
+   "h": 32,
+   "page": "racing",
    "kind": "prop"
   }
  }
