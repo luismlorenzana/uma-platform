@@ -2,7 +2,7 @@
  "schemaVersion": 1,
  "cell": 32,
  "width": 320,
- "height": 1024,
+ "height": 1056,
  "frames": {
   "wheat": {
    "x": 0,
@@ -3203,6 +3203,12 @@
    "effect": "Limit Break charge",
    "grade": 10,
    "refined": true
+  },
+  "speed-ticket": {
+   "x": 0,
+   "y": 1024,
+   "name": "Speed Ticket",
+   "kind": "ticket"
   }
  }
 }

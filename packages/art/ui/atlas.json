@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 36,
+ "height": 52,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -122,6 +122,54 @@
    "h": 12,
    "group": "status",
    "key": "clarity"
+  },
+  "currency/prize-money": {
+   "x": 0,
+   "y": 36,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "prize-money"
+  },
+  "currency/speed-ticket": {
+   "x": 16,
+   "y": 36,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "speed-ticket"
+  },
+  "currency/uma-ticket": {
+   "x": 32,
+   "y": 36,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "uma-ticket"
+  },
+  "tier/1": {
+   "x": 48,
+   "y": 36,
+   "w": 12,
+   "h": 12,
+   "group": "tier",
+   "key": "1"
+  },
+  "tier/2": {
+   "x": 60,
+   "y": 36,
+   "w": 12,
+   "h": 12,
+   "group": "tier",
+   "key": "2"
+  },
+  "tier/3": {
+   "x": 72,
+   "y": 36,
+   "w": 12,
+   "h": 12,
+   "group": "tier",
+   "key": "3"
   }
  }
 }

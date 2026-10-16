@@ -6,7 +6,8 @@ Draws the Uma games' original pixel art from code: no dependencies, no hand-edit
 pnpm art:draw
 ```
 
-It writes all 320 item icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`) as 32×32 PNGs to
+It writes all 320 material icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`), plus the Speed Ticket,
+as 32×32 PNGs to
 `assets/items/<family>/<id>.png`, plus `assets/previews/items.png` (a 4× contact sheet) and
 `assets/previews/items.html` (named cards at 4× and 1×). The same code always draws the same pixels.
 
@@ -37,6 +38,17 @@ No new building returns smoke (none has a chimney). `buildings/legacy-2.5.0.json
 `racer-buildings-2x.png` compares new places (top) to Stable, Observatory, Brawler Dojo and Scenario Gate (bottom).
 `racing-tiles-2x.png` is a terrain sample; `racing-hub-2x.png` adds the Racing page's four buildings. The review-only
 `tiles/racing-map.ts` reserves 3×3 footprints and connects their doors without any closed 2×2 path block.
+
+## Racer marks and utility ticket (A02)
+
+`src/ui/racer.ts` adds three 16px currency marks and three 12px tier crests after the original UI rows. The coin,
+horizontal teal stub and vertical gold punched ticket differ in shape, and shield pips are distinct connected
+clusters at native size. `src/ticket.ts` paints the lightning stub directly at 16px and 32px; `items/tickets.ts`
+supplies the ungraded item, appended after all material families. Do not give utility art fake material grades.
+
+`racer-marks-{1x,2x,4x}.png` shows all six on white/dark panels; `racer-ticket-items-2x.png` compares Speed Ticket,
+Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
+bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
 
 ## D103 armor (H27)
 
