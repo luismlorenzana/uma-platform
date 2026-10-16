@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.9.0
+
+### Minor Changes
+
+- 8253e25: Add a native green Laurel currency wreath and the Battle terrain page: packed earth, trampled grass, sixteen flagstone masks and six drill-ground props. All published frame positions, metadata and pixels remain unchanged.
+
 ## 2.8.0
 
 ### Minor Changes

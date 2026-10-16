@@ -50,6 +50,22 @@ supplies the ungraded item, appended after all material families. Do not give ut
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
 
+## Laurel and Battle terrain (H31)
+
+`src/laurel.ts` paints an open green wreath directly at the target grid. Its native 16px `currency/laurel` occupies
+the empty UI slot (84, 36) without moving any old mark or tier crest. `laurel-marks-{1x,2x,4x}.png` compares all four
+currencies on white/dark chips; the older A02 sheets remain byte-identical.
+
+`battle` appends to the tile pages: packed earth and trampled grass, sixteen flagstone masks, and six original
+`tiles/props/battle.ts` furniture painters. Banner, training dummy and torch are tall; rack, crate and shield stand
+are short. The native sheet grows to 256×304, 170 frames. `tiles/battle-map.ts` lays both existing Battle buildings
+and all six props on a review-only 12×22 page, with a connected road, no 2×2 blocks and reserved footprints/name rows.
+`battle-hub-2x.png` shows this composition; `battle-tiles-2x.png` scatters props across a terrain sample.
+
+`testing/legacy-h31-2.8.0.json` freezes every prior UI/tile entry and pixel (excluding only the previously blank
+Laurel rectangle). Tests also check native sizes, unique masks/props, seam continuity, open wreath, saved pixels,
+deterministic painters and review-layout clearance. No game-specific layout or rules are shipped in the art package.
+
 ## D103 armor (H27)
 
 `src/gear/armor-pieces.ts` adds paired head/body/legs/arms pieces to rows 26–33, after `orb-dark`. Do not edit or

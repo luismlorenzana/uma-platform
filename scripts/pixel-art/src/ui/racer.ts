@@ -3,9 +3,9 @@ import { Mask, shadeDome } from '../shape.ts'
 import type { Sprite } from '../sprite.ts'
 import { speedTicket } from '../ticket.ts'
 import { add } from '../tiles/props/kit.ts'
-import type { Currency, Tier } from './spec.ts'
+import type { RacerCurrency, Tier } from './spec.ts'
 
-export function currencyMark(s: Sprite, key: Currency): Mask | undefined {
+export function currencyMark(s: Sprite, key: RacerCurrency): Mask | undefined {
   s.shadow = { cx: 8, cy: 13.7, rx: 5.8, ry: 0.8, alpha: 40 }
   if (key === 'speed-ticket') { speedTicket(s); return }
   const gold = add(s, '#d9a63f', { lift: 0.35, drop: 0.25 })

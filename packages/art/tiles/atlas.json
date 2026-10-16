@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 256,
- "height": 256,
+ "height": 304,
  "frames": {
   "farmlands/ground-0": {
    "x": 0,
@@ -1153,6 +1153,214 @@
    "w": 16,
    "h": 32,
    "page": "racing",
+   "kind": "prop"
+  },
+  "battle/ground-0": {
+   "x": 0,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "ground"
+  },
+  "battle/ground-1": {
+   "x": 16,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "ground"
+  },
+  "battle/ground-2": {
+   "x": 32,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "ground"
+  },
+  "battle/ground-3": {
+   "x": 48,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "ground"
+  },
+  "battle/path-0": {
+   "x": 0,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-1": {
+   "x": 16,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-2": {
+   "x": 32,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-3": {
+   "x": 48,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-4": {
+   "x": 64,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-5": {
+   "x": 80,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-6": {
+   "x": 96,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-7": {
+   "x": 112,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-8": {
+   "x": 128,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-9": {
+   "x": 144,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-10": {
+   "x": 160,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-11": {
+   "x": 176,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-12": {
+   "x": 192,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-13": {
+   "x": 208,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-14": {
+   "x": 224,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/path-15": {
+   "x": 240,
+   "y": 256,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "path"
+  },
+  "battle/weapon-rack": {
+   "x": 64,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "prop"
+  },
+  "battle/crate": {
+   "x": 80,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "prop"
+  },
+  "battle/shield-stand": {
+   "x": 96,
+   "y": 272,
+   "w": 16,
+   "h": 16,
+   "page": "battle",
+   "kind": "prop"
+  },
+  "battle/banner": {
+   "x": 112,
+   "y": 272,
+   "w": 16,
+   "h": 32,
+   "page": "battle",
+   "kind": "prop"
+  },
+  "battle/training-dummy": {
+   "x": 128,
+   "y": 272,
+   "w": 16,
+   "h": 32,
+   "page": "battle",
+   "kind": "prop"
+  },
+  "battle/torch": {
+   "x": 144,
+   "y": 272,
+   "w": 16,
+   "h": 32,
+   "page": "battle",
    "kind": "prop"
   }
  }

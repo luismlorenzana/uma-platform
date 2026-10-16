@@ -29,7 +29,7 @@ for (const [name, scale] of [['ui', 3], ['ui-1x', 1]] as const) {
   writeFileSync(join(previews, `${name}.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 // A02's six marks on the account bar's white panel and its inverse stage background, at exact integer scales.
-const marks = frames.filter(f => f.group === 'currency' || f.group === 'tier')
+const marks = frames.filter(f => (f.group === 'currency' && f.key !== 'laurel') || f.group === 'tier')
 for (const scale of [1, 2, 4]) {
   const cell = 24 * scale, sheet = new Img(marks.length * (cell + PAD) + PAD, 2 * (cell + PAD) + PAD).fill(BG)
   for (const [row, color] of ['#ffffff', '#101a24'].entries()) {
@@ -41,13 +41,24 @@ for (const scale of [1, 2, 4]) {
   }
   writeFileSync(join(previews, `racer-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
+// H31: retain A02's previews; compare the new wreath beside all three racer currencies on light/dark chips.
+const currencies = frames.filter(f => f.group === 'currency')
+for (const scale of [1, 2, 4]) {
+  const cell = 24 * scale, sheet = new Img(currencies.length * (cell + PAD) + PAD, 2 * (cell + PAD) + PAD).fill(BG)
+  for (const [row, color] of ['#ffffff', '#17202b'].entries()) currencies.forEach((f, i) => {
+    const left = PAD + i * (cell + PAD), top = PAD + row * (cell + PAD)
+    sheet.copy(new Img(cell, cell).fill(hex(color)), left, top)
+    sheet.draw(f.img.scaled(scale), left + (cell - f.w * scale) / 2, top + (cell - f.h * scale) / 2)
+  })
+  writeFileSync(join(previews, `laurel-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
 const itemSheet = new Img(3 * (64 + PAD) + PAD, 64 + PAD * 2).fill(CELL)
 const references = [FAMILIES[0]!.raw[0]!, FAMILIES[1]!.raw[0]!]
 ;[speedTicketItem(), ...references.map(drawIcon)].forEach((px, i) => itemSheet.draw(new Img(32, 32, px).scaled(2), PAD + i * (64 + PAD), PAD))
 writeFileSync(join(previews, 'racer-ticket-items-2x.png'), encodePng(itemSheet.w, itemSheet.h, itemSheet.px))
 const labels: Record<string, string> = { brawler: 'Brawler', mage: 'Mage', spellblade: 'Spell Blade', cleric: 'Cleric', summoner: 'Summoner',
   'armor-break': 'Armor Break', 'mind-break': 'Mind Break', enfeeble: 'Enfeeble', shatter: 'Shatter', hex: 'Hex', brave: 'Brave', faith: 'Faith', aegis: 'Aegis', breaker: 'Breaker', clarity: 'Clarity',
-  'prize-money': 'Prize Money', 'speed-ticket': 'Speed Ticket', 'uma-ticket': 'Uma Ticket', '1': 'Tier 1', '2': 'Tier 2', '3': 'Tier 3' }
+  'prize-money': 'Prize Money', 'speed-ticket': 'Speed Ticket', 'uma-ticket': 'Uma Ticket', laurel: 'Laurels', '1': 'Tier 1', '2': 'Tier 2', '3': 'Tier 3' }
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
 const examples = (group: string) => frames.filter(f => f.group === group).map((f) => `<div class="example" role="img" aria-label="${labels[f.key]}${f.group === 'status' ? ', 2 stacks' : ''}"><img src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt=""><span>${f.group === 'status' ? '2' : labels[f.key]}</span></div>`).join('')
 const cards = frames.map((f) => `<figure><img src="${uri(f.img)}" width="${f.w * 3}" height="${f.h * 3}" alt="${f.id} at 3×"><img class="native" src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt="${f.id} at 1×"><figcaption>${labels[f.key]}</figcaption></figure>`).join('')

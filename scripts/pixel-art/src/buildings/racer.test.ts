@@ -81,7 +81,7 @@ describe('A01 append-only Hub art', () => {
 
   it('appends all 24 Racing tiles at the declared native sizes and matches their painters', () => {
     const { index, img } = atlas('tiles')
-    expect(PAGES).toEqual(['farmlands', 'wilds', 'learning', 'town', 'racing'])
+    expect(PAGES.slice(0, 5)).toEqual(['farmlands', 'wilds', 'learning', 'town', 'racing'])
     const ground = [0, 1, 2, 3].map(v => groundTile(TERRAIN.racing, v))
     const paths = MASKS.map(m => PATH.racing(m, ground[0]!))
     expect(new Set(ground.map(g => sha(g.px))).size).toBe(4)

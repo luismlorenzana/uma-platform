@@ -1,4 +1,5 @@
 import { Sprite } from '../sprite.ts'
+import { laurelMark } from '../laurel.ts'
 import { Img } from '../tiles/image.ts'
 import { classEmblem } from './classes.ts'
 import { statusBadge } from './statuses.ts'
@@ -13,7 +14,10 @@ export function drawUi(spec: FrameSpec): Img {
   let cutout: ReturnType<typeof currencyMark>
   if (spec.group === 'class') classEmblem(s, spec.key)
   else if (spec.group === 'status') statusBadge(s, spec.key)
-  else if (spec.group === 'currency') cutout = currencyMark(s, spec.key)
+  else if (spec.group === 'currency') {
+    if (spec.key === 'laurel') laurelMark(s)
+    else cutout = currencyMark(s, spec.key)
+  }
   else tierCrest(s, spec.key)
   const img = new Img(spec.w, spec.h, s.render())
   cutout?.each((x, y) => img.set(x, y, [0, 0, 0, 0]))
@@ -42,7 +46,7 @@ export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<
   for (const { id, group, key, w, h, img } of frames) {
     const x = group === 'class' ? CLASSES.indexOf(key as typeof CLASSES[number]) * 24
       : group === 'status' ? STATUSES.indexOf(key as typeof STATUSES[number]) * 12
-      : group === 'currency' ? CURRENCIES.indexOf(key as typeof CURRENCIES[number]) * 16
+      : group === 'currency' ? key === 'laurel' ? 84 : CURRENCIES.indexOf(key as typeof CURRENCIES[number]) * 16
       : 48 + TIERS.indexOf(key as typeof TIERS[number]) * 12
     const y = group === 'class' ? 0 : group === 'status' ? 24 : 36
     atlas.copy(img, x, y); index[id] = { x, y, w, h, group, key }

@@ -5,10 +5,18 @@ import type { GroundStyle } from './ground.ts'
 import { cobblePath, dirtPath, flagstonePath, racingPath, type PathPainter } from './paths.ts'
 import { type WaterSpec, waterTile } from './water.ts'
 
-export const PAGES = ['farmlands', 'wilds', 'learning', 'town', 'racing'] as const
+export const PAGES = ['farmlands', 'wilds', 'learning', 'town', 'racing', 'battle'] as const
 export type Page = (typeof PAGES)[number]
 
 export const GROUND: Record<Page, GroundStyle> = {
+  battle: {
+    page: 'battle', base: '#7c7854',
+    grain: { light: '#84805a', dark: '#72724f', rate: .2 },
+    ink: { g: '#697947', G: '#596b3e', d: '#97815c', D: '#6b6549', l: '#b29c70' },
+    marks: [['g.g', '.G.'], ['dd', '.D'], ['d.', '.D'], ['g', 'G']],
+    darts: 40, spacing: 3.8,
+    features: [[['.ll.', 'lddl', '.DD.']], [['dd..', 'DDdd', '..DD']]],
+  },
   racing: {
     page: 'racing',
     base: '#5ca66c',
@@ -63,6 +71,11 @@ export const GROUND: Record<Page, GroundStyle> = {
 }
 
 export const PATH: Record<Page, PathPainter> = {
+  battle: flagstonePath({
+    page: 'battle', half: 5, lines: [3, 8, 13],
+    slabs: ['#a29d89', '#989581', '#aaa58f'], light: '#b8b3a0', shadow: '#858170',
+    joint: '#666750', kerb: '#8c8976', kerbShade: '#61654b',
+  }),
   racing: racingPath,
   farmlands: dirtPath({
     page: 'farmlands',
