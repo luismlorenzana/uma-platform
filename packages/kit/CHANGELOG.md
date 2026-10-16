@@ -1,5 +1,15 @@
 # @luismlorenzana/uma-kit
 
+## 0.1.2
+
+### Patch Changes
+
+- - `HubMap` re-lays its terrain only when places' ids, frames or spots, the plaza's spot or the ground change, never on
+    a count or pip tick (`sceneKey`). From uma-racer.
+  - With sheets open over each other, only the topmost one answers Escape, whatever `onClose`'s identity. From
+    uma-racer.
+  - `MotionRoot` takes optional `features`, so tests can pass `domMax` instead of nesting their own `LazyMotion`.
+
 ## 0.1.1
 
 ### Patch Changes

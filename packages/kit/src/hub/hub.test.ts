@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { hubGrid, placeAnchor, placeCell } from './grid.js'
+import { sceneKey } from './HubMap.js'
 import { neighbourPage, swipeDirection } from './swipe.js'
 import { E, layTerrain, N, S, TILE_PROPS, W } from './terrain.js'
 import type { PlaceAt } from './types.js'
@@ -87,4 +88,14 @@ describe('terrain', () => {
       }
     })
   }
+})
+
+describe('sceneKey (0.1.2)', () => {
+  it('ignores what ticks and changes with what the scene draws', () => {
+    const a = [{ id: 'mine', frame: 'buildings/mine', at: { x: 0.2, y: 0.4 }, count: 1 }]
+    const b = [{ id: 'mine', frame: 'buildings/mine', at: { x: 0.2, y: 0.4 }, count: 2 }]
+    expect(sceneKey(a)).toBe(sceneKey(b))
+    expect(sceneKey([{ ...a[0]!, at: { x: 0.3, y: 0.4 } }])).not.toBe(sceneKey(a))
+    expect(sceneKey([{ ...a[0]!, frame: 'buildings/forge' }])).not.toBe(sceneKey(a))
+  })
 })

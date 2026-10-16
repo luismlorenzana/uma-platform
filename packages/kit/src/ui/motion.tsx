@@ -2,7 +2,7 @@
 // The root applies it through Motion's `MotionConfig` and a `data-reduced-motion` attribute for CSS: no pip bounce, no
 // number transition, instant sheets. Everything runs under `LazyMotion strict`, so only `m.*` components draw.
 import { LazyMotion, MotionConfig } from 'motion/react'
-import { useEffect, useSyncExternalStore, type ReactNode } from 'react'
+import { useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from 'react'
 import { kitKey, readPref, subscribePrefs, writePref } from './prefs.js'
 
 const QUERY = '(prefers-reduced-motion: reduce)'
@@ -36,8 +36,9 @@ export function useReducedMotionSetting(): boolean {
   return useSyncExternalStore(subscribe, reducedNow, () => false)
 }
 
-/** The motion root: lazy features, strict `m.*`, and the reduced-motion setting for Motion and CSS. */
-export function MotionRoot({ children }: { children: ReactNode }) {
+/** The motion root: lazy features, strict `m.*`, and the reduced-motion setting for Motion and CSS. Tests can pass
+ *  `features={domMax}` so animations need no dynamic import (0.1.2). */
+export function MotionRoot({ children, features = loadFeatures }: { children: ReactNode; features?: ComponentProps<typeof LazyMotion>['features'] }) {
   const reduced = useReducedMotionSetting()
   useEffect(() => {
     const root = document.documentElement
@@ -45,7 +46,7 @@ export function MotionRoot({ children }: { children: ReactNode }) {
     else root.removeAttribute('data-reduced-motion')
   }, [reduced])
   return (
-    <LazyMotion features={loadFeatures} strict>
+    <LazyMotion features={features} strict>
       <MotionConfig reducedMotion={reduced ? 'always' : 'never'}>{children}</MotionConfig>
     </LazyMotion>
   )

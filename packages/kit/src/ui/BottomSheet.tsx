@@ -3,8 +3,9 @@
 // the screen: its content scrolls under a fixed header whose close button and handle stay in reach. Under reduced motion
 // it appears and goes without sliding. `Sheet` renders it through a portal, so one can open over another.
 import { AnimatePresence, m, useDragControls } from 'motion/react'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
+import { openEscapeLayer } from './escape.js'
 import { CloseIcon } from './icons/index.js'
 import { useReducedMotionSetting } from './motion.js'
 
@@ -27,17 +28,25 @@ export function BottomSheet({ open, onClose, children, label, title, footer, clo
   const dragControls = useDragControls()
   const reducedMotion = useReducedMotionSetting()
 
+  const closeRef = useRef(onClose)
+  closeRef.current = onClose
+
   useEffect(() => {
     if (!open || !closeOnEscape) return
+    // Only the topmost open sheet answers, and it answers before anything under it (a side panel). The listener stays
+    // registered while the sheet is open, whatever `onClose`'s identity, so the stack keeps its order.
+    const layer = openEscapeLayer()
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.defaultPrevented) return
-      // The sheet answers Escape before anything under it (a side panel).
+      if (event.key !== 'Escape' || event.defaultPrevented || !layer.isTop()) return
       event.preventDefault()
-      onClose()
+      closeRef.current()
     }
     window.addEventListener('keydown', onKey, true)
-    return () => window.removeEventListener('keydown', onKey, true)
-  }, [open, closeOnEscape, onClose])
+    return () => {
+      window.removeEventListener('keydown', onKey, true)
+      layer.close()
+    }
+  }, [open, closeOnEscape])
 
   return (
     <AnimatePresence>

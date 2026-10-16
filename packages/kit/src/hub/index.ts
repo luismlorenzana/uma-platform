@@ -1,6 +1,6 @@
 // @luismlorenzana/uma-kit/hub: the Hub map both games draw (uma-platform P48, sibling plan A3). Phaser loads only when a
 // map mounts (`HubCanvas` imports the scene lazily).
-export { HubMap, type HubMapPlace } from './HubMap.js'
+export { HubMap, sceneKey, type HubMapPlace } from './HubMap.js'
 export { HubCanvas, type HubCanvasProps } from './HubCanvas.js'
 export { PlaceTargets, useHubGrid, type TargetModel } from './PlaceTargets.js'
 export { Pips, type PipModel } from './Pips.js'

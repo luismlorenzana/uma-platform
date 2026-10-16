@@ -13,6 +13,9 @@ export interface HubMapPlace extends TargetModel {
   readonly frame: string
 }
 
+/** What the Hub scene draws of the places, as one string: ids, frames and spots, nothing that ticks. */
+export const sceneKey = (places: readonly MapPlace[]): string => places.map((p) => `${p.id}:${p.frame}:${p.at.x},${p.at.y}`).join('|')
+
 export function HubMap<P extends string>({ label, page, pages, onPage, ground, places, plaza, covered, reducedMotion, canvas, debug, children }: {
   /** The map's accessible name, such as "Wilds map". */
   label: string
@@ -32,8 +35,14 @@ export function HubMap<P extends string>({ label, page, pages, onPage, ground, p
 }) {
   const swipeStart = useRef<Point | null>(null)
   const swiped = useRef(false)
-  const scenePlaces = useMemo<MapPlace[]>(() => places.map((p) => ({ id: p.id, frame: p.frame, at: p.at })), [places])
-  const clearings = useMemo<PlaceAt[]>(() => (plaza === undefined ? [] : [plaza.at]), [plaza])
+  // The scene re-lays its terrain only when what it draws changes: places' ids, frames and spots, the plaza's spot and
+  // the ground. Counts, pips and labels change on every tick and only touch the DOM buttons (0.1.2).
+  const placesKey = sceneKey(places)
+  const scenePlaces = useMemo<MapPlace[]>(() => places.map((p) => ({ id: p.id, frame: p.frame, at: p.at })), [placesKey])
+  const plazaKey = plaza === undefined ? '' : `${plaza.at.x},${plaza.at.y}`
+  const clearings = useMemo<PlaceAt[]>(() => (plaza === undefined ? [] : [plaza.at]), [plazaKey])
+  const groundKey = JSON.stringify(ground)
+  const sceneGround = useMemo(() => ground, [groundKey])
   return (
     <>
       <main
@@ -62,7 +71,7 @@ export function HubMap<P extends string>({ label, page, pages, onPage, ground, p
           event.stopPropagation()
         }}
       >
-        <HubCanvas ground={ground} places={scenePlaces} clearings={clearings} paused={covered} reducedMotion={reducedMotion} canvas={canvas} debug={debug} />
+        <HubCanvas ground={sceneGround} places={scenePlaces} clearings={clearings} paused={covered} reducedMotion={reducedMotion} canvas={canvas} debug={debug} />
         <PlaceTargets places={places} plaza={plaza} />
       </main>
       {children}
