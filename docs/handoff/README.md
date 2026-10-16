@@ -68,14 +68,14 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | [SD3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SD3-rpg-places.md) | uma-rpg on SD1 and SD2 | uma-rpg | Either | M | SD1, SD2 | Waiting |
 | [SD4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SD4-racer-places.md) | uma-racer on SD1 and SD2 | uma-racer | Either | M | SD1, SD2 | Waiting |
 | **Phase E: platform plumbing** | | | | | | |
-| [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
+| [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | In progress (uma-racer's Claude session) |
 | [SE2](tasks/SE2-kit-content.md) | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Waiting |
 | [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Waiting |
 | [SE4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE4-racer-content.md) | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Waiting |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SA7, SB1, SB2, SB5, SC1, SD1, SD2, SE1.
+**Ready now, in parallel:** SA7, SB1, SB2, SB5, SC1, SD1, SD2. SE1 is taken.
 
 ## Releases while packets run in parallel
 
