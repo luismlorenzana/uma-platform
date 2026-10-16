@@ -15,14 +15,16 @@ It owns:
 
 Phases 0 and 1 are done, and Phases 2 (uma-rpg) and 3 (the uma-racer refactor) are in progress.
 `@luismlorenzana/uma-data` and `@luismlorenzana/uma-art` are on GitHub Packages: uma-rpg uses both, and uma-racer
-installs `uma-data`. See the
-[roadmap](docs/roadmap.md).
+installs `uma-data`. `@luismlorenzana/uma-kit` (P48) is the app both games share: theme, primitives, shell and Hub
+map. See the [roadmap](docs/roadmap.md).
 
 ## Layout
 
 | Path | What |
 |---|---|
 | `packages/data` | `@luismlorenzana/uma-data`: master types, runtime parsers, release client ([master-data.md](docs/master-data.md)) |
+| `packages/art` | `@luismlorenzana/uma-art`: the original art atlases ([README](packages/art/README.md)) |
+| `packages/kit` | `@luismlorenzana/uma-kit`: the shared app, theme, shell and Hub map ([README](packages/kit/README.md), [sibling plan](docs/sibling/README.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
@@ -87,7 +89,8 @@ steps:
 ```
 
 A game repo's `GITHUB_TOKEN` can read the package only after the package grants that repo access: on GitHub, open the
-`uma-data` package → **Package settings** → **Manage Actions access** → add the game repo with the **Read** role.
+`uma-data` package (and each other package it installs: `uma-art`, `uma-kit`) → **Package settings** → **Manage
+Actions access** → add the game repo with the **Read** role.
 
 **Reading releases.** Each game's API reads the private bucket with its own read-only service account and serves the
 files to its web app through its logged-in endpoint (architecture §2.2):
