@@ -13,6 +13,11 @@ The order of work across all four repos (P16). Each phase lists its exit check. 
 
 Until Phase 3, **uma-racer gets no new RPG or puzzle features** (P17), so the port isn't chasing a moving target.
 
+**Proposed, 2026-10-16: [sibling apps](sibling/README.md).** The owner wants uma-rpg and uma-racer to share one
+shell, one Hub and one Uma album, with only the games different. The plan shares a kit across both games: Phase 0 fixes
+in each game, then Phases A–E. It folds the racer's phases 5–7 into Phase A and Phase E. It waits on the owner's
+approval; nothing changes until then.
+
 ## Phase 0 — uma-platform foundation
 
 **Status:** done 2026-10-10. Exit check passed from a fresh clone of `6c7f691` (with the private inputs of P31):
