@@ -212,7 +212,11 @@
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  /* The floating bottom bar's lift: the home indicator may overlap the bar's margin, never its tabs (sibling Phase 0). */
+  /* The docked bottom bar's foot (0.2.0): the panel runs under the home indicator, and the tabs stop just above it. */
+  .pb-bar-safe {
+    padding-bottom: max(calc(env(safe-area-inset-bottom) - 14px), 6px);
+  }
+  /* The old floating bar's lift (Phase 0); kept for games that still use it. */
   .mb-bar-safe {
     margin-bottom: max(calc(env(safe-area-inset-bottom) - 12px), 8px);
   }

@@ -3,6 +3,7 @@
 // browser's theme colour follows the page colour, so the status bar area matches.
 import { useSyncExternalStore } from 'react'
 import { kitKey, readPref, subscribePrefs, writePref } from './prefs.js'
+import { fillScreen } from './screen.js'
 
 export type Appearance = 'system' | 'light' | 'dark'
 export const APPEARANCES: readonly Appearance[] = ['system', 'light', 'dark']
@@ -38,6 +39,8 @@ export function setAppearance(choice: Appearance): void {
 
 /** Applies the stored choice now and keeps it applied as the phone's setting changes. Call once at boot. */
 export function initAppearance(): () => void {
+  // The whole screen in an iOS Home Screen app (0.2.0): every game calls this at boot, so it comes for free.
+  const unfill = fillScreen()
   apply()
   const query = media()
   query?.addEventListener('change', apply)
@@ -45,6 +48,7 @@ export function initAppearance(): () => void {
   return () => {
     query?.removeEventListener('change', apply)
     unsubscribe()
+    unfill()
   }
 }
 

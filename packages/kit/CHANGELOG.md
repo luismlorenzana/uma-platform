@@ -1,5 +1,17 @@
 # @luismlorenzana/uma-kit
 
+## 0.2.0
+
+### Minor Changes
+
+- - **The whole screen in an iOS Home Screen app.** iOS 26 sizes a translucent-status-bar web app's viewport a status bar
+    short (62pt on an iPhone 17), and draws no fixed content below that line: the empty band under the bottom bar.
+    `fillScreen()` makes the document one screen tall, which gives the page the whole screen; `initAppearance()` calls
+    it, so games get it at boot. Measured in the iOS 26.4 Simulator.
+  - **A docked bottom bar.** Full width, square, flush to the bottom edge, its panel under the home indicator; five equal
+    slots; the Play disc rises out of the bar in a notch of the bar's colour; the active tab has a marker on the top edge.
+    New utility `pb-bar-safe`; `mb-bar-safe` stays for games that use it.
+
 ## 0.1.2
 
 ### Patch Changes
