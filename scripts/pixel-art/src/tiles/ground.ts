@@ -12,6 +12,8 @@ export type Stamp = readonly string[]
 export interface GroundStyle {
   page: string
   base: string
+  /** Optional faint mowing bands, repeating within the tile (used by the Racing lawn). */
+  stripes?: { width: number; color: string }
   /** Sparse one-pixel grain over the whole tile, a touch lighter or darker than the base. */
   grain: { light: string; dark: string; rate: number }
   ink: Readonly<Record<string, string>>
@@ -78,6 +80,7 @@ export function groundTile(style: GroundStyle, variant: number): Img {
   const bandSeed = seedOf(`${style.page}:grain:band`), ownSeed = seedOf(`${style.page}:grain:v${variant}`)
   for (let y = 0; y < TILE; y++)
     for (let x = 0; x < TILE; x++) {
+      if (style.stripes && Math.floor(x / style.stripes.width) % 2) img.set(x, y, hex(style.stripes.color))
       const h = hash2(x, y, inBand(x, y) ? bandSeed : ownSeed)
       if (h < style.grain.rate / 2) img.set(x, y, dark)
       else if (h < style.grain.rate) img.set(x, y, light)

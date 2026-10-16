@@ -27,6 +27,17 @@ It writes all 320 item icons (16 families × 10 raw + 10 refined, in `src/items/
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## Racer buildings and Racing terrain (A01)
+
+`src/buildings/racer.ts` appends Card Library, Gym, Racecourse and Trophy Hall after every existing place, using the
+48px kit and ground line 44. `racing` is appended to the terrain pages: four striped turf variants, sixteen raked
+dirt/white-edge paths, and `props/racing.ts`'s rail, furlong post, pennant and flower box. Existing pages do not change.
+No new building returns smoke (none has a chimney). `buildings/legacy-2.5.0.json` freezes old frame metadata and pixels.
+
+`racer-buildings-2x.png` compares new places (top) to Stable, Observatory, Brawler Dojo and Scenario Gate (bottom).
+`racing-tiles-2x.png` is a terrain sample; `racing-hub-2x.png` adds the Racing page's four buildings. The review-only
+`tiles/racing-map.ts` reserves 3×3 footprints and connects their doors without any closed 2×2 path block.
+
 ## D103 armor (H27)
 
 `src/gear/armor-pieces.ts` adds paired head/body/legs/arms pieces to rows 26–33, after `orb-dark`. Do not edit or

@@ -2,13 +2,24 @@
 // farmlands lush meadow and dirt paths, wilds dark rough grass and trails, learning a neat lawn and pale flagstones,
 // town packed earth and cobbles.
 import type { GroundStyle } from './ground.ts'
-import { cobblePath, dirtPath, flagstonePath, type PathPainter } from './paths.ts'
+import { cobblePath, dirtPath, flagstonePath, racingPath, type PathPainter } from './paths.ts'
 import { type WaterSpec, waterTile } from './water.ts'
 
-export const PAGES = ['farmlands', 'wilds', 'learning', 'town'] as const
+export const PAGES = ['farmlands', 'wilds', 'learning', 'town', 'racing'] as const
 export type Page = (typeof PAGES)[number]
 
 export const GROUND: Record<Page, GroundStyle> = {
+  racing: {
+    page: 'racing',
+    base: '#5ca66c',
+    stripes: { width: 4, color: '#60aa70' },
+    grain: { light: '#65ad74', dark: '#579f66', rate: 0.1 },
+    ink: { d: '#549b63', l: '#6ab279' },
+    marks: [['ld'], ['d.'], ['l']],
+    darts: 25,
+    spacing: 4,
+    features: [[['l.l']], [['d.d']]],
+  },
   farmlands: {
     page: 'farmlands',
     base: '#5d9f3f',
@@ -52,6 +63,7 @@ export const GROUND: Record<Page, GroundStyle> = {
 }
 
 export const PATH: Record<Page, PathPainter> = {
+  racing: racingPath,
   farmlands: dirtPath({
     page: 'farmlands',
     half: 4.6,

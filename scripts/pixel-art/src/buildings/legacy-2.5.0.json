@@ -1,0 +1,1274 @@
+{
+  "version": "2.5.0",
+  "source": "aad7b6c6f93e2ad7cb845042c0ecc407dd35e034",
+  "buildings": {
+    "width": 288,
+    "height": 288,
+    "rgba": "d52d1bc16aa29f2fe8a2a2dd67e536f074ac96e23876a0405ad5fccc33a77bbf",
+    "frames": {
+      "fields": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "orchard": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "fishery": {
+        "x": 96,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "herb-garden": {
+        "x": 144,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "vegetable-garden": {
+        "x": 192,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "mushroom-cave": {
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "sugar-grove": {
+        "x": 0,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "nut-grove": {
+        "x": 48,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "pantry": {
+        "x": 96,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "kitchen": {
+        "x": 144,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "smoke": {
+          "x": 38,
+          "y": 4
+        }
+      },
+      "monster-den": {
+        "x": 192,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "ley-spring": {
+        "x": 240,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "mine": {
+        "x": 0,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "crystal-cavern": {
+        "x": 48,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "quarry": {
+        "x": 96,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "meadow": {
+        "x": 144,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forest": {
+        "x": 192,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "fossil-dig": {
+        "x": 240,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "workbench": {
+        "x": 0,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forge": {
+        "x": 48,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 11,
+          "y": 2
+        }
+      },
+      "brawler-dojo": {
+        "x": 96,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "mage-tower": {
+        "x": 144,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "spell-blade-salle": {
+        "x": 192,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "cleric-chapel": {
+        "x": 240,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "summoner-circle": {
+        "x": 0,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "rangers-lodge": {
+        "x": 48,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "lancers-barracks": {
+        "x": 96,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "arcane-armory": {
+        "x": 144,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "knights-bastion": {
+        "x": 192,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "stable": {
+        "x": 240,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "party-hall": {
+        "x": 0,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "scenario-gate": {
+        "x": 48,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "warehouse": {
+        "x": 96,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "exchange": {
+        "x": 144,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "observatory": {
+        "x": 192,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "tier-finale": {
+        "x": 240,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      }
+    }
+  },
+  "tiles": {
+    "width": 256,
+    "height": 208,
+    "rgba": "e6a44114b6eae357f425c744f937cce794fd585ca6237b28318181ab13c4daf2",
+    "frames": {
+      "farmlands/ground-0": {
+        "x": 0,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "ground"
+      },
+      "farmlands/ground-1": {
+        "x": 16,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "ground"
+      },
+      "farmlands/ground-2": {
+        "x": 32,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "ground"
+      },
+      "farmlands/ground-3": {
+        "x": 48,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "ground"
+      },
+      "farmlands/path-0": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-1": {
+        "x": 16,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-2": {
+        "x": 32,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-3": {
+        "x": 48,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-4": {
+        "x": 64,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-5": {
+        "x": 80,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-6": {
+        "x": 96,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-7": {
+        "x": 112,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-8": {
+        "x": 128,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-9": {
+        "x": 144,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-10": {
+        "x": 160,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-11": {
+        "x": 176,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-12": {
+        "x": 192,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-13": {
+        "x": 208,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-14": {
+        "x": 224,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/path-15": {
+        "x": 240,
+        "y": 0,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "path"
+      },
+      "farmlands/bush": {
+        "x": 64,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/flowers-a": {
+        "x": 80,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/flowers-b": {
+        "x": 96,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/hay-bale": {
+        "x": 112,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/fence": {
+        "x": 128,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/rock": {
+        "x": 144,
+        "y": 16,
+        "w": 16,
+        "h": 16,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "farmlands/tree": {
+        "x": 160,
+        "y": 16,
+        "w": 16,
+        "h": 32,
+        "page": "farmlands",
+        "kind": "prop"
+      },
+      "wilds/ground-0": {
+        "x": 0,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "ground"
+      },
+      "wilds/ground-1": {
+        "x": 16,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "ground"
+      },
+      "wilds/ground-2": {
+        "x": 32,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "ground"
+      },
+      "wilds/ground-3": {
+        "x": 48,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "ground"
+      },
+      "wilds/path-0": {
+        "x": 0,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-1": {
+        "x": 16,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-2": {
+        "x": 32,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-3": {
+        "x": 48,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-4": {
+        "x": 64,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-5": {
+        "x": 80,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-6": {
+        "x": 96,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-7": {
+        "x": 112,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-8": {
+        "x": 128,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-9": {
+        "x": 144,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-10": {
+        "x": 160,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-11": {
+        "x": 176,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-12": {
+        "x": 192,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-13": {
+        "x": 208,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-14": {
+        "x": 224,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/path-15": {
+        "x": 240,
+        "y": 48,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "path"
+      },
+      "wilds/water-0": {
+        "x": 0,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-1": {
+        "x": 16,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-2": {
+        "x": 32,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-3": {
+        "x": 48,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-4": {
+        "x": 64,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-5": {
+        "x": 80,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-6": {
+        "x": 96,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-7": {
+        "x": 112,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-8": {
+        "x": 128,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-9": {
+        "x": 144,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-10": {
+        "x": 160,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-11": {
+        "x": 176,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-12": {
+        "x": 192,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-13": {
+        "x": 208,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-14": {
+        "x": 224,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/water-15": {
+        "x": 240,
+        "y": 64,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "water"
+      },
+      "wilds/boulder": {
+        "x": 64,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "wilds/rock": {
+        "x": 80,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "wilds/grass-tuft": {
+        "x": 96,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "wilds/mushrooms": {
+        "x": 112,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "wilds/log": {
+        "x": 128,
+        "y": 80,
+        "w": 16,
+        "h": 16,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "wilds/pine": {
+        "x": 144,
+        "y": 80,
+        "w": 16,
+        "h": 32,
+        "page": "wilds",
+        "kind": "prop"
+      },
+      "learning/ground-0": {
+        "x": 0,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "ground"
+      },
+      "learning/ground-1": {
+        "x": 16,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "ground"
+      },
+      "learning/ground-2": {
+        "x": 32,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "ground"
+      },
+      "learning/ground-3": {
+        "x": 48,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "ground"
+      },
+      "learning/path-0": {
+        "x": 0,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-1": {
+        "x": 16,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-2": {
+        "x": 32,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-3": {
+        "x": 48,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-4": {
+        "x": 64,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-5": {
+        "x": 80,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-6": {
+        "x": 96,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-7": {
+        "x": 112,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-8": {
+        "x": 128,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-9": {
+        "x": 144,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-10": {
+        "x": 160,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-11": {
+        "x": 176,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-12": {
+        "x": 192,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-13": {
+        "x": 208,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-14": {
+        "x": 224,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/path-15": {
+        "x": 240,
+        "y": 112,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "path"
+      },
+      "learning/hedge": {
+        "x": 64,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "prop"
+      },
+      "learning/bench": {
+        "x": 80,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "prop"
+      },
+      "learning/flower-bed": {
+        "x": 96,
+        "y": 128,
+        "w": 16,
+        "h": 16,
+        "page": "learning",
+        "kind": "prop"
+      },
+      "learning/lamp": {
+        "x": 112,
+        "y": 128,
+        "w": 16,
+        "h": 32,
+        "page": "learning",
+        "kind": "prop"
+      },
+      "learning/banner": {
+        "x": 128,
+        "y": 128,
+        "w": 16,
+        "h": 32,
+        "page": "learning",
+        "kind": "prop"
+      },
+      "town/ground-0": {
+        "x": 0,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "ground"
+      },
+      "town/ground-1": {
+        "x": 16,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "ground"
+      },
+      "town/ground-2": {
+        "x": 32,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "ground"
+      },
+      "town/ground-3": {
+        "x": 48,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "ground"
+      },
+      "town/path-0": {
+        "x": 0,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-1": {
+        "x": 16,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-2": {
+        "x": 32,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-3": {
+        "x": 48,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-4": {
+        "x": 64,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-5": {
+        "x": 80,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-6": {
+        "x": 96,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-7": {
+        "x": 112,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-8": {
+        "x": 128,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-9": {
+        "x": 144,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-10": {
+        "x": 160,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-11": {
+        "x": 176,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-12": {
+        "x": 192,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-13": {
+        "x": 208,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-14": {
+        "x": 224,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/path-15": {
+        "x": 240,
+        "y": 160,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "path"
+      },
+      "town/barrel": {
+        "x": 64,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "prop"
+      },
+      "town/crate": {
+        "x": 80,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "prop"
+      },
+      "town/flower-pot": {
+        "x": 96,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "prop"
+      },
+      "town/bench": {
+        "x": 112,
+        "y": 176,
+        "w": 16,
+        "h": 16,
+        "page": "town",
+        "kind": "prop"
+      },
+      "town/lamp": {
+        "x": 128,
+        "y": 176,
+        "w": 16,
+        "h": 32,
+        "page": "town",
+        "kind": "prop"
+      },
+      "town/tree": {
+        "x": 144,
+        "y": 176,
+        "w": 16,
+        "h": 32,
+        "page": "town",
+        "kind": "prop"
+      }
+    }
+  }
+}

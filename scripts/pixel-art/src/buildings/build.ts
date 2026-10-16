@@ -92,14 +92,15 @@ writeFileSync(join(atlasDir, 'atlas.json'), `${JSON.stringify({ schemaVersion: 1
 // ---------------------------------------------------------------------------------------------------------------
 // Previews: the contact sheet at 3×, then each Hub page mocked at 1× (195×350) and shown at 2×.
 
-const PAGES: Page[] = ['farmlands', 'wilds', 'learning', 'town']
+const PAGES: Page[] = ['farmlands', 'wilds', 'learning', 'town', 'racing']
 const GROUND_COLORS: Record<Page, [string, string]> = {
   farmlands: ['#5f9440', '#8a6a44'],
   wilds: ['#5d7a3e', '#7a6648'],
   learning: ['#4f8a52', '#9a9484'],
   town: ['#6a9446', '#a08a62'],
+  racing: ['#5ca66c', '#b88b60'],
 }
-const TINTS: Record<Page, string> = { farmlands: '#2a2219', wilds: '#1c241a', learning: '#1a2030', town: '#262019' }
+const TINTS: Record<Page, string> = { farmlands: '#2a2219', wilds: '#1c241a', learning: '#1a2030', town: '#262019', racing: '#192c24' }
 
 const CELL = SIZE * 3
 const PAD = 8
@@ -139,6 +140,15 @@ mocks.reduce((x, m) => {
 const previews = join(ROOT, 'assets', 'previews')
 mkdirSync(previews, { recursive: true })
 writeFileSync(join(previews, 'buildings.png'), encodePng(preview.w, preview.h, preview.px))
+
+// A01 review contract: additions above four familiar neighbours, all at exactly 2×.
+const comparison = image(4 * SIZE * 2 + 5 * PAD, 2 * SIZE * 2 + 3 * PAD, hex('#18202a'))
+;['card-library', 'gym', 'racecourse', 'trophy-hall', 'stable', 'observatory', 'brawler-dojo', 'scenario-gate'].forEach((id, i) => {
+  const d = drawn.find((p) => p.place.id === id)
+  if (!d) throw new Error(`Missing A01 comparison building: ${id}`)
+  stamp(comparison, d.px, PAD + (i % 4) * (SIZE * 2 + PAD), PAD + Math.floor(i / 4) * (SIZE * 2 + PAD), 2)
+})
+writeFileSync(join(previews, 'racer-buildings-2x.png'), encodePng(comparison.w, comparison.h, comparison.px))
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`

@@ -9,6 +9,25 @@ import { hash2, periodicNoise, seedOf, TILE, wrap } from './noise.ts'
 
 export type PathPainter = (mask: number, ground: Img) => Img
 
+/** A01's raked dirt track. The white edging follows only the turf boundary, never cuts across a joined arm. */
+export const racingPath: PathPainter = (mask, ground) => {
+  const img = ground.crop(0, 0, TILE, TILE)
+  const inside = bandRegion(mask, 'round', 5, 0, () => 0.5)
+  const dirt = hex('#b88b60'), rake = hex('#aa7e55'), light = hex('#c6986b')
+  const rail = hex('#ecebdc'), litRail = hex('#fff8e5'), shadow = hex('#827864')
+  for (let y = 0; y < TILE; y++) for (let x = 0; x < TILE; x++) {
+    if (!inside(x, y)) continue
+    const top = !inside(x, y - 1), left = !inside(x - 1, y)
+    const edge = top || left || !inside(x, y + 1) || !inside(x + 1, y)
+    // Periodic short rake strokes, not stones or pebbles. Rail posts sit on the inner edge, leaving ground seams alone.
+    let color = y % 4 === 1 && x % 4 !== 3 ? rake : (x + y) % 8 === 0 ? light : dirt
+    if (N4.some(([dx, dy]) => !inside(x + dx * 2, y + dy * 2))) color = shadow
+    if (edge) color = top || left ? litRail : rail
+    img.set(x, y, color)
+  }
+  return img
+}
+
 /** Stamps dealt once on a torus (same anchors for every mask), drawn wherever they fit wholly inside a region. */
 export interface Scatter {
   stamps: readonly Stamp[]

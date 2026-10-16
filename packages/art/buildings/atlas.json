@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 288,
- "height": 288,
+ "height": 336,
  "frames": {
   "fields": {
    "x": 0,
@@ -297,6 +297,38 @@
    "w": 48,
    "h": 48,
    "page": "town",
+   "anchorY": 44
+  },
+  "card-library": {
+   "x": 0,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "town",
+   "anchorY": 44
+  },
+  "gym": {
+   "x": 48,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "racecourse": {
+   "x": 96,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "racing",
+   "anchorY": 44
+  },
+  "trophy-hall": {
+   "x": 144,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "racing",
    "anchorY": 44
   }
  }
