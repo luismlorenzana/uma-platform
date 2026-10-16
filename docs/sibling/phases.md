@@ -44,52 +44,93 @@ chooser, with the same tiles, search, filters, sorts and level rule. Face-focuse
 | Facets | The facet types and the filter tray | Rarity, aptitudes, sex, new, free, class | Tier, ready, target, new, aptitudes A+ |
 | Sorts | The sort sheet and the shared level sort | Release, name, Craft Level, Class Rank | Release, name, tier, Racing, Farm |
 | Device preferences | View, sort and filters per device; up to 20 saved views; the "seen" set behind New | Gains saved views and New | Keeps its own (`albumPrefs` moves) |
-| Portrait tile | The bust, with the icon until it loads; corner badges; dimmed when locked | Badges: class mark, working, target crosshair | Badges: tier, ready, target |
-| Face token | One face, used in pips, slots and strips | Replaces outfit icons in pips and party rows | `UmaFace` moves |
-| Chibi art | One component | Plaza, fights | Plaza, races |
-| Views | Icons at **5 columns** (default), cards at 3, list at 1, on a virtual grid | Was a 4–5 column grid or a list | Was 3 columns of icons |
+| Face tile (owner, 2026-10-16) | The outfit's face crop (`outfit-faces`), with the icon until it loads; corner badges; dimmed when locked. Used wherever an Uma is small: the Stable's icon view, every picker, work slots and pips, and party and hall seats | Badges: class mark, working, target crosshair. Faces replace outfit icons in the Stable, the pickers, the Wilds' slots and pips, party rows, the Halls and the Observatory's tabs | Badges: tier, ready, target. Faces in the Stable, the pickers, the Farm's slots and pips; `UmaFace`'s per-character faces retire |
+| Bust | The bust, for an Uma shown large: the cards view, the profile header, the featured Uma's sheet | The same | The same |
+| Fights and races (owner, 2026-10-16) | **No chibis in fights or races: busts there** | The battle stage's party draws busts instead of idle and cheer chibis; the Limit Break cut-in already uses the bust | Its race screen draws busts wherever it draws chibis today |
+| Chibi art | Kept only for the plaza's featured Uma | Plaza | Plaza |
+| Views | Icons at **5 columns** of faces (default), cards at 3 (busts), list at 1, on a virtual grid | Was a 4–5 column grid or a list | Was 3 columns of icons |
 | Album chrome | Search, quick picks, tabs (All, Owned, Locked) with counts | The Stable's header counter | The reveal ceremony stays racer-only |
 | `UmaPicker` | Candidates, why one can't be picked, a context sort, multi-select | Replaces six pickers: party slot, facility job, Observatory, Hall seat and Learner, Manuals, active party | Replaces the strips where a list is better: Farm job, race entry, training |
 | Art source | An `AlbumArt` provider, so the components never know where art comes from | uma-data art families | Its private content until Phase E, then uma-data |
 
-- **Art:** if busts don't read as faces at 5 columns, add an `outfit-faces` family to uma-data: a tighter crop of the
-  same portraits.
-  - It is an additive release, made in uma-platform's asset pipeline.
-  - It lands in the private bucket, never in git, so it is not a ChatGPT packet.
-  - **Recommendation:** check busts first in the Simulator, and crop only if the face is under about half the tile.
+- **Art: an `outfit-faces` family in uma-data** (owner, 2026-10-16: face crops in the Uma list and on assigned workers).
+  - One square face crop per outfit, cut from its bust. A crop box is computed per outfit, with a short override list
+    for outliers (tall hats, ears, odd poses).
+  - Per outfit rather than per character, so two outfits of one Uma still look different in a list of 268.
+  - It is an additive uma-data release, made in uma-platform's asset pipeline. It lands in the private bucket, never in
+    git, so it is not a ChatGPT packet.
 - **Done when:**
-  - both Stables run on the kit album, with 5 columns by default;
+  - both Stables run on the kit album, with 5 columns of faces by default;
+  - faces show wherever an Uma is small, and busts in fights and races;
   - uma-rpg's six pickers and uma-racer's list-type strips use `UmaPicker`;
   - both games open every list on the level rule;
   - the engine's tests live in the kit.
 - **Size:** large. This is the biggest shared win after the Hub.
 
-## Phase C: one work UI
+## Phase C: one work system, engine and screens
 
-**Goal:** a job looks and behaves the same in both games. The same rows, buttons, speed-ups, recall and job sheet, over
-each game's own rules.
+**Goal:** a job is the same code in both games, from the rule that times it to the row that shows it. Each game keeps
+its content (what is gathered and made), its levels and its economy.
 
-| Element | Common (`uma-kit/work`) | uma-rpg | uma-racer |
+**Changed 2026-10-16:** the owner asked whether `work.ts` and `/work` should be one. They should, so the work engine
+moves here from Phase E. Its package is renamed from `uma-idle` to `uma-work`.
+
+### Why one engine, and why uma-racer's
+
+The two engines run the same rules today, written twice:
+- 1–10 items one after another;
+- queues of 3;
+- Collect part-way;
+- Recall;
+- Repeat;
+- 30-minute Speed Tickets and Finish;
+- facility levels that add slots and speed.
+
+| | uma-rpg `save/work.ts` | uma-racer `domain/src/work/` | Pick |
 |---|---|---|---|
-| View model | `JobView` and `FacilityView`, and the actions as callbacks; the kit never reads a save | Fills it from `work.ts` | Fills it from its `/work` engine |
-| Job row | uma-racer's compact 56 pt row (D366): a face ring with progress, the item, `×10 · 3/10`, time left, Collect · Repeat · Speed · ⋯ | Replaces its job cards | `SlotRow` moves |
-| Side-panel row | The same row, smaller, in the quick look | Facilities' quick looks | `PeekRow` moves |
-| Queues | Queue chips and the queue list (3 deep) | `QueueList` retires | Moves |
-| Speed-up | −30m, Finish · N, Buy N and finish | `TimeCut` retires; Speed Tickets come from the Exchange | `SpeedUpControls` moves; Speed Up All stays with check-ins |
-| Recall | A sheet previewing what comes back | Its Recall button gains the preview | `RecallSheet` moves |
-| Batch size | One chip row; the game supplies the rule | 1–10, or ×1–×40 when refining | By duration, marking the size that fits the next check-in |
-| Facility header | Level, slots, speed, and the upgrade button and sheet | Levels 1–3: 3/4/5 slots, speed at 3 | `PlaceStats` and `Upgrade` move |
-| Job sheet frame | Who, then what, then how many, opened by link (`?job=…`) | Its three-step sheet; the Forge and Lapidary icon pickers become the "what" step | Its job sheet; the Pantry and Kitchen pickers become the "what" step |
-| Item icon | One component over uma-art | Gear, materials, gems | Items, dishes |
-| Targets strip | The strip and the crosshair mark | "For your targets" at each facility | Target strips and the Needs tab |
-| Words | Collect, Repeat, Speed up, Recall, Queue next | Renamed where they differ | Already these |
-| Rules and engine | Not shared | `work.ts`, Craft Level, its prices | `/work`, Farm Level with aptitude EXP, check-ins and suggestions (racer-only) |
+| Size | About 400 lines with `economy/jobs.ts` | About 60 KB, with 70 KB of tests (timeline, settle, edge cases, purity) | racer |
+| Where a job lives | In a facility's slot | In the Uma's own work row, so an Uma can only ever be in one place | racer |
+| Kinds of work | Hard-coded: gather, refine, craft, cut | Plugged in: a kind plans items and pays outputs; the engine owns slots, reserving, the clock, queues, collect, recall and tickets. It already runs two systems: the Farm and the Training Hub's sessions | racer |
+| A job's plan | Speed and EXP fixed per job | Each item's seconds, inputs, output and EXP frozen when it starts | racer |
+| A queue that can't start | — | Kept as a dropped queue to restart or dismiss | racer |
+| Requirements netting for targets | `planRequirements`, pure and generic | The planner cascade | rpg's, as a module beside the engine |
 
-- **Art:** none expected; both item atlases exist in uma-art.
+**The structure:** uma-racer's engine. **The rules:** neither game's wins. Where the two games already agree, that
+becomes the one rule; where they differ, each keeps its own (the table below).
+
+### What is common and what each game keeps
+
+| Element | Common (`uma-work` engine, `uma-kit/work` screens) | uma-rpg | uma-racer |
+|---|---|---|---|
+| Work state | Per Uma: started entries, a queue of 3, last work, a dropped queue. Facility levels and the free stock beside them | Its save moves jobs from facility slots to these rows (a save step; running jobs finish into the Warehouse) | Already this shape |
+| Kinds | The kind interface: plan items, pay outputs | Gather, refine, craft (the Forge), cut (the Lapidary) | Gather, craft (the Pantry), cook (the Kitchen), Training sessions |
+| Job rules | 1–10 items, queue 3, Collect part-way, Recall, Repeat, Speed Tickets of 30 minutes, Finish | The same | The same |
+| Facility levels | Levels add slots and speed; the cost comes from the game | 3/4/5 slots, speed at Lv3, paid in Laurels and items | Its own table and Prize Money |
+| Worker levels and EXP | A hook: the kind says what EXP an item pays, and the game levels the Uma | Craft Level: one curve, the same for every Uma (D139) | Farm Level per tier, with aptitude-boosted EXP |
+| Grade gates | A hook: the kind refuses a grade above the Uma's level | Craft Level opens grades | Farm Level opens grades |
+| Batch size | The engine takes 1–10; the screens' chips take a game rule | By count; ×1–×40 when refining | By duration, fitted to the next check-in |
+| Targets | `planRequirements` netting (targets → items → raw) | "For your targets" at each facility | Feeds its planner and Needs tab |
+| Check-ins | — | — | Its own: check-in times, suggestions, Speed Up All |
+| Push "work done" | A tick reads the engine's finish times (Phase E's `uma-server/push`) | Has it | If the owner wants it |
+| Job row, queues, speed-up, recall, facility header, job sheet, item icon, words | One set of screens (`uma-kit/work`) over the engine's state, with no per-game view model | Its job cards, `QueueList` and `TimeCut` retire; the Forge and Lapidary icon pickers become the job sheet's "what" step | `SlotRow`, `PeekRow`, `SpeedUpControls`, `RecallSheet`, `PlaceStats` and `Upgrade` move; the Pantry and Kitchen pickers become the "what" step |
+
+- **The package:**
+  - `uma-work` is pure TypeScript, built for both ESM and CJS like uma-data, because each game's API runs it to
+    accept a save.
+  - It stays separate from uma-kit, which is React.
+- **Codebase layout:** the parts that plug into shared code use the same names in both games:
+  - `domain/src/work/kinds/`, one file per kind;
+  - `domain/src/items/`;
+  - `domain/src/hub/places.ts`.
+
+  The saves keep their own layouts (uma-rpg's `save/`, uma-racer's `state/`), because they are different designs.
+- **Who:** a uma-platform session extracts the engine from uma-racer's `origin/main` and moves uma-rpg onto it,
+  including the save step. uma-racer's session swaps its import.
 - **Done when:**
-  - uma-rpg's Wilds and uma-racer's Farm both run on the kit's rows, queues, speed-up, recall and job sheet;
-  - one set of words is used in both games.
-- **Size:** medium.
+  - both games run every job through `uma-work` and show it with `uma-kit/work`;
+  - the engine's tests live in the package;
+  - uma-rpg's save step is in and tested.
+- **Size:** large: the engine, the uma-rpg save step and the screens.
 
 ## Phase D: places, profile and getting in
 
@@ -124,7 +165,6 @@ the Account, the Warehouse, the Exchange and the Uma profile.
 | Art loading (`uma-kit/content`) | The release client wrapper, authenticated art fetch, a blob and Cache Storage cache, atlas sprites | Its `master/art.tsx` moves | Its content runtime retires |
 | Content proxy (`uma-server/content`) | The API's master data and content routes as one NestJS module | Moves; its enemy packs stay its own content | Moves |
 | Push (`uma-server/push` and a kit client) | Subscription, server tick, app badge | Moves | Only if the owner wants push in uma-racer |
-| Work engine (`uma-idle`) | A timeline, queues of 3, collect, recall, tickets, requirements netting | **Recommendation: not now.** Both saves stay as they are; Phase C's view models already share everything the player sees | — |
 | Saves, sync, Dexie | Never shared: the shapes differ | Its save | Its save |
 
 - **Order:** uma-racer's phase 5 can start in parallel with Phase B. Phase B's art provider and row builder take
@@ -148,9 +188,9 @@ The games themselves stay in each repo, under no phase:
 
 | Phase | Depends on | Size | The owner approves |
 |---|---|---|---|
-| B | A (done) | Large | Busts at 5 columns by default (faces cropped only if needed); one picker everywhere; saved views and New in uma-rpg |
-| C | B (pickers inside the job sheet) | Medium | uma-racer's compact rows in uma-rpg; one set of words |
+| B | A (done) | Large | Face crops at 5 columns and on workers, busts in fights and races (decided 2026-10-16); one picker everywhere; saved views and New in uma-rpg |
+| C | B (pickers inside the job sheet) | Large | One engine (`uma-work`, from uma-racer's), uma-rpg's save step, uma-racer's compact rows in uma-rpg, one set of words |
 | D | A | Medium | One boot sequence; the `uma-server` package |
-| E | uma-racer's phase 5 | Large (racer) | Moving uma-racer to uma-data; no shared work engine for now |
+| E | uma-racer's phase 5 | Large (racer) | Moving uma-racer to uma-data |
 
 D can run alongside B or C, since it touches different screens.
