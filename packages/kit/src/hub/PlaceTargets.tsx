@@ -1,8 +1,8 @@
 // The tappable, accessible layer over the Phaser map (uma-racer's `hub/PlaceTargets.tsx`, from uma-rpg's D33; P48): one
 // link per place, sitting on its building through the scene's own grid math, so the canvas underneath only draws. Each
 // covers its building down to the ground line, then its name pill with the counter and its slot pips, and carries the
-// Ready badge, a lock when closed, and its VoiceOver line. A plaza (an Uma standing on the road) is a slot. Links read in
-// map order, row by row, as the eye meets them.
+// Ready badge, a lock when closed, and its VoiceOver line. A plaza is a slot: one figure standing on the road, or a small
+// crowd of up to five round it (0.3.0). Links read in map order, row by row, as the eye meets them.
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { Link } from 'react-router'
 import { LockedIcon } from '../ui/icons/index.js'
@@ -95,13 +95,57 @@ function PlaceTarget({ place, grid }: { place: TargetModel; grid: HubGrid | null
   )
 }
 
+/** One Uma standing on a plaza: a link or button the game draws, about 44 px. */
+export interface PlazaFigure {
+  readonly key: string
+  readonly node: ReactNode
+}
+
+/** Something standing on the map without a building: one `node` lifted `lift` px above its spot, or `figures`. */
+export interface Plaza {
+  readonly at: PlaceAt
+  readonly node?: ReactNode
+  readonly lift?: number
+  /** A small crowd round the spot, the first in front and the rest in a shallow V behind and beside it (at most 5). */
+  readonly figures?: readonly PlazaFigure[]
+}
+
+/** The crowd's spots, in tiles from the plaza's ground line: front centre, two behind, two out wide. */
+export const CROWD_SPOTS: readonly { readonly dx: number; readonly dy: number }[] = [
+  { dx: 0, dy: 0 },
+  { dx: -1.7, dy: -0.8 },
+  { dx: 1.7, dy: -0.8 },
+  { dx: -3.2, dy: 0.2 },
+  { dx: 3.2, dy: 0.2 },
+]
+/** How many columns either side of the plaza the crowd needs clear of props. */
+export const CROWD_CLEARING = 4
+
+function Crowd({ plaza, grid }: { plaza: Plaza; grid: HubGrid | null }) {
+  const tile = grid?.tile ?? 24
+  const figures = (plaza.figures ?? []).slice(0, CROWD_SPOTS.length)
+  return (
+    <div className="absolute size-0" style={position(plaza.at, grid, 0)} data-kit="plaza">
+      {figures.map((figure, i) => {
+        const spot = CROWD_SPOTS[i]!
+        return (
+          <div key={figure.key} className="absolute w-max" style={{ left: spot.dx * tile, top: spot.dy * tile, transform: 'translate(-50%, -100%)', zIndex: Math.round(10 + spot.dy * 10) }}>
+            {/* Each bobs on its own beat, so the crowd never moves as one. */}
+            <div className="kit-bob" style={{ animationDelay: `${-i * 0.53}s` }}>{figure.node}</div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 /** Map order: top to bottom, then left to right. */
 const byMap = (a: { readonly at: PlaceAt }, b: { readonly at: PlaceAt }): number => a.at.y - b.at.y || a.at.x - b.at.x
 
 export function PlaceTargets({ places, plaza }: {
   places: readonly TargetModel[]
-  /** Something standing on the map without a building: the featured Uma on a plaza. Lifted `lift` px above its spot. */
-  plaza?: { readonly at: PlaceAt; readonly node: ReactNode; readonly lift?: number }
+  /** Something standing on the map without a building: the featured Uma, or a crowd, on a plaza. */
+  plaza?: Plaza
 }) {
   const [root, grid] = useHubGrid()
   const items = [
@@ -111,11 +155,13 @@ export function PlaceTargets({ places, plaza }: {
   return (
     <div ref={root} className="absolute inset-0" data-kit="place-targets" data-grid={grid === null ? undefined : `${grid.cols}x${grid.rows}`}>
       {items.map((item) => (item.place === null
-        ? (
-          <div key="plaza" className="absolute flex justify-center" style={{ ...position(plaza!.at, grid, plaza!.lift ?? 76), width: TARGET_W }} data-kit="plaza">
-            {plaza!.node}
-          </div>
-        )
+        ? (plaza!.figures !== undefined
+          ? <Crowd key="plaza" plaza={plaza!} grid={grid} />
+          : (
+            <div key="plaza" className="absolute flex justify-center" style={{ ...position(plaza!.at, grid, plaza!.lift ?? 76), width: TARGET_W }} data-kit="plaza">
+              {plaza!.node}
+            </div>
+          ))
         : <PlaceTarget key={item.place.id} place={item.place} grid={grid} />))}
     </div>
   )

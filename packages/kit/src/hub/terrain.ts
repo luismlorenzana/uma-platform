@@ -5,7 +5,7 @@
 // returns. Frame ids follow uma-art's `tiles` atlas: `<tiles>/ground-<n>`, `<tiles>/path-<mask>`, `<tiles>/water-<mask>`,
 // `<tiles>/<prop>`.
 import { placeCell } from './grid.js'
-import type { PlaceAt, TileProp } from './types.js'
+import type { Clearing, PlaceAt, TileProp } from './types.js'
 
 /** Connection bits for path and water masks; a map edge counts as connected. */
 export const N = 1, E = 2, S = 4, W = 8
@@ -44,8 +44,8 @@ export interface TerrainOptions {
   readonly places: readonly TerrainPlace[]
   readonly cols: number
   readonly rows: number
-  /** Spots kept free of props without a building, such as a plaza where an Uma stands. */
-  readonly clearings?: readonly PlaceAt[]
+  /** Spots kept free of props without a building, such as a plaza where Umas stand. */
+  readonly clearings?: readonly Clearing[]
   /** Props to scatter; `TILE_PROPS[tiles]` by default. */
   readonly props?: readonly TileProp[]
   /** A stream down the east edge (uma-rpg's Wilds). */
@@ -140,7 +140,8 @@ export function layTerrain({ page, tiles, places, cols, rows, clearings = [], pr
   }
   for (const spot of clearings) {
     const { col, row } = placeCell(spot, cols, rows)
-    for (let c = col - 2; c <= col + 2; c++) for (let r = row - 3; r <= row + 2; r++) set(c, r, 'clear')
+    const half = spot.r ?? 2
+    for (let c = col - half; c <= col + half; c++) for (let r = row - 3; r <= row + 2; r++) set(c, r, 'clear')
   }
   // Paths and water at the map's edge run on off the map.
   const mask = (c: number, r: number, k: 'path' | 'water') => {

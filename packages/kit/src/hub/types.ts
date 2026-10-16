@@ -8,6 +8,11 @@ export interface PlaceAt {
   readonly y: number
 }
 
+/** A spot kept free of props without a building, `r` columns either side (2 by default): a plaza where Umas stand. */
+export interface Clearing extends PlaceAt {
+  readonly r?: number
+}
+
 /** A place as the map draws it: where it stands and which building frame it is. */
 export interface MapPlace {
   readonly id: string

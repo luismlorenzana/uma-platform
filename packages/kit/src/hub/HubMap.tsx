@@ -4,9 +4,9 @@
 // floating pill and side panel beside it.
 import { useMemo, useRef, type ReactNode } from 'react'
 import { HubCanvas } from './HubCanvas.js'
-import { PlaceTargets, type TargetModel } from './PlaceTargets.js'
+import { CROWD_CLEARING, PlaceTargets, type Plaza, type TargetModel } from './PlaceTargets.js'
 import { neighbourPage, swipeDirection, type Point } from './swipe.js'
-import type { MapPlace, PageGround, PlaceAt } from './types.js'
+import type { Clearing, MapPlace, PageGround } from './types.js'
 
 export interface HubMapPlace extends TargetModel {
   /** The building frame the scene draws. */
@@ -25,7 +25,7 @@ export function HubMap<P extends string>({ label, page, pages, onPage, ground, p
   onPage: (page: P) => void
   ground: PageGround
   places: readonly HubMapPlace[]
-  plaza?: { readonly at: PlaceAt; readonly node: ReactNode; readonly lift?: number }
+  plaza?: Plaza
   /** A panel or sheet covers the map: the scene pauses and swipes stop. */
   covered: boolean
   reducedMotion: boolean
@@ -39,8 +39,10 @@ export function HubMap<P extends string>({ label, page, pages, onPage, ground, p
   // the ground. Counts, pips and labels change on every tick and only touch the DOM buttons (0.1.2).
   const placesKey = sceneKey(places)
   const scenePlaces = useMemo<MapPlace[]>(() => places.map((p) => ({ id: p.id, frame: p.frame, at: p.at })), [placesKey])
-  const plazaKey = plaza === undefined ? '' : `${plaza.at.x},${plaza.at.y}`
-  const clearings = useMemo<PlaceAt[]>(() => (plaza === undefined ? [] : [plaza.at]), [plazaKey])
+  // A crowd needs wider clear ground than one figure.
+  const crowd = plaza?.figures !== undefined
+  const plazaKey = plaza === undefined ? '' : `${plaza.at.x},${plaza.at.y},${crowd}`
+  const clearings = useMemo<Clearing[]>(() => (plaza === undefined ? [] : [crowd ? { ...plaza.at, r: CROWD_CLEARING } : plaza.at]), [plazaKey])
   const groundKey = JSON.stringify(ground)
   const sceneGround = useMemo(() => ground, [groundKey])
   return (

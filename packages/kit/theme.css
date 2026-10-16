@@ -293,6 +293,14 @@
   opacity: 0;
   transition: none;
 }
+/* A plaza figure's idle bob (0.3.0): 2 px, slow, each on its own beat. */
+@keyframes kit-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+.kit-bob {
+  animation: kit-bob 2.6s ease-in-out infinite;
+}
 /* A ready pip's small bounce. */
 @keyframes kit-pip-ready {
   0%, 100% { transform: scale(1); }
@@ -302,7 +310,8 @@
   animation: kit-pip-ready 900ms var(--ease-standard) 1;
 }
 :root[data-reduced-motion] .kit-number,
-:root[data-reduced-motion] .kit-pip-ready {
+:root[data-reduced-motion] .kit-pip-ready,
+:root[data-reduced-motion] .kit-bob {
   transition: none;
   animation: none;
 }

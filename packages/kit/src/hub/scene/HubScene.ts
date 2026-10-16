@@ -9,7 +9,7 @@ import type { Atlas, AtlasIndex } from '../../ui/art.js'
 import { ART_TILE, hubGrid, placeAnchor } from '../grid.js'
 import { drawMarker, MARKER_BASE, type Ambient } from '../markers.js'
 import { layTerrain, pageSeed } from '../terrain.js'
-import type { MapPlace, PageGround, PlaceAt } from '../types.js'
+import type { Clearing, MapPlace, PageGround } from '../types.js'
 
 const TILES = 'hub-tiles'
 const BUILDINGS = 'hub-buildings'
@@ -32,7 +32,7 @@ export interface HubSceneState {
   readonly ground: PageGround
   readonly places: readonly MapPlace[]
   /** Spots kept clear of props, such as a plaza. */
-  readonly clearings: readonly PlaceAt[]
+  readonly clearings: readonly Clearing[]
   readonly reducedMotion: boolean
 }
 

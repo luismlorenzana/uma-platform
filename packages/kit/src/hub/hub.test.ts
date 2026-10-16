@@ -99,3 +99,15 @@ describe('sceneKey (0.1.2)', () => {
     expect(sceneKey([{ ...a[0]!, frame: 'buildings/forge' }])).not.toBe(sceneKey(a))
   })
 })
+
+describe('plaza clearings (0.3.0)', () => {
+  it('keeps a crowd plaza clear of props across its wider radius', () => {
+    const cols = 17
+    const rows = 30
+    const at = { x: 0.5, y: 0.45 }
+    const wide = layTerrain({ page: 'town', tiles: 'town', places: [], cols, rows, clearings: [{ ...at, r: 4 }] })
+    const { col, row } = placeCell(at, cols, rows)
+    const near = wide.props.filter((p) => Math.abs(p.col - col) <= 4 && p.row >= row - 3 && p.row <= row + 2)
+    expect(near).toEqual([])
+  })
+})

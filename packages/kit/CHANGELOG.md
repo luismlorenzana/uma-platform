@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-kit
 
+## 0.3.0
+
+### Minor Changes
+
+- - **A plaza crowd.** `plaza.figures` stands up to five small figures (about 44 px) round the plaza spot: the first in front, two behind, two out wide (`CROWD_SPOTS`). Each bobs 2 px on its own beat (`.kit-bob`, off under reduced motion), and the terrain keeps four columns either side clear of props (`CROWD_CLEARING`). One `node` still works as before. Owner, 2026-10-16: "smaller but multiple Uma chibis" on Town Hall.
+  - `Clearing`: a terrain clearing takes an optional `r`, its half-width in columns (2 by default).
+
 ## 0.2.0
 
 ### Minor Changes

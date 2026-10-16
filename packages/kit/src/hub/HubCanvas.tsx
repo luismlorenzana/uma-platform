@@ -4,12 +4,12 @@
 import { useEffect, useRef } from 'react'
 import { useKitArt } from '../ui/art.js'
 import type { HubGame } from './scene/createHubGame.js'
-import type { MapPlace, PageGround, PlaceAt } from './types.js'
+import type { Clearing, MapPlace, PageGround } from './types.js'
 
 export interface HubCanvasProps {
   readonly ground: PageGround
   readonly places: readonly MapPlace[]
-  readonly clearings?: readonly PlaceAt[]
+  readonly clearings?: readonly Clearing[]
   readonly paused: boolean
   readonly reducedMotion: boolean
   /** Force the Canvas renderer (dev previews can't capture WebGL). */
@@ -18,7 +18,7 @@ export interface HubCanvasProps {
   readonly debug?: boolean
 }
 
-const NONE: readonly PlaceAt[] = []
+const NONE: readonly Clearing[] = []
 
 export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMotion, canvas = false, debug = false }: HubCanvasProps) {
   const art = useKitArt()
