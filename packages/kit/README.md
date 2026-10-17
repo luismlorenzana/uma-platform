@@ -11,6 +11,7 @@ The games stay their own: rules, screens, saves and which places exist.
 | `@luismlorenzana/uma-kit/shell` | `AppFrame`, `AccountBar`, `BottomBar`, `PlaceMenu`, `PeekPanel`, `PlaceHeader`, `FloatingPill`, nav helpers |
 | `@luismlorenzana/uma-kit/hub` | `HubMap` (canvas, place links, swipe), `HubCanvas`, `PlaceTargets`, `Pips`, the grid, terrain, palettes and markers |
 | `@luismlorenzana/uma-kit/roster` | Pure album queries, level/work ordering, master-data row projection and device preferences |
+| `@luismlorenzana/uma-kit/album` | Injected Uma art, `FaceTile`/`UmaBust`/`UmaChibi`, `AlbumChrome`, the virtual `AlbumGrid`, album preferences and `UmaPicker` |
 | `@luismlorenzana/uma-kit/auth` | Google sign-in through Firebase, loaded only by `import()`: `AuthProvider`, `useAuth`, `loadAuth`, `idToken`, `signIn`, `signOut` (0.5.0, SD2) |
 | `@luismlorenzana/uma-kit/places` | The screens around the game, as frames: `BootGates`, `UpdateNotice` and the update lifecycle, `AccountPage`, `ShelfView`, `ExchangeRows`, `ProfileFrame`, `UnlockConfirm` (0.5.0, SD2) |
 | `@luismlorenzana/uma-kit/content` | Master data and art through the game's API: `createContentClient`, `ContentProvider`, `useContent`, `useArtUrl`, `usePackUrl`, `imagePath`, `AtlasSprite`, `contentProblem` (0.6.0, SE2) |
@@ -51,6 +52,39 @@ root.render(
   bundle and a game without sign-in never loads it.
 - **Appearance:** `initAppearance()` applies the device's choice (System, Light or Dark: `setAppearance`) as
   `<html data-theme>`, and keeps the browser's theme colour on the page colour.
+
+## One Uma album (`/roster`, `/album`)
+
+The game owns its art loader and rows. The kit owns how they browse and draw:
+
+```tsx
+import { AlbumArtProvider, AlbumChrome, AlbumGrid, useAlbumPrefs, type AlbumArt } from '@luismlorenzana/uma-kit/album'
+import { runAlbumQuery } from '@luismlorenzana/uma-kit/roster'
+
+const art = {
+  useUrl: (kind, outfitId) => useArtUrl(imagePath(master.art, familyFor(kind), outfitId)),
+  Fallback: ({ outfitId, size }) => <OutfitIcon id={outfitId} size={size} />,
+} satisfies AlbumArt
+
+function Stable() {
+  const prefs = useAlbumPrefs('stable', schema)
+  const result = runAlbumQuery(rows, facets, prefs.query)
+  return (
+    <AlbumArtProvider art={art}>
+      <AlbumChrome {...chrome} query={prefs.query} onQueryChange={prefs.setQuery} total={result.total} counts={result.counts}>
+        <AlbumGrid rows={displayRows(result.rows)} view={prefs.query.view} columns={5} />
+      </AlbumChrome>
+    </AlbumArtProvider>
+  )
+}
+```
+
+- `AlbumArt.useUrl(kind, outfitId)` is a game hook; the kit never fetches art. `Fallback` is normally the outfit-icon
+  atlas frame while a face, bust or chibi loads.
+- `AlbumGrid` opens on five face columns, with three bust cards or a one-column list as the other views. Badges and
+  chips are callbacks, so game state stays in the game.
+- Every visible word has an English default in `ALBUM_WORDS`; pass `words` for game vocabulary such as a work-level
+  name. `UmaPicker` uses `byLevel` unless a work picker passes `workOrder`.
 
 ## Getting in and the places (`/auth`, `/places`)
 
