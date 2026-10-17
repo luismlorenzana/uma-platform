@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.7.0
+
+### Minor Changes
+
+- d01692d: Add the React album subpath: injected Uma art, shared chrome and filters, three virtualized views, bounded preferences, and the reusable Uma picker.
+
 ## 0.6.0
 
 ### Minor Changes
