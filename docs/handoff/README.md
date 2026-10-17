@@ -48,7 +48,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | Id | What | Repo | Who | Size | Needs | State |
 |---|---|---|---|---|---|---|
 | **Phase A follow-up** | | | | | | |
-| [SA7](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SA7-plaza-crowd.md) | The plaza crowd in uma-racer (kit 0.3.0) | uma-racer | Either | S | — | In progress (uma-racer's Claude session) |
+| [SA7](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SA7-plaza-crowd.md) | The plaza crowd in uma-racer (kit 0.3.0) | uma-racer | Either | S | — | Done (`9723a23`) |
 | **Phase B: one Uma album** | | | | | | |
 | [SB1](tasks/SB1-outfit-faces.md) | `outfit-faces`: a face crop per outfit in uma-data | uma-platform | Claude | M | — | Ready |
 | [SB2](tasks/SB2-kit-roster.md) | `uma-kit/roster`: the album engine, level rule, label, rows, preferences | uma-platform | Either | M | — | Ready |
@@ -75,7 +75,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB1, SB2, SB5, SC1, SD1, SD2, SE1. SA7 is in progress.
+**Ready now, in parallel:** SB1, SB2, SB5, SC1, SD1, SD2, SE1.
 
 ## Releases while packets run in parallel
 
@@ -92,3 +92,4 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
