@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-work",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The Uma games' work engine: timed jobs per Uma, queues, collect, recall, Speed Tickets and facility levels (uma-platform SC1). Private; personal use only.",
   "license": "UNLICENSED",
   "type": "module",
