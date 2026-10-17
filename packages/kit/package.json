@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-kit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "The shared app of the Uma games: theme, primitives, shell and Hub map (uma-platform P48). Private; personal use only.",
   "license": "UNLICENSED",
   "type": "module",
