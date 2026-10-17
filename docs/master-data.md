@@ -293,6 +293,7 @@ paths. A missing family or key means the release has no art for it; games fall b
 | `scenario-icons` | atlas | scenario id | GameTora scenario crest | 128 px frames |
 | `outfit-portraits` | images | outfit id | GameTora full stand | ≤512 px, transparent |
 | `outfit-busts` | images | outfit id | Cut from the portrait (head band centroid; private pins in `content/overrides/bust-crops.json`) | 256 px square |
+| `outfit-faces` | images | outfit id | Tight crop derived from the outfit's bust (private pins in `content/overrides/face-crops.json`) | 192 px square |
 | `support-card-art` | images | support card id | GameTora `tex_support_card_<id>` | ≤600 px, opaque |
 | `outfit-chibis` | images | `<outfitId>-a`, `<outfitId>-b` | Wiki `Game_Asset_petit_chr_<chara>_<costume>_0010/0011` | ≤256 px |
 | `character-dresses` | images | `<characterId>-gym\|summer\|winter\|casual` | Wiki `Game_Asset_chara_stand_<chara>_…` | ≤512 px |
@@ -344,6 +345,7 @@ const { manifest, data, art } = await client.load()        // latest
 const pinned = await client.load('d9bbb52a9cd7')           // a specific release
 const outfits = await client.set(manifest, 'outfits')       // one set
 const portrait = await client.file(manifest, art!.images['outfit-portraits']!['100101']!.path)
+const face = await client.file(manifest, art!.images['outfit-faces']!['100101']!.path)
 ```
 
 The client reads channel → manifest → files, checks the channel points at its own manifest, checks the manifest's

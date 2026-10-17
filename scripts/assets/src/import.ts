@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { buildArtFamily, type ArtFamily } from './art'
 import { buildAtlas } from './atlas'
 import { downloadImages, type ImageSource } from './download'
-import { readAssetInputs, readBustCrops, readScenarioIconOverrides } from './read'
+import { readAssetInputs, readBustCrops, readFaceCrops, readScenarioIconOverrides } from './read'
 import { artSources } from './sources'
 import { buildWikiFamily, selectWikiArt, stageWikiFiles, stagedWikiFiles, WIKI_FAMILIES, type WikiKind } from './wiki'
 import { writeArt, type AtlasDefinition, type ImageFamilyDefinition } from './write'
@@ -36,10 +36,15 @@ async function buildIconAtlas(family: AtlasFamily, sources: readonly ImageSource
 }
 
 async function buildImages(family: ArtFamily, sources: readonly ImageSource[], refresh: boolean): Promise<ImageFamilyDefinition> {
+  const [bustCrops, faceCrops] = await Promise.all([
+    family === 'outfit-busts' || family === 'outfit-faces' ? readBustCrops() : {},
+    family === 'outfit-faces' ? readFaceCrops() : {},
+  ])
   const built = await buildArtFamily(family, sources, {
     cacheDir,
     refresh,
-    bustCrops: family === 'outfit-busts' ? await readBustCrops() : {},
+    bustCrops,
+    faceCrops,
     onProgress: (done, total) => {
       if (done === total || done % 50 === 0) process.stdout.write(`\r${family}: encoded ${done}/${total}`)
     },
@@ -117,6 +122,8 @@ async function main(): Promise<void> {
   if (wanted('outfit-portraits')) images.push(await buildImages('outfit-portraits', sources.outfitPortraits, refresh))
   // Busts reuse the portrait sources just downloaded, so this pass is all cache hits.
   if (wanted('outfit-busts')) images.push(await buildImages('outfit-busts', sources.outfitPortraits, false))
+  // Faces use the same portrait source and the bust crop as their starting point.
+  if (wanted('outfit-faces')) images.push(await buildImages('outfit-faces', sources.outfitPortraits, false))
   if (wanted('support-card-art')) images.push(await buildImages('support-card-art', sources.supportCardArt, refresh))
   images.push(...(await buildWiki(inputs.outfits, false, wanted)))
 

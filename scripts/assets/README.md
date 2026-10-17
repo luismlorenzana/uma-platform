@@ -17,6 +17,7 @@ pnpm assets:import -- --families=skill-icons,outfit-busts   # rebuild only these
 pnpm assets:import -- --dry-run                             # report wiki coverage and gaps; write nothing
 pnpm assets:import -- --refresh                             # download every GameTora source again
 pnpm assets:bust-sheet                                      # review sheets in content/review/
+pnpm assets:face-sheet                                      # every 192 px outfit face, labelled for review
 ```
 
 **GameTora sources** (outfit icons and portraits, card icons and illustrations, skill icons, scenario crests) are
@@ -31,6 +32,11 @@ cache. Chibis are matched through `Outfit.costumeId`. With nothing staged, these
 
 **Busts** are cut from the portraits around the head band's centroid. Pin a misread one in
 `content/overrides/bust-crops.json`: `{ "<outfitId>": { "cx": 0.5, "top": 0.02, "size": 0.6 } }`.
+
+**Faces** are 192 px per-record WebPs cut from the same portraits. Their default square keeps the bust crop's centre,
+uses 70% of its size and starts 2% down from its top. Pin an outlier in `content/overrides/face-crops.json` with the
+same `{ "<outfitId>": { "cx", "top", "size" } }` shape. They remain per-record because the atlas writer's published
+contract is fixed to 128 px frames; changing it for one family would repack or generalize that contract.
 
 Atlas frames are 128 px on a 132 px grid (2 px transparent padding), in WebP pages up to 4096 px; a family that grows
 past 961 frames gets more pages. Output files are content-addressed; rebuilt families replace their old files, other

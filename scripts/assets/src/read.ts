@@ -53,8 +53,9 @@ export async function readScenarioIconOverrides(
   return overrides
 }
 
-/** Optional private bust pins: `{ "<outfitId>": { "cx": 0.5, "top": 0.02, "size": 0.6 } }`. */
-export async function readBustCrops(path = resolve(OVERRIDES_DIR, 'bust-crops.json')): Promise<Record<string, { cx?: number; top?: number; size?: number }>> {
+type CropOverrides = Record<string, { cx?: number; top?: number; size?: number }>
+
+async function readCropOverrides(path: string, filename: string): Promise<CropOverrides> {
   let raw: string
   try {
     raw = await readFile(path, 'utf8')
@@ -62,13 +63,23 @@ export async function readBustCrops(path = resolve(OVERRIDES_DIR, 'bust-crops.js
     return {}
   }
   const parsed = JSON.parse(raw) as unknown
-  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error('bust-crops.json must be an object')
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error(`${filename} must be an object`)
   for (const [id, crop] of Object.entries(parsed as Record<string, unknown>)) {
-    const values = crop as Record<string, unknown>
-    if (typeof crop !== 'object' || crop === null || Object.keys(values).some((key) => !['cx', 'top', 'size'].includes(key)) ||
+    const values = typeof crop === 'object' && crop !== null ? crop as Record<string, unknown> : {}
+    if (typeof crop !== 'object' || crop === null || Array.isArray(crop) || Object.keys(values).some((key) => !['cx', 'top', 'size'].includes(key)) ||
       Object.values(values).some((value) => typeof value !== 'number' || !(value >= 0 && value <= 1))) {
-      throw new Error(`bust-crops.json has an invalid crop for ${id}`)
+      throw new Error(`${filename} has an invalid crop for ${id}`)
     }
   }
-  return parsed as Record<string, { cx?: number; top?: number; size?: number }>
+  return parsed as CropOverrides
+}
+
+/** Optional private bust pins: `{ "<outfitId>": { "cx": 0.5, "top": 0.02, "size": 0.6 } }`. */
+export async function readBustCrops(path = resolve(OVERRIDES_DIR, 'bust-crops.json')): Promise<CropOverrides> {
+  return readCropOverrides(path, 'bust-crops.json')
+}
+
+/** Optional private face pins, with the same shape as bust pins. */
+export async function readFaceCrops(path = resolve(OVERRIDES_DIR, 'face-crops.json')): Promise<CropOverrides> {
+  return readCropOverrides(path, 'face-crops.json')
 }

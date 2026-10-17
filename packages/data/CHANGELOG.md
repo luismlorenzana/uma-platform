@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.1.0
+
+### Minor Changes
+
+- 1a6c43b: Add the `outfit-faces` per-record art family for small Uma tiles.
+
 ## 1.0.0
 
 ### Major Changes

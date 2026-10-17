@@ -4,7 +4,7 @@
 import sharp from 'sharp'
 import { downloadImages, type DownloadFailure, type DownloadedImage, type ImageSource } from './download'
 
-export type ArtFamily = 'outfit-portraits' | 'outfit-busts' | 'support-card-art'
+export type ArtFamily = 'outfit-portraits' | 'outfit-busts' | 'outfit-faces' | 'support-card-art'
 
 export interface ArtFamilyConfig {
   family: ArtFamily
@@ -22,6 +22,8 @@ export const ART_FAMILIES: Record<ArtFamily, ArtFamilyConfig> = {
   'support-card-art': { family: 'support-card-art', maxSize: 600, quality: 80, alpha: false, source: 'support-card-art' },
   // Head-and-shoulders tiles for lists, like the original's Trainee Select.
   'outfit-busts': { family: 'outfit-busts', maxSize: 256, quality: 82, alpha: true, source: 'outfit-portraits' },
+  // Tight face tiles for dense lists, pickers, workers, pips and seats.
+  'outfit-faces': { family: 'outfit-faces', maxSize: 192, quality: 82, alpha: true, source: 'outfit-portraits' },
 }
 
 export interface ArtImage {
@@ -40,6 +42,8 @@ export interface BustCrop {
 
 /** Busts start near the top so ears stay in, and take 60% of the frame: head and shoulders, as the original's tiles. */
 export const BUST_DEFAULTS = { top: 0.02, size: 0.6 } as const
+/** A face uses most of its bust crop: the full face stays in, while shoulders and torso stay out. */
+export const FACE_DEFAULTS = { topInBust: 0.02, sizeInBust: 0.7 } as const
 /** Rows where a stand portrait's face sits; arms and props mostly fall below it. */
 const HEAD_BAND = [0.15, 0.4] as const
 
@@ -70,10 +74,54 @@ export function bustCrop(
   return { left, top, size }
 }
 
+/**
+ * The square to cut a face from. Its default is derived from the outfit's bust crop; a private face override may pin
+ * any part directly as a share of the source portrait, with the same shape as a bust override.
+ */
+export function faceCrop(
+  rgba: Uint8Array,
+  width: number,
+  height: number,
+  bustOverride: Partial<BustCrop> = {},
+  faceOverride: Partial<BustCrop> = {},
+): { left: number; top: number; size: number } {
+  const bust = bustCrop(rgba, width, height, bustOverride)
+  const defaultSize = Math.round(bust.size * FACE_DEFAULTS.sizeInBust)
+  const size = Math.max(1, Math.round(
+    faceOverride.size === undefined ? defaultSize : Math.min(width, height) * faceOverride.size,
+  ))
+  const defaultCx = bust.left + bust.size / 2
+  const cx = faceOverride.cx === undefined ? defaultCx : faceOverride.cx * width
+  const defaultTop = bust.top + Math.round(bust.size * FACE_DEFAULTS.topInBust)
+  const top = faceOverride.top === undefined ? defaultTop : Math.round(height * faceOverride.top)
+  return {
+    left: Math.max(0, Math.min(width - size, Math.round(cx - size / 2))),
+    top: Math.max(0, Math.min(height - size, top)),
+    size: Math.min(size, width, height),
+  }
+}
+
 /** Cuts and encodes one bust from a portrait source. */
 export async function encodeBust(config: ArtFamilyConfig, image: DownloadedImage, override?: Partial<BustCrop>): Promise<ArtImage> {
   const { data, info } = await sharp(image.bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
   const box = bustCrop(data, info.width, info.height, override)
+  const { data: bytes, info: encoded } = await sharp(image.bytes)
+    .extract({ left: box.left, top: box.top, width: box.size, height: box.size })
+    .resize({ width: config.maxSize, height: config.maxSize, withoutEnlargement: true })
+    .webp({ quality: config.quality, alphaQuality: 90, effort: 5 })
+    .toBuffer({ resolveWithObject: true })
+  return { id: image.id, bytes, width: encoded.width, height: encoded.height }
+}
+
+/** Cuts and encodes one face from the same portrait source as its bust. */
+export async function encodeFace(
+  config: ArtFamilyConfig,
+  image: DownloadedImage,
+  bustOverride?: Partial<BustCrop>,
+  faceOverride?: Partial<BustCrop>,
+): Promise<ArtImage> {
+  const { data, info } = await sharp(image.bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const box = faceCrop(data, info.width, info.height, bustOverride, faceOverride)
   const { data: bytes, info: encoded } = await sharp(image.bytes)
     .extract({ left: box.left, top: box.top, width: box.size, height: box.size })
     .resize({ width: config.maxSize, height: config.maxSize, withoutEnlargement: true })
@@ -101,6 +149,8 @@ export interface BuildArtOptions {
   cacheDir: string
   /** Bust crop pins by outfit id (`content/overrides/bust-crops.json`). */
   bustCrops?: Readonly<Record<string, Partial<BustCrop>>>
+  /** Face crop pins by outfit id (`content/overrides/face-crops.json`). */
+  faceCrops?: Readonly<Record<string, Partial<BustCrop>>>
   refresh?: boolean
   concurrency?: number
   fetcher?: typeof fetch
@@ -135,7 +185,9 @@ export async function buildArtFamily(
   for (const image of downloaded.images) {
     images.push(config.family === 'outfit-busts'
       ? await encodeBust(config, image, options.bustCrops?.[image.id])
-      : await encodeArt(config, image))
+      : config.family === 'outfit-faces'
+        ? await encodeFace(config, image, options.bustCrops?.[image.id], options.faceCrops?.[image.id])
+        : await encodeArt(config, image))
     options.onProgress?.(images.length, downloaded.images.length)
   }
   return {
