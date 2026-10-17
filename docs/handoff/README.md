@@ -58,7 +58,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Phase C: one work system** | | | | | | |
 | SC1 | `@luismlorenzana/uma-work`: the shared engine, from uma-racer's | uma-platform | Claude | L | — | Done (`ed446b8`, 0.1.0) |
 | [SC2](tasks/SC2-kit-work.md) | `uma-kit/work`: rows, queues, speed-up, recall, header, job sheet | uma-platform | Either | L | SC1, SB3 | Ready (uma-kit 0.7.0, uma-work 0.1.0) |
-| [SC3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC3-rpg-on-uma-work.md) | uma-rpg on `uma-work`: kinds, save v22, the API | uma-rpg | Claude | L | SC1 | Ready (uma-work 0.1.0) |
+| SC3 | uma-rpg on `uma-work`: kinds, save v22, the API | uma-rpg | Claude | L | SC1 | Done (`6063b95`) |
 | [SC4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC4-rpg-work-screens.md) | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Waiting |
 | [SC5](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SC5-racer-on-uma-work.md) | uma-racer on `uma-work` and `uma-kit/work` | uma-racer | Either | L | SC1, SC2 | Waiting |
 | **Phase D: places, profile and getting in** | | | | | | |
@@ -74,7 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB4, SB5, SB6, SC2, SC3, SD3, SD4, SE1, SE3.
+**Ready now, in parallel:** SB4, SB5, SB6, SC2, SD3, SD4, SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -93,6 +93,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 |---|---|---|
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
+| SC3 | uma-rpg on `uma-work` 0.1.0: four kinds, save v22, Repeat and stopped queues (its D152) | `6063b95` |
 | SD1 | `@luismlorenzana/uma-server` 0.1.0 with `/auth`, the shared API guard (P54) | `1824879` (release `09f6d52`) |
 | SB2 | `uma-kit/roster`, the album engine and level rule, uma-kit 0.4.0 (P55) | `c518093` (release `f7f6e51`) |
 | SB3 | `uma-kit/album`, the shared album screens, art primitives and Uma picker, uma-kit 0.7.0 (P58) | `5579b32` (0.7.0 tag) |
