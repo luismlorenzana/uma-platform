@@ -16,6 +16,7 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
  * Per-record WebP images, keyed by:
  * - `outfit-portraits`: outfit id (full stand, ≤512 px)
  * - `outfit-busts`: outfit id (head and shoulders, ≤256 px square)
+ * - `outfit-faces`: outfit id (face crop, ≤192 px square)
  * - `support-card-art`: support card id (full illustration, ≤600 px)
  * - `outfit-chibis`: `<outfitId>-a` or `<outfitId>-b` (two poses, ≤256 px)
  * - `character-dresses`: `<characterId>-gym|summer|winter|casual` (≤512 px)
@@ -24,6 +25,7 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
 export const IMAGE_FAMILIES = [
   'outfit-portraits',
   'outfit-busts',
+  'outfit-faces',
   'support-card-art',
   'outfit-chibis',
   'character-dresses',

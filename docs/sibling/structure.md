@@ -99,7 +99,7 @@
 |---|---|---|---|
 | Master data | Its own GameTora pipeline into private content; platform data in its phase 5 | `uma-data` through the API | **Same** (target): both on `uma-data` |
 | Outfit ids | GameTora card ids, `'100101'` | uma-data outfit ids, `'100401'` | **Same**: the same numbers |
-| Uma art | Private content files: icons, bust, chibi, dress, face | uma-data art families: `outfit-icons`, `outfit-busts`, `outfit-chibis`, `character-faces` … | **Same** (target): uma-racer's mapping is in `racer-mapping.md` |
+| Uma art | Private content files: icons, bust, chibi, dress, face | uma-data art families: `outfit-icons`, `outfit-busts`, `outfit-faces`, `outfit-chibis`, `character-faces` … | **Same** (target): uma-racer's mapping is in `racer-mapping.md` |
 | Pixel art | uma-art 2.7.0: buildings, tiles, ui, items, dishes | uma-art 2.8.0: buildings, tiles, ui, items, gear, gems, world, fx | **Same** |
 | Save | Documents per kind (`saves/{uid}/{kind}/{id}`), Dexie `uma-racer-g2` | One revisioned snapshot, schema v21, Dexie | **Different** |
 | API | NestJS: save, sync, content proxy | NestJS: save, push, master data proxy | **Variant**: shared guard and content modules |

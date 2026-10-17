@@ -41,7 +41,7 @@ evolved skills, full course geometry, objective details, Global mechanics side b
 | `eventSkillIds` | `outfit.skills.event` | already deduplicated |
 | `realHorseSex` | `characters[characterId].realHorseSex` | same mapping (1 male, 2 female) |
 | `signatureRaceFamilyIds` | `objectives` (by `characterId`) | objectives in `order`; each `races[].familyId` in order; keep ids whose family has a race uma-racer retains; distinct |
-| `imageSource` | — | replaced by art: `outfit-icons` atlas, `outfit-portraits`, `outfit-busts` |
+| `imageSource` | — | replaced by art: `outfit-icons` atlas, `outfit-portraits`, `outfit-busts`, `outfit-faces` |
 
 ## `SupportCardTemplate` (pack `cards`) ← `support-cards` (+ `scenarios` for eras)
 
@@ -139,6 +139,7 @@ scenarios with its ladder to notice a new scenario.
 | `scenario-icons` (keys: racer slugs) | `scenario-icons` (keys: scenario ids) | map through the slug table above |
 | `art/uma/<id>` | `art.images['outfit-portraits'][id]` | |
 | `art/bust/<id>` | `art.images['outfit-busts'][id]` | |
+| small outfit face `<id>` | `art.images['outfit-faces'][id]` | per outfit; replaces character-level race faces in shared lists |
 | `art/card/<id>` | `art.images['support-card-art'][id]` | every rarity |
 | `art/chibi/<id>-a\|b` | `art.images['outfit-chibis']['<id>-a\|b']` | same keys |
 | `art/dress/<chara>-<look>` | `art.images['character-dresses']['<chara>-<look>']` | same keys |

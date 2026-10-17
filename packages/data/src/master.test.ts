@@ -61,6 +61,14 @@ describe('parseArtIndex', () => {
     expect(parsed).toEqual(index)
   })
 
+  it('parses the additive per-outfit face family', () => {
+    const index = syntheticArtIndex('atlases/a.webp', 'art/outfit-portraits/900101.aa.webp')
+    index.images['outfit-faces'] = {
+      '900101': { path: 'art/outfit-faces/900101.bb.webp', width: 192, height: 192 },
+    }
+    expect(parseArtIndex(roundTrip(index), 'art')).toEqual(index)
+  })
+
   it('rejects a frame on a page the atlas lacks', () => {
     const index = syntheticArtIndex('atlases/a.webp', 'art/b.webp')
     index.atlases['outfit-icons']!.frames['900101']!.page = 1

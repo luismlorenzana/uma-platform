@@ -1,7 +1,7 @@
 import { syntheticMasterData } from '@luismlorenzana/uma-data/testing'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
-import { ART_FAMILIES, bustCrop, encodeArt, encodeBust } from './art'
+import { ART_FAMILIES, bustCrop, encodeArt, encodeBust, encodeFace, faceCrop } from './art'
 import { artSources, outfitIconUrl, outfitPortraitUrl, scenarioIconUrl, supportCardArtUrl, supportCardIconUrl } from './sources'
 
 describe('art sources', () => {
@@ -82,5 +82,43 @@ describe('busts', () => {
     const bust = await encodeBust(ART_FAMILIES['outfit-busts'], { id: 'u1', bytes: source, cacheHit: false })
     expect([bust.width, bust.height]).toEqual([256, 256])
     expect((await sharp(bust.bytes).metadata()).hasAlpha).toBe(true)
+  })
+})
+
+describe('faces', () => {
+  // A 100×100 cut-out whose head (rows 10–45) is centred on `headX`.
+  const portrait = (headX: number) => {
+    const rgba = new Uint8Array(100 * 100 * 4)
+    for (let y = 0; y < 100; y += 1) {
+      for (let x = 0; x < 100; x += 1) {
+        const inHead = y >= 10 && y < 45 && Math.abs(x - headX) <= 12
+        const inBody = y >= 45 && x >= 20 && x < 80
+        if (inHead || inBody) rgba[(y * 100 + x) * 4 + 3] = 255
+      }
+    }
+    return rgba
+  }
+
+  it('derives a tighter square from the outfit bust crop', () => {
+    expect(faceCrop(portrait(70), 100, 100)).toEqual({ left: 49, top: 3, size: 42 })
+  })
+
+  it('honours a private face crop instead of the derived defaults', () => {
+    expect(faceCrop(portrait(70), 100, 100, {}, { cx: 0.3, top: 0.2, size: 0.25 }))
+      .toEqual({ left: 18, top: 20, size: 25 })
+  })
+
+  it('clamps a pinned face crop at the portrait edges', () => {
+    expect(faceCrop(portrait(70), 100, 100, {}, { cx: 1, top: 1, size: 0.3 }))
+      .toEqual({ left: 70, top: 70, size: 30 })
+  })
+
+  it('encodes a square, transparent face at 192 px', async () => {
+    const source = await sharp({
+      create: { width: 600, height: 600, channels: 4, background: { r: 200, g: 100, b: 50, alpha: 0.5 } },
+    }).png().toBuffer()
+    const face = await encodeFace(ART_FAMILIES['outfit-faces'], { id: 'u1', bytes: source, cacheHit: false })
+    expect([face.width, face.height]).toEqual([192, 192])
+    expect((await sharp(face.bytes).metadata()).hasAlpha).toBe(true)
   })
 })
