@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-kit
 
+## 0.4.0
+
+### Minor Changes
+
+- 5314901: Add the pure `/roster` subpath: the shared album query engine, level and work ordering, master-data row projection,
+  and bounded device preferences.
+
 ## 0.3.0
 
 ### Minor Changes
