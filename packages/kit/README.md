@@ -10,6 +10,7 @@ The games stay their own: rules, screens, saves and which places exist.
 | `@luismlorenzana/uma-kit/ui` | Icons, `UiMark`/`TierCrest`, `Button`, `Chip`, `Tabs`, `Panel`, `BottomSheet`/`Sheet`, `HelpButton`, `AnimatedNumber`, `MotionRoot`, appearance and device preferences, `KitArtProvider` |
 | `@luismlorenzana/uma-kit/shell` | `AppFrame`, `AccountBar`, `BottomBar`, `PlaceMenu`, `PeekPanel`, `PlaceHeader`, `FloatingPill`, nav helpers |
 | `@luismlorenzana/uma-kit/hub` | `HubMap` (canvas, place links, swipe), `HubCanvas`, `PlaceTargets`, `Pips`, the grid, terrain, palettes and markers |
+| `@luismlorenzana/uma-kit/roster` | Pure album queries, level/work ordering, master-data row projection and device preferences |
 
 ## Use it in a game
 

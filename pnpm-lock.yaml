@@ -31,6 +31,12 @@ importers:
 
   packages/kit:
     devDependencies:
+      '@luismlorenzana/uma-data':
+        specifier: workspace:*
+        version: link:../data
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
