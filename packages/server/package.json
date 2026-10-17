@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The NestJS pieces both Uma game APIs share: the Firebase auth guard and owner allowlist (uma-platform SD1). Private; personal use only.",
   "license": "UNLICENSED",
   "repository": {
@@ -21,7 +21,9 @@
   },
   "typesVersions": {
     "*": {
-      "auth": ["./dist/auth/index.d.ts"]
+      "auth": [
+        "./dist/auth/index.d.ts"
+      ]
     }
   },
   "files": [
