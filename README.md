@@ -15,8 +15,8 @@ It owns:
 
 Phases 0 and 1 are done, and Phases 2 (uma-rpg) and 3 (the uma-racer refactor) are in progress.
 `@luismlorenzana/uma-data` and `@luismlorenzana/uma-art` are on GitHub Packages: uma-rpg uses both, and uma-racer
-installs `uma-data`. `@luismlorenzana/uma-kit` (P48) is the app both games share: theme, primitives, shell and Hub
-map. `@luismlorenzana/uma-work` (P53) is the work engine both games run, and `@luismlorenzana/uma-server` (P54) the
+installs `uma-data`. `@luismlorenzana/uma-kit` (P48) is the app both games share: theme, primitives, shell, Hub
+map, sign-in and the place frames (P56). `@luismlorenzana/uma-work` (P53) is the work engine both games run, and `@luismlorenzana/uma-server` (P54) the
 NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 
 ## Layout
@@ -25,7 +25,7 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 |---|---|
 | `packages/data` | `@luismlorenzana/uma-data`: master types, runtime parsers, release client ([master-data.md](docs/master-data.md)) |
 | `packages/art` | `@luismlorenzana/uma-art`: the original art atlases ([README](packages/art/README.md)) |
-| `packages/kit` | `@luismlorenzana/uma-kit`: the shared app, theme, shell and Hub map ([README](packages/kit/README.md), [sibling plan](docs/sibling/README.md)) |
+| `packages/kit` | `@luismlorenzana/uma-kit`: the shared app, theme, shell, Hub map, sign-in and place frames ([README](packages/kit/README.md), [sibling plan](docs/sibling/README.md)) |
 | `packages/server` | `@luismlorenzana/uma-server`: the NestJS pieces both game APIs share, starting with the auth guard ([README](packages/server/README.md)) |
 | `packages/work` | `@luismlorenzana/uma-work`: the work engine both games run, jobs, queues, tickets and building levels ([README](packages/work/README.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |

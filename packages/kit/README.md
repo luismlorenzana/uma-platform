@@ -11,6 +11,8 @@ The games stay their own: rules, screens, saves and which places exist.
 | `@luismlorenzana/uma-kit/shell` | `AppFrame`, `AccountBar`, `BottomBar`, `PlaceMenu`, `PeekPanel`, `PlaceHeader`, `FloatingPill`, nav helpers |
 | `@luismlorenzana/uma-kit/hub` | `HubMap` (canvas, place links, swipe), `HubCanvas`, `PlaceTargets`, `Pips`, the grid, terrain, palettes and markers |
 | `@luismlorenzana/uma-kit/roster` | Pure album queries, level/work ordering, master-data row projection and device preferences |
+| `@luismlorenzana/uma-kit/auth` | Google sign-in through Firebase, loaded only by `import()`: `AuthProvider`, `useAuth`, `loadAuth`, `idToken`, `signIn`, `signOut` (0.5.0, SD2) |
+| `@luismlorenzana/uma-kit/places` | The screens around the game, as frames: `BootGates`, `UpdateNotice` and the update lifecycle, `AccountPage`, `ShelfView`, `ExchangeRows`, `ProfileFrame`, `UnlockConfirm` (0.5.0, SD2) |
 
 ## Use it in a game
 
@@ -44,8 +46,54 @@ root.render(
 - **No game state:** components take values, words and links as props. The game keeps its stores and its words.
 - **Art:** uma-art's atlases come in through `KitArtProvider`, so the kit never imports image files. A mark or frame the
   atlas lacks falls back (a `fallback` node, or a code-drawn building).
+- **Firebase** is an optional peer: only `/auth` uses it, and only through `import()`, so it never lands in the startup
+  bundle and a game without sign-in never loads it.
 - **Appearance:** `initAppearance()` applies the device's choice (System, Light or Dark: `setAppearance`) as
   `<html data-theme>`, and keeps the browser's theme colour on the page colour.
+
+## Getting in and the places (`/auth`, `/places`)
+
+```tsx
+// main.tsx: the game passes its Firebase config; without one (local dev) auth is off and the user is `local-dev`.
+import { AuthProvider } from '@luismlorenzana/uma-kit/auth'
+import { watchAppUpdates } from '@luismlorenzana/uma-kit/places'
+import { registerSW } from 'virtual:pwa-register'
+
+const firebase = { apiKey: import.meta.env.VITE_FIREBASE_API_KEY, authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID }
+watchAppUpdates(registerSW)
+root.render(<AuthProvider config={firebase}><RouterProvider router={router} /></AuthProvider>)
+
+// Root.tsx: splash → sign-in → boot → first launch → start page, always in that order.
+const auth = useAuth()
+<BootGates
+  auth={auth}
+  boot={async ({ uid }) => ({ firstLaunch: await openDeviceSave(uid) === 'new' })}
+  firstLaunch={(done) => <TrainerNameStep onDone={done} />}   // uma-rpg; uma-racer has none
+  startPath={() => (umas === 0 ? '/town/stable?tab=locked' : lastPage())}
+  words={{ name: 'Uma RPG', tagline: 'A party RPG for one trainer.' }}
+>
+  <UpdateNotice />
+  <Outlet />
+</BootGates>
+```
+
+- **`BootGates`** runs the game's `boot` once per user and attempt (StrictMode's second effect reuses it), shows the
+  sign-in gate when auth is on and nobody is signed in (with "Sign-in didn't finish" after a failed redirect), a retry
+  when the boot fails, the first-launch step only when the boot says so, then opens `startPath()` once, only when the
+  app was opened at `/`.
+- **`criticalAction(fn)`** holds an update's Restart until `fn` has committed; wrap every gameplay tap.
+- **`AccountPage`** takes `rename` (`value`, `maxLength`, `normalize?`, `onSave`), `wallet` (`{ icon, value, label }[]`),
+  `appearance` (default on), `notifications` and `sections` (`ReactNode`), `info` (`{ label, value }[]`) and
+  `onSignOut`. A section left out isn't drawn.
+- **`ShelfView`** takes `shelves`, `items` (`{ id, name, shelf, grade, count, group? }`), `renderItem`, and optionally
+  `layout` (`grid` or `rows`), `rowDetail`, `details`, `price`, `sizes`, `ask` (a question before selling) and
+  `onSell`. Grade chips offer every grade, one grade, or the highest held per `group`.
+- **`ExchangeRows`** takes `rows` (`{ key, icon, name, detail?, price: { mark, amount }, disabled? }`), `balance` and
+  `onBuy`; its sheet offers ×1, ×5, ×10, ×25 or a typed quantity, the total, and "Need N more" when short.
+- **`ProfileFrame`** takes `portrait`, `name`, `title`, `level` (SB2's `formatLevel` once it lands), `chips`, `corner`,
+  `summary`, `locked`, and `tabs` with `tab` and `onTab`; its children are the active tab's body.
+- **`UnlockConfirm`** shows the Uma Tickets going N → N−1, "Unlocking is final." and Confirm.
+- **Words:** every string is a prop with an English default (`ACCOUNT_WORDS`, `SHELF_WORDS`, …).
 
 ## Changing it
 
