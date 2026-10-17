@@ -68,13 +68,13 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | [SD4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SD4-racer-places.md) | uma-racer on SD1 and SD2 | uma-racer | Either | M | SD1, SD2 | Ready (uma-server 0.1.0, uma-kit 0.5.0) |
 | **Phase E: platform plumbing** | | | | | | |
 | [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
-| [SE2](tasks/SE2-kit-content.md) | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Ready (uma-server 0.1.0) |
-| [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Waiting |
+| SE2 | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Done (`5aaeb93`, kit 0.6.0, server 0.2.0) |
+| [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Ready (uma-kit 0.6.0, uma-server 0.2.0) |
 | [SE4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE4-racer-content.md) | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Waiting |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB3, SB5, SC3, SD3, SD4, SE1, SE2.
+**Ready now, in parallel:** SB3, SB5, SC3, SD3, SD4, SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -96,4 +96,5 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 | SD1 | `@luismlorenzana/uma-server` 0.1.0 with `/auth`, the shared API guard (P54) | `1824879` (release `09f6d52`) |
 | SB2 | `uma-kit/roster`, the album engine and level rule, uma-kit 0.4.0 (P55) | `c518093` (release `f7f6e51`) |
 | SD2 | `uma-kit/auth` and `uma-kit/places`, uma-kit 0.5.0 (P56) | `b9247da` (release `8b3e26b`) |
+| SE2 | Shared content loading and proxy, uma-kit 0.6.0 and uma-server 0.2.0 (P57) | `5aaeb93` (release `8ad4354`) |
 | SB1 | `outfit-faces`: a face crop per outfit in uma-data 1.1.0 | `516cb84` (release `11cf2ea880df`) |
