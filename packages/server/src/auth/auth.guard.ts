@@ -33,6 +33,9 @@ export class AuthGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     if (this.reflector.getAllAndOverride<boolean | undefined>(IS_PUBLIC, [ctx.getHandler(), ctx.getClass()])) return true
     const req = ctx.switchToHttp().getRequest<AuthedRequest>()
+    // The global guard already let this request in, and a controller's own `@UseGuards(AuthGuard)` runs after it (the
+    // content routes): don't verify the token twice.
+    if (req.user !== undefined) return true
     if (this.options.mode === 'disabled') {
       req.user = { uid: LOCAL_DEV_UID }
       return true

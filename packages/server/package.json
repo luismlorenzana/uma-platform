@@ -1,7 +1,7 @@
 {
   "name": "@luismlorenzana/uma-server",
   "version": "0.1.0",
-  "description": "The NestJS pieces both Uma game APIs share: the Firebase auth guard and owner allowlist (uma-platform SD1). Private; personal use only.",
+  "description": "The NestJS pieces both Uma game APIs share: the Firebase auth guard and owner allowlist, the master data release proxy and private packs (uma-platform SD1, SE2). Private; personal use only.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
@@ -17,12 +17,19 @@
       "types": "./dist/auth/index.d.ts",
       "default": "./dist/auth/index.js"
     },
+    "./content": {
+      "types": "./dist/content/index.d.ts",
+      "default": "./dist/content/index.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
       "auth": [
         "./dist/auth/index.d.ts"
+      ],
+      "content": [
+        "./dist/content/index.d.ts"
       ]
     }
   },
@@ -41,12 +48,19 @@
     "test": "vitest run"
   },
   "peerDependencies": {
+    "@google-cloud/storage": "^7.22.0",
     "@nestjs/common": "^11.2.4",
     "@nestjs/core": "^11.2.4",
     "firebase-admin": "^13.10.0",
     "rxjs": "^7.8.2"
   },
+  "peerDependenciesMeta": {
+    "@google-cloud/storage": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@google-cloud/storage": "^7.22.0",
     "@nestjs/common": "^11.2.4",
     "@nestjs/core": "^11.2.4",
     "@nestjs/platform-express": "^11.2.4",

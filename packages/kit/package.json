@@ -41,6 +41,10 @@
       "types": "./dist/places/index.d.ts",
       "default": "./dist/places/index.js"
     },
+    "./content": {
+      "types": "./dist/content/index.d.ts",
+      "default": "./dist/content/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

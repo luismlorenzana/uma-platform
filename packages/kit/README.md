@@ -13,6 +13,7 @@ The games stay their own: rules, screens, saves and which places exist.
 | `@luismlorenzana/uma-kit/roster` | Pure album queries, level/work ordering, master-data row projection and device preferences |
 | `@luismlorenzana/uma-kit/auth` | Google sign-in through Firebase, loaded only by `import()`: `AuthProvider`, `useAuth`, `loadAuth`, `idToken`, `signIn`, `signOut` (0.5.0, SD2) |
 | `@luismlorenzana/uma-kit/places` | The screens around the game, as frames: `BootGates`, `UpdateNotice` and the update lifecycle, `AccountPage`, `ShelfView`, `ExchangeRows`, `ProfileFrame`, `UnlockConfirm` (0.5.0, SD2) |
+| `@luismlorenzana/uma-kit/content` | Master data and art through the game's API: `createContentClient`, `ContentProvider`, `useContent`, `useArtUrl`, `usePackUrl`, `imagePath`, `AtlasSprite`, `contentProblem` (0.6.0, SE2) |
 
 ## Use it in a game
 
@@ -94,6 +95,31 @@ const auth = useAuth()
   `summary`, `locked`, and `tabs` with `tab` and `onTab`; its children are the active tab's body.
 - **`UnlockConfirm`** shows the Uma Tickets going N → N−1, "Unlocking is final." and Confirm.
 - **Words:** every string is a prop with an English default (`ACCOUNT_WORDS`, `SHELF_WORDS`, …).
+
+## Content (`/content`)
+
+```tsx
+import { ContentProvider, createContentClient, useArtUrl, AtlasSprite, imagePath } from '@luismlorenzana/uma-kit/content'
+
+const content = createContentClient({ token: () => auth.idToken() })   // base '/api' by default
+root.render(<ContentProvider client={content}>…</ContentProvider>)
+
+const manifest = await content.manifest()                  // the channel's, once a session
+const outfits = await (await content.release()).set(manifest, 'outfits')   // uma-data's client, for the game's sets
+const bust = useArtUrl(imagePath(art, 'outfit-busts', outfitId))          // a blob URL, or null while loading
+<AtlasSprite art={art} family="outfit-icons" frameKey={outfitId} size={48} />
+const enemies = JSON.parse(new TextDecoder().decode(await content.pack('enemies.json')))
+const face = usePackUrl(enemy.face.path)
+```
+
+- **Release files** (`atlases/…`, `art/…`) must be in the manifest; their bytes are checked against its SHA-256 and kept
+  in memory for the session and in Cache Storage (`uma-kit-content`) under that hash, so art survives a restart. A
+  damaged cached copy is downloaded again.
+- **Private packs** come from `/api/content/`; hash-named files are kept in Cache Storage too, index files are fetched
+  fresh.
+- **uma-data loads on first use** (`import()`), never at import, so it stays out of the startup bundle.
+- **`contentProblem(error)`** names what went wrong (`signed-out`, `not-allowed`, `missing`, `damaged`, `offline`,
+  `failed`); the game says it in its own words.
 
 ## Changing it
 

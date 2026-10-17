@@ -25,6 +25,8 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
   uma-rpg's SC3 and uma-racer's SC5 move onto it, and SC2 builds `uma-kit/work`'s screens once SB3 ships.
 - **Phase D:** in progress (2026-10-16). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard
   (P54), and SD2 uma-kit 0.5.0 with `/auth` and `/places` (P56); SD3 and SD4 move the games onto them.
+- **Phase E:** in progress (2026-10-17). SE2 shipped shared content loading: uma-kit 0.6.0 and uma-server 0.2.0
+  `/content` (P57); SE3 moves uma-rpg onto it, SE4 uma-racer after its SE1.
 - **Phases B to E:** briefed in [phases.md](sibling/phases.md), and broken into 21 self-contained packets with parallel
   tracks in [docs/handoff/](handoff/README.md) (P51). Ready when they were queued:
   - SA7, the plaza crowd in uma-racer;
