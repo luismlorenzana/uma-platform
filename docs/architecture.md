@@ -131,7 +131,7 @@ The shared app code ships as **one package, `@luismlorenzana/uma-kit`**, with su
 `/ui`, `/shell` and `/hub` first, then `/album`, `/roster` and `/work`, later `/places`, `/auth` and `/content`; the
 [sibling plan](sibling/README.md) orders the work. Pure rules that a game's API runs too ship apart from the React kit:
 **`@luismlorenzana/uma-work`** is the work engine both games run (P53, ESM and CJS), and `@luismlorenzana/uma-server`
-holds the NestJS pieces both APIs repeat.
+holds the NestJS pieces both APIs repeat, starting with the auth guard (`/auth`, P54).
 
 ## 4. Game baseline
 
