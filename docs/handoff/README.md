@@ -62,19 +62,19 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | [SC4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC4-rpg-work-screens.md) | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Waiting |
 | [SC5](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SC5-racer-on-uma-work.md) | uma-racer on `uma-work` and `uma-kit/work` | uma-racer | Either | L | SC1, SC2 | Waiting |
 | **Phase D: places, profile and getting in** | | | | | | |
-| [SD1](tasks/SD1-uma-server-auth.md) | `@luismlorenzana/uma-server`: the NestJS auth guard | uma-platform | Either | M | — | Ready |
+| SD1 | `@luismlorenzana/uma-server`: the NestJS auth guard | uma-platform | Either | M | — | Done (`1824879`, 0.1.0) |
 | [SD2](tasks/SD2-kit-places.md) | `uma-kit/auth` and `uma-kit/places`: boot gates, Account, Warehouse, Exchange, profile | uma-platform | Either | L | — | Ready |
 | [SD3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SD3-rpg-places.md) | uma-rpg on SD1 and SD2 | uma-rpg | Either | M | SD1, SD2 | Waiting |
 | [SD4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SD4-racer-places.md) | uma-racer on SD1 and SD2 | uma-racer | Either | M | SD1, SD2 | Waiting |
 | **Phase E: platform plumbing** | | | | | | |
 | [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
-| [SE2](tasks/SE2-kit-content.md) | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Waiting |
+| [SE2](tasks/SE2-kit-content.md) | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Ready (uma-server 0.1.0) |
 | [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Waiting |
 | [SE4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE4-racer-content.md) | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Waiting |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB2, SB5, SC3, SD1, SD2, SE1.
+**Ready now, in parallel:** SB2, SB5, SC3, SD2, SE1, SE2.
 
 ## Releases while packets run in parallel
 
@@ -93,4 +93,5 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 |---|---|---|
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
+| SD1 | `@luismlorenzana/uma-server` 0.1.0 with `/auth`, the shared API guard (P54) | `1824879` (release `09f6d52`) |
 | SB1 | `outfit-faces`: a face crop per outfit in uma-data 1.1.0 | `516cb84` (release `11cf2ea880df`) |
