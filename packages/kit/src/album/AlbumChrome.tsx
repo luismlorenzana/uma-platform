@@ -159,7 +159,7 @@ export function AlbumChrome({
               : <ArrowDownIcon size={16} title={words.descending} />}
             {!compact && <span className="max-w-[5.75rem] truncate">{sortLabel}</span>}
           </Button>
-          <Button variant={activeCount > 0 ? 'primary' : 'secondary'} size="sm" onClick={() => setFilterOpen(true)}>
+          <Button variant={activeCount > 0 ? 'primary' : 'secondary'} size="sm" aria-label={words.filters} onClick={() => setFilterOpen(true)}>
             <FilterIcon size={16} />
             {activeCount > 0 ? activeCount : compact ? null : words.filters}
           </Button>
