@@ -128,8 +128,10 @@ first in uma-rpg (Phase 2), kept in clearly separated folders, and extracted int
 the second user (Phase 3). No shared package is created before a game needs it, except `uma-data` (P11).
 
 The shared app code ships as **one package, `@luismlorenzana/uma-kit`**, with subpath exports (P48): `/theme.css`,
-`/ui`, `/shell` and `/hub` first, then `/album`, `/roster` and `/work`. `uma-content`, `uma-idle` and `uma-auth` may
-join it as subpaths too; the [sibling plan](sibling/README.md) orders the work.
+`/ui`, `/shell` and `/hub` first, then `/album`, `/roster` and `/work`, later `/places`, `/auth` and `/content`; the
+[sibling plan](sibling/README.md) orders the work. Pure rules that a game's API runs too ship apart from the React kit:
+**`@luismlorenzana/uma-work`** is the work engine both games run (P53, ESM and CJS), and `@luismlorenzana/uma-server`
+holds the NestJS pieces both APIs repeat.
 
 ## 4. Game baseline
 

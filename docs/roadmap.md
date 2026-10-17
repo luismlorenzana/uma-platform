@@ -19,8 +19,10 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
 - **Phase A:** done (2026-10-16). Both games run on `@luismlorenzana/uma-kit` (theme, primitives, shell, Hub map;
   0.2.0 fixed the iPhone's bottom band and docked the bar, 0.3.0 added the plaza crowd), with H31's art in uma-art
   2.9.0. Neither game forks the kit; changes go through a kit release.
+- **Phase C:** in progress (2026-10-16). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53);
+  uma-rpg's SC3 and uma-racer's SC5 move onto it, and SC2 builds `uma-kit/work`'s screens once SB3 ships.
 - **Phases B to E:** briefed in [phases.md](sibling/phases.md), and broken into 21 self-contained packets with parallel
-  tracks in [docs/handoff/](handoff/README.md) (P51). Ready now:
+  tracks in [docs/handoff/](handoff/README.md) (P51). Ready when they were queued:
   - SA7, the plaza crowd in uma-racer;
   - SB1, face crops;
   - SB2, the album engine;
