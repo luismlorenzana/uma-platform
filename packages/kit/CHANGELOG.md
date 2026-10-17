@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.7.1
+
+### Patch Changes
+
+- Keep the album Filter button named for assistive technology when compact Uma pickers hide its visible text. Uses the game's existing `filters` words; no prop or layout change (SB6 integration).
+
 ## 0.7.0
 
 ### Minor Changes
