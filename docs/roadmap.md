@@ -19,6 +19,8 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
 - **Phase A:** done (2026-10-16). Both games run on `@luismlorenzana/uma-kit` (theme, primitives, shell, Hub map;
   0.2.0 fixed the iPhone's bottom band and docked the bar, 0.3.0 added the plaza crowd), with H31's art in uma-art
   2.9.0. Neither game forks the kit; changes go through a kit release.
+- **Phase B:** in progress (2026-10-16). SB1 shipped the `outfit-faces` art family in uma-data 1.1.0 (P52) and SB2
+  `uma-kit/roster` in uma-kit 0.4.0 (P55); SB3 builds `uma-kit/album` next.
 - **Phase C:** in progress (2026-10-16). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53);
   uma-rpg's SC3 and uma-racer's SC5 move onto it, and SC2 builds `uma-kit/work`'s screens once SB3 ships.
 - **Phase D:** in progress (2026-10-16). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard
