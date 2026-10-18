@@ -52,7 +52,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Phase B: one Uma album** | | | | | | |
 | SB2 | `uma-kit/roster`: the album engine, level rule, label, rows, preferences | uma-platform | Either | M | — | Done (`c518093`, 0.4.0) |
 | SB3 | `uma-kit/album`: faces, busts, chrome, views, virtual grid, `UmaPicker` | uma-platform | Either | L | SB2 | Done (`5579b32`, 0.7.0) |
-| [SB4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SB4-rpg-album.md) | uma-rpg on the kit album: the Stable, six pickers, faces wherever an Uma is small | uma-rpg | Either | L | SB3 (SB1 for real faces) | Ready (uma-kit 0.7.0, uma-data 1.1.0) |
+| SB4 | uma-rpg on the kit album: the Stable, six pickers, faces wherever an Uma is small | uma-rpg | Either | L | SB3 (SB1 for real faces) | Done (`b205b52`, uma-kit 0.7.1, uma-data 1.1.0; deployed `21b4fa9`) |
 | [SB5](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SB5-rpg-battle-busts.md) | uma-rpg: busts on the battle stage, no chibis | uma-rpg | Either | S | — | Ready |
 | [SB6](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SB6-racer-album.md) | uma-racer on the kit album, and busts in races | uma-racer | Either | L | SB3 (SB1 for real faces) | Ready (uma-kit 0.7.0, uma-data 1.1.0) |
 | **Phase C: one work system** | | | | | | |
@@ -74,7 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB4, SB5, SB6, SC2, SE1, SE3.
+**Ready now, in parallel:** SB5, SB6, SC2, SE1, SE3.
 
 ## Releases while packets run in parallel
 
