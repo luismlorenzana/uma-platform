@@ -38,7 +38,7 @@ describe('H29 Star Gems', () => {
       expect(hash(atlas.crop(f.x, f.y, 32, 32).px), spec.id).toBe(hash(a))
       expect(encodePng(32, 32, a).equals(encodePng(32, 32, b))).toBe(true)
     }
-  })
+  }, 20_000) // Exhaustive painting/encoding of 100 identities exceeds 5s on shared CI.
 
   it('gives every planet its own silhouette at every grade, and every grade its own art', () => {
     expect(Object.values(PLANETS).map(p => p.color)).toEqual(['#e8706a', '#6aa8ff', '#ff9a4d', '#c48bff', '#9fb4cc', '#5fd3c0', '#ffd84d', '#f0b8ff'])
