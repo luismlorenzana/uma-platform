@@ -99,8 +99,14 @@ describe('faces', () => {
     return rgba
   }
 
-  it('derives a tighter square from the outfit bust crop', () => {
-    expect(faceCrop(portrait(70), 100, 100)).toEqual({ left: 49, top: 3, size: 42 })
+  it('derives a face-and-ears square from the outfit bust crop', () => {
+    expect(faceCrop(portrait(70), 100, 100)).toEqual({ left: 45, top: 2, size: 51 })
+  })
+
+  it('keeps breathing room above ears and below the chin band', () => {
+    const crop = faceCrop(portrait(70), 100, 100)
+    expect(10 - crop.top).toBeGreaterThanOrEqual(8)
+    expect(crop.top + crop.size - 45).toBeGreaterThanOrEqual(8)
   })
 
   it('honours a private face crop instead of the derived defaults', () => {
@@ -111,6 +117,11 @@ describe('faces', () => {
   it('clamps a pinned face crop at the portrait edges', () => {
     expect(faceCrop(portrait(70), 100, 100, {}, { cx: 1, top: 1, size: 0.3 }))
       .toEqual({ left: 70, top: 70, size: 30 })
+  })
+
+  it('keeps derived framing for fields a private override does not pin', () => {
+    expect(faceCrop(portrait(70), 100, 100, {}, { cx: 0.3 }))
+      .toEqual({ left: 5, top: 2, size: 51 })
   })
 
   it('encodes a square, transparent face at 192 px', async () => {

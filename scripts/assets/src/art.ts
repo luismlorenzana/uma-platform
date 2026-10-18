@@ -22,7 +22,7 @@ export const ART_FAMILIES: Record<ArtFamily, ArtFamilyConfig> = {
   'support-card-art': { family: 'support-card-art', maxSize: 600, quality: 80, alpha: false, source: 'support-card-art' },
   // Head-and-shoulders tiles for lists, like the original's Trainee Select.
   'outfit-busts': { family: 'outfit-busts', maxSize: 256, quality: 82, alpha: true, source: 'outfit-portraits' },
-  // Tight face tiles for dense lists, pickers, workers, pips and seats.
+  // Face-and-ears tiles for dense lists, pickers, workers, pips and seats.
   'outfit-faces': { family: 'outfit-faces', maxSize: 192, quality: 82, alpha: true, source: 'outfit-portraits' },
 }
 
@@ -42,8 +42,8 @@ export interface BustCrop {
 
 /** Busts start near the top so ears stay in, and take 60% of the frame: head and shoulders, as the original's tiles. */
 export const BUST_DEFAULTS = { top: 0.02, size: 0.6 } as const
-/** A face uses most of its bust crop: the full face stays in, while shoulders and torso stay out. */
-export const FACE_DEFAULTS = { topInBust: 0.02, sizeInBust: 0.7 } as const
+/** A face uses most of its bust crop: ears and chin keep air around them, while the torso stays out. */
+export const FACE_DEFAULTS = { topInBust: 0, sizeInBust: 0.85 } as const
 /** Rows where a stand portrait's face sits; arms and props mostly fall below it. */
 const HEAD_BAND = [0.15, 0.4] as const
 
