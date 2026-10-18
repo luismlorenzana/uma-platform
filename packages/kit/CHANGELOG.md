@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-kit
 
+## 0.8.0
+
+### Minor Changes
+
+- Add `/work`: shared job rows, queues, speed-up and recall, facility upgrades, targets, stopped queues, size chips and
+  the job sheet over uma-work state, with game-injected actions, item art and vocabulary.
+
 ## 0.7.1
 
 ### Patch Changes
