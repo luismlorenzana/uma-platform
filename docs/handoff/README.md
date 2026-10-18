@@ -54,7 +54,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SB3 | `uma-kit/album`: faces, busts, chrome, views, virtual grid, `UmaPicker` | uma-platform | Either | L | SB2 | Done (`5579b32`, 0.7.0) |
 | SB4 | uma-rpg on the kit album: the Stable, six pickers, faces wherever an Uma is small | uma-rpg | Either | L | SB3 (SB1 for real faces) | Done (`b205b52`, uma-kit 0.7.1, uma-data 1.1.0; deployed `21b4fa9`) |
 | [SB5](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SB5-rpg-battle-busts.md) | uma-rpg: busts on the battle stage, no chibis | uma-rpg | Either | S | — | Ready |
-| [SB6](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SB6-racer-album.md) | uma-racer on the kit album, and busts in races | uma-racer | Either | L | SB3 (SB1 for real faces) | Ready (uma-kit 0.7.0, uma-data 1.1.0) |
+| SB6 | uma-racer on the kit album, and busts in races | uma-racer | Either | L | SB3 (SB1 for real faces) | Done (`4885baf`, uma-kit 0.7.1; deployed green) |
 | **Phase C: one work system** | | | | | | |
 | SC1 | `@luismlorenzana/uma-work`: the shared engine, from uma-racer's | uma-platform | Claude | L | — | Done (`ed446b8`, 0.1.0) |
 | [SC2](tasks/SC2-kit-work.md) | `uma-kit/work`: rows, queues, speed-up, recall, header, job sheet | uma-platform | Either | L | SC1, SB3 | Ready (uma-kit 0.7.0, uma-work 0.1.0) |
@@ -74,7 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB5, SB6, SC2, SE1, SE3.
+**Ready now, in parallel:** SB5, SC2, SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -99,6 +99,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 | SD1 | `@luismlorenzana/uma-server` 0.1.0 with `/auth`, the shared API guard (P54) | `1824879` (release `09f6d52`) |
 | SB2 | `uma-kit/roster`, the album engine and level rule, uma-kit 0.4.0 (P55) | `c518093` (release `f7f6e51`) |
 | SB3 | `uma-kit/album`, the shared album screens, art primitives and Uma picker, uma-kit 0.7.0 (P58) | `5579b32` (0.7.0 tag) |
+| SB6 | uma-racer on uma-kit 0.7.1: shared Stable/pickers, small faces and race busts (its D373); local acceptance under P60, [production deployment green](https://github.com/luismlorenzana/uma-racer/actions/runs/39145322463) | `4885baf` ([racer #120](https://github.com/luismlorenzana/uma-racer/pull/120)) |
 | SD2 | `uma-kit/auth` and `uma-kit/places`, uma-kit 0.5.0 (P56) | `b9247da` (release `8b3e26b`) |
 | SE2 | Shared content loading and proxy, uma-kit 0.6.0 and uma-server 0.2.0 (P57) | `5aaeb93` (release `8ad4354`) |
 | SB1 | `outfit-faces`: a face crop per outfit in uma-data 1.1.0 | `516cb84` (release `11cf2ea880df`) |
