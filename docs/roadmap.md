@@ -22,8 +22,9 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
 - **Phase B:** in progress (2026-10-17). SB1 shipped the `outfit-faces` art family in uma-data 1.1.0 (P52), SB2
   shipped `uma-kit/roster` in uma-kit 0.4.0 (P55), and SB3 shipped `uma-kit/album` in uma-kit 0.7.0 (P58); SB4 and
   SB6 move the two games onto it.
-- **Phase C:** in progress (2026-10-16). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53);
-  uma-rpg's SC3 and uma-racer's SC5 move onto it, and SC2 can now build `uma-kit/work`'s screens on SB3.
+- **Phase C:** in progress (2026-10-18). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53),
+  and uma-rpg adopted it in SC3. SC2 adds `uma-kit/work`'s shared screens in uma-kit 0.8.0 (P61); SC4 and SC5 move
+  the games onto those screens, with SC5 also adopting the shared engine.
 - **Phase D:** in progress (2026-10-16). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard
   (P54), and SD2 uma-kit 0.5.0 with `/auth` and `/places` (P56); SD3 and SD4 move the games onto them.
 - **Phase E:** in progress (2026-10-17). SE2 shipped shared content loading: uma-kit 0.6.0 and uma-server 0.2.0

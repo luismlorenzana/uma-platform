@@ -3,7 +3,7 @@
 // uma-data behind `/content`'s.
 import { readdirSync, readFileSync } from 'node:fs'
 
-for (const entry of ['ui', 'shell', 'hub', 'roster', 'album', 'auth', 'places', 'content']) await import(`@luismlorenzana/uma-kit/${entry}`)
+for (const entry of ['ui', 'shell', 'hub', 'roster', 'album', 'work', 'auth', 'places', 'content']) await import(`@luismlorenzana/uma-kit/${entry}`)
 
 // `/auth` may name `firebase` only in `import()`: a static import would put the SDK in every game's startup bundle.
 const auth = new URL('../dist/auth/', import.meta.url)

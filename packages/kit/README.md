@@ -12,6 +12,7 @@ The games stay their own: rules, screens, saves and which places exist.
 | `@luismlorenzana/uma-kit/hub` | `HubMap` (canvas, place links, swipe), `HubCanvas`, `PlaceTargets`, `Pips`, the grid, terrain, palettes and markers |
 | `@luismlorenzana/uma-kit/roster` | Pure album queries, level/work ordering, master-data row projection and device preferences |
 | `@luismlorenzana/uma-kit/album` | Injected Uma art, `FaceTile`/`UmaBust`/`UmaChibi`, `AlbumChrome`, the virtual `AlbumGrid`, album preferences and `UmaPicker` |
+| `@luismlorenzana/uma-kit/work` | `WorkProvider`, engine selectors, compact `SlotRow`/`PeekRow`, queues, speed-up and recall, `FacilityHeader`, `TargetsStrip`, `StoppedQueueCard`, `SizeChips` and `JobSheet` (SC2) |
 | `@luismlorenzana/uma-kit/auth` | Google sign-in through Firebase, loaded only by `import()`: `AuthProvider`, `useAuth`, `loadAuth`, `idToken`, `signIn`, `signOut` (0.5.0, SD2) |
 | `@luismlorenzana/uma-kit/places` | The screens around the game, as frames: `BootGates`, `UpdateNotice` and the update lifecycle, `AccountPage`, `ShelfView`, `ExchangeRows`, `ProfileFrame`, `UnlockConfirm` (0.5.0, SD2) |
 | `@luismlorenzana/uma-kit/content` | Master data and art through the game's API: `createContentClient`, `ContentProvider`, `useContent`, `useArtUrl`, `usePackUrl`, `imagePath`, `AtlasSprite`, `contentProblem` (0.6.0, SE2) |
@@ -85,6 +86,91 @@ function Stable() {
   chips are callbacks, so game state stays in the game.
 - Every visible word has an English default in `ALBUM_WORDS`; pass `words` for game vocabulary such as a work-level
   name. `UmaPicker` uses `byLevel` unless a work picker passes `workOrder`.
+
+## Work (`/work`)
+
+Install the optional peer `@luismlorenzana/uma-work@0.1.0` when using this subpath. It reads the game's engine state
+directly; a game supplies its `WorkEnv`, callbacks, names and art, rather than filling a separate set of view models.
+
+```tsx
+import {
+  WorkProvider, WorkArtProvider, FacilityHeader, SlotRow, JobSheet, readJobQuery,
+} from '@luismlorenzana/uma-kit/work'
+
+<WorkArtProvider art={{ Item: ({ id, size }) => <ItemIcon id={id} size={size} /> }}>
+  <WorkProvider state={state} now={now} env={workEnv} actions={workActions}
+    names={{ uma: umaName, item: itemName, place: placeName }}
+    words={{ workLevel: 'Craft Level', workLevelLabel: 'Craft Lv {level}' }}
+    renderMoney={amount => <Money amount={amount} />}>
+    <FacilityHeader building={building} />
+    {slots.map(slot => <SlotRow key={slot.slot} slot={slot} repeat
+      onStart={() => openJobLink(slot)} onQueue={outfitId => openQueueLink(slot, outfitId)} />)}
+    <JobSheet query={readJobQuery(searchParams)} building={building} title={title} rows={candidateRows}
+      request={(item, count) => ({ kind: workKind, item, count })}
+      initialJob={firstRecipe} sizeRule={{ mode: 'count', sizes: [1, 4, 8, 20, 40] }}
+      renderWhat={({ outfitId, job, onChange }) => <RecipePicker outfitId={outfitId} value={job} onChange={onChange} />}
+      onClose={closeJobLink} />
+  </WorkProvider>
+</WorkArtProvider>
+```
+
+- **`WorkProvider`** takes `state`, integer-millisecond `now`, `env`, `actions`, optional `names`, `words`,
+  `describeRequest`, `formatRefusal`, `renderMoney` and `ticketOffer(state, count)`. Wrap it in the existing
+  `AlbumArtProvider` and `MotionRoot`; faces are SB3's `FaceTile`. `WorkArtProvider.Item` receives `{ id, size }`.
+  `useWorkView()` exposes selectors built once for that state/clock/env. Queue projection settles all workers in the
+  engine's order, without collecting their outputs, so warnings account for competing stock.
+- **`actions`** can supply `collect({ outfitId })`, `repeat({ outfitId })`, `speedUp({ outfitId, startedAt, tickets })`,
+  `finish({ outfitId, startedAt })`, `buyAndFinish({ outfitId, startedAt, tickets, quote })`, `recall({ outfitId })`,
+  `start({ outfitId, slot, request })`, `queue(engineQueueInput)`, `unqueue({ outfitId, index })`,
+  `upgrade({ building })`, `restart({ outfitId })` and `dismiss({ outfitId })`. Missing actions are unavailable.
+  Repeat owns its Collect + Repeat sequence; restart owns restoring the complete dropped queue. The callbacks go
+  through the game's real operation port, which must recheck against current state. Request builders use the same
+  kinds registered in `env`; a game's typed adapter narrows the neutral `WorkRequest` at its operation boundary.
+- A callback returns `void` or `{ kind: 'done', message? }` on success, an engine `Refusal` or
+  `{ kind: 'say', message }` without success, or `{ kind: 'ask', message, confirm }` to ask again with new numbers.
+  `confirm` returns the same answer shape. A rejected callback shows its error message (or the default failure
+  sentence). `useTap` prevents concurrent taps across the provider; `TapNoteLine` draws the answer and confirmation.
+- **`SlotRow` props:** `slot`, optional `what: { name, icon? }`, `startTo`/`onStart`, `queueTo`/`onQueue`,
+  `startLabel`, and `repeat`. It reads its own card from the provider. `PeekRow` has the same props at the smaller
+  side-panel size. Links use the game's router; callbacks allow another navigation scheme. A new entry closes the
+  previous entry's controls, including when Finish immediately starts a queue. Collect counts span every entry.
+- **`JobSheet` props:** `query: JobQuery | null`, `building`, optional `room`, `title`, `rows`, `request(job, count)`,
+  `renderWhat({ outfitId, job, count, onChange })`, `onClose`, and optional `onDone`, `initialJob(outfitId)`,
+  `sizeRule`, `maxCount`, `disabled(row)`, `picker`, `renderPreview(preview, selection)` and `empty`.
+  `picker` accepts the album's facets, sorts, order, descriptions, badges, chips and words. It uses `UmaPicker` with
+  `workOrder` by default. The game supplies candidates and any additional eligibility rule (e.g. Free only); a queue
+  fixes its named worker. Recipe choices are a render prop. Planning, stock, inputs, EXP and start/queue refusals
+  come from the engine. EXP stays in the game's units; `renderPreview` can format it and add shortfall links.
+  Selection survives clock ticks; another link opens a fresh selection.
+- **Links:** `jobQuery`, `readJobQuery`, `withoutJobQuery`, `inAppPath` and `JOB_QUERY_KEYS` support
+  `?job=…&uma=…&count=…&queue=1&slot=…&back=…`. A present, empty `job` opens an unselected sheet. Back handling
+  stays in `onClose`/`onDone`; closing preserves unrelated query fields such as `peek`. Return paths must be in-app.
+- **`SizeChips`** takes `start`, `itemSeconds`, `max`, `value`, `onChange`, optional `heading` and `rule`.
+  `rule.mode` is `count` or `duration`; `sizes` can be sparse, including ×40. A duration rule may supply
+  `recommend(start, cappedItemSeconds, max) → { size, label, overnight?, idleMs? }`. The game calculates fitting to
+  check-ins; the kit displays the chosen mark, duration and idle time. Keyboard arrows move among the radio chips.
+- **Buying tickets:** `ticketOffer` returns `{ price, label, refusal? }`, or null when the game does not sell them.
+  `buyAndFinish` must recheck the entry's `startedAt`, the price and stock before charging; the kit never performs an
+  economy operation itself. Finish uses the callback named `finish`, or `speedUp` with the required count. Wasting
+  part of a ticket and buying tickets both require an explicit confirmation.
+- **Other pieces:** `QueueChips` edits order/removes requests; `QueueLine` and `QueueCount` only show them.
+  `RecallSheet` and `RecallPreviewLines` read the engine's real recall receipt. `FacilityHeader` combines
+  `PlaceStats` and `UpgradeButton`, using the game's building table and money renderer. `TargetsStrip` takes authored
+  `{ id, item, short, label, locked?, to?, onPick? }[]`; target planning stays in the game. `StoppedQueueCard` takes
+  `outfitId`, optional `onDone` and `children` for game-owned recovery suggestions such as buying or making inputs.
+- **Pure exports:** `workView`, `projectWork`, `heldCard`, `slotCards`, `speedUpModel`, `recallPreview`, `queueChips`,
+  `sizeChipsView`, `upgradeView`, `chooseSlot`, `shortItems`, `durationText`, `workWords` and `itemsList`.
+  The work subpath loads in Node without Phaser, Firebase, or uma-data. jsdom is a development-only dependency for
+  testing real React actions, confirmation flows, and the entry-change safeguard.
+
+### Adoption notes (SC4 and SC5)
+
+SC4 wraps the RPG's existing SC3 state/`WorkEnv`; its callback adapter maps wallet tickets, Laurels and the four kinds.
+Its gear and gem grids fill `renderWhat`; refining passes count sizes up to ×40. SC5 first adopts `uma-work` and maps
+the old `farmExp` entry/plan field to `exp`; it can then replace its local work pieces with these exports. Check-ins,
+suggestions, Speed Up All, the planner and purchase rules stay in the racer. Both use their existing album art
+provider, injected item art, and the provider's words for their own level labels. Adoption/deploys remain separate
+game packets.
 
 ## Getting in and the places (`/auth`, `/places`)
 
