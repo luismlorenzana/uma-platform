@@ -64,7 +64,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Phase D: places, profile and getting in** | | | | | | |
 | SD1 | `@luismlorenzana/uma-server`: the NestJS auth guard | uma-platform | Either | M | — | Done (`1824879`, 0.1.0) |
 | SD2 | `uma-kit/auth` and `uma-kit/places`: boot gates, Account, Warehouse, Exchange, profile | uma-platform | Either | L | — | Done (`b9247da`, 0.5.0) |
-| [SD3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SD3-rpg-places.md) | uma-rpg on SD1 and SD2 | uma-rpg | Either | M | SD1, SD2 | Ready (uma-server 0.1.0, uma-kit 0.5.0) |
+| SD3 | uma-rpg on SD1 and SD2 | uma-rpg | Either | M | SD1, SD2 | Done (`3ea66a4`) |
 | [SD4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SD4-racer-places.md) | uma-racer on SD1 and SD2 | uma-racer | Either | M | SD1, SD2 | Ready (uma-server 0.1.0, uma-kit 0.5.0) |
 | **Phase E: platform plumbing** | | | | | | |
 | [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
@@ -74,7 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SB4, SB5, SB6, SC2, SD3, SD4, SE1, SE3.
+**Ready now, in parallel:** SB4, SB5, SB6, SC2, SD4, SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -94,6 +94,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
 | SC3 | uma-rpg on `uma-work` 0.1.0: four kinds, save v22, Repeat and stopped queues (its D152) | `6063b95` |
+| SD3 | uma-rpg on uma-kit 0.7.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D153) | `3ea66a4` |
 | SD1 | `@luismlorenzana/uma-server` 0.1.0 with `/auth`, the shared API guard (P54) | `1824879` (release `09f6d52`) |
 | SB2 | `uma-kit/roster`, the album engine and level rule, uma-kit 0.4.0 (P55) | `c518093` (release `f7f6e51`) |
 | SB3 | `uma-kit/album`, the shared album screens, art primitives and Uma picker, uma-kit 0.7.0 (P58) | `5579b32` (0.7.0 tag) |
