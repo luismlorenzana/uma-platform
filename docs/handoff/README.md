@@ -57,10 +57,10 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SB6 | uma-racer on the kit album, and busts in races | uma-racer | Either | L | SB3 (SB1 for real faces) | Done (`4885baf`, uma-kit 0.7.1; deployed green) |
 | **Phase C: one work system** | | | | | | |
 | SC1 | `@luismlorenzana/uma-work`: the shared engine, from uma-racer's | uma-platform | Claude | L | — | Done (`ed446b8`, 0.1.0) |
-| [SC2](tasks/SC2-kit-work.md) | `uma-kit/work`: rows, queues, speed-up, recall, header, job sheet | uma-platform | Either | L | SC1, SB3 | Ready (uma-kit 0.7.0, uma-work 0.1.0) |
+| SC2 | `uma-kit/work`: rows, queues, speed-up, recall, header, job sheet | uma-platform | Either | L | SC1, SB3 | Done (`fe7e30f`, uma-kit 0.8.0) |
 | SC3 | uma-rpg on `uma-work`: kinds, save v22, the API | uma-rpg | Claude | L | SC1 | Done (`6063b95`) |
-| [SC4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC4-rpg-work-screens.md) | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Waiting |
-| [SC5](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SC5-racer-on-uma-work.md) | uma-racer on `uma-work` and `uma-kit/work` | uma-racer | Either | L | SC1, SC2 | Waiting |
+| [SC4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC4-rpg-work-screens.md) | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Ready (uma-kit 0.8.0, uma-work 0.1.0) |
+| [SC5](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SC5-racer-on-uma-work.md) | uma-racer on `uma-work` and `uma-kit/work` | uma-racer | Either | L | SC1, SC2 | Ready (uma-kit 0.8.0, uma-work 0.1.0) |
 | **Phase D: places, profile and getting in** | | | | | | |
 | SD1 | `@luismlorenzana/uma-server`: the NestJS auth guard | uma-platform | Either | M | — | Done (`1824879`, 0.1.0) |
 | SD2 | `uma-kit/auth` and `uma-kit/places`: boot gates, Account, Warehouse, Exchange, profile | uma-platform | Either | L | — | Done (`b9247da`, 0.5.0) |
@@ -74,7 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SC2, SE1, SE3.
+**Ready now, in parallel:** SC4, SC5, SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -93,6 +93,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 |---|---|---|
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
+| SC2 | `uma-kit/work`, the shared work screens in uma-kit 0.8.0 (P61); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39168986257), props and SC4/SC5 adoption notes in [the kit README](../../packages/kit/README.md#work-work); local racer proof at 390×844, scratch changes reverted | `fe7e30f` ([#33](https://github.com/luismlorenzana/uma-platform/pull/33)) |
 | SC3 | uma-rpg on `uma-work` 0.1.0: four kinds, save v22, Repeat and stopped queues (its D152) | `6063b95` |
 | SD3 | uma-rpg on uma-kit 0.7.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D153) | `3ea66a4` |
 | SD4 | uma-racer on uma-kit 0.6.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D372) | `7d2b757` (release `b20bb13`) |
