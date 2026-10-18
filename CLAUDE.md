@@ -12,7 +12,7 @@
 - **Local gcloud has two accounts, and the active one is the owner's work account. Never change it.** Scope every
   command with `CLOUDSDK_ACTIVE_CONFIG_NAME` and `CLOUDSDK_CORE_PROJECT`. Never run `gcloud config set …`.
 - Never type credentials into sign-in pages.
-- **"Both apps:" requests run here** ([docs/change-protocol.md](docs/change-protocol.md)): change the kit, test it in both
-  games (iPhone Simulator Home Screen app for anything at the screen's edges), release, then message the uma-rpg and
+- **"Both apps:" requests run here** ([docs/change-protocol.md](docs/change-protocol.md)): change the kit, test it locally in both
+  games (their checks and dev servers; never the iOS Simulator, P60), release, then message the uma-rpg and
   uma-racer sessions to pin it, or pin a game yourself when its session isn't running.
 - **Claude commits and pushes to `main`** in Conventional Commits style (owner, 2026-10-10). Delegated agents use a branch and a pull request. Check `git status` before every commit: no original-game content.

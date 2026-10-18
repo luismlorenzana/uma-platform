@@ -15,7 +15,7 @@
   - uma-rpg's: `docs/handoff/tasks/`, in its [queue](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/README.md).
   - uma-racer's: `docs/handoff/tasks/`, in its [queue](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/README.md).
 - **Who can take it:**
-  - **Claude:** needs the owner's machine (private content, the GCP bucket, the iOS Simulator) or a long refactor.
+  - **Claude:** needs the owner's machine (private content, the GCP bucket) or a long refactor.
   - **Either:** ChatGPT or a Claude session.
 - **Workers have full autonomy.** A worker follows the packet, decides what the packet leaves open (writing it under
   Decisions), verifies, delivers and **flags it done itself**.

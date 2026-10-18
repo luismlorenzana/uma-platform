@@ -59,7 +59,8 @@ model by hand.
    usage sketch.
 5. **Prove it in uma-racer before releasing,** whose engine already has this shape. Build the kit, copy it into a
    uma-racer worktree, and swap one building's page onto the kit's rows on a scratch change you don't commit. Check it
-   in the iOS Simulator's Home Screen app: start, queue, collect, speed up, recall. Revert.
+   locally in its dev server (a desktop browser at phone width; no iOS Simulator, P60): start, queue, collect, speed
+   up, recall. Revert.
 6. **Release:** a minor changeset; version and publish as the queue README says. Log a P-decision.
 
 ## Done when
@@ -67,7 +68,7 @@ model by hand.
 - [ ] `pnpm lint && pnpm test && pnpm build` pass. `check-dist` loads `/work`.
 - [ ] No string in `src/work/` names one game's places or levels ("Farm Level", "Craft Level", "Kitchen", "Forge")
       outside defaults in `words`.
-- [ ] The Simulator check in step 5 was done and described.
+- [ ] The local check in step 5 was done and described.
 - [ ] The new uma-kit version is published, and the P-decision is logged.
 
 ## Deliver

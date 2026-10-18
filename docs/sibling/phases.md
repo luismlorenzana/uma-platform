@@ -27,8 +27,8 @@ A dash means the game has nothing of its own there.
   - A uma-platform session builds the shared part, tests it inside both games, releases it, and moves uma-rpg onto it.
   - uma-racer's session moves uma-racer.
   - ChatGPT takes any pixel-art packet.
-- **Done means seen on the phone.** Every phase is checked in the iOS Simulator's Home Screen app, in light and dark,
-  as well as by each game's tests.
+- **Done means checked locally, then on the phone.** Each packet passes its game's tests and is looked at in the
+  local dev server; the owner checks the phone after the deploy. No session drives the iOS Simulator (P60).
 - **No forks.** A game that needs a different behaviour gets an option in the kit.
 
 ## Phase B: one Uma album

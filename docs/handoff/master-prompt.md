@@ -41,12 +41,12 @@ HOW TO WORK
     (cd apps/api && AUTH_MODE=disabled PORT=8091 pnpm exec nest start --watch)
     API_PROXY_TARGET=http://localhost:8091 pnpm --filter @rpg/web exec vite --port 5184
 - To try an unreleased kit build inside a game: build it (pnpm --filter @luismlorenzana/uma-kit build), copy its dist/
-  and theme.css over the game's installed copy (apps/web/node_modules/@luismlorenzana/uma-kit, resolved with pwd -P),
-  delete apps/web/node_modules/.vite, and restart the game's dev server. Never commit a pnpm link or a copied build.
-- Anything at the screen's edges (the frame, the bars, sheets) is checked in the iOS Simulator's Home Screen app, not
-  only a desktop browser. Steps: open the game in the Simulator's Safari, then ⋯ → Share → View More → Add to Home
-  Screen, and open it from the Home Screen. Check light and dark (xcrun simctl ui <device> appearance dark). iOS 26
-  sizes a Home Screen app differently from Safari (uma-rpg D149).
+  and theme.css over the game's installed copy (apps/web/node_modules/@luismlorenzana/uma-kit, resolved with pwd -P;
+  delete the old files first, as they're hard links into pnpm's store), delete apps/web/node_modules/.vite, and
+  restart the game's dev server. Never commit a pnpm link or a copied build.
+- Check your work locally: the packet's checks, then the changed screens in the game's dev server (a desktop browser
+  at phone width). Never drive the iOS Simulator (owner, 2026-10-18, P60): the owner checks the screen's edges on the
+  phone after the deploy, so say in your delivery when a change touches them.
 - Before delivering: the packet's checks, then the repo's pnpm lint && pnpm test && pnpm build.
 - Commits are Conventional Commits, with a body that says why.
 
