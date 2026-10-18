@@ -43,7 +43,7 @@ describe('additive native two-tile stage towers', () => {
     expect(pngRows(readFileSync(new URL('stages-compact.png',root)))).toEqual(pngRows(encodePng(atlas.w,atlas.h,atlas.px)))
     expect(frames.filter(f=>f.biome).every(f=>f.anchorY===28 && f.w===32 && f.h===32)).toBe(true)
     expect(frames.at(-1)!.img.px).not.toEqual(frames.at(-2)!.img.px)
-  })
+  }, 20_000) // Exhaustive packing/PNG comparison of 173 frames exceeds 5s on shared CI.
   it('retains the exact published 2.3.0 world sheet/index and every 4×4 structure preview', () => {
     const root=new URL('../../../../',import.meta.url)
     const frozen: Record<string,string> = {
