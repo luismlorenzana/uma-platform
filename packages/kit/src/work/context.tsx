@@ -29,18 +29,21 @@ interface WorkContextValue {
   readonly umaName: (id: string) => string; readonly itemName: (id: string) => string; readonly placeName: (id: string) => string
   readonly requestLabel: (request: import('@luismlorenzana/uma-work').WorkRequest) => RequestLabel
   readonly refusal: (refusal: Refusal) => string
+  readonly restartRefusal: (outfitId: string) => Refusal | null
   readonly money: (amount: number) => ReactNode
   readonly pending: boolean
   readonly acquire: () => boolean; readonly release: () => void
 }
 const WorkContext = createContext<WorkContextValue | null>(null)
 
-export function WorkProvider<S extends WorkState>({ state, now, env, actions, names = {}, words, ticketOffer, describeRequest, formatRefusal, renderMoney, children }: {
+export function WorkProvider<S extends WorkState>({ state, now, env, actions, names = {}, words, ticketOffer, describeRequest, formatRefusal, checkRestart, renderMoney, children }: {
   readonly state: S; readonly now: number; readonly env: WorkEnv<S>; readonly actions: WorkActions
   readonly names?: WorkNames; readonly words?: Partial<WorkWords>
   readonly ticketOffer?: (state: S, count: number) => TicketOffer | null
   readonly describeRequest?: WorkContextValue['requestLabel']
   readonly formatRefusal?: (refusal: Refusal) => string
+  /** Pure preview of the game's complete restart, including alternate slots or restored queues. */
+  readonly checkRestart?: (state: S, outfitId: string) => Refusal | null
   readonly renderMoney?: (amount: number) => ReactNode
   readonly children: ReactNode
 }) {
@@ -59,6 +62,7 @@ export function WorkProvider<S extends WorkState>({ state, now, env, actions, na
   })
   return <WorkContext.Provider value={{
     view, actions, copy, umaName, itemName, placeName, refusal, pending,
+    restartRefusal: (id) => checkRestart === undefined ? view.restart(id) : checkRestart(view.projection.current, id),
     requestLabel: describeRequest ?? ((request) => {
       const row = request as { readonly item?: string; readonly count?: number; readonly unlocks?: readonly unknown[] }
       return { name: row.item === undefined ? copy(row.unlocks?.length === 1 ? 'unlockOne' : 'unlocks', { n: row.unlocks?.length ?? 0 }) : itemName(row.item), item: row.item, count: row.count ?? row.unlocks?.length }

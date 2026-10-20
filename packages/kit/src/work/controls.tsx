@@ -5,7 +5,9 @@ import { useItemList, useTap, useWork, TapNoteLine } from './context.js'
 import type { RecallPreview, SpeedUpModel } from './model.js'
 import { type WorkCopy } from './words.js'
 
-export const WORK_BUTTON = 'font-display inline-flex min-h-11 items-center justify-center rounded-sm border border-hairline-strong bg-panel px-3 text-[14px] font-semibold disabled:opacity-45'
+const WORK_BUTTON_BASE = 'font-display inline-flex min-h-11 items-center justify-center rounded-sm border border-hairline-strong px-3 text-[14px] font-semibold disabled:opacity-45'
+export const WORK_BUTTON = `${WORK_BUTTON_BASE} bg-panel`
+export const WORK_PRIMARY_BUTTON = `${WORK_BUTTON_BASE} bg-accent text-accent-ink`
 
 export function speedUpQuestion(model: SpeedUpModel, copy: WorkCopy): string | null {
   if (model.state === 'buy') return copy(model.finish === 1 && model.wastedMinutes > 0 ? 'buyWasteOne' : model.buy === 1 ? 'buyAskOne' : 'buyAsk', {

@@ -7,7 +7,7 @@ import { Sheet } from '../ui/BottomSheet.js'
 import { ChevronRightIcon } from '../ui/icons/index.js'
 import { WorkItem } from './art.js'
 import { useTap, useWork, TapNoteLine } from './context.js'
-import { WORK_BUTTON } from './controls.js'
+import { WORK_PRIMARY_BUTTON } from './controls.js'
 import type { JobQuery } from './job-query.js'
 import type { SizeRule } from './model.js'
 import { SizeChips } from './SizeChips.js'
@@ -70,7 +70,7 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
     : actions.start!({ outfitId: input.outfitId, slot: input.slot, request: input.request }), done)
   return <>
     <Sheet open onClose={onClose} title={title} closeLabel={copy('close')} footer={<div className="space-y-1">
-      <button type="button" data-action="job-submit" className={`${WORK_BUTTON} w-full bg-accent text-accent-ink`} disabled={tap.pending || blocked !== null || operation === undefined}
+      <button type="button" data-action="job-submit" className={`${WORK_PRIMARY_BUTTON} w-full`} disabled={tap.pending || blocked !== null || operation === undefined}
         onClick={() => void submit()}>{preview === null ? copy(mode === 'queue' ? 'queueNext' : 'start') : copy('submit', { action: copy(mode === 'queue' ? 'queueNext' : 'start'), n: chosenCount, time: durationText(preview.ms) })}</button>
       {blocked !== null && <p data-kit="job-why" className="text-[13px] text-ink-soft">{blocked}</p>}<TapNoteLine tap={tap} />
     </div>}>
