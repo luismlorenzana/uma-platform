@@ -2,7 +2,7 @@
  "schemaVersion": 1,
  "cell": 32,
  "width": 320,
- "height": 1056,
+ "height": 1088,
  "frames": {
   "wheat": {
    "x": 0,
@@ -3209,6 +3209,96 @@
    "y": 1024,
    "name": "Speed Ticket",
    "kind": "ticket"
+  },
+  "tonic-1": {
+   "x": 0,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Warm-Up Tonic",
+   "kind": "tonic",
+   "grade": 1
+  },
+  "tonic-2": {
+   "x": 32,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Practice Tonic",
+   "kind": "tonic",
+   "grade": 2
+  },
+  "tonic-3": {
+   "x": 64,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Paddock Tonic",
+   "kind": "tonic",
+   "grade": 3
+  },
+  "tonic-4": {
+   "x": 96,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Gallop Tonic",
+   "kind": "tonic",
+   "grade": 4
+  },
+  "tonic-5": {
+   "x": 128,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Stride Tonic",
+   "kind": "tonic",
+   "grade": 5
+  },
+  "tonic-6": {
+   "x": 160,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Stretch Tonic",
+   "kind": "tonic",
+   "grade": 6
+  },
+  "tonic-7": {
+   "x": 192,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Spurt Tonic",
+   "kind": "tonic",
+   "grade": 7
+  },
+  "tonic-8": {
+   "x": 224,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Derby Tonic",
+   "kind": "tonic",
+   "grade": 8
+  },
+  "tonic-9": {
+   "x": 256,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Champion's Tonic",
+   "kind": "tonic",
+   "grade": 9
+  },
+  "tonic-10": {
+   "x": 288,
+   "y": 1056,
+   "w": 32,
+   "h": 32,
+   "name": "Legend's Tonic",
+   "kind": "tonic",
+   "grade": 10
   }
  }
 }

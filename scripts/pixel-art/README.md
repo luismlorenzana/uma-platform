@@ -6,10 +6,10 @@ Draws the Uma games' original pixel art from code: no dependencies, no hand-edit
 pnpm art:draw
 ```
 
-It writes all 320 material icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`), plus the Speed Ticket,
+It writes all 320 material icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`), the Speed Ticket and ten tonics,
 as 32×32 PNGs to
-`assets/items/<family>/<id>.png`, plus `assets/previews/items.png` (a 4× contact sheet) and
-`assets/previews/items.html` (named cards at 4× and 1×). The same code always draws the same pixels.
+`assets/items/<family>/<id>.png`, plus `assets/previews/items.png` (a 3× contact sheet) and
+`assets/previews/items.html` (named cards at 3× and 1×). The same code always draws the same pixels.
 
 ## How an icon is made
 
@@ -49,6 +49,21 @@ supplies the ungraded item, appended after all material families. Do not give ut
 `racer-marks-{1x,2x,4x}.png` shows all six on white/dark panels; `racer-ticket-items-2x.png` compares Speed Ticket,
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
+
+## Racer tonics (A04)
+
+`src/items/tonics.ts` paints ten native 32px stoppered herbal/sports flasks with a paper stride label, a grade-colour
+ladder and lower-body ribs. Ribbon, wax seal, bronze/silver/gold cap and final raised trim add structural progression;
+`drawIcon` supplies the same G9–10 glints as the other items. There are no potion auras or copied source images.
+
+The item builder appends a complete row after the Speed Ticket, never reuses the old row's empty cells, and writes
+`tonic-1` … `tonic-10` with `kind: tonic`, `grade`, `w` and `h`, alongside standalone PNGs in `assets/items/tonics/`.
+`items/legacy-2.9.0.json` freezes every prior frame's exact metadata and the full old sheet's RGBA hash.
+
+`items/tonic-previews.ts` writes `racer-tonics-{16,24,32,64,128}px.png` and labelled `racer-tonics.html`. Each sheet
+shows white above dark, G1–5, G6–10, then two existing dishes and the Speed Ticket. The HTML also uses real CSS
+16/24/32px images. Previews are original art and safe in git. Tests cover the old sheet, every new frame/painter/file,
+ten colour-independent structural variants, glint clearance, borders and repeatable comparison sheets.
 
 ## Laurel and Battle terrain (H31)
 
