@@ -238,6 +238,19 @@ const face = usePackUrl(enemy.face.path)
 - **Private packs** come from `/api/content/`; hash-named files are kept in Cache Storage too, index files are fetched
   fresh.
 - **uma-data loads on first use** (`import()`), never at import, so it stays out of the startup bundle.
+- **Complete offline boot (SE4):** `createContentRuntime({ ...clientOptions, store, readMetadata, parseMetadata,
+  prepare })` prepares a pinned release with game-owned metadata/shapes. Only a complete preparation is saved;
+  failures try the last complete snapshot, except 401/403. `load()` returns `{ value, client, origin }`, and `clear()`
+  cancels pending loads and revokes URLs without deleting persistent bytes or the snapshot. `contentSnapshotStore(key)`
+  tolerates unavailable localStorage; `metadataKey`, `cacheName` and `cacheKey(hash)` preserve a game's existing cache.
+- **Every set, atlas and image** uses the same size/full-SHA-256 verified cache, including disk hits. Required private
+  data calls `client.pack(path, { path, bytes, sha256 })` for the same guarantee. Unenveloped private indexes stay fresh;
+  existing hash-named `packUrl` caching is not a full-hash verification contract.
+- **URL lifetime:** `useArtUrl(pathOrFallbackPaths, optionalSource)` holds while displayed, clears a previous identity
+  immediately and ignores late completions. Imperative/canvas consumers call `client.hold(path)` before `artUrl`, release
+  after playback and `dispose()` at session end. The bounded LRU never revokes held or just-returned images; released
+  excess is trimmed. `urlLimit` configures the in-memory window. `AtlasFrame` draws an already-loaded responsive atlas
+  asset, with the same crop as `AtlasSprite`; neither copies a game component.
 - **`contentProblem(error)`** names what went wrong (`signed-out`, `not-allowed`, `missing`, `damaged`, `offline`,
   `failed`); the game says it in its own words.
 
