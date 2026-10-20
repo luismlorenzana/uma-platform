@@ -71,6 +71,8 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SE2 | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Done (`5aaeb93`, kit 0.6.0, server 0.2.0) |
 | [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Ready (uma-kit 0.6.0, uma-server 0.2.0) |
 | [SE4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE4-racer-content.md) | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Waiting |
+| **Art authoring (briefed by the games, delivered here)** | | | | | | |
+| A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; racer pin/deploy and game-side packet retirement stay with its session) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
@@ -94,6 +96,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
 | SC2 | `uma-kit/work`, the shared work screens in uma-kit 0.8.0 (P61); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39168986257), props and SC4/SC5 adoption notes in [the kit README](../../packages/kit/README.md#work-work); local racer proof at 390×844, scratch changes reverted | `fe7e30f` ([#33](https://github.com/luismlorenzana/uma-platform/pull/33)) |
+| A04 | Ten original 32px tonic item icons in uma-art 2.10.0 (P62); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39412839729), inline light/dark 1×/2×/4× and 16/24px chip previews in the code PR. All preceding art preserved; racer adoption is separate | `7ed5bce` ([#36](https://github.com/luismlorenzana/uma-platform/pull/36)) |
 | SC3 | uma-rpg on `uma-work` 0.1.0: four kinds, save v22, Repeat and stopped queues (its D152) | `6063b95` |
 | SD3 | uma-rpg on uma-kit 0.7.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D153) | `3ea66a4` |
 | SD4 | uma-racer on uma-kit 0.6.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D372) | `7d2b757` (release `b20bb13`) |
