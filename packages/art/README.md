@@ -4,9 +4,10 @@ Original art for the Uma games, drawn from code by `scripts/pixel-art` (`pnpm ar
 files by hand.
 
 - `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined),
-  then ungraded utility items (A02).
+  then the ungraded Speed Ticket (A02), then the ten graded tonics (A04).
 - `items/atlas.json`: `{ schemaVersion: 1, cell, width, height, frames }`, where `frames[itemId]` is
   `{ x, y, name, family, side, effect, grade, refined }`. Item ids follow uma-rpg's catalog (`docs/design/items.md`).
+  Tonics add `{ x, y, w, h, name, kind: 'tonic', grade }`; the existing ticket keeps its ungraded metadata.
 
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
@@ -68,6 +69,24 @@ resized bitmap. No game economy or ticket quantities live in the package.
 that order, on the account bar's white panel (top) and inverse dark stage (bottom). `racer-ticket-items-2x.png`
 compares the item to Wheat and Apple. `ui.html` labels every icon. H11's `ui.png` and `ui-1x.png` stay byte-identical.
 `ui/legacy-2.6.0.json` and tests freeze both preceding sheets' positions, metadata and RGBA bytes.
+
+## Racer tonic items (A04, 2.10.0)
+
+Ten native **32×32** frames, `tonic-1` … `tonic-10`, append as a complete grade row at **y=1056**, x=0…288.
+The items sheet is now **320×1088**, 331 frames. Every prior frame's position, metadata and RGBA pixels are
+unchanged, including the Speed Ticket and the empty cells beside it. Consumers read dimensions from JSON.
+
+The set uses one original, straight-shouldered stoppered flask with a large paper stride label. Herbal green liquid
+and labels progress through teal, blue, violet and rose to gold. Lower-body ribs distinguish grades within each
+finish; a neck ribbon appears at G4, a wax seal and metal cap at G7, silver at G8, gilding/shared legendary glints at
+G9–10, and raised cap/base trim at G10. No fantasy-potion glow or borrowed infusion art. Metadata is art identity
+only: names and grades, not recipes, costs or unlocks. Racer already looks up a tonic's own item id after pinning.
+
+Standalone originals are in `assets/items/tonics/`. `assets/previews/racer-tonics-{32,64,128}px.png` show exact
+1×/2×/4× on white above dark; each panel has G1–5, G6–10, then Honeycomb Cake, Apple Tart and Speed Ticket.
+The 16px/24px sheets and labelled `racer-tonics.html` additionally check the compact chip sizes. Tests pin every
+preceding item field/pixel, each fresh painter/standalone/atlas cutout, colour-independent structural differences,
+legendary glint clearance, transparent borders and deterministic comparison sheets. Other art families are unchanged.
 
 ## Star Gems and the Lapidary (H29, 2.8.0)
 

@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.10.0
+
+### Minor Changes
+
+- Append ten original 32px tonic item icons, graded 1–10, without moving or repainting any published item frame.
+
 ## 2.9.0
 
 ### Minor Changes

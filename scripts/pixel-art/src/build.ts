@@ -1,4 +1,4 @@
-// Builds every item icon: 32×32 PNGs in assets/items/<family>/, plus a 4× contact sheet and an HTML preview, and the
+// Builds every item icon: 32×32 PNGs in assets/items/<family>/, plus a 3× contact sheet and an HTML preview, and the
 // published atlas (packages/art/items: one PNG on a 32 px grid and its JSON index, P37).
 // Run from the repo root: pnpm art:draw
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url'
 import { hex } from './color.ts'
 import { FAMILIES } from './items/index.ts'
 import { speedTicketItem } from './items/tickets.ts'
+import { TONICS } from './items/tonics.ts'
+import { TONIC_PREVIEW_SIZES, tonicPreview, tonicPreviewHtml } from './items/tonic-previews.ts'
 import type { ItemIcon } from './items/types.ts'
 import { encodePng } from './png.ts'
 import { drawIcon, ICON_SIZE } from './icon.ts'
@@ -19,10 +21,11 @@ const SIZE = ICON_SIZE
 const rows: Uint8Array[][] = []
 // The atlas: ten grades across, one row per family side (raw, then refined), families in catalog order.
 const ATLAS_COLUMNS = 10
-const atlasRows = FAMILIES.length * 2 + 1
+const atlasRows = FAMILIES.length * 2 + 2
 const atlas = new Uint8Array(ATLAS_COLUMNS * SIZE * atlasRows * SIZE * 4)
 type ItemFrame = { x: number; y: number; name: string; family: string; side: string; effect: string; grade: number; refined: boolean }
   | { x: number; y: number; name: string; kind: 'ticket' }
+  | { x: number; y: number; w: number; h: number; name: string; kind: 'tonic'; grade: number }
 const frames: Record<string, ItemFrame> = {}
 function blit(px: Uint8Array, col: number, row: number): void {
   for (let y = 0; y < SIZE; y++) {
@@ -67,6 +70,20 @@ frames['speed-ticket'] = { x: 0, y: FAMILIES.length * 2 * SIZE, name: 'Speed Tic
 rows.push([ticket])
 cards.push(`<section><h2>Tickets</h2><div class="grid"><figure><img src="data:image/png;base64,${ticketPng.toString('base64')}" width="96" height="96" alt="Speed Ticket at 3×"><img class="x1" src="data:image/png;base64,${ticketPng.toString('base64')}" width="32" height="32" alt="Speed Ticket at 1×"><figcaption>Speed Ticket</figcaption></figure></div></section>`)
 
+// A04 gets a new complete row, including retaining the old utility row's empty cells verbatim.
+const tonicDir = join(OUT, 'tonics'), tonicRow = FAMILIES.length * 2 + 1
+if (TONICS.length !== ATLAS_COLUMNS || TONICS.some((item, col) => item.grade !== col + 1 || item.id !== `tonic-${col + 1}`)) throw new Error('Expected tonic-1…10 in grade order')
+mkdirSync(tonicDir, { recursive: true })
+const tonicPixels = TONICS.map((item, col) => {
+  const px = drawIcon(item), png = encodePng(SIZE, SIZE, px)
+  blit(px, col, tonicRow)
+  frames[item.id] = { x: col * SIZE, y: tonicRow * SIZE, w: SIZE, h: SIZE, name: item.name, kind: 'tonic', grade: item.grade }
+  writeFileSync(join(tonicDir, `${item.id}.png`), png)
+  return px
+})
+rows.push(tonicPixels)
+cards.push(`<section><h2>Tonics</h2><div class="grid">${TONICS.map((item, index) => card(item, `data:image/png;base64,${encodePng(SIZE, SIZE, tonicPixels[index]!).toString('base64')}`)).join('')}</div></section>`)
+
 const atlasDir = join(ROOT, 'packages', 'art', 'items')
 mkdirSync(atlasDir, { recursive: true })
 writeFileSync(join(atlasDir, 'atlas.png'), encodePng(ATLAS_COLUMNS * SIZE, atlasRows * SIZE, atlas))
@@ -74,6 +91,11 @@ writeFileSync(join(atlasDir, 'atlas.json'), `${JSON.stringify({ schemaVersion: 1
 
 const previews = join(ROOT, 'assets', 'previews')
 mkdirSync(previews, { recursive: true })
+for (const size of TONIC_PREVIEW_SIZES) {
+  const sheet = tonicPreview(size)
+  writeFileSync(join(previews, `racer-tonics-${size}px.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
+writeFileSync(join(previews, 'racer-tonics.html'), tonicPreviewHtml())
 const contact = contactSheet(rows, 3, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'items.png'), encodePng(contact.w, contact.h, contact.px))
 writeFileSync(
