@@ -1,179 +1,122 @@
-// Content in the app, the same in both games (uma-platform SE2): uma-platform's master data release through the game's
-// API (`/api/master/`), and the game's private packs (`/api/content/`), both with the owner's token. Built from
-// uma-rpg's `master.ts` and `art.tsx`, with uma-racer's habits where they're better: every release file's bytes are
-// checked against the manifest's SHA-256, kept in Cache Storage under that hash so art survives a restart, and a
-// failure is classified for the screen (`contentProblem`). uma-data loads on first use, so the startup bundle stays small.
-import type { ReleaseClient, ReleaseManifest } from '@luismlorenzana/uma-data'
+// Shared authenticated release/pack bytes and bounded held art URLs (SE2, hardened for SE4).
+import type { ReleaseClient, ReleaseFile, ReleaseManifest } from '@luismlorenzana/uma-data'
+import { defaultCache, releaseCacheKey, verifiedBytes } from './bytes.js'
+import { contentUrls } from './urls.js'
+export { releaseCacheKey } from './bytes.js'
 
-/** The bits of Cache Storage the client uses (`caches.open(…)`); tests pass a map. */
-export interface ContentCache {
-  match(key: string): Promise<Response | undefined>
-  put(key: string, response: Response): Promise<void>
-}
-
+export interface ContentCache { match(key: string): Promise<Response | undefined>; put(key: string, response: Response): Promise<void> }
 export interface ContentClientOptions {
-  /** The game's API base (default `/api`). */
   readonly base?: string
-  /** The owner's ID token; null with auth off or signed out. */
   readonly token: () => Promise<string | null>
-  /** The release channel to follow (default `latest`). */
   readonly channel?: string
-  /** Cache Storage for art, or null for memory only. Default: the `uma-kit-content` cache where the browser has one. */
   readonly cache?: ContentCache | null | Promise<ContentCache | null>
+  readonly cacheName?: string
+  /** Preserve an existing game's content-addressed cache key. */
+  readonly cacheKey?: (sha256: string) => string
   readonly fetch?: (input: string, init?: RequestInit) => Promise<Response>
-  /** Makes a blob URL (default `URL.createObjectURL`). */
   readonly objectUrl?: (blob: Blob) => string
+  readonly revokeUrl?: (url: string) => void
+  readonly urlLimit?: number
+  /** Previously verified snapshot, used by createContentRuntime for offline boot. */
+  readonly manifest?: ReleaseManifest
 }
-
 export interface ContentClient {
-  /** uma-data's release client over `/api/master/`, for the game's own sets. */
   release(): Promise<ReleaseClient>
-  /** The channel's manifest, loaded once per session (`refresh` forgets it). */
   manifest(): Promise<ReleaseManifest>
   refresh(): void
-  /** A blob URL for a release file (`atlases/…`, `art/…`), checked against the manifest and kept for the session. */
   artUrl(path: string): Promise<string>
-  /** A private pack file's bytes (`enemies.json`). */
-  pack(path: string): Promise<Uint8Array>
-  /** A blob URL for a private pack file, kept for the session; hash-named ones also in Cache Storage. */
+  /** Passing an envelope verifies and persistently caches immutable private bytes; indexes stay fresh. */
+  pack(path: string, file?: ReleaseFile): Promise<Uint8Array>
   packUrl(path: string): Promise<string>
+  hold(path: string): () => void
+  dispose(): void
 }
-
-/** A content request the API refused or couldn't answer. */
 export class ContentError extends Error {
   override readonly name = 'ContentError'
-  constructor(readonly path: string, readonly status: number | null, message = `Content returned ${status ?? 'no answer'} for ${path}`) {
-    super(message)
-  }
+  constructor(readonly path: string, readonly status: number | null, message = `Content returned ${status ?? 'no answer'} for ${path}`) { super(message) }
 }
-
-const CACHE_NAME = 'uma-kit-content'
 const TYPES: Readonly<Record<string, string>> = { webp: 'image/webp', png: 'image/png', avif: 'image/avif', json: 'application/json', mp3: 'audio/mpeg', ogg: 'audio/ogg' }
-
 export const contentType = (path: string): string => TYPES[path.slice(path.lastIndexOf('.') + 1).toLowerCase()] ?? 'application/octet-stream'
-
-/** A name carrying its content hash: `<stem>.<8 or more hex>.<ext>`. */
 export const isHashNamed = (path: string): boolean => /\.[a-f0-9]{8,64}\.[a-z0-9]+$/.test(path)
-
-/** The Cache Storage key for a release file: its SHA-256, so a file is stored once whatever its path or release. */
-export const releaseCacheKey = (sha256: string): string => `https://uma-kit.invalid/release/${sha256}`
-/** The Cache Storage key for a hash-named pack file: its path, which names its hash. */
 export const packCacheKey = (path: string): string => `https://uma-kit.invalid/pack/${path}`
-
 const encodePath = (path: string): string => path.split('/').map(encodeURIComponent).join('/')
-
-async function sha256Hex(bytes: Uint8Array): Promise<string | null> {
-  const subtle = globalThis.crypto?.subtle
-  if (subtle === undefined) return null
-  const digest = new Uint8Array(await subtle.digest('SHA-256', bytes as Uint8Array<ArrayBuffer>))
-  return Array.from(digest, (b) => b.toString(16).padStart(2, '0')).join('')
-}
-
-function defaultCache(): Promise<ContentCache | null> {
-  const storage = (globalThis as { caches?: CacheStorage }).caches
-  if (storage === undefined) return Promise.resolve(null)
-  return storage.open(CACHE_NAME).then(
-    (cache) => ({ match: (key: string) => cache.match(key), put: (key: string, response: Response) => cache.put(key, response) }),
-    () => null,
-  )
-}
-
-/** Remembers a promise per key; a failed one is forgotten so the next call tries again. */
-function memo<T>(): (key: string, make: () => Promise<T>) => Promise<T> {
-  const held = new Map<string, Promise<T>>()
-  return (key, make) => {
-    let value = held.get(key)
-    if (value === undefined) {
-      value = make()
-      value.catch(() => held.delete(key))
-      held.set(key, value)
-    }
-    return value
-  }
-}
 
 export function createContentClient(options: ContentClientOptions): ContentClient {
   const base = (options.base ?? '/api').replace(/\/+$/, '')
   const origin = (globalThis as { location?: { origin?: string } }).location?.origin ?? 'http://localhost'
   const absolute = /^https?:\/\//.test(base) ? base : `${origin}${base}`
   const doFetch = options.fetch ?? ((input: string, init?: RequestInit) => fetch(input, init))
-  const objectUrl = options.objectUrl ?? ((blob: Blob) => URL.createObjectURL(blob))
-  const cache: Promise<ContentCache | null> = Promise.resolve(options.cache === undefined ? defaultCache() : options.cache)
-  const headers = async (): Promise<Record<string, string>> => {
+  const cache = Promise.resolve(options.cache === undefined ? defaultCache(options.cacheName) : options.cache).catch(() => null)
+  const key = options.cacheKey ?? releaseCacheKey
+  const urls = contentUrls(options.objectUrl ?? ((blob) => URL.createObjectURL(blob)), options.revokeUrl ?? ((url) => URL.revokeObjectURL(url)), options.urlLimit ?? 320)
+  let disposed = false
+  const check = () => { if (disposed) throw new Error('Content load cancelled') }
+  const fetchBytes = async (route: string, path: string) => {
+    check()
     const token = await options.token()
-    return token ? { Authorization: `Bearer ${token}` } : {}
-  }
-
-  let releasePromise: Promise<ReleaseClient> | null = null
-  let manifestPromise: Promise<ReleaseManifest> | null = null
-  const artUrls = memo<string>()
-  const packUrls = memo<string>()
-
-  const release = (): Promise<ReleaseClient> => {
-    releasePromise ??= import('@luismlorenzana/uma-data').then(({ createFetchSource, createReleaseClient }) => createReleaseClient({
-      source: createFetchSource({ baseUrl: `${absolute}/master/`, init: async () => ({ headers: await headers() }), fetch: doFetch }),
-      ...(options.channel ? { channel: options.channel } : {}),
-    }))
-    releasePromise.catch(() => { releasePromise = null })
-    return releasePromise
-  }
-
-  const manifest = (): Promise<ReleaseManifest> => {
-    manifestPromise ??= release().then((client) => client.manifest())
-    manifestPromise.catch(() => { manifestPromise = null })
-    return manifestPromise
-  }
-
-  async function releaseBytes(path: string): Promise<Uint8Array> {
-    const current = await manifest()
-    const entry = current.files.find((file) => file.path === path)
-    if (entry === undefined) throw new ContentError(path, 404, `${path} isn't in the release`)
-    const store = await cache
-    const hit = await store?.match(releaseCacheKey(entry.sha256)).catch(() => undefined)
-    if (hit !== undefined) {
-      const bytes = new Uint8Array(await hit.arrayBuffer())
-      // A damaged copy is dropped and downloaded again.
-      if (bytes.byteLength === entry.bytes && (await sha256Hex(bytes)) === entry.sha256) return bytes
-    }
-    const bytes = await (await release()).file(current, path)
-    await store?.put(releaseCacheKey(entry.sha256), new Response(bytes as Uint8Array<ArrayBuffer>, { headers: { 'Content-Type': contentType(path) } })).catch(() => undefined)
-    return bytes
-  }
-
-  async function pack(path: string): Promise<Uint8Array> {
-    const response = await doFetch(`${absolute}/content/${encodePath(path)}`, { headers: await headers() }).catch((err: unknown) => {
-      throw new ContentError(path, null, err instanceof Error ? err.message : String(err))
+    const response = await doFetch(`${absolute}/${route}/${encodePath(path)}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} }).catch((error: unknown) => {
+      if (error instanceof ContentError) throw error
+      throw new ContentError(path, null, error instanceof Error ? error.message : String(error))
     })
     if (!response.ok) throw new ContentError(path, response.status)
-    return new Uint8Array(await response.arrayBuffer())
+    const bytes = new Uint8Array(await response.arrayBuffer()); check(); return bytes
   }
-
-  async function packBytes(path: string): Promise<Uint8Array> {
+  let releasePromise: Promise<ReleaseClient> | null = null
+  let manifestPromise: Promise<ReleaseManifest> | null = options.manifest ? Promise.resolve(options.manifest) : null
+  const files = new Map<string, ReleaseFile>(options.manifest?.files.map((file) => [file.path, file]))
+  const release = (): Promise<ReleaseClient> => {
+    check()
+    releasePromise ??= import('@luismlorenzana/uma-data').then(({ createReleaseClient }) => {
+      const source = { read: async (path: string) => {
+        const file = path.startsWith('files/') ? files.get(path.slice(6)) : undefined
+        return file ? verifiedBytes(file, () => fetchBytes('master', path), cache, key) : fetchBytes('master', path)
+      } }
+      const client = createReleaseClient({ source, ...(options.channel ? { channel: options.channel } : {}) })
+      const register = (manifest: ReleaseManifest) => { for (const file of manifest.files) files.set(file.path, file) }
+      const wrapped: ReleaseClient = { ...client,
+        manifest: async (version) => { const value = await client.manifest(version); register(value); return value },
+        set: (manifest, name) => { register(manifest); return client.set(manifest, name) },
+        art: (manifest) => { register(manifest); return client.art(manifest) },
+        file: (manifest, path) => { register(manifest); return client.file(manifest, path) },
+        load: async (version) => {
+          const current = await wrapped.manifest(version)
+          const { SET_NAMES, MASTER_DATA_KEYS } = await import('@luismlorenzana/uma-data')
+          const entries = await Promise.all(SET_NAMES.map(async (name) => [MASTER_DATA_KEYS[name], await wrapped.set(current, name)] as const))
+          return { manifest: current, data: Object.fromEntries(entries) as unknown as import('@luismlorenzana/uma-data').MasterData, art: await wrapped.art(current) }
+        },
+      }
+      return wrapped
+    })
+    releasePromise.catch(() => { releasePromise = null }); return releasePromise
+  }
+  const manifest = (): Promise<ReleaseManifest> => {
+    check(); manifestPromise ??= release().then((client) => client.manifest())
+    manifestPromise.catch(() => { manifestPromise = null }); return manifestPromise
+  }
+  const pack = (path: string, file?: ReleaseFile) => file
+    ? file.path !== path ? Promise.reject(new ContentError(path, 404, 'Pack envelope path mismatch')) : verifiedBytes(file, () => fetchBytes('content', path), cache, key)
+    : fetchBytes('content', path)
+  async function packBytes(path: string) {
     if (!isHashNamed(path)) return pack(path)
     const store = await cache
-    const hit = await store?.match(packCacheKey(path)).catch(() => undefined)
-    if (hit !== undefined) return new Uint8Array(await hit.arrayBuffer())
+    try { const hit = await store?.match(packCacheKey(path)); if (hit) return new Uint8Array(await hit.arrayBuffer()) } catch { /* Repair online. */ }
     const bytes = await pack(path)
-    await store?.put(packCacheKey(path), new Response(bytes as Uint8Array<ArrayBuffer>, { headers: { 'Content-Type': contentType(path) } })).catch(() => undefined)
+    try { await store?.put(packCacheKey(path), new Response(bytes as Uint8Array<ArrayBuffer>)) } catch { /* Memory only. */ }
     return bytes
   }
-
-  const blobUrl = (bytes: Uint8Array, path: string): string => objectUrl(new Blob([bytes as Uint8Array<ArrayBuffer>], { type: contentType(path) }))
-
+  const blob = (bytes: Uint8Array, path: string) => new Blob([bytes as Uint8Array<ArrayBuffer>], { type: contentType(path) })
   return {
-    release,
-    manifest,
-    refresh: () => { manifestPromise = null },
-    artUrl: (path) => artUrls(path, async () => blobUrl(await releaseBytes(path), path)),
-    pack,
-    packUrl: (path) => packUrls(path, async () => blobUrl(await packBytes(path), path)),
+    release, manifest, refresh: () => { manifestPromise = null },
+    artUrl: (path) => urls.load(path, async () => {
+      const current = await manifest()
+      if (!current.files.some((file) => file.path === path)) throw new ContentError(path, 404, `${path} isn't in the release`)
+      return blob(await (await release()).file(current, path), path)
+    }),
+    pack, packUrl: (path) => urls.load(`pack:${path}`, async () => blob(await packBytes(path), path)),
+    hold: (path) => urls.hold(path), dispose: () => { disposed = true; urls.dispose() },
   }
 }
-
-/** What went wrong, for the game's words: signed out, not the owner, missing, damaged, offline, or something else. */
 export type ContentProblem = 'signed-out' | 'not-allowed' | 'missing' | 'damaged' | 'offline' | 'failed'
-
-/** Classifies a content failure (uma-racer's diagnostics, without the words: each game says them its way). */
 export function contentProblem(error: unknown, online: boolean = (globalThis as { navigator?: { onLine?: boolean } }).navigator?.onLine ?? true): ContentProblem {
   const named = error as { name?: unknown; status?: unknown } | null
   const status = typeof named?.status === 'number' ? named.status : null

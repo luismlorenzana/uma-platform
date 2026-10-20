@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.9.0
+
+### Minor Changes
+
+- Add complete offline release snapshots, verified private-pack envelopes, compatible cache keys, cancellable held art URLs and responsive atlas frames for SE4. Keep data interpretation in each game.
+
 ## 0.8.0
 
 ### Minor Changes

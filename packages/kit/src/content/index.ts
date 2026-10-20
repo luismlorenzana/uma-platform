@@ -4,4 +4,5 @@ export {
   ContentError, contentProblem, contentType, createContentClient, isHashNamed, packCacheKey, releaseCacheKey,
   type ContentCache, type ContentClient, type ContentClientOptions, type ContentProblem,
 } from './client.js'
-export { AtlasSprite, ContentProvider, imagePath, useArtUrl, useContent, usePackUrl } from './art.js'
+export { AtlasSprite, AtlasFrame, atlasImageStyle, ContentProvider, imagePath, useArtUrl, useContent, usePackUrl, type AtlasAsset, type ArtSource } from './art.js'
+export { createContentRuntime, contentSnapshotStore, ContentFallbackError, type ContentSnapshotStore, type ContentVersion } from './runtime.js'
