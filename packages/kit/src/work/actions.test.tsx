@@ -11,6 +11,7 @@ import { WorkProvider, TapNoteLine, useTap, type WorkActions, type WorkAnswer } 
 import { SpeedUpControls } from './controls.js'
 import { JobSheet } from './JobSheet.js'
 import { SlotRow } from './SlotRow.js'
+import { StoppedQueueCard } from './StoppedQueueCard.js'
 import { AT, done, ENV, fresh, MINUTE, type TestRequest, type TestState } from './work.fixtures.js'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
@@ -133,6 +134,10 @@ describe('work actions', () => {
       request={(item, count): TestRequest => ({ kind: 'refine', item, count })} sizeRule={{ mode: 'count', sizes: [1, 4, 8, 20, 40] }}
       renderWhat={() => <p>Toy recipe</p>} onClose={() => {}} onDone={onDone} />
     await mount(wrap(sheet, state, { start: startAction }))
+    const submit = document.querySelector<HTMLButtonElement>('[data-action="job-submit"]')!
+    expect(submit.disabled).toBe(false)
+    expect(submit.classList.contains('bg-accent')).toBe(true)
+    expect(submit.classList.contains('bg-panel')).toBe(false)
     await click('[data-size="40"]')
     await mount(wrap(sheet, state, { start: startAction }, AT + MINUTE))
     expect(document.querySelector('[data-size="40"]')?.getAttribute('aria-checked')).toBe('true')
@@ -140,5 +145,37 @@ describe('work actions', () => {
     expect(startAction).toHaveBeenCalledWith({ outfitId: 'ada', slot, request: { kind: 'refine', item: 'toy', count: 40 } })
     expect(onDone).not.toHaveBeenCalled()
     expect(document.body.textContent).toContain('Changed stock.')
+  })
+
+  it('lets the game preview a complete restart in another free slot against settled state', async () => {
+    const first = done(start(fresh(), { outfitId: 'bee', slot, request: { kind: 'gather', item: 'twig', count: 1 } }, AT, ENV))
+    const working = done(queue(first, { outfitId: 'bee', add: { building: 'grove', request: { kind: 'gather', item: 'twig', count: 1 } } }, AT, ENV))
+    const state: TestState = { ...working, work: { ...working.work, ada: {
+      outfitId: 'ada', entries: [], slot: null, last: null, queue: [],
+      dropped: { at: AT, slot, requests: [{ kind: 'gather', item: 'twig', count: 2 }], short: [], refused: null },
+    } } }
+    const restart = vi.fn()
+    await mount(wrap(<StoppedQueueCard outfitId="ada" />, state, { restart }, AT + 30 * MINUTE))
+    expect(document.querySelector<HTMLButtonElement>('[data-action="restart"]')!.disabled).toBe(true)
+    const checkRestart = vi.fn((_current: TestState, _id: string) => null)
+    await mount(<WorkProvider state={state} now={AT + 30 * MINUTE} env={ENV} actions={{ restart }} checkRestart={checkRestart}>
+      <StoppedQueueCard outfitId="ada" />
+    </WorkProvider>)
+    expect(checkRestart).toHaveBeenCalledWith(expect.objectContaining({ coins: 100 }), 'ada')
+    expect(checkRestart.mock.calls.at(-1)![0].work.bee!.entries).toHaveLength(2)
+    expect(state.work.bee!.entries).toHaveLength(1)
+    expect(document.querySelector<HTMLButtonElement>('[data-action="restart"]')!.disabled).toBe(false)
+    await click('[data-action="restart"]')
+    expect(restart).toHaveBeenCalledExactlyOnceWith({ outfitId: 'ada' })
+
+    const refusal = { refused: true as const, code: 'blocked', message: 'Need more twigs.' }
+    const refused: TestState = { ...state, work: { ...state.work, ada: { ...state.work.ada!, dropped: { ...state.work.ada!.dropped!, refused: refusal } } } }
+    await mount(<WorkProvider state={refused} now={AT} env={ENV} actions={{ restart }} checkRestart={() => refusal}>
+      <StoppedQueueCard outfitId="ada" />
+    </WorkProvider>)
+    expect(document.querySelector<HTMLButtonElement>('[data-action="restart"]')!.disabled).toBe(true)
+    expect(document.body.textContent!.split(refusal.message)).toHaveLength(2)
+    await click('[data-action="restart"]')
+    expect(restart).toHaveBeenCalledTimes(1)
   })
 })

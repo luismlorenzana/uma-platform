@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.9.1
+
+### Patch Changes
+
+- f499301: Keep the work job sheet's primary button readable in both themes and let games preview their complete stopped-queue restart against settled state.
+
 ## 0.9.0
 
 ### Minor Changes

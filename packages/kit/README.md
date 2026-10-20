@@ -115,7 +115,7 @@ import {
 ```
 
 - **`WorkProvider`** takes `state`, integer-millisecond `now`, `env`, `actions`, optional `names`, `words`,
-  `describeRequest`, `formatRefusal`, `renderMoney` and `ticketOffer(state, count)`. Wrap it in the existing
+  `describeRequest`, `formatRefusal`, `renderMoney`, `ticketOffer(state, count)` and `checkRestart(state, outfitId)`. Wrap it in the existing
   `AlbumArtProvider` and `MotionRoot`; faces are SB3's `FaceTile`. `WorkArtProvider.Item` receives `{ id, size }`.
   `useWorkView()` exposes selectors built once for that state/clock/env. Queue projection settles all workers in the
   engine's order, without collecting their outputs, so warnings account for competing stock.
@@ -126,6 +126,9 @@ import {
   Repeat owns its Collect + Repeat sequence; restart owns restoring the complete dropped queue. The callbacks go
   through the game's real operation port, which must recheck against current state. Request builders use the same
   kinds registered in `env`; a game's typed adapter narrows the neutral `WorkRequest` at its operation boundary.
+  `checkRestart` previews that complete game operation against the settled state without mutating it; use it when
+  restart can choose another free slot or has further queue rules. Without it, the card checks the first request in
+  its original slot. The action must still recheck the latest state when tapped.
 - A callback returns `void` or `{ kind: 'done', message? }` on success, an engine `Refusal` or
   `{ kind: 'say', message }` without success, or `{ kind: 'ask', message, confirm }` to ask again with new numbers.
   `confirm` returns the same answer shape. A rejected callback shows its error message (or the default failure
