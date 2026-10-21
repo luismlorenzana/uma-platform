@@ -34,7 +34,7 @@ export const WORK_WORDS = {
   upgradeCost: '{amount} money', upgradeItem: '{item}: {have} held, {need} needed',
   upgradeSlots: '{n} slots', upgradeSpeed: 'Speed ×{speed}',
   size: '×{n}', sizeLabel: '×{n}, {time}', idle: '{time}, then free {idle}',
-  targets: 'For your targets', targetShort: '×{n}',
+  targets: 'For your targets', targetShort: '×{n}', targetGrade: 'G{grade}',
   submit: '{action} · ×{n} · {time}', queueFor: 'Queue for {uma}',
   input: '{item}: {have}/{need}', exp: '{n} EXP', unexpected: 'That didn’t work. Try again.',
 } as const

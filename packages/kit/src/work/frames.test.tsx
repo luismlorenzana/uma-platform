@@ -41,6 +41,14 @@ describe('shared work frames', () => {
     const shown = html(<><QueueChips outfitId="ada" /><FacilityHeader building="grove" /><RecallPreviewLines outfitId="ada" />
       <TargetsStrip targets={[{ id: 'target', item: 'toy', short: 2, label: 'Two toys needed', to: '/work?job=toy' }]} /></>, state)
     for (const text of ['Short 2 twig', 'Remove toy ×2 from the queue', '1 of 2 slots in use', 'Two toys needed', 'comes back']) expect(shown).toContain(text)
+    expect(shown).not.toContain('data-grade')
+  })
+  it('marks each target tile with its grade when the game gives one', () => {
+    const shown = html(<TargetsStrip targets={[
+      { id: 'g2', item: 'toy', short: 3, grade: 2, label: 'Toy G2' }, { id: 'g5', item: 'toy', short: 1, grade: 5, label: 'Toy G5' },
+    ]} />, fresh())
+    expect(shown).toMatch(/data-grade="2"[^>]*>G2</)
+    expect(shown).toMatch(/data-grade="5"[^>]*>G5</)
   })
   it('renders larger refining counts, ticket shortage and stopped queue recovery', () => {
     const state = fresh()

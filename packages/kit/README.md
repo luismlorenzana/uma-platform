@@ -159,7 +159,8 @@ import {
 - **Other pieces:** `QueueChips` edits order/removes requests; `QueueLine` and `QueueCount` only show them.
   `RecallSheet` and `RecallPreviewLines` read the engine's real recall receipt. `FacilityHeader` combines
   `PlaceStats` and `UpgradeButton`, using the game's building table and money renderer. `TargetsStrip` takes authored
-  `{ id, item, short, label, locked?, to?, onPick? }[]`; target planning stays in the game. `StoppedQueueCard` takes
+  `{ id, item, short, label, grade?, locked?, to?, onPick? }[]`; `grade` draws a "G3" chip (the `targetGrade` word) in
+  the tile's bottom-right corner, so one family's grades tell apart. Target planning stays in the game. `StoppedQueueCard` takes
   `outfitId`, optional `onDone` and `children` for game-owned recovery suggestions such as buying or making inputs.
 - **Pure exports:** `workView`, `projectWork`, `heldCard`, `slotCards`, `speedUpModel`, `recallPreview`, `queueChips`,
   `sizeChipsView`, `upgradeView`, `chooseSlot`, `shortItems`, `durationText`, `workWords` and `itemsList`.
