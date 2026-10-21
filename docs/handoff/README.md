@@ -59,7 +59,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SC1 | `@luismlorenzana/uma-work`: the shared engine, from uma-racer's | uma-platform | Claude | L | — | Done (`ed446b8`, 0.1.0) |
 | SC2 | `uma-kit/work`: rows, queues, speed-up, recall, header, job sheet | uma-platform | Either | L | SC1, SB3 | Done (`fe7e30f`, uma-kit 0.8.0) |
 | SC3 | uma-rpg on `uma-work`: kinds, save v22, the API | uma-rpg | Claude | L | SC1 | Done (`6063b95`) |
-| [SC4](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SC4-rpg-work-screens.md) | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Ready (uma-kit 0.8.0, uma-work 0.1.0) |
+| SC4 | uma-rpg on `uma-kit/work`'s screens | uma-rpg | Either | M | SC2, SC3 | Done (`c8bded0`; [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39590331919)) |
 | SC5 | uma-racer on `uma-work` and `uma-kit/work` | uma-racer | Either | L | SC1, SC2 | Done (`8967e24`, uma-kit 0.9.1, uma-work 0.1.0; production verified green) |
 | **Phase D: places, profile and getting in** | | | | | | |
 | SD1 | `@luismlorenzana/uma-server`: the NestJS auth guard | uma-platform | Either | M | — | Done (`1824879`, 0.1.0) |
@@ -76,7 +76,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SC4, SE1, SE3.
+**Ready now, in parallel:** SE1, SE3.
 
 ## Releases while packets run in parallel
 
@@ -93,6 +93,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| SC4 | uma-rpg's 11 Wilds facilities and quick looks on `uma-kit/work` 0.9.1, with RPG rules, saves, recipes, targets and D144 pickers retained (its D157); [production deployment green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39590331919) | `c8bded0` ([rpg #26](https://github.com/luismlorenzana/uma-rpg/pull/26)) |
 | SC5 | uma-racer on `@luismlorenzana/uma-work` 0.1.0 and `uma-kit/work` 0.9.1, with Racer's rules, saves and planning retained (its D377); [local acceptance and production deployment green](https://github.com/luismlorenzana/uma-racer/blob/main/docs/research/sc5-work/README.md) | `8967e24` ([racer #124](https://github.com/luismlorenzana/uma-racer/pull/124)) |
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
