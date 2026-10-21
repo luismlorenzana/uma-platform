@@ -19,16 +19,18 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
 - **Phase A:** done (2026-10-16). Both games run on `@luismlorenzana/uma-kit` (theme, primitives, shell, Hub map;
   0.2.0 fixed the iPhone's bottom band and docked the bar, 0.3.0 added the plaza crowd), with H31's art in uma-art
   2.9.0. Neither game forks the kit; changes go through a kit release.
-- **Phase B:** in progress (2026-10-17). SB1 shipped the `outfit-faces` art family in uma-data 1.1.0 (P52), SB2
-  shipped `uma-kit/roster` in uma-kit 0.4.0 (P55), and SB3 shipped `uma-kit/album` in uma-kit 0.7.0 (P58); SB4 and
-  SB6 move the two games onto it.
-- **Phase C:** in progress (2026-10-18). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53),
-  and uma-rpg adopted it in SC3. SC2 adds `uma-kit/work`'s shared screens in uma-kit 0.8.0 (P61); SC4 and SC5 move
-  the games onto those screens, with SC5 also adopting the shared engine.
-- **Phase D:** in progress (2026-10-16). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard
-  (P54), and SD2 uma-kit 0.5.0 with `/auth` and `/places` (P56); SD3 and SD4 move the games onto them.
-- **Phase E:** in progress (2026-10-17). SE2 shipped shared content loading: uma-kit 0.6.0 and uma-server 0.2.0
-  `/content` (P57); SE3 moves uma-rpg onto it, SE4 uma-racer after its SE1.
+- **Phase B:** done (2026-10-18). SB1 shipped the `outfit-faces` art family in uma-data 1.1.0 (P52), SB2
+  `uma-kit/roster` in uma-kit 0.4.0 (P55) and SB3 `uma-kit/album` in uma-kit 0.7.0 (P58). Both games run every Uma
+  list and picker on the kit album (uma-rpg SB4, uma-racer SB6), and both fight or race with busts (SB5, SB6).
+- **Phase C:** done (2026-10-21). SC1 shipped `@luismlorenzana/uma-work` 0.1.0, the one work engine (P53), and SC2
+  `uma-kit/work`'s screens in uma-kit 0.8.0 (P61; fixes in 0.9.1, P64). uma-rpg runs on both (SC3, SC4), and so does
+  uma-racer (SC5).
+- **Phase D:** done (2026-10-17). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard (P54),
+  and SD2 uma-kit 0.5.0 with `/auth` and `/places` (P56); both games get in, and draw Account, Warehouse, Exchange and
+  the profile, through them (SD3, SD4).
+- **Phase E:** in progress (2026-10-17). SE2 shipped shared content loading, uma-kit 0.6.0 and uma-server 0.2.0
+  `/content` (P57, hardened in P63), and uma-racer adopted it (SE4). Left: SE1 (uma-racer's phase 5, onto uma-data
+  and its art families) and SE3 (uma-rpg onto the shared content loading). SE5 (shared push) stays parked.
 - **Phases B to E:** briefed in [phases.md](sibling/phases.md), and broken into 21 self-contained packets with parallel
   tracks in [docs/handoff/](handoff/README.md) (P51). Ready when they were queued:
   - SA7, the plaza crowd in uma-racer;
