@@ -69,14 +69,14 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Phase E: platform plumbing** | | | | | | |
 | [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
 | SE2 | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Done (`5aaeb93`, kit 0.6.0, server 0.2.0) |
-| [SE3](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/handoff/tasks/SE3-rpg-content.md) | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Ready (uma-kit 0.6.0, uma-server 0.2.0) |
+| SE3 | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Done (`18dbd4b`, uma-kit 0.9.1, uma-server 0.2.0; [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39633132807)) |
 | SE4 | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Done (`ad15cf0`, [racer #123](https://github.com/luismlorenzana/uma-racer/pull/123); kit 0.9.0, [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39460142245)) |
 | **Art authoring (briefed by the games, delivered here)** | | | | | | |
 | A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; racer pin/deploy and game-side packet retirement stay with its session) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now, in parallel:** SE1, SE3.
+**Ready now:** SE1.
 
 ## Releases while packets run in parallel
 
@@ -93,6 +93,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| SE3 | uma-rpg on `uma-kit/content` 0.9.1 and `uma-server/content` 0.2.0, with its master adapter, private enemy allowlist, routes, cache rules and behavior retained (its D158); [production deployment green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39633132807) | `18dbd4b` ([rpg #28](https://github.com/luismlorenzana/uma-rpg/pull/28)) |
 | SC4 | uma-rpg's 11 Wilds facilities and quick looks on `uma-kit/work` 0.9.1, with RPG rules, saves, recipes, targets and D144 pickers retained (its D157); [production deployment green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39590331919) | `c8bded0` ([rpg #26](https://github.com/luismlorenzana/uma-rpg/pull/26)) |
 | SC5 | uma-racer on `@luismlorenzana/uma-work` 0.1.0 and `uma-kit/work` 0.9.1, with Racer's rules, saves and planning retained (its D377); [local acceptance and production deployment green](https://github.com/luismlorenzana/uma-racer/blob/main/docs/research/sc5-work/README.md) | `8967e24` ([racer #124](https://github.com/luismlorenzana/uma-racer/pull/124)) |
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
