@@ -81,6 +81,21 @@ and all six props on a review-only 12×22 page, with a connected road, no 2×2 b
 Laurel rectangle). Tests also check native sizes, unique masks/props, seam continuity, open wreath, saved pixels,
 deterministic painters and review-layout clearance. No game-specific layout or rules are shipped in the art package.
 
+## The Rift (H38)
+
+`src/buildings/rift.ts` appends `rift` after the Lapidary on a new `battle` buildings page: a torn lens of light,
+near-white lilac at the core and indigo at its torn edges, over a two-step cracked dais with leaning obsidian shards
+and four rim stones in the fronts' colours. It reuses the `rift` biome palette, paints its `glow()` two pixels clear
+of every edge and returns no smoke. `rift-2x.png` compares it to the Scenario Gate and Tier Finale on Battle ground;
+`battleHubMap` takes optional lots, and `rift-battle-hub-2x.png` puts the Rift in the Tier Finale's lot while
+`battle-hub-2x.png` keeps its default.
+
+`src/ui/rift.ts` paints the 16px `front/*` crests and 24px `achievement/*` badges at their own grids: wax seals with a
+pressed crest, the crown, and one shared banner whose six 12×12 pictograms tell the titles apart. They append below
+the A02 row (y=52, then 68/92/116), keeping the sheet 120 wide. `rift-marks-{1x,2x,4x}.png` shows them on white and
+dark chips. `testing/legacy-h38-2.10.0.json` and `rift.test.ts` freeze every older frame (the Rift's empty cell
+zeroed), check ids, positions, deterministic painters, edge clearance, crest silhouettes and distinct pictograms.
+
 ## D103 armor (H27)
 
 `src/gear/armor-pieces.ts` adds paired head/body/legs/arms pieces to rows 26–33, after `orb-dark`. Do not edit or

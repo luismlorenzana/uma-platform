@@ -73,6 +73,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SE4 | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Done (`ad15cf0`, [racer #123](https://github.com/luismlorenzana/uma-racer/pull/123); kit 0.9.0, [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39460142245)) |
 | **Art authoring (briefed by the games, delivered here)** | | | | | | |
 | A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; racer pin/deploy and game-side packet retirement stay with its session) |
+| H38 | The Rift's building, four front crests and eleven achievement badges in uma-art; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/a550358/docs/handoff/tasks/H38-rift-art.md) | uma-platform | Claude | M | — | Done (uma-art 2.11.0; the uma-rpg Rift page pins it) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 

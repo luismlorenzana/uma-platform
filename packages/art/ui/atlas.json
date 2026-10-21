@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 52,
+ "height": 140,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -178,6 +178,126 @@
    "h": 16,
    "group": "currency",
    "key": "laurel"
+  },
+  "front/iron": {
+   "x": 0,
+   "y": 52,
+   "w": 16,
+   "h": 16,
+   "group": "front",
+   "key": "iron"
+  },
+  "front/arcane": {
+   "x": 16,
+   "y": 52,
+   "w": 16,
+   "h": 16,
+   "group": "front",
+   "key": "arcane"
+  },
+  "front/duel": {
+   "x": 32,
+   "y": 52,
+   "w": 16,
+   "h": 16,
+   "group": "front",
+   "key": "duel"
+  },
+  "front/horde": {
+   "x": 48,
+   "y": 52,
+   "w": 16,
+   "h": 16,
+   "group": "front",
+   "key": "horde"
+  },
+  "achievement/seal-iron": {
+   "x": 0,
+   "y": 68,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "seal-iron"
+  },
+  "achievement/seal-arcane": {
+   "x": 24,
+   "y": 68,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "seal-arcane"
+  },
+  "achievement/seal-duel": {
+   "x": 48,
+   "y": 68,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "seal-duel"
+  },
+  "achievement/seal-horde": {
+   "x": 72,
+   "y": 68,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "seal-horde"
+  },
+  "achievement/rift-conquered": {
+   "x": 96,
+   "y": 68,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "rift-conquered"
+  },
+  "achievement/iron-will": {
+   "x": 0,
+   "y": 92,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "iron-will"
+  },
+  "achievement/arcane-purity": {
+   "x": 24,
+   "y": 92,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "arcane-purity"
+  },
+  "achievement/untouched": {
+   "x": 48,
+   "y": 92,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "untouched"
+  },
+  "achievement/swift-convergence": {
+   "x": 72,
+   "y": 92,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "swift-convergence"
+  },
+  "achievement/bestiary": {
+   "x": 96,
+   "y": 92,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "bestiary"
+  },
+  "achievement/crossover": {
+   "x": 0,
+   "y": 116,
+   "w": 24,
+   "h": 24,
+   "group": "achievement",
+   "key": "crossover"
   }
  }
 }

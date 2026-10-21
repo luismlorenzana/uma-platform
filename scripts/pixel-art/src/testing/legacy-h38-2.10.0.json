@@ -1,0 +1,534 @@
+{
+  "version": "2.10.0",
+  "source": "1b03101de5762ea82e64c97364d7526d22e96ca9",
+  "ui": {
+    "width": 120,
+    "height": 52,
+    "rgba": "eae76fed221f370d47424a9182663011c8ffc3c1e91e312f681003a7ee75628e",
+    "frames": {
+      "class/brawler": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "brawler"
+      },
+      "class/mage": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "mage"
+      },
+      "class/spellblade": {
+        "x": 48,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "spellblade"
+      },
+      "class/cleric": {
+        "x": 72,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "cleric"
+      },
+      "class/summoner": {
+        "x": 96,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "summoner"
+      },
+      "status/armor-break": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "armor-break"
+      },
+      "status/mind-break": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "mind-break"
+      },
+      "status/enfeeble": {
+        "x": 24,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "enfeeble"
+      },
+      "status/shatter": {
+        "x": 36,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "shatter"
+      },
+      "status/hex": {
+        "x": 48,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "hex"
+      },
+      "status/brave": {
+        "x": 60,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "brave"
+      },
+      "status/faith": {
+        "x": 72,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "faith"
+      },
+      "status/aegis": {
+        "x": 84,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "aegis"
+      },
+      "status/breaker": {
+        "x": 96,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "breaker"
+      },
+      "status/clarity": {
+        "x": 108,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "clarity"
+      },
+      "currency/prize-money": {
+        "x": 0,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "prize-money"
+      },
+      "currency/speed-ticket": {
+        "x": 16,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "speed-ticket"
+      },
+      "currency/uma-ticket": {
+        "x": 32,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "uma-ticket"
+      },
+      "tier/1": {
+        "x": 48,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "1"
+      },
+      "tier/2": {
+        "x": 60,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "2"
+      },
+      "tier/3": {
+        "x": 72,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "3"
+      },
+      "currency/laurel": {
+        "x": 84,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "laurel"
+      }
+    }
+  },
+  "buildings": {
+    "width": 288,
+    "height": 336,
+    "rgba": "16bc49e6f40dff92947f9eb1a94e8a933c8e2a7ac046f43c837a998a6a515f08",
+    "frames": {
+      "fields": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "orchard": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "fishery": {
+        "x": 96,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "herb-garden": {
+        "x": 144,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "vegetable-garden": {
+        "x": 192,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "mushroom-cave": {
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "sugar-grove": {
+        "x": 0,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "nut-grove": {
+        "x": 48,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "pantry": {
+        "x": 96,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "kitchen": {
+        "x": 144,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "smoke": {
+          "x": 38,
+          "y": 4
+        }
+      },
+      "monster-den": {
+        "x": 192,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "ley-spring": {
+        "x": 240,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "mine": {
+        "x": 0,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "crystal-cavern": {
+        "x": 48,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "quarry": {
+        "x": 96,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "meadow": {
+        "x": 144,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forest": {
+        "x": 192,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "fossil-dig": {
+        "x": 240,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "workbench": {
+        "x": 0,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forge": {
+        "x": 48,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 11,
+          "y": 2
+        }
+      },
+      "brawler-dojo": {
+        "x": 96,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "mage-tower": {
+        "x": 144,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "spell-blade-salle": {
+        "x": 192,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "cleric-chapel": {
+        "x": 240,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "summoner-circle": {
+        "x": 0,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "rangers-lodge": {
+        "x": 48,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "lancers-barracks": {
+        "x": 96,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "arcane-armory": {
+        "x": 144,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "knights-bastion": {
+        "x": 192,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "stable": {
+        "x": 240,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "party-hall": {
+        "x": 0,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "scenario-gate": {
+        "x": 48,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "warehouse": {
+        "x": 96,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "exchange": {
+        "x": 144,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "observatory": {
+        "x": 192,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "tier-finale": {
+        "x": 240,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "card-library": {
+        "x": 0,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "gym": {
+        "x": 48,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "racecourse": {
+        "x": 96,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44
+      },
+      "trophy-hall": {
+        "x": 144,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44
+      },
+      "lapidary": {
+        "x": 192,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      }
+    },
+    "cutouts": {
+      "scenario-gate": "1c9c943e16b77207ed6858f6a186c10d1b34ee3ce8f26e0484513cf177cc2dcf",
+      "tier-finale": "ff951d6798511d0527466091809ff2af51004dd017a7172f1622bf325f11a080"
+    }
+  }
+}

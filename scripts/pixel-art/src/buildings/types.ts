@@ -1,6 +1,6 @@
 import type { Sprite } from '../sprite.ts'
 
-export type Page = 'farmlands' | 'wilds' | 'learning' | 'town' | 'racing'
+export type Page = 'farmlands' | 'wilds' | 'learning' | 'town' | 'racing' | 'battle'
 
 /** What a painter reports back: points the game may animate (chimney smoke). */
 export interface PaintExtras {

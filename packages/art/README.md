@@ -17,14 +17,15 @@ files by hand.
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 41 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 42 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), four currency marks (16×16) and
-  three tier crests (12×12). The index is `{ schemaVersion: 1, width, height, frames }`, with
-  `{ x, y, w, h, group, key }` by `class/<class>`, `status/<key>`, `currency/<key>` or `tier/<1…3>`.
+- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
+  three tier crests (12×12), four Rift front crests (16×16) and eleven achievement badges (24×24). The index is
+  `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
+  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>` or `achievement/<key>`.
   Classes: Brawler, Mage, Spell Blade, Cleric and Summoner. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
   buffs gold-teal. Render at native size or a whole-number scale. Keep full class names beside emblems and full
@@ -126,6 +127,42 @@ order, on white chips (top) and dark chips (bottom). `battle-tiles-2x.png` shows
 `battle-hub-2x.png` composes Scenario Gate and Tier Finale with all six props. Its 12×22 layout is for review,
 not a game layout. Roads never close a 2×2 block; all furniture clears both footprints, names and paths.
 `testing/legacy-h31-2.8.0.json` freezes both preceding atlases. Game wiring and package adoption stay with Phase A.
+
+## The Rift (H38, 2.11.0)
+
+uma-rpg's end-of-tier event (its D161). Original art in the world atlas's `rift` biome palette (indigo, lilac and a
+`#cfb3ef` glow), so the Battle page building and the world map read as one place.
+
+`rift` appends to buildings at **(240, 288)**, 48×48, `anchorY: 44`, `page: battle`, no smoke: a tall torn lens of
+light over a cracked dark-stone dais, two leaning obsidian shards, floating rock chips and four rim stones lit steel,
+violet, crimson and amber (the fronts, left to right). Its glow is painted in and keeps two pixels off every edge.
+`battle` is a new buildings `page` value. The buildings sheet stays **288×336**, now 42 frames. uma-racer's
+`tier-finale` and every other frame keep their place, metadata and pixels; uma-rpg points its own `tier-finale` place
+at the `rift` frame.
+
+The `ui` sheet grows from 120×52 to **120×140**, 37 frames; the old 120×52 is unchanged.
+
+| y | Frames, left to right |
+|---|---|
+| 52 | `front/iron`, `front/arcane`, `front/duel`, `front/horde` (16×16, x = 0, 16, 32, 48) |
+| 68 | `achievement/seal-iron`, `seal-arcane`, `seal-duel`, `seal-horde`, `rift-conquered` (24×24, x = 0…96) |
+| 92 | `achievement/iron-will`, `arcane-purity`, `untouched`, `swift-convergence`, `bestiary` |
+| 116 | `achievement/crossover` |
+
+- **Front crests** differ by silhouette: a point-down broadsword (Iron), a long-rayed diamond star with two sparks
+  (Arcane), one horned mask (Duel), three horned masks in a pyramid (Horde).
+- **Seals:** a round wax seal in the front's colour with two ribbon tails, the crest pressed in. **Rift conquered** is
+  the set's only crown, its band holding the four front colours.
+- **Titles** share one swallow-tailed indigo banner on a gold rod and differ by pictogram: a gauntlet (Iron Will), a
+  violet drop (Arcane Purity), a heart under a halo (Untouched), a winged hourglass (Swift Convergence), an open book
+  with three claw marks (Bestiary), six pips in six hues (Crossover). Untouched is one badge for all four fronts;
+  show the front's crest beside it.
+- One frame per badge, no tints. Draw at native size or a whole-number scale (a cut-in at 4× holds up).
+
+Review `assets/previews/rift-2x.png` (Scenario Gate, Tier Finale, Rift on Battle ground), `rift-battle-hub-2x.png`
+(H31's review page with the Rift in the Tier Finale's lot) and `rift-marks-{1x,2x,4x}.png` (crests then badges on
+white and `#17202b` chips); `ui.html` labels each one. `src/testing/legacy-h38-2.10.0.json` freezes every prior
+`ui`/`buildings` frame and pixel.
 
 ## Gear rows in 2.0.0
 

@@ -52,17 +52,31 @@ for (const scale of [1, 2, 4]) {
   })
   writeFileSync(join(previews, `laurel-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
+// H38: the four front crests, then the eleven achievement badges, on white and dark chips, as laurel-marks lays out.
+const rift = frames.filter(f => f.group === 'front' || f.group === 'achievement')
+for (const scale of [1, 2, 4]) {
+  const cell = 24 * scale, sheet = new Img(rift.length * (cell + PAD) + PAD, 2 * (cell + PAD) + PAD).fill(BG)
+  for (const [row, color] of ['#ffffff', '#17202b'].entries()) rift.forEach((f, i) => {
+    const left = PAD + i * (cell + PAD), top = PAD + row * (cell + PAD)
+    sheet.copy(new Img(cell, cell).fill(hex(color)), left, top)
+    sheet.draw(f.img.scaled(scale), left + (cell - f.w * scale) / 2, top + (cell - f.h * scale) / 2)
+  })
+  writeFileSync(join(previews, `rift-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
 const itemSheet = new Img(3 * (64 + PAD) + PAD, 64 + PAD * 2).fill(CELL)
 const references = [FAMILIES[0]!.raw[0]!, FAMILIES[1]!.raw[0]!]
 ;[speedTicketItem(), ...references.map(drawIcon)].forEach((px, i) => itemSheet.draw(new Img(32, 32, px).scaled(2), PAD + i * (64 + PAD), PAD))
 writeFileSync(join(previews, 'racer-ticket-items-2x.png'), encodePng(itemSheet.w, itemSheet.h, itemSheet.px))
 const labels: Record<string, string> = { brawler: 'Brawler', mage: 'Mage', spellblade: 'Spell Blade', cleric: 'Cleric', summoner: 'Summoner',
   'armor-break': 'Armor Break', 'mind-break': 'Mind Break', enfeeble: 'Enfeeble', shatter: 'Shatter', hex: 'Hex', brave: 'Brave', faith: 'Faith', aegis: 'Aegis', breaker: 'Breaker', clarity: 'Clarity',
-  'prize-money': 'Prize Money', 'speed-ticket': 'Speed Ticket', 'uma-ticket': 'Uma Ticket', laurel: 'Laurels', '1': 'Tier 1', '2': 'Tier 2', '3': 'Tier 3' }
+  'prize-money': 'Prize Money', 'speed-ticket': 'Speed Ticket', 'uma-ticket': 'Uma Ticket', laurel: 'Laurels', '1': 'Tier 1', '2': 'Tier 2', '3': 'Tier 3',
+  iron: 'Iron front', arcane: 'Arcane front', duel: 'Duel front', horde: 'Horde front',
+  'seal-iron': 'Iron seal', 'seal-arcane': 'Arcane seal', 'seal-duel': 'Duel seal', 'seal-horde': 'Horde seal', 'rift-conquered': 'Rift conquered',
+  'iron-will': 'Iron Will', 'arcane-purity': 'Arcane Purity', untouched: 'Untouched', 'swift-convergence': 'Swift Convergence', bestiary: 'Bestiary', crossover: 'Crossover' }
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
 const examples = (group: string) => frames.filter(f => f.group === group).map((f) => `<div class="example" role="img" aria-label="${labels[f.key]}${f.group === 'status' ? ', 2 stacks' : ''}"><img src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt=""><span>${f.group === 'status' ? '2' : labels[f.key]}</span></div>`).join('')
 const cards = frames.map((f) => `<figure><img src="${uri(f.img)}" width="${f.w * 3}" height="${f.h * 3}" alt="${f.id} at 3×"><img class="native" src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt="${f.id} at 1×"><figcaption>${labels[f.key]}</figcaption></figure>`).join('')
 writeFileSync(join(previews, 'ui.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Class emblems and status badges</title><style>
 :root{color-scheme:dark}body{margin:0;padding:12px;background:#0f141b;color:#e6e9ee;font:14px/1.4 system-ui,sans-serif}h1{font-size:20px}h2{font-size:16px}p,figcaption{color:#a2afbf}img{image-rendering:pixelated;display:block;flex:none}.examples,.cards{display:flex;flex-wrap:wrap;gap:8px}.example{display:flex;align-items:center;gap:6px;background:#18202a;padding:8px;border-radius:4px;min-height:28px}figure{margin:0;padding:10px;background:#18202a;border-radius:5px;display:grid;justify-items:center;align-content:end;gap:8px}figcaption{font-size:11px;text-align:center}.native{margin:auto}
-</style></head><body><h1>UI marks, emblems and badges</h1><p>Original pixel marks at native size; full names remain in accessible labels. Debuffs use red-violet badges, buffs gold-teal.</p><h2>Classes, 1×</h2><div class="examples">${examples('class')}</div><h2>Statuses and stacks, 1×</h2><div class="examples">${examples('status')}</div><h2>Currencies, 1×</h2><div class="examples">${examples('currency')}</div><h2>Tiers, 1×</h2><div class="examples">${examples('tier')}</div><h2>All icons, 3× and 1×</h2><div class="cards">${cards}</div><h2>Racer marks on white and dark panels</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="racer-marks-${scale}x.png" alt="Prize Money, Speed Ticket, Uma Ticket, Tier 1, Tier 2, Tier 3">`).join('')}<h2>Speed Ticket, Wheat and Apple, 2×</h2><img src="racer-ticket-items-2x.png" alt="Speed Ticket beside existing Wheat and Apple item icons"></body></html>`)
+</style></head><body><h1>UI marks, emblems and badges</h1><p>Original pixel marks at native size; full names remain in accessible labels. Debuffs use red-violet badges, buffs gold-teal.</p><h2>Classes, 1×</h2><div class="examples">${examples('class')}</div><h2>Statuses and stacks, 1×</h2><div class="examples">${examples('status')}</div><h2>Currencies, 1×</h2><div class="examples">${examples('currency')}</div><h2>Tiers, 1×</h2><div class="examples">${examples('tier')}</div><h2>Rift fronts, 1×</h2><div class="examples">${examples('front')}</div><h2>Achievements, 1×</h2><div class="examples">${examples('achievement')}</div><h2>All icons, 3× and 1×</h2><div class="cards">${cards}</div><h2>Racer marks on white and dark panels</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="racer-marks-${scale}x.png" alt="Prize Money, Speed Ticket, Uma Ticket, Tier 1, Tier 2, Tier 3">`).join('')}<h2>Rift fronts and achievements on white and dark chips</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="rift-marks-${scale}x.png" alt="Iron, Arcane, Duel and Horde front crests, then the four front seals, Rift conquered, Iron Will, Arcane Purity, Untouched, Swift Convergence, Bestiary and Crossover">`).join('')}<h2>Speed Ticket, Wheat and Apple, 2×</h2><img src="racer-ticket-items-2x.png" alt="Speed Ticket beside existing Wheat and Apple item icons"></body></html>`)
 console.log(`Wrote ${frames.length} ui icons (${atlas.w}×${atlas.h}) to ${relative(ROOT, dir)}; ids and native sizes checked`)

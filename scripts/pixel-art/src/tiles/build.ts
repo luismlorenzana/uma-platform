@@ -8,7 +8,7 @@ import { hex } from '../color.ts'
 import { encodePng } from '../png.ts'
 import { Sprite } from '../sprite.ts'
 import { MASKS } from './autotile.ts'
-import { battleHubMap } from './battle-map.ts'
+import { battleHubMap, RIFT_LOTS } from './battle-map.ts'
 import { autotileSeams, groundSeams } from './check.ts'
 import { groundTile } from './ground.ts'
 import { Img } from './image.ts'
@@ -100,6 +100,7 @@ for (const page of PAGES) {
   maps[page] = sampleMap(page, ground, layers, sprites)
   if (page === 'racing') maps['racing-hub'] = racingHubMap(ground, paths, sprites)
   if (page === 'battle') maps['battle-hub'] = battleHubMap(ground, paths, sprites)
+  if (page === 'battle') maps['rift-battle-hub'] = battleHubMap(ground, paths, sprites, RIFT_LOTS)
 }
 if (problems.length) {
   console.error(`Seam check failed:\n${problems.join('\n')}`)
@@ -156,7 +157,7 @@ const racing = maps.racing!.scaled(2)
 writeFileSync(join(previews, 'racing-tiles-2x.png'), encodePng(racing.w, racing.h, racing.px))
 const hub = maps['racing-hub']!.scaled(2)
 writeFileSync(join(previews, 'racing-hub-2x.png'), encodePng(hub.w, hub.h, hub.px))
-for (const name of ['battle', 'battle-hub']) {
+for (const name of ['battle', 'battle-hub', 'rift-battle-hub']) {
   const img = maps[name]!.scaled(2)
   writeFileSync(join(previews, `${name === 'battle' ? 'battle-tiles' : name}-2x.png`), encodePng(img.w, img.h, img.px))
 }

@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url'
 import { hex, type RGBA } from '../color.ts'
 import { encodePng } from '../png.ts'
 import { Sprite } from '../sprite.ts'
+import { groundTile } from '../tiles/ground.ts'
+import { GROUND as TERRAIN } from '../tiles/terrain.ts'
 import { BASE, GROUND, SIZE } from './kit.ts'
 import { PLACES } from './places.ts'
 import type { Page, PaintExtras } from './types.ts'
@@ -92,15 +94,16 @@ writeFileSync(join(atlasDir, 'atlas.json'), `${JSON.stringify({ schemaVersion: 1
 // ---------------------------------------------------------------------------------------------------------------
 // Previews: the contact sheet at 3×, then each Hub page mocked at 1× (195×350) and shown at 2×.
 
-const PAGES: Page[] = ['farmlands', 'wilds', 'learning', 'town', 'racing']
+const PAGES: Page[] = ['farmlands', 'wilds', 'learning', 'town', 'racing', 'battle']
 const GROUND_COLORS: Record<Page, [string, string]> = {
   farmlands: ['#5f9440', '#8a6a44'],
   wilds: ['#5d7a3e', '#7a6648'],
   learning: ['#4f8a52', '#9a9484'],
   town: ['#6a9446', '#a08a62'],
   racing: ['#5ca66c', '#b88b60'],
+  battle: ['#7c7854', '#a29d89'],
 }
-const TINTS: Record<Page, string> = { farmlands: '#2a2219', wilds: '#1c241a', learning: '#1a2030', town: '#262019', racing: '#192c24' }
+const TINTS: Record<Page, string> = { farmlands: '#2a2219', wilds: '#1c241a', learning: '#1a2030', town: '#262019', racing: '#192c24', battle: '#24231a' }
 
 const CELL = SIZE * 3
 const PAD = 8
@@ -161,6 +164,21 @@ const lapidary = image(3 * SIZE * 2 + 4 * PAD, SIZE * 2 + 2 * PAD, hex('#18251f'
   stamp(lapidary, d.px, PAD + i * (SIZE * 2 + PAD), PAD, 2)
 })
 writeFileSync(join(previews, 'lapidary-2x.png'), encodePng(lapidary.w, lapidary.h, lapidary.px))
+
+// H38: the Rift beside the two pale places it must not be mistaken for, at 2× on the Battle page's own ground tiles.
+const battleGround = [0, 1, 2, 3].map(v => groundTile(TERRAIN.battle, v))
+const rift = image(3 * SIZE * 2 + 4 * PAD, SIZE * 2 + 2 * PAD, [0, 0, 0, 255])
+for (let y = 0; y < rift.h; y++)
+  for (let x = 0; x < rift.w; x++) {
+    const tile = battleGround[(Math.floor(x / 32) + 3 * Math.floor(y / 32)) % 4]!
+    rift.px.set(tile.get(Math.floor(x / 2) % 16, Math.floor(y / 2) % 16), (y * rift.w + x) * 4)
+  }
+;['scenario-gate', 'tier-finale', 'rift'].forEach((id, i) => {
+  const d = drawn.find(p => p.place.id === id)
+  if (!d) throw new Error(`Missing Rift reference ${id}`)
+  stamp(rift, d.px, PAD + i * (SIZE * 2 + PAD), PAD, 2)
+})
+writeFileSync(join(previews, 'rift-2x.png'), encodePng(rift.w, rift.h, rift.px))
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`

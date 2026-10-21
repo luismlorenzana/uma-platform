@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { encodePng } from '../png.ts'
 import { Img } from '../tiles/image.ts'
 import { checkUi, drawUi, packUi, uiFrames, type UiFrame } from './atlas.ts'
-import { CLASSES, FRAME_SPECS, RACER_CURRENCIES, STATUSES, TIERS } from './spec.ts'
+import { ACHIEVEMENTS, CLASSES, FRAME_SPECS, FRONTS, RACER_CURRENCIES, STATUSES, TIERS } from './spec.ts'
 import { GLYPHS } from './statuses.ts'
 import { hash, savedAtlas } from '../testing/atlas.ts'
 import baseline from './legacy-2.6.0.json'
@@ -17,9 +17,10 @@ describe('shared UI atlas (H11, A02)', () => {
   it('has the five D86 classes and ten named statuses, at their native sizes', () => {
     expect(CLASSES).toEqual(['brawler', 'mage', 'spellblade', 'cleric', 'summoner'])
     expect(STATUSES).toEqual(['armor-break', 'mind-break', 'enfeeble', 'shatter', 'hex', 'brave', 'faith', 'aegis', 'breaker', 'clarity'])
-    expect(frames.map((f) => f.id)).toEqual([...CLASSES.map((c) => `class/${c}`), ...STATUSES.map((s) => `status/${s}`), ...RACER_CURRENCIES.map(c => `currency/${c}`), ...TIERS.map(t => `tier/${t}`), 'currency/laurel'])
+    expect(frames.map((f) => f.id)).toEqual([...CLASSES.map((c) => `class/${c}`), ...STATUSES.map((s) => `status/${s}`), ...RACER_CURRENCIES.map(c => `currency/${c}`), ...TIERS.map(t => `tier/${t}`), 'currency/laurel',
+      ...FRONTS.map(f => `front/${f}`), ...ACHIEVEMENTS.map(a => `achievement/${a}`)])
     expect(checkUi(frames)).toEqual([])
-    expect(frames.filter((f) => f.w === 24 && f.h === 24)).toHaveLength(5)
+    expect(frames.filter((f) => f.w === 24 && f.h === 24)).toHaveLength(16)
     expect(frames.filter((f) => f.group === 'status' && f.w === 12 && f.h === 12)).toHaveLength(10)
     expect(frames.filter((f) => f.group === 'currency' && f.w === 16 && f.h === 16)).toHaveLength(4)
     expect(frames.filter((f) => f.group === 'tier' && f.w === 12 && f.h === 12)).toHaveLength(3)
@@ -33,8 +34,8 @@ describe('shared UI atlas (H11, A02)', () => {
     }
   })
 
-  it('renders twenty-two distinct icons and transparent corners', () => {
-    expect(new Set(frames.map((f) => bytes(f.img).toString('base64'))).size).toBe(22)
+  it('renders thirty-seven distinct icons and transparent corners', () => {
+    expect(new Set(frames.map((f) => bytes(f.img).toString('base64'))).size).toBe(37)
     for (const { img } of frames) {
       expect([[0, 0], [img.w - 1, 0], [0, img.h - 1], [img.w - 1, img.h - 1]]
         .map(([x, y]) => img.get(x!, y!)[3])).toEqual([0, 0, 0, 0])
@@ -51,10 +52,11 @@ describe('shared UI atlas (H11, A02)', () => {
 
   it('packs native pixels without overlap and matches the checked-in index and PNG', () => {
     const { atlas, index } = packUi(frames), occupied = new Set<string>()
-    expect([atlas.w, atlas.h]).toEqual([120, 52])
-    for (const { id, img, group } of frames) {
+    expect([atlas.w, atlas.h]).toEqual([120, 140])
+    for (const { id, img, group, key } of frames) {
       const f = index[id]!
-      expect(f.y).toBe(group === 'class' ? 0 : group === 'status' ? 24 : 36)
+      const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
+      expect(f.y).toBe(group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36)
       expect(bytes(atlas.crop(f.x, f.y, f.w, f.h)).equals(bytes(img))).toBe(true)
       for (let y = f.y; y < f.y + f.h; y++) for (let x = f.x; x < f.x + f.w; x++) {
         const key = `${x},${y}`
@@ -63,7 +65,7 @@ describe('shared UI atlas (H11, A02)', () => {
       }
     }
     const root = new URL('../../../../packages/art/ui/', import.meta.url)
-    expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: 120, height: 52, frames: index })
+    expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: 120, height: 140, frames: index })
     // Different Node/zlib builds may compress identical pixels differently. Compare the saved artwork, not deflate.
     expect(bytes(savedAtlas('ui').img).equals(bytes(atlas))).toBe(true)
   })

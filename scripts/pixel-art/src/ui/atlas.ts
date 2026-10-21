@@ -4,7 +4,8 @@ import { Img } from '../tiles/image.ts'
 import { classEmblem } from './classes.ts'
 import { statusBadge } from './statuses.ts'
 import { currencyMark, tierCrest } from './racer.ts'
-import { CLASSES, CURRENCIES, FRAME_SPECS, STATUSES, TIERS, type FrameSpec } from './spec.ts'
+import { achievementBadge, frontCrest } from './rift.ts'
+import { ACHIEVEMENTS, CLASSES, CURRENCIES, FRAME_SPECS, FRONTS, STATUSES, TIERS, type FrameSpec } from './spec.ts'
 
 export type UiFrame = FrameSpec & { img: Img }
 export interface FrameIndex { x: number; y: number; w: number; h: number; group: FrameSpec['group']; key: string }
@@ -18,7 +19,9 @@ export function drawUi(spec: FrameSpec): Img {
     if (spec.key === 'laurel') laurelMark(s)
     else cutout = currencyMark(s, spec.key)
   }
-  else tierCrest(s, spec.key)
+  else if (spec.group === 'tier') tierCrest(s, spec.key)
+  else if (spec.group === 'front') frontCrest(s, spec.key)
+  else achievementBadge(s, spec.key)
   const img = new Img(spec.w, spec.h, s.render())
   cutout?.each((x, y) => img.set(x, y, [0, 0, 0, 0]))
   return img
@@ -41,14 +44,18 @@ export function checkUi(frames: readonly UiFrame[]): string[] {
 }
 
 export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<string, FrameIndex> } {
-  // Append below H11's 120×36 cutout. Never repack the published class/status rows.
-  const atlas = new Img(120, 52), index: Record<string, FrameIndex> = {}
+  // Append below H11's 120×36 cutout and A02's row. Never repack a published row; the width stays 120 (H31's guard).
+  // H38 adds the front crests at y=52 and the achievements five across from y=68.
+  const atlas = new Img(120, 140), index: Record<string, FrameIndex> = {}
   for (const { id, group, key, w, h, img } of frames) {
+    const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
     const x = group === 'class' ? CLASSES.indexOf(key as typeof CLASSES[number]) * 24
       : group === 'status' ? STATUSES.indexOf(key as typeof STATUSES[number]) * 12
       : group === 'currency' ? key === 'laurel' ? 84 : CURRENCIES.indexOf(key as typeof CURRENCIES[number]) * 16
-      : 48 + TIERS.indexOf(key as typeof TIERS[number]) * 12
-    const y = group === 'class' ? 0 : group === 'status' ? 24 : 36
+      : group === 'tier' ? 48 + TIERS.indexOf(key as typeof TIERS[number]) * 12
+      : group === 'front' ? FRONTS.indexOf(key as typeof FRONTS[number]) * 16
+      : (n % 5) * 24
+    const y = group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36
     atlas.copy(img, x, y); index[id] = { x, y, w, h, group, key }
   }
   return { atlas, index }

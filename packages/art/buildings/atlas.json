@@ -338,6 +338,14 @@
    "h": 48,
    "page": "wilds",
    "anchorY": 44
+  },
+  "rift": {
+   "x": 240,
+   "y": 288,
+   "w": 48,
+   "h": 48,
+   "page": "battle",
+   "anchorY": 44
   }
  }
 }

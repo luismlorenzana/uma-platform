@@ -9,14 +9,15 @@ import { PLACES } from './places.ts'
 describe('H29 appended Lapidary', () => {
   it('preserves all forty published 2.7.0 frames, metadata and individual RGBA cutouts', () => {
     const { index, img } = savedAtlas('buildings')
-    expect(Object.keys(index.frames)).toHaveLength(41)
+    // H38 appends the Rift after the Lapidary.
+    expect(Object.keys(index.frames)).toHaveLength(42)
     expect(Object.keys(baseline.frames)).toHaveLength(40)
     for (const [id, old] of Object.entries(baseline.frames)) {
       const { rgba, ...frame } = old
       expect(index.frames[id], id).toEqual(frame)
       expect(hash(img.crop(frame.x, frame.y, frame.w, frame.h).px), id).toBe(rgba)
     }
-    expect(PLACES.at(-1)).toBe(LAPIDARY)
+    expect(PLACES[40]).toBe(LAPIDARY)
   })
   it('matches the dedicated native 48px workshop at ground line 44, without smoke or edge clipping', () => {
     const { index, img } = savedAtlas('buildings'), f = index.frames.lapidary!

@@ -39,7 +39,17 @@ export function battleLayout(): { road: Set<string>; reserved: Set<string> } {
   return { road, reserved }
 }
 
-export function battleHubMap(ground: readonly Img[], paths: readonly Img[], props: readonly PropSprite[]): Img {
+/** H38's review lots: the Rift stands in the Tier Finale's lot. */
+export const RIFT_LOTS = [
+  { id: 'scenario-gate', col: 6, row: 4 },
+  { id: 'rift', col: 6, row: 15 },
+] as const
+
+/** `lots` swaps which building stands in each lot; they must keep BATTLE_LOTS' cells, so the road and props stay put. */
+export function battleHubMap(ground: readonly Img[], paths: readonly Img[], props: readonly PropSprite[],
+  lots: readonly { id: string; col: number; row: number }[] = BATTLE_LOTS): Img {
+  if (lots.length !== BATTLE_LOTS.length || lots.some((l, i) => l.col !== BATTLE_LOTS[i]!.col || l.row !== BATTLE_LOTS[i]!.row))
+    throw new Error('Battle sample lots must keep the H31 lot cells')
   const { road, reserved } = battleLayout()
   const map = sampleMap('battle-hub', ground, [{ cells: road, on: (x, y) => road.has(`${x},${y}`), tiles: paths }], [], reserved)
   const stamps: { row: number; x: number; y: number; img: Img }[] = []
@@ -48,7 +58,7 @@ export function battleHubMap(ground: readonly Img[], paths: readonly Img[], prop
     if (!prop) throw new Error(`Missing Battle sample prop ${id}`)
     stamps.push({ row, x: col * TILE, y: (row + 1) * TILE - prop.img.h, img: prop.img })
   }
-  for (const { id, col, row } of BATTLE_LOTS) {
+  for (const { id, col, row } of lots) {
     const place = PLACES.find(p => p.id === id)
     if (!place) throw new Error(`Missing Battle sample building ${id}`)
     const sprite = new Sprite(SIZE, SIZE)
