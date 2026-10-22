@@ -148,6 +148,57 @@
   }
 }
 
+/* Tints (0.12.0): a look over the theme, set by AppFrame's `tint` as `<html data-tint>` (uma-rpg's
+   tiers: day, dusk, night). Only the accent changes, in light and dark; the page, panel and ink stay, and `accent-ink`
+   keeps 6:1 or more on every tinted accent. The rules are unlayered and come after the dark ones so they win over them:
+   the light rule, then the dark rules for `<html data-theme="dark">` and a fight's dark subtree, then the phone's dark
+   mode. `day` sets no attribute, so it is the theme as it is. The light rule also sets the Hub map's wash. */
+:root[data-tint='dusk'] {
+  --color-accent: #e08a3c;
+  --color-accent-strong: #c06c1f;
+  --color-accent-wash: #fcebdc;
+  --kit-hub-tint: rgb(176 84 24 / 0.16);
+}
+:root[data-tint='night'] {
+  --color-accent: #9d86e8;
+  --color-accent-strong: #7a62cf;
+  --color-accent-wash: #efebfc;
+  --kit-hub-tint: rgb(28 22 92 / 0.32);
+}
+:root[data-theme='dark'][data-tint='dusk'],
+:root[data-tint='dusk'] [data-theme='dark'] {
+  --color-accent: #e89a52;
+  --color-accent-strong: #f4b072;
+  --color-accent-wash: #2e2013;
+}
+:root[data-theme='dark'][data-tint='night'],
+:root[data-tint='night'] [data-theme='dark'] {
+  --color-accent: #a894f0;
+  --color-accent-strong: #c1b2ff;
+  --color-accent-wash: #231e3a;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-tint='dusk']:not([data-theme='light']) {
+    --color-accent: #e89a52;
+    --color-accent-strong: #f4b072;
+    --color-accent-wash: #2e2013;
+  }
+  :root[data-tint='night']:not([data-theme='light']) {
+    --color-accent: #a894f0;
+    --color-accent-strong: #c1b2ff;
+    --color-accent-wash: #231e3a;
+  }
+}
+/* The Hub's wash: one layer over the map's art (HubCanvas's sibling, under the place links), in normal blending so it
+   costs the same over WebGL and Canvas. Hidden unless a tint is set. */
+[data-kit='hub-tint'] {
+  display: none;
+}
+:root[data-tint] [data-kit='hub-tint'] {
+  display: block;
+  background-color: var(--kit-hub-tint, transparent);
+}
+
 @layer base {
   html,
   body,

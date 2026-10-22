@@ -54,6 +54,18 @@ root.render(
 - **Appearance:** `initAppearance()` applies the device's choice (System, Light or Dark: `setAppearance`) as
   `<html data-theme>`, and keeps the browser's theme colour on the page colour.
 
+## The shell (`/shell`)
+
+- **`AppFrame`** takes `top`, `bottom`, `overlays`, `fullScreen` and `tint` (0.12.0): `day` (the default), `dusk` or
+  `night`. A tint is applied as `<html data-tint>` while the frame is mounted, so portalled sheets tint too. theme.css
+  then shifts only `--color-accent`, `-strong` and `-wash` (light, dark and a fight's dark subtree), and lays one wash
+  over the Hub map, under the place links. `day` sets nothing. `TINTS` and `Tint` are exported.
+- **`AccountBar`** takes `initial`, `tier` (the crest), `account` (the initial's link), `chips` and `sync`. With
+  `tierShifter: { to, label, state? }` (0.12.0) and a `tier`, the crest becomes a link of its own
+  (`data-kit="tier-shifter"`) at the same spot. Its hit box is the bar row's height and 44 pt wide from the crest's left
+  edge, above the account link and below the chips, and it adds no width. `state` defaults to `{ back: true }`, so Back
+  closes the sheet it opens. Without it the bar is unchanged.
+
 ## One Uma album (`/roster`, `/album`)
 
 The game owns its art loader and rows. The kit owns how they browse and draw:

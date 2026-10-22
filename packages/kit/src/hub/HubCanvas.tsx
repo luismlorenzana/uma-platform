@@ -1,6 +1,7 @@
 // Hosts the lazy Phaser Hub map (uma-racer's `hub/HubCanvas.tsx`, from uma-rpg's; P48): created on mount, destroyed on
 // unmount, paused while an overlay or sheet covers it or the page is hidden. The canvas only draws; every tap goes to the
-// DOM above it. Without a ResizeObserver (jsdom) no engine starts and the map stays its background colour.
+// DOM above it. Without a ResizeObserver (jsdom) no engine starts and the map stays its background colour. A sibling layer
+// after it carries a tint's wash (0.12.0), under the place links so their names stay crisp.
 import { useEffect, useRef } from 'react'
 import { useKitArt } from '../ui/art.js'
 import type { HubGame } from './scene/createHubGame.js'
@@ -62,13 +63,17 @@ export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMot
   }, [paused])
 
   return (
-    <div
-      ref={host}
-      data-kit="hub-canvas"
-      data-paused={paused || undefined}
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      style={{ backgroundColor: ground.palette.background }}
-    />
+    <>
+      <div
+        ref={host}
+        data-kit="hub-canvas"
+        data-paused={paused || undefined}
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        style={{ backgroundColor: ground.palette.background }}
+      />
+      {/* A tint's wash over the map (0.12.0): theme.css shows it only under `<html data-tint>`. */}
+      <div data-kit="hub-tint" aria-hidden="true" className="pointer-events-none absolute inset-0" />
+    </>
   )
 }
