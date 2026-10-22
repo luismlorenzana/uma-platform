@@ -152,7 +152,8 @@ import {
   previous entry's controls, including when Finish immediately starts a queue. Collect counts span every entry.
 - **`JobSheet` props:** `query: JobQuery | null`, `building`, optional `room`, `title`, `rows`, `request(job, count)`,
   `renderWhat({ outfitId, job, count, onChange })`, `onClose`, and optional `onDone`, `initialJob(outfitId)`,
-  `sizeRule`, `sizePlacement` (`after-what`, or `before-what` for a long recipe picker), `maxCount`, `disabled(row)`,
+  `sizeRule`, `sizePlacement` (`after-what`, or `before-what` for a long recipe picker),
+  `preserveCountOnJobChange` (the explicit quantity survives a recipe pick, still clamped to its limit), `maxCount`, `disabled(row)`,
   `picker`, `renderPreview(preview, selection)` and `empty`.
   `picker` accepts the album's facets, sorts, order, descriptions, badges, chips and words. It uses `UmaPicker` with
   `workOrder` by default. The game supplies candidates and any additional eligibility rule (e.g. Free only); a queue

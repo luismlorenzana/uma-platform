@@ -27,6 +27,8 @@ export interface JobSheetProps<T extends UmaPickerRow = UmaPickerRow> {
   readonly sizeRule?: SizeRule
   /** Keeps the default Who → What → How many flow, or puts quantity before a long authored recipe picker. */
   readonly sizePlacement?: 'before-what' | 'after-what'
+  /** Keeps an explicitly chosen quantity when the game changes the recipe. The effective count still clamps to the new recipe's limit. */
+  readonly preserveCountOnJobChange?: boolean
   readonly maxCount?: number
   readonly disabled?: (row: T) => string | null
   readonly picker?: Pick<UmaPickerProps<T>, 'facets' | 'sorts' | 'order' | 'describe' | 'dimmed' | 'renderBadges' | 'renderChips' | 'words'>
@@ -42,7 +44,7 @@ export function JobSheet<T extends UmaPickerRow>(props: JobSheetProps<T>) {
   return <JobSheetBody key={JSON.stringify([props.building, props.room, props.query])} {...props} query={props.query} />
 }
 
-function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, rows, request, renderWhat, initialJob, sizeRule, sizePlacement = 'after-what', maxCount, disabled, picker, renderPreview, empty, onClose, onDone }: JobSheetProps<T> & { query: JobQuery }) {
+function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, rows, request, renderWhat, initialJob, sizeRule, sizePlacement = 'after-what', preserveCountOnJobChange = false, maxCount, disabled, picker, renderPreview, empty, onClose, onDone }: JobSheetProps<T> & { query: JobQuery }) {
   const { view, copy, actions, umaName, itemName, refusal } = useWork()
   const tap = useTap()
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -91,7 +93,7 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
         </section>
         {eligible && <>
           {sizePlacement === 'before-what' && sizes}
-          <section aria-label={copy('what')} className="space-y-2"><h3 className="text-micro">{copy('what')}</h3>{renderWhat({ ...selection, onChange: (next) => { setJob(next); setCount(null); tap.clear() } })}</section>
+          <section aria-label={copy('what')} className="space-y-2"><h3 className="text-micro">{copy('what')}</h3>{renderWhat({ ...selection, onChange: (next) => { setJob(next); if (!preserveCountOnJobChange) setCount(null); tap.clear() } })}</section>
           {sizePlacement === 'after-what' && sizes}
           {preview !== null && preview.refusal === null && <section className="flex flex-wrap gap-2 text-[13px]">
             {preview.inputs.map((item) => <span key={item.item} aria-label={copy('input', { item: itemName(item.item), have: item.have, need: item.need })} className={`flex items-center gap-1 rounded-full bg-sunken px-2 py-1 ${item.have < item.need ? 'text-danger' : ''}`}><WorkItem id={item.item} size={20} />{item.have}/{item.need}</span>)}
