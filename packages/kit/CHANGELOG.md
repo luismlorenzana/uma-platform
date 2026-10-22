@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.14.0
+
+### Minor Changes
+
+- a5e55ef: Let a JobSheet preserve its explicitly selected quantity when the recipe changes, while still clamping it to the new recipe's valid maximum.
+
 ## 0.13.0
 
 ### Minor Changes
