@@ -28,9 +28,12 @@ shell, one Hub and one Uma album through `@luismlorenzana/uma-kit`; only the gam
 - **Phase D:** done (2026-10-17). SD1 shipped `@luismlorenzana/uma-server` 0.1.0 with the shared auth guard (P54),
   and SD2 uma-kit 0.5.0 with `/auth` and `/places` (P56); both games get in, and draw Account, Warehouse, Exchange and
   the profile, through them (SD3, SD4).
-- **Phase E:** in progress (2026-10-17). SE2 shipped shared content loading, uma-kit 0.6.0 and uma-server 0.2.0
-  `/content` (P57, hardened in P63), and uma-racer adopted it (SE4). Left: SE1 (uma-racer's phase 5, onto uma-data
-  and its art families) and SE3 (uma-rpg onto the shared content loading). SE5 (shared push) stays parked.
+- **Phase E:** done (2026-10-21). SE2 shipped shared content loading, uma-kit 0.6.0 and uma-server 0.2.0
+  `/content` (P57, hardened in P63), adopted by uma-racer (SE4) and uma-rpg (SE3,
+  [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39633132807)). SE1 migrated Racer onto
+  uma-data and its art families, then retired its old generated content with live overlays preserved
+  ([production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39636290115)). SE5 (shared push)
+  stays parked.
 - **Phases B to E:** briefed in [phases.md](sibling/phases.md), and broken into 21 self-contained packets with parallel
   tracks in [docs/handoff/](handoff/README.md) (P51). Ready when they were queued:
   - SA7, the plaza crowd in uma-racer;

@@ -67,17 +67,17 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | SD3 | uma-rpg on SD1 and SD2 | uma-rpg | Either | M | SD1, SD2 | Done (`3ea66a4`) |
 | [SD4](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SD4-racer-places.md) | uma-racer on SD1 and SD2 | uma-racer | Either | M | SD1, SD2 | Done (`7d2b757`) |
 | **Phase E: platform plumbing** | | | | | | |
-| [SE1](https://github.com/luismlorenzana/uma-racer/blob/main/docs/handoff/tasks/SE1-racer-phase-5.md) | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Ready |
+| SE1 | uma-racer's phase 5: uma-data and its art families; its own pipeline goes | uma-racer | Claude | L | — | Done (`efd36c4`, [racer #122](https://github.com/luismlorenzana/uma-racer/pull/122); cleanup `9370e0a`, [#128](https://github.com/luismlorenzana/uma-racer/pull/128); [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39636290115)) |
 | SE2 | `uma-kit/content` and `uma-server/content`: art loading and the content proxy | uma-platform | Either | M | SD1 | Done (`5aaeb93`, kit 0.6.0, server 0.2.0) |
 | SE3 | uma-rpg on SE2 | uma-rpg | Either | S | SE2 | Done (`18dbd4b`, uma-kit 0.9.1, uma-server 0.2.0; [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39633132807)) |
 | SE4 | uma-racer on SE2 | uma-racer | Either | M | SE1, SE2 | Done (`ad15cf0`, [racer #123](https://github.com/luismlorenzana/uma-racer/pull/123); kit 0.9.0, [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39460142245)) |
 | **Art authoring (briefed by the games, delivered here)** | | | | | | |
-| A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; racer pin/deploy and game-side packet retirement stay with its session) |
+| A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; Racer adoption `be16a6d`, [racer #127](https://github.com/luismlorenzana/uma-racer/pull/127); [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39633395549)) |
 | H38 | The Rift's building, four front crests and eleven achievement badges in uma-art; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/a550358/docs/handoff/tasks/H38-rift-art.md) | uma-platform | Claude | M | — | Done (`e3da022`, uma-art 2.11.0; the uma-rpg Rift page pins it) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** SE1.
+**Ready now:** none. All active sibling packets are complete; SE5 stays parked.
 
 ## Releases while packets run in parallel
 
@@ -94,13 +94,14 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| SE1 | uma-racer's master-data/art migration and retirement of 2,076 old generated objects, with both live overlays preserved; [acceptance and production verification](https://github.com/luismlorenzana/uma-racer/blob/main/docs/research/se1-master-data/README.md) | `efd36c4` ([racer #122](https://github.com/luismlorenzana/uma-racer/pull/122)); cleanup `9370e0a` ([#128](https://github.com/luismlorenzana/uma-racer/pull/128)) |
 | SE3 | uma-rpg on `uma-kit/content` 0.9.1 and `uma-server/content` 0.2.0, with its master adapter, private enemy allowlist, routes, cache rules and behavior retained (its D158); [production deployment green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39633132807) | `18dbd4b` ([rpg #28](https://github.com/luismlorenzana/uma-rpg/pull/28)) |
 | SC4 | uma-rpg's 11 Wilds facilities and quick looks on `uma-kit/work` 0.9.1, with RPG rules, saves, recipes, targets and D144 pickers retained (its D157); [production deployment green](https://github.com/luismlorenzana/uma-rpg/actions/runs/39590331919) | `c8bded0` ([rpg #26](https://github.com/luismlorenzana/uma-rpg/pull/26)) |
 | SC5 | uma-racer on `@luismlorenzana/uma-work` 0.1.0 and `uma-kit/work` 0.9.1, with Racer's rules, saves and planning retained (its D377); [local acceptance and production deployment green](https://github.com/luismlorenzana/uma-racer/blob/main/docs/research/sc5-work/README.md) | `8967e24` ([racer #124](https://github.com/luismlorenzana/uma-racer/pull/124)) |
 | SA7 | The plaza crowd in uma-racer, uma-kit 0.3.0 (its D371) | `9723a23` (release `0737c9f`) |
 | SC1 | `@luismlorenzana/uma-work` 0.1.0, one work engine for both games (P53) | `ed446b8` (release `29a37d5`) |
 | SC2 | `uma-kit/work`, the shared work screens in uma-kit 0.8.0 (P61); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39168986257), props and SC4/SC5 adoption notes in [the kit README](../../packages/kit/README.md#work-work); local racer proof at 390×844, scratch changes reverted | `fe7e30f` ([#33](https://github.com/luismlorenzana/uma-platform/pull/33)) |
-| A04 | Ten original 32px tonic item icons in uma-art 2.10.0 (P62); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39412839729), inline light/dark 1×/2×/4× and 16/24px chip previews in the code PR. All preceding art preserved; racer adoption is separate | `7ed5bce` ([#36](https://github.com/luismlorenzana/uma-platform/pull/36)) |
+| A04 | Ten original 32px tonic item icons in uma-art 2.10.0 (P62); [published release](https://github.com/luismlorenzana/uma-platform/actions/runs/39412839729). Racer pins and renders all ten with light/dark phone-width acceptance and a verified production deployment | `7ed5bce` ([#36](https://github.com/luismlorenzana/uma-platform/pull/36)); Racer `be16a6d` ([racer #127](https://github.com/luismlorenzana/uma-racer/pull/127)) |
 | SC3 | uma-rpg on `uma-work` 0.1.0: four kinds, save v22, Repeat and stopped queues (its D152) | `6063b95` |
 | SD3 | uma-rpg on uma-kit 0.7.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D153) | `3ea66a4` |
 | SD4 | uma-racer on uma-kit 0.6.0 `/auth` and `/places` and uma-server 0.2.0 `/auth`: getting in, Account, Warehouse, Exchange, profile frame (its D372) | `7d2b757` (release `b20bb13`) |
