@@ -96,6 +96,17 @@ the A02 row (y=52, then 68/92/116), keeping the sheet 120 wide. `rift-marks-{1x,
 dark chips. `testing/legacy-h38-2.10.0.json` and `rift.test.ts` freeze every older frame (the Rift's empty cell
 zeroed), check ids, positions, deterministic painters, edge clearance, crest silhouettes and distinct pictograms.
 
+## The Paladin (H54)
+
+`classEmblem`'s `paladin` branch draws the sixth class on the five's kit (the shared dome, steel and wood ramps, the
+contact shadow and outline) in the Knight's Bastion banner's blue and gold: a tall tower shield with a star boss and a
+sword's hilt rising behind it. `Class` gains `paladin`, but `CLASSES` keeps the five that place the y=0 row by index;
+the Paladin's spec appends last and `packUi` puts her in the free cell at (24, 116). `ui.png` and `ui-1x.png` still show
+H11's five; `paladin-emblems-{1x,2x,4x}.png` shows all six on white and dark chips, and the buildings build writes
+`paladin-bastion-2x.png`, the emblem beside `knights-bastion`. `testing/legacy-h54-2.11.0.json` and `paladin.test.ts`
+freeze every 2.11.0 `ui` frame (the new cell zeroed) and `knights-bastion`, and check the new frame's place, painter,
+corners, and a silhouette that differs from each of the five in at least a quarter of their combined pixels.
+
 ## D103 armor (H27)
 
 `src/gear/armor-pieces.ts` adds paired head/body/legs/arms pieces to rows 26–33, after `orb-dark`. Do not edit or
@@ -161,7 +172,7 @@ ships only the atlas/index; playback and summon lifetimes belong to the game.
 
 ## UI emblems and status badges
 
-`src/ui/` draws five 24×24 class emblems and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
+`src/ui/` draws six 24×24 class emblems (the Paladin since H54) and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
 `spec.ts` pins the class/status keys; `atlas.ts` checks completeness, ids and native sizes before packing.
 `pnpm art:draw` also writes `assets/previews/ui.png` (3×), `ui-1x.png` and `ui.html`, with named cards and native-size
 class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes and the saved atlas contract.

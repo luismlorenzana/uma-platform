@@ -298,6 +298,14 @@
    "h": 24,
    "group": "achievement",
    "key": "crossover"
+  },
+  "class/paladin": {
+   "x": 24,
+   "y": 116,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "paladin"
   }
  }
 }

@@ -1,7 +1,8 @@
 // H11: D86's five classes and ten Cleric statuses (uma-rpg rpg/kinds.ts and battle/labels.tsx).
 export const CLASSES = ['brawler', 'mage', 'spellblade', 'cleric', 'summoner'] as const
 export const STATUSES = ['armor-break', 'mind-break', 'enfeeble', 'shatter', 'hex', 'brave', 'faith', 'aegis', 'breaker', 'clarity'] as const
-export type Class = (typeof CLASSES)[number]
+// H54: classes v2's sixth class (uma-rpg D160). CLASSES keeps the five, which place the y=0 row by index.
+export type Class = (typeof CLASSES)[number] | 'paladin'
 export type Status = (typeof STATUSES)[number]
 export const RACER_CURRENCIES = ['prize-money', 'speed-ticket', 'uma-ticket'] as const
 export const CURRENCIES = [...RACER_CURRENCIES, 'laurel'] as const
@@ -29,4 +30,5 @@ export const FRAME_SPECS: FrameSpec[] = [
   { id: 'currency/laurel', group: 'currency', key: 'laurel', w: 16, h: 16 },
   ...FRONTS.map((key): FrameSpec => ({ id: `front/${key}`, group: 'front', key, w: 16, h: 16 })),
   ...ACHIEVEMENTS.map((key): FrameSpec => ({ id: `achievement/${key}`, group: 'achievement', key, w: 24, h: 24 })),
+  { id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 },
 ]

@@ -87,16 +87,16 @@ describe('H38 append-only Rift art', () => {
   it('appends four 16px front crests at y=52 and eleven 24px achievements from y=68, at the end of the spec', () => {
     const { index, img } = savedAtlas('ui')
     expect([index.width, index.height]).toEqual([120, 140])
-    expect(Object.keys(index.frames)).toHaveLength(37)
+    expect(Object.keys(index.frames)).toHaveLength(38) // H54 appends class/paladin after these.
     expect(FRONTS).toEqual(['iron', 'arcane', 'duel', 'horde'])
     expect(ACHIEVEMENTS).toEqual(['seal-iron', 'seal-arcane', 'seal-duel', 'seal-horde', 'rift-conquered',
       'iron-will', 'arcane-purity', 'untouched', 'swift-convergence', 'bestiary', 'crossover'])
     expect(FRAME_SPECS.slice(0, 22).map(s => s.id)).toEqual(Object.keys(baseline.ui.frames))
-    expect(FRAME_SPECS.slice(22).map(s => s.id)).toEqual([...FRONTS.map(f => `front/${f}`), ...ACHIEVEMENTS.map(a => `achievement/${a}`)])
+    expect(FRAME_SPECS.slice(22, 37).map(s => s.id)).toEqual([...FRONTS.map(f => `front/${f}`), ...ACHIEVEMENTS.map(a => `achievement/${a}`)])
     FRONTS.forEach((key, i) => expect(index.frames[`front/${key}`]).toEqual({ x: i * 16, y: 52, w: 16, h: 16, group: 'front', key }))
     ACHIEVEMENTS.forEach((key, i) => expect(index.frames[`achievement/${key}`])
       .toEqual({ x: (i % 5) * 24, y: 68 + Math.floor(i / 5) * 24, w: 24, h: 24, group: 'achievement', key }))
-    for (const spec of FRAME_SPECS.slice(22)) {
+    for (const spec of FRAME_SPECS.slice(22, 37)) {
       const a = drawUi(spec), b = drawUi(spec), f = index.frames[spec.id]!
       expect(hash(a.px), spec.id).toBe(hash(b.px))
       expect(hash(img.crop(f.x, f.y, spec.w, spec.h).px), spec.id).toBe(hash(a.px))

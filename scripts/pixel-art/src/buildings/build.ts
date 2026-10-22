@@ -9,7 +9,10 @@ import { hex, type RGBA } from '../color.ts'
 import { encodePng } from '../png.ts'
 import { Sprite } from '../sprite.ts'
 import { groundTile } from '../tiles/ground.ts'
+import { Img } from '../tiles/image.ts'
 import { GROUND as TERRAIN } from '../tiles/terrain.ts'
+import { drawUi } from '../ui/atlas.ts'
+import { FRAME_SPECS as UI_SPECS } from '../ui/spec.ts'
 import { BASE, GROUND, SIZE } from './kit.ts'
 import { PLACES } from './places.ts'
 import type { Page, PaintExtras } from './types.ts'
@@ -179,6 +182,27 @@ for (let y = 0; y < rift.h; y++)
   stamp(rift, d.px, PAD + i * (SIZE * 2 + PAD), PAD, 2)
 })
 writeFileSync(join(previews, 'rift-2x.png'), encodePng(rift.w, rift.h, rift.px))
+
+// H54: the Knight's Bastion, which uma-rpg's Paladin Bastion draws, between the Spell Blade Salle and the Cleric Chapel
+// on Learning ground at 2×, with the Paladin's emblem at 2× on a dark chip beside it, so the pair is judged together.
+const learningGround = [0, 1, 2, 3].map(v => groundTile(TERRAIN.learning, v)), CHIP = 24 * 2 + 8
+const bastion = image(3 * SIZE * 2 + CHIP + 5 * PAD, SIZE * 2 + 2 * PAD, [0, 0, 0, 255])
+for (let y = 0; y < bastion.h; y++)
+  for (let x = 0; x < bastion.w; x++) {
+    const tile = learningGround[(Math.floor(x / 32) + 3 * Math.floor(y / 32)) % 4]!
+    bastion.px.set(tile.get(Math.floor(x / 2) % 16, Math.floor(y / 2) % 16), (y * bastion.w + x) * 4)
+  }
+;([['spell-blade-salle', 0], ['knights-bastion', 1], ['cleric-chapel', 2]] as const).forEach(([id, i]) => {
+  const d = drawn.find(p => p.place.id === id)
+  if (!d) throw new Error(`Missing Paladin Bastion reference ${id}`)
+  stamp(bastion, d.px, PAD + i * (SIZE * 2 + PAD) + (i === 2 ? CHIP + PAD : 0), PAD, 2)
+})
+const paladin = UI_SPECS.find(spec => spec.id === 'class/paladin')
+if (!paladin) throw new Error('Missing class/paladin')
+const chipAt = [PAD + 2 * (SIZE * 2 + PAD), PAD + SIZE - CHIP / 2] as const
+new Img(bastion.w, bastion.h, bastion.px).copy(new Img(CHIP, CHIP).fill(hex('#17202b')), ...chipAt)
+  .draw(drawUi(paladin).scaled(2), chipAt[0] + 4, chipAt[1] + 4)
+writeFileSync(join(previews, 'paladin-bastion-2x.png'), encodePng(bastion.w, bastion.h, bastion.px))
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`
