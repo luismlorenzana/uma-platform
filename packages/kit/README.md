@@ -216,7 +216,8 @@ const auth = useAuth()
 - **`ExchangeRows`** takes `rows` (`{ key, icon, name, detail?, price: { mark, amount }, disabled? }`), `balance` and
   `onBuy`; its sheet offers ×1, ×5, ×10, ×25 or a typed quantity, the total, and "Need N more" when short.
 - **`ProfileFrame`** takes `portrait`, `name`, `title`, `level` (SB2's `formatLevel` once it lands), `chips`, `corner`,
-  `summary`, `locked`, and `tabs` with `tab` and `onTab`; its children are the active tab's body.
+  `summary`, `locked`, and `tabs` with `tab` and `onTab`; its children are the active tab's body. A tab's optional
+  `dot` draws a small green "ready" dot after its label, and `dotLabel` names the tab while the dot shows (0.11.0).
 - **`UnlockConfirm`** shows the Uma Tickets going N → N−1, "Unlocking is final." and Confirm.
 - **Words:** every string is a prop with an English default (`ACCOUNT_WORDS`, `SHELF_WORDS`, …).
 

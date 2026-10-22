@@ -7,6 +7,10 @@ import { LockedIcon } from '../ui/icons/index.js'
 export interface ProfileTab<K extends string = string> {
   readonly key: K
   readonly label: string
+  /** A small green "ready" dot after the label, e.g. something on this tab can be done now. */
+  readonly dot?: boolean
+  /** The tab's accessible name while the dot shows, e.g. "Skills, can upgrade". */
+  readonly dotLabel?: string
 }
 
 export interface ProfileFrameProps<K extends string = string> {
@@ -62,8 +66,10 @@ export function ProfileFrame<K extends string>({
           <div role="tablist" aria-label={tabsLabel} className="flex gap-1 rounded-sm bg-sunken p-1">
             {tabs.map((t) => (
               <button key={t.key} type="button" role="tab" aria-selected={t.key === tab} onClick={() => onTab?.(t.key)}
-                className={`min-h-11 min-w-0 flex-1 truncate rounded-xs px-1 text-[12.5px] font-semibold transition-colors ${t.key === tab ? 'bg-panel text-ink shadow-1' : 'text-ink-soft'}`}>
-                {t.label}
+                aria-label={t.dot ? (t.dotLabel ?? t.label) : undefined}
+                className={`flex min-h-11 min-w-0 flex-1 items-center justify-center gap-1 rounded-xs px-1 text-[12.5px] font-semibold transition-colors ${t.key === tab ? 'bg-panel text-ink shadow-1' : 'text-ink-soft'}`}>
+                <span className="min-w-0 truncate">{t.label}</span>
+                {t.dot && <span aria-hidden="true" data-dot="" className="size-1.5 shrink-0 rounded-full bg-success" />}
               </button>
             ))}
           </div>

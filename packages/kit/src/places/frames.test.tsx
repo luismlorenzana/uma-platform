@@ -53,4 +53,14 @@ describe('the places frames', () => {
     // Sheets render through a portal, so a closed one draws nothing on the server.
     expect(html(<UnlockConfirm open={false} onClose={() => {}} name="Test Uma" tickets={3} onConfirm={async () => {}} />)).toBe('')
   })
+
+  it("draws a tab's dot and names it by dotLabel; no dot by default", () => {
+    const tabs = [{ key: 'a', label: 'Skills', dot: true, dotLabel: 'Skills, can upgrade' }, { key: 'b', label: 'Work' }]
+    const shown = html(<ProfileFrame portrait={<img alt="" />} name="Test Uma" tabs={tabs} tab="b">Body</ProfileFrame>)
+    expect(shown).toMatch(/aria-label="Skills, can upgrade"[^>]*><span[^>]*>Skills<\/span><span aria-hidden="true" data-dot=""/)
+    expect(shown.match(/data-dot=""/g)).toHaveLength(1)
+    const plain = html(<ProfileFrame portrait={<img alt="" />} name="Test Uma" tabs={[{ key: 'a', label: 'Skills' }]} tab="a">Body</ProfileFrame>)
+    expect(plain).not.toContain('data-dot')
+    expect(plain).not.toContain('aria-label="Skills')
+  })
 })
