@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.12.0
+
+### Minor Changes
+
+- 6872da5: AccountBar: `tierShifter` makes the tier crest a link of its own. AppFrame: `tint` (`day`, `dusk`, `night`) shifts the accent and washes the Hub map. Both are off by default.
+
 ## 0.11.0
 
 ### Minor Changes
