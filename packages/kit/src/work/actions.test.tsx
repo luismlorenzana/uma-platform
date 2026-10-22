@@ -151,6 +151,24 @@ describe('work actions', () => {
     expect(document.body.textContent).toContain('Changed stock.')
   })
 
+  it('can keep a chosen quantity across recipe changes while clamping it to the new recipe', async () => {
+    const state = fresh({ twig: 40 })
+    const startAction = vi.fn()
+    const sheet = <JobSheet query={{ job: 'toy', uma: 'ada', count: 1, queue: false, slot: 0, back: null }} building="grove" title="Make toys"
+      rows={[{ id: 'ada', name: 'Ada', search: 'ada', facets: {}, sorts: {}, level: 1, workLevel: 7, releasedAt: '' }]}
+      request={(item, count): TestRequest => ({ kind: 'refine', item, count })} sizeRule={{ mode: 'count', sizes: [1, 4, 8, 20, 40] }}
+      sizePlacement="before-what" preserveCountOnJobChange maxCount={20}
+      renderWhat={({ job, onChange }) => <button type="button" data-action="change-recipe" onClick={() => onChange(job === 'toy' ? 'kite' : 'toy')}>{job}</button>}
+      onClose={() => {}} />
+    await mount(wrap(sheet, state, { start: startAction }))
+    await click('[data-size="20"]')
+    expect(document.querySelector('[data-size="20"]')?.getAttribute('aria-checked')).toBe('true')
+    await click('[data-action="change-recipe"]')
+    expect(document.querySelector('[data-size="20"]')?.getAttribute('aria-checked')).toBe('true')
+    await click('[data-action="job-submit"]')
+    expect(startAction).toHaveBeenCalledWith({ outfitId: 'ada', slot, request: { kind: 'refine', item: 'kite', count: 20 } })
+  })
+
   it('lets the game preview a complete restart in another free slot against settled state', async () => {
     const first = done(start(fresh(), { outfitId: 'bee', slot, request: { kind: 'gather', item: 'twig', count: 1 } }, AT, ENV))
     const working = done(queue(first, { outfitId: 'bee', add: { building: 'grove', request: { kind: 'gather', item: 'twig', count: 1 } } }, AT, ENV))
