@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.13.0
+
+### Minor Changes
+
+- Let games visually dim eligible Uma picker rows and place a job sheet's quantity controls before long authored recipe grids.
+
 ## 0.12.0
 
 ### Minor Changes

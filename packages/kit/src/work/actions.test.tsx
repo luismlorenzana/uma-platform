@@ -132,8 +132,12 @@ describe('work actions', () => {
     const sheet = <JobSheet query={{ job: 'toy', uma: 'ada', count: 1, queue: false, slot: 0, back: null }} building="grove" title="Make toys"
       rows={[{ id: 'ada', name: 'Ada', search: 'ada', facets: {}, sorts: {}, level: 1, workLevel: 7, releasedAt: '' }]}
       request={(item, count): TestRequest => ({ kind: 'refine', item, count })} sizeRule={{ mode: 'count', sizes: [1, 4, 8, 20, 40] }}
+      sizePlacement="before-what"
       renderWhat={() => <p>Toy recipe</p>} onClose={() => {}} onDone={onDone} />
     await mount(wrap(sheet, state, { start: startAction }))
+    const sizes = document.querySelector('[data-kit="size-chips"]')!
+    const what = document.querySelector('[aria-label="What"]')!
+    expect(sizes.compareDocumentPosition(what) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
     const submit = document.querySelector<HTMLButtonElement>('[data-action="job-submit"]')!
     expect(submit.disabled).toBe(false)
     expect(submit.classList.contains('bg-accent')).toBe(true)

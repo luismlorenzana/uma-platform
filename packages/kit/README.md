@@ -97,7 +97,8 @@ function Stable() {
 - `AlbumGrid` opens on five face columns, with three bust cards or a one-column list as the other views. Badges and
   chips are callbacks, so game state stays in the game.
 - Every visible word has an English default in `ALBUM_WORDS`; pass `words` for game vocabulary such as a work-level
-  name. `UmaPicker` uses `byLevel` unless a work picker passes `workOrder`.
+  name. `UmaPicker` uses `byLevel` unless a work picker passes `workOrder`. `dimmed(row)` visually de-emphasizes an
+  eligible row without making it unselectable; `disabled(row)` still moves blocked rows last and prevents selection.
 
 ## Work (`/work`)
 
@@ -151,7 +152,8 @@ import {
   previous entry's controls, including when Finish immediately starts a queue. Collect counts span every entry.
 - **`JobSheet` props:** `query: JobQuery | null`, `building`, optional `room`, `title`, `rows`, `request(job, count)`,
   `renderWhat({ outfitId, job, count, onChange })`, `onClose`, and optional `onDone`, `initialJob(outfitId)`,
-  `sizeRule`, `maxCount`, `disabled(row)`, `picker`, `renderPreview(preview, selection)` and `empty`.
+  `sizeRule`, `sizePlacement` (`after-what`, or `before-what` for a long recipe picker), `maxCount`, `disabled(row)`,
+  `picker`, `renderPreview(preview, selection)` and `empty`.
   `picker` accepts the album's facets, sorts, order, descriptions, badges, chips and words. It uses `UmaPicker` with
   `workOrder` by default. The game supplies candidates and any additional eligibility rule (e.g. Free only); a queue
   fixes its named worker. Recipe choices are a render prop. Planning, stock, inputs, EXP and start/queue refusals

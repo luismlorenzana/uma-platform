@@ -39,6 +39,8 @@ export interface UmaPickerProps<T extends UmaPickerRow> {
   /** The opening order. `byLevel` is the shared default; work pickers pass `workOrder`. */
   readonly order?: (left: T, right: T) => number
   readonly disabled?: (row: T) => string | null
+  /** Visually de-emphasizes an eligible row without disabling it. */
+  readonly dimmed?: (row: T) => boolean
   readonly max?: number
   readonly selectedIds?: readonly string[]
   readonly renderBadges?: (row: T) => FaceTileBadges | undefined
@@ -60,6 +62,7 @@ export function UmaPicker<T extends UmaPickerRow>({
   sorts = [],
   order = byLevel,
   disabled = () => null,
+  dimmed = () => false,
   max = 1,
   selectedIds = NO_IDS,
   renderBadges,
@@ -175,6 +178,7 @@ export function UmaPicker<T extends UmaPickerRow>({
           keyOf={(row) => row.id}
           renderItem={(row) => {
             const reason = disabled(row)
+            const isDimmed = dimmed(row)
             const isSelected = selected.includes(row.id)
             const note = reason ?? describe?.(row) ?? activeSort?.describe?.(row)
             return (
@@ -183,8 +187,9 @@ export function UmaPicker<T extends UmaPickerRow>({
                 disabled={reason !== null}
                 aria-pressed={cap > 1 ? isSelected : undefined}
                 aria-label={reason === null ? row.name : `${row.name}. ${reason}`}
+                data-dimmed={isDimmed || undefined}
                 onClick={() => choose(row)}
-                className="block w-full min-w-0 text-center disabled:opacity-55"
+                className={`block w-full min-w-0 text-center disabled:opacity-55 ${isDimmed ? 'opacity-55 saturate-50' : ''}`}
               >
                 <FaceTile
                   outfitId={row.id}
