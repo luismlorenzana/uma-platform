@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.11.0
+
+### Minor Changes
+
+- c2fc305: `ProfileFrame`: a tab can show a small green dot (`dot`), named by `dotLabel`. Tabs without it draw as before.
+
 ## 0.10.0
 
 ### Minor Changes
