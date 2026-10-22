@@ -25,9 +25,11 @@ export interface JobSheetProps<T extends UmaPickerRow = UmaPickerRow> {
   readonly renderWhat: (selection: JobSelection & { readonly onChange: (job: string) => void }) => ReactNode
   readonly initialJob?: (outfitId: string | null) => string | null
   readonly sizeRule?: SizeRule
+  /** Keeps the default Who → What → How many flow, or puts quantity before a long authored recipe picker. */
+  readonly sizePlacement?: 'before-what' | 'after-what'
   readonly maxCount?: number
   readonly disabled?: (row: T) => string | null
-  readonly picker?: Pick<UmaPickerProps<T>, 'facets' | 'sorts' | 'order' | 'describe' | 'renderBadges' | 'renderChips' | 'words'>
+  readonly picker?: Pick<UmaPickerProps<T>, 'facets' | 'sorts' | 'order' | 'describe' | 'dimmed' | 'renderBadges' | 'renderChips' | 'words'>
   readonly renderPreview?: (preview: JobPreview, selection: JobSelection) => ReactNode
   readonly empty?: ReactNode
   readonly onClose: () => void
@@ -40,7 +42,7 @@ export function JobSheet<T extends UmaPickerRow>(props: JobSheetProps<T>) {
   return <JobSheetBody key={JSON.stringify([props.building, props.room, props.query])} {...props} query={props.query} />
 }
 
-function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, rows, request, renderWhat, initialJob, sizeRule, maxCount, disabled, picker, renderPreview, empty, onClose, onDone }: JobSheetProps<T> & { query: JobQuery }) {
+function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, rows, request, renderWhat, initialJob, sizeRule, sizePlacement = 'after-what', maxCount, disabled, picker, renderPreview, empty, onClose, onDone }: JobSheetProps<T> & { query: JobQuery }) {
   const { view, copy, actions, umaName, itemName, refusal } = useWork()
   const tap = useTap()
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -65,6 +67,9 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
   const blocked = !eligible ? copy('noUma') : !samePlace ? copy('noSlot') : job === null ? copy('chooseJob') : input === null ? copy('chooseJob') : (() => { const why = view.check(input); return why === null ? null : refusal(why) })()
   const operation = mode === 'queue' ? actions.queue : actions.start
   const done = onDone ?? onClose
+  const sizes = many !== null && many.seconds.length > 0
+    ? <SizeChips start={many.start} itemSeconds={many.seconds} max={many.max} value={count} onChange={setCount} rule={sizeRule} />
+    : null
   const submit = () => input === null ? undefined : tap.run(() => mode === 'queue'
     ? actions.queue!({ outfitId: input.outfitId, add: { request: input.request, building, ...(room === undefined ? {} : { room }) } })
     : actions.start!({ outfitId: input.outfitId, slot: input.slot, request: input.request }), done)
@@ -85,8 +90,9 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
           {!eligible && empty}
         </section>
         {eligible && <>
+          {sizePlacement === 'before-what' && sizes}
           <section aria-label={copy('what')} className="space-y-2"><h3 className="text-micro">{copy('what')}</h3>{renderWhat({ ...selection, onChange: (next) => { setJob(next); setCount(null); tap.clear() } })}</section>
-          {many !== null && many.seconds.length > 0 && <SizeChips start={many.start} itemSeconds={many.seconds} max={many.max} value={count} onChange={setCount} rule={sizeRule} />}
+          {sizePlacement === 'after-what' && sizes}
           {preview !== null && preview.refusal === null && <section className="flex flex-wrap gap-2 text-[13px]">
             {preview.inputs.map((item) => <span key={item.item} aria-label={copy('input', { item: itemName(item.item), have: item.have, need: item.need })} className={`flex items-center gap-1 rounded-full bg-sunken px-2 py-1 ${item.have < item.need ? 'text-danger' : ''}`}><WorkItem id={item.item} size={20} />{item.have}/{item.need}</span>)}
             {renderPreview ? renderPreview(preview, selection) : <span className="ml-auto text-ink-soft">{copy('exp', { n: preview.exp })}</span>}
