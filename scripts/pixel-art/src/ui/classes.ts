@@ -37,6 +37,27 @@ export function classEmblem(s: Sprite, kind: Class): void {
     stroke(s, 11, 14, 11, 19, gold, 4); stroke(s, 8, 16, 15, 16, gold, 3)
     dome(Mask.circle(12, 7, 4, 24, 24).subtract(Mask.circle(12, 7, 2.5, 24, 24)), gold)
     for (const [x, y] of [[12, 1], [6, 7], [18, 7], [8, 3], [16, 3]] as const) s.paint(x, y, gold, 5)
+  } else if (kind === 'paladin') {
+    // H54: a tall tower shield face on, in the Knight's Bastion banner's blue and gold, a sword's hilt rising behind
+    // its flat top. Told apart by silhouette: tall and upright with a cross on top, not a small heater under a halo.
+    const blue = add(s, '#3858b8', { lift: 0.18 }), crest = add(s, '#e6b640', { lift: 0.4 })
+    const tower = (inset: number) => Mask.from((px, py) => {
+      const left = 7 + inset, right = 17 - inset, top = 8 + inset, foot = 21.7 - inset, knee = 18
+      if (px < left || px > right || py < top || py > foot) return false
+      return py <= knee || ((px - 12) / ((right - left) / 2)) ** 2 + ((py - knee) / (foot - knee)) ** 2 <= 1
+    }, 24, 24)
+    // The hilt behind the shield: pommel, wrapped grip, crossguard, then a steel stub of blade.
+    s.paint(11, 1, crest, 5); s.paint(12, 1, crest, 3)
+    stroke(s, 11, 2, 11, 3, wood, 3); stroke(s, 12, 2, 12, 3, wood, 2)
+    stroke(s, 8, 4, 11, 4, crest, 4); stroke(s, 12, 4, 15, 4, crest, 3)
+    stroke(s, 11, 5, 11, 7, steel, 4); stroke(s, 12, 5, 12, 7, steel, 3)
+    dome(tower(0), crest)
+    dome(tower(1), blue)
+    const star = Array.from({ length: 10 }, (_, i) => {
+      const a = -Math.PI / 2 + (i * Math.PI) / 5, r = i % 2 ? 1.8 : 4
+      return [12 + r * Math.cos(a), 14.8 + r * Math.sin(a)] as const
+    })
+    dome(poly(star), crest)
   } else {
     const rune = add(s, '#70b6b5'), spirit = add(s, '#b6d2ea', { lift: 0.45, drop: 0.24 }), eye = add(s, '#58628b')
     dome(Mask.ellipse(12, 18, 8.5, 3.2, 0, 24, 24).subtract(Mask.ellipse(12, 18, 6, 1.4, 0, 24, 24)), rune)

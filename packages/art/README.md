@@ -22,11 +22,12 @@ files by hand.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: five class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
+- `ui/atlas.png` / `.json`: six class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
   three tier crests (12×12), four Rift front crests (16×16) and eleven achievement badges (24×24). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
   `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>` or `achievement/<key>`.
-  Classes: Brawler, Mage, Spell Blade, Cleric and Summoner. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
+  Classes: Brawler, Mage, Spell Blade, Cleric, Summoner and Paladin (the Paladin off the class row: read positions from
+  the JSON). Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
   buffs gold-teal. Render at native size or a whole-number scale. Keep full class names beside emblems and full
   status names in accessible labels; unknown statuses should retain the game's text fallback.
@@ -163,6 +164,23 @@ Review `assets/previews/rift-2x.png` (Scenario Gate, Tier Finale, Rift on Battle
 (H31's review page with the Rift in the Tier Finale's lot) and `rift-marks-{1x,2x,4x}.png` (crests then badges on
 white and `#17202b` chips); `ui.html` labels each one. `src/testing/legacy-h38-2.10.0.json` freezes every prior
 `ui`/`buildings` frame and pixel.
+
+## The Paladin (H54, 2.12.0)
+
+uma-rpg's sixth class (its D160). `class/paladin` is a native 24×24 emblem at **(24, 116)**, the free cell beside
+`achievement/crossover`: the class row at y=0 is full, and published frames never move. The `ui` sheet stays
+**120×140**, now 38 frames; every 2.11.0 frame keeps its place, metadata and pixels.
+
+A tall tower shield face on (flat top, rounded foot) in the Knight's Bastion banner's deep blue, with a gold rim and a
+gold star boss; a sword's crossguard and grip rise behind its top edge. It's told apart by silhouette, not colour: tall
+and upright with a cross on top, where the Cleric's is a small heater shield under a halo.
+
+No new building: uma-rpg's Paladin Bastion draws the existing `knights-bastion` frame (the stone keep with the blue
+banner and gold star, drawn with the Learning halls), unchanged.
+
+Review `assets/previews/paladin-emblems-{1x,2x,4x}.png` (the six emblems in game order on white and `#17202b` chips)
+and `paladin-bastion-2x.png` (Spell Blade Salle, Knight's Bastion with the emblem beside it, Cleric Chapel, on
+Learning ground); `ui.html` labels it. `src/testing/legacy-h54-2.11.0.json` freezes the older frames.
 
 ## Gear rows in 2.0.0
 

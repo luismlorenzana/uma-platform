@@ -74,6 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Art authoring (briefed by the games, delivered here)** | | | | | | |
 | A04 | Ten native tonic item icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-racer/blob/1ed5b77d4f31c56def3549f444d93c1f4887d46c/docs/handoff/tasks/A04-tonic-icons.md) | uma-platform | ChatGPT | S | — | Done (`7ed5bce`, uma-art 2.10.0; Racer adoption `be16a6d`, [racer #127](https://github.com/luismlorenzana/uma-racer/pull/127); [production verified green](https://github.com/luismlorenzana/uma-racer/actions/runs/39633395549)) |
 | H38 | The Rift's building, four front crests and eleven achievement badges in uma-art; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/a550358/docs/handoff/tasks/H38-rift-art.md) | uma-platform | Claude | M | — | Done (`e3da022`, uma-art 2.11.0; the uma-rpg Rift page pins it) |
+| H54 | The Paladin's class emblem in uma-art (no new building: the Paladin Bastion draws `knights-bastion`); [source brief](https://github.com/luismlorenzana/uma-rpg/blob/5dd9f08/docs/handoff/tasks/H54-paladin-emblem-art.md) | uma-platform | Claude | S | — | Done (uma-art 2.12.0; uma-rpg's H59 pins it) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
