@@ -4,10 +4,11 @@ Original art for the Uma games, drawn from code by `scripts/pixel-art` (`pnpm ar
 files by hand.
 
 - `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined),
-  then the ungraded Speed Ticket (A02), then the ten graded tonics (A04).
+  then the ungraded Speed Ticket (A02), ten graded tonics (A04), three made-item grade rows and the Branch Gem (H73).
 - `items/atlas.json`: `{ schemaVersion: 1, cell, width, height, frames }`, where `frames[itemId]` is
   `{ x, y, name, family, side, effect, grade, refined }`. Item ids follow uma-rpg's catalog (`docs/design/items.md`).
-  Tonics add `{ x, y, w, h, name, kind: 'tonic', grade }`; the existing ticket keeps its ungraded metadata.
+  Tonics add `{ x, y, w, h, name, kind: 'tonic', grade }`; made items add
+  `{ x, y, w, h, name, kind: 'made', line, grade }`; the existing ticket keeps its ungraded metadata.
 
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
@@ -89,6 +90,25 @@ Standalone originals are in `assets/items/tonics/`. `assets/previews/racer-tonic
 The 16px/24px sheets and labelled `racer-tonics.html` additionally check the compact chip sizes. Tests pin every
 preceding item field/pixel, each fresh painter/standalone/atlas cutout, colour-independent structural differences,
 legendary glint clearance, transparent borders and deterministic comparison sheets. Other art families are unchanged.
+
+## Made items (H73, 2.13.0)
+
+Thirty-one native **32×32** frames append after the tonics: `weapon-gem-g1…g10` at **y=1088**,
+`armor-fittings-g1…g10` at **y=1120**, `accessory-setting-g1…g10` at **y=1152**, then `branch-gem` at
+**(0, 1184)**. The items sheet is **320×1216**, 362 frames. Made metadata is art identity only:
+`{ x, y, w: 32, h: 32, name, kind: 'made', line, grade }`; Branch Gem uses grade 5 and its own `branch-gem` line.
+
+Weapon Gems are pointed faceted stones with a crossguard-like clasp, rivets and short tang. Armor Fittings pair a
+strap and buckle with a curved riveted plate; G6–10 grow the plate and add a set stone. Accessory Settings remain
+visibly empty face-on bezel cups, progressing from wire and cord through prongs, silver filigree and gold. Grades
+1–3 are rough/simple, 4–6 cut/cast, 7–8 mounted/silver and 9–10 gilded with the shared legendary glints. Branch Gem
+is one teal-and-violet Y crystal held at its fork by a gold Weapon-Gem clasp. Every frame keeps a transparent 1 px
+border and bottom-right 9×9 corner.
+
+Standalone files are in `assets/items/made/`. `assets/previews/made-items-{1x,2x,4x}.png` repeats each line, Branch
+Gem and a comparison strip on white and `#17202b`; `made-items.html` labels the same source-drawn icons. The 2.12.0
+baseline freezes all 331 prior frame records and the complete old RGBA rectangle. Tests also pin order/positions,
+standalones, atlas cutouts, structural grade differences, distinct G5 silhouettes, clear glints and repeatable sheets.
 
 ## Star Gems and the Lapidary (H29, 2.8.0)
 

@@ -2,7 +2,7 @@
  "schemaVersion": 1,
  "cell": 32,
  "width": 320,
- "height": 1088,
+ "height": 1216,
  "frames": {
   "wheat": {
    "x": 0,
@@ -3299,6 +3299,316 @@
    "name": "Legend's Tonic",
    "kind": "tonic",
    "grade": 10
+  },
+  "weapon-gem-g1": {
+   "x": 0,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G1",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 1
+  },
+  "weapon-gem-g2": {
+   "x": 32,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G2",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 2
+  },
+  "weapon-gem-g3": {
+   "x": 64,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G3",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 3
+  },
+  "weapon-gem-g4": {
+   "x": 96,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G4",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 4
+  },
+  "weapon-gem-g5": {
+   "x": 128,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G5",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 5
+  },
+  "weapon-gem-g6": {
+   "x": 160,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G6",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 6
+  },
+  "weapon-gem-g7": {
+   "x": 192,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G7",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 7
+  },
+  "weapon-gem-g8": {
+   "x": 224,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G8",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 8
+  },
+  "weapon-gem-g9": {
+   "x": 256,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G9",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 9
+  },
+  "weapon-gem-g10": {
+   "x": 288,
+   "y": 1088,
+   "w": 32,
+   "h": 32,
+   "name": "Weapon Gem G10",
+   "kind": "made",
+   "line": "weapon-gem",
+   "grade": 10
+  },
+  "armor-fittings-g1": {
+   "x": 0,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G1",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 1
+  },
+  "armor-fittings-g2": {
+   "x": 32,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G2",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 2
+  },
+  "armor-fittings-g3": {
+   "x": 64,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G3",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 3
+  },
+  "armor-fittings-g4": {
+   "x": 96,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G4",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 4
+  },
+  "armor-fittings-g5": {
+   "x": 128,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G5",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 5
+  },
+  "armor-fittings-g6": {
+   "x": 160,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G6",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 6
+  },
+  "armor-fittings-g7": {
+   "x": 192,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G7",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 7
+  },
+  "armor-fittings-g8": {
+   "x": 224,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G8",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 8
+  },
+  "armor-fittings-g9": {
+   "x": 256,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G9",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 9
+  },
+  "armor-fittings-g10": {
+   "x": 288,
+   "y": 1120,
+   "w": 32,
+   "h": 32,
+   "name": "Armor Fittings G10",
+   "kind": "made",
+   "line": "armor-fittings",
+   "grade": 10
+  },
+  "accessory-setting-g1": {
+   "x": 0,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G1",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 1
+  },
+  "accessory-setting-g2": {
+   "x": 32,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G2",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 2
+  },
+  "accessory-setting-g3": {
+   "x": 64,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G3",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 3
+  },
+  "accessory-setting-g4": {
+   "x": 96,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G4",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 4
+  },
+  "accessory-setting-g5": {
+   "x": 128,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G5",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 5
+  },
+  "accessory-setting-g6": {
+   "x": 160,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G6",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 6
+  },
+  "accessory-setting-g7": {
+   "x": 192,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G7",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 7
+  },
+  "accessory-setting-g8": {
+   "x": 224,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G8",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 8
+  },
+  "accessory-setting-g9": {
+   "x": 256,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G9",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 9
+  },
+  "accessory-setting-g10": {
+   "x": 288,
+   "y": 1152,
+   "w": 32,
+   "h": 32,
+   "name": "Accessory Setting G10",
+   "kind": "made",
+   "line": "accessory-setting",
+   "grade": 10
+  },
+  "branch-gem": {
+   "x": 0,
+   "y": 1184,
+   "w": 32,
+   "h": 32,
+   "name": "Branch Gem",
+   "kind": "made",
+   "line": "branch-gem",
+   "grade": 5
   }
  }
 }

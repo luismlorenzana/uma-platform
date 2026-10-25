@@ -16,18 +16,18 @@ const names = ['Warm-Up Tonic', 'Practice Tonic', 'Paddock Tonic', 'Gallop Tonic
 describe('A04 appended tonic items', () => {
   it('retains all 321 preceding frames, their metadata and the complete old RGBA rectangle', () => {
     const { img, index } = savedAtlas('items')
-    const retained = Object.fromEntries(Object.entries(index.frames).filter(([id]) => !id.startsWith('tonic-')))
+    const retained = Object.fromEntries(Object.entries(index.frames).slice(0, baseline.frames))
     expect(Object.keys(retained)).toHaveLength(baseline.frames)
     expect(hash(JSON.stringify(retained))).toBe(baseline.metadata)
     expect(hash(img.crop(0, 0, baseline.width, baseline.height).px)).toBe(baseline.rgba)
-    expect([index.width, index.height, index.cell]).toEqual([320, 1088, 32])
-    expect(Object.keys(index.frames)).toHaveLength(331)
+    expect([index.width, index.height, index.cell]).toEqual([320, 1216, 32])
+    expect(Object.keys(index.frames)).toHaveLength(362)
   })
 
   it('appends exactly ten native frames in grade order, matching each painter and standalone PNG', () => {
     const { img, index } = savedAtlas('items')
     expect(TONICS.map(item => item.id)).toEqual(Array.from({ length: 10 }, (_, i) => `tonic-${i + 1}`))
-    expect(Object.keys(index.frames).slice(baseline.frames)).toEqual(TONICS.map(item => item.id))
+    expect(Object.keys(index.frames).slice(baseline.frames, baseline.frames + TONICS.length)).toEqual(TONICS.map(item => item.id))
     TONICS.forEach((item, col) => {
       expect(index.frames[item.id]).toEqual({ x: col * 32, y: 1056, w: 32, h: 32, name: names[col], kind: 'tonic', grade: col + 1 })
       const a = drawIcon(item), b = drawIcon(item)

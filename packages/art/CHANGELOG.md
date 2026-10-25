@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.13.0
+
+### Minor Changes
+
+- 60fa82e: Add native icons for Weapon Gems, Armor Fittings, Accessory Settings and the Branch Gem.
+
 ## 2.12.0
 
 ### Minor Changes

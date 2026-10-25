@@ -9,6 +9,8 @@ import { FAMILIES } from './items/index.ts'
 import { speedTicketItem } from './items/tickets.ts'
 import { TONICS } from './items/tonics.ts'
 import { TONIC_PREVIEW_SIZES, tonicPreview, tonicPreviewHtml } from './items/tonic-previews.ts'
+import { ACCESSORY_SETTINGS, ARMOR_FITTINGS, BRANCH_GEM, WEAPON_GEMS } from './items/made.ts'
+import { MADE_PREVIEW_SCALES, madePreview, madePreviewHtml } from './items/made-previews.ts'
 import type { ItemIcon } from './items/types.ts'
 import { encodePng } from './png.ts'
 import { drawIcon, ICON_SIZE } from './icon.ts'
@@ -21,11 +23,12 @@ const SIZE = ICON_SIZE
 const rows: Uint8Array[][] = []
 // The atlas: ten grades across, one row per family side (raw, then refined), families in catalog order.
 const ATLAS_COLUMNS = 10
-const atlasRows = FAMILIES.length * 2 + 2
+const atlasRows = FAMILIES.length * 2 + 6
 const atlas = new Uint8Array(ATLAS_COLUMNS * SIZE * atlasRows * SIZE * 4)
 type ItemFrame = { x: number; y: number; name: string; family: string; side: string; effect: string; grade: number; refined: boolean }
   | { x: number; y: number; name: string; kind: 'ticket' }
   | { x: number; y: number; w: number; h: number; name: string; kind: 'tonic'; grade: number }
+  | { x: number; y: number; w: number; h: number; name: string; kind: 'made'; line: string; grade: number }
 const frames: Record<string, ItemFrame> = {}
 function blit(px: Uint8Array, col: number, row: number): void {
   for (let y = 0; y < SIZE; y++) {
@@ -84,6 +87,32 @@ const tonicPixels = TONICS.map((item, col) => {
 rows.push(tonicPixels)
 cards.push(`<section><h2>Tonics</h2><div class="grid">${TONICS.map((item, index) => card(item, `data:image/png;base64,${encodePng(SIZE, SIZE, tonicPixels[index]!).toString('base64')}`)).join('')}</div></section>`)
 
+// H73 appends three complete grade rows and one Branch Gem. These are crafting outputs, not another material family.
+const madeDir = join(OUT, 'made'), madeFirstRow = FAMILIES.length * 2 + 2
+mkdirSync(madeDir, { recursive: true })
+for (const [offset, line, label, items] of [
+  [0, 'weapon-gem', 'Weapon Gems', WEAPON_GEMS],
+  [1, 'armor-fittings', 'Armor Fittings', ARMOR_FITTINGS],
+  [2, 'accessory-setting', 'Accessory Settings', ACCESSORY_SETTINGS],
+] as const) {
+  if (items.length !== ATLAS_COLUMNS || items.some((item, col) => item.grade !== col + 1 || item.id !== `${line}-g${col + 1}`)) throw new Error(`Expected ${line}-g1…10 in grade order`)
+  const pixels = items.map((item, col) => {
+    const px = drawIcon(item), png = encodePng(SIZE, SIZE, px)
+    blit(px, col, madeFirstRow + offset)
+    frames[item.id] = { x: col * SIZE, y: (madeFirstRow + offset) * SIZE, w: SIZE, h: SIZE, name: item.name, kind: 'made', line, grade: item.grade }
+    writeFileSync(join(madeDir, `${item.id}.png`), png)
+    return px
+  })
+  rows.push(pixels)
+  cards.push(`<section><h2>${label}</h2><div class="grid">${items.map((item, index) => card(item, `data:image/png;base64,${encodePng(SIZE, SIZE, pixels[index]!).toString('base64')}`)).join('')}</div></section>`)
+}
+const branch = drawIcon(BRANCH_GEM), branchPng = encodePng(SIZE, SIZE, branch), branchRow = madeFirstRow + 3
+blit(branch, 0, branchRow)
+frames[BRANCH_GEM.id] = { x: 0, y: branchRow * SIZE, w: SIZE, h: SIZE, name: BRANCH_GEM.name, kind: 'made', line: 'branch-gem', grade: BRANCH_GEM.grade }
+writeFileSync(join(madeDir, `${BRANCH_GEM.id}.png`), branchPng)
+rows.push([branch])
+cards.push(`<section><h2>Branch Gem</h2><div class="grid">${card(BRANCH_GEM, `data:image/png;base64,${branchPng.toString('base64')}`)}</div></section>`)
+
 const atlasDir = join(ROOT, 'packages', 'art', 'items')
 mkdirSync(atlasDir, { recursive: true })
 writeFileSync(join(atlasDir, 'atlas.png'), encodePng(ATLAS_COLUMNS * SIZE, atlasRows * SIZE, atlas))
@@ -96,6 +125,11 @@ for (const size of TONIC_PREVIEW_SIZES) {
   writeFileSync(join(previews, `racer-tonics-${size}px.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 writeFileSync(join(previews, 'racer-tonics.html'), tonicPreviewHtml())
+for (const scale of MADE_PREVIEW_SCALES) {
+  const sheet = madePreview(scale)
+  writeFileSync(join(previews, `made-items-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
+writeFileSync(join(previews, 'made-items.html'), madePreviewHtml())
 const contact = contactSheet(rows, 3, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'items.png'), encodePng(contact.w, contact.h, contact.px))
 writeFileSync(
