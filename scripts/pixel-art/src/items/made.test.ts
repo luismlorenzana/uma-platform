@@ -7,6 +7,7 @@ import { decodePng, hash, savedAtlas } from '../testing/atlas.ts'
 import baseline from './legacy-h73-2.12.0.json'
 import { ACCESSORY_SETTINGS, ARMOR_FITTINGS, BRANCH_GEM, WEAPON_GEMS } from './made.ts'
 import { MADE_PREVIEW_SCALES, madeComparisonIcons, madePreview } from './made-previews.ts'
+import { TONICS } from './tonics.ts'
 import type { ItemIcon } from './types.ts'
 
 const root = new URL('../../../../', import.meta.url)
@@ -23,7 +24,11 @@ const structure = (item: ItemIcon) => {
   return hash(JSON.stringify({ filled: [...s.mat].map(value => value < 0 ? 0 : 1), tone: [...s.tone] }))
 }
 const alpha = (px: Uint8Array) => Uint8Array.from(px.filter((_, index) => index % 4 === 3), value => value === 0 ? 0 : 1)
-const difference = (a: Uint8Array, b: Uint8Array) => a.reduce((count, value, index) => count + (value === b[index] ? 0 : 1), 0) / a.length
+const silhouetteDifference = (a: Uint8Array, b: Uint8Array) => {
+  const union = a.reduce((count, value, index) => count + (value || b[index] ? 1 : 0), 0)
+  const differ = a.reduce((count, value, index) => count + (value === b[index] ? 0 : 1), 0)
+  return differ / union
+}
 
 describe('H73 appended made items', () => {
   it('freezes every 2.12.0 frame, metadata field and RGBA pixel before the append point', () => {
@@ -85,13 +90,14 @@ describe('H73 appended made items', () => {
 
   it('keeps G5 slot silhouettes distinct from one another and familiar icon families', () => {
     const made = [WEAPON_GEMS[4]!, ARMOR_FITTINGS[4]!, ACCESSORY_SETTINGS[4]!].map(icon => ({ name: icon.id, mask: alpha(drawIcon(icon)) }))
-    const references = madeComparisonIcons().map(icon => ({ name: icon.name, mask: alpha(icon.px) }))
+    const references = [...madeComparisonIcons().map(icon => ({ name: icon.name, mask: alpha(icon.px) })),
+      { name: TONICS[4]!.id, mask: alpha(drawIcon(TONICS[4]!)) }]
     for (const [i, icon] of made.entries()) {
-      for (const other of made.slice(i + 1)) expect(difference(icon.mask, other.mask), `${icon.name} vs ${other.name}`).toBeGreaterThan(.08)
-      for (const other of references) expect(difference(icon.mask, other.mask), `${icon.name} vs ${other.name}`).toBeGreaterThan(.08)
+      for (const other of made.slice(i + 1)) expect(silhouetteDifference(icon.mask, other.mask), `${icon.name} vs ${other.name}`).toBeGreaterThanOrEqual(.25)
+      for (const other of references) expect(silhouetteDifference(icon.mask, other.mask), `${icon.name} vs ${other.name}`).toBeGreaterThanOrEqual(.25)
     }
     const branch = alpha(drawIcon(BRANCH_GEM))
-    for (const icon of made) expect(difference(branch, icon.mask), `branch-gem vs ${icon.name}`).toBeGreaterThan(.1)
+    for (const icon of made) expect(silhouetteDifference(branch, icon.mask), `branch-gem vs ${icon.name}`).toBeGreaterThanOrEqual(.25)
   })
 
   it.each(MADE_PREVIEW_SCALES)('reproduces the %i× white/dark review sheet', (scale) => {

@@ -1,5 +1,5 @@
-// H73: one earned icon per made item. These are crafting parts, not equipment: the silhouette says which slot the
-// part advances, while the grade ladder supplies its material and finish.
+// H73 art identity only: one icon per made item. These are crafting parts, not equipment; the silhouette says which
+// slot the part advances, while recipes, costs and unlocks stay in the game.
 import { gemOf, legendaryHalo, jewel } from '../gear/fittings.ts'
 import { BRONZE, CLOTHS, GOLD, METALS, SILVER, use, type Material } from '../gear/materials.ts'
 import { halo, linePixels } from './refined/workbench-kit.ts'
