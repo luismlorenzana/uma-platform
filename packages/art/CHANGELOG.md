@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.14.0
+
+### Minor Changes
+
+- Add five trade workbenches and Weapon, Tome and Charm Forges for the Wilds' trios (H113). The buildings atlas grows to 288×432 with 50 frames; all 42 previously published frames keep their metadata and pixels.
+
 ## 2.13.0
 
 ### Minor Changes

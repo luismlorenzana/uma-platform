@@ -21,7 +21,7 @@ describe('H54 append-only Paladin emblem', () => {
 
   it("keeps the Knight's Bastion, which uma-rpg's Paladin Bastion draws, unchanged", () => {
     const { img, index } = savedAtlas('buildings'), at = PLACES.findIndex(p => p.id === 'knights-bastion')
-    expect(Object.keys(index.frames)).toHaveLength(42)
+    expect(Object.keys(index.frames)).toHaveLength(50) // H113 appends eight buildings.
     expect(PLACES[at]).toMatchObject({ id: 'knights-bastion', page: 'learning' })
     for (const [id, frame] of Object.entries(baseline.buildings.frames)) expect(index.frames[id], id).toEqual(frame)
     for (const [id, rgba] of Object.entries(baseline.buildings.cutouts)) {

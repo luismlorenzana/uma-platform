@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 288,
- "height": 336,
+ "height": 432,
  "frames": {
   "fields": {
    "x": 0,
@@ -346,6 +346,86 @@
    "h": 48,
    "page": "battle",
    "anchorY": 44
+  },
+  "mine-workbench": {
+   "x": 0,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44,
+   "smoke": {
+    "x": 6,
+    "y": 13
+   }
+  },
+  "fields-workbench": {
+   "x": 48,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "forest-workbench": {
+   "x": 96,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "fishery-workbench": {
+   "x": 144,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "den-workbench": {
+   "x": 192,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44
+  },
+  "weapon-forge": {
+   "x": 240,
+   "y": 336,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44,
+   "smoke": {
+    "x": 9,
+    "y": 2
+   }
+  },
+  "tome-forge": {
+   "x": 0,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44,
+   "smoke": {
+    "x": 35.5,
+    "y": 5
+   }
+  },
+  "charm-forge": {
+   "x": 48,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "wilds",
+   "anchorY": 44,
+   "smoke": {
+    "x": 31.5,
+    "y": 7
+   }
   }
  }
 }

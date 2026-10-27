@@ -5,9 +5,10 @@ import { LEARNING } from './learning.ts'
 import { LAPIDARY } from './lapidary.ts'
 import { RACER } from './racer.ts'
 import { RIFT } from './rift.ts'
+import { TRIOS } from './trios.ts'
 import { TOWN } from './town.ts'
 import type { Place } from './types.ts'
 import { WILDS } from './wilds.ts'
 
 // Always append: published frames must never move when a new game adds places.
-export const PLACES: Place[] = [...FARMLANDS, ...WILDS, ...LEARNING, ...TOWN, ...RACER, LAPIDARY, RIFT]
+export const PLACES: Place[] = [...FARMLANDS, ...WILDS, ...LEARNING, ...TOWN, ...RACER, LAPIDARY, RIFT, ...TRIOS]
