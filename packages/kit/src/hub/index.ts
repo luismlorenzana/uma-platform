@@ -3,7 +3,7 @@
 export { HubMap, sceneKey, type HubMapPlace } from './HubMap.js'
 export { HubCanvas, type HubCanvasProps } from './HubCanvas.js'
 export { CROWD_CLEARING, CROWD_SPOTS, PlaceTargets, useHubGrid, type Plaza, type PlazaFigure, type TargetModel } from './PlaceTargets.js'
-export { Pips, type PipModel } from './Pips.js'
+export { ARCH_PIP, ArchPips, archSpots, Pips, type PipModel } from './Pips.js'
 export { ART_TILE, artScale, BUILDING, hubDpr, hubGrid, placeAnchor, placeCell, TARGET_W, type HubGrid } from './grid.js'
 export { neighbourPage, SWIPE_MIN_PX, swipeDirection, type Point } from './swipe.js'
 export { E, layTerrain, N, pageSeed, S, TILE_PROPS, W, type Terrain, type TerrainOptions, type TerrainPlace } from './terrain.js'

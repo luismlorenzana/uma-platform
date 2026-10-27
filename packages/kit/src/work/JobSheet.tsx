@@ -24,7 +24,8 @@ export interface JobSheetProps<T extends UmaPickerRow = UmaPickerRow> {
   /** The game's authored recipes, gear or gem choices. */
   readonly renderWhat: (selection: JobSelection & { readonly onChange: (job: string) => void }) => ReactNode
   readonly initialJob?: (outfitId: string | null) => string | null
-  readonly sizeRule?: SizeRule
+  /** The sizes offered, or the sizes for the chosen job, such as brackets by a recipe's length (0.15.0). */
+  readonly sizeRule?: SizeRule | ((job: string | null) => SizeRule | undefined)
   /** Keeps the default Who → What → How many flow, or puts quantity before a long authored recipe picker. */
   readonly sizePlacement?: 'before-what' | 'after-what'
   /** Keeps an explicitly chosen quantity when the game changes the recipe. The effective count still clamps to the new recipe's limit. */
@@ -60,7 +61,8 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
   const slot = query.queue && uma !== null ? view.settled.work[uma]?.slot ?? null : chooseSlot(view, building, uma, query.slot, room)
   const samePlace = slot !== null && slot.building === building && slot.room === room
   const one = job === null ? null : request(job, 1)
-  const most = one === null ? 1 : Math.min(view.maxItems(one.kind), maxCount ?? view.maxItems(one.kind))
+  const rule = typeof sizeRule === 'function' ? sizeRule(job) : sizeRule
+  const most = one === null ? 1 : Math.min(view.maxItems(one.kind), maxCount ?? Infinity, rule?.max ?? Infinity)
   const many = !eligible || !samePlace || uma === null || job === null || slot === null ? null : view.plan({ outfitId: uma, slot, request: request(job, most), mode })
   const chosenCount = Math.max(1, Math.min(count ?? 1, most, many?.max ?? most))
   const selection = { outfitId: uma, job, count: chosenCount }
@@ -70,7 +72,8 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
   const operation = mode === 'queue' ? actions.queue : actions.start
   const done = onDone ?? onClose
   const sizes = many !== null && many.seconds.length > 0
-    ? <SizeChips start={many.start} itemSeconds={many.seconds} max={many.max} value={count} onChange={setCount} rule={sizeRule} />
+    // A count past the most (a deep link's, or one kept across recipes) lands on the most.
+    ? <SizeChips start={many.start} itemSeconds={many.seconds} max={many.max} value={count === null ? null : chosenCount} onChange={setCount} rule={rule} />
     : null
   const submit = () => input === null ? undefined : tap.run(() => mode === 'queue'
     ? actions.queue!({ outfitId: input.outfitId, add: { request: input.request, building, ...(room === undefined ? {} : { room }) } })

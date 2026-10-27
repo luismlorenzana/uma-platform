@@ -114,6 +114,8 @@ export interface SizeRule {
   readonly sizes?: readonly number[]
   /** The game computes check-in fitting; the kit only marks it. */
   readonly recommend?: (start: number, itemSeconds: readonly number[], max: number) => SizeRecommendation
+  /** The most one job of this recipe takes, below the kind's own most, such as a long recipe's (0.15.0). */
+  readonly max?: number
 }
 export interface SizeChipView { readonly size: number; readonly endsAt: number; readonly ms: number; readonly duration: string; readonly idleMs: number }
 export interface SizeChipsView { readonly chips: readonly SizeChipView[]; readonly marked: number | null; readonly fit: string | null; readonly overnight: boolean }

@@ -2,12 +2,13 @@
 // link per place, sitting on its building through the scene's own grid math, so the canvas underneath only draws. Each
 // covers its building down to the ground line, then its name pill with the counter and its slot pips, and carries the
 // Ready badge, a lock when closed, and its VoiceOver line. A plaza is a slot: one figure standing on the road, or a small
-// crowd of up to five round it (0.3.0). Links read in map order, row by row, as the eye meets them.
+// crowd of up to five round it (0.3.0). Links read in map order, row by row, as the eye meets them. A place may hang its
+// pips over its building's top in a half arch instead (0.15.0); its Ready badge then sits at the building's foot.
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { Link } from 'react-router'
 import { LockedIcon } from '../ui/icons/index.js'
 import { BUILDING, hubDpr, hubGrid, placeAnchor, TARGET_W, type HubGrid } from './grid.js'
-import { Pips, type PipModel } from './Pips.js'
+import { ArchPips, Pips, type PipModel } from './Pips.js'
 import type { PlaceAt } from './types.js'
 
 export interface TargetModel {
@@ -26,6 +27,8 @@ export interface TargetModel {
   readonly locked?: boolean
   readonly pips?: readonly PipModel[]
   readonly more?: number
+  /** Where the pips sit: in rows under the name pill, or over the building's top in a half arch (0.15.0). */
+  readonly pipsAt?: 'below' | 'arch'
 }
 
 /** Where a link sits over the map: its top centre on the building's top, or a fraction of the map before it's measured. */
@@ -57,6 +60,8 @@ function PlaceTarget({ place, grid }: { place: TargetModel; grid: HubGrid | null
   const tapH = grid === null ? 66 : BUILDING.anchorY * grid.scale
   const tapW = grid === null ? 72 : grid.tile * 3
   const count = place.count ?? 0
+  const pips = place.pips !== undefined && place.pips.length > 0 ? place.pips : null
+  const arch = place.pipsAt === 'arch'
   return (
     <Link
       to={place.to}
@@ -73,10 +78,11 @@ function PlaceTarget({ place, grid }: { place: TargetModel; grid: HubGrid | null
           </span>
         )}
         {place.ready !== undefined && (
-          <span aria-hidden data-ready-badge className="font-display absolute -top-1 -right-3 rounded-full bg-success px-1.5 text-[10px] leading-4 font-bold text-ink-on-dark shadow-2">
+          <span aria-hidden data-ready-badge className={`font-display absolute ${arch ? 'bottom-0.5 left-1/2 z-10 -translate-x-1/2' : '-top-1 -right-3'} rounded-full bg-success px-1.5 text-[10px] leading-4 font-bold text-ink-on-dark shadow-2`}>
             {place.ready}
           </span>
         )}
+        {arch && pips !== null && <ArchPips pips={pips} more={place.more} w={tapW} h={tapH} />}
       </span>
       <span aria-hidden className="relative mt-0.5 max-w-full rounded-full border border-hairline bg-panel/95 px-1.5 py-0.5 text-[11px] leading-4 font-semibold text-ink shadow-2">
         <span className={`block truncate ${place.locked ? 'text-ink-faint' : ''}`}>{place.name}</span>
@@ -86,9 +92,9 @@ function PlaceTarget({ place, grid }: { place: TargetModel; grid: HubGrid | null
           </span>
         )}
       </span>
-      {place.pips !== undefined && place.pips.length > 0 && (
+      {!arch && pips !== null && (
         <span className="mt-0.5 drop-shadow-sm">
-          <Pips pips={place.pips} more={place.more} />
+          <Pips pips={pips} more={place.more} />
         </span>
       )}
     </Link>
