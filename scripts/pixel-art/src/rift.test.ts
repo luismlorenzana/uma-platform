@@ -32,10 +32,10 @@ describe('H38 append-only Rift art', () => {
     expect(ui.index.width).toBe(baseline.ui.width)
     for (const [id, frame] of Object.entries(baseline.ui.frames)) expect(ui.index.frames[id], id).toEqual(frame)
     expect(hash(ui.img.crop(0, 0, baseline.ui.width, baseline.ui.height).px)).toBe(baseline.ui.rgba)
-    expect([b.index.width, b.index.height]).toEqual([baseline.buildings.width, baseline.buildings.height])
+    expect([b.index.width, b.index.height]).toEqual([baseline.buildings.width, 432]) // H113 appends two rows.
     for (const [id, frame] of Object.entries(baseline.buildings.frames)) expect(b.index.frames[id], id).toEqual(frame)
     // The Rift's cell was entirely RGBA zero in 2.10.0, checked when the baseline was taken; zero it to compare the rest.
-    const rest = b.img.crop(0, 0, b.img.w, b.img.h).copy(new Img(SIZE, SIZE), 240, 288)
+    const rest = b.img.crop(0, 0, baseline.buildings.width, baseline.buildings.height).copy(new Img(SIZE, SIZE), 240, 288)
     expect(hash(rest.px)).toBe(baseline.buildings.rgba)
     for (const [id, rgba] of Object.entries(baseline.buildings.cutouts)) {
       const f = b.index.frames[id]!
@@ -52,9 +52,9 @@ describe('H38 append-only Rift art', () => {
 
   it('appends the Rift as place 41 at (240, 288) on the Battle page, drawn the same every time', () => {
     const { index, img } = savedAtlas('buildings')
-    expect(Object.keys(index.frames)).toHaveLength(42)
+    expect(Object.keys(index.frames)).toHaveLength(50)
     expect(PLACES.indexOf(RIFT)).toBe(41)
-    expect(PLACES.at(-1)).toBe(RIFT)
+    expect(PLACES.slice(0, 42).at(-1)).toBe(RIFT) // H113 follows the published 42-frame block.
     expect(RIFT).toMatchObject({ id: 'rift', name: 'The Rift', page: 'battle', at: { x: .5, y: .72 } })
     expect(index.frames.rift).toEqual({ x: 240, y: 288, w: 48, h: 48, page: 'battle', anchorY: GROUND })
     const a = draw(RIFT), b = draw(RIFT)

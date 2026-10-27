@@ -29,6 +29,23 @@ as 32×32 PNGs to
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## Wilds trios (H113)
+
+`src/buildings/trios.ts` appends five open timber trade sheds and three enclosed forges after every older frame.
+The sheds share their roof, awning, bench and sign construction; each trade paints its own tools, materials and
+sign pictogram. Weapon Forge carries a sword/axe/lance rack, Tome Forge a slate gable and open-book lectern,
+and Charm Forge a warm brick kiln and pendant rail. Only Mine Workbench and the three forges return smoke.
+
+`legacy-h113-2.13.0.json` freezes all 42 older frame records and individual RGBA cutouts before the sheet grows
+to 288×432 (50 frames). `trios.test.ts` checks the baseline, append coordinates, painters, smoke, edges and
+colour-independent silhouettes. No old painter changes.
+
+`trios-preview.ts` composes fifteen buildings in the five requested gather/refine/make rows on a 17×30 review
+grid, reusing the Wilds' ground/path painters. Roads connect all doors and bypass the middle sheds without entering
+footprints or closing 2×2 road blocks. The existing buildings PNG/HTML previews use this Wilds mock; standalone
+`wilds-trios-{1x,1.5x,3x}.png` and `buildings-contact-3x.png` aid review. HTML labels are 112px wide at 1.5×.
+This composition ships only as a preview, never as game layout or production rules.
+
 ## Racer buildings and Racing terrain (A01)
 
 `src/buildings/racer.ts` appends Card Library, Gym, Racecourse and Trophy Hall after every existing place, using the

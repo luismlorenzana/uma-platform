@@ -18,7 +18,7 @@ files by hand.
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 42 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 50 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
@@ -34,6 +34,33 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Wilds trios (H113, 2.14.0)
+
+Eight new frames append after the Rift, growing the buildings atlas from **288×336 to 288×432**. All 42 older
+frames retain their exact metadata and RGBA pixels, including the original `forge`, `workbench` and `arcane-armory`.
+Read the atlas dimensions from JSON rather than retaining the old sheet height.
+
+| Frame | Position | Smoke |
+|---|---|---|
+| `mine-workbench` | (0, 336) | Yes |
+| `fields-workbench` | (48, 336) | No |
+| `forest-workbench` | (96, 336) | No |
+| `fishery-workbench` | (144, 336) | No |
+| `den-workbench` | (192, 336) | No |
+| `weapon-forge` | (240, 336) | Yes |
+| `tome-forge` | (0, 384) | Yes |
+| `charm-forge` | (48, 384) | Yes |
+
+All eight are native 48×48, `page: wilds`, `anchorY: 44`. The five open timber sheds share a low shingle roof,
+front bench and hanging trade sign, with grey/green/tan/blue/violet awnings and trade-specific tools and materials.
+The forges have stone/brick kilns: a weapon rack and anvil, a peaked slate roof with open tome and violet runes,
+and hanging gold pendants, respectively. These are distinct original designs, not aliases for the older workshops.
+
+`assets/previews/buildings.html#wilds-trios` shows the fifteen places in Metal / Vegetables / Wood / Fish / Stone
+rows, at **1.5 CSS pixels per art pixel**, with 112px names and connected paths around the middle buildings.
+`wilds-trios-{1x,1.5x,3x}.png` provides the same composition without labels; `buildings-contact-3x.png` contains
+all fifty old and new frames in atlas order. Placement, names and production rules remain game-owned.
 
 ## Racer Hub (A01, 2.6.0)
 
