@@ -1,5 +1,15 @@
 # @luismlorenzana/uma-kit
 
+## 0.15.0
+
+### Minor Changes
+
+- Hub: `TargetModel.pipsAt: 'arch'` hangs a place's pips over its building's top in a half arch, 28 pt (best with four),
+  and moves its Ready badge to the building's foot; `PipModel.badge` adds a short tag on a pip's lower left, such as a
+  level. Work: `JobSheet.sizeRule` may be a function of the chosen job, `SizeRule.max` caps one recipe's job below its
+  kind's most, and a count past the most (a deep link's, or one kept across recipes) lands on the most. Everything is
+  opt-in; the defaults are unchanged.
+
 ## 0.14.0
 
 ### Minor Changes

@@ -169,6 +169,25 @@ describe('work actions', () => {
     expect(startAction).toHaveBeenCalledWith({ outfitId: 'ada', slot, request: { kind: 'refine', item: 'kite', count: 20 } })
   })
 
+  it('takes sizes per job, capped by the recipe, and lands a deep link past the cap on its most (0.15.0)', async () => {
+    const state = fresh({ twig: 40 })
+    const startAction = vi.fn()
+    const rule = (job: string | null) => (job === 'kite' ? { mode: 'count' as const, sizes: [1, 2, 3], max: 3 } : { mode: 'count' as const, sizes: [1, 5, 10] })
+    const sheet = <JobSheet query={{ job: 'kite', uma: 'ada', count: 8, queue: false, slot: 0, back: null }} building="grove" title="Make kites"
+      rows={[{ id: 'ada', name: 'Ada', search: 'ada', facets: {}, sorts: {}, level: 1, workLevel: 7, releasedAt: '' }]}
+      request={(item, count): TestRequest => ({ kind: 'refine', item, count })} sizeRule={rule} preserveCountOnJobChange
+      renderWhat={({ job, onChange }) => <button type="button" data-action="change-recipe" onClick={() => onChange(job === 'toy' ? 'kite' : 'toy')}>{job}</button>}
+      onClose={() => {}} />
+    await mount(wrap(sheet, state, { start: startAction }))
+    expect([...document.querySelectorAll('[data-size]')].map((chip) => chip.getAttribute('data-size'))).toEqual(['1', '2', '3'])
+    expect(document.querySelector('[data-size="3"]')?.getAttribute('aria-checked')).toBe('true')
+    await click('[data-action="change-recipe"]')
+    expect([...document.querySelectorAll('[data-size]')].map((chip) => chip.getAttribute('data-size'))).toEqual(['1', '5', '10', '40'])
+    await click('[data-size="10"]')
+    await click('[data-action="job-submit"]')
+    expect(startAction).toHaveBeenCalledWith({ outfitId: 'ada', slot, request: { kind: 'refine', item: 'toy', count: 10 } })
+  })
+
   it('lets the game preview a complete restart in another free slot against settled state', async () => {
     const first = done(start(fresh(), { outfitId: 'bee', slot, request: { kind: 'gather', item: 'twig', count: 1 } }, AT, ENV))
     const working = done(queue(first, { outfitId: 'bee', add: { building: 'grove', request: { kind: 'gather', item: 'twig', count: 1 } } }, AT, ENV))
