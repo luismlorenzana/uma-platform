@@ -1,5 +1,13 @@
 # @luismlorenzana/uma-art
 
+## 2.15.0
+
+### Minor Changes
+
+- Gear: ten rows append (320×1792): each Arm in its own color at every grade, as a Tome wears its element (Greatsword
+  orange, Axe purple, Lance green, Bow pale jade, Katana deep rose), its fittings in the grade's ingot, then the five Arm
+  Orbs in the same colors with white emblems. The first 46 rows are unchanged.
+
 ## 2.14.0
 
 ### Minor Changes

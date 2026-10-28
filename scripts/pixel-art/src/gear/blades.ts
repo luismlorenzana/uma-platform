@@ -54,8 +54,8 @@ interface Hilt {
   setting?: number
 }
 
-function paintHilt(s: Sprite, f: Frame, g: number, style: SwordStyle, h: Hilt): void {
-  const trim = use(s, trimOf(g))
+function paintHilt(s: Sprite, f: Frame, g: number, style: SwordStyle, h: Hilt, trimMaterial: Material = trimOf(g)): void {
+  const trim = use(s, trimMaterial)
   const grip = use(s, g >= 7 ? DARK_GRIP : LEATHER_GRIP)
   // Pommel: round at low grades, a faceted block later.
   const faceted = g >= 5
@@ -164,14 +164,16 @@ const GREAT: SwordStyle[] = [
   { guard: 'wings', span: 9, fuller: true, gem: 10, pommelGem: true, inlay: 'molten' },
 ]
 
-export function greatsword(s: Sprite, g: number): void {
+/** `tint`: the blade's color for every grade instead of the grade's ingot (the colored rows); the hilt is then the
+ * grade's ingot, as a Tome's fittings are its grade's gem. */
+export function greatsword(s: Sprite, g: number, tint?: Material): void {
   diagonalShadow(s)
   const style = GREAT[g - 1] ?? (GREAT[0] as SwordStyle)
   const f: Frame = { c: 32 }
-  const m = metalOf(g)
+  const m = tint ?? metalOf(g)
   const metal = use(s, m)
   paintBlade(s, f, metal, style, { from: -7, tip: 25, half: 4, taper: 0.5 })
-  paintHilt(s, f, g, style, { guardA: -9, gripFrom: -22, gripTo: -11, pommelA: -25, pommelR2: 8 })
+  paintHilt(s, f, g, style, { guardA: -9, gripFrom: -22, gripTo: -11, pommelA: -25, pommelR2: 8 }, tint ? metalOf(g) : undefined)
   if (style.inlay && m.glow) {
     inlay(s, f, style.inlay, m.glow, -4, 14)
     legendaryHalo(s, m.glow, 55)
@@ -227,13 +229,14 @@ const AXES: AxeStyle[] = [
   { head: 'crescent', gilt: true, wrap: true, spike: true, gem: 10 },
 ]
 
-export function axe(s: Sprite, g: number): void {
+/** `tint`: the head's color for every grade (the colored rows); its eye, bands and spike are the grade's ingot. */
+export function axe(s: Sprite, g: number, tint?: Material): void {
   diagonalShadow(s)
   const st = AXES[g - 1] ?? (AXES[0] as AxeStyle)
   const f: Frame = { c: 35 }
-  const m = metalOf(g)
+  const m = tint ?? metalOf(g)
   const metal = use(s, m)
-  const trim = use(s, st.gilt ? trimOf(g) : m)
+  const trim = use(s, tint ? metalOf(g) : st.gilt ? trimOf(g) : m)
   const wood = use(s, haftOf(g))
   const n0 = 7, n1 = 12
   shaft(s, f, wood, -24, n1 + 4)

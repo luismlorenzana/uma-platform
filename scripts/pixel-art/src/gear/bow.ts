@@ -3,12 +3,13 @@ import type { Sprite } from '../sprite.ts'
 import { diagonalShadow, metalOf, trimOf } from './blades.ts'
 import { diagPaint, xy, type Frame } from './diag.ts'
 import { gemOf, glowPixels, jewel, legendaryHalo } from './fittings.ts'
-import { DARK_GRIP, LEATHER_GRIP, use } from './materials.ts'
+import { DARK_GRIP, LEATHER_GRIP, use, type Material } from './materials.ts'
 
-export function bow(s: Sprite, grade: number): void {
+/** `tint`: the limbs' color for every grade (the colored rows); their tips are capped in the grade's ingot from G1. */
+export function bow(s: Sprite, grade: number, tint?: Material): void {
   diagonalShadow(s)
   const f: Frame = { c: 35 }
-  const material = metalOf(grade), metal = use(s, material)
+  const material = tint ?? metalOf(grade), metal = use(s, material)
   const length = 20, depth = 9
   const center = (a: number) => -depth * (1 - (a / length) ** 2)
   const thick = (a: number) => Math.abs(a) <= 3 ? 2.1 : Math.abs(a) >= length - 3 ? 0.9 : Math.abs(a) >= length - 8 ? 1.2 : 1.6
@@ -26,8 +27,8 @@ export function bow(s: Sprite, grade: number): void {
     const t = b - center(a) < -0.5 ? 4 : b - center(a) > 0.5 ? 2 : 3
     return (a + 100) % 2 === 0 ? t : Math.max(1, t - 1)
   })
-  const trim = use(s, trimOf(grade))
-  if (grade >= 3)
+  const trim = use(s, tint ? metalOf(grade) : trimOf(grade))
+  if (grade >= 3 || tint)
     for (const sign of [-1, 1]) {
       diagPaint(s, f, trim, (a, b) => sign * a >= length - 3 && sign * a <= length + 0.5 && Math.abs(b - center(a)) <= 1.3 ? (b - center(a) < 0 ? 5 : 3) : null)
       if (grade >= 6) {

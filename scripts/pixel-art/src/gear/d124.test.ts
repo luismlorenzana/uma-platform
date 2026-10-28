@@ -28,7 +28,7 @@ describe('H28 append-only feet and accessory art', () => {
 
   it('gives all twelve additions unique art and silhouettes at every grade', () => {
     for (let grade = 0; grade < 10; grade++) {
-      const icons = GEAR.slice(34).map(row => drawGearIcon(row.icons[grade]!))
+      const icons = GEAR.slice(34, 46).map(row => drawGearIcon(row.icons[grade]!))
       expect(new Set(icons.map(sha)).size).toBe(12)
       // Each family has its own object/outline silhouette, even before color and finishes.
       for (const family of [icons.slice(2, 7), icons.slice(7)]) {
@@ -44,7 +44,7 @@ describe('H28 append-only feet and accessory art', () => {
       // Ignore every RGB ramp: compare material placement, shading and soft-effect positions only.
       return JSON.stringify({ mat: [...sprite.mat], tone: [...sprite.tone], overlays: sprite.overlays.map(o => [o.x, o.y, o.color[3]]) })
     }
-    for (const row of GEAR.slice(34)) {
+    for (const row of GEAR.slice(34, 46)) {
       for (const grade of [4, 7, 8]) {
         const current = drawGearIcon(row.icons[grade - 1]!), prior = drawGearIcon(row.icons[grade - 2]!)
         expect(sha(current), row.type.type + ':g' + grade).not.toBe(sha(prior))

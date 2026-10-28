@@ -15,7 +15,7 @@ function atlasPixels(): Buffer {
     at += n + 12
   }
   const raw = inflateSync(Buffer.concat(chunks)), stride = 320 * 4, height = png.readUInt32BE(20), px = Buffer.alloc(stride * height)
-  expect(png.readUInt32BE(16)).toBe(320); expect(height).toBe(1472)
+  expect(png.readUInt32BE(16)).toBe(320); expect(height).toBe(1792)
   for (let y = 0; y < height; y++) {
     expect(raw[y * (stride + 1)]).toBe(0)
     px.set(raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1)), y * stride)

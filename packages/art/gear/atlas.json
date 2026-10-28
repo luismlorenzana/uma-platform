@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 320,
- "height": 1472,
+ "height": 1792,
  "frames": {
   "greatsword-g1": {
    "x": 0,
@@ -4602,6 +4602,1006 @@
    "grade": 10,
    "slot": "accessory",
    "material": "cut-philosophers-stone"
+  },
+  "greatsword-hue-g1": {
+   "x": 0,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "greatsword-hue-g2": {
+   "x": 32,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "greatsword-hue-g3": {
+   "x": 64,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "greatsword-hue-g4": {
+   "x": 96,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "greatsword-hue-g5": {
+   "x": 128,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "greatsword-hue-g6": {
+   "x": 160,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "greatsword-hue-g7": {
+   "x": 192,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "greatsword-hue-g8": {
+   "x": 224,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "greatsword-hue-g9": {
+   "x": 256,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "greatsword-hue-g10": {
+   "x": 288,
+   "y": 1472,
+   "w": 32,
+   "h": 32,
+   "type": "greatsword-hue",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "axe-hue-g1": {
+   "x": 0,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "axe-hue-g2": {
+   "x": 32,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "axe-hue-g3": {
+   "x": 64,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "axe-hue-g4": {
+   "x": 96,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "axe-hue-g5": {
+   "x": 128,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "axe-hue-g6": {
+   "x": 160,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "axe-hue-g7": {
+   "x": 192,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "axe-hue-g8": {
+   "x": 224,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "axe-hue-g9": {
+   "x": 256,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "axe-hue-g10": {
+   "x": 288,
+   "y": 1504,
+   "w": 32,
+   "h": 32,
+   "type": "axe-hue",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "lance-hue-g1": {
+   "x": 0,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "lance-hue-g2": {
+   "x": 32,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "lance-hue-g3": {
+   "x": 64,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "lance-hue-g4": {
+   "x": 96,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "lance-hue-g5": {
+   "x": 128,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "lance-hue-g6": {
+   "x": 160,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "lance-hue-g7": {
+   "x": 192,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "lance-hue-g8": {
+   "x": 224,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "lance-hue-g9": {
+   "x": 256,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "lance-hue-g10": {
+   "x": 288,
+   "y": 1536,
+   "w": 32,
+   "h": 32,
+   "type": "lance-hue",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "bow-hue-g1": {
+   "x": 0,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "bow-hue-g2": {
+   "x": 32,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "bow-hue-g3": {
+   "x": 64,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "bow-hue-g4": {
+   "x": 96,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "bow-hue-g5": {
+   "x": 128,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "bow-hue-g6": {
+   "x": 160,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "bow-hue-g7": {
+   "x": 192,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "bow-hue-g8": {
+   "x": 224,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "bow-hue-g9": {
+   "x": 256,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "bow-hue-g10": {
+   "x": 288,
+   "y": 1568,
+   "w": 32,
+   "h": 32,
+   "type": "bow-hue",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "katana-hue-g1": {
+   "x": 0,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 1,
+   "slot": "weapon",
+   "material": "copper-ingot"
+  },
+  "katana-hue-g2": {
+   "x": 32,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 2,
+   "slot": "weapon",
+   "material": "tin-ingot"
+  },
+  "katana-hue-g3": {
+   "x": 64,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 3,
+   "slot": "weapon",
+   "material": "iron-ingot"
+  },
+  "katana-hue-g4": {
+   "x": 96,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 4,
+   "slot": "weapon",
+   "material": "silver-ingot"
+  },
+  "katana-hue-g5": {
+   "x": 128,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 5,
+   "slot": "weapon",
+   "material": "cobalt-ingot"
+  },
+  "katana-hue-g6": {
+   "x": 160,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 6,
+   "slot": "weapon",
+   "material": "gold-ingot"
+  },
+  "katana-hue-g7": {
+   "x": 192,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 7,
+   "slot": "weapon",
+   "material": "platinum-ingot"
+  },
+  "katana-hue-g8": {
+   "x": 224,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 8,
+   "slot": "weapon",
+   "material": "titanium-ingot"
+  },
+  "katana-hue-g9": {
+   "x": 256,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 9,
+   "slot": "weapon",
+   "material": "mythril-ingot"
+  },
+  "katana-hue-g10": {
+   "x": 288,
+   "y": 1600,
+   "w": 32,
+   "h": 32,
+   "type": "katana-hue",
+   "grade": 10,
+   "slot": "weapon",
+   "material": "orichalcum-ingot"
+  },
+  "orb-greatsword-hue-g1": {
+   "x": 0,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "orb-greatsword-hue-g2": {
+   "x": 32,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "orb-greatsword-hue-g3": {
+   "x": 64,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "orb-greatsword-hue-g4": {
+   "x": 96,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "orb-greatsword-hue-g5": {
+   "x": 128,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "orb-greatsword-hue-g6": {
+   "x": 160,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "orb-greatsword-hue-g7": {
+   "x": 192,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "orb-greatsword-hue-g8": {
+   "x": 224,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "orb-greatsword-hue-g9": {
+   "x": 256,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "orb-greatsword-hue-g10": {
+   "x": 288,
+   "y": 1632,
+   "w": 32,
+   "h": 32,
+   "type": "orb-greatsword-hue",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "orb-axe-hue-g1": {
+   "x": 0,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "orb-axe-hue-g2": {
+   "x": 32,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "orb-axe-hue-g3": {
+   "x": 64,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "orb-axe-hue-g4": {
+   "x": 96,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "orb-axe-hue-g5": {
+   "x": 128,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "orb-axe-hue-g6": {
+   "x": 160,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "orb-axe-hue-g7": {
+   "x": 192,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "orb-axe-hue-g8": {
+   "x": 224,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "orb-axe-hue-g9": {
+   "x": 256,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "orb-axe-hue-g10": {
+   "x": 288,
+   "y": 1664,
+   "w": 32,
+   "h": 32,
+   "type": "orb-axe-hue",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "orb-lance-hue-g1": {
+   "x": 0,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "orb-lance-hue-g2": {
+   "x": 32,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "orb-lance-hue-g3": {
+   "x": 64,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "orb-lance-hue-g4": {
+   "x": 96,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "orb-lance-hue-g5": {
+   "x": 128,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "orb-lance-hue-g6": {
+   "x": 160,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "orb-lance-hue-g7": {
+   "x": 192,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "orb-lance-hue-g8": {
+   "x": 224,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "orb-lance-hue-g9": {
+   "x": 256,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "orb-lance-hue-g10": {
+   "x": 288,
+   "y": 1696,
+   "w": 32,
+   "h": 32,
+   "type": "orb-lance-hue",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "orb-bow-hue-g1": {
+   "x": 0,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "orb-bow-hue-g2": {
+   "x": 32,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "orb-bow-hue-g3": {
+   "x": 64,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "orb-bow-hue-g4": {
+   "x": 96,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "orb-bow-hue-g5": {
+   "x": 128,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "orb-bow-hue-g6": {
+   "x": 160,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "orb-bow-hue-g7": {
+   "x": 192,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "orb-bow-hue-g8": {
+   "x": 224,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "orb-bow-hue-g9": {
+   "x": 256,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "orb-bow-hue-g10": {
+   "x": 288,
+   "y": 1728,
+   "w": 32,
+   "h": 32,
+   "type": "orb-bow-hue",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
+  },
+  "orb-katana-hue-g1": {
+   "x": 0,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 1,
+   "slot": "accessory",
+   "material": "copper-ingot"
+  },
+  "orb-katana-hue-g2": {
+   "x": 32,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 2,
+   "slot": "accessory",
+   "material": "tin-ingot"
+  },
+  "orb-katana-hue-g3": {
+   "x": 64,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 3,
+   "slot": "accessory",
+   "material": "iron-ingot"
+  },
+  "orb-katana-hue-g4": {
+   "x": 96,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 4,
+   "slot": "accessory",
+   "material": "silver-ingot"
+  },
+  "orb-katana-hue-g5": {
+   "x": 128,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 5,
+   "slot": "accessory",
+   "material": "cobalt-ingot"
+  },
+  "orb-katana-hue-g6": {
+   "x": 160,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 6,
+   "slot": "accessory",
+   "material": "gold-ingot"
+  },
+  "orb-katana-hue-g7": {
+   "x": 192,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 7,
+   "slot": "accessory",
+   "material": "platinum-ingot"
+  },
+  "orb-katana-hue-g8": {
+   "x": 224,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 8,
+   "slot": "accessory",
+   "material": "titanium-ingot"
+  },
+  "orb-katana-hue-g9": {
+   "x": 256,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 9,
+   "slot": "accessory",
+   "material": "mythril-ingot"
+  },
+  "orb-katana-hue-g10": {
+   "x": 288,
+   "y": 1760,
+   "w": 32,
+   "h": 32,
+   "type": "orb-katana-hue",
+   "grade": 10,
+   "slot": "accessory",
+   "material": "orichalcum-ingot"
   }
  }
 }

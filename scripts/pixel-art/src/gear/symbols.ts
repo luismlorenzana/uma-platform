@@ -1,6 +1,6 @@
 // Tiny embossed elements and etched weapons: shapes remain distinct even when two grade materials share a color.
 import type { Sprite } from '../sprite.ts'
-import { use } from './materials.ts'
+import { use, type Material } from './materials.ts'
 
 export const ELEMENTS = {
   fire: { color: '#ff8a5c', ink: '#ffcf4a', glyph: ['...#...', '..##...', '.####..', '#####..', '#####..', '.###...', '..#....'] },
@@ -13,6 +13,20 @@ export const ELEMENTS = {
 export type Element = keyof typeof ELEMENTS
 export type Arm = 'greatsword' | 'axe' | 'lance' | 'bow' | 'katana'
 export type Kind = Arm | Element
+
+/** Each Arm's own color (uma-rpg D234), beside its twin element's on the wheel as a Tome wears its element: the
+ * Greatsword orange by Fire, the Lance green by Lightning, the Axe purple by Ice; Light and Dark's pale and deep pair
+ * gives the Bow a pale jade and the Katana a deep rose. `glow` lights the legendary grades. */
+export const ARM_COLORS: Readonly<Record<Arm, { color: string; glow: string }>> = {
+  greatsword: { color: '#f0922e', glow: '#ffc76a' },
+  axe: { color: '#8466e8', glow: '#c9b8ff' },
+  lance: { color: '#46c05a', glow: '#b4ffb0' },
+  bow: { color: '#6fd6c0', glow: '#d2fff4' },
+  katana: { color: '#d9437f', glow: '#ff9cc4' },
+}
+export const ARM_IDS = Object.keys(ARM_COLORS) as readonly Arm[]
+/** An Arm's color as a metal: the blade, head or limbs of its colored rows, whatever the grade. */
+export const armTint = (arm: Arm): Material => ({ base: ARM_COLORS[arm].color, opts: { lift: 0.42, drop: 0.32, hueShift: 6 }, glow: ARM_COLORS[arm].glow })
 
 const ARMS: Record<Arm, readonly string[]> = {
   greatsword: ['...#...', '..###..', '..###..', '..###..', '..###..', '#######', '...#...', '...#...', '..###..'],
@@ -37,9 +51,9 @@ export function elementGlyph(s: Sprite, element: Element, x0: number, y0: number
   return bright
 }
 
-/** Recessed dark silhouette, a fine bright bevel below it. */
-export function armGlyph(s: Sprite, arm: Arm): void {
-  const id = use(s, '#3f526b', { lift: 0.45, drop: 0.28 })
+/** Recessed dark silhouette, a fine bright bevel below it; `ink` a light emblem instead, on a colored sphere. */
+export function armGlyph(s: Sprite, arm: Arm, ink = '#3f526b'): void {
+  const id = use(s, ink, { lift: 0.45, drop: 0.28 })
   const rows = ARMS[arm]
   rows.forEach((row, y) => [...row].forEach((c, x) => {
     if (c !== '#') return
