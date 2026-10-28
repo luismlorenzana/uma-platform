@@ -13,8 +13,8 @@ files by hand.
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
   `duo-…`, `feast-<grade>`).
-- `gear/atlas.png` / `.json`: 46 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
-  the fittings' colours. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
+- `gear/atlas.png` / `.json`: 56 rows × 10 grades (including six retained retired rows) (32×32), id `<type>-g<grade>`; the grade's material sets
+  the fittings' colours, and since 2.15.0 each Arm also has a row in its own colour. Frames: `{ x, y, w, h, type, grade, slot, material }`. The bottom-right 9×9 stays clear for a game's
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
@@ -295,6 +295,24 @@ and use the dedicated row, not borrowed Greaves/Leggings/Charm/Ring art. No gear
 
 `assets/previews/gear-d124-2x.png` and `gear-d124-1x.png` show the twelve rows in this order; `gear.html` has labels.
 Tests pin all 2.4.0 frames/pixels and check each new silhouette, ten distinct grades and every saved atlas pixel.
+
+## Colored Arms (uma-rpg D234, 2.15.0)
+
+Ten rows append after the Mirror Amulet, growing the gear atlas to **320×1792**. All first 46 rows keep their positions,
+metadata and exact RGBA bytes (`legacy-2.14.0.json`).
+
+| Rows | Types, in order |
+|---|---|
+| 46–50 | `greatsword-hue`, `axe-hue`, `lance-hue`, `bow-hue`, `katana-hue` |
+| 51–55 | `orb-greatsword-hue`, `orb-axe-hue`, `orb-lance-hue`, `orb-bow-hue`, `orb-katana-hue` |
+
+Each Arm wears one color at every grade, as a Tome wears its element, beside its twin element's on the wheel: the
+Greatsword orange (`#f0922e`, by Fire), the Lance green (`#46c05a`, by Lightning), the Axe purple (`#8466e8`, by Ice);
+Light and Dark's pale and deep pair gives the Bow a pale jade (`#6fd6c0`) and the Katana a deep rose (`#d9437f`). The
+same painters draw them, so each keeps its plain row's silhouette; the hilt, guard, eye, tips or vamplate are the
+grade's ingot (copper to orichalcum), as a Tome's fittings are its grade's gem, and the legendary grades glow in the
+Arm's own light. The colored Orbs wear the Arm's color with a white emblem, as the element Orbs do. The plain rows stay
+for consumers that want metal by grade (`symbols.ts` exports `ARM_COLORS`).
 
 ## World atlas (H06, complete)
 

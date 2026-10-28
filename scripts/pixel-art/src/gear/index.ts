@@ -1,6 +1,7 @@
 // Every gear icon: one painter per type, drawn once per grade with that grade's material.
 import type { ItemIcon } from '../items/types.ts'
 import type { Sprite } from '../sprite.ts'
+import type { Material } from './materials.ts'
 import { garb, leather, mail, plate } from './armor.ts'
 import { bracers, circlet, cuirass, gauntlets, greaves, helm, leggings, robe } from './armor-pieces.ts'
 import { axe, greatsword } from './blades.ts'
@@ -12,7 +13,7 @@ import { charm, ring } from './jewelry.ts'
 import { katana } from './katana.ts'
 import { lance } from './lance.ts'
 import { GEAR_TYPES, GRADES, type GearType } from './spec.ts'
-import { ELEMENTS, type Element, type Kind } from './symbols.ts'
+import { ARM_IDS, armTint, ELEMENTS, type Arm, type Element, type Kind } from './symbols.ts'
 
 export type GearPainter = (s: Sprite, grade: number) => void
 
@@ -36,6 +37,12 @@ for (const kind of AMULETS) PAINTERS[`amulet-${kind}`] = (s, g) => amulet(s, g, 
 for (const element of Object.keys(ELEMENTS) as Element[]) PAINTERS[`tome-${element}`] = (s, g) => elementTome(s, g, element)
 for (const kind of ['greatsword', 'axe', 'lance', 'bow', 'katana', ...Object.keys(ELEMENTS)] as Kind[])
   PAINTERS[`orb-${kind}`] = (s, g) => orb(s, g, kind)
+// The colored rows (uma-rpg D234): the same painters, each Arm in its own color.
+const ARM_PAINTERS: Record<Arm, (s: Sprite, grade: number, tint?: Material) => void> = { greatsword, axe, lance, bow, katana }
+for (const arm of ARM_IDS) {
+  PAINTERS[`${arm}-hue`] = (s, g) => ARM_PAINTERS[arm](s, g, armTint(arm))
+  PAINTERS[`orb-${arm}-hue`] = (s, g) => orb(s, g, arm, true)
+}
 
 export interface GearIcon extends ItemIcon {
   type: string

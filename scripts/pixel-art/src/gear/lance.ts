@@ -3,12 +3,13 @@ import type { Sprite } from '../sprite.ts'
 import { diagonalShadow, metalOf, trimOf } from './blades.ts'
 import { diagPaint, xy, type Frame } from './diag.ts'
 import { gemOf, glowPixels, jewel, legendaryHalo } from './fittings.ts'
-import { DARK_GRIP, LEATHER_GRIP, use } from './materials.ts'
+import { DARK_GRIP, LEATHER_GRIP, use, type Material } from './materials.ts'
 
-export function lance(s: Sprite, grade: number): void {
+/** `tint`: the cone's color for every grade (the colored rows); the vamplate and ferrules are the grade's ingot. */
+export function lance(s: Sprite, grade: number, tint?: Material): void {
   diagonalShadow(s)
   const f: Frame = { c: 32 }
-  const material = metalOf(grade), metal = use(s, material), trim = use(s, trimOf(grade))
+  const material = tint ?? metalOf(grade), metal = use(s, material), trim = use(s, tint ? metalOf(grade) : trimOf(grade))
   const grip = use(s, grade >= 7 ? DARK_GRIP : LEATHER_GRIP)
   // The shaft below the guard is short; almost the whole length above it is the tapering cone.
   diagPaint(s, f, grip, (a, b) => {

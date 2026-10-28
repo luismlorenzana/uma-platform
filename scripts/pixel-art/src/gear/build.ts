@@ -58,8 +58,13 @@ const armorNative = contactSheet(rows.slice(26, 34), 1, 8, hex('#0f141b'), hex('
 writeFileSync(join(previews, 'gear-armor-d103-1x.png'), encodePng(armorNative.w, armorNative.h, armorNative.px))
 // H28: twelve dedicated rows, native and 2×, grades 1–10 left to right.
 for (const scale of [1, 2]) {
-  const sheet = contactSheet(rows.slice(34), scale, 8, hex('#0f141b'), hex('#18202a'))
+  const sheet = contactSheet(rows.slice(34, 46), scale, 8, hex('#0f141b'), hex('#18202a'))
   writeFileSync(join(previews, `gear-d124-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
+// D234: the colored Arms and Orbs under the five Tomes they pair with, native and 2×.
+for (const scale of [1, 2]) {
+  const sheet = contactSheet([...rows.slice(5, 10), ...rows.slice(46)], scale, 8, hex('#0f141b'), hex('#18202a'))
+  writeFileSync(join(previews, `gear-hues-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 writeFileSync(
   join(previews, 'gear.html'),

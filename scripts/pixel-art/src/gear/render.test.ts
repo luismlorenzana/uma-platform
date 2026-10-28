@@ -16,11 +16,13 @@ const ROWS = [
   'helm', 'cuirass', 'greaves', 'gauntlets', 'circlet', 'robe', 'leggings', 'bracers',
   'boots', 'slippers', 'talisman-vital', 'talisman-vampire', 'talisman-bulwark', 'talisman-iron', 'talisman-thorn',
   'amulet-spring', 'amulet-siphon', 'amulet-veil', 'amulet-ward', 'amulet-mirror',
+  'greatsword-hue', 'axe-hue', 'lance-hue', 'bow-hue', 'katana-hue',
+  'orb-greatsword-hue', 'orb-axe-hue', 'orb-lance-hue', 'orb-bow-hue', 'orb-katana-hue',
 ]
 const signature = (px: Uint8Array) => Buffer.from(px).toString('base64')
 
 describe('D86/D103/D124 gear atlas contract', () => {
-  it('pins all 46 rows and their primary drawing material', () => {
+  it('pins all 56 rows and their primary drawing material', () => {
     expect(GEAR_TYPES.map((t) => t.type)).toEqual(ROWS)
     expect(GEAR_TYPES.map((t) => t.mainFamily)).toEqual([
       ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
@@ -28,18 +30,19 @@ describe('D86/D103/D124 gear atlas contract', () => {
       ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
       ...Array<string>(4).fill('ores'), ...Array<string>(4).fill('crystals'),
       'ores', 'crystals', ...Array<string>(5).fill('ores'), ...Array<string>(5).fill('crystals'),
+      ...Array<string>(10).fill('ores'),
     ])
     expect(() => checkGearContract(GEAR)).not.toThrow()
-    expect(() => checkGearContract(GEAR.slice(1))).toThrow('46 gear rows')
-    expect(new Set(GEAR.flatMap((r) => r.icons.map((i) => i.id))).size).toBe(460)
+    expect(() => checkGearContract(GEAR.slice(1))).toThrow('56 gear rows')
+    expect(new Set(GEAR.flatMap((r) => r.icons.map((i) => i.id))).size).toBe(560)
   })
 
   it('matches every checked-in JSON frame, including grade material', () => {
     const atlas = JSON.parse(readFileSync(new URL('../../../../packages/art/gear/atlas.json', import.meta.url), 'utf8')) as {
       width: number; height: number; frames: Record<string, { x: number; y: number; w: number; h: number; type: string; grade: number; slot: string; material: string }>
     }
-    expect([atlas.width, atlas.height]).toEqual([320, 1472])
-    expect(Object.keys(atlas.frames)).toHaveLength(460)
+    expect([atlas.width, atlas.height]).toEqual([320, 1792])
+    expect(Object.keys(atlas.frames)).toHaveLength(560)
     GEAR.forEach((row, r) => row.icons.forEach((icon) => {
       expect(atlas.frames[icon.id]).toEqual({ x: (icon.grade - 1) * 32, y: r * 32, w: 32, h: 32, type: row.type.type, grade: icon.grade, slot: row.type.slot, material: icon.material })
     }))
@@ -56,12 +59,12 @@ describe('D86/D103/D124 gear atlas contract', () => {
     expect(new Set(grades).size).toBe(10)
   })
 
-  it('has five distinct Tome symbols and ten distinct Orb symbols at every grade', () => {
+  it('has five distinct Tome symbols and fifteen distinct Orbs at every grade', () => {
     for (let g = 0; g < 10; g++) {
       const books = GEAR.filter((r) => r.type.type.startsWith('tome-')).map((r) => signature(drawGearIcon(r.icons[g]!)))
       const orbs = GEAR.filter((r) => r.type.type.startsWith('orb-')).map((r) => signature(drawGearIcon(r.icons[g]!)))
       expect(new Set(books).size).toBe(5)
-      expect(new Set(orbs).size).toBe(10)
+      expect(new Set(orbs).size).toBe(15)
     }
   })
 

@@ -1,4 +1,4 @@
-// The gear catalog as the art sees it: forty-six rows (six retired), each in ten grades. A type's grade-g piece is made from
+// The gear catalog as the art sees it: fifty-six rows (six retired), each in ten grades. A type's grade-g piece is made from
 // the refined material at materialByGrade[g - 1] (uma-rpg's gear design), and that material colors it.
 
 export type Slot = 'weapon' | 'armor' | 'accessory'
@@ -66,6 +66,17 @@ export const GEAR_TYPES: readonly GearType[] = [
   { type: 'amulet-veil', label: 'Veil Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'amulet-ward', label: 'Ward Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
   { type: 'amulet-mirror', label: 'Mirror Amulet', slot: 'accessory', mainFamily: 'crystals', materialByGrade: CUT_GEMS },
+  // uma-rpg D234 appends only: each Arm in its own color at every grade, as a Tome wears its element, then its Orb.
+  { type: 'greatsword-hue', label: 'Greatsword (orange)', slot: 'weapon', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'axe-hue', label: 'Axe (purple)', slot: 'weapon', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'lance-hue', label: 'Lance (green)', slot: 'weapon', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'bow-hue', label: 'Bow (jade)', slot: 'weapon', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'katana-hue', label: 'Katana (rose)', slot: 'weapon', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'orb-greatsword-hue', label: 'Greatsword Orb (orange)', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'orb-axe-hue', label: 'Axe Orb (purple)', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'orb-lance-hue', label: 'Lance Orb (green)', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'orb-bow-hue', label: 'Bow Orb (jade)', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
+  { type: 'orb-katana-hue', label: 'Katana Orb (rose)', slot: 'accessory', mainFamily: 'ores', materialByGrade: INGOTS },
 ]
 
 export const GRADES = 10
