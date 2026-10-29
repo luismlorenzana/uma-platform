@@ -86,8 +86,8 @@ describe('H38 append-only Rift art', () => {
 
   it('appends four 16px front crests at y=52 and eleven 24px achievements from y=68, at the end of the spec', () => {
     const { index, img } = savedAtlas('ui')
-    expect([index.width, index.height]).toEqual([120, 140])
-    expect(Object.keys(index.frames)).toHaveLength(38) // H54 appends class/paladin after these.
+    expect([index.width, index.height]).toEqual([120, 164])
+    expect(Object.keys(index.frames)).toHaveLength(45) // H54 and H127 append class emblems after these.
     expect(FRONTS).toEqual(['iron', 'arcane', 'duel', 'horde'])
     expect(ACHIEVEMENTS).toEqual(['seal-iron', 'seal-arcane', 'seal-duel', 'seal-horde', 'rift-conquered',
       'iron-will', 'arcane-purity', 'untouched', 'swift-convergence', 'bestiary', 'crossover'])

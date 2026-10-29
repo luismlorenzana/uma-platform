@@ -2,7 +2,9 @@
 export const CLASSES = ['brawler', 'mage', 'spellblade', 'cleric', 'summoner'] as const
 export const STATUSES = ['armor-break', 'mind-break', 'enfeeble', 'shatter', 'hex', 'brave', 'faith', 'aegis', 'breaker', 'clarity'] as const
 // H54: classes v2's sixth class (uma-rpg D160). CLASSES keeps the five, which place the y=0 row by index.
-export type Class = (typeof CLASSES)[number] | 'paladin'
+export const TIER0 = ['recruit', 'duelist', 'acolyte', 'caller', 'apprentice'] as const
+export const HYBRIDS = ['tomeblade', 'armsummoner'] as const
+export type Class = (typeof CLASSES)[number] | 'paladin' | (typeof TIER0)[number] | (typeof HYBRIDS)[number]
 export type Status = (typeof STATUSES)[number]
 export const RACER_CURRENCIES = ['prize-money', 'speed-ticket', 'uma-ticket'] as const
 export const CURRENCIES = [...RACER_CURRENCIES, 'laurel'] as const
@@ -31,4 +33,5 @@ export const FRAME_SPECS: FrameSpec[] = [
   ...FRONTS.map((key): FrameSpec => ({ id: `front/${key}`, group: 'front', key, w: 16, h: 16 })),
   ...ACHIEVEMENTS.map((key): FrameSpec => ({ id: `achievement/${key}`, group: 'achievement', key, w: 24, h: 24 })),
   { id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 },
+  ...[...HYBRIDS, ...TIER0].map((key): FrameSpec => ({ id: `class/${key}`, group: 'class', key, w: 24, h: 24 })),
 ]

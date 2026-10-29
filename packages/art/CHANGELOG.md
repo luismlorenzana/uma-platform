@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.16.0
+
+### Minor Changes
+
+- Add seven native class emblems for Classes v3: five plain outlined Tier 0 motifs and two mirrored channel hybrids. The UI atlas grows to 120×164 with 45 frames while every published frame retains its metadata and pixels.
+
 ## 2.15.0
 
 ### Minor Changes
