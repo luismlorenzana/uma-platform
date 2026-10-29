@@ -5,7 +5,7 @@ import { classEmblem } from './classes.ts'
 import { statusBadge } from './statuses.ts'
 import { currencyMark, tierCrest } from './racer.ts'
 import { achievementBadge, frontCrest } from './rift.ts'
-import { ACHIEVEMENTS, CLASSES, CURRENCIES, FRAME_SPECS, FRONTS, STATUSES, TIERS, type FrameSpec } from './spec.ts'
+import { ACHIEVEMENTS, CLASSES, CURRENCIES, FRAME_SPECS, FRONTS, HYBRIDS, STATUSES, TIER0, TIERS, type FrameSpec } from './spec.ts'
 
 export type UiFrame = FrameSpec & { img: Img }
 export interface FrameIndex { x: number; y: number; w: number; h: number; group: FrameSpec['group']; key: string }
@@ -47,17 +47,19 @@ export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<
   // Append below H11's 120×36 cutout and A02's row. Never repack a published row; the width stays 120 (H31's guard).
   // H38 adds the front crests at y=52 and the achievements five across from y=68. H54's Paladin takes the free cell
   // beside achievement/crossover at (24, 116): the class row is full at 120, and published frames never move.
-  const atlas = new Img(120, 140), index: Record<string, FrameIndex> = {}
+  // H127 fills two more cells beside the Paladin; the five beginners append in tree order on a new row at y=140.
+  const atlas = new Img(120, 164), index: Record<string, FrameIndex> = {}
   for (const { id, group, key, w, h, img } of frames) {
     const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
     const paladin = group === 'class' && key === 'paladin'
-    const x = paladin ? 24 : group === 'class' ? CLASSES.indexOf(key as typeof CLASSES[number]) * 24
+    const hybrid = HYBRIDS.indexOf(key as typeof HYBRIDS[number]), beginner = TIER0.indexOf(key as typeof TIER0[number])
+    const x = paladin ? 24 : hybrid >= 0 ? 48 + hybrid * 24 : beginner >= 0 ? beginner * 24 : group === 'class' ? CLASSES.indexOf(key as typeof CLASSES[number]) * 24
       : group === 'status' ? STATUSES.indexOf(key as typeof STATUSES[number]) * 12
       : group === 'currency' ? key === 'laurel' ? 84 : CURRENCIES.indexOf(key as typeof CURRENCIES[number]) * 16
       : group === 'tier' ? 48 + TIERS.indexOf(key as typeof TIERS[number]) * 12
       : group === 'front' ? FRONTS.indexOf(key as typeof FRONTS[number]) * 16
       : (n % 5) * 24
-    const y = paladin ? 116 : group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36
+    const y = beginner >= 0 ? 140 : paladin || hybrid >= 0 ? 116 : group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36
     atlas.copy(img, x, y); index[id] = { x, y, w, h, group, key }
   }
   return { atlas, index }

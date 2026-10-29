@@ -1,0 +1,331 @@
+{
+  "version": "2.15.0",
+  "source": "89e99e1273229a6f73a4ed902cb00e09501e6bba",
+  "ui": {
+    "width": 120,
+    "height": 140,
+    "rgba": "8a360c1eb4d190957e93a194fb7e2771742b6177a6d7693ee959e02cfe2b0f72",
+    "frames": {
+      "class/brawler": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "brawler"
+      },
+      "class/mage": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "mage"
+      },
+      "class/spellblade": {
+        "x": 48,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "spellblade"
+      },
+      "class/cleric": {
+        "x": 72,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "cleric"
+      },
+      "class/summoner": {
+        "x": 96,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "summoner"
+      },
+      "status/armor-break": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "armor-break"
+      },
+      "status/mind-break": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "mind-break"
+      },
+      "status/enfeeble": {
+        "x": 24,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "enfeeble"
+      },
+      "status/shatter": {
+        "x": 36,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "shatter"
+      },
+      "status/hex": {
+        "x": 48,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "hex"
+      },
+      "status/brave": {
+        "x": 60,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "brave"
+      },
+      "status/faith": {
+        "x": 72,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "faith"
+      },
+      "status/aegis": {
+        "x": 84,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "aegis"
+      },
+      "status/breaker": {
+        "x": 96,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "breaker"
+      },
+      "status/clarity": {
+        "x": 108,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "clarity"
+      },
+      "currency/prize-money": {
+        "x": 0,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "prize-money"
+      },
+      "currency/speed-ticket": {
+        "x": 16,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "speed-ticket"
+      },
+      "currency/uma-ticket": {
+        "x": 32,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "uma-ticket"
+      },
+      "tier/1": {
+        "x": 48,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "1"
+      },
+      "tier/2": {
+        "x": 60,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "2"
+      },
+      "tier/3": {
+        "x": 72,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "3"
+      },
+      "currency/laurel": {
+        "x": 84,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "laurel"
+      },
+      "front/iron": {
+        "x": 0,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "iron"
+      },
+      "front/arcane": {
+        "x": 16,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "arcane"
+      },
+      "front/duel": {
+        "x": 32,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "duel"
+      },
+      "front/horde": {
+        "x": 48,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "horde"
+      },
+      "achievement/seal-iron": {
+        "x": 0,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-iron"
+      },
+      "achievement/seal-arcane": {
+        "x": 24,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-arcane"
+      },
+      "achievement/seal-duel": {
+        "x": 48,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-duel"
+      },
+      "achievement/seal-horde": {
+        "x": 72,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-horde"
+      },
+      "achievement/rift-conquered": {
+        "x": 96,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "rift-conquered"
+      },
+      "achievement/iron-will": {
+        "x": 0,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "iron-will"
+      },
+      "achievement/arcane-purity": {
+        "x": 24,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "arcane-purity"
+      },
+      "achievement/untouched": {
+        "x": 48,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "untouched"
+      },
+      "achievement/swift-convergence": {
+        "x": 72,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "swift-convergence"
+      },
+      "achievement/bestiary": {
+        "x": 96,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "bestiary"
+      },
+      "achievement/crossover": {
+        "x": 0,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "crossover"
+      },
+      "class/paladin": {
+        "x": 24,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "paladin"
+      }
+    }
+  },
+  "previews": {
+    "laurel-marks-1x.png": "099adf63cc25a5c2e7710d71c325a7471fcd113035385347326aca4acbb2a527",
+    "laurel-marks-2x.png": "a6bf9a3b4f6a31fbf05cd66c67304aa7b0fe6500bfeec7ad7d50a6afe7db3a41",
+    "laurel-marks-4x.png": "b1a773595e2881fb9e92a37954179b7602371ef69b297d6dd33bc64c5b53f427",
+    "paladin-emblems-1x.png": "da3b98660ee6ae9ed9e31fe7c04c02ab538f93cc7660eac80a67c9d76544a7b1",
+    "paladin-emblems-2x.png": "a6abefd4698a97beafa2e9cd69299768655e4870ee7522a5eb347f969ca247b1",
+    "paladin-emblems-4x.png": "745a458447086518b4535a036b693920b1e459a82f1bfcc0a987d762ce5e3a41",
+    "racer-marks-1x.png": "e759a950922b876e094d446fe384fea5965b1deb6724a80a9323e64b3dca99af",
+    "racer-marks-2x.png": "4dda2bedddae74b1462f4b0dd905fe58ea4b826dfa15c03d8295acd639b254d9",
+    "racer-marks-4x.png": "33e7f8cf455f8ffd57b152143e6dc65ccd092651b755664161811fd64fef174a",
+    "rift-marks-1x.png": "f2a862ca9c510dda59431a4449634275437978202d395c0d56a6998dc2d37654",
+    "rift-marks-2x.png": "40849d4d832c09f81973b3302caf457c5e282f79861e29d9cf52b8a8946b8dd4",
+    "rift-marks-4x.png": "9487404a9654fa0c5369f86ef8c73787998847db0642bbb13994ff07c02a644f",
+    "ui-1x.png": "844bf33024913b164c2df2a5e6cffa3608c582799057f11619205e2187c96ca8",
+    "ui.png": "bfa36f275ddc1f0d563d50e3339c1c8d2e33fb292016b3aad0b577374d0e546f"
+  }
+}

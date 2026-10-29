@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 140,
+ "height": 164,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -306,6 +306,62 @@
    "h": 24,
    "group": "class",
    "key": "paladin"
+  },
+  "class/tomeblade": {
+   "x": 48,
+   "y": 116,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "tomeblade"
+  },
+  "class/armsummoner": {
+   "x": 72,
+   "y": 116,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "armsummoner"
+  },
+  "class/recruit": {
+   "x": 0,
+   "y": 140,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "recruit"
+  },
+  "class/duelist": {
+   "x": 24,
+   "y": 140,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "duelist"
+  },
+  "class/acolyte": {
+   "x": 48,
+   "y": 140,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "acolyte"
+  },
+  "class/caller": {
+   "x": 72,
+   "y": 140,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "caller"
+  },
+  "class/apprentice": {
+   "x": 96,
+   "y": 140,
+   "w": 24,
+   "h": 24,
+   "group": "class",
+   "key": "apprentice"
   }
  }
 }

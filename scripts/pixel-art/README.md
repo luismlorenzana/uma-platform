@@ -204,7 +204,20 @@ ships only the atlas/index; playback and summon lifetimes belong to the game.
 
 ## UI emblems and status badges
 
-`src/ui/` draws six 24×24 class emblems (the Paladin since H54) and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
+`src/ui/` draws thirteen 24×24 class emblems (Classes v3 since H127) and ten 12×12 status glyphs into `packages/art/ui/atlas.{png,json}`.
 `spec.ts` pins the class/status keys; `atlas.ts` checks completeness, ids and native sizes before packing.
 `pnpm art:draw` also writes `assets/previews/ui.png` (3×), `ui-1x.png` and `ui.html`, with named cards and native-size
 class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes and the saved atlas contract.
+
+## Classes v3 (H127)
+
+`ui/classes.ts` shares the Spellblade and Summoner geometry between each mirrored pair before dome shading; the
+original six retain their exact pixels. Five plain iron/wood/parchment beginners use hollow faces and no painted
+glow. The Tome Spellblade's steel ring has a blue-grey outline so the two channel palettes stay distinct at 24px.
+`ui/spec.ts` keeps the original `CLASSES` row and appends `HYBRIDS` then `TIER0`; `packUi` fills (48,116)/(72,116)
+and a five-cell row at y=140, keeping the old width and positions. The sheet becomes 120×164, 45 frames.
+
+`ui/classes-v3-preview.ts` lays out Tier 0 above Tier 1 in tree order on white and dark chips at 1×/2×/4×.
+`testing/legacy-h127-2.15.0.json` freezes the complete old sheet and every record, with the two previously empty
+hybrid cells zeroed for comparison, plus all older UI preview PNGs. Tests require distinct beginner silhouettes,
+at least 90% mirrored silhouette overlap and 60% visibly recoloured opaque pixels for each hybrid.

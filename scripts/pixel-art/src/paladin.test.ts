@@ -12,10 +12,12 @@ const opaque = (img: Img) => Array.from({ length: img.w * img.h }, (_, i) => img
 describe('H54 append-only Paladin emblem', () => {
   it('preserves every published 2.11.0 ui frame, its metadata and its pixels', () => {
     const { img, index } = savedAtlas('ui')
-    expect([index.width, index.height]).toEqual([baseline.ui.width, baseline.ui.height])
+    expect(index.width).toBe(baseline.ui.width)
     for (const [id, frame] of Object.entries(baseline.ui.frames)) expect(index.frames[id], id).toEqual(frame)
     // The Paladin's cell was entirely RGBA zero in 2.11.0, checked when the baseline was taken; zero it to compare the rest.
-    const rest = img.crop(0, 0, img.w, img.h).copy(new Img(PALADIN.w, PALADIN.h), PALADIN.x, PALADIN.y)
+    const rest = img.crop(0, 0, baseline.ui.width, baseline.ui.height)
+    // H127's two hybrid cells were also RGBA zero in the old sheet; its new baseline checks this.
+    for (const x of [PALADIN.x, 48, 72]) rest.copy(new Img(24, 24), x, PALADIN.y)
     expect(hash(rest.px)).toBe(baseline.ui.rgba)
   })
 
@@ -33,21 +35,23 @@ describe('H54 append-only Paladin emblem', () => {
   it('appends class/paladin last in the spec, at (24, 116), 24×24, in the class group, keeping the five', () => {
     const { index } = savedAtlas('ui')
     expect(CLASSES).toEqual(['brawler', 'mage', 'spellblade', 'cleric', 'summoner'])
-    expect(FRAME_SPECS.slice(0, -1).map(s => s.id)).toEqual(Object.keys(baseline.ui.frames))
-    expect(FRAME_SPECS.at(-1)).toEqual({ id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 })
-    expect(Object.keys(index.frames)).toHaveLength(38)
+    const at = FRAME_SPECS.findIndex(s => s.id === 'class/paladin')
+    expect(at).toBe(37)
+    expect(FRAME_SPECS.slice(0, at).map(s => s.id)).toEqual(Object.keys(baseline.ui.frames))
+    expect(FRAME_SPECS[at]).toEqual({ id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 })
+    expect(Object.keys(index.frames)).toHaveLength(45)
     expect(index.frames['class/paladin']).toEqual(PALADIN)
   })
 
   it('draws the same pixels every time, matching the saved atlas, with transparent corners', () => {
-    const spec = FRAME_SPECS.at(-1)!, a = drawUi(spec), b = drawUi(spec), { img } = savedAtlas('ui')
+    const spec = FRAME_SPECS.find(s => s.id === 'class/paladin')!, a = drawUi(spec), b = drawUi(spec), { img } = savedAtlas('ui')
     expect(hash(a.px)).toBe(hash(b.px))
     expect(hash(img.crop(PALADIN.x, PALADIN.y, PALADIN.w, PALADIN.h).px)).toBe(hash(a.px))
     expect([[0, 0], [23, 0], [0, 23], [23, 23]].map(([x, y]) => a.get(x!, y!)[3])).toEqual([0, 0, 0, 0])
   })
 
   it('is a tall upright shape, told apart from each of the five emblems by silhouette', () => {
-    const classes = uiFrames().filter(f => f.group === 'class'), paladin = opaque(classes.at(-1)!.img)
+    const classes = uiFrames().filter(f => f.group === 'class' && ((CLASSES as readonly string[]).includes(f.key) || f.key === 'paladin')), paladin = opaque(classes.at(-1)!.img)
     const xs = paladin.flatMap((v, i) => v ? [i % 24] : []), ys = paladin.flatMap((v, i) => v ? [Math.floor(i / 24)] : [])
     expect(Math.max(...ys) - Math.min(...ys)).toBeGreaterThan(Math.max(...xs) - Math.min(...xs))
     expect(classes.map(f => f.key)).toEqual([...CLASSES, 'paladin'])

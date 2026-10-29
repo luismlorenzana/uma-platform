@@ -23,12 +23,12 @@ files by hand.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: six class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
+- `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
   three tier crests (12×12), four Rift front crests (16×16) and eleven achievement badges (24×24). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
   `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>` or `achievement/<key>`.
-  Classes: Brawler, Mage, Spell Blade, Cleric, Summoner and Paladin (the Paladin off the class row: read positions from
-  the JSON). Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
+  Classes: Recruit, Duelist, Acolyte, Caller, Apprentice; Brawler, Arms Spellblade, Tome Spellblade, Paladin, Cleric,
+  Arms Summoner, Tome Summoner and Sorcerer. Read positions from the JSON. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
   buffs gold-teal. Render at native size or a whole-number scale. Keep full class names beside emblems and full
   status names in accessible labels; unknown statuses should retain the game's text fallback.
@@ -228,6 +228,30 @@ banner and gold star, drawn with the Learning halls), unchanged.
 Review `assets/previews/paladin-emblems-{1x,2x,4x}.png` (the six emblems in game order on white and `#17202b` chips)
 and `paladin-bastion-2x.png` (Spell Blade Salle, Knight's Bastion with the emblem beside it, Cleric Chapel, on
 Learning ground); `ui.html` labels it. `src/testing/legacy-h54-2.11.0.json` freezes the older frames.
+
+## Classes v3 (H127, 2.16.0)
+
+Seven native 24×24 class emblems append after the Paladin, growing `ui` from **120×140 to 120×164**, 45 frames.
+Every older frame retains its metadata and pixels. The last cell at (96, 116) remains empty.
+
+| Key | Position | Motif |
+|---|---|---|
+| `class/tomeblade` | (48, 116) | Mirrored Spellblade, violet blade and steel ring |
+| `class/armsummoner` | (72, 116) | Mirrored Summoner, steel spirit, gold ellipse and warm halo |
+| `class/recruit` | (0, 140) | Upright axe, hollow iron head and wood haft |
+| `class/duelist` | (24, 140) | Slim iron sword, round guard and wood grip |
+| `class/acolyte` | (48, 140) | Hollow heater shield and wood boss |
+| `class/caller` | (72, 140) | Hollow iron ellipse and small parchment wisp |
+| `class/apprentice` | (96, 140) | Closed wood book, hollow panel, parchment edge and iron clasp |
+
+Tier 0 uses plain iron, wood and parchment, with no glow, gold, halo or rune marks. The hybrids share their mirrors'
+geometry helpers and receive top-left light after mirroring. A blue-grey edge on Tome Spellblade's steel ring makes
+the exchanged channel colours readable at native size. Sorcerer, Arms Spellblade and Tome Summoner retain the ids
+`class/mage`, `class/spellblade` and `class/summoner`; their existing images do not change.
+
+`classes-v3-emblems-{1x,2x,4x}.png` shows the five beginners above the eight Tier 1 classes in tree order, on white
+and dark chips. `ui.html#classes-v3` labels all thirteen. Older preview PNGs stay byte-identical; the new baseline
+and `classes-v3.test.ts` guard the old sheet, positions, mirrored silhouettes and channel contrast.
 
 ## Gear rows in 2.0.0
 
