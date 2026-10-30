@@ -147,7 +147,9 @@ import {
   `confirm` returns the same answer shape. A rejected callback shows its error message (or the default failure
   sentence). `useTap` prevents concurrent taps across the provider; `TapNoteLine` draws the answer and confirmation.
 - **`SlotRow` props:** `slot`, optional `what: { name, icon? }`, `startTo`/`onStart`, `queueTo`/`onQueue`,
-  `startLabel`, and `repeat`. It reads its own card from the provider. `PeekRow` has the same props at the smaller
+  `startLabel`, `repeat`, and `onFace?: (outfitId: string) => void` (0.16.0). `onFace` wraps the worker face in a
+  44pt button named "Profile: {Uma name}"; `profile` is an overridable work word. The game owns navigation and its
+  Back/next/previous context. Without it the face stays unchanged. It reads its own card from the provider. `PeekRow` has the same props at the smaller
   side-panel size. Links use the game's router; callbacks allow another navigation scheme. A new entry closes the
   previous entry's controls, including when Finish immediately starts a queue. Collect counts span every entry.
 - **`JobSheet` props:** `query: JobQuery | null`, `building`, optional `room`, `title`, `rows`, `request(job, count)`,
@@ -233,6 +235,12 @@ const auth = useAuth()
 - **`ProfileFrame`** takes `portrait`, `name`, `title`, `level` (SB2's `formatLevel` once it lands), `chips`, `corner`,
   `summary`, `locked`, and `tabs` with `tab` and `onTab`; its children are the active tab's body. A tab's optional
   `dot` draws a small green "ready" dot after its label, and `dotLabel` names the tab while the dot shows (0.11.0).
+  Opt-in `size?: 'regular' | 'compact'` defaults to the original regular header (0.16.0). Compact uses a 64px portrait,
+  a wrapping 17px name, a truncating 12.5px title beside the chips, and a bold 14px level. The block is 64px tall;
+  `corner`, `summary` and tabs retain their slots. The compact lock is a named 14px icon without the word.
+  Optional `progress: { value: number; max: number; label: string }` draws a 4px bar and an 11px caption on the compact
+  level line, or below the regular level. It exposes the supplied values and label through `role="progressbar"`;
+  the fill is full at or beyond the maximum. Omitting both options preserves the regular markup exactly.
 - **`UnlockConfirm`** shows the Uma Tickets going N → N−1, "Unlocking is final." and Confirm.
 - **Words:** every string is a prop with an English default (`ACCOUNT_WORDS`, `SHELF_WORDS`, …).
 

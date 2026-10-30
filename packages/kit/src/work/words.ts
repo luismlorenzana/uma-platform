@@ -1,7 +1,7 @@
 // Shared work vocabulary (SC2, docs/sibling/phases.md § Phase C). Games can replace every sentence.
 export const WORK_WORDS = {
   free: 'Free', done: 'Done', start: 'Start', startJob: 'Start a job', queueNext: 'Queue next',
-  collect: 'Collect', repeat: 'Repeat', speed: 'Speed up', recall: 'Recall', more: 'More',
+  collect: 'Collect', repeat: 'Repeat', speed: 'Speed up', recall: 'Recall', more: 'More', profile: 'Profile',
   yes: 'Yes', notNow: 'Not now', close: 'Close', who: 'Who works here?', what: 'What', howMany: 'How many',
   chooseUma: 'Choose an Uma', chooseJob: 'Choose what to make.', noUma: 'No available Uma.', noSlot: 'No free slot here.',
   locked: 'Locked', busy: 'Busy',
