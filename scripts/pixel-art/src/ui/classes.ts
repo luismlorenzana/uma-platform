@@ -1,5 +1,6 @@
 import { halo } from '../items/refined/workbench-kit.ts'
 import { hex } from '../color.ts'
+import { ARM_COLORS, ELEMENTS, elementGlyph } from '../gear/symbols.ts'
 import { Mask, shadeDome } from '../shape.ts'
 import type { Sprite } from '../sprite.ts'
 import { add, stroke } from '../tiles/props/kit.ts'
@@ -7,7 +8,7 @@ import { TIER0, type Class } from './spec.ts'
 
 export function classEmblem(s: Sprite, kind: Class): void {
   s.shadow = { cx: 12, cy: 22, rx: 8, ry: 1, alpha: 62 }
-  if ((TIER0 as readonly string[]).includes(kind)) { beginner(s, kind); return }
+  if ((TIER0 as readonly string[]).includes(kind)) { baseClassEmblem(s, kind); return }
   const steel = add(s, '#cadde8', { lift: 0.42, drop: 0.26 }), gold = add(s, '#d9b96b'), wood = add(s, '#8c674c')
   const poly = (points: readonly (readonly [number, number])[]) => Mask.polygon(points, 24, 24)
   const dome = (mask: Mask, id: number) => shadeDome(s, mask, id, { bias: 0.12, relief: 0.45, contact: false })
@@ -84,35 +85,73 @@ function spellblade(s: Sprite, blade: number, rune: number, gold: number, wood: 
   halo(s, '#c4b1ef', 32, 1)
 }
 function summoner(s: Sprite, rune: number, spirit: number, eye: number, flipped: boolean) {
-  const { x, poly, dome } = geometry(s, flipped)
+  const { x, dome } = geometry(s, flipped)
   dome(Mask.ellipse(12, 18, 8.5, 3.2, 0, 24, 24).subtract(Mask.ellipse(12, 18, 6, 1.4, 0, 24, 24)), rune)
-  dome(poly([[12, 2], [17, 7], [16, 12], [14, 15], [10, 13], [7, 14], [8, 10], [7, 7]]), spirit)
-  s.paint(x(10), 8, eye, 1); s.paint(x(14), 8, eye, 1)
+  familiar(s, spirit, eye, { flipped })
   for (const [xx, y] of [[5, 17], [12, 20], [18, 17]] as const) s.paint(x(xx), y, rune, 5)
   halo(s, flipped ? '#ead9a6' : '#c7e7f3', 28, 1)
 }
-function beginner(s: Sprite, kind: Class) {
-  const iron = add(s, '#9aa3a8', { lift: .35 }), wood = add(s, '#8c674c'), paper = add(s, '#e5ddc5')
+/** The same summoned shape across both generations; transform its geometry before top-left shading. */
+function familiar(s: Sprite, spirit: number, eye: number, { flipped = false, scale = 1, dx = 0, dy = 0 } = {}) {
+  const { dome } = geometry(s)
+  const shape = [[12, 2], [17, 7], [16, 12], [14, 15], [10, 13], [7, 14], [8, 10], [7, 7]] as const
+  dome(Mask.polygon(shape.map(([x, y]) => [(flipped ? 24 - x : x) * scale + dx, y * scale + dy] as const), 24, 24), spirit)
+  for (const x of [10, 14]) s.paint(Math.round((flipped ? 23 - x : x) * scale + dx), Math.round(8 * scale + dy), eye, 1)
+}
+
+/** H138: the five base classes wear their hall's family motif, at the same native scale as their promotions. */
+function baseClassEmblem(s: Sprite, kind: Class) {
   const { poly, dome } = geometry(s)
-  const box = (x0: number, y0: number, x1: number, y1: number) => Mask.from((x, y) => x >= x0 && x < x1 && y >= y0 && y < y1, 24, 24)
   if (kind === 'recruit') {
-    stroke(s, 13, 4, 13, 21, wood, 3)
-    dome(poly([[4, 4], [12, 4], [12, 12], [7, 13], [4, 10]]).subtract(box(6, 6, 11, 10)), iron)
+    const wood = add(s, '#8c674c'), gold = add(s, '#d9b96b')
+    const sword = add(s, ARM_COLORS.greatsword.color, { lift: .42, drop: .32 })
+    const axe = add(s, ARM_COLORS.axe.color, { lift: .42, drop: .32 })
+    const lance = add(s, ARM_COLORS.lance.color, { lift: .42, drop: .32 })
+    // Three shafts fan from one foot; heads stay broad rather than shrinking three full weapons.
+    stroke(s, 12, 21, 6, 7, wood, 4)
+    stroke(s, 12, 21, 19, 8, wood, 3)
+    dome(poly([[3, 3], [7, 3], [9, 6], [8, 9], [5, 10], [4, 7], [2, 7]])
+      .subtract(poly([[6, 5], [9, 5], [8, 8]])), axe)
+    dome(poly([[20, 2], [22, 8], [18, 10], [18, 6]]), lance)
+    dome(poly([[12, 1], [14, 5], [14, 14], [10, 14], [10, 5]]), sword)
+    stroke(s, 8, 16, 15, 16, gold, 4)
+    stroke(s, 11, 17, 11, 21, wood, 3)
+    s.paint(12, 21, gold, 4)
   } else if (kind === 'duelist') {
-    dome(poly([[12, 2], [13, 5], [13, 14], [11, 14], [11, 5]]), iron)
-    dome(Mask.circle(12, 16, 2.2, 24, 24), iron)
-    stroke(s, 11, 18, 11, 21, wood, 3)
+    const steel = add(s, '#cadde8', { lift: .42, drop: .26 }), wood = add(s, '#8c674c')
+    const violet = add(s, '#a28ac8', { lift: .38, drop: .26 })
+    const spirit = add(s, '#b6d2ea', { lift: .45, drop: .24 }), eye = add(s, '#58628b')
+    dome(poly([[9, 2], [11, 6], [11, 16], [7, 16], [7, 6]]), steel)
+    stroke(s, 5, 17, 13, 17, violet, 4)
+    stroke(s, 8, 18, 8, 21, wood, 3)
+    // A familiar curls down to the blade's violet guard; no promotion's rune ring.
+    stroke(s, 10, 15, 14, 12, violet, 4)
+    familiar(s, spirit, eye, { scale: .68, dx: 7.5, dy: 2.5 })
   } else if (kind === 'acolyte') {
-    dome(poly([[5, 5], [19, 5], [18, 14], [12, 20], [6, 14]])
-      .subtract(poly([[7, 7], [17, 7], [16, 13], [12, 17], [8, 13]])), iron)
-    dome(Mask.circle(12, 11, 1.3, 24, 24), wood)
+    const rose = add(s, '#f0c8d8', { lift: .38, drop: .26 }), gold = add(s, '#d9b96b')
+    // A heart with two full lobes and a pointed foot; no shield, cross or tiny ambiguous wings.
+    dome(poly([[12, 11], [9, 8], [6, 8], [4, 10], [4, 13], [6, 16], [12, 21], [18, 16], [20, 13], [20, 10], [18, 8], [15, 8]]), rose)
+    dome(Mask.ellipse(12, 4.5, 5.3, 2.4, 0, 24, 24).subtract(Mask.ellipse(12, 4.5, 3.8, 1.8, 0, 24, 24)), gold)
   } else if (kind === 'caller') {
-    // The larger opening survives the renderer's inner outline as a truly transparent hollow.
-    dome(Mask.ellipse(12, 18, 8.5, 3.2, 0, 24, 24).subtract(Mask.ellipse(12, 18, 6.5, 2.2, 0, 24, 24)), iron)
-    dome(poly([[12, 10], [14, 13], [12, 14], [11, 13]]), paper)
+    const cover = add(s, '#8064a1'), paper = add(s, '#e5ddc5', { lift: .36, drop: .2 }), gold = add(s, '#d9b96b')
+    const spirit = add(s, '#b6d2ea', { lift: .45, drop: .24 }), eye = add(s, '#58628b')
+    dome(poly([[2, 14], [8, 13], [12, 15], [16, 13], [22, 14], [21, 21], [16, 20], [12, 22], [8, 20], [3, 21]]), cover)
+    dome(poly([[3, 15], [8, 14], [11, 16], [11, 20], [8, 18], [4, 19]]), paper)
+    dome(poly([[13, 16], [16, 14], [21, 15], [20, 19], [16, 18], [13, 20]]), paper)
+    stroke(s, 12, 16, 12, 21, gold, 3)
+    stroke(s, 5, 17, 8, 16, paper, 2); stroke(s, 16, 16, 19, 17, paper, 2)
+    familiar(s, spirit, eye)
   } else {
-    dome(box(6, 4, 17, 21).subtract(box(8, 6, 15, 19)), wood)
-    dome(box(17, 5, 19, 20), paper)
-    dome(box(15, 11, 19, 13), iron)
+    const arc = add(s, '#8d9ebd'), spark = add(s, '#f2e9ca')
+    stroke(s, 12, 8, 12, 11, arc, 4)
+    stroke(s, 10, 12, 7, 14, arc, 3); stroke(s, 14, 12, 17, 14, arc, 3)
+    for (const [element, x, y] of [['fire', 9, 1], ['ice', 2, 13], ['lightning', 15, 13]] as const) {
+      const color = add(s, ELEMENTS[element].color, { lift: .4, drop: .28 })
+      // The shared seven-pixel glyph keeps its silhouette; a coloured lower bevel carries its family hue.
+      const mask = Mask.from((px, py) => ELEMENTS[element].glyph[Math.floor(py) - y]?.[Math.floor(px) - x] === '#', 24, 24)
+      mask.each((xx, yy) => s.paint(xx + 1, yy + 1, color, 3))
+      elementGlyph(s, element, x, y)
+    }
+    for (const [x, y] of [[12, 10], [11, 11], [12, 11], [13, 11], [12, 12]] as const) s.paint(x, y, spark, 5)
   }
 }

@@ -1,0 +1,417 @@
+{
+  "version": "2.17.0",
+  "source": "b461e747f6102e0412c9c1541a36296705bc0e5a",
+  "ui": {
+    "width": 120,
+    "height": 164,
+    "rgba": "f55da3668915e6b1b69bd94201fcf74c630bc639d0e564fd0df7261833adf952",
+    "preservedRgba": "4c7f48baf87016e11893b64f6f806483de0d5c2968500e4d5e573a76ac40f6b4",
+    "frames": {
+      "class/brawler": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "brawler",
+        "rgba": "5a80df689576577a747dc5bf21e5cbf06c3531b77a9e66e26f79790371f5f7b7"
+      },
+      "class/mage": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "mage",
+        "rgba": "bcce884a2c3a94b660594ee6bd081356d0a8b91bbed694a4dcdd9c4e9399df43"
+      },
+      "class/spellblade": {
+        "x": 48,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "spellblade",
+        "rgba": "0757f6267be1bd9b57eb2ea533dec376dd01ff51ac575f6e6ae704ebf7034c9c"
+      },
+      "class/cleric": {
+        "x": 72,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "cleric",
+        "rgba": "dd7ddd7fd05c18782b9cff0261d9cfe3e5c2c30b0dc3a86d8bc320d8e626d6fa"
+      },
+      "class/summoner": {
+        "x": 96,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "summoner",
+        "rgba": "94a22b2c4c22dd55e009a580d3ba8efa2f4f6c52d6ca8b530135c6145f7ddc75"
+      },
+      "status/armor-break": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "armor-break",
+        "rgba": "79d928f614d9fae99ea1050be34f22909fc36a83c9c1105b04216954f6a3232f"
+      },
+      "status/mind-break": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "mind-break",
+        "rgba": "57afbd0c84b73f3c0ac7f77c664bd01c6a47ee9a667c9902c9081f857f5eef4c"
+      },
+      "status/enfeeble": {
+        "x": 24,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "enfeeble",
+        "rgba": "bc03753e721c54b332c8d0ecab82b047091da5c034dac28f8580b61e9ec08075"
+      },
+      "status/shatter": {
+        "x": 36,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "shatter",
+        "rgba": "449aef9fc09b32988c1f2598d5284af7791ce392e1bc271e40b3a163cc1e2bee"
+      },
+      "status/hex": {
+        "x": 48,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "hex",
+        "rgba": "aa7bddc6fbed5c20d2f8f99923d29aeaf572b11ec27f24def48ead62fe95df97"
+      },
+      "status/brave": {
+        "x": 60,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "brave",
+        "rgba": "fa4ff8ee9d164c0f1ddafcbe2fc7236bfd9b62c45ca6eb9874b83431fcf4b27a"
+      },
+      "status/faith": {
+        "x": 72,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "faith",
+        "rgba": "247ed07a59fb866203d3782a8f4138cf47a9558177503cdbf27990543b86f641"
+      },
+      "status/aegis": {
+        "x": 84,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "aegis",
+        "rgba": "e6b94ab46d735474d7df582e26238285087850b6b6ee502967f81bfaa1f4324e"
+      },
+      "status/breaker": {
+        "x": 96,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "breaker",
+        "rgba": "841b1909878bcb734193081e1a8483d4596d28a84a1eb8c8bcca4552aee8d40c"
+      },
+      "status/clarity": {
+        "x": 108,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "clarity",
+        "rgba": "69acee5e439896a241c2f672016d012a15c6eb939d95c491711db7bf559c9715"
+      },
+      "currency/prize-money": {
+        "x": 0,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "prize-money",
+        "rgba": "ed920fab7cf1851a69c7751c91247993f54ffcc564632acfd7c7f2af21b9a6f1"
+      },
+      "currency/speed-ticket": {
+        "x": 16,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "speed-ticket",
+        "rgba": "ea09bb2e8f96a14f47e77fa160b930981ada26499a45e30dc2752d21b50f78ec"
+      },
+      "currency/uma-ticket": {
+        "x": 32,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "uma-ticket",
+        "rgba": "565961ec203d12b71d88ef9f21dc7e28f79618b892be25f79ee4f06ac0014227"
+      },
+      "tier/1": {
+        "x": 48,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "1",
+        "rgba": "ba9e4cde48b9bdb56c2f20ee396f454f5dd2602895e178af51f957280a82d42c"
+      },
+      "tier/2": {
+        "x": 60,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "2",
+        "rgba": "c30b84d9bc8846870ace2e37328f9868f46b22f0f0f079fdf4abaf1d3d1dbf87"
+      },
+      "tier/3": {
+        "x": 72,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "3",
+        "rgba": "443aca4b81c6a639a76c1c2f696626ff17cb1b53f9f6f2ec9aee2e9eb109cf50"
+      },
+      "currency/laurel": {
+        "x": 84,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "laurel",
+        "rgba": "e7fe4983bdbe12f1127635e3fd9e9d18febdd0355a0a5f508734cd165a6824f0"
+      },
+      "front/iron": {
+        "x": 0,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "iron",
+        "rgba": "994a20be62d9c16bd0b2993302035e28628f154818f9359dc0817f61ff7f143a"
+      },
+      "front/arcane": {
+        "x": 16,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "arcane",
+        "rgba": "bfb52cb80a5eeb75ad2d54945f1508d514fa01d961b1fea8f355dc05f64a78a3"
+      },
+      "front/duel": {
+        "x": 32,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "duel",
+        "rgba": "cdc49893b7c46ee4698630b661b2573aa973992ebebe6d5384dc4a85c5dd86b1"
+      },
+      "front/horde": {
+        "x": 48,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "horde",
+        "rgba": "714ec0bea94fcad2a6c2e8543af7c5e36b2d97dc29e176ca954b7581c50b667e"
+      },
+      "achievement/seal-iron": {
+        "x": 0,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-iron",
+        "rgba": "eefa9e69021eb56554cecb1dc32be9530773d572e272ca7c1e3230a9d1d62696"
+      },
+      "achievement/seal-arcane": {
+        "x": 24,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-arcane",
+        "rgba": "3ec13cb764235cafef6f73947ed681397e95e2e888c30d0bbcfc8a0535e622b9"
+      },
+      "achievement/seal-duel": {
+        "x": 48,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-duel",
+        "rgba": "94cd0587d9d71b9dfd0e6e55d9515897dfb688e97976bae13aefe168a6322537"
+      },
+      "achievement/seal-horde": {
+        "x": 72,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-horde",
+        "rgba": "3e5595efef17ff74ce2ee3148cf63783b2767cad42153add379f06a315e7283e"
+      },
+      "achievement/rift-conquered": {
+        "x": 96,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "rift-conquered",
+        "rgba": "dea538b8982346ae9847a22ff5c81854073b9598a77a9694793b2c081b28439b"
+      },
+      "achievement/iron-will": {
+        "x": 0,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "iron-will",
+        "rgba": "9426c800792985376d0e05d98d2b4ce6bbaabfae0f9ba821c7c8f24f5c114c64"
+      },
+      "achievement/arcane-purity": {
+        "x": 24,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "arcane-purity",
+        "rgba": "44abd591b3546e0ccc85a12f224cf55048aa05857ac0b79e1211ddd05f1e6524"
+      },
+      "achievement/untouched": {
+        "x": 48,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "untouched",
+        "rgba": "653b1cf72dfab80724aa5ed1968c6a3b4c063685a50d2611e568ed8da2bf2809"
+      },
+      "achievement/swift-convergence": {
+        "x": 72,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "swift-convergence",
+        "rgba": "491c65da445efbc5fda71176003559d75fac3e8e966a611f1951f908b99b3fb9"
+      },
+      "achievement/bestiary": {
+        "x": 96,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "bestiary",
+        "rgba": "997be832cedd3e83cb04d495511ac3e9e4b8ddded8c5379d105a1ab6384a4a20"
+      },
+      "achievement/crossover": {
+        "x": 0,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "crossover",
+        "rgba": "cb8448e53eba7ac6c15b455d0a2461396e619776cb3fdece35bed8e2b8ec39a5"
+      },
+      "class/paladin": {
+        "x": 24,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "paladin",
+        "rgba": "5073d96bcb7686badde0e482380fbee10aa48deda4405d502a793a09ac83f265"
+      },
+      "class/tomeblade": {
+        "x": 48,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "tomeblade",
+        "rgba": "09b0f61cc73859bc0d1ceca90e17887f555fa998e1201f911ee72a4858451e66"
+      },
+      "class/armsummoner": {
+        "x": 72,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "armsummoner",
+        "rgba": "4f85fedffcbc965fe39f325de48acd81642e9e6af95dd4652a8e5adbe709e48f"
+      },
+      "class/recruit": {
+        "x": 0,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "recruit",
+        "rgba": "1618a1196300b1d780a31899799dcd25c1ca778339ae76ee46eeab1605e74cdf"
+      },
+      "class/duelist": {
+        "x": 24,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "duelist",
+        "rgba": "d656af2a1b66d289b7846ce1a00384daf1d0e73b5aa51eab612bdbf71ed97687"
+      },
+      "class/acolyte": {
+        "x": 48,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "acolyte",
+        "rgba": "c584f13807afefef4f4c06864d60ab938dc35dd030eb1846e0d42c7baf09f9a5"
+      },
+      "class/caller": {
+        "x": 72,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "caller",
+        "rgba": "3b25f23dc5e9f07c6d9afd5c14c1e3205755b033109324e000fdb36deed99cd0"
+      },
+      "class/apprentice": {
+        "x": 96,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "apprentice",
+        "rgba": "131629377f496bf43d7d92209aeb4f0607b6cd0e8fb4531bedbfad0fc4ac14be"
+      }
+    }
+  }
+}

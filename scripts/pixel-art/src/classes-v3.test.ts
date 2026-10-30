@@ -1,11 +1,9 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { Sprite } from './sprite.ts'
 import { decodePng, hash, savedAtlas } from './testing/atlas.ts'
 import baseline from './testing/legacy-h127-2.15.0.json'
 import { Img } from './tiles/image.ts'
 import { drawUi, uiFrames } from './ui/atlas.ts'
-import { classEmblem } from './ui/classes.ts'
 import { classesV3Preview } from './ui/classes-v3-preview.ts'
 import { FRAME_SPECS, HYBRIDS, TIER0 } from './ui/spec.ts'
 
@@ -48,25 +46,16 @@ describe('H127 Classes v3 emblems', () => {
       for (const [xx, yy] of [[0, 0], [23, 0], [0, 23], [23, 23]] as const) expect(a.get(xx, yy)[3]).toBe(0)
     })
   })
-  it('gives each beginner a plain, hollow motif with no painted glow and a silhouette unlike all twelve other classes', () => {
-    const classes = uiFrames().filter(f => f.group === 'class')
-    for (const key of TIER0) {
-      const s = new Sprite(24, 24); classEmblem(s, key)
-      expect(s.overlays, key).toHaveLength(0)
-      const a = classes.find(f => f.key === key)!.img
-      for (const b of classes.filter(f => f.key !== key)) expect(difference(a, b.img), `${key}/${b.key}`).toBeGreaterThanOrEqual(.25)
-    }
-    const holes = { recruit: [8, 8], acolyte: [10, 8], caller: [8, 17], apprentice: [11, 10] } as const
-    for (const [key, [x, y]] of Object.entries(holes)) expect(classes.find(f => f.key === key)!.img.get(x, y)[3], key).toBe(0)
-  })
-  it('mirrors the two family motifs while changing their channel colours, distinct from every other class', () => {
+  // H138 deliberately replaces the five hollow beginners; its own 2.17.0 baseline guards that exception.
+  it('mirrors the two family motifs while changing their channel colours, distinct from every other Tier 1', () => {
     const classes = uiFrames().filter(f => f.group === 'class')
     for (const [key, mirror] of [['tomeblade', 'spellblade'], ['armsummoner', 'summoner']] as const) {
       const a = classes.find(f => f.key === key)!.img, b = flipped(classes.find(f => f.key === mirror)!.img)
       expect(1 - difference(a, b), key).toBeGreaterThanOrEqual(.9)
       const painted = opaque(a), changed = painted.filter((v, i) => v && [0, 1, 2].reduce((sum, k) => sum + Math.abs(a.px[i * 4 + k]! - b.px[i * 4 + k]!), 0) >= 60).length
       expect(changed / painted.filter(Boolean).length, key).toBeGreaterThanOrEqual(.6)
-      for (const c of classes.filter(f => f.key !== key && f.key !== mirror)) expect(difference(a, c.img), `${key}/${c.key}`).toBeGreaterThanOrEqual(.25)
+      // H138 intentionally shares the spirit with its base classes; their motifs are guarded in base-classes.test.ts.
+      for (const c of classes.filter(f => f.key !== key && f.key !== mirror && !(TIER0 as readonly string[]).includes(f.key))) expect(difference(a, c.img), `${key}/${c.key}`).toBeGreaterThanOrEqual(.25)
     }
   })
   it('reproduces the native/2×/4× light and dark tree-order comparison sheets', () => {
