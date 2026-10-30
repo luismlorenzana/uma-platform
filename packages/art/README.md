@@ -18,7 +18,7 @@ files by hand.
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 50 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 51 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
@@ -34,6 +34,22 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## The Healer Sanctum (H135, 2.17.0)
+
+`healer-sanctum` appends after the Charm Forge at **(96, 384)**, native 48×48, `page: learning`, `anchorY: 44`,
+without smoke. The buildings sheet stays **288×432**, now 51 frames; every older record and pixel is unchanged.
+
+A wide white-stone temple stands on three steps, with four columns, open side bays, a dark cella doorway and a
+low triangular pediment carrying a gold sun. Two braziers at its foot burn gold and violet, with static painted
+glows at alpha 65 or less, two pixels clear of the edges. It has neither the Chapel's belfry nor the Bastion's keep.
+The existing `knights-bastion` and `cleric-chapel` remain available, unchanged.
+
+`healer-sanctum-2x.png` compares the Knight's Bastion, Sanctum and Cleric Chapel on Learning ground; the general
+buildings contact sheet, named cards and Learning mock include the new temple. All other preview PNGs stay exact.
+The published-sheet baseline and `sanctum.test.ts` guard old records/pixels, the new cell, deterministic drawing,
+edge/glow clearance and distinct silhouettes. RPG H133 (or its first later adopter) pins this version and uses
+`healer-sanctum` directly, dropping the keep override when the game's Sanctum exists.
 
 ## Wilds trios (H113, 2.14.0)
 

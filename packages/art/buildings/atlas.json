@@ -426,6 +426,14 @@
     "x": 31.5,
     "y": 7
    }
+  },
+  "healer-sanctum": {
+   "x": 96,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
   }
  }
 }

@@ -9,8 +9,8 @@ import { PLACES } from './places.ts'
 describe('H29 appended Lapidary', () => {
   it('preserves all forty published 2.7.0 frames, metadata and individual RGBA cutouts', () => {
     const { index, img } = savedAtlas('buildings')
-    // H38 appends the Rift; H113 appends eight workshops after it.
-    expect(Object.keys(index.frames)).toHaveLength(50)
+    // H38 appends the Rift; H113 eight workshops; H135 the Healer Sanctum.
+    expect(Object.keys(index.frames)).toHaveLength(51)
     expect(Object.keys(baseline.frames)).toHaveLength(40)
     for (const [id, old] of Object.entries(baseline.frames)) {
       const { rgba, ...frame } = old

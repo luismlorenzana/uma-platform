@@ -52,7 +52,7 @@ describe('H38 append-only Rift art', () => {
 
   it('appends the Rift as place 41 at (240, 288) on the Battle page, drawn the same every time', () => {
     const { index, img } = savedAtlas('buildings')
-    expect(Object.keys(index.frames)).toHaveLength(50)
+    expect(Object.keys(index.frames)).toHaveLength(51)
     expect(PLACES.indexOf(RIFT)).toBe(41)
     expect(PLACES.slice(0, 42).at(-1)).toBe(RIFT) // H113 follows the published 42-frame block.
     expect(RIFT).toMatchObject({ id: 'rift', name: 'The Rift', page: 'battle', at: { x: .5, y: .72 } })
