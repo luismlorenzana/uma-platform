@@ -25,13 +25,17 @@ const html = (node: ReactNode, state: TestState = fresh(), now = AT) => renderTo
 </MemoryRouter>)
 
 describe('shared work frames', () => {
-  it('draws compact rows from state, injected art and words with accessible actions', () => {
-    expect(html(<SlotRow slot={slot} startTo="/work?job=" />)).toContain('Begin work in slot 1')
+  it('draws compact rows from state, injected art and words with accessible actions', async () => {
+    const free = html(<SlotRow slot={slot} startTo="/work?job=" />)
+    expect(free).toContain('Begin work in slot 1')
+    await expect(free).toMatchFileSnapshot('./testing/legacy-h118-slot-free.html')
     const state = done(start(fresh({ ticket: 2 }), { outfitId: 'ada', slot, request: { kind: 'gather', item: 'twig', count: 2 } }, AT, ENV))
     const running = html(<SlotRow slot={slot} onQueue={() => {}} />, state, AT + 25 * MINUTE)
+    await expect(running).toMatchFileSnapshot('./testing/legacy-h118-slot-running.html')
     for (const text of ['data-kit="slot-row"', 'data-slot-card="running"', 'data-item="twig"', 'Collect 1 twig', 'Speed up twig', 'Ada. twig, 1 of 2 made, 15m left']) expect(running).toContain(text)
     expect(running).not.toContain('data-action="repeat"')
     const ready = html(<PeekRow slot={slot} repeat />, state, AT + 40 * MINUTE)
+    await expect(ready).toMatchFileSnapshot('./testing/legacy-h118-peek-ready.html')
     expect(ready).toContain('data-action="repeat"')
     expect(ready).toContain('data-slot-card="ready"')
   })
@@ -42,6 +46,16 @@ describe('shared work frames', () => {
       <TargetsStrip targets={[{ id: 'target', item: 'toy', short: 2, label: 'Two toys needed', to: '/work?job=toy' }]} /></>, state)
     for (const text of ['Short 2 twig', 'Remove toy ×2 from the queue', '1 of 2 slots in use', 'Two toys needed', 'comes back']) expect(shown).toContain(text)
     expect(shown).not.toContain('data-grade')
+  })
+  it('makes the worker face a named profile door only when the game opts in, in full and peek rows', () => {
+    const state = done(start(fresh(), { outfitId: 'ada', slot, request: { kind: 'gather', item: 'twig', count: 2 } }, AT, ENV))
+    for (const Row of [SlotRow, PeekRow]) {
+      expect(html(<Row slot={slot} />, state)).not.toContain('aria-label="Profile: Ada"')
+      const shown = html(<Row slot={slot} onFace={() => {}} />, state)
+      expect(shown).toMatch(/<button[^>]*aria-label="Profile: Ada"[^>]*><span aria-hidden="true" data-ring=/)
+      expect(shown).toContain('min-h-11 min-w-11')
+    }
+    expect(html(<SlotRow slot={slot} onFace={() => {}} />)).not.toContain('aria-label="Profile:')
   })
   it('marks each target tile with its grade when the game gives one', () => {
     const shown = html(<TargetsStrip targets={[

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode, SVGProps } from 'react'
 import type { IconName } from './names.js'
 
-export type IconSize = 16 | 20 | 24 | 32
+export type IconSize = 14 | 16 | 20 | 24 | 32
 /** `line` by default, `solid` for active states, `duotone` for the illustrated tab and currency icons. */
 export type IconVariant = 'line' | 'solid' | 'duotone'
 

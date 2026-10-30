@@ -10,7 +10,7 @@ import { MotionRoot } from '../ui/motion.js'
 import { WorkProvider, TapNoteLine, useTap, type WorkActions, type WorkAnswer } from './context.js'
 import { SpeedUpControls } from './controls.js'
 import { JobSheet } from './JobSheet.js'
-import { SlotRow } from './SlotRow.js'
+import { SlotRow, PeekRow } from './SlotRow.js'
 import { StoppedQueueCard } from './StoppedQueueCard.js'
 import { AT, done, ENV, fresh, MINUTE, type TestRequest, type TestState } from './work.fixtures.js'
 
@@ -34,6 +34,16 @@ afterEach(async () => {
 })
 
 describe('work actions', () => {
+  it.each([['SlotRow', SlotRow], ['PeekRow', PeekRow]] as const)('%s reports the face tap to the game, with its words and outfit id', async (_name, Row) => {
+    const state = done(start(fresh(), { outfitId: 'ada', slot, request: { kind: 'gather', item: 'twig', count: 2 } }, AT, ENV))
+    const onFace = vi.fn(), collect = vi.fn()
+    await mount(<WorkProvider state={state} now={AT} env={ENV} actions={{ collect }} names={{ uma: () => 'Ada' }} words={{ profile: 'View profile' }}>
+      <Row slot={slot} onFace={onFace} />
+    </WorkProvider>)
+    await click('button[aria-label="View profile: Ada"]')
+    expect(onFace).toHaveBeenCalledExactlyOnceWith('ada')
+    expect(collect).not.toHaveBeenCalled()
+  })
   it('holds a single in-flight action across two rows, including rapid taps', async () => {
     let release: (() => void) | undefined
     const promise = new Promise<void>((resolve) => { release = resolve })

@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.16.0
+
+### Minor Changes
+
+- Add opt-in compact ProfileFrame headers with 64px portraits, wrapping names, inline chips and accessible progress in either header size. Add optional SlotRow/PeekRow onFace callbacks with a named 44pt profile button and an overridable profile word. Existing markup stays unchanged when the new props are absent; the compact lock uses the newly supported 14px icon size.
+
 ## 0.15.0
 
 ### Minor Changes

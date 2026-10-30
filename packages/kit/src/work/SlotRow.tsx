@@ -25,6 +25,8 @@ export interface SlotRowProps {
   readonly queueTo?: string; readonly onQueue?: (outfitId: string) => void
   readonly startLabel?: string; readonly repeat?: boolean
   readonly what?: { readonly icon?: ReactNode; readonly name: string }
+  /** An optional profile door; the game owns navigation and its Back/next/previous context. */
+  readonly onFace?: (outfitId: string) => void
 }
 export function SlotRow(props: SlotRowProps) { return <SlotEntry {...props} compact={false} /> }
 export function PeekRow(props: SlotRowProps) { return <SlotEntry {...props} compact /> }
@@ -41,7 +43,7 @@ function SlotEntry(props: SlotRowProps & { compact: boolean }) {
   return <Row key={identity} {...props} card={card} />
 }
 
-function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = false, what, compact, card }: SlotRowProps & { compact: boolean; card: SlotCardModel }) {
+function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = false, what, onFace, compact, card }: SlotRowProps & { compact: boolean; card: SlotCardModel }) {
   const { view, actions, copy, requestLabel, umaName } = useWork()
   const tap = useTap()
   const [sheet, setSheet] = useState<'speed' | 'more' | 'recall' | null>(null)
@@ -61,10 +63,12 @@ function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = fa
   const ready = !card.running
   const queueFull = card.queue.length >= MAX_QUEUE
   const voice = copy(card.running ? 'cardRunning' : 'cardReady', { uma: umaName(card.outfitId), what: name, made: card.made, count: card.count, left: durationText(card.leftMs) })
+  const face = <FaceRing outfitId={card.outfitId} progress={card.progress} ready={ready} size={compact ? 40 : 44} />
   return <article data-kit={compact ? 'peek-row' : 'slot-row'} data-slot-card={ready ? 'ready' : 'running'} data-slot={slot.slot} data-outfit={card.outfitId}
     aria-label={voice} className="space-y-1 rounded-md border border-hairline bg-panel px-1.5 py-1 shadow-1">
     <div className={`flex ${compact ? 'min-h-9' : 'min-h-11'} items-center gap-1.5`}>
-      <FaceRing outfitId={card.outfitId} progress={card.progress} ready={ready} size={compact ? 40 : 44} />
+      {onFace ? <button type="button" onClick={() => onFace(card.outfitId)} aria-label={`${copy('profile')}: ${umaName(card.outfitId)}`}
+        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full">{face}</button> : face}
       <span aria-hidden className="flex size-8 shrink-0 items-center justify-center">{icon}</span>
       <span aria-hidden className="min-w-0 flex-1 leading-tight tabular-nums">
         <span className="block truncate text-[14px] font-semibold">×{card.count}<span className="font-normal text-ink-soft"> · {card.made}/{card.count}</span></span>

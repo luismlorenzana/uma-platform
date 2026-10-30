@@ -39,7 +39,7 @@ describe('the places frames', () => {
     expect(signIn).not.toContain('The game')
   })
 
-  it('lay out shelves, exchange rows and a profile from props', () => {
+  it('lay out shelves, exchange rows and a profile from props', async () => {
     const shelves = html(
       <ShelfView shelves={[{ key: 'raw', label: 'Raw' }, { key: 'made', label: 'Made' }]} renderItem={(item) => <b>{item.id}</b>}
         items={[{ id: 'ore-1', name: 'Ore', shelf: 'raw', grade: 1, count: 3 }, { id: 'ore-2', name: 'Ore', shelf: 'raw', grade: 2, count: 1 }]} />,
@@ -49,6 +49,7 @@ describe('the places frames', () => {
     expect(rows).toContain('Speed Ticket')
     expect(rows).toContain('1,200')
     const profile = html(<ProfileFrame portrait={<img alt="" />} name="Test Uma" title="[Invented]" level="T2 · Lv 7" tabs={[{ key: 'a', label: 'Skills' }, { key: 'b', label: 'Work' }]} tab="a" locked>Body</ProfileFrame>)
+    await expect(profile).toMatchFileSnapshot('./testing/legacy-h118-profile-regular.html')
     for (const text of ['Test Uma', '[Invented]', 'T2 · Lv 7', 'Skills', 'Work', 'Locked', 'Body']) expect(profile).toContain(text)
     // Sheets render through a portal, so a closed one draws nothing on the server.
     expect(html(<UnlockConfirm open={false} onClose={() => {}} name="Test Uma" tickets={3} onConfirm={async () => {}} />)).toBe('')
