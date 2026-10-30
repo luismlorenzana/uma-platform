@@ -40,11 +40,11 @@ describe('H113 Wilds trios', () => {
   it('appends eight native square frames in exact order with only the four chimney anchors', () => {
     const { index, img } = savedAtlas('buildings')
     expect([index.width, index.height]).toEqual([288, 432])
-    expect(Object.keys(index.frames)).toHaveLength(50)
-    expect(Object.keys(index.frames).slice(42)).toEqual(IDS)
-    expect(PLACES.slice(42).map(p => p.id)).toEqual(IDS)
+    expect(Object.keys(index.frames)).toHaveLength(51)
+    expect(Object.keys(index.frames).slice(42, 50)).toEqual(IDS)
+    expect(PLACES.slice(42, 50).map(p => p.id)).toEqual(IDS)
     expect(TRIOS.map(p => p.id)).toEqual(IDS)
-    expect(new Set(PLACES.map(p => p.id)).size).toBe(50)
+    expect(new Set(PLACES.map(p => p.id)).size).toBe(51)
     for (const [i, place] of TRIOS.entries()) {
       const { px, extras } = paint(place), smoke = extras?.smoke
       expect(index.frames[place.id]).toEqual({ x: (i % 6) * SIZE, y: 336 + Math.floor(i / 6) * SIZE, w: SIZE, h: SIZE, page: 'wilds', anchorY: GROUND, ...(smoke ? { smoke } : {}) })

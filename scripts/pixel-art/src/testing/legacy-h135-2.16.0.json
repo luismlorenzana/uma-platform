@@ -1,0 +1,448 @@
+{
+  "version": "2.16.0",
+  "buildings": {
+    "width": 288,
+    "height": 432,
+    "rgba": "adc258961b80f507a44502055aeadff328346f884c1b4aa1292249f97a9e6566",
+    "frames": {
+      "fields": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "orchard": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "fishery": {
+        "x": 96,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "herb-garden": {
+        "x": 144,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "vegetable-garden": {
+        "x": 192,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "mushroom-cave": {
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "sugar-grove": {
+        "x": 0,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "nut-grove": {
+        "x": 48,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "pantry": {
+        "x": 96,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44
+      },
+      "kitchen": {
+        "x": 144,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "smoke": {
+          "x": 38,
+          "y": 4
+        }
+      },
+      "monster-den": {
+        "x": 192,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "ley-spring": {
+        "x": 240,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "mine": {
+        "x": 0,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "crystal-cavern": {
+        "x": 48,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "quarry": {
+        "x": 96,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "meadow": {
+        "x": 144,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forest": {
+        "x": 192,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "fossil-dig": {
+        "x": 240,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "workbench": {
+        "x": 0,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forge": {
+        "x": 48,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 11,
+          "y": 2
+        }
+      },
+      "brawler-dojo": {
+        "x": 96,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "mage-tower": {
+        "x": 144,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "spell-blade-salle": {
+        "x": 192,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "cleric-chapel": {
+        "x": 240,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "summoner-circle": {
+        "x": 0,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "rangers-lodge": {
+        "x": 48,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "lancers-barracks": {
+        "x": 96,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "arcane-armory": {
+        "x": 144,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "knights-bastion": {
+        "x": 192,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "stable": {
+        "x": 240,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "party-hall": {
+        "x": 0,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "scenario-gate": {
+        "x": 48,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "warehouse": {
+        "x": 96,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "exchange": {
+        "x": 144,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "observatory": {
+        "x": 192,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "tier-finale": {
+        "x": 240,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "card-library": {
+        "x": 0,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44
+      },
+      "gym": {
+        "x": 48,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44
+      },
+      "racecourse": {
+        "x": 96,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44
+      },
+      "trophy-hall": {
+        "x": 144,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44
+      },
+      "lapidary": {
+        "x": 192,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "rift": {
+        "x": 240,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "battle",
+        "anchorY": 44
+      },
+      "mine-workbench": {
+        "x": 0,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 6,
+          "y": 13
+        }
+      },
+      "fields-workbench": {
+        "x": 48,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "forest-workbench": {
+        "x": 96,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "fishery-workbench": {
+        "x": 144,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "den-workbench": {
+        "x": 192,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44
+      },
+      "weapon-forge": {
+        "x": 240,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 9,
+          "y": 2
+        }
+      },
+      "tome-forge": {
+        "x": 0,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 35.5,
+          "y": 5
+        }
+      },
+      "charm-forge": {
+        "x": 48,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 31.5,
+          "y": 7
+        }
+      }
+    },
+    "cutouts": {
+      "knights-bastion": "cdbf1e3b7dcef8249b70b170ea9709e28b8eec72192315ca33b4f88495f1fc0a",
+      "cleric-chapel": "0d70f1ba0dd351095d25863c92dcf37332769175f060f71334d90f08035823c8"
+    }
+  },
+  "previews": {
+    "paladin-bastion-2x.png": "fbe700830d7cbc87d17ee4b64a2b3c50b448a84dfb557fc587e75c15b4e47e54",
+    "lapidary-2x.png": "6f028ecc6b04cd3cf80018092474bc28290899dd3f64fb98a80437bcb4d3ebe2",
+    "rift-2x.png": "cf8ed0e5808856742b2361de5726cb9c78fd509f708a3521af96d3ea5abf17ee",
+    "racer-buildings-2x.png": "ec99e5250ff88489bd15adebaf59d22747737573140d6e7584e6b0ecee603770",
+    "wilds-trios-1x.png": "98374a9efbdb3d27b2393eac4313a10bb7f1eed81c3a05c95a5ead54fe4de329",
+    "wilds-trios-1.5x.png": "783fdb9a13cd997eca84282a99226132d46e4ed1a60babaaf5d415cb8ee18bf2",
+    "wilds-trios-3x.png": "d95e3f29ee7d1e5260fa3b608cbccaf48be61246410f6b04a5af483535f16786"
+  },
+  "source": "ca76d2706188f8127b53ea75c0d999c6aec8ba05"
+}

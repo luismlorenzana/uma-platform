@@ -29,6 +29,18 @@ as 32×32 PNGs to
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## The Healer Sanctum (H135)
+
+`buildings/sanctum.ts` appends a white-stone open temple after the trios: three wide steps, four columns, a sun
+pediment and gold/violet braziers. Its side bays are transparent; the dark cella stays behind the middle columns.
+Both static `glow()` fields use alpha 65 and remain two pixels clear of every edge. No smoke is returned.
+
+`testing/legacy-h135-2.16.0.json` freezes the 50 older records and whole sheet (the newly occupied empty cell zeroed),
+both healer halls' cutouts and older building comparisons. The sheet remains 288×432, 51 frames; older trios use
+their fixed 42–50 slice. `sanctum.test.ts` checks legacy pixels, native geometry, smoke, edge/glow clearance,
+determinism and ≥25% silhouette difference from six neighbouring halls. `sanctum-preview.ts` writes the dedicated
+keep/temple/chapel comparison at 2×; all other old previews except the general buildings sheets/HTML stay exact.
+
 ## Wilds trios (H113)
 
 `src/buildings/trios.ts` appends five open timber trade sheds and three enclosed forges after every older frame.

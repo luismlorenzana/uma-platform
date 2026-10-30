@@ -15,6 +15,7 @@ import { drawUi } from '../ui/atlas.ts'
 import { FRAME_SPECS as UI_SPECS } from '../ui/spec.ts'
 import { BASE, GROUND, SIZE } from './kit.ts'
 import { PLACES } from './places.ts'
+import { sanctumPreview } from './sanctum-preview.ts'
 import { TILE, TRIO_COLS, TRIO_LOTS, TRIO_MAP_ROWS, triosMock } from './trios-preview.ts'
 import type { Page, PaintExtras } from './types.ts'
 
@@ -210,6 +211,8 @@ const chipAt = [PAD + 2 * (SIZE * 2 + PAD), PAD + SIZE - CHIP / 2] as const
 new Img(bastion.w, bastion.h, bastion.px).copy(new Img(CHIP, CHIP).fill(hex('#17202b')), ...chipAt)
   .draw(drawUi(paladin).scaled(2), chipAt[0] + 4, chipAt[1] + 4)
 writeFileSync(join(previews, 'paladin-bastion-2x.png'), encodePng(bastion.w, bastion.h, bastion.px))
+const sanctum = sanctumPreview()
+writeFileSync(join(previews, 'healer-sanctum-2x.png'), encodePng(sanctum.w, sanctum.h, sanctum.px))
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`

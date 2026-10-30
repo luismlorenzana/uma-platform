@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.17.0
+
+### Minor Changes
+
+- Add the Healer Sanctum's original native 48px temple, with four columns, three steps and static gold/violet braziers. The buildings atlas keeps its 288×432 size and grows to 51 frames; all 50 previously published records and pixels remain unchanged.
+
 ## 2.16.0
 
 ### Minor Changes
