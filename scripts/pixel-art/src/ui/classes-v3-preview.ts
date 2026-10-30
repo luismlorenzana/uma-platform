@@ -5,7 +5,7 @@ import { FRAME_SPECS, TIER0, type Class } from './spec.ts'
 
 export const CLASS_TREE = [TIER0, ['brawler', 'spellblade', 'tomeblade', 'paladin', 'cleric', 'armsummoner', 'summoner', 'mage']] as const
 export const CLASS_LABELS: Record<Class, string> = {
-  recruit: 'Recruit', duelist: 'Duelist', acolyte: 'Acolyte', caller: 'Caller', apprentice: 'Apprentice',
+  recruit: 'Warrior', duelist: 'Spellblade', acolyte: 'Healer', caller: 'Summoner', apprentice: 'Mage',
   brawler: 'Brawler', spellblade: 'Arms Spellblade', tomeblade: 'Tome Spellblade', paladin: 'Paladin', cleric: 'Cleric',
   armsummoner: 'Arms Summoner', summoner: 'Tome Summoner', mage: 'Sorcerer',
 }

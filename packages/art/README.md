@@ -245,7 +245,7 @@ Review `assets/previews/paladin-emblems-{1x,2x,4x}.png` (the six emblems in game
 and `paladin-bastion-2x.png` (Spell Blade Salle, Knight's Bastion with the emblem beside it, Cleric Chapel, on
 Learning ground); `ui.html` labels it. `src/testing/legacy-h54-2.11.0.json` freezes the older frames.
 
-## Classes v3 (H127, 2.16.0)
+## Classes v3 (H127; base families redrawn in H138, 2.18.0)
 
 Seven native 24×24 class emblems append after the Paladin, growing `ui` from **120×140 to 120×164**, 45 frames.
 Every older frame retains its metadata and pixels. The last cell at (96, 116) remains empty.
@@ -254,20 +254,23 @@ Every older frame retains its metadata and pixels. The last cell at (96, 116) re
 |---|---|---|
 | `class/tomeblade` | (48, 116) | Mirrored Spellblade, violet blade and steel ring |
 | `class/armsummoner` | (72, 116) | Mirrored Summoner, steel spirit, gold ellipse and warm halo |
-| `class/recruit` | (0, 140) | Upright axe, hollow iron head and wood haft |
-| `class/duelist` | (24, 140) | Slim iron sword, round guard and wood grip |
-| `class/acolyte` | (48, 140) | Hollow heater shield and wood boss |
-| `class/caller` | (72, 140) | Hollow iron ellipse and small parchment wisp |
-| `class/apprentice` | (96, 140) | Closed wood book, hollow panel, parchment edge and iron clasp |
+| `class/recruit` · Warrior | (0, 140) | Orange Greatsword, purple Axe and green Lance, fanned from one foot |
+| `class/duelist` · Spellblade | (24, 140) | Upright steel blade, violet guard and curled pale familiar |
+| `class/acolyte` · Healer | (48, 140) | Pale rose-white heart under an open gold halo |
+| `class/caller` · Summoner | (72, 140) | Open violet tome with the Summoner family's pale familiar rising from its pages |
+| `class/apprentice` · Mage | (96, 140) | Fire above Ice and Lightning, joined by a small spark |
 
-Tier 0 uses plain iron, wood and parchment, with no glow, gold, halo or rune marks. The hybrids share their mirrors'
+H138 deliberately replaces only these five base-class cells in place, following RPG D259's family names and retiring
+the plain hollow forms. All 45 records, the sheet bounds and every other pixel match 2.17.0 exactly. The heart omits
+wings to keep its lobes and halo clear at native 24px. The hybrids share their mirrors'
 geometry helpers and receive top-left light after mirroring. A blue-grey edge on Tome Spellblade's steel ring makes
 the exchanged channel colours readable at native size. Sorcerer, Arms Spellblade and Tome Summoner retain the ids
 `class/mage`, `class/spellblade` and `class/summoner`; their existing images do not change.
 
 `classes-v3-emblems-{1x,2x,4x}.png` shows the five beginners above the eight Tier 1 classes in tree order, on white
-and dark chips. `ui.html#classes-v3` labels all thirteen. Older preview PNGs stay byte-identical; the new baseline
-and `classes-v3.test.ts` guard the old sheet, positions, mirrored silhouettes and channel contrast.
+and dark chips. `ui.html#classes-v3` labels all thirteen with their current names. Older preview PNGs stay byte-identical;
+`legacy-h138-2.17.0.json` and `base-classes.test.ts` guard the exact five-cell exception and family motifs, while
+`classes-v3.test.ts` retains the earlier sheet, positions, mirrored Tier 1 silhouettes and channel contrast guards.
 
 ## Gear rows in 2.0.0
 

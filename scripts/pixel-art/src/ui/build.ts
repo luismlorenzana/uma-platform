@@ -86,7 +86,7 @@ const references = [FAMILIES[0]!.raw[0]!, FAMILIES[1]!.raw[0]!]
 ;[speedTicketItem(), ...references.map(drawIcon)].forEach((px, i) => itemSheet.draw(new Img(32, 32, px).scaled(2), PAD + i * (64 + PAD), PAD))
 writeFileSync(join(previews, 'racer-ticket-items-2x.png'), encodePng(itemSheet.w, itemSheet.h, itemSheet.px))
 const labels: Record<string, string> = { brawler: 'Brawler', mage: 'Mage', spellblade: 'Spell Blade', cleric: 'Cleric', summoner: 'Summoner', paladin: 'Paladin',
-  recruit: 'Recruit', duelist: 'Duelist', acolyte: 'Acolyte', caller: 'Caller', apprentice: 'Apprentice', tomeblade: 'Tome Spellblade', armsummoner: 'Arms Summoner',
+  recruit: 'Warrior', duelist: 'Spellblade', acolyte: 'Healer', caller: 'Summoner', apprentice: 'Mage', tomeblade: 'Tome Spellblade', armsummoner: 'Arms Summoner',
   'armor-break': 'Armor Break', 'mind-break': 'Mind Break', enfeeble: 'Enfeeble', shatter: 'Shatter', hex: 'Hex', brave: 'Brave', faith: 'Faith', aegis: 'Aegis', breaker: 'Breaker', clarity: 'Clarity',
   'prize-money': 'Prize Money', 'speed-ticket': 'Speed Ticket', 'uma-ticket': 'Uma Ticket', laurel: 'Laurels', '1': 'Tier 1', '2': 'Tier 2', '3': 'Tier 3',
   iron: 'Iron front', arcane: 'Arcane front', duel: 'Duel front', horde: 'Horde front',

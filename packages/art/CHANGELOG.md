@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.18.0
+
+### Minor Changes
+
+- Redraw the five base-class emblems in place as Warrior's three weapons, Spellblade's blade and familiar, Healer's heart and halo, Summoner's open tome and familiar, and Mage's three elements. The 45-frame UI sheet keeps every id, position and size; all forty other frames and pixels remain exact to 2.17.0. Preview labels follow the family names.
+
 ## 2.17.0
 
 ### Minor Changes

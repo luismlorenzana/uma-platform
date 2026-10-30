@@ -224,12 +224,28 @@ class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes a
 ## Classes v3 (H127)
 
 `ui/classes.ts` shares the Spellblade and Summoner geometry between each mirrored pair before dome shading; the
-original six retain their exact pixels. Five plain iron/wood/parchment beginners use hollow faces and no painted
-glow. The Tome Spellblade's steel ring has a blue-grey outline so the two channel palettes stay distinct at 24px.
+original six retain their exact pixels. H127's five plain hollow beginners are superseded by H138 below.
+The Tome Spellblade's steel ring has a blue-grey outline so the two channel palettes stay distinct at 24px.
 `ui/spec.ts` keeps the original `CLASSES` row and appends `HYBRIDS` then `TIER0`; `packUi` fills (48,116)/(72,116)
 and a five-cell row at y=140, keeping the old width and positions. The sheet becomes 120×164, 45 frames.
 
 `ui/classes-v3-preview.ts` lays out Tier 0 above Tier 1 in tree order on white and dark chips at 1×/2×/4×.
 `testing/legacy-h127-2.15.0.json` freezes the complete old sheet and every record, with the two previously empty
-hybrid cells zeroed for comparison, plus all older UI preview PNGs. Tests require distinct beginner silhouettes,
+hybrid cells zeroed for comparison, plus all older UI preview PNGs. Tests require distinct Tier 1 silhouettes,
 at least 90% mirrored silhouette overlap and 60% visibly recoloured opaque pixels for each hybrid.
+
+## Base class families (H138, 2.18.0)
+
+RPG D259 retires CV33's plain hollow rule. `baseClassEmblem` redraws exactly the five Tier 0 cells at y=140:
+Warrior's orange Greatsword, purple Axe and green Lance fan from one foot; Spellblade's upright blade carries a
+small pale familiar and violet guard; Healer's rose-white heart sits under a gold halo; Summoner's open tome
+carries the same familiar as the Tier 1 Summoners; Mage's Fire / Ice / Lightning triangle uses the shared 7px glyphs
+and a small connecting spark. The heart omits wings to keep its shape readable at 24px. Neither familiar uses a
+rune ring. The shared `familiar` geometry preserves the older Summoners' exact pixels, including their mirrored eyes.
+
+All ids, metadata and positions stay, on the 120×164 sheet with 45 frames. `testing/legacy-h138-2.17.0.json`, captured
+before drawing, and `base-classes.test.ts` freeze the other forty frames and every pixel above the five-cell row.
+The retired hollow checks and their 25% Tier 0 silhouette constraint give way to the five family motifs, colour
+placement, heart anatomy, shared familiar and distinct silhouettes. The older hybrid mirror/contrast checks remain.
+`classes-v3-emblems-{1x,2x,4x}.png` compares the new names' families with their Tier 1s on white and dark chips;
+`ui.html#classes-v3` supplies the labels. Judge the native sheet first. No other atlas or preview PNG changes.
