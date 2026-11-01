@@ -70,9 +70,10 @@ so look anyway.
 
 **4. Try the games.**
 
-- **uma-rpg:** start `rpg-api` and `rpg-web`, which read `content/release`. Open the Stable, find the new outfit and open
-  her profile. Her template and calling come from one rule over her aptitudes and growth, so a new outfit needs no hand
-  work.
+- **uma-rpg:** run `pnpm --filter @rpg/domain test`: `template-release.test.ts` reads `content/release` and checks every
+  outfit gets a template and no new skill's name clashes with the game's words. Then start `rpg-api` and `rpg-web`, which
+  read it too, open the Stable, find the new outfit and open her profile. Her template and calling come from one rule over
+  her aptitudes and growth, so a new outfit needs no hand work.
 - **uma-racer:** `localContent()` in `scripts/overlays/src/local.ts` runs its adapter on the local release. Check it gives
   no warnings and the Uma count went up.
 - **A new scenario** gives uma-rpg a continent, named after it, at its release order, five a tier. The sixteenth would
