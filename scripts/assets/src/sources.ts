@@ -15,12 +15,16 @@ export const outfitIconUrl = (outfit: Pick<Outfit, 'id' | 'characterId'>): strin
 export const outfitPortraitUrl = (outfit: Pick<Outfit, 'id' | 'characterId'>): string =>
   `${GAMETORA_IMAGES}/characters/chara_stand_${outfit.characterId}_${outfit.id}.png`
 
+/** A chibi by outfit id. Pose `a` is the original's `0010`, `b` its `0011`, as on the wiki. */
+export const outfitChibiUrl = (outfitId: number, pose: 'a' | 'b'): string =>
+  `${GAMETORA_MEDIA}/characters/chibi/${outfitId}_${pose === 'a' ? '0010' : '0011'}.png`
+
 export const supportCardIconUrl = (cardId: number): string => `${GAMETORA_IMAGES}/supports/support_card_s_${cardId}.png`
 
-/** The card's full illustration. */
-export const supportCardArtUrl = (cardId: number): string => `${GAMETORA_IMAGES}/supports/tex_support_card_${cardId}.png`
+/** The card's full illustration (1536 × 2048). GameTora stopped adding the old `tex_support_card_<id>.png` in 2026. */
+export const supportCardArtUrl = (cardId: number): string => `${GAMETORA_MEDIA}/supports/full/${cardId}.png`
 
-export const skillIconUrl = (iconId: number): string => `${GAMETORA_IMAGES}/skill_icons/utx_ico_skill_${iconId}.png`
+export const skillIconUrl = (iconId: number): string => `${GAMETORA_MEDIA}/skills/icon/${iconId}.png`
 
 export const scenarioIconUrl = (scenarioId: number): string => `${GAMETORA_MEDIA}/scenarios/hero/thumb/${scenarioId}.png`
 

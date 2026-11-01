@@ -165,23 +165,7 @@ export async function publishRelease(options: PublishReleaseOptions): Promise<Pu
     if (!uploaded) throw new Error(`${manifestObject} is missing after upload`)
     checkRemoteManifest(uploaded, manifest, manifestObject)
 
-    if (channelBefore !== manifest.version) {
-      const pointer: ReleaseChannel = {
-        schemaMajor: SCHEMA_MAJOR,
-        channel,
-        version: manifest.version,
-        manifest: manifestObject,
-        updatedAt: now().toISOString(),
-      }
-      const scratch = await mkdtemp(resolve(tmpdir(), 'uma-release-'))
-      try {
-        const pointerPath = resolve(scratch, `${channel}.json`)
-        await writeFile(pointerPath, JSON.stringify(pointer), 'utf8')
-        await storage.replace({ localPath: pointerPath, objectPath: channelPath }, CHANNEL_CACHE_CONTROL)
-      } finally {
-        await rm(scratch, { recursive: true, force: true })
-      }
-    }
+    if (channelBefore !== manifest.version) await writeChannel(storage, channel, manifest.version, manifestObject, now())
     channelAfter = parseRemoteChannel(await storage.read(channelPath), channelPath)?.version ?? null
     if (channelAfter !== manifest.version) {
       throw new Error(`Channel verification failed: ${channelPath} points at ${channelAfter ?? 'nothing'}, expected ${manifest.version}`)
@@ -203,4 +187,42 @@ export async function publishRelease(options: PublishReleaseOptions): Promise<Pu
     referenceIssues: local.referenceIssues.length,
     elapsedMs: now().getTime() - startedAt,
   }
+}
+
+async function writeChannel(storage: ReleaseStorageClient, channel: string, version: string, manifest: string, at: Date): Promise<void> {
+  const pointer: ReleaseChannel = { schemaMajor: SCHEMA_MAJOR, channel, version, manifest, updatedAt: at.toISOString() }
+  const scratch = await mkdtemp(resolve(tmpdir(), 'uma-release-'))
+  try {
+    const pointerPath = resolve(scratch, `${channel}.json`)
+    await writeFile(pointerPath, JSON.stringify(pointer), 'utf8')
+    await storage.replace({ localPath: pointerPath, objectPath: releasePaths.channel(channel) }, CHANNEL_CACHE_CONTROL)
+  } finally {
+    await rm(scratch, { recursive: true, force: true })
+  }
+}
+
+export interface MoveChannelOptions {
+  storage: ReleaseStorageClient
+  channel: string
+  version: string
+  dryRun?: boolean
+  now?: () => Date
+}
+
+/** Points a channel at a release already in the bucket: the undo for a bad publish. Files are immutable, so it's only the pointer. */
+export async function moveChannel(options: MoveChannelOptions): Promise<{ before: string | null; after: string }> {
+  const { storage, channel, version } = options
+  const channelPath = releasePaths.channel(channel)
+  const manifestObject = releasePaths.manifest(version)
+  const raw = await storage.read(manifestObject)
+  if (!raw) throw new Error(`${manifestObject} isn't in the bucket`)
+  const manifest = parseReleaseManifest(JSON.parse(raw.toString('utf8')) as unknown, manifestObject)
+  await verifyReleaseVersion(manifest)
+  const before = parseRemoteChannel(await storage.read(channelPath), channelPath)?.version ?? null
+  if (!options.dryRun && before !== version) {
+    await writeChannel(storage, channel, version, manifestObject, (options.now ?? (() => new Date()))())
+    const after = parseRemoteChannel(await storage.read(channelPath), channelPath)?.version ?? null
+    if (after !== version) throw new Error(`Channel verification failed: ${channelPath} points at ${after ?? 'nothing'}, expected ${version}`)
+  }
+  return { before, after: version }
 }

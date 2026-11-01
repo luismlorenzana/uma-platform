@@ -1,13 +1,9 @@
 // CLI for `pnpm release:publish` (scripts/data/README.md#publish).
 
 import { resolve } from 'node:path'
-import { GcloudStorageClient } from './gcloud-storage'
-import { publishRelease } from './publish'
+import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
+import { moveChannel, publishRelease } from './publish'
 import { DEFAULT_RELEASE_DIR } from './release-dir'
-
-/** The platform's GCP project (`uma-platform` was taken) and private release bucket (infra/README.md, P34). */
-export const DEFAULT_PROJECT = 'uma-platform-lm'
-export const DEFAULT_BUCKET = 'uma-platform-master-data'
 
 function argument(name: string): string | null {
   const inline = process.argv.find((arg) => arg.startsWith(`${name}=`))
@@ -27,7 +23,14 @@ async function main(): Promise<void> {
   const bucket = argument('--bucket') ?? process.env.UMA_RELEASE_BUCKET ?? DEFAULT_BUCKET
   const channel = argument('--channel') ?? 'latest'
   const releaseDir = resolve(argument('--release-dir') ?? DEFAULT_RELEASE_DIR)
-  const result = await publishRelease({ releaseDir, storage: new GcloudStorageClient(bucket, project), channel, dryRun })
+  const storage = new GcloudStorageClient(bucket, project)
+  const rollback = argument('--rollback')
+  if (rollback) {
+    const moved = await moveChannel({ storage, channel, version: rollback, dryRun })
+    console.log(`Channel ${channel}: ${moved.before ?? 'none'} → ${moved.after}${dryRun ? ' (unchanged; dry run)' : ''}`)
+    return
+  }
+  const result = await publishRelease({ releaseDir, storage, channel, dryRun })
 
   console.log(dryRun ? `Release publish plan for gs://${bucket} (dry run)` : `Release published to gs://${bucket}`)
   console.log(`Version: ${result.version}`)

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { writeDataSets } from './pack'
-import { publishRelease, type ReleaseStorageClient, type UploadEntry } from './publish'
+import { moveChannel, publishRelease, type ReleaseStorageClient, type UploadEntry } from './publish'
 import { readLocalManifest, sha256, writeLocalManifest } from './release-dir'
 
 const tempDirs: string[] = []
@@ -136,6 +136,23 @@ describe('publishRelease', () => {
     const manifest = (await readLocalManifest(dir))!
     await writeFile(resolve(dir, manifest.sets.races), '{"set":"races","items":[]}')
     await expect(publishRelease({ releaseDir: dir, storage: new FakeBucket() })).rejects.toThrow(manifest.sets.races)
+  })
+
+  it('rolls a channel back to a published release, and refuses one the bucket lacks', async () => {
+    const dir = await localRelease()
+    const manifest = (await readLocalManifest(dir))!
+    const bucket = new FakeBucket()
+    await publishRelease({ releaseDir: dir, storage: bucket })
+    const channel = releasePaths.channel('latest')
+    bucket.objects.set(channel, Buffer.from(JSON.stringify({ ...JSON.parse(bucket.objects.get(channel)!.toString('utf8')), version: 'aaaaaaaaaaaa', manifest: 'manifests/v1/aaaaaaaaaaaa.json' })))
+
+    const plan = await moveChannel({ storage: bucket, channel: 'latest', version: manifest.version, dryRun: true })
+    expect(plan).toEqual({ before: 'aaaaaaaaaaaa', after: manifest.version })
+    expect(JSON.parse(bucket.objects.get(channel)!.toString('utf8')).version).toBe('aaaaaaaaaaaa')
+
+    await moveChannel({ storage: bucket, channel: 'latest', version: manifest.version })
+    expect((await createReleaseClient({ source: bucket.source() }).load()).manifest.version).toBe(manifest.version)
+    await expect(moveChannel({ storage: bucket, channel: 'latest', version: 'bbbbbbbbbbbb' })).rejects.toThrow("isn't in the bucket")
   })
 
   it('refuses to publish over a different manifest with the same version', async () => {

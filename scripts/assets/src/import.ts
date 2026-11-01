@@ -7,9 +7,10 @@ import { fileURLToPath } from 'node:url'
 import { buildArtFamily, type ArtFamily } from './art'
 import { buildAtlas } from './atlas'
 import { downloadImages, type ImageSource } from './download'
-import { readAssetInputs, readBustCrops, readFaceCrops, readScenarioIconOverrides } from './read'
-import { artSources } from './sources'
-import { buildWikiFamily, selectWikiArt, stageWikiFiles, stagedWikiFiles, WIKI_FAMILIES, type WikiKind } from './wiki'
+import { buildGlassFamily } from './glass'
+import { readAssetInputs, readBustCrops, readFaceCrops, readGlassPins, readScenarioIconOverrides, type AssetInputs } from './read'
+import { artSources, outfitChibiUrl } from './sources'
+import { buildWikiFamily, encodeWikiArt, missingChibis, selectWikiArt, stageWikiFiles, stagedWikiFiles, WIKI_FAMILIES, type WikiKind, type WikiPick } from './wiki'
 import { writeArt, type AtlasDefinition, type ImageFamilyDefinition } from './write'
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -58,11 +59,44 @@ async function buildImages(family: ArtFamily, sources: readonly ImageSource[], r
   return { family, images: built.images }
 }
 
+/** The stained-glass windows: baked from the busts' portrait sources, so this pass downloads nothing new. */
+async function buildGlass(inputs: AssetInputs, sources: readonly ImageSource[]): Promise<ImageFamilyDefinition> {
+  const { images: portraits } = await downloadImages(sources, { cacheDir, kind: 'outfit-portraits', concurrency: 6, optional: true })
+  const characters = new Map(inputs.characters.map((character) => [character.id, character]))
+  const colors = new Map(inputs.outfits.flatMap((outfit) => {
+    const palette = characters.get(outfit.characterId)?.colors
+    return palette ? [[String(outfit.id), palette] as const] : []
+  }))
+  const built = await buildGlassFamily({
+    cacheDir,
+    portraits,
+    colors,
+    bustCrops: await readBustCrops(),
+    pins: await readGlassPins(),
+    onProgress: (done, total) => process.stdout.write(`\routfit-glass: baked ${done}/${total}`),
+  })
+  process.stdout.write('\r')
+  console.log(`outfit-glass: ${built.images.length} windows (${built.cacheHits} cache hits, ${built.baked} baked), ${megabytes(built.bytes)}`)
+  if (built.failed.length > 0) console.warn(`  ${built.failed.length} failed (games fall back to the bust): ${built.failed.map(({ id, reason }) => `${id} ${reason}`).join(', ')}`)
+  if (built.unpinned.length > 0) console.warn(`  ${built.unpinned.length} look misread; check them and pin in glass-pins.json: ${built.unpinned.join(', ')}`)
+  return { family: 'outfit-glass', images: built.images }
+}
+
+/** The chibis the wiki files don't cover, from GameTora: a new outfit needs no file saved by hand. */
+async function gameToraChibis(outfits: Parameters<typeof selectWikiArt>[1], have: readonly WikiPick[], refresh: boolean) {
+  const missing = missingChibis(have, outfits)
+  const sources = missing.map(({ outfitId, pose, id }) => ({ id, url: outfitChibiUrl(outfitId, pose) }))
+  const { images, failures } = await downloadImages(sources, { cacheDir, kind: 'outfit-chibis', refresh, concurrency: 8, optional: true })
+  if (sources.length > 0) console.log(`outfit-chibis: ${images.length} of ${sources.length} from GameTora`)
+  if (failures.length > 0) console.warn(`  skipped ${failures.length} without a source: ${failures.map((failure) => failure.id).join(', ')}`)
+  return Promise.all(images.map((image) => encodeWikiArt('chibi', image.id, image.bytes)))
+}
+
 /**
  * Chibis, outfit stands and faces from staged wiki files. `--source dir:<path>` stages the owner's folder first;
  * without it, whatever was staged before is used, and with nothing staged these families keep what the release has.
  */
-async function buildWiki(outfits: Parameters<typeof selectWikiArt>[1], dryRun: boolean, wanted: (family: ImageFamily) => boolean) {
+async function buildWiki(outfits: Parameters<typeof selectWikiArt>[1], dryRun: boolean, refresh: boolean, wanted: (family: ImageFamily) => boolean) {
   const source = option('--source')
   if (source !== undefined) {
     if (!source.startsWith('dir:')) throw new Error('--source takes dir:<path>')
@@ -83,6 +117,7 @@ async function buildWiki(outfits: Parameters<typeof selectWikiArt>[1], dryRun: b
     const family = WIKI_FAMILIES[kind].family
     if (!wanted(family)) continue
     const images = await buildWikiFamily(kind, selection[kind], cacheDir)
+    if (kind === 'chibi') images.push(...(await gameToraChibis(outfits, selection.chibi, refresh)))
     console.log(`${family}: ${images.length} images, ${megabytes(images.reduce((sum, image) => sum + image.bytes.length, 0))}`)
     families.push({ family, images })
   }
@@ -101,7 +136,7 @@ async function main(): Promise<void> {
   const inputs = await readAssetInputs(releaseDir)
   const sources = artSources(inputs, await readScenarioIconOverrides(inputs.scenarios))
   if (dryRun) {
-    await buildWiki(inputs.outfits, true, wanted)
+    await buildWiki(inputs.outfits, true, false, wanted)
     return
   }
 
@@ -124,8 +159,9 @@ async function main(): Promise<void> {
   if (wanted('outfit-busts')) images.push(await buildImages('outfit-busts', sources.outfitPortraits, false))
   // Faces use the same portrait source and the bust crop as their starting point.
   if (wanted('outfit-faces')) images.push(await buildImages('outfit-faces', sources.outfitPortraits, false))
+  if (wanted('outfit-glass')) images.push(await buildGlass(inputs, sources.outfitPortraits))
   if (wanted('support-card-art')) images.push(await buildImages('support-card-art', sources.supportCardArt, refresh))
-  images.push(...(await buildWiki(inputs.outfits, false, wanted)))
+  images.push(...(await buildWiki(inputs.outfits, false, refresh, wanted)))
 
   const manifest = await writeArt({ releaseDir, atlases, images })
   console.log(`Release: ${manifest.version} (${manifest.files.length} files)`)

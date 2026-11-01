@@ -9,7 +9,10 @@
     "test": "vitest run",
     "import": "tsx src/import.ts",
     "bust-sheet": "tsx src/bust-sheet.ts",
-    "face-sheet": "tsx src/bust-sheet.ts --family=outfit-faces"
+    "face-sheet": "tsx src/bust-sheet.ts --family=outfit-faces",
+    "glass-sheet": "tsx src/bust-sheet.ts --family=outfit-glass",
+    "uma-check": "tsx src/uma.ts check",
+    "uma-report": "tsx src/uma.ts report"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",

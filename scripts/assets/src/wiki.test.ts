@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import sharp from 'sharp'
 import { afterEach, describe, expect, it } from 'vitest'
-import { chibiName, encodeWikiArt, parseWikiName, selectWikiArt, stageWikiFiles, stagedWikiFiles, standName } from './wiki'
+import { chibiName, encodeWikiArt, parseWikiName, missingChibis, selectWikiArt, stageWikiFiles, stagedWikiFiles, standName } from './wiki'
 
 describe('wiki file names', () => {
   it('reads chibis and the four outfit stands', () => {

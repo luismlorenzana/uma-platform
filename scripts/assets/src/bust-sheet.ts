@@ -16,10 +16,13 @@ import sharp from 'sharp'
 const LABEL = 30
 const GAP = 8
 
-const family = process.argv.includes('--family=outfit-faces') ? 'outfit-faces' : 'outfit-busts'
-const sheet = family === 'outfit-faces'
-  ? { tile: 192, columns: 5, rows: 6, prefix: 'faces' }
-  : { tile: 128, columns: 6, rows: 8, prefix: 'busts' }
+const SHEETS = {
+  'outfit-busts': { tile: 128, columns: 6, rows: 8, prefix: 'busts' },
+  'outfit-faces': { tile: 192, columns: 5, rows: 6, prefix: 'faces' },
+  'outfit-glass': { tile: 192, columns: 5, rows: 6, prefix: 'glass' },
+} as const
+const family = (Object.keys(SHEETS) as (keyof typeof SHEETS)[]).find((key) => process.argv.includes(`--family=${key}`)) ?? 'outfit-busts'
+const sheet = SHEETS[family]
 
 const escape = (text: string) => text.replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[char]!)
 

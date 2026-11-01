@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "GameTora \u2192 neutral master data importer and private release publisher.",
+  "description": "GameTora → neutral master data importer and private release publisher.",
   "exports": {
     "./release-dir": "./src/release-dir.ts",
-    "./pack": "./src/pack.ts"
+    "./pack": "./src/pack.ts",
+    "./gametora": "./src/gametora.ts",
+    "./sets": "./src/sets.ts",
+    "./gcloud-storage": "./src/gcloud-storage.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",

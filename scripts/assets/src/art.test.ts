@@ -2,7 +2,7 @@ import { syntheticMasterData } from '@luismlorenzana/uma-data/testing'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { ART_FAMILIES, bustCrop, encodeArt, encodeBust, encodeFace, faceCrop } from './art'
-import { artSources, outfitIconUrl, outfitPortraitUrl, scenarioIconUrl, supportCardArtUrl, supportCardIconUrl } from './sources'
+import { artSources, outfitChibiUrl, outfitIconUrl, outfitPortraitUrl, scenarioIconUrl, supportCardArtUrl, supportCardIconUrl } from './sources'
 
 describe('art sources', () => {
   it('derives each family URL from the original ids', () => {
@@ -10,7 +10,9 @@ describe('art sources', () => {
     expect(outfitIconUrl(outfit)).toBe('https://gametora.com/images/umamusume/characters/thumb/chara_stand_9001_900101.png')
     expect(outfitPortraitUrl(outfit)).toBe('https://gametora.com/images/umamusume/characters/chara_stand_9001_900101.png')
     expect(supportCardIconUrl(99001)).toBe('https://gametora.com/images/umamusume/supports/support_card_s_99001.png')
-    expect(supportCardArtUrl(99001)).toBe('https://gametora.com/images/umamusume/supports/tex_support_card_99001.png')
+    expect(supportCardArtUrl(99001)).toBe('https://media.gametora.com/umamusume/supports/full/99001.png')
+    expect(outfitChibiUrl(900101, 'a')).toBe('https://media.gametora.com/umamusume/characters/chibi/900101_0010.png')
+    expect(outfitChibiUrl(900101, 'b')).toBe('https://media.gametora.com/umamusume/characters/chibi/900101_0011.png')
     expect(scenarioIconUrl(99)).toBe('https://media.gametora.com/umamusume/scenarios/hero/thumb/99.png')
   })
 

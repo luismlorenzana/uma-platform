@@ -1,13 +1,15 @@
 // Reads the master sets the asset pipeline needs from the local release, verified against the manifest
 // (ported from uma-racer's pack reader), plus the private scenario-crest override.
 
-import type { Outfit, ReleaseManifest, Scenario, Skill, SupportCard } from '@luismlorenzana/uma-data'
+import type { Character, Outfit, ReleaseManifest, Scenario, Skill, SupportCard } from '@luismlorenzana/uma-data'
 import { OVERRIDES_DIR, readLocalManifest, readLocalSet } from '@uma-platform/data-pipeline/release-dir'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
+import type { GlassPin } from './glass'
 
 export interface AssetInputs {
   manifest: ReleaseManifest
+  characters: Character[]
   outfits: Outfit[]
   supportCards: SupportCard[]
   skills: Skill[]
@@ -17,13 +19,14 @@ export interface AssetInputs {
 export async function readAssetInputs(releaseDir: string): Promise<AssetInputs> {
   const manifest = await readLocalManifest(releaseDir)
   if (!manifest) throw new Error('No local release; run pnpm data:import first')
-  const [outfits, supportCards, skills, scenarios] = await Promise.all([
+  const [characters, outfits, supportCards, skills, scenarios] = await Promise.all([
+    readLocalSet(releaseDir, manifest, 'characters'),
     readLocalSet(releaseDir, manifest, 'outfits'),
     readLocalSet(releaseDir, manifest, 'support-cards'),
     readLocalSet(releaseDir, manifest, 'skills'),
     readLocalSet(releaseDir, manifest, 'scenarios'),
   ])
-  return { manifest, outfits, supportCards, skills, scenarios }
+  return { manifest, characters, outfits, supportCards, skills, scenarios }
 }
 
 /**
@@ -82,4 +85,28 @@ export async function readBustCrops(path = resolve(OVERRIDES_DIR, 'bust-crops.js
 /** Optional private face pins, with the same shape as bust pins. */
 export async function readFaceCrops(path = resolve(OVERRIDES_DIR, 'face-crops.json')): Promise<CropOverrides> {
   return readCropOverrides(path, 'face-crops.json')
+}
+
+/**
+ * Optional private face pins for the stained-glass bake: `{ "<outfitId>": { "cx", "cy", "rx", "ry", "tilt" } }`. The
+ * ellipse is in shares of the bust's side, and `tilt` (degrees, clockwise) is optional.
+ */
+export async function readGlassPins(path = resolve(OVERRIDES_DIR, 'glass-pins.json')): Promise<Record<string, GlassPin>> {
+  let raw: string
+  try {
+    raw = await readFile(path, 'utf8')
+  } catch {
+    return {}
+  }
+  const parsed = JSON.parse(raw) as unknown
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error('glass-pins.json must be an object')
+  for (const [id, pin] of Object.entries(parsed as Record<string, unknown>)) {
+    const values = typeof pin === 'object' && pin !== null ? pin as Record<string, unknown> : {}
+    const share = (key: string) => typeof values[key] === 'number' && values[key] > 0 && values[key] < 1
+    if (!['cx', 'cy', 'rx', 'ry'].every(share) || (values.tilt !== undefined && typeof values.tilt !== 'number') ||
+      Object.keys(values).some((key) => !['cx', 'cy', 'rx', 'ry', 'tilt'].includes(key))) {
+      throw new Error(`glass-pins.json has an invalid pin for ${id}`)
+    }
+  }
+  return parsed as Record<string, GlassPin>
 }

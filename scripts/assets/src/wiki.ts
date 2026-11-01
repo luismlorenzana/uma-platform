@@ -1,6 +1,6 @@
 // Chibi, outfit-stand and face art from the owner's local copy of the original's files, named as on the wiki
 // (ported from uma-racer T059). Nothing here is fetched: `--source dir:<path>` stages the files into the gitignored
-// cache, and every later run builds from that cache.
+// cache, and every later run builds from that cache. A chibi the files lack comes from GameTora (`missingChibis`).
 
 import { copyFile, mkdir, readFile, readdir, stat } from 'node:fs/promises'
 import { resolve } from 'node:path'
@@ -77,6 +77,14 @@ export function selectWikiArt(
     else selection.missing.push(chara)
   }
   return selection
+}
+
+/** The chibis no wiki file covers, such as the newest outfits'. GameTora has them by outfit id. */
+export function missingChibis(chibis: readonly WikiPick[], outfits: readonly { id: number }[]): { outfitId: number; pose: 'a' | 'b'; id: string }[] {
+  const have = new Set(chibis.map((pick) => pick.id))
+  return outfits.flatMap((outfit) => (['a', 'b'] as const)
+    .map((pose) => ({ outfitId: outfit.id, pose, id: `${outfit.id}-${pose}` }))
+    .filter(({ id }) => !have.has(id)))
 }
 
 /** Copies the roster's files from the owner's folder into the cache, skipping any already there at the same size. */

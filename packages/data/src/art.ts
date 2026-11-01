@@ -21,6 +21,7 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
  * - `outfit-chibis`: `<outfitId>-a` or `<outfitId>-b` (two poses, ≤256 px)
  * - `character-dresses`: `<characterId>-gym|summer|winter|casual` (≤512 px)
  * - `character-faces`: character id (race token face, ≤128 px square)
+ * - `outfit-glass`: outfit id (the bust as a stained-glass window, ≤512 px square, opaque)
  */
 export const IMAGE_FAMILIES = [
   'outfit-portraits',
@@ -30,6 +31,7 @@ export const IMAGE_FAMILIES = [
   'outfit-chibis',
   'character-dresses',
   'character-faces',
+  'outfit-glass',
 ] as const
 export type ImageFamily = (typeof IMAGE_FAMILIES)[number]
 

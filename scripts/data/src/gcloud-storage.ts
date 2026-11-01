@@ -13,6 +13,9 @@ const BUCKET_PATTERN = /^[a-z0-9][a-z0-9._-]{1,220}[a-z0-9]$/
 const UPLOAD_BATCH = 200
 
 export const GCLOUD_CONFIGURATION = 'default'
+/** The platform's GCP project (`uma-platform` was taken) and private release bucket (infra/README.md, P34). */
+export const DEFAULT_PROJECT = 'uma-platform-lm'
+export const DEFAULT_BUCKET = 'uma-platform-master-data'
 
 const CONTENT_TYPES: Record<string, string> = {
   '.json': 'application/json',

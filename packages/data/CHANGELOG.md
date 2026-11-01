@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.2.0
+
+### Minor Changes
+
+- Add the `outfit-glass` art family: each outfit's bust as a 512 px stained-glass window, keyed by outfit id. Additive: a game on an older uma-data drops the family when it parses the art index, and keeps working.
+
 ## 1.1.0
 
 ### Minor Changes

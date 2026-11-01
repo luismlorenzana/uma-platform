@@ -60,7 +60,7 @@ Set `characters`, from GameTora `characters`. One record per character: trainabl
 | `realCounterpart` | LocalText \| null | `rl_counterpart` | The real horse a fictional character is modelled on |
 | `kind` | string \| null | `race` | `uma`, `human`, `unknown`; null where GameTora leaves it unset |
 | `realHorseSex` | `male` \| `female` \| null | `sex` (1, 2) | The real horse's sex. Non-horse characters still carry GameTora's value (P33) |
-| `birthday` | `{ month, day, year }` | `birth_month`, `birth_day`, `birth_year` | `year` null where unknown |
+| `birthday` | `{ month, day, year }` | `birth_month`, `birth_day`, `birth_year` | `year` null where unknown. Required: a character without one is skipped with a warning (P82) |
 | `heightCm` | number \| null | `height` | |
 | `threeSizes` | `{ bust, waist, hip }` \| null | `three_sizes.b/w/h` | |
 | `playable` | ServerFlags | `playable`, `playable_en`, … | Trainable on that server |
@@ -289,22 +289,28 @@ paths. A missing family or key means the release has no art for it; games fall b
 |---|---|---|---|---|
 | `outfit-icons` | atlas | outfit id | GameTora stand thumbnail | 128 px frames |
 | `support-card-icons` | atlas | support card id | GameTora `support_card_s_<id>` | 128 px frames |
-| `skill-icons` | atlas | skill icon id | GameTora `utx_ico_skill_<id>` (every `iconId` and `globalIconId`) | 128 px frames |
+| `skill-icons` | atlas | skill icon id | GameTora `skills/icon/<id>` (every `iconId` and `globalIconId`) | 128 px frames |
 | `scenario-icons` | atlas | scenario id | GameTora scenario crest | 128 px frames |
 | `outfit-portraits` | images | outfit id | GameTora full stand | ≤512 px, transparent |
 | `outfit-busts` | images | outfit id | Cut from the portrait (head band centroid; private pins in `content/overrides/bust-crops.json`) | 256 px square |
 | `outfit-faces` | images | outfit id | Tight crop derived from the outfit's bust (private pins in `content/overrides/face-crops.json`) | 192 px square |
-| `support-card-art` | images | support card id | GameTora `tex_support_card_<id>` | ≤600 px, opaque |
-| `outfit-chibis` | images | `<outfitId>-a`, `<outfitId>-b` | Wiki `Game_Asset_petit_chr_<chara>_<costume>_0010/0011` | ≤256 px |
+| `support-card-art` | images | support card id | GameTora `supports/full/<id>` | ≤600 px, opaque |
+| `outfit-chibis` | images | `<outfitId>-a`, `<outfitId>-b` | Wiki `Game_Asset_petit_chr_<chara>_<costume>_0010/0011`, else GameTora `characters/chibi/<outfitId>_0010/0011` | ≤256 px |
 | `character-dresses` | images | `<characterId>-gym\|summer\|winter\|casual` | Wiki `Game_Asset_chara_stand_<chara>_…` | ≤512 px |
 | `character-faces` | images | character id | Cut from the first of the summer, winter, gym, casual stands | 128 px square |
+| `outfit-glass` | images | outfit id | Baked from the outfit's bust by `scripts/assets/glass` (private face pins in `content/overrides/glass-pins.json`) | 512 px square, opaque |
 
 `Atlas`: `frameWidth`, `frameHeight` (128), `pages: [{ path, width, height }]` (WebP, ≤4096 px), and
 `frames: { <key>: { page, x, y, width, height } }`. Frames sit on a 132 px grid with 2 px transparent padding.
 
-Wiki art comes from the owner's local folder (`pnpm assets:import -- --source dir:<path>`), never fetched. GameTora
-sources are downloaded at most 8 at a time (6 for full-size art) and cached; missing sources are skipped with a
-warning.
+Wiki art comes from the owner's local folder (`pnpm assets:import -- --source dir:<path>`), never fetched: the wiki's
+robots.txt closes `/w/`, where its images sit. A chibi the folder lacks comes from GameTora, so only a new character's
+stands need saving by hand. GameTora sources are downloaded at most 8 at a time (6 for full-size art)
+and cached; missing sources are skipped with a warning.
+
+`outfit-glass` derives from original art, so it's a release family with the same privacy as the busts, not uma-art. A
+bust has only 307 real pixels, so 512 px is the honest size. [new-umas.md](new-umas.md) has the import of a new outfit
+end to end.
 
 ## Releases
 

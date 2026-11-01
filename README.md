@@ -55,6 +55,9 @@ pnpm release:publish -- --dry-run
 pnpm release:publish             # files → manifest → channels/v1/latest.json
 ```
 
+For a new banner, [docs/new-umas.md](docs/new-umas.md) has the whole path: `pnpm uma:check`, `pnpm uma:import`, review,
+publish, and how to undo it.
+
 The first run on a machine needs the private inputs (P31): `content/overrides/scenario-icons.json` and the owner's
 wiki art folder, staged once with `pnpm assets:import -- --source dir:~/Documents/uma-content`. Downloads are cached
 in `scripts/*/.cache/`, so later runs only fetch what's new. Publishing uses the owner's `default` gcloud

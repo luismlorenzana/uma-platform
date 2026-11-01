@@ -30,7 +30,9 @@ are removed. The same sources give the same bytes and the same release version.
 
 ```bash
 pnpm release:publish -- --dry-run   # verify and show the plan; writes nothing
-pnpm release:publish                # upload
+pnpm release:publish -- --channel candidate   # upload everything, leave `latest` alone
+pnpm release:publish                # upload and move `latest`
+pnpm release:publish -- --rollback <version>  # point the channel back at a published release
 ```
 
 Options: `--bucket` (or `UMA_RELEASE_BUCKET`), `--project` (or `UMA_GCP_PROJECT`), `--channel` (default `latest`),
@@ -39,7 +41,7 @@ Options: `--bucket` (or `UMA_RELEASE_BUCKET`), `--project` (or `UMA_GCP_PROJECT`
 The publisher checks the local release the way a client will (manifest version, every byte and SHA-256, every set,
 the art index), lists the bucket once, uploads missing files with `--no-clobber`, uploads the manifest unless the
 bucket has it (an existing one must list the same files), moves `channels/v1/<channel>.json` and reads it back. It
-never deletes anything (P23). Every gcloud call is pinned with `CLOUDSDK_ACTIVE_CONFIG_NAME=default` and
+never deletes anything (P23). A rollback checks the bucket holds that manifest and moves only the pointer. Every gcloud call is pinned with `CLOUDSDK_ACTIVE_CONFIG_NAME=default` and
 `CLOUDSDK_CORE_PROJECT`; the active configuration is never read or changed.
 
 ## Safety and tests
