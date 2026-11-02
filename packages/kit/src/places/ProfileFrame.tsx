@@ -1,7 +1,8 @@
 // An Uma's profile frame, one for both games (uma-platform SD2): a header (portrait, name, title, level label, chips,
 // and a corner for the game's toggle) over a tab bar and the active tab's body. The game passes the portrait (SB3's
 // `UmaBust` once it lands), its level label (SB2's `formatLevel`), its tabs and each tab's body. H118 adds an opt-in
-// 64px compact header and progress line; omitting both keeps the regular header's markup unchanged.
+// 64px compact header and progress line; omitting both keeps the regular header's markup unchanged. H151 adds an optional
+// companion square beside the portrait (uma-rpg's stained-glass window); omitted, the markup is unchanged.
 import type { ReactNode } from 'react'
 import { LockedIcon } from '../ui/icons/index.js'
 
@@ -16,6 +17,9 @@ export interface ProfileTab<K extends string = string> {
 
 export interface ProfileFrameProps<K extends string = string> {
   readonly portrait: ReactNode
+  /** A second square beside the portrait, the same size (64px compact, 112px regular), e.g. a window of her progress. The
+   * game supplies its content, tap target and label. Not drawn while locked. */
+  readonly companion?: ReactNode
   readonly name: string
   readonly title?: string | null
   /** "Lv 7", or "T2 · Lv 7". */
@@ -42,7 +46,7 @@ export interface ProfileFrameProps<K extends string = string> {
 }
 
 export function ProfileFrame<K extends string>({
-  portrait, name, title, level, size = 'regular', progress, chips, corner, summary, locked = false, lockedLabel = 'Locked', tabs = [], tab, onTab, tabsLabel = 'Profile', children,
+  portrait, companion, name, title, level, size = 'regular', progress, chips, corner, summary, locked = false, lockedLabel = 'Locked', tabs = [], tab, onTab, tabsLabel = 'Profile', children,
 }: ProfileFrameProps<K>) {
   return (
     <div className="space-y-3 px-4 pt-3 pb-24" data-kit="profile">
@@ -52,6 +56,7 @@ export function ProfileFrame<K extends string>({
             {portrait}
             {locked && <span role="img" aria-label={lockedLabel} className="absolute top-1 left-1 flex rounded-full bg-scrim/60 p-0.5 text-ink-on-dark"><LockedIcon size={14} /></span>}
           </div>
+          {companion && !locked && <div className="relative size-16 shrink-0 overflow-hidden rounded-md bg-sunken" data-kit="profile-companion">{companion}</div>}
           <div className="flex h-16 min-w-0 flex-1 flex-col justify-between">
             {/* Two 18px name lines, a 14px title and a 14px level fit the 64px block without clipping a long name. */}
             <h2 className="break-words text-[17px] leading-[18px] font-bold">{name}</h2>
@@ -75,6 +80,7 @@ export function ProfileFrame<K extends string>({
             </span>
           )}
         </div>
+        {companion && !locked && <div className="relative size-28 shrink-0 overflow-hidden rounded-md bg-sunken" data-kit="profile-companion">{companion}</div>}
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">{chips}</div>

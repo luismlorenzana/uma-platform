@@ -238,6 +238,9 @@ const auth = useAuth()
   Opt-in `size?: 'regular' | 'compact'` defaults to the original regular header (0.16.0). Compact uses a 64px portrait,
   a wrapping 17px name, a truncating 12.5px title beside the chips, and a bold 14px level. The block is 64px tall;
   `corner`, `summary` and tabs retain their slots. The compact lock is a named 14px icon without the word.
+  Optional `companion` draws a second square beside the portrait, the same size (64px compact, 112px regular) and
+  radius, for something of hers the game shows next to her picture (uma-rpg's stained-glass window). The game supplies
+  its content, tap target and label; it isn't drawn while `locked`, and omitted it leaves the markup unchanged (0.17.0).
   Optional `progress: { value: number; max: number; label: string }` draws a 4px bar and an 11px caption on the compact
   level line, or below the regular level. It exposes the supplied values and label through `role="progressbar"`;
   the fill is full at or beyond the maximum. Omitting both options preserves the regular markup exactly.

@@ -65,3 +65,24 @@ describe('the compact ProfileFrame (H118)', () => {
     expect(page.querySelector<HTMLElement>('[role="progressbar"] > span')!.style.width).toBe(width)
   })
 })
+
+describe('the companion square (H151)', () => {
+  it.each(['regular', 'compact'] as const)('leaves %s markup unchanged when it is omitted', size => {
+    expect(doc({ size, companion: undefined }).body.innerHTML).toBe(doc({ size }).body.innerHTML)
+    expect(doc({ size }).querySelector('[data-kit="profile-companion"]')).toBeNull()
+  })
+
+  it.each([['compact', 'size-16'], ['regular', 'size-28']] as const)('sits beside the %s portrait at its size', (size, box) => {
+    const header = doc({ size, companion: <button type="button" data-window="">45%</button> }).querySelector('section')!
+    const square = header.querySelector('[data-kit="profile-companion"]')!
+    expect(square.previousElementSibling).toBe(header.firstElementChild)
+    expect(header.firstElementChild!.classList.contains(box)).toBe(true)
+    expect(square.classList.contains(box)).toBe(true)
+    expect(square.classList.contains('shrink-0')).toBe(true)
+    expect(square.querySelector('[data-window]')!.textContent).toBe('45%')
+  })
+
+  it('is not drawn while locked', () => {
+    expect(doc({ size: 'compact', locked: true, companion: <i data-window="" /> }).querySelector('[data-kit="profile-companion"]')).toBeNull()
+  })
+})
