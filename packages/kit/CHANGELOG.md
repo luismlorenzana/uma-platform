@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-kit
 
+## 0.17.0
+
+### Minor Changes
+
+- 82c23db: `ProfileFrame`'s optional `companion`: a second square beside the portrait, the same size (H151, P85). Omitted, the
+  markup is unchanged.
+
 ## 0.16.0
 
 ### Minor Changes

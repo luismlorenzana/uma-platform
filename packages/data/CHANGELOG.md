@@ -1,5 +1,12 @@
 # @luismlorenzana/uma-data
 
+## 1.3.0
+
+### Minor Changes
+
+- fc7906f: The `outfit-glass-order` image family: each window's pane map, for lighting it pane by pane (P84). A game on 1.2.0 drops
+  it when parsing.
+
 ## 1.2.0
 
 ### Minor Changes
