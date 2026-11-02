@@ -44,6 +44,7 @@ so it stays there too: it's a release family, not uma-art, and it's never publis
 | `outfit-icons`, `outfit-portraits` | GameTora | Required |
 | `outfit-busts`, `outfit-faces` | Cut from the portrait; pin in `bust-crops.json` or `face-crops.json` | Required |
 | `outfit-glass` | Baked from the bust; pin in `glass-pins.json` | Required |
+| `outfit-glass-order` | The same bake: the window's pane map, for the reveal | Required |
 | `outfit-chibis` | GameTora | Games show the icon |
 | `character-dresses`, `character-faces` | The wiki, by hand; only for a new character | Games fall back |
 
@@ -56,8 +57,9 @@ than a row: see step 4.
 **2. Import.** Only new art downloads or bakes, so a banner's outfits cost seconds on top of re-encoding the families. A
 changed `glass.py` rebakes everything, about 3.5 minutes.
 
-**3. Review.** Open `content/review/new-umas.png`: portrait, bust, face, window, the window at list size, and the chibi,
-one row an outfit.
+**3. Review.** Open `content/review/new-umas.png`: portrait, bust, face, window, the window at list size, the chibi, and
+the window lit at 0, 15 and 30 of 31 steps by its pane map, one row an outfit. The frame lights first and the face never
+before the 31st.
 
 | What's wrong | The fix |
 |---|---|

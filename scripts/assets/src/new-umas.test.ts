@@ -30,6 +30,7 @@ function fullArt(data: RecordSets): ArtIndex {
       'outfit-busts': keyed(outfits, image),
       'outfit-faces': keyed(outfits, image),
       'outfit-glass': keyed(outfits, image),
+      'outfit-glass-order': keyed(outfits, image),
       'outfit-chibis': keyed(outfits.flatMap((id) => [`${id}-a`, `${id}-b`]), image),
       'character-dresses': keyed(characters.flatMap((id) => [`${id}-gym`, `${id}-summer`, `${id}-winter`, `${id}-casual`]), image),
       'character-faces': keyed(characters, image),
@@ -71,6 +72,14 @@ describe('artGaps', () => {
   it('finds nothing in a complete release', () => {
     const data = sets()
     expect(artGaps(data, fullArt(data))).toEqual({ required: [], optional: [], wikiFiles: [] })
+  })
+
+  it('holds a release back for a missing pane map, as for a missing window', () => {
+    const data = sets()
+    const art = fullArt(data)
+    const id = String(data.outfits[0]!.id)
+    delete art.images['outfit-glass-order']![id]
+    expect(artGaps(data, art).required).toEqual([`outfit-glass-order/${id}`])
   })
 
   it('holds a release back for a missing window, and only notes a missing chibi', () => {

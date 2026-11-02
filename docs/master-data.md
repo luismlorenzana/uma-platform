@@ -299,6 +299,7 @@ paths. A missing family or key means the release has no art for it; games fall b
 | `character-dresses` | images | `<characterId>-gym\|summer\|winter\|casual` | Wiki `Game_Asset_chara_stand_<chara>_…` | ≤512 px |
 | `character-faces` | images | character id | Cut from the first of the summer, winter, gym, casual stands | 128 px square |
 | `outfit-glass` | images | outfit id | Baked from the outfit's bust by `scripts/assets/glass` (private face pins in `content/overrides/glass-pins.json`) | 512 px square, opaque |
+| `outfit-glass-order` | images | outfit id | The same bake: the window's pane map, each pixel its pane's place in the reveal (0 the lead, 1–250 the panes outside in, 255 the face) | 512 px square, lossless gray |
 
 `Atlas`: `frameWidth`, `frameHeight` (128), `pages: [{ path, width, height }]` (WebP, ≤4096 px), and
 `frames: { <key>: { page, x, y, width, height } }`. Frames sit on a 132 px grid with 2 px transparent padding.
@@ -308,7 +309,10 @@ robots.txt closes `/w/`, where its images sit. A chibi the folder lacks comes fr
 stands need saving by hand. GameTora sources are downloaded at most 8 at a time (6 for full-size art)
 and cached; missing sources are skipped with a warning.
 
-`outfit-glass` derives from original art, so it's a release family with the same privacy as the busts, not uma-art. A
+`outfit-glass` derives from original art, so it's a release family with the same privacy as the busts, not uma-art; so does
+its pane map, `outfit-glass-order`, which a game uses to light the window pane by pane (uma-rpg's collections, P84): a pixel
+is drawn as it is when its value is 0 or at most 250 × lit ÷ (steps − 1), the face (255) only with the last step, and as
+dark glass otherwise. `litWindow` in `scripts/assets/src/glass.ts` is the reference. A
 bust has only 307 real pixels, so 512 px is the honest size. [new-umas.md](new-umas.md) has the import of a new outfit
 end to end.
 

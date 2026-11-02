@@ -52,7 +52,12 @@ become the glass, large pieces are cut along the hair, and the face stays one sh
 Voronoi and superpixel filters ruin anime faces. A bake takes about 6 seconds, so results are cached in
 `.cache/outfit-glass/` by the code, source, crop, colours and pin: a run bakes only what changed, the same inputs always
 give the same bytes, and changing `glass.py` rebakes everything (about 3.5 minutes). An import warns about a face whose
-sheet covers under 3% or over 20% of the window, which means it was misread. Pin one in
+sheet covers under 3% or over 20% of the window, which means it was misread.
+
+Each bake also writes the window's **pane map** (`outfit-glass-order`, P84): the same size, lossless, each pixel its pane's
+place in the reveal: 0 the lead, 255 the face, 1–250 the rest, outside in (the frame, then the glass behind her from its
+rim toward her head, then her figure from the bottom up). `glass/check_order.py` checks the order on a made-up window:
+`.cache/glass-venv/bin/python -I glass/check_order.py`. Pin one in
 `content/overrides/glass-pins.json`, as shares of the bust's side: `{ "<outfitId>": { "cx": 0.5, "cy": 0.6, "rx": 0.2,
 "ry": 0.24, "tilt": 10 } }`. `tilt` is optional, in degrees clockwise.
 

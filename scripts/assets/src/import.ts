@@ -59,8 +59,9 @@ async function buildImages(family: ArtFamily, sources: readonly ImageSource[], r
   return { family, images: built.images }
 }
 
-/** The stained-glass windows: baked from the busts' portrait sources, so this pass downloads nothing new. */
-async function buildGlass(inputs: AssetInputs, sources: readonly ImageSource[]): Promise<ImageFamilyDefinition> {
+/** The stained-glass windows and their pane maps (P84): baked from the busts' portrait sources, so this pass downloads
+ * nothing new. One bake makes both, so asking for either writes both. */
+async function buildGlass(inputs: AssetInputs, sources: readonly ImageSource[]): Promise<ImageFamilyDefinition[]> {
   const { images: portraits } = await downloadImages(sources, { cacheDir, kind: 'outfit-portraits', concurrency: 6, optional: true })
   const characters = new Map(inputs.characters.map((character) => [character.id, character]))
   const colors = new Map(inputs.outfits.flatMap((outfit) => {
@@ -76,10 +77,10 @@ async function buildGlass(inputs: AssetInputs, sources: readonly ImageSource[]):
     onProgress: (done, total) => process.stdout.write(`\routfit-glass: baked ${done}/${total}`),
   })
   process.stdout.write('\r')
-  console.log(`outfit-glass: ${built.images.length} windows (${built.cacheHits} cache hits, ${built.baked} baked), ${megabytes(built.bytes)}`)
+  console.log(`outfit-glass: ${built.images.length} windows (${built.cacheHits} cache hits, ${built.baked} baked), ${megabytes(built.bytes)}; pane maps ${megabytes(built.orderBytes)}`)
   if (built.failed.length > 0) console.warn(`  ${built.failed.length} failed (games fall back to the bust): ${built.failed.map(({ id, reason }) => `${id} ${reason}`).join(', ')}`)
   if (built.unpinned.length > 0) console.warn(`  ${built.unpinned.length} look misread; check them and pin in glass-pins.json: ${built.unpinned.join(', ')}`)
-  return { family: 'outfit-glass', images: built.images }
+  return [{ family: 'outfit-glass', images: built.images }, { family: 'outfit-glass-order', images: built.orders }]
 }
 
 /** The chibis the wiki files don't cover, from GameTora: a new outfit needs no file saved by hand. */
@@ -159,7 +160,7 @@ async function main(): Promise<void> {
   if (wanted('outfit-busts')) images.push(await buildImages('outfit-busts', sources.outfitPortraits, false))
   // Faces use the same portrait source and the bust crop as their starting point.
   if (wanted('outfit-faces')) images.push(await buildImages('outfit-faces', sources.outfitPortraits, false))
-  if (wanted('outfit-glass')) images.push(await buildGlass(inputs, sources.outfitPortraits))
+  if (wanted('outfit-glass') || wanted('outfit-glass-order')) images.push(...(await buildGlass(inputs, sources.outfitPortraits)))
   if (wanted('support-card-art')) images.push(await buildImages('support-card-art', sources.supportCardArt, refresh))
   images.push(...(await buildWiki(inputs.outfits, false, refresh, wanted)))
 

@@ -22,6 +22,8 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
  * - `character-dresses`: `<characterId>-gym|summer|winter|casual` (≤512 px)
  * - `character-faces`: character id (race token face, ≤128 px square)
  * - `outfit-glass`: outfit id (the bust as a stained-glass window, ≤512 px square, opaque)
+ * - `outfit-glass-order`: outfit id (the window's pane map, its size, lossless gray: each pixel its pane's place in the
+ *   reveal, 0 the lead, 1–250 the panes outside in, 255 the face)
  */
 export const IMAGE_FAMILIES = [
   'outfit-portraits',
@@ -32,6 +34,7 @@ export const IMAGE_FAMILIES = [
   'character-dresses',
   'character-faces',
   'outfit-glass',
+  'outfit-glass-order',
 ] as const
 export type ImageFamily = (typeof IMAGE_FAMILIES)[number]
 

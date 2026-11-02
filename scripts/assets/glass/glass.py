@@ -414,8 +414,40 @@ def background(size, cx, cy, tone, accent, rng, border=44):
     return labels, colours, outer
 
 
+def pane_order(labels, face, border, lead, offset, cx, cy):
+    """Each pane's place in the reveal (`outfit-glass-order`, P84): 0 the lead, 255 the face, 1–250 the rest, outside in.
+
+    The frame first, then the glass behind her from its rim toward her head, then her figure from the bottom up. A game
+    lights every pane at or under 250 × lit ÷ (steps − 1), and the face with the last step.
+    """
+    n = int(labels.max()) + 1
+    flat = labels.ravel()
+    ys, xs = np.mgrid[0:labels.shape[0], 0:labels.shape[1]]
+    area = np.bincount(flat, minlength=n).astype(np.float64)
+    my = np.bincount(flat, ys.ravel(), minlength=n) / np.maximum(area, 1)
+    mx = np.bincount(flat, xs.ravel(), minlength=n) / np.maximum(area, 1)
+    in_face = (np.bincount(flat, face.ravel().astype(np.float64), minlength=n) > 0.5 * area) & (area > 0)
+    framed = np.bincount(flat, border.ravel().astype(np.float64), minlength=n) > 0
+    r = np.hypot(mx - cx, my - cy)
+
+    def key(i):
+        if i <= offset:
+            return (2, -my[i], i)
+        return (0 if framed[i] else 1, -r[i], i)
+
+    ranked = sorted((i for i in range(1, n) if area[i] > 0 and not in_face[i]), key=key)
+    value = np.zeros(n, np.uint8)
+    for rank, i in enumerate(ranked):
+        value[i] = int(np.ceil(250 * (rank + 1) / len(ranked)))
+    value[in_face] = 255
+    order = value[labels]
+    order[lead] = 0
+    return order
+
+
 def render(rgba, main_hex, sub_hex, seed=3, n_colors=22, min_area=800, max_area=11000, sigma=4.5, pin=None):
-    """The window, and how it went: `face_share` outside about 0.03–0.2 means the face was misread and wants a pin."""
+    """The window, its pane map, and how it went: `face_share` outside about 0.03–0.2 means the face was misread and
+    wants a pin."""
     rng = np.random.default_rng(seed)
     rgb, mask = upscale(rgba)
     soft = smooth_art(rgb)
@@ -509,4 +541,5 @@ def render(rgba, main_hex, sub_hex, seed=3, n_colors=22, min_area=800, max_area=
     bright = np.clip(out - 0.55, 0, 1)
     out = 1 - (1 - out) * (1 - cv2.GaussianBlur(bright, (0, 0), 18) * 0.7)
     out8 = (np.clip(out, 0, 1) * 255).astype(np.uint8)
-    return out8, {'pieces': int(len(np.unique(labels))), 'face_share': round(float(face.mean()), 3)}
+    order = pane_order(labels, face, border, lead, offset, cx, cy)
+    return out8, order, {'pieces': int(len(np.unique(labels))), 'face_share': round(float(face.mean()), 3)}

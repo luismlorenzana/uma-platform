@@ -7,11 +7,12 @@ import { DATASET_NAMES, loadGameToraData } from '@uma-platform/data-pipeline/gam
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from '@uma-platform/data-pipeline/gcloud-storage'
 import { DEFAULT_CONTENT_DIR, DEFAULT_RELEASE_DIR, readLocalManifest, readLocalSet, readVerifiedFile } from '@uma-platform/data-pipeline/release-dir'
 import { normalizeSets } from '@uma-platform/data-pipeline/sets'
-import { mkdir, readdir } from 'node:fs/promises'
+import { mkdir, readFile, readdir } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
+import { litWindow } from './glass'
 import { artGaps, describeNews, hasNews, newRecords, wikiPage, type RecordSets } from './new-umas'
 import { parseWikiName } from './wiki'
 
@@ -65,7 +66,8 @@ async function check(): Promise<void> {
   console.log('\nNext: pnpm uma:import')
 }
 
-/** One row a new outfit: bust, face, window, the window at list size and its chibi, labelled. */
+/** One row a new outfit: portrait, bust, face, window, the window at list size, its chibi, and the window lit at 0, 15 and
+ * 30 of 31 steps by its pane map (the face comes with the 31st), labelled. */
 async function reviewSheet(outfits: readonly Outfit[], art: ArtIndex, sets: RecordSets): Promise<string> {
   const ROW = 280
   const TILE = 256
@@ -79,7 +81,9 @@ async function reviewSheet(outfits: readonly Outfit[], art: ArtIndex, sets: Reco
     ['outfit-glass', String, 68],
     ['outfit-chibis', (id) => `${id}-a`, TILE],
   ]
-  const width = GAP + cells.reduce((sum, [, , size]) => sum + size + GAP, 0)
+  const REVEAL = [0, 15, 30] as const
+  const SMALL = 128
+  const width = GAP + cells.reduce((sum, [, , size]) => sum + size + GAP, 0) + REVEAL.length * (SMALL + GAP)
   const layers: sharp.OverlayOptions[] = []
   for (const [row, outfit] of outfits.entries()) {
     const top = GAP + row * (ROW + GAP)
@@ -92,6 +96,15 @@ async function reviewSheet(outfits: readonly Outfit[], art: ArtIndex, sets: Reco
       if (image) layers.push({ input: await sharp(resolve(releaseDir, image.path)).resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer(), left, top: top + 20 })
       else layers.push({ input: Buffer.from(`<svg width="${size}" height="${TILE}"><rect width="${size}" height="${TILE}" fill="#f7e3e3"/><text x="8" y="20" font-family="Helvetica" font-size="12" fill="#a33">missing</text></svg>`), left, top: top + 20 })
       left += size + GAP
+    }
+    const window = art.images['outfit-glass']?.[String(outfit.id)], order = art.images['outfit-glass-order']?.[String(outfit.id)]
+    for (const lit of REVEAL) {
+      if (window && order) {
+        const shown = await litWindow(await readFile(resolve(releaseDir, window.path)), await readFile(resolve(releaseDir, order.path)), lit, 31)
+        layers.push({ input: await sharp(shown).resize(SMALL, SMALL).png().toBuffer(), left, top: top + 20 })
+        layers.push({ input: Buffer.from(`<svg width="${SMALL}" height="16"><text x="0" y="12" font-family="Helvetica" font-size="11" fill="#23324a">${lit} of 31</text></svg>`), left, top: top + 24 + SMALL })
+      }
+      left += SMALL + GAP
     }
   }
   const file = resolve(DEFAULT_CONTENT_DIR, 'review', 'new-umas.png')

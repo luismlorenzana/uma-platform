@@ -96,7 +96,7 @@ export function artGaps(data: RecordSets, art: ArtIndex | null): ArtGaps {
   for (const outfit of data.outfits) {
     const id = String(outfit.id)
     if (!frame('outfit-icons', id)) gaps.required.push(`outfit-icons/${id}`)
-    for (const family of ['outfit-portraits', 'outfit-busts', 'outfit-faces', 'outfit-glass'] as const) {
+    for (const family of ['outfit-portraits', 'outfit-busts', 'outfit-faces', 'outfit-glass', 'outfit-glass-order'] as const) {
       if (!image(family, id)) gaps.required.push(`${family}/${id}`)
     }
     for (const pose of ['a', 'b'] as const) if (!image('outfit-chibis', `${id}-${pose}`)) gaps.optional.push(`outfit-chibis/${id}-${pose}`)
