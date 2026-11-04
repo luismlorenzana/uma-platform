@@ -18,7 +18,7 @@ files by hand.
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 51 shared Hub places (48×48), id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 54 shared Hub places (48×48) on a 288×432 sheet, id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
@@ -35,6 +35,22 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Collections buildings (H156, 2.20.0)
+
+Three native 48px buildings fill the last row's remaining cells. The sheet stays **288×432**; all 51 older records
+and RGBA cutouts stay exact. Each new frame has `anchorY: 44` and no `smoke`.
+
+| Frame | At | Page | Motif |
+|---|---|---|---|
+| `gallery` | (144,384) | learning | Narrow stone chapel, steep front gable, jewel-coloured rose window, door and low buttresses |
+| `trials` | (192,384) | battle | Open proving ring, low round wall, two banners and a weapon rack beside the gate |
+| `drill-yard` | (240,384) | battle | Timber shed, two straw dummies, stacked wooden logs and a hanging brass bell |
+
+The window's static glow is alpha 32, within the 65 limit and two pixels clear of the frame edges. Every new
+silhouette differs by at least 25% from its neighbours and the other additions. `collections-buildings-{1x,2x}.png`
+compare the three with the Healer Sanctum, Scenario Gate and Rift on their own ground; `buildings.html#collections`
+labels the rows. RPG H158 pins this release and maps its `drills` place to `drill-yard`; H156 changes no game.
 
 ## Star crests and stat marks (H141, 2.19.0)
 

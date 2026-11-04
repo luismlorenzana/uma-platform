@@ -29,6 +29,30 @@ as 32×32 PNGs to
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## Collections buildings (H156, 2.20.0)
+
+`buildings/collections.ts` appends the Gallery, Trials and Drills after the 51 published places. The native 48px
+kit, top-left light, selective 1px outline, soft contact shadows and ground line 44 stay. The **288×432** atlas does
+not grow: the three last cells are `(144,384)`, `(192,384)` and `(240,384)`, with no smoke anchors.
+
+The Gallery is a narrow stone chapel with a steep slate front gable, low buttresses, a dark arched door and a large
+rose window. Eight lead-divided petals carry ruby, sapphire, topaz and amethyst; the static window glow is alpha 32.
+Its narrow silhouette differs from the older Chapel's, rather than relying on the glass colour. Trials is an open
+oval proving ring: a low stone wall around sand, two banners and a sword/spear rack beside a clear gate. Drills is
+an open timber shed, two straw dummies, three wooden logs with end grain, and a hanging brass bell with a clapper.
+
+`testing/legacy-h156-2.19.0.json`, captured before drawing and checked against the release tag, freezes all 51 older
+records and cutouts, the whole sheet outside the three previously empty cells, all 18 other atlas files and 90
+dedicated preview PNGs. Historical count guards advance to 54; H135's old empty-cell mask and H141's cross-family
+freeze defer precisely these three cells and the two general overviews to H156's new baseline.
+
+`collections-buildings-{1x,2x}.png` compare Gallery / Trials / Drills above Healer Sanctum / Scenario Gate / Rift,
+on the places' own ground. `buildings.html#collections` names the rows; its cards keep every legacy frame, while
+its review map places the Gallery where the Observatory stood. Only the general building PNGs/HTML update;
+older dedicated comparisons stay exact. `collections-buildings.test.ts` checks native cells, glows at alpha ≤65
+and two pixels clear of edges, no smoke, repeated pixels, motifs, and ≥25% silhouette difference against six
+neighbours and each other. RPG H158 owns the pin and actual game placements.
+
 ## The Healer Sanctum (H135)
 
 `buildings/sanctum.ts` appends a white-stone open temple after the trios: three wide steps, four columns, a sun

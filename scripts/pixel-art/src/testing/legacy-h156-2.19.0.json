@@ -1,0 +1,606 @@
+{
+  "version": "2.19.0",
+  "source": "44a41e0fcd8f2f73bfb9040634ccee8b36013771",
+  "buildings": {
+    "width": 288,
+    "height": 432,
+    "rgba": "be8353a0e1c7b73196ea6286380743b7ab98297dbd5e19fe4eda25f3f3ded32b",
+    "frames": {
+      "fields": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "ce879ee98368ab91863029759ead884bbd8264c4f8d33b45e6e2f6e9beaf6a09"
+      },
+      "orchard": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "e25e8f06a2b56190bf274a3c0ba8f14baa0b5bac7f1ea726c63e78da66fe9d75"
+      },
+      "fishery": {
+        "x": 96,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "8c765a4d5391b51313fd6b4aff503e794b27cdb29c7c269e464500d8c67b55bb"
+      },
+      "herb-garden": {
+        "x": 144,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "9f307cf6ec98db9a2bbc66ff563fcf335ac28a81d29a23bed1dd5759b0bb0aa6"
+      },
+      "vegetable-garden": {
+        "x": 192,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "b9e84135151e579ce8b8e9d67f3f6da7a9ca45b1c8683d9a8d28286f426c7ad0"
+      },
+      "mushroom-cave": {
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "84dd031d6d808a8f44fe16fc05c8628e4916d09169ce9c69af52eb06cdfe127b"
+      },
+      "sugar-grove": {
+        "x": 0,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "4924d8af35c81b6be41e5ac349e02f116042c70ecd3c312ac022a4464a2deeac"
+      },
+      "nut-grove": {
+        "x": 48,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "b9743c35d57fdbdb67686e3831f07a9b0703888f22177f3b7e4463e02bfd8779"
+      },
+      "pantry": {
+        "x": 96,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "19bd5b0c121e4ab1b50de667b5c62feb048456ee49cc20fc7cf63684427cd6d1"
+      },
+      "kitchen": {
+        "x": 144,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "smoke": {
+          "x": 38,
+          "y": 4
+        },
+        "rgba": "b6789122a8fcf650a5523b9f6bdf19fdde29914725d7a46439241f068382dc9d"
+      },
+      "monster-den": {
+        "x": 192,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "c3a041ee13006e64863e5f33faab2b7f3a48824f52edfc3cb12b681f8a85a7ba"
+      },
+      "ley-spring": {
+        "x": 240,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "51693b5e65521250a986a765acc85533e4f9b880ba7d93ddd07c38acc40577ae"
+      },
+      "mine": {
+        "x": 0,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "9bb7d3da080004d35f9ae775440a97dfaf8c221a862a1f566e934cdba67a29bf"
+      },
+      "crystal-cavern": {
+        "x": 48,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "fdfa45731bcacde0041a41b8417a2bdd6dc869e931967117eeb6f59dfdfdbdda"
+      },
+      "quarry": {
+        "x": 96,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "ba5a52db6805a703d355e77b8a05f10a8067796dfd09181e9fccda62daa475af"
+      },
+      "meadow": {
+        "x": 144,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "8792abd290ebaea7f9871aeab1341ac20f8be784890ed66480d15162a2a7d768"
+      },
+      "forest": {
+        "x": 192,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "45f53b46f71e088d6aeef291c1a606b5e9cd255d37171e82e4fb83a3b4e04010"
+      },
+      "fossil-dig": {
+        "x": 240,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "68dc95d9021b4826903d7499580a248dfc254268e25f4fb77d374a58b1c44de8"
+      },
+      "workbench": {
+        "x": 0,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "43379b659c2d0caa3d1ae435e9cfcc537d7e68a17f783b010564abb3c3fbc9b2"
+      },
+      "forge": {
+        "x": 48,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 11,
+          "y": 2
+        },
+        "rgba": "4ea1633c24ffc15ef26f5141511a5eaa8fa8697a315e2f158521964eb4ef07bf"
+      },
+      "brawler-dojo": {
+        "x": 96,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "3c94688a0bf5210ce630891c1055ee4a98f39ce5fbd65f8f8e04d17dd3658d33"
+      },
+      "mage-tower": {
+        "x": 144,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "0317ee5e260a35665e95e98a52d734cbb9f5286fae2e3189ae6303980fb7ff1c"
+      },
+      "spell-blade-salle": {
+        "x": 192,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "9420d9803afb21e4d0aaae30cadb32a294a1a3888cc52ff45d5cd5e075b6f6a7"
+      },
+      "cleric-chapel": {
+        "x": 240,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "0d70f1ba0dd351095d25863c92dcf37332769175f060f71334d90f08035823c8"
+      },
+      "summoner-circle": {
+        "x": 0,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "9a673260c3e62b97936b67aba2bc1799a8bc250d6361a2bbe8f6909be7e6e292"
+      },
+      "rangers-lodge": {
+        "x": 48,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "ebbe6b98c9051b628f451b1d1ece68cacf6c6e7309af9b96aedd7b2d93dbfe29"
+      },
+      "lancers-barracks": {
+        "x": 96,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "342dc2f633fba5fc20fdbd8e9ae2652e1c81f7da48d66e902a1197f307a19ff0"
+      },
+      "arcane-armory": {
+        "x": 144,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "e041dc81ff5fc823d465a327388118638569e755fcf09f7e552b110cbee644d3"
+      },
+      "knights-bastion": {
+        "x": 192,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "cdbf1e3b7dcef8249b70b170ea9709e28b8eec72192315ca33b4f88495f1fc0a"
+      },
+      "stable": {
+        "x": 240,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "4bd8e97f41c34771d584f697ca72fff9359376d1d84845329fe9a5a8c4ed4251"
+      },
+      "party-hall": {
+        "x": 0,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "96a9dc816e1ee69dcb4e63af418bbab0bc8ed3552b831ee30f0aa54ce83fefc4"
+      },
+      "scenario-gate": {
+        "x": 48,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "1c9c943e16b77207ed6858f6a186c10d1b34ee3ce8f26e0484513cf177cc2dcf"
+      },
+      "warehouse": {
+        "x": 96,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "c0e16ae12cd1ab77f3ab8a6df99d00bc508e79f80fb4c22b53970396673a33d9"
+      },
+      "exchange": {
+        "x": 144,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "61cb63cf5b3ee2d761ee8a2733a5471bac730618ab2c773a17ee9dea74dcf5b7"
+      },
+      "observatory": {
+        "x": 192,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "a6aff070ecbcb4514da0d40e79257a9cde98cbed1c65b729eb609ba29a302529"
+      },
+      "tier-finale": {
+        "x": 240,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "ff951d6798511d0527466091809ff2af51004dd017a7172f1622bf325f11a080"
+      },
+      "card-library": {
+        "x": 0,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "9c7a5c35ca6bfca58c0b9dfb77122b0d94b413f7d2595eced1422d082cfbae65"
+      },
+      "gym": {
+        "x": 48,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "779981f9ad18968a8dcc42b4a6651c56753ac0bb041fdb744e33392da6a67b5a"
+      },
+      "racecourse": {
+        "x": 96,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44,
+        "rgba": "fe2909e7ebbf47484a0f24d71297de964efa95fb2ba285d69bd1eaacccc1f33c"
+      },
+      "trophy-hall": {
+        "x": 144,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44,
+        "rgba": "0cb9657d621a6a3ce6c4daff377af871f843ae69129d933ce5e6d2c5c3ba7f46"
+      },
+      "lapidary": {
+        "x": 192,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "433bc2f5c12c922e206d63ff138af9eb4a8a5d9fffb260e742d586076683c6fd"
+      },
+      "rift": {
+        "x": 240,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "battle",
+        "anchorY": 44,
+        "rgba": "0e71908be13039fe97e7c747d955f46d3b3ab48a62003e61d28e5d82e0527ca0"
+      },
+      "mine-workbench": {
+        "x": 0,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 6,
+          "y": 13
+        },
+        "rgba": "1ccda34e63eefe7ba91e0e0a1927c29ee169bd41b70b02da86399f949ae00e4d"
+      },
+      "fields-workbench": {
+        "x": 48,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "9003753ec737bc7d6ff9e1e376e55ae561314021c1ef6160672d31212177d618"
+      },
+      "forest-workbench": {
+        "x": 96,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "e582ed72825304bc79747d2a6bef6ee36660084988f64ed62d1799beb54b7a88"
+      },
+      "fishery-workbench": {
+        "x": 144,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "3229a50135a70e7ca84584ae18ca2c3d5cd22b3b3d543620c460126bfd06bfb3"
+      },
+      "den-workbench": {
+        "x": 192,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "dc1ae3150fc7b5a67f7325b293385b9328e91eeb5b01288045bcbfbf12156dfb"
+      },
+      "weapon-forge": {
+        "x": 240,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 9,
+          "y": 2
+        },
+        "rgba": "5a53a4f5e103f6d4fd584584eae6ce0f54b6e79300eeeb18a3891b6cb88ee6c0"
+      },
+      "tome-forge": {
+        "x": 0,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 35.5,
+          "y": 5
+        },
+        "rgba": "bfc02954d6de8d49d28e1e36e51491bf2263390c06891cc1fa88eccf7d8e5b12"
+      },
+      "charm-forge": {
+        "x": 48,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 31.5,
+          "y": 7
+        },
+        "rgba": "b4901d38a97b07e52426bdc3c372d7419b49195c445d9b8581ba80bdaf8fe02f"
+      },
+      "healer-sanctum": {
+        "x": 96,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "682fc7f446bb1edc3dbb35e2098e8f33df552abe163f2b76c4645786e9429b8f"
+      }
+    }
+  },
+  "previews": {
+    "backdrops.png": "65778eac43bbba6a35c26249871d3448ddcb6a042d39b55d8943eff7eb8c88b4",
+    "battle-hub-2x.png": "100fa0d067f3213a0e48d3c7ec200286ecdd65415d6c70030e60a8ebc3e91d20",
+    "battle-tiles-2x.png": "db483461ca5b667c5a5b0f42bf48806622372445acdba9ba8e67b51cb6cae697",
+    "calibration.png": "c804309a42285faf60b6c6638832d66225c92ee9da865b5f30cfccb68fdac848",
+    "classes-v3-emblems-1x.png": "ebcec0bb52eff88948b44c4b30390074947e9a4aae5f529ff5adc3c4a113d27f",
+    "classes-v3-emblems-2x.png": "e0b72b68d02c5f27c9c80b96dcfe8f3b40d2d7f9867dc2b06b22fdf9842140ca",
+    "classes-v3-emblems-4x.png": "40e2cfb6e9e2244a27f1346bef23d1969d5c9a1d095a34672622fa1219f99aba",
+    "dishes.png": "479a02a8ffde99c41b02e78a65310ea7db5e542d5f40e40f9fe1b6484897a0cc",
+    "fx-1x.png": "2b37fe5a496cd6ec4b197310c7829e35cc564901c20fec829c6346b03e2fe9b9",
+    "fx.png": "bd7e786b241c18e50811ce090b43ff205c608a93fa1844f953b7eb70da7b59b4",
+    "gear-1x.png": "fd620a150952e67dfc13e0f51a1ae2c04cc7e08d3adf8abea008a1c2a12cac7e",
+    "gear-armor-d103-1x.png": "05c48816bb66946ae40b1e0a596944515a1282695b2f5b14eb01fcf06e64fccd",
+    "gear-armor-d103.png": "5d6ec1cca82503e56dd803d0071fd0d0889f5bf5f41d68e3e99f5c44f662f58d",
+    "gear-d124-1x.png": "8e567bdf38fb63946554fb9a3c2065f106e9150448c165f595ca16cf46919384",
+    "gear-d124-2x.png": "4a752d2fd3c87958ae33ef119e2897ce4ab203c05344a226c23bd55e0d26b8d3",
+    "gear-hues-1x.png": "b3c297cd0df123ecc56e34a36dbf31b7dccc0866036ffd6d60537b29d0202472",
+    "gear-hues-2x.png": "6935470838f709319f7e0f91816825f596802a915680a009f18945c88a613935",
+    "gear.png": "e08d410295ba7c5e7fa70952043547bc7bde6ad1124c07a1861c12abc8bad6d1",
+    "gems-1x.png": "da6e35a7e5d86f7047138acae2e4b67503bf7f183dba7092181ca182442ef6c2",
+    "gems-2x.png": "4c0e79778a045fd17e19438799b18d44655c4e6158f9dbf7b07a16865eb5603a",
+    "gems-planets-2x.png": "a1be85d162240e52b139d39aa86f07ce3386a276054369b2d6a347dde668b0c8",
+    "healer-sanctum-2x.png": "6dc8e447abd52fb022df60c3ce749f9fc885baff741928c7d927dad864a5b8b3",
+    "items.png": "ce18e701fefa1b59b1963022e7dfcc6b7eaaa5260ec560b37a31dc7ebe903e92",
+    "lapidary-2x.png": "6f028ecc6b04cd3cf80018092474bc28290899dd3f64fb98a80437bcb4d3ebe2",
+    "laurel-marks-1x.png": "099adf63cc25a5c2e7710d71c325a7471fcd113035385347326aca4acbb2a527",
+    "laurel-marks-2x.png": "a6bf9a3b4f6a31fbf05cd66c67304aa7b0fe6500bfeec7ad7d50a6afe7db3a41",
+    "laurel-marks-4x.png": "b1a773595e2881fb9e92a37954179b7602371ef69b297d6dd33bc64c5b53f427",
+    "made-items-1x.png": "b3d624732bd0d657dd3e184563c15d9f8adb8ed8931c5d820ea1e1662e8a4d21",
+    "made-items-2x.png": "269d097857aa9340d66b55bb06357c88aca1cdcadf039aef3d2034cc60877b19",
+    "made-items-4x.png": "cc4d1e595ade6fa0d2f701f94ac71ab65d83e235b3d3386537d8f165f56d4753",
+    "paladin-bastion-2x.png": "fbe700830d7cbc87d17ee4b64a2b3c50b448a84dfb557fc587e75c15b4e47e54",
+    "paladin-emblems-1x.png": "da3b98660ee6ae9ed9e31fe7c04c02ab538f93cc7660eac80a67c9d76544a7b1",
+    "paladin-emblems-2x.png": "a6abefd4698a97beafa2e9cd69299768655e4870ee7522a5eb347f969ca247b1",
+    "paladin-emblems-4x.png": "745a458447086518b4535a036b693920b1e459a82f1bfcc0a987d762ce5e3a41",
+    "racer-buildings-2x.png": "ec99e5250ff88489bd15adebaf59d22747737573140d6e7584e6b0ecee603770",
+    "racer-marks-1x.png": "e759a950922b876e094d446fe384fea5965b1deb6724a80a9323e64b3dca99af",
+    "racer-marks-2x.png": "4dda2bedddae74b1462f4b0dd905fe58ea4b826dfa15c03d8295acd639b254d9",
+    "racer-marks-4x.png": "33e7f8cf455f8ffd57b152143e6dc65ccd092651b755664161811fd64fef174a",
+    "racer-ticket-items-2x.png": "277d6204d92f9001b0247c6fd2166c7d2555465f412299de941fccc7ce0abd94",
+    "racer-tonics-128px.png": "4da4e2efb8d94ec06ce6a576eeafbf104c0c731e494846d75ebc66604f6654ae",
+    "racer-tonics-16px.png": "382890e58e099a219abf9d95f035f0683f8f9e4d4bf99f42fb3ce37530b1799b",
+    "racer-tonics-24px.png": "9ad69c0589adfa91fadc3ff5833182e2bfcb6c0f0d52ddf5fdce340d344b0b00",
+    "racer-tonics-32px.png": "f7279f692a114d8469bf04944482870613a1928eb6206c4e148b43be031c5948",
+    "racer-tonics-64px.png": "efb13a91d07094302fa576eeaf1a3069d3546fe8b129a36ce5fea9b3f38a4682",
+    "racing-hub-2x.png": "97633caeb1c6a6ef7de898d61517ae98168c4947492d9fdd464a4cfa5f20f8b2",
+    "racing-tiles-2x.png": "400a19e22e2f0a1c0ef9091c1b939b0896e5e4173d9f009e23c4dbc32612159a",
+    "rift-2x.png": "cf8ed0e5808856742b2361de5726cb9c78fd509f708a3521af96d3ea5abf17ee",
+    "rift-battle-hub-2x.png": "ff4a17f6627946e9dafc75b23f6725b3662733c7654daa2d8420e82f577803a7",
+    "rift-marks-1x.png": "f2a862ca9c510dda59431a4449634275437978202d395c0d56a6998dc2d37654",
+    "rift-marks-2x.png": "40849d4d832c09f81973b3302caf457c5e282f79861e29d9cf52b8a8946b8dd4",
+    "rift-marks-4x.png": "9487404a9654fa0c5369f86ef8c73787998847db0642bbb13994ff07c02a644f",
+    "stage-buildings-1x.png": "17c27ddeac6757be3ec45d803fc624fa0578da7264a43c89b65abbcb6db92bec",
+    "stage-buildings-2x.png": "1b5027da480662dc333dcc39e1879a4a62a68fec770eb691480fffc5b767262d",
+    "stage-buildings-sample.png": "3c8fdfcd47c74078ec22c3c23f88857ecc4522a19515db3e7090fd48fd415431",
+    "stage-compact-1x.png": "1e5df0e0e7432ff513a6731243c33b6753c27c1ea50ed96a02f50a5ce844247d",
+    "stage-compact-2x.png": "5643cccb416eac6c613c2ac89395db8328cb6dac25212e2198eb5786e0e35200",
+    "stage-compact-sample.png": "9e0a6f7c01ea962180169b9b0f938759de622ce493412c27af240c6209eb43ec",
+    "star-crests-1x.png": "6da94132186b01b2afadc244b81d5ef935f477c718c795f99feee524cf8b871c",
+    "star-crests-2x.png": "faec7ec00f0263add396c0732e155e23e143f88ab7861d811683a0c4f0c8e8c6",
+    "star-crests-4x.png": "0b295d9a45ec3b2248e9ebc4e1cdf76c74fceafc299735536e2dde994258fa9a",
+    "tiles.png": "7466eb68c9dadd02c2d0eec51084b9388d49439a985cc0e78c7261b51ead85ad",
+    "ui-1x.png": "844bf33024913b164c2df2a5e6cffa3608c582799057f11619205e2187c96ca8",
+    "ui.png": "bfa36f275ddc1f0d563d50e3339c1c8d2e33fb292016b3aad0b577374d0e546f",
+    "wilds-trios-1.5x.png": "783fdb9a13cd997eca84282a99226132d46e4ed1a60babaaf5d415cb8ee18bf2",
+    "wilds-trios-1x.png": "98374a9efbdb3d27b2393eac4313a10bb7f1eed81c3a05c95a5ead54fe4de329",
+    "wilds-trios-3x.png": "d95e3f29ee7d1e5260fa3b608cbccaf48be61246410f6b04a5af483535f16786",
+    "world-canyon.png": "5465caf652e5d7e1abc384819f3bb24c3da9f909eb6eaacd4016603316c09b82",
+    "world-coast.png": "36162c389f002bf549ea47f46759c5c4755847e5112ab3da4288752f03891980",
+    "world-continent.png": "07d75d63f11754a198d543dfa6fa91472c55b4803b4166f9cda2a82996e6dfc7",
+    "world-crystal.png": "e5e48e5f6a47d65aac7bad6adc47aebb1fe08e28edfed58c3cb0d7032532ed16",
+    "world-desert.png": "39fdd5125530237f3e01f829df7556fdcf1425f66073138c768136177fcaa811",
+    "world-forest.png": "034457a492c2a9a68707b5b72260e7c58cbe2187306a4805de58f72f403813ae",
+    "world-geyser.png": "92741cb63a79bf5742f8b369237d065eddba017f604581b2c02c71063f6ee2b3",
+    "world-glacier.png": "87c57e2d65fa19ec881a04b51f14ad38970b784af75b8f31e956c641140a9065",
+    "world-highlands.png": "a7bec61b9855f1427b078a23711393b36aeb8784e5c7adeffe77d9552c6a793d",
+    "world-jungle.png": "fde6038148c39a6599eb9d242c11098eb17a4528c7414c7b5abd59026066e12b",
+    "world-markers-1x.png": "ddcbeea52943b08e1d45e4070823360b2b70832cdbd20686b0146680803f1c7e",
+    "world-meadow.png": "466b5af9428ad450bfc236b1e7f4d7c936e40ad48000ba9db72ac15c5f765373",
+    "world-moor.png": "0e3b6e82d20581e2e86f3ba17ffafb8ce31ca28f26f01a45c748ebfd665a1bf4",
+    "world-peaks.png": "8a514e710017913a9dca2150a1590994f638696c54cb363a189395cead982d8e",
+    "world-plots.png": "a1f71665cda74bb7b766f2f90171b96c76dc70bdad394aa3090fc3495a22b7f2",
+    "world-rift.png": "2abb2e7c689ec88a3ddcd446a3156f4d3fddd21633fd76a13e0616a7947028eb",
+    "world-ruins.png": "62f0f90c86e10a51859473ec7bc2ed9de98226279286fab9ab0ae211134bb81a",
+    "world-sky.png": "b0b562e4602b0afae104b2c63427f0bee77441ee65bbb5278b0305d731f49c50",
+    "world-swamp.png": "25674d042ce546abb312ad68eaabff0b6f6a1987cf1e95d6125db847d14b1139",
+    "world-tundra.png": "b6c28e24e1eadc0501bb59d90fa11e68cc03d890d1aa97cb7cd4d847f206ed24",
+    "world-underworld.png": "64a165509b3e4c8195f0c493e2d783dcf35a48854cf6a97dc32cbb45e7df1046",
+    "world-volcano.png": "f68cbacf60cef720084c2c868348f12ae4ebc4db480e5c3f9d39bc3ba5076a0f",
+    "world-world.png": "52316556d7661d3ee5a7fabcf5aa41d48788e9914c6c6bc9e2a33ac0e6a2076e",
+    "world.png": "6904a777779d0a432125bdad8aa9255d74bae1688c393ea7931222c0b1958ba3"
+  },
+  "artFiles": {
+    "dishes/atlas.json": "c221bd09d32f6d4e9040b9bc97675293e2ea6df2977e95f7a5539b3f4d52fd30",
+    "dishes/atlas.png": "dae9ded75ffee31c80043db78cdaaf06c83af525dbbb153145451c5a0418931b",
+    "fx/atlas.json": "fa3d015bfb73c462ca34de619312a730d5ac24bdf5134bf33fa2a363fa4214a1",
+    "fx/atlas.png": "f9f2ce52e3a4ce2c50924e706cfcad12ed855ad854a175d9e5a5a83a35a6ffaf",
+    "gear/atlas.json": "c6e30247d8424e684d7be68b5b62ec8a37b76e88d18d35a30199e0ebc29aef21",
+    "gear/atlas.png": "6be0aacb98318f5fbb10f182c11dde528d1a66b1da254dd8a736d1365bd7722b",
+    "gems/atlas.json": "661c5b17c4e69753f5eea9741df25bd6dd20da57aa36b4d6a407ec4ca6534875",
+    "gems/atlas.png": "28bb1bbacf01e60e5b9de7a302f1d60ae1c80ada951704aa9f0113668f1070f6",
+    "items/atlas.json": "7c3393fd5a46011dc7ed78aaddc0fc6b54c40bea4e17749b801334545026d611",
+    "items/atlas.png": "7b8c8af711bf1edfeaa565ac6b82312f421257d5a1777f68f3bba0850890ca18",
+    "tiles/atlas.json": "ae95b8880ef61e4530e4b3b8acdb3d3a98723a5f2727f81c39893a33d0954fce",
+    "tiles/atlas.png": "2053b6eaba961592aa0242ce3d115ec24a10b7ec382cc1edcce254a967c1796d",
+    "ui/atlas.json": "736a34a48de932ab126158688c60bcc699c9fb42e0e74556cccdc03a0295dfa4",
+    "ui/atlas.png": "a21ad509f308cc875b610e7b61ada92d2604392f537ab86a9d9c357ebecb09d7",
+    "world/atlas.json": "a55773f8d81d42ac8fb60234294ad3ac20abd4404db614451b01743a5a02cb46",
+    "world/atlas.png": "ee9c00019f670537452c005315aa664acb9bc04dbdf10de276f4733be760a7d0",
+    "world/stages-compact.json": "0c0227dc5dffde776076ee59f34f8aeb9c5a163566c4d0375f8ebe00b15ff6b7",
+    "world/stages-compact.png": "4849eb3284963b965f6fe7bda5f3b7c268423dde74e29b7d965929a01a1c1fc0"
+  }
+}

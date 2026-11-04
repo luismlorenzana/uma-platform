@@ -1,5 +1,13 @@
 # @luismlorenzana/uma-art
 
+## 2.20.0
+
+### Minor Changes
+
+- Add the Gallery, Trials and Drills buildings (H156) as native 48px `gallery`, `trials` and `drill-yard` frames.
+  Fill the three remaining cells on the unchanged 288×432 atlas while preserving all 51 older records and pixels.
+  Include native/2× comparisons and frozen-art guards. RPG H158 owns adoption.
+
 ## 2.19.0
 
 ### Minor Changes

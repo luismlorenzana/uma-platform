@@ -22,7 +22,9 @@ describe('H135 appended Healer Sanctum', () => {
     const { index, img } = savedAtlas('buildings'), old = baseline.buildings
     expect(Object.keys(old.frames)).toHaveLength(50)
     for (const [id, f] of Object.entries(old.frames)) expect(index.frames[id], id).toEqual(f)
-    const retained = img.crop(0, 0, old.width, old.height).copy(new Img(SIZE, SIZE), 96, 384)
+    const retained = img.crop(0, 0, old.width, old.height)
+    // H135 and H156 occupy four cells that were empty in this older baseline.
+    for (const x of [96, 144, 192, 240]) retained.copy(new Img(SIZE, SIZE), x, 384)
     expect(hash(retained.px)).toBe(old.rgba)
     for (const [id, rgba] of Object.entries(old.cutouts)) {
       const f = index.frames[id]!
@@ -34,9 +36,9 @@ describe('H135 appended Healer Sanctum', () => {
   it('appends a native 48px Learning temple at (96,384), ground line 44, with no smoke or edge pixels', () => {
     const { index, img } = savedAtlas('buildings'), a = paint()
     expect([index.width, index.height]).toEqual([288, 432])
-    expect(Object.keys(index.frames)).toHaveLength(51)
+    expect(Object.keys(index.frames)).toHaveLength(54)
     expect(PLACES[50]).toBe(HEALER_SANCTUM)
-    expect(PLACES.at(-1)).toBe(HEALER_SANCTUM)
+    expect(PLACES.slice(0, 51).at(-1)).toBe(HEALER_SANCTUM)
     expect(HEALER_SANCTUM.at).toEqual({ x: .5, y: .3 })
     expect(index.frames['healer-sanctum']).toEqual({ x: 96, y: 384, w: 48, h: 48, page: 'learning', anchorY: GROUND })
     expect(a.extras).toBeUndefined()
