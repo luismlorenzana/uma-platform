@@ -434,6 +434,30 @@
    "h": 48,
    "page": "learning",
    "anchorY": 44
+  },
+  "gallery": {
+   "x": 144,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "learning",
+   "anchorY": 44
+  },
+  "trials": {
+   "x": 192,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "battle",
+   "anchorY": 44
+  },
+  "drill-yard": {
+   "x": 240,
+   "y": 384,
+   "w": 48,
+   "h": 48,
+   "page": "battle",
+   "anchorY": 44
   }
  }
 }

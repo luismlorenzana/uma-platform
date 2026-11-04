@@ -26,9 +26,12 @@ describe('H141 star crests and stat marks', () => {
     for (const atlas of [img, generated.atlas]) expect(hash(atlas.crop(0, 0, baseline.ui.width, baseline.ui.height).px)).toBe(baseline.ui.rgba)
   })
 
-  it('keeps every earlier preview PNG and all other published atlas files byte-identical', () => {
-    for (const [file, sha] of Object.entries(baseline.previews)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
-    for (const [file, sha] of Object.entries(baseline.artFiles)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
+  it('keeps earlier previews and other atlas files exact outside H156’s appended buildings', () => {
+    // H156 owns a new 2.19.0 building freeze, allowing only its three formerly empty cells and general overviews.
+    for (const [file, sha] of Object.entries(baseline.previews)) if (!['buildings.png', 'buildings-contact-3x.png'].includes(file))
+      expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['buildings/atlas.png', 'buildings/atlas.json'].includes(file))
+      expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
   })
 
   it('appends exactly the thirteen named frames in their native cells on a 120×220 sheet', () => {
