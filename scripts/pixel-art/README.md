@@ -221,6 +221,27 @@ ships only the atlas/index; playback and summon lifetimes belong to the game.
 `pnpm art:draw` also writes `assets/previews/ui.png` (3×), `ui-1x.png` and `ui.html`, with named cards and native-size
 class/stack examples. `pnpm test` checks glyph uniqueness, deterministic bytes and the saved atlas contract.
 
+## Star crests and stat marks (H141, 2.19.0)
+
+`ui/stars.ts` adds five native 24×24 crests and eight native 16×16 stat marks, each drawn on its own grid with the
+shared masks, six-tone ramps, selective 1px outline and top-left light. Planet is a gold globe crossed by a tilted
+pale-gold ring, with a contact seam below its front arc; Prowess an ember upright blade and small spark; Vigor a rose
+heart; Guard a sky heater shield; her moon an orchid crescent holding a separate star. Floating crests have no
+ground shadow. The smaller marks are a rose heart, blue drop, ember diagonal sword, blue-violet four-point spark,
+steel shield, the same shield with an incised blue-violet spark, sky wing and gold eight-ray burst. Tiny sparks meet
+on a pixel centre so their rays read at native size. No palette uses green, reserved for Ready in the game.
+
+`spec.ts` appends `star` and `stat` after all 45 earlier records. `packUi` keeps the width 120 and grows the sheet to
+**120×220**: crests at y=164 (x=0,24,48,72,96), seven marks at y=188 (x=0,16,…96), `stat/limit` at (0,204).
+`testing/legacy-h141-2.18.0.json`, captured before editing, freezes every earlier UI record and cutout, the entire
+old 120×164 region including gaps, all 89 earlier preview PNGs and the other 18 published atlas files.
+
+`star-crests-{1x,2x,4x}.png` show five rows: crests / marks on white; crests / marks on `#17202b`; crests on the
+chart's `#101a24` sky. Columns follow `STAR_BODIES` / `STAT_MARKS`. `ui.html#star-crests` names every icon beside
+its native image. `star-crests.test.ts` guards the frozen artwork, exact cells, unclipped edges, distinct deterministic
+pixels, absence of green, the two shield variants, heart/crescent anatomy and regenerated preview pixels.
+RPG H144 owns the pin and replacement of its vector stand-ins; H141 makes no game change.
+
 ## Classes v3 (H127)
 
 `ui/classes.ts` shares the Spellblade and Summoner geometry between each mirrored pair before dome shading; the

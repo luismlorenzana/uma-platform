@@ -1,5 +1,13 @@
 # @luismlorenzana/uma-art
 
+## 2.19.0
+
+### Minor Changes
+
+- Add five native 24px star-chart crests and eight native 16px stat marks (H141). Append the `star/*` and `stat/*`
+  frames on the 120×220 UI atlas while preserving every earlier frame's metadata and pixels. Include white, dark
+  and night-sky previews at native, 2× and 4× size. RPG H144 owns adoption.
+
 ## 2.18.0
 
 ### Minor Changes
