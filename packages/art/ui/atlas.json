@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 164,
+ "height": 220,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -362,6 +362,110 @@
    "h": 24,
    "group": "class",
    "key": "apprentice"
+  },
+  "star/planet": {
+   "x": 0,
+   "y": 164,
+   "w": 24,
+   "h": 24,
+   "group": "star",
+   "key": "planet"
+  },
+  "star/prowess": {
+   "x": 24,
+   "y": 164,
+   "w": 24,
+   "h": 24,
+   "group": "star",
+   "key": "prowess"
+  },
+  "star/vigor": {
+   "x": 48,
+   "y": 164,
+   "w": 24,
+   "h": 24,
+   "group": "star",
+   "key": "vigor"
+  },
+  "star/guard": {
+   "x": 72,
+   "y": 164,
+   "w": 24,
+   "h": 24,
+   "group": "star",
+   "key": "guard"
+  },
+  "star/template": {
+   "x": 96,
+   "y": 164,
+   "w": 24,
+   "h": 24,
+   "group": "star",
+   "key": "template"
+  },
+  "stat/hp": {
+   "x": 0,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "hp"
+  },
+  "stat/mp": {
+   "x": 16,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "mp"
+  },
+  "stat/atk": {
+   "x": 32,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "atk"
+  },
+  "stat/matk": {
+   "x": 48,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "matk"
+  },
+  "stat/def": {
+   "x": 64,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "def"
+  },
+  "stat/mdef": {
+   "x": 80,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "mdef"
+  },
+  "stat/evasion": {
+   "x": 96,
+   "y": 188,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "evasion"
+  },
+  "stat/limit": {
+   "x": 0,
+   "y": 204,
+   "w": 16,
+   "h": 16,
+   "group": "stat",
+   "key": "limit"
   }
  }
 }

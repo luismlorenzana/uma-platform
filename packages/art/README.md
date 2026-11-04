@@ -24,9 +24,10 @@ files by hand.
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
 - `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
-  three tier crests (12×12), four Rift front crests (16×16) and eleven achievement badges (24×24). The index is
+  three tier crests (12×12), four Rift front crests (16×16), eleven achievement badges (24×24), five star crests
+  (24×24) and eight stat marks (16×16), on a **120×220** sheet (2.19.0). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
-  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>` or `achievement/<key>`.
+  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>` or `stat/<stat>`.
   Classes: Recruit, Duelist, Acolyte, Caller, Apprentice; Brawler, Arms Spellblade, Tome Spellblade, Paladin, Cleric,
   Arms Summoner, Tome Summoner and Sorcerer. Read positions from the JSON. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
@@ -34,6 +35,22 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Star crests and stat marks (H141, 2.19.0)
+
+Thirteen original icons append below the 2.18.0 UI sheet. Every earlier record and pixel stays exact; the width
+remains 120. Always read dimensions and positions from `ui/atlas.json`, and render at native size or an integer scale.
+
+| Frames, in column order | Native size | Positions | Motifs |
+|---|---|---|---|
+| `star/planet`, `star/prowess`, `star/vigor`, `star/guard`, `star/template` | 24×24 | y=164, x=0,24,48,72,96 | Gold ringed planet, ember blade and spark, rose heart, sky shield, orchid crescent and star |
+| `stat/hp`, `stat/mp`, `stat/atk`, `stat/matk`, `stat/def`, `stat/mdef`, `stat/evasion` | 16×16 | y=188, x=0,16,…96 | Heart, drop, diagonal sword, four-point spark, shield, shield with an incised spark, wing |
+| `stat/limit` | 16×16 | (0,204) | Gold eight-ray burst |
+
+The stat marks carry rose, blue, ember, blue-violet, steel, steel/blue-violet, sky and gold respectively. No green:
+the game's Ready indicator keeps that colour. The house's 1px outline and top-left shading work on white and dark
+panels. `assets/previews/star-crests-{1x,2x,4x}.png` compare the two panel colours and the chart's night sky;
+`ui.html#star-crests` labels the native icons. RPG H144 pins this release and replaces its vector stand-ins.
 
 ## The Healer Sanctum (H135, 2.17.0)
 
