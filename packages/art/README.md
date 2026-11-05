@@ -23,11 +23,11 @@ files by hand.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), four currency marks (16×16),
+- `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), five currency marks (16×16),
   three tier crests (12×12), four Rift front crests (16×16), eleven achievement badges (24×24), five star crests
-  (24×24) and eight stat marks (16×16), on a **120×220** sheet (2.19.0). The index is
+  (24×24), eight stat marks (16×16) and two `yard` marks (24×24), on a **120×244** sheet (2.21.0). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
-  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>` or `stat/<stat>`.
+  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>`, `stat/<stat>` or `yard/<key>`.
   Classes: Recruit, Duelist, Acolyte, Caller, Apprentice; Brawler, Arms Spellblade, Tome Spellblade, Paladin, Cleric,
   Arms Summoner, Tome Summoner and Sorcerer. Read positions from the JSON. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
@@ -128,6 +128,25 @@ the connection. Network layouts must never close a 2×2 road block. Tall props s
 Gate, left to right. `racing-tiles-2x.png` shows the terrain alone; `racing-hub-2x.png` composes all four Racing places
 on a 12×22-tile sample, including the reused Scenario Gate and Tier Finale. These are review layouts, not game rules.
 Vitest freezes every published 2.5.0 building/tile frame, metadata and RGBA byte in `buildings/legacy-2.5.0.json`.
+
+## Card Ticket and Training Yard (A05, 2.21.0)
+
+Three original frames append below the 58 earlier UI records on the **120×244** sheet:
+
+| Frame | Position | Native size |
+|---|---|---|
+| `currency/card-ticket` | (0,220) | 16×16 |
+| `yard/fatigue` | (16,220) | 24×24 |
+| `yard/rest` | (40,220) | 24×24 |
+
+The ticket is a violet fan of portrait cards with a pale star, distinct from the gold Uma Ticket. Fatigue is a
+light-blue sweat drop with a white reflection; Rest is a pale folded towel with two blue stripes. Render at native
+size or integer scale; the Yard's 2× size is 48pt. Exact metadata is `{ x, y, w, h, group, key }`; `yard` is a new
+additive group. Every earlier record and pixel stays exact, including the empty atlas gaps and older preview PNGs.
+
+`assets/previews/racer-yard-marks-{1x,2x,4x}.png` shows Prize Money / Speed Ticket / Uma Ticket / Card Ticket / Laurels
+on white and stage navy, then Fatigue / Rest on `#101a24`, `#e4eaf2` and `#0b1118`. `ui.html#racer-yard` labels them.
+Racer's own session pins the release and swaps its stand-ins; no game code changes with this publication.
 
 ## Racer marks (A02, 2.7.0)
 

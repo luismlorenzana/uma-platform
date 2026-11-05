@@ -41,7 +41,8 @@ describe('H156 appended collections buildings', () => {
   })
 
   it('keeps every other atlas and all earlier dedicated preview PNGs byte-identical', () => {
-    for (const [file, sha] of Object.entries(baseline.artFiles)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
+    // A05's fresh 2.20.0 baseline guards the UI sheet while allowing three frames below the old region.
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['ui/atlas.png', 'ui/atlas.json'].includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
     for (const [file, sha] of Object.entries(baseline.previews)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
   })
 

@@ -28,18 +28,19 @@ describe('H141 star crests and stat marks', () => {
 
   it('keeps earlier previews and other atlas files exact outside H156’s appended buildings', () => {
     // H156 owns a new 2.19.0 building freeze, allowing only its three formerly empty cells and general overviews.
+    // A05 owns the fresh 2.20.0 UI freeze; only its three appended frames may change that sheet.
     for (const [file, sha] of Object.entries(baseline.previews)) if (!['buildings.png', 'buildings-contact-3x.png'].includes(file))
       expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
-    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['buildings/atlas.png', 'buildings/atlas.json'].includes(file))
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['buildings/atlas.png', 'buildings/atlas.json', 'ui/atlas.png', 'ui/atlas.json'].includes(file))
       expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
   })
 
-  it('appends exactly the thirteen named frames in their native cells on a 120×220 sheet', () => {
+  it('retains the thirteen named star/stat frames in their original native cells', () => {
     const { index, img } = savedAtlas('ui')
-    expect([img.w, img.h, Object.keys(index.frames).length]).toEqual([120, 220, 58])
+    expect([img.w, img.h, Object.keys(index.frames).length]).toEqual([120, 244, 61])
     expect(STAR_BODIES).toEqual(['planet', 'prowess', 'vigor', 'guard', 'template'])
     expect(STAT_MARKS).toEqual(['hp', 'mp', 'atk', 'matk', 'def', 'mdef', 'evasion', 'limit'])
-    expect(FRAME_SPECS.slice(45).map(f => f.id)).toEqual([...STAR_BODIES.map(key => `star/${key}`), ...STAT_MARKS.map(key => `stat/${key}`)])
+    expect(FRAME_SPECS.slice(45, 58).map(f => f.id)).toEqual([...STAR_BODIES.map(key => `star/${key}`), ...STAT_MARKS.map(key => `stat/${key}`)])
     const positions = [[0, 164], [24, 164], [48, 164], [72, 164], [96, 164],
       [0, 188], [16, 188], [32, 188], [48, 188], [64, 188], [80, 188], [96, 188], [0, 204]]
     for (const [i, f] of frames.entries()) expect(index.frames[f.id], f.id).toEqual({ x: positions[i]![0], y: positions[i]![1], w: f.w, h: f.h, group: f.group, key: f.key })

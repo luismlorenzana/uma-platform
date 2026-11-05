@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 220,
+ "height": 244,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -466,6 +466,30 @@
    "h": 16,
    "group": "stat",
    "key": "limit"
+  },
+  "currency/card-ticket": {
+   "x": 0,
+   "y": 220,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "card-ticket"
+  },
+  "yard/fatigue": {
+   "x": 16,
+   "y": 220,
+   "w": 24,
+   "h": 24,
+   "group": "yard",
+   "key": "fatigue"
+  },
+  "yard/rest": {
+   "x": 40,
+   "y": 220,
+   "w": 24,
+   "h": 24,
+   "group": "yard",
+   "key": "rest"
   }
  }
 }

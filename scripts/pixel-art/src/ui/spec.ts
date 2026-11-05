@@ -7,7 +7,9 @@ export const HYBRIDS = ['tomeblade', 'armsummoner'] as const
 export type Class = (typeof CLASSES)[number] | 'paladin' | (typeof TIER0)[number] | (typeof HYBRIDS)[number]
 export type Status = (typeof STATUSES)[number]
 export const RACER_CURRENCIES = ['prize-money', 'speed-ticket', 'uma-ticket'] as const
-export const CURRENCIES = [...RACER_CURRENCIES, 'laurel'] as const
+export const CURRENCIES = [...RACER_CURRENCIES, 'laurel', 'card-ticket'] as const
+export const YARD_MARKS = ['fatigue', 'rest'] as const
+export type YardMark = (typeof YARD_MARKS)[number]
 export const TIERS = ['1', '2', '3'] as const
 export type Currency = (typeof CURRENCIES)[number]
 export type RacerCurrency = (typeof RACER_CURRENCIES)[number]
@@ -31,6 +33,7 @@ export type FrameSpec = { id: string; group: 'class'; key: Class; w: 24; h: 24 }
   | { id: string; group: 'achievement'; key: Achievement; w: 24; h: 24 }
   | { id: string; group: 'star'; key: StarBody; w: 24; h: 24 }
   | { id: string; group: 'stat'; key: StatMark; w: 16; h: 16 }
+  | { id: string; group: 'yard'; key: YardMark; w: 24; h: 24 }
 export const FRAME_SPECS: FrameSpec[] = [
   ...CLASSES.map((key): FrameSpec => ({ id: `class/${key}`, group: 'class', key, w: 24, h: 24 })),
   ...STATUSES.map((key): FrameSpec => ({ id: `status/${key}`, group: 'status', key, w: 12, h: 12 })),
@@ -43,4 +46,6 @@ export const FRAME_SPECS: FrameSpec[] = [
   ...[...HYBRIDS, ...TIER0].map((key): FrameSpec => ({ id: `class/${key}`, group: 'class', key, w: 24, h: 24 })),
   ...STAR_BODIES.map((key): FrameSpec => ({ id: `star/${key}`, group: 'star', key, w: 24, h: 24 })),
   ...STAT_MARKS.map((key): FrameSpec => ({ id: `stat/${key}`, group: 'stat', key, w: 16, h: 16 })),
+  { id: 'currency/card-ticket', group: 'currency', key: 'card-ticket', w: 16, h: 16 },
+  ...YARD_MARKS.map((key): FrameSpec => ({ id: `yard/${key}`, group: 'yard', key, w: 24, h: 24 })),
 ]

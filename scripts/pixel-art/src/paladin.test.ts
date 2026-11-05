@@ -39,7 +39,7 @@ describe('H54 append-only Paladin emblem', () => {
     expect(at).toBe(37)
     expect(FRAME_SPECS.slice(0, at).map(s => s.id)).toEqual(Object.keys(baseline.ui.frames))
     expect(FRAME_SPECS[at]).toEqual({ id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 })
-    expect(Object.keys(index.frames)).toHaveLength(58) // H141 appends thirteen star/stat marks.
+    expect(Object.keys(index.frames)).toHaveLength(61) // H141 appends thirteen star/stat marks.
     expect(index.frames['class/paladin']).toEqual(PALADIN)
   })
 

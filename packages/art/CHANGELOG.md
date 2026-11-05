@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.21.0
+
+### Minor Changes
+
+- Add native Card Ticket, Fatigue sweat-drop and Rest folded-towel UI frames for Racer. All published frame records and pixels remain unchanged; the UI sheet grows to 120×244 with a new `yard` group.
+
 ## 2.20.0
 
 ### Minor Changes
