@@ -74,6 +74,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Shared components (briefed by the games, delivered here)** | | | | | | |
 | H118 | Compact `ProfileFrame`, accessible progress and a worker-face callback; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/d48ed935f38e403ca49024de21bd88ce3f8d9ea4/docs/handoff/tasks/H118-kit-compact-profile-frame.md) | uma-platform, uma-rpg | ChatGPT | S | — | Done (`5662009`, [kit #62](https://github.com/luismlorenzana/uma-platform/pull/62), uma-kit 0.16.0; [published](https://github.com/luismlorenzana/uma-platform/actions/runs/41116447663)); [RPG pin #84](https://github.com/luismlorenzana/uma-rpg/pull/84). H119/H124 own opting in; Racer needs no pin yet |
 | **Art authoring (briefed by the games, delivered here)** | | | | | | |
+| A05 | Card Ticket and Training Yard Fatigue/Rest marks; [source brief](https://github.com/luismlorenzana/uma-racer/blob/25aac67d09f1a6e1d8967bf3b5eb57dde5f9fd69/docs/handoff/tasks/A05-card-ticket-and-yard-marks.md) | uma-platform | ChatGPT | S | — | In progress; art drawn and under verification; Racer owns its pin and deployment |
 | H156 | Three collections buildings: Gallery, Trials and Drills; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/685ba15c11e2289f7ee1e4a9cd38fcb29f32127a/docs/handoff/tasks/H156-collections-buildings-art.md) | uma-platform | ChatGPT | S | H141 | Done (`9323162`, [art #67](https://github.com/luismlorenzana/uma-platform/pull/67), uma-art 2.20.0; [published](https://github.com/luismlorenzana/uma-platform/actions/runs/41908742455)); RPG adoption H158 Done (`e7d5d7e`, [RPG #100](https://github.com/luismlorenzana/uma-rpg/pull/100), [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/41950893931)) |
 | H141 | Five star crests and eight stat marks; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/82b0e723d2deaf63b7822cc245e3b7ac207f3cf5/docs/handoff/tasks/H141-star-crests-art.md) | uma-platform | ChatGPT | S | — | Done (`b612403`, [art #64](https://github.com/luismlorenzana/uma-platform/pull/64), uma-art 2.19.0; [published](https://github.com/luismlorenzana/uma-platform/actions/runs/41880067892)); RPG adoption H144 Done (`5017f41`, [RPG #88](https://github.com/luismlorenzana/uma-rpg/pull/88), [production green](https://github.com/luismlorenzana/uma-rpg/actions/runs/41906774018)) |
 | H138 | Five base-class family emblems redrawn in place, and the RPG pin | uma-platform, uma-rpg | ChatGPT | S | — | Done (`9dc40f3`, [art #60](https://github.com/luismlorenzana/uma-platform/pull/60), uma-art 2.18.0; [published](https://github.com/luismlorenzana/uma-platform/actions/runs/41099542585)); [RPG pin #83](https://github.com/luismlorenzana/uma-rpg/pull/83) |
@@ -87,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** none. All active sibling packets are complete; SE5 stays parked.
+**Ready now:** none. A05 art is in progress; all sibling packets are complete and SE5 stays parked.
 
 ## Releases while packets run in parallel
 

@@ -104,6 +104,25 @@ supplies the ungraded item, appended after all material families. Do not give ut
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
 
+## Card Ticket and Training Yard marks (A05, 2.21.0)
+
+`ui/yard.ts` draws a native 16px violet fanned-card ticket with a pale star, distinct from the older gold punched
+Uma Ticket in both colour and silhouette. The native 24px Fatigue mark is a leaning light-blue sweat drop with a
+white upper-left reflection; Rest is a pale folded towel in 3/4 view, with two blue woven stripes and folded seams.
+Both use the shared six-tone ramps and selective 1px outline; only the cards and towel have contact shadows.
+
+`spec.ts` appends `currency/card-ticket`, `yard/fatigue` and `yard/rest` after all 58 older UI records. They occupy
+(0,220), (16,220), (40,220), growing the sheet only down to **120×244**. `testing/legacy-a05-2.20.0.json` was captured
+before editing: it freezes all old records, RGBA cutouts and the complete old region including gaps, every other
+atlas file (18), and all 94 earlier preview PNGs. Older cross-family guards delegate only the two UI atlas files to
+this new baseline; their own historical frame/pixel guards remain. Historical preview filters retain their old sets.
+
+`racer-yard-marks-{1x,2x,4x}.png` compares all five currencies on white and stage navy, with the two tickets adjacent;
+then Fatigue / Rest on stage `#101a24`, light sunken `#e4eaf2` and dark sunken `#0b1118`. `ui.html#racer-yard` labels
+all rows and shows native examples. At 2× the Yard art is the game's 48pt size. Tests cover exact append metadata,
+determinism, transparent borders, colour-independent ticket distinction, the drop's taper/highlight, towel stripes,
+folds and contrast on both sunken tiles. This packet publishes art only; Racer owns pinning and replacing stand-ins.
+
 ## Racer tonics (A04)
 
 `src/items/tonics.ts` paints ten native 32px stoppered herbal/sports flasks with a paper stride label, a grade-colour
