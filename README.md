@@ -30,6 +30,7 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `packages/work` | `@luismlorenzana/uma-work`: the work engine both games run, jobs, queues, tickets and building levels ([README](packages/work/README.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
+| `scripts/sprite-ranker` | Local Uma sprite-authoring tier board: `pnpm rank:umas` ([README](scripts/sprite-ranker/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
 | `assets/` | **In git.** Original art for the games (item icons so far) and its previews |
 | `infra/` | GCP project and bucket runbook ([README](infra/README.md)) |

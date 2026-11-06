@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "rank:umas": "turbo run build --filter=@uma-platform/sprite-ranker && pnpm --filter @uma-platform/sprite-ranker start",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "data:import": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run import",
