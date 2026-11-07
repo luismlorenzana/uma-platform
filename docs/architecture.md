@@ -12,11 +12,17 @@ order of work is in [roadmap.md](roadmap.md).
 | `uma-racer` | Game | Racing, training, cards, collection, Farm |
 | `uma-rpg` | Game | Party battles and chapter maps, its own farm, loop and goals |
 | `uma-puzzle` | Game | Puzzle battles (design to come) |
+| `uma-quest` | Game | An HD-2D travelers RPG in three.js: stories, towns, dungeons, one climb to Lv 50 ([plan](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/plan.md), P88, P90) |
+| `uma-farm` | App | The farm: gather, process, make, and the Forge, sending one-way parcels to the games ([plan](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/plan.md), P88, P89) |
 
-All four are private under `github.com/luismlorenzana`. Everything is personal and never distributed (P1).
+All are under `github.com/luismlorenzana`. uma-platform, uma-racer and uma-rpg are public, with no original-game content
+in git; uma-quest and uma-farm are private until the owner's word; uma-puzzle is private. Everything is personal and never
+distributed (P1).
 
-**Each game stands alone** (P2, P3): its own GCP/Firebase project, save format, game rules, game-only content, docs,
-decisions and release cycle. Games never import from each other, never read each other's saves, and share no economy.
+**Each game stands alone** (P2, P3): its own save format, game rules, game-only content, docs, decisions and release
+cycle, and its own GCP/Firebase project, except that uma-quest and uma-farm share uma-rpg's project with every piece
+of their own (P88). Games never import from each other and never read each other's saves. The one shared economy is
+uma-farm's one-way parcels, capped by each receiving game (P89).
 New games start with fresh saves; nothing carries over from uma-racer (P4).
 
 `uma-planner` is **not part of this initiative** (P12). It may be used once as a source for initial loads into
@@ -141,9 +147,9 @@ New games start from the uma-racer stack, which already runs well on the owner's
 |---|---|
 | Tooling | pnpm 10, Node 22, Turbo, TypeScript strict with `noUncheckedIndexedAccess`, Vitest |
 | Web | React 19, Vite, Tailwind 4, Motion (`LazyMotion strict`), Zustand + Dexie, TanStack Query for network data only, PWA |
-| Canvas scenes | **Phaser 4** for new scenes: maps, battles, Hub (P14). uma-racer's PixiJS scenes stay until they're reworked |
+| Canvas scenes | **Phaser 4** for new scenes: maps, battles, Hub (P14). uma-racer's PixiJS scenes stay until they're reworked. uma-quest uses three.js (P90) |
 | API | NestJS on Cloud Run: `AuthGuard` (Firebase token + owner allowlist), save and sync, content proxy |
-| Hosting | Firebase Hosting (classic), one Firebase/GCP project per game |
+| Hosting | Firebase Hosting (classic), one Firebase/GCP project per game; uma-quest and uma-farm in uma-rpg's, isolated (P88) |
 | Deploy | GitHub Actions with keyless Workload Identity Federation |
 
 Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
@@ -171,7 +177,7 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 |---|---|
 | GCP project | `uma-platform-lm` (`uma-platform` was taken, P34) |
 | Bucket | `gs://uma-platform-master-data`: private, `us-central1`, uniform access, public access prevention on |
-| Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket |
+| Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket. Planned: `quest-api-runtime` and `farm-api-runtime` (project `uma-rpg`), granted by their Q2 and F2 (P88) |
 | Publishing | From the owner's machine, with gcloud scoped by environment variables |
 
 **Local gcloud has two accounts, and the active one is the owner's work account. Never change it.** Scope every command

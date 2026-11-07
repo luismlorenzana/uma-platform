@@ -2,7 +2,7 @@
 
 - `AGENTS.md` holds the shared rules. `docs/architecture.md` and `docs/roadmap.md` are the cross-game plan that every
   Uma repo follows.
-- Claude drives the roadmap across all four repos (uma-platform, uma-racer, uma-rpg, uma-puzzle). Keep the roadmap's
+- Claude drives the roadmap across all the repos (uma-platform, uma-racer, uma-rpg, uma-puzzle, uma-quest, uma-farm). Keep the roadmap's
   status current when a phase starts or ends.
 - The owner prefers **no open questions**: when a sensible default exists, decide with a recommendation and log it in
   `docs/decisions.md`.
