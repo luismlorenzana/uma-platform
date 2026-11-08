@@ -108,8 +108,8 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 
 **Exit:**
 
-- uma-art lists `held/` and `emote/`, published
-- Three townsfolk sets are published
+- uma-art lists `held/` and `emote/`, published ✓ (2.22.0; uma-quest pins it and draws the bubbles, its D23)
+- Three townsfolk sets are published ✓ (`7c34dbe2c8de`; uma-quest's Q12 casts them, its D23)
 - The forest kit, the town kit and the slice's foes are uma-art releases
 
 ### M3 · For the next stretch
