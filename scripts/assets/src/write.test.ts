@@ -1,6 +1,6 @@
 import { parseArtIndex } from '@luismlorenzana/uma-data'
 import { syntheticMasterData } from '@luismlorenzana/uma-data/testing'
-import { readLocalManifest, readVerifiedFile } from '@uma-platform/data-pipeline/release-dir'
+import { readLocalManifest, readVerifiedFile, writeLocalManifest, writeReleaseFile } from '@uma-platform/data-pipeline/release-dir'
 import { writeDataSets } from '@uma-platform/data-pipeline/pack'
 import { mkdtemp, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -84,6 +84,21 @@ describe('writeArt', () => {
     expect((await readdir(resolve(dir, 'data'))).filter((name) => name.startsWith('art.'))).toEqual([after.manifest.art!.slice(5)])
     // Sets are untouched by art writes.
     expect(after.manifest.sets).toEqual(before.manifest.sets)
+  })
+
+  it("keeps the sprite family's map, which sprites:pack owns", async () => {
+    const dir = await releaseWithData()
+    await writeArt({ releaseDir: dir, images: [portraits(1)] })
+    const { manifest } = await artIndex(dir)
+    const sprite = { path: 'art/outfit-sprites/900101.3333333333333333.json', bytes: 2, sha256: 'a'.repeat(64) }
+    const indexJson = JSON.stringify({ ...(await artIndex(dir)).index, sprites: { 900101: sprite.path } })
+    const indexFile = await writeReleaseFile(dir, 'data', 'art', 'json', indexJson)
+    await writeLocalManifest(dir, { sources: manifest.sources, sets: manifest.sets, art: indexFile.path,
+      files: [...manifest.files.filter((f) => f.path !== manifest.art), sprite, indexFile] })
+    await writeArt({ releaseDir: dir, images: [portraits(2)] })
+    const after = await artIndex(dir)
+    expect(after.index.sprites).toEqual({ 900101: sprite.path })
+    expect(after.manifest.files.map((f) => f.path)).toContain(sprite.path)
   })
 
   it('needs the data sets first', async () => {

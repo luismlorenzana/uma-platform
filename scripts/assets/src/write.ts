@@ -92,6 +92,8 @@ export async function writeArt(options: WriteArtOptions): Promise<ReleaseManifes
   const ordered: ArtIndex = { atlases: {}, images: {} }
   for (const family of ATLAS_FAMILIES) if (index.atlases[family]) ordered.atlases[family] = index.atlases[family]
   for (const family of IMAGE_FAMILIES) if (index.images[family]) ordered.images[family] = index.images[family]
+  // The sprite family is written by `pnpm sprites:pack`; an art import keeps it as it is.
+  if (index.sprites) ordered.sprites = index.sprites
   const indexFile = await writeReleaseFile(releaseDir, 'data', 'art', 'json', JSON.stringify(ordered))
   files.push(indexFile)
 

@@ -12,10 +12,12 @@
     "export": "tsx src/cli.ts export",
     "verify": "tsx src/cli.ts verify",
     "repeat": "tsx src/cli.ts repeat",
-    "progress": "tsx src/cli.ts progress"
+    "progress": "tsx src/cli.ts progress",
+    "pack": "tsx src/cli.ts pack"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",
+    "@uma-platform/data-pipeline": "workspace:*",
     "sharp": "^0.34.5"
   },
   "devDependencies": {

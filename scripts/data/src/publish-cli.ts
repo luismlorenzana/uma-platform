@@ -1,9 +1,14 @@
 // CLI for `pnpm release:publish` (scripts/data/README.md#publish).
 
+import { mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
-import { moveChannel, publishRelease } from './publish'
-import { DEFAULT_RELEASE_DIR } from './release-dir'
+import { moveChannel, publishManifest, publishRelease, type PublishReleaseResult } from './publish'
+import { DEFAULT_CONTENT_DIR, DEFAULT_RELEASE_DIR } from './release-dir'
+import { planSpritesOnly, recordPublished } from './sprites-only'
+
+const PUBLISHED_SPRITES = resolve(DEFAULT_CONTENT_DIR, 'authoring/sprites/published.json')
 
 function argument(name: string): string | null {
   const inline = process.argv.find((arg) => arg.startsWith(`${name}=`))
@@ -24,13 +29,29 @@ async function main(): Promise<void> {
   const channel = argument('--channel') ?? 'latest'
   const releaseDir = resolve(argument('--release-dir') ?? DEFAULT_RELEASE_DIR)
   const storage = new GcloudStorageClient(bucket, project)
-  const rollback = argument('--rollback')
-  if (rollback) {
-    const moved = await moveChannel({ storage, channel, version: rollback, dryRun })
+  // `--promote` and `--rollback` are the same move: point a channel at a release already in the bucket.
+  const target = argument('--promote') ?? argument('--rollback')
+  if (target) {
+    const moved = await moveChannel({ storage, channel, version: target, dryRun })
     console.log(`Channel ${channel}: ${moved.before ?? 'none'} → ${moved.after}${dryRun ? ' (unchanged; dry run)' : ''}`)
+    if (channel === 'latest' && !dryRun) console.log(`Published sprite sets recorded: ${await recordPublished(storage, target, PUBLISHED_SPRITES)}`)
     return
   }
-  const result = await publishRelease({ releaseDir, storage, channel, dryRun })
+  let result: PublishReleaseResult
+  if (process.argv.includes('--sprites-only')) {
+    const staging = await mkdtemp(resolve(tmpdir(), 'uma-sprites-only-'))
+    try {
+      const plan = await planSpritesOnly({ releaseDir, storage, stagingDir: staging })
+      console.log(`Sprite-only release on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
+        `adds ${plan.added.map((set) => `${set.outfitId} r${set.revision}`).join(', ')}; ${Object.keys(plan.sprites).length} sprite set(s) in all`)
+      result = await publishManifest({ manifest: plan.manifest, manifestPath: plan.manifestPath, localPaths: plan.localPaths, storage, channel, dryRun })
+    } finally {
+      await rm(staging, { recursive: true, force: true })
+    }
+  } else {
+    result = await publishRelease({ releaseDir, storage, channel, dryRun })
+  }
+  if (channel === 'latest' && !dryRun) console.log(`Published sprite sets recorded: ${await recordPublished(storage, result.version, PUBLISHED_SPRITES)}`)
 
   console.log(dryRun ? `Release publish plan for gs://${bucket} (dry run)` : `Release published to gs://${bucket}`)
   console.log(`Version: ${result.version}`)

@@ -20,6 +20,7 @@
     "uma:report": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/asset-pipeline run uma-report",
     "uma:import": "pnpm data:import && pnpm assets:import -- --source dir:~/Documents/uma-content && pnpm uma:report",
     "release:publish": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run publish",
+    "release:check": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run check",
     "art:draw": "pnpm --filter @uma-platform/pixel-art run draw",
     "art:icons": "pnpm --filter @uma-platform/pixel-art run icons",
     "changeset": "changeset",
@@ -29,6 +30,7 @@
     "sprites:verify": "pnpm --filter @uma-platform/sprite-pipeline run verify",
     "sprites:repeat": "pnpm --filter @uma-platform/sprite-pipeline run repeat",
     "sprites:progress": "pnpm --filter @uma-platform/sprite-pipeline run progress",
+    "sprites:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run pack",
     "sprites:backup": "node scripts/sprites/backup.mjs",
     "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start"
   },

@@ -1,11 +1,12 @@
-import { createReleaseClient, releasePaths, type ReleaseSource } from '@luismlorenzana/uma-data'
+import { createReleaseClient, releasePaths } from '@luismlorenzana/uma-data'
 import { syntheticArtIndex, syntheticMasterData } from '@luismlorenzana/uma-data/testing'
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { writeDataSets } from './pack'
-import { moveChannel, publishRelease, type ReleaseStorageClient, type UploadEntry } from './publish'
+import { FakeBucket } from './__fixtures__/bucket'
+import { moveChannel, publishRelease } from './publish'
 import { readLocalManifest, sha256, writeLocalManifest } from './release-dir'
 
 const tempDirs: string[] = []
@@ -49,43 +50,6 @@ async function localRelease(): Promise<string> {
     files: [...base.files, ...extra.map(([path, value]) => ({ path, bytes: Buffer.byteLength(value), sha256: sha256(value) }))],
   })
   return dir
-}
-
-class FakeBucket implements ReleaseStorageClient {
-  objects = new Map<string, Buffer>()
-  log: string[] = []
-
-  async read(path: string) {
-    return this.objects.get(path) ?? null
-  }
-
-  async list(prefix: string) {
-    this.log.push(`list ${prefix}`)
-    return new Map([...this.objects].filter(([path]) => path.startsWith(prefix)).map(([path, bytes]) => [path, bytes.byteLength]))
-  }
-
-  async uploadImmutable(entries: readonly UploadEntry[]) {
-    for (const entry of entries) {
-      if (this.objects.has(entry.objectPath)) continue
-      this.log.push(`put ${entry.objectPath}`)
-      this.objects.set(entry.objectPath, await readFile(entry.localPath))
-    }
-  }
-
-  async replace(entry: UploadEntry) {
-    this.log.push(`replace ${entry.objectPath}`)
-    this.objects.set(entry.objectPath, await readFile(entry.localPath))
-  }
-
-  source(): ReleaseSource {
-    return {
-      read: async (path) => {
-        const bytes = this.objects.get(path)
-        if (!bytes) throw new Error(`missing ${path}`)
-        return new Uint8Array(bytes)
-      },
-    }
-  }
 }
 
 describe('publishRelease', () => {

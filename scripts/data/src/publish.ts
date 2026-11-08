@@ -113,7 +113,7 @@ export interface PublishReleaseResult {
   elapsedMs: number
 }
 
-function parseRemoteChannel(bytes: Buffer | null, path: string): ReleaseChannel | null {
+export function parseRemoteChannel(bytes: Buffer | null, path: string): ReleaseChannel | null {
   if (bytes === null) return null
   return parseReleaseChannel(JSON.parse(bytes.toString('utf8')) as unknown, path)
 }
@@ -130,12 +130,41 @@ function checkRemoteManifest(bytes: Buffer, local: ReleaseManifest, path: string
 }
 
 export async function publishRelease(options: PublishReleaseOptions): Promise<PublishReleaseResult> {
-  const now = options.now ?? (() => new Date())
-  const startedAt = now().getTime()
-  const channel = options.channel ?? 'latest'
-  const { storage } = options
+  const startedAt = (options.now ?? (() => new Date()))().getTime()
   const local = await verifyLocalRelease(options.releaseDir)
-  const { manifest } = local
+  return publishManifest({
+    manifest: local.manifest,
+    manifestPath: local.manifestPath,
+    localPaths: local.localPaths,
+    referenceIssues: local.referenceIssues.length,
+    storage: options.storage,
+    channel: options.channel,
+    dryRun: options.dryRun,
+    now: options.now,
+    startedAt,
+  })
+}
+
+export interface PublishManifestOptions {
+  manifest: ReleaseManifest
+  /** The manifest's bytes on disk, uploaded as `manifests/v1/<version>.json`. */
+  manifestPath: string
+  /** Local copies of the files the bucket may lack. A file missing from both is an error. */
+  localPaths: ReadonlyMap<string, string>
+  referenceIssues?: number
+  storage: ReleaseStorageClient
+  channel?: string
+  dryRun?: boolean
+  now?: () => Date
+  startedAt?: number
+}
+
+/** Uploads a verified manifest's missing files, then the manifest, then moves the channel and reads it back. */
+export async function publishManifest(options: PublishManifestOptions): Promise<PublishReleaseResult> {
+  const now = options.now ?? (() => new Date())
+  const startedAt = options.startedAt ?? now().getTime()
+  const channel = options.channel ?? 'latest'
+  const { storage, manifest } = options
 
   const channelPath = releasePaths.channel(channel)
   const manifestObject = releasePaths.manifest(manifest.version)
@@ -149,18 +178,19 @@ export async function publishRelease(options: PublishReleaseOptions): Promise<Pu
   const alreadyPresentPaths: string[] = []
   for (const file of manifest.files) {
     if (listed.get(releasePaths.file(file.path)) === file.bytes) alreadyPresentPaths.push(file.path)
-    else uploadPaths.push(file.path)
+    else if (options.localPaths.has(file.path)) uploadPaths.push(file.path)
+    else throw new Error(`${file.path} isn't in the bucket at ${file.bytes} bytes and has no local copy`)
   }
 
   let channelAfter = channelBefore
   if (!options.dryRun) {
-    await storage.uploadImmutable(uploadPaths.map((path) => ({ localPath: local.localPaths.get(path)!, objectPath: releasePaths.file(path) })))
+    await storage.uploadImmutable(uploadPaths.map((path) => ({ localPath: options.localPaths.get(path)!, objectPath: releasePaths.file(path) })))
     const relisted = await storage.list('files/')
     const missing = manifest.files.filter((file) => relisted.get(releasePaths.file(file.path)) !== file.bytes)
     if (missing.length > 0) {
       throw new Error(`${missing.length} file(s) are still missing or the wrong size after upload, e.g. ${missing[0]!.path}`)
     }
-    if (!remoteManifest) await storage.uploadImmutable([{ localPath: local.manifestPath, objectPath: manifestObject }])
+    if (!remoteManifest) await storage.uploadImmutable([{ localPath: options.manifestPath, objectPath: manifestObject }])
     const uploaded = await storage.read(manifestObject)
     if (!uploaded) throw new Error(`${manifestObject} is missing after upload`)
     checkRemoteManifest(uploaded, manifest, manifestObject)
@@ -184,7 +214,7 @@ export async function publishRelease(options: PublishReleaseOptions): Promise<Pu
     manifestUploaded: !options.dryRun && !remoteManifest,
     totalBytes: manifest.files.reduce((total, file) => total + file.bytes, 0),
     uploadBytes: uploadPaths.reduce((total, path) => total + sizes.get(path)!, 0),
-    referenceIssues: local.referenceIssues.length,
+    referenceIssues: options.referenceIssues ?? 0,
     elapsedMs: now().getTime() - startedAt,
   }
 }
