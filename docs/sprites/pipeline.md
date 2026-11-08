@@ -252,7 +252,7 @@ Approving a batch's sets in the Studio is the go (CR21). From the workspace root
    ```
 
 4. **Read it back** like a game. It must end with `Check passed`: every file present, every sprite set a whole set for
-   its profile (a traveler: 27 actions, 118 frames, 7 patches), every page decoded and hash-checked, every file of
+   its profile (a traveler: 29 actions, 130 frames, 7 patches; townsfolk: 12 actions, 45 frames, 2 patches), every page decoded and hash-checked, every file of
    `latest` carried byte for byte, and the art index changed only by `sprites`.
 
    ```bash
@@ -295,8 +295,8 @@ UA8 is delivered in uma-art **2.22.0**: 16 held textures and eight bubbles, with
 
 | Profile | Outfits | Frames each | Frames in all | Done | Generation masters each | Generation waits |
 |---|---|---|---|---|---|---|
-| Traveler | 100 | 130 | 13,000 | 650 drawn; 590 published (UA12’s 60 left frames await the set gate) | ~11 (6 measured, plus ~5 for the field set, `weary` and emotes) | ~9 min each, **~15 h** |
-| Townsfolk | 70 | 45 | 3,150 | 135 drawn, set gate pending (UA10) | 7–8 measured in pilot | 11.83–21.43 min summed tool duration in pilot (P106); old ~3 min estimate not achieved |
+| Traveler | 100 | 130 | 13,000 | 650 published in `7c34dbe2c8de` (UA12, P108) | ~11 (6 measured, plus ~5 for the field set, `weary` and emotes) | ~9 min each, **~15 h** |
+| Townsfolk | 70 | 45 | 3,150 | 135 published in `7c34dbe2c8de` (UA10, P108) | 7–8 measured in pilot | 11.83–21.43 min summed tool duration in pilot (P106); old ~3 min estimate not achieved |
 | Rival add-on | up to 65 | ≈25 | ≈1,600 | — | ~2 | ~1.5 min each, ~1.5 h |
 
 - The measured base is from H168 and batch 1: 5–6 calls and 4.5–4.8 minutes of waits for each Uma's battle set.
@@ -329,9 +329,9 @@ All in uma-platform. Ids UA1–UA12 (they don't collide with D, P, S, H, Q, F or
 | UA7 (done) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
 | UA8 (done) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
 | [UA9](../handoff/tasks/UA9-batch-2.md) | Art: batch 2 in the full traveler profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 |
-| [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA7 |
+| UA10 (done, P108) | Art: T1’s three townsfolk, published in `7c34dbe2c8de` | ChatGPT | S | UA7 |
 | [UA11](../handoff/tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 | ChatGPT | M | UA10's set gate, UA2 |
-| [UA12](../handoff/tasks/UA12-left-walks.md) | Art: batch 1's `walk-left` and `run-left` as new revisions, published sprite-only (P105) | ChatGPT | S | UA7 |
+| UA12 (done, P108) | Art: batch 1’s left walks/runs, published in `7c34dbe2c8de` (P108) | ChatGPT | S | UA7 |
 
 **Later, written when their game step nears:**
 - the rival add-on's first set, with uma-quest's Phase 5;

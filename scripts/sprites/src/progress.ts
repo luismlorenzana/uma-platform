@@ -52,7 +52,8 @@ export async function buildProgress(content: string, persist = true) {
     nextBatch: nextBatch(queue(roster.rankings, profile, override[profile], override.townsfolkOutfits), profile, complete, entries.filter(e => e.profile === 'townsfolk' && e.fullyAuthored).length >= 3).map(r => r.outfitId),
   }]))
   const progress = { schemaVersion: 2, updatedAt: new Date().toISOString(), rosterRevision: roster.revision, coverage: 'traveler',
-    completionDefinition: 'Each profile has its own complete frame/patch catalog and all 14 checks. Approvals are verified against current file hashes.', totals, entries }
+    completionDefinition: 'Each profile has its own complete frame/patch catalog and all 14 checks. Approvals are verified against current file hashes.',
+    catalogs: { traveler: profileTotals('traveler'), townsfolk: profileTotals('townsfolk') }, totals, entries }
   if (persist) {
     await atomicJson(resolve(root, 'progress.json'), progress)
     await atomicJson(resolve(content, 'authoring/uma-sprite-progress.json'), progress)

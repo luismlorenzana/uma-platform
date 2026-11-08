@@ -34,6 +34,7 @@ it('shows an alternate townsfolk outfit at its assigned gate and in progress wit
     expect(review.missing).toEqual([])
     const progress = await buildProgress(content, false)
     expect(progress.entries.map(e => [e.outfitId, e.phase])).toEqual([[900103, 'Key gate']])
+    expect(progress.catalogs).toEqual({ traveler: { frames: 130, faces: 7 }, townsfolk: { frames: 45, faces: 2 } })
     expect(progress.totals.townsfolk).toMatchObject({ total: 1, nextBatch: [900103] })
     await expect(spriteReview(content, catalog, new URLSearchParams('profile=townsfolk&ids=900101'))).rejects.toThrow('selection')
   } finally { await rm(content, { recursive: true, force: true }) }
