@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** UA3, UA5, UA8 and UA10 (the sprite pipeline, below). Batch 1 is approved in full; UA2 and UA4 are delivered; UA5 can pack and publish. Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**Ready now:** UA5, UA6, UA8 and UA10, for the new apps ([the new-apps brief](../new-apps/README.md), below), and UA3. Batch 1 is approved in full; UA2 and UA4 are delivered; UA5 can pack and publish. Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -100,12 +100,10 @@ and bubbles are uma-art.
 |---|---|---|---|---|---|
 | [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | **Ready** |
 | [UA5](tasks/UA5-pack-and-publish.md) | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | **Ready** |
-| [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | Owner yes received 2026-11-08 | Bucket created; first backup/restore in progress |
+| [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | Owner yes received 2026-11-08 | Bucket created; sprites and roster backed up. **To finish:** a second upload without the cache exclusions is copying ~18 GB of image-model files from `azurlane-boss-study`; remove them, confirm the exclusions, test a restore (new-apps NA9) |
 | [UA8](tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons (16 textures) and eight emote bubbles | ChatGPT | M | — | **Ready** |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | After UA2, UA3 |
-| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA2 | Versioned export, 14 pure checks, repeat, progress, templates and privacy guards. All 15 revisions repeat **1,335/1,335 files**; 70 explicit literals across history, five in current batch. Current five pass all checks; **635/635 files** repeat; all 2,032 sealed revision files unchanged. Progress: 5/100 travelers, 0/70 townsfolk. | This PR |
-| UA4 | uma-data 1.4.0: optional sprite index, packed-set types/parser, verified client loader and synthetic memory fixtures; backwards compatible, rejection tests. | This PR; release workflow |
-| UA7 | **Ready** |
+| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA2 ✓ | **Ready** |
 | [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 (P93) | ChatGPT | M | UA10's set gate, UA2 | After UA10, UA2 |
 
 **Order:** UA1 and UA7 are complete, and the owner approved batch 1's full traveler sets on 2026-11-08 (`reviews.json`),
@@ -113,6 +111,24 @@ which closed uma-rpg's H168 (its D310). UA2 and UA4 are complete. UA3, UA5, UA8 
 townsfolk if they're approved by then, once UA2 and UA4 have landed. That must happen before uma-quest's Q6, which loads sprites from
 master data. Townsfolk follow UA11's batches, one after each traveler batch (P93). Written later, when their uma-quest step nears: the
 rival add-on, familiars at the new scale, and the bestiary's foe format (CR34).
+
+## The new apps: what uma-quest and uma-farm need (NA)
+
+The brief is [new-apps/README.md](../new-apps/README.md) (NA1–NA11, [page](../new-apps/previews/new-apps.html)): what
+uma-quest's [first slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md) and
+uma-farm's [first playable farm](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)
+need from here, in order. A uma-platform session writes the missing packets from it.
+
+| Milestone | Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|---|
+| M1, uma-quest's engine | UA5 | Batch 1 published in master data (above) | Claude | M | UA2 ✓, UA4 ✓, approval ✓ | **Ready**; before uma-quest's Q6 |
+| | UA6 | The backup finished: caches out, a restore tested (above) | Claude | S | — | **Ready** |
+| M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | **Ready**; before uma-quest's Q9 and Q12 |
+| | Q7, Q15, Q16 | uma-quest's art packets (forest kit, town kit, foes), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5, Q8 | Incoming |
+| M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor | Claude | M | uma-quest's Q4 (the request) | To write |
+| | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
+| M4, uma-farm's parcels | PO1 | `uma-post` 0.1.0: the parcel format, accept lists and caps | Claude | M | uma-farm's F7, uma-quest's Q17 | To write |
+| | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
 
 ## Releases while packets run in parallel
 
@@ -129,6 +145,8 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| UA2 | Versioned export, 14 pure checks, repeat, progress, templates and privacy guards. All 15 revisions repeat **1,335/1,335 files**; 70 explicit literals across history, five in current batch. Current five pass all checks; **635/635 files** repeat; all 2,032 sealed revision files unchanged. Progress: 5/100 travelers, 0/70 townsfolk. | `ed2d8c0` ([#76](https://github.com/luismlorenzana/uma-platform/pull/76)) |
+| UA4 | uma-data 1.4.0: optional sprite index, packed-set types/parser, verified client loader and synthetic memory fixtures; backwards compatible, rejection tests. | `aa46c2c` ([#75](https://github.com/luismlorenzana/uma-platform/pull/75)) |
 | UA7 | Five private full traveler revisions: 106801 r4, 106701 r2, 112901 r4, 111501 r3 and 113401 r2; 118 frames/7 patches/27 actions each (590 body PNGs, 35 patches, five keys and five atlases; 635 runtime files). Added 280 frames and five weary patches in 893 new revision files. **16 successful built-in imagegen calls, 1,328.461 seconds summed call duration** (overlapping calls); prompts, waits, raw masters and unused alternatives retained privately. All 14 checks pass, **635/635 repeat files** match byte for byte, **345/345 approved PNGs** and approved action metadata are preserved, and all 1,139 older revision files are unchanged. Each cycle's standing reference matches its facing still within 4 px and all six poses keep one scale; flight/stride poses retain their drawn proportions. Field single-file/four-facing and two-character emote proofs checked in an 844×390 DPR3 phone frame; Studio shows 5/100 full profiles, all 641 served runtime/prop files match disk. Keys and earlier battle approval carried forward by hash; full traveler sets approved 2026-11-08 against all 635 runtime hashes. No publish, roster edits or cloud changes. | Private content; this docs-only PR |
 | UA1 | Five private outfit folders, ten revisions (seven unchanged imports + three P92 fixes), 620 body frames, 60 patches, 10 keys/atlases, 130 historical strips and six shared props; 976 PNGs including sources. All **580/580 imported native PNGs match pack SHA-256** (zero mismatches); fresh master recut repeats **350/350 current runtime files** byte for byte. 106801 r3 removes 2+2+1 opaque speck pixels; 111501 r2 removes one; 112901 r3 removes one and scales walk 1–5 uniformly about (128,240) from top rows 23/25/25/24/25 to 33 (height 208), preserving the exact key face and transforming anchors/crops. Every unlisted parent file is byte-identical. Current battle checks 1–11/14 pass; full traveler coverage remains UA7. Old packs (apart from README lines), roster and old pointer preserved; current key/set gates pending, only the earlier 106801 r1 key gate seeded. Review app launched; no publish. | Private content; this docs-only PR |
 | A05 | Native 16px Card Ticket and 24px Fatigue sweat-drop/Rest towel marks (P87), appended on the 120×244 UI sheet. All 58 earlier records/pixels, 18 other atlas files and 94 preview PNGs frozen; real-background native/2×/4× review, full checks and 499-file repeat-generation proof passed. [Uma-art 2.21.0 published](https://github.com/luismlorenzana/uma-platform/actions/runs/42071645010); Racer owns pinning, replacing stand-ins, deployment and deleting its A05 brief. | `3e23261` ([art #70](https://github.com/luismlorenzana/uma-platform/pull/70)) |
