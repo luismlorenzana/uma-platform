@@ -8,9 +8,13 @@ import { m } from 'motion/react'
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { CloseIcon, InfoIcon } from '../ui/icons/index.js'
+import { toStageDelta, useKitStage } from '../ui/stage.js'
 import { swipeDirection, type Point } from '../hub/swipe.js'
 
 const EASE = [0.2, 0, 0, 1] as const
+const PANEL = 'pt-safe pb-safe absolute inset-y-0 right-0 flex w-[88%] max-w-md touch-pan-y flex-col border-l border-hairline-strong bg-panel text-ink shadow-3'
+/** On a landscape `KitStage` (0.18.0, KL1) the panel also keeps clear of the stage's right inset, the home bar's side. */
+const PANEL_LANDSCAPE = `${PANEL} pr-safe`
 const FOCUSABLE = 'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
 export function PeekPanel({ title, count, about, onClose, enter, words, children, focusKey }: {
@@ -27,6 +31,7 @@ export function PeekPanel({ title, count, about, onClose, enter, words, children
   /** Where focus returns if what opened the panel is gone, such as `[data-place="mine"]`. */
   focusKey?: string
 }) {
+  const stage = useKitStage()
   const titleId = useId()
   const panel = useRef<HTMLDivElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
@@ -86,11 +91,15 @@ export function PeekPanel({ title, count, about, onClose, enter, words, children
         transition={{ duration: 0.22, ease: EASE }}
         onPointerDown={(event) => { start.current = { x: event.clientX, y: event.clientY } }}
         onPointerUp={(event) => {
-          if (start.current !== null && swipeDirection(start.current, { x: event.clientX, y: event.clientY }) === -1) close.current()
+          const from = start.current
+          // On a stage the swipe is read in the stage's own directions, whatever its turn.
+          const moved = from === null ? null : stage ? toStageDelta(stage.turn, event.clientX - from.x, event.clientY - from.y) : null
+          const end = from === null ? null : moved ? { x: from.x + moved.x, y: from.y + moved.y } : { x: event.clientX, y: event.clientY }
+          if (from !== null && end !== null && swipeDirection(from, end) === -1) close.current()
           start.current = null
         }}
         onPointerCancel={() => { start.current = null }}
-        className="pt-safe pb-safe absolute inset-y-0 right-0 flex w-[88%] max-w-md touch-pan-y flex-col border-l border-hairline-strong bg-panel text-ink shadow-3"
+        className={stage?.layout === 'landscape' ? PANEL_LANDSCAPE : PANEL}
         data-kit="side-panel"
       >
         <div className="flex shrink-0 items-center gap-1 border-b border-hairline py-1 pr-1 pl-4">

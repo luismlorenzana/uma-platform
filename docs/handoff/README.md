@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** UA10 (ChatGPT), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered. KL1 and PO1 wait for their requests (uma-quest's Q4; uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**Ready now:** UA10 (ChatGPT), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103) for uma-quest's Phase 5. PO1 waits for its requests (uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -121,7 +121,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | UA6 | Backup complete: 2.39 GB live authored content, caches removed; 185-file restore byte-identical | Done | — | — | **Done** |
 | M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 ready before Q12 |
 | | Q7, Q15, Q16 | uma-quest's art packets (forest kit, town kit, foes), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5, Q8 | Incoming |
-| M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor | Claude | M | uma-quest's Q4 (the request) | To write |
+| M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); uma-quest adopts it in Phase 5 |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
 | M4, uma-farm's parcels | PO1 | `uma-post` 0.1.0: the parcel format, accept lists and caps | Claude | M | uma-farm's F7, uma-quest's Q17 | To write |
 | | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
@@ -141,6 +141,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| KL1 | uma-kit 0.18.0: `KitStage` (portals, `cqh` heights, drags through the turn), `--inset-*` safe areas with `pl-safe`/`pr-safe`, the landscape sheet from the right edge, `AppFrame` rails (account and menu left, actions right), `PeekPanel` on a stage. Seven 0.17.0 markup snapshots unchanged; uma-rpg and uma-racer pass their checks on the packed kit (rpg 226.79 KB of 230). [Review page](../kit/previews/landscape.html). | This release · P103 |
 | UA8 | Original held/emote families in uma-art **2.22.0**: 16 weapon textures and eight bubbles, authored masters and reproducible export; native/2× reviews. 6,480 local attachment checks, no grip drift, exact bow nock placement, all 635 character files unchanged. Studio gallery, desk and scene use the package. All 20 old atlas files unchanged; 24 built-in imagegen calls, 1,431.569 seconds summed. | P102 · this PR |
 | UA5 | `pnpm sprites:pack` (approved-only, trimmed to visible pixels, shared images, shelf-packed WebP, deterministic), `release:publish -- --sprites-only` (on the published `latest`, every other file carried byte for byte), `--promote`, `release:check`. Encoding lossy q90/alpha 100: 1.34–1.66 MB a traveler, against 3.57–4.44 MB lossless. Release **`4757517816a0`**: 3,158 files carried, 11 added; candidate read back, then `latest`; uma-rpg unchanged (its uma-data 1.3.0 loads it identically). Steps in pipeline.md §7. | `f77ac77` · P100 |
 | UA3 | Versioned local Studio: ranker, traveler/townsfolk queue with drag overrides, full action desk and field/scene previews, atomic key/set gates with SHA-256 and stale-write protection; automatic serialized backups. 18 Studio tests plus 22 pipeline/privacy checks pass; all pages reviewed locally. Existing approvals and all sealed art remain unchanged. | `544465a` ([#77](https://github.com/luismlorenzana/uma-platform/pull/77)) · P99 |

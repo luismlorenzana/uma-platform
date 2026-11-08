@@ -3,9 +3,14 @@
 // indicator, so nothing shows below it, and the Play tab is a gold disc rising out of the bar's top edge in a notch of the
 // bar's colour. The active tab shows by shape (a marker on the bar's top edge and a two-tone icon) as well as colour;
 // badges are counts, hidden at 0.
+//
+// On a landscape `KitStage` (0.18.0, KL1) it is the frame's right rail, under the right thumb: the tabs stacked, the Play
+// disc rising out of the rail's inner edge toward the stage, the active marker on that edge. The menu isn't drawn there:
+// on a landscape stage it is the account rail's (`AccountBar`'s `menu`). Outside a stage it is exactly as before.
 import { m } from 'motion/react'
 import { Link } from 'react-router'
 import { MenuIcon, type IconComponent } from '../ui/icons/index.js'
+import { useKitStage } from '../ui/stage.js'
 
 export interface BarTab {
   readonly key: string
@@ -28,12 +33,75 @@ function ActiveMark() {
   return <span aria-hidden className="absolute top-0 left-1/2 h-[3px] w-8 -translate-x-1/2 rounded-b-full bg-accent" />
 }
 
+/** The rail's marker, on its inner edge beside the active tab. */
+function RailMark() {
+  return <span aria-hidden className="absolute top-1/2 left-0 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-accent" />
+}
+
+function Badge({ count }: { count: number }) {
+  return (
+    <span aria-hidden className="absolute -top-1.5 -right-3 min-w-4 rounded-full bg-success px-1 text-center text-[10px] leading-4 font-bold text-ink-on-dark ring-2 ring-panel">
+      {count}
+    </span>
+  )
+}
+
+/** The action rail on a landscape stage. */
+function BarRail({ tabs, label }: { tabs: readonly BarTab[]; label: string }) {
+  return (
+    <nav
+      aria-label={label}
+      data-kit="bottom-bar"
+      data-layout="landscape"
+      className="pt-safe pb-safe pr-safe relative z-20 flex shrink-0 flex-col justify-center gap-1 border-l border-hairline bg-panel shadow-[-6px_0_18px_-10px_rgb(16_26_36/0.35)]"
+    >
+      {tabs.map((tab) => {
+        const count = tab.badge ?? 0
+        return (
+          <Link
+            key={tab.key}
+            to={tab.to}
+            aria-label={count > 0 && tab.badgeLabel ? tab.badgeLabel : tab.label}
+            aria-current={tab.active ? 'page' : undefined}
+            className="relative flex w-16 justify-center"
+          >
+            {tab.raised ? (
+              <m.span
+                whileTap={{ scale: 0.94 }}
+                transition={PRESS}
+                className={`-ml-5 flex size-[62px] flex-col items-center justify-center rounded-full bg-accent text-accent-ink shadow-2 ring-4 ring-panel ${
+                  tab.active ? 'outline-2 outline-offset-[3px] outline-accent' : ''
+                }`}
+              >
+                <tab.Icon size={24} variant="duotone" accent="var(--color-panel)" />
+                <span className="font-display -mt-0.5 text-[10px] font-bold">{tab.label}</span>
+              </m.span>
+            ) : (
+              <m.span whileTap={{ scale: 0.94 }} transition={PRESS} className="flex h-14 w-full flex-col items-center justify-center gap-0.5 px-1">
+                {tab.active && <RailMark />}
+                <span className="relative">
+                  <tab.Icon size={24} variant={tab.active ? 'duotone' : 'line'} className={tab.active ? 'text-ink' : 'text-ink-faint'} />
+                  {count > 0 && <Badge count={count} />}
+                </span>
+                <span className={`max-w-full truncate text-[11px] font-semibold ${tab.active ? 'text-ink' : 'text-ink-faint'}`}>{tab.label}</span>
+              </m.span>
+            )}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
 export function BottomBar({ tabs, menu, label }: {
   tabs: readonly BarTab[]
+  /** The fifth slot; on a landscape stage it is the account rail's instead (`AccountBar`'s `menu`). */
   menu: { readonly to: string; readonly label: string; readonly text: string; readonly state?: unknown }
   /** The bar's accessible name. */
   label: string
 }) {
+  const stage = useKitStage()
+  if (stage?.layout === 'landscape') return <BarRail tabs={tabs} label={label} />
   return (
     <nav
       aria-label={label}
@@ -68,11 +136,7 @@ export function BottomBar({ tabs, menu, label }: {
                 {tab.active && <ActiveMark />}
                 <span className="relative">
                   <tab.Icon size={24} variant={tab.active ? 'duotone' : 'line'} className={tab.active ? 'text-ink' : 'text-ink-faint'} />
-                  {count > 0 && (
-                    <span aria-hidden className="absolute -top-1.5 -right-3 min-w-4 rounded-full bg-success px-1 text-center text-[10px] leading-4 font-bold text-ink-on-dark ring-2 ring-panel">
-                      {count}
-                    </span>
-                  )}
+                  {count > 0 && <Badge count={count} />}
                 </span>
                 <span className={`max-w-full truncate text-[11px] font-semibold ${tab.active ? 'text-ink' : 'text-ink-faint'}`}>{tab.label}</span>
               </m.span>

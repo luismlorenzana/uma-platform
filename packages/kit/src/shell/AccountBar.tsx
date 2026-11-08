@@ -3,10 +3,15 @@
 // sync chip only when something isn't synced. Every chip is a 44 pt link to the place that sells or spends it. The game
 // supplies the values, words and links; the kit draws them the same in both games. With `tierShifter` (0.12.0) the crest
 // is a link of its own at the same spot (uma-rpg's Tier shifter); without it the bar is unchanged.
+//
+// On a landscape `KitStage` (0.18.0, KL1) it is the frame's left rail: the initial on top, the chips stacked under it, and
+// the Menu at its foot when the game passes `menu` (on a landscape stage the menu lives here, by the left thumb, and the
+// bottom bar's rail keeps only the actions). Outside a stage it is exactly as before.
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { AnimatedNumber } from '../ui/AnimatedNumber.js'
-import { OfflineIcon, WarningIcon } from '../ui/icons/index.js'
+import { MenuIcon, OfflineIcon, WarningIcon } from '../ui/icons/index.js'
+import { useKitStage } from '../ui/stage.js'
 import { UiMark } from '../ui/UiMark.js'
 
 export interface CurrencyChip {
@@ -56,7 +61,7 @@ export interface TierShifter {
 
 const crestMark = (tier: number) => `tier/${Math.min(3, Math.max(1, tier))}`
 
-export function AccountBar({ initial, tier, tierShifter, account, chips, sync }: {
+export function AccountBar({ initial, tier, tierShifter, account, chips, sync, menu }: {
   /** The trainer's initial, or empty while loading. */
   initial: string
   /** The tier crest under the initial; none when undefined. */
@@ -67,7 +72,10 @@ export function AccountBar({ initial, tier, tierShifter, account, chips, sync }:
   chips: readonly CurrencyChip[]
   /** The sync chip: its words and link. None when synced. */
   sync?: { readonly state: SyncState; readonly text: string; readonly label: string; readonly to: string }
+  /** The Menu, drawn at the rail's foot on a landscape stage only (portrait games keep it in the bottom bar). */
+  menu?: { readonly to: string; readonly label: string; readonly text: string; readonly state?: unknown }
 }) {
+  const stage = useKitStage()
   const showSync = sync !== undefined && sync.state !== 'synced'
   const shifter = tier === undefined ? undefined : tierShifter
   const accountLink = (
@@ -82,6 +90,47 @@ export function AccountBar({ initial, tier, tierShifter, account, chips, sync }:
       </span>
     </Link>
   )
+  const chipList = (
+    <>
+      {chips.map((chip) => (
+        <Chip key={chip.key} to={chip.to} label={chip.label}>
+          <UiMark mark={chip.mark} fallback={chip.fallback} />
+          <span className="font-display font-semibold">
+            {chip.value === null ? blank : <><AnimatedNumber value={chip.value} />{chip.extra}</>}
+          </span>
+        </Chip>
+      ))}
+      {showSync && (
+        <Chip to={sync.to} label={sync.label} className={`font-semibold ${SYNC_TONE[sync.state as Exclude<SyncState, 'synced'>]}`}>
+          {sync.state === 'offline' ? <OfflineIcon size={16} /> : sync.state === 'paused' ? null : <WarningIcon size={16} />}
+          <span className="whitespace-nowrap text-[12px]">{sync.text}</span>
+        </Chip>
+      )}
+    </>
+  )
+
+  if (stage?.layout === 'landscape') {
+    return (
+      <header className="pt-safe pb-safe pl-safe relative z-20 flex shrink-0 flex-col border-r border-hairline bg-panel/95 backdrop-blur" data-kit="account-bar" data-layout="landscape">
+        <div className="flex min-h-0 flex-1 flex-col items-center gap-0.5 px-1 py-1">
+          {accountLink}
+          {shifter !== undefined && (
+            // The crest's own link sits under the initial, 44 pt square, instead of beside it.
+            <Link to={shifter.to} state={shifter.state ?? { back: true }} aria-label={shifter.label} data-kit="tier-shifter" className="flex size-11 shrink-0 items-center justify-center">
+              <span className="drop-shadow-sm"><UiMark mark={crestMark(tier!)} /></span>
+            </Link>
+          )}
+          <div className="flex min-h-0 flex-col items-center gap-0.5 overflow-y-auto">{chipList}</div>
+          {menu !== undefined && (
+            <Link to={menu.to} state={menu.state ?? { back: true }} aria-label={menu.label} className="mt-auto flex min-h-14 w-full min-w-11 shrink-0 flex-col items-center justify-center gap-0.5 text-ink-faint" data-kit="rail-menu">
+              <MenuIcon size={24} />
+              <span className="text-[11px] font-semibold">{menu.text}</span>
+            </Link>
+          )}
+        </div>
+      </header>
+    )
+  }
   return (
     <header className="pt-safe relative z-20 border-b border-hairline bg-panel/95 backdrop-blur" data-kit="account-bar">
       <div className="flex items-center gap-0.5 px-1">
@@ -101,20 +150,7 @@ export function AccountBar({ initial, tier, tierShifter, account, chips, sync }:
           </div>
         ) : accountLink}
         <div className={shifter !== undefined ? 'relative ml-auto flex min-w-0 items-center gap-0.5' : 'ml-auto flex min-w-0 items-center gap-0.5'}>
-          {chips.map((chip) => (
-            <Chip key={chip.key} to={chip.to} label={chip.label}>
-              <UiMark mark={chip.mark} fallback={chip.fallback} />
-              <span className="font-display font-semibold">
-                {chip.value === null ? blank : <><AnimatedNumber value={chip.value} />{chip.extra}</>}
-              </span>
-            </Chip>
-          ))}
-          {showSync && (
-            <Chip to={sync.to} label={sync.label} className={`font-semibold ${SYNC_TONE[sync.state as Exclude<SyncState, 'synced'>]}`}>
-              {sync.state === 'offline' ? <OfflineIcon size={16} /> : sync.state === 'paused' ? null : <WarningIcon size={16} />}
-              <span className="whitespace-nowrap text-[12px]">{sync.text}</span>
-            </Chip>
-          )}
+          {chipList}
         </div>
       </div>
     </header>

@@ -1,5 +1,17 @@
 # @luismlorenzana/uma-kit
 
+## 0.18.0
+
+### Minor Changes
+
+- The landscape layout (KL1, P103), opt-in through `KitStage` from `/ui`: put it inside a game's own stage box and the
+  kit lives on that stage. `Sheet` portals into the stage and sizes by it (`cqh`); on a landscape stage it comes in from
+  the right edge, the stage's full height, and its drag to close follows the thumb through the stage's turn. `AppFrame`
+  becomes a row with `top` as the left rail and `bottom` as the right; `AccountBar` draws the account rail with an optional
+  `menu` at its foot, and `BottomBar` the action rail. `PeekPanel` keeps clear of the right inset and reads its swipe on
+  the stage. The `*-safe` utilities read a stage's `--inset-*` variables before `env()`, with new `pl-safe` and `pr-safe`.
+  `useKitStage` and `toStageDelta` are exported. Without a `KitStage` every piece draws 0.17.0's markup.
+
 ## 0.17.0
 
 ### Minor Changes

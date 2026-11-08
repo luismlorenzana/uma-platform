@@ -117,7 +117,7 @@ What uma-quest's Phase 5 needs: the landscape layout, wave 2's travelers and ban
 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [KL1](#kl1) | **The landscape kit layout**: A uma-kit minor with a landscape layout for uma-quest: its frame, bars and sheets turned for a landscape stage, opt-in, so portrait games don't change. | Claude | M | uma-quest's Q4 (the request) | To write |
+| [KL1](#kl1) | **The landscape kit layout**: A uma-kit minor with a landscape layout for uma-quest: its frame, bars and sheets turned for a landscape stage, opt-in, so portrait games don't change. | Claude | M | uma-quest's Q4 ✓ | Released (uma-kit 0.18.0, P103) |
 | [UA3](#ua3) | **Sprite Studio in git**: The review app in git (`pnpm studio`), with both gates writing `reviews.json`. | Done | M | UA1 ✓ | Done (P99) |
 | [UA9](#ua9) | **Batch 2 (wave 2)**: Five more travelers at the full profile, published; the template for batches 3–20. | ChatGPT | L | UA2 ✓, UA3, UA7 ✓ | Waiting |
 | [UA11](#ua11) | **Townsfolk T2 onward**: Townsfolk batches of ten, one after each traveler batch (P93). | ChatGPT | M | UA10's set gate, UA2 ✓ | Waiting |
@@ -217,7 +217,9 @@ The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md).
 
 ### KL1
 
-**The landscape kit layout** · Claude · M · Needs: uma-quest's Q4 (the request) · To write
+**The landscape kit layout** · Claude · M · Needs: uma-quest's Q4 ✓ · **Released** (uma-kit 0.18.0, P103)
+
+Released 2026-11-08 from uma-quest's [request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md): `KitStage` puts the kit on a game's own stage, with the landscape sheet and frame. Review page: [kit/previews/landscape.html](../kit/previews/landscape.html). uma-rpg and uma-racer pass their checks on it and need no pin. What's left is uma-quest's: its Phase 5 packet pins 0.18.0 and draws its menus with it.
 
 **Delivers:**
 

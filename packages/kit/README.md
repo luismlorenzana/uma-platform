@@ -66,6 +66,38 @@ root.render(
   edge, above the account link and below the chips, and it adds no width. `state` defaults to `{ back: true }`, so Back
   closes the sheet it opens. Without it the bar is unchanged.
 
+## On a game's own stage: the landscape layout (0.18.0)
+
+For a game that draws on a fixed box of its own, such as uma-quest's landscape stage, turned 90° on an upright phone (KL1,
+uma-platform P103). Review page: [docs/kit/previews/landscape.html](../../docs/kit/previews/landscape.html), built by
+`pnpm --filter @luismlorenzana/uma-kit review`.
+
+```tsx
+import { KitStage } from '@luismlorenzana/uma-kit/ui'
+
+<TurnedStage>{(layout) => (
+  // Inside the game's stage box, which sets --inset-top, --inset-right, --inset-bottom and --inset-left on its own edges.
+  <KitStage layout="landscape" turn={layout.turned ? 90 : 0}>
+    <AppFrame top={<AccountBar … menu={menu} />} bottom={<BottomBar … />}>…</AppFrame>
+  </KitStage>
+)}</TurnedStage>
+```
+
+- **`KitStage`** fills the stage box, is a size container and holds the layer sheets portal into. `layout` is
+  `landscape` (the default) or `portrait`; `turn` is how far the game turned its stage, clockwise (0, 90, 180, 270).
+  `useKitStage()` reads it; `toStageDelta(turn, dx, dy)` turns a viewport movement into a stage one.
+- **Safe areas:** `pt-safe`, `pb-safe`, `pl-safe`, `pr-safe`, `pb-bar-safe` and `mb-bar-safe` read the stage's
+  `--inset-*` variables, and the viewport's `env(safe-area-inset-*)` when a game never sets them.
+- **Sheets:** `Sheet` portals into the stage and sizes by it (`cqh`). On a landscape stage it comes in from the right
+  edge, the stage's full height and at most `min(26rem, 62cqw)` wide, its handle on its left edge; a drag toward the
+  stage's right closes it, however the stage is turned. Escape, Close, the title and the footer work as before.
+- **The frame:** on a landscape stage `AppFrame` is a row: `top` is the left rail and `bottom` the right rail.
+  `AccountBar` draws the account rail (the initial, the chips stacked, and the Menu at its foot when given `menu`) and
+  `BottomBar` the action rail (its tabs, Play raised toward the stage; its `menu` belongs to the account rail there).
+- **The side panel** keeps clear of the stage's right inset and reads its swipe in the stage's directions.
+- **Portrait games change nothing.** Without a `KitStage` every piece draws 0.17.0's markup, pinned by snapshots
+  (`src/shell/testing/legacy-kl1-*.html`).
+
 ## One Uma album (`/roster`, `/album`)
 
 The game owns its art loader and rows. The kit owns how they browse and draw:

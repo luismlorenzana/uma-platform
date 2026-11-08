@@ -257,19 +257,27 @@
 }
 
 @layer utilities {
+  /* Safe areas (0.18.0, KL1): a game drawing on its own stage sets them on its box as --inset-top, -right, -bottom and
+     -left, on the stage's own edges; every other game never sets them and keeps the viewport's env() values. */
   .pt-safe {
-    padding-top: env(safe-area-inset-top);
+    padding-top: var(--inset-top, env(safe-area-inset-top));
   }
   .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: var(--inset-bottom, env(safe-area-inset-bottom));
+  }
+  .pl-safe {
+    padding-left: var(--inset-left, env(safe-area-inset-left));
+  }
+  .pr-safe {
+    padding-right: var(--inset-right, env(safe-area-inset-right));
   }
   /* The docked bottom bar's foot (0.2.0): the panel runs under the home indicator, and the tabs stop just above it. */
   .pb-bar-safe {
-    padding-bottom: max(calc(env(safe-area-inset-bottom) - 14px), 6px);
+    padding-bottom: max(calc(var(--inset-bottom, env(safe-area-inset-bottom)) - 14px), 6px);
   }
   /* The old floating bar's lift (Phase 0); kept for games that still use it. */
   .mb-bar-safe {
-    margin-bottom: max(calc(env(safe-area-inset-bottom) - 12px), 8px);
+    margin-bottom: max(calc(var(--inset-bottom, env(safe-area-inset-bottom)) - 12px), 8px);
   }
   .game-surface {
     user-select: none;

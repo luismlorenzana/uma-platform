@@ -82,3 +82,12 @@ describe('the tints in theme.css', () => {
     expect(shown.props['background-color']).toContain('var(--kit-hub-tint')
   })
 })
+
+describe('the safe-area utilities (0.18.0, KL1)', () => {
+  it("read a stage's --inset-* variables first and the viewport's env() otherwise", () => {
+    const css = readFileSync(new URL('../../theme.css', import.meta.url), 'utf8')
+    for (const [name, side] of [['pt-safe', 'top'], ['pb-safe', 'bottom'], ['pl-safe', 'left'], ['pr-safe', 'right'], ['pb-bar-safe', 'bottom'], ['mb-bar-safe', 'bottom']]) {
+      expect(new RegExp(`\\.${name} \\{[^}]*var\\(--inset-${side}, env\\(safe-area-inset-${side}\\)\\)`).test(css), name).toBe(true)
+    }
+  })
+})

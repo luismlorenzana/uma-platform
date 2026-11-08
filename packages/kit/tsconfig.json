@@ -3,10 +3,17 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "jsx": "react-jsx",
     "types": [],
     "noEmit": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "review"
+  ]
 }
