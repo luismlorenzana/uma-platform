@@ -12,6 +12,7 @@ The order of work across all the repos (P16). Each phase lists its exit check. A
 | 4 | uma-puzzle | Design spec, scaffold from the kit, puzzle core ported | | Not started |
 | 5 | uma-quest | The repo, the cloud in uma-rpg's project and a hello app (Q1, Q2, Q14); then the engine, the slice and the design ([plan](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/plan.md), P88, P90) | Phase 6 | Started 2026-11-07: repo and plans; Q1 ready |
 | 6 | uma-farm | The repo, the cloud and a hello app (F1, F2, F3); then the Wilds copied, the Forge, and parcels with `uma-post` ([plan](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/plan.md), P88, P89) | Phase 5 | Started 2026-11-07: repo and plans; F1 ready |
+| 7 | uma-platform | Uma sprites: the format, the pipeline and the release family, then batches of five travelers to 100, townsfolk and rivals as uma-quest needs them ([pipeline](sprites/pipeline.md), P91) | Phases 5 and 6 | Started 2026-11-07: batch 1's battle sets drawn; UA1, UA4 and UA8 ready |
 
 **Before Phases 5 and 6 create any cloud piece, uma-rpg's H169 hardens the shared project** (its D308, the
 [cloud plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)). uma-rpg freezes, bug fixes only, when uma-quest's engine work (its Phase 2) starts.

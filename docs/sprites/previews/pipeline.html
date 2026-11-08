@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uma Sprites Pipeline</title>
+<!-- The sprite format (docs/sprites/format.md) and the pipeline (docs/sprites/pipeline.md) on one page: the stages and
+     gates, what a traveler has and lacks, uma-quest's needs, the packets, the volume, every call and the bill.
+     Self-contained, uma-kit's tokens, light and dark. No character art and no master-data names: outfits by id only. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+
+  /* Stacked frame bar */
+  .bars { display: grid; gap: 10px; }
+  .barrow { display: grid; grid-template-columns: 150px minmax(0, 1fr) 64px; gap: 10px; align-items: center; }
+  .barrow .label { font: 600 13px system-ui; color: var(--ink); }
+  .barrow .label small { display: block; font-weight: 500; color: var(--ink-faint); font-size: 11px; }
+  .track { display: flex; gap: 2px; height: 26px; }
+  .seg { height: 100%; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center;
+    font: 700 11px system-ui; color: var(--ink); min-width: 0; overflow: hidden; white-space: nowrap; }
+  .seg.done { background: color-mix(in srgb, var(--success) 70%, var(--panel)); color: #fff; }
+  .seg.miss { background: var(--accent-wash); border: 1px dashed var(--accent); color: var(--ink); }
+  .seg.later { background: var(--sunken); border: 1px dashed var(--hairline-strong); color: var(--ink-soft); }
+  .barrow .total { font: 700 13px ui-monospace, Menlo, monospace; text-align: right; color: var(--ink); }
+  .seg:hover::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--page); font: 500 11px system-ui; padding: 4px 8px; border-radius: 6px; white-space: nowrap; z-index: 2; }
+  .seg { overflow: visible; }
+  @media (max-width: 640px) { .barrow { grid-template-columns: 1fr; } .barrow .total { text-align: left; } }
+
+  /* Facings */
+  .facings { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .facing { background: var(--raised); border-radius: 10px; padding: 12px; }
+  .facing svg { max-width: 120px; margin: 0 auto 8px; }
+  .facing b { display: block; color: var(--ink); }
+  .facing span { font-size: 12px; color: var(--ink-soft); }
+
+  /* Packets board */
+  .board { display: grid; grid-template-columns: 120px repeat(4, minmax(150px, 1fr)); gap: 6px; min-width: 860px; }
+  .board .head { font: 700 12px system-ui; color: var(--ink); padding: 8px; background: var(--raised); border-radius: 8px; }
+  .board .head span { display: block; font-weight: 500; color: var(--ink-faint); }
+  .board .lane { font: 700 12px system-ui; color: var(--ink-soft); padding: 8px 0; }
+  .board .cell { display: flex; flex-direction: column; gap: 6px; }
+  .chip { border-radius: 8px; padding: 7px 9px; font-size: 12px; line-height: 1.3; border: 1px solid var(--hairline-strong); background: var(--raised); color: var(--ink); }
+  .chip b { font: 700 11px ui-monospace, Menlo, monospace; margin-right: 4px; }
+  .chip small { display: block; color: var(--ink-faint); font-size: 11px; margin-top: 2px; }
+  .chip.claude { background: var(--info-wash); border-color: color-mix(in srgb, var(--info) 35%, transparent); }
+  .chip.art { background: var(--accent-wash); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .chip.either { background: var(--violet-wash); border-color: color-mix(in srgb, var(--violet) 40%, transparent); }
+  .chip.you { background: var(--success-wash); border-color: color-mix(in srgb, var(--success) 40%, transparent); }
+  .chip.exit { background: transparent; border-style: dashed; color: var(--ink-soft); }
+
+  /* Batches grid */
+  .batches { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; }
+  .batch { border-radius: 8px; padding: 8px 6px; text-align: center; font: 700 12px system-ui; background: var(--raised); color: var(--ink-soft); border: 1px solid var(--hairline); }
+  .batch small { display: block; font-weight: 500; font-size: 10px; color: var(--ink-faint); }
+  .batch.ss { box-shadow: inset 0 3px 0 var(--accent); }
+  .batch.a1 { box-shadow: inset 0 3px 0 var(--info); }
+  .batch.a2 { box-shadow: inset 0 3px 0 var(--violet); }
+  .batch.drawn { background: var(--success-wash); color: var(--success); }
+  @media (max-width: 720px) { .batches { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Uma sprites: from experiments to a pipeline</h1>
+  <p>ChatGPT's experiments, written down as one format and one way from the roster to a game. The docs:
+    <a href="../format.md">format.md</a> (the format, CR1–CR18) and <a href="../pipeline.md">pipeline.md</a> (the pipeline,
+    CR19–CR34). The packets, UA1–UA10, are in <a href="../../handoff/README.md#uma-sprites-the-pipeline-ua">the handoff</a>,
+    and the decision is P91. Outfits appear by id only, and this page shows no character art.
+    <b>2026-11-07:</b> batch 1's battle sets are drawn; UA1, UA4 and UA8 are ready.</p>
+  <nav>
+    <a href="#flow">Stages and gates</a>
+    <a href="#profile">What a traveler has</a>
+    <a href="#facings">Facings</a>
+    <a href="#quest">What uma-quest needs</a>
+    <a href="#packets">The packets</a>
+    <a href="#batches">Batches</a>
+    <a href="#volume">Volume</a>
+    <a href="#calls">The calls</a>
+    <a href="#cost">The bill</a>
+  </nav>
+
+  <div class="tiles">
+    <div class="tile"><b>5 / 100</b><span>travelers drawn (battle sets), one of each Way</span></div>
+    <div class="tile"><b>62 → 118</b><span>frames a traveler, with the field set, <code>weary</code> and emotes</span></div>
+    <div class="tile"><b>2 gates</b><span>yours, in the Studio: the key per outfit, the set per batch</span></div>
+    <div class="tile"><b>20 batches</b><span>of five; batch N is uma-quest's wave N</span></div>
+    <div class="tile"><b>10 packets</b><span>UA1–UA10; three ready now</span></div>
+    <div class="tile"><b>≈ $0</b><span>a month: a backup bucket on your yes, the rest free tier</span></div>
+  </div>
+
+  <section class="card" id="flow">
+    <h2>Stages and gates</h2>
+    <p>Each outfit moves left to right. Your two gates are the only stops that wait on you. Changes at a gate, or a
+      failed check, make a new revision; a revision is never edited (CR20–CR22).</p>
+    <div class="scroll"><svg id="flowsvg" viewBox="0 0 1120 322" role="img" aria-label="The stages from the roster through the key gate, drawing, checks, the set gate, packing and the release to a game, in lanes for the owner, ChatGPT, the tools and the release"></svg></div>
+    <div class="legend">
+      <span><i style="background:var(--success-wash);border:1px solid var(--success)"></i>You</span>
+      <span><i style="background:var(--accent-wash);border:1px solid var(--accent)"></i>ChatGPT</span>
+      <span><i style="background:var(--violet-wash);border:1px solid var(--violet)"></i>The tools (git)</span>
+      <span><i style="background:var(--info-wash);border:1px solid var(--info)"></i>The release and the games</span>
+    </div>
+  </section>
+
+  <section class="card" id="profile">
+    <h2>What a traveler has, and what's missing</h2>
+    <p>Frames for each set, by group. The green part is drawn and checked for batch 1. The dashed parts are this plan's
+      additions for uma-quest. Hover a segment for its actions.</p>
+    <div class="bars" id="bars"></div>
+    <div class="legend">
+      <span><i style="background:color-mix(in srgb, var(--success) 70%, var(--panel))"></i>Drawn (batch 1)</span>
+      <span><i style="background:var(--accent-wash);border:1px dashed var(--accent)"></i>To draw (UA7, then every batch)</span>
+      <span><i style="background:var(--sunken);border:1px dashed var(--hairline-strong)"></i>Later, when uma-quest needs it</span>
+    </div>
+    <h3>The catalog</h3>
+    <div class="scroll"><table id="catalog"></table></div>
+  </section>
+
+  <section class="card" id="facings">
+    <h2>Four facings, all drawn</h2>
+    <p>An Uma's ornaments sit on one side, so nothing is mirrored (CR4, DN25). The battle facing exists; the other three are
+      the field set. Standing in the field uses the approved turnaround's stills.</p>
+    <div class="facings" id="facingcards"></div>
+  </section>
+
+  <section class="card" id="quest">
+    <h2>What uma-quest's planned work needs</h2>
+    <div class="scroll"><table id="questtable"></table></div>
+    <p class="note">Not missing: portraits (master data's busts and portraits serve the text box), talking (the portrait
+      shows who speaks), cheering (it's <code>victory</code>), mirrored facings (never), normal maps (scene tint first).</p>
+  </section>
+
+  <section class="card" id="packets">
+    <h2>The packets</h2>
+    <p>Lanes by kind of work; columns in order. UA5 must publish batch 1 before uma-quest's Q6, which loads sprites from
+      master data.</p>
+    <div class="scroll"><div class="board" id="board"></div></div>
+    <div class="legend">
+      <span><i style="background:var(--violet-wash);border:1px solid var(--violet)"></i>Either</span>
+      <span><i style="background:var(--info-wash);border:1px solid var(--info)"></i>Claude</span>
+      <span><i style="background:var(--accent-wash);border:1px solid var(--accent)"></i>ChatGPT, art</span>
+      <span><i style="background:var(--success-wash);border:1px solid var(--success)"></i>You</span>
+    </div>
+  </section>
+
+  <section class="card" id="batches">
+    <h2>Twenty batches, one per uma-quest wave</h2>
+    <p>Five travelers a batch, one of each Way, in tier order and then the roster's order, never two outfits of one
+      character (CR24). You can reorder the queue in the Studio.</p>
+    <div class="batches" id="batchgrid"></div>
+    <div class="legend">
+      <span><i style="box-shadow:inset 0 3px 0 var(--accent);background:var(--raised)"></i>SS (8 batches)</span>
+      <span><i style="box-shadow:inset 0 3px 0 var(--info);background:var(--raised)"></i>A1 (8)</span>
+      <span><i style="box-shadow:inset 0 3px 0 var(--violet);background:var(--raised)"></i>A2 (4)</span>
+      <span><i style="background:var(--success-wash)"></i>Battle sets drawn</span>
+    </div>
+    <div class="two" style="margin-top:12px">
+      <table>
+        <tr><th>Way</th><th>Batch 1 (drawn)</th><th>Batch 2 (UA9)</th></tr>
+        <tr><td><b>Warrior</b></td><td class="id">106801</td><td class="id">108701</td></tr>
+        <tr><td><b>Spellblade</b></td><td class="id">113401</td><td class="id">113301</td></tr>
+        <tr><td><b>Mage</b></td><td class="id">112901</td><td class="id">111001</td></tr>
+        <tr><td><b>Healer</b></td><td class="id">106701</td><td class="id">111801</td></tr>
+        <tr><td><b>Summoner</b></td><td class="id">111501</td><td class="id">111401</td></tr>
+      </table>
+      <table>
+        <tr><th>Townsfolk pilot (UA10)</th><th>Tier</th></tr>
+        <tr><td class="id">103301</td><td>B</td></tr>
+        <tr><td class="id">112001</td><td>B</td></tr>
+        <tr><td class="id">109801</td><td>B</td></tr>
+        <tr><td colspan="2" class="note">Each the best-ranked outfit of a character with no selected outfit (CR25)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="volume">
+    <h2>Volume and time</h2>
+    <div class="scroll"><table>
+      <tr><th>Profile</th><th class="num">Outfits</th><th class="num">Frames each</th><th class="num">Frames in all</th><th class="num">Drawn</th><th class="num">Masters each</th><th class="num">Generation waits</th></tr>
+      <tr><td><b>Traveler</b></td><td class="num">100</td><td class="num">118</td><td class="num">11,800</td><td class="num">310</td><td class="num">~10</td><td class="num">~13 h</td></tr>
+      <tr><td><b>Townsfolk</b></td><td class="num">70</td><td class="num">45</td><td class="num">3,150</td><td class="num">—</td><td class="num">~4</td><td class="num">~3.5 h</td></tr>
+      <tr><td><b>Rival add-on</b></td><td class="num">up to 65</td><td class="num">≈25</td><td class="num">≈1,600</td><td class="num">—</td><td class="num">~2</td><td class="num">~1.5 h</td></tr>
+    </table></div>
+    <p class="note">The base was measured on H168 and batch 1: 5–6 generations and 4.5–4.8 minutes of waits for each
+      Uma's battle set. Export, checks and fixes come on top. Your time: about a minute a key and ten minutes a batch,
+      about 4 hours over all 20 batches.</p>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <p>CR1–CR18 are the format (<a href="../format.md#15-calls">format.md</a>); CR19–CR34 are the pipeline
+      (<a href="../pipeline.md#14-calls">pipeline.md</a>).</p>
+    <div class="scroll"><table id="callstable"></table></div>
+  </section>
+
+  <section class="card" id="cost">
+    <h2>The bill</h2>
+    <div class="scroll"><table>
+      <tr><th>Piece</th><th>Free tier</th><th>Expected</th><th>A month</th></tr>
+      <tr><td><b>Backup bucket</b> (UA6, on your yes), <code>us-central1</code>, versioned</td><td>5 GB-months of Standard storage in US regions, shared by the billing account</td><td>~0.2 GB now; ~4 GB at the full roster</td><td><b>$0</b>; at most ~$0.08 if the free 5 GB is used elsewhere</td></tr>
+      <tr><td><b>Master-data bucket</b>, sprite files added</td><td>The same</td><td>~2–4 MB a traveler packed (UA5 measures it); ~0.3 GB at the full roster</td><td>$0–$0.01</td></tr>
+      <tr><td><b>Serving to the phone</b> (quest-api's content proxy)</td><td>1 GB a month of Cloud Run egress in North America</td><td>A party's five sets once (~10–20 MB), then cached</td><td>$0</td></tr>
+      <tr><td><b>Generation</b></td><td>ChatGPT's own tool</td><td>—</td><td>$0 in the cloud</td></tr>
+    </table></div>
+  </section>
+</main>
+<script>
+const NS = 'http://www.w3.org/2000/svg'
+const el = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text !== undefined) e.textContent = text; return e }
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim()
+const h = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content }
+
+// Stages and gates: four lanes, boxes placed by column, every arrow drawn explicitly.
+function drawFlow() {
+  const svg = document.getElementById('flowsvg'); svg.replaceChildren()
+  const defs = el('defs')
+  for (const [id, c] of [['arr', '--ink-faint'], ['arrd', '--danger']]) {
+    const m = el('marker', { id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' })
+    m.append(el('path', { d: 'M0,0 L10,5 L0,10 z', fill: css(c) })); defs.append(m)
+  }
+  svg.append(defs)
+  const lanes = [['You', '--success'], ['ChatGPT', '--accent'], ['Tools (git)', '--violet'], ['Release · games', '--info']]
+  const top = 10, laneH = 78, left = 104, step = 126, W = 116, H = 46
+  lanes.forEach(([name], i) => {
+    const y = top + i * laneH
+    svg.append(el('rect', { x: 0, y, width: 1120, height: laneH - 8, rx: 10, fill: css('--raised') }))
+    svg.append(el('text', { x: 12, y: y + (laneH - 8) / 2, 'dominant-baseline': 'middle', 'font-size': 12, 'font-weight': 700, fill: css('--ink-soft') }, name))
+  })
+  const boxes = {
+    roster: [0, 0, 'Roster', 'you rank; 100 selected'],
+    key: [1, 1, 'Identity sheet', 'key, turnaround, checklist'],
+    kgate: [2, 0, 'Key gate', 'approve or changes'],
+    draw: [3, 1, 'Draw the profile', '~10 masters'],
+    export: [4, 2, 'Export · verify', '14 checks, repeat'],
+    sgate: [5, 0, 'Set gate', 'a batch of five'],
+    pack: [6, 2, 'Pack', 'approved only'],
+    pub: [7, 1, 'Publish', 'sprite-only'],
+    rel: [7, 3, 'Release', 'outfit-sprites'],
+    game: [5.5, 3, 'uma-quest', 'loads by outfit id'],
+  }
+  const colors = ['--success', '--accent', '--violet', '--info']
+  const washes = ['--success-wash', '--accent-wash', '--violet-wash', '--info-wash']
+  const P = {}
+  for (const [k, [col, lane, title, sub]] of Object.entries(boxes)) {
+    const x = left + col * step, y = top + lane * laneH + (laneH - 8 - H) / 2
+    P[k] = { x, y, r: x + W, b: y + H, cx: x + W / 2, cy: y + H / 2 }
+  }
+  const label = (x, y, text, danger) => {
+    const t = el('text', { x, y, 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': 10.5, 'font-weight': 600, fill: css(danger ? '--danger' : '--ink-soft') }, text)
+    const w = text.length * 5.6 + 12
+    svg.append(el('rect', { x: x - w / 2, y: y - 9, width: w, height: 18, rx: 9, fill: css('--panel'), stroke: css(danger ? '--danger' : '--hairline-strong'), 'stroke-width': 0.8 }))
+    svg.append(t)
+  }
+  const curve = (x1, y1, x2, y2, opts = {}) => {
+    const mx = (x1 + x2) / 2
+    const d = Math.abs(y1 - y2) < 2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`
+    svg.append(el('path', { d, fill: 'none', stroke: css(opts.danger ? '--danger' : '--ink-faint'), 'stroke-width': 1.5, 'stroke-dasharray': opts.danger ? '5 4' : '', 'marker-end': `url(#${opts.danger ? 'arrd' : 'arr'})` }))
+    return [mx, (y1 + y2) / 2]
+  }
+  // Forward arrows, right edge to left edge.
+  const fwd = [['roster', 'key'], ['key', 'kgate', 'approved'], ['kgate', 'draw'], ['draw', 'export'], ['export', 'sgate', 'all pass'], ['sgate', 'pack', 'approved = go'], ['pack', 'pub']]
+  const labels = []
+  for (const [a, b, text] of fwd) {
+    const m = curve(P[a].r, P[a].cy, P[b].x, P[b].cy)
+    if (text) labels.push([m[0], m[1], text])
+  }
+  // Publish down to the release, then the release left to the game.
+  curve(P.pub.cx, P.pub.b, P.rel.cx, P.rel.y)
+  svg.append(el('path', { d: `M${P.rel.x},${P.rel.cy} L${P.game.r},${P.game.cy}`, fill: 'none', stroke: css('--ink-faint'), 'stroke-width': 1.5, 'marker-end': 'url(#arr)' }))
+  // Returns: changes at a gate or a failed check make a new revision.
+  const back = (from, to, text, lift, at) => {
+    const x1 = P[from].x, y1 = P[from].b - 8, x2 = P[to].cx, y2 = P[to].b
+    const d = `M${x1},${y1} C${x1 - 40},${y1 + lift} ${x2 + 30},${y2 + lift} ${x2},${y2 + 2}`
+    svg.append(el('path', { d, fill: 'none', stroke: css('--danger'), 'stroke-width': 1.3, 'stroke-dasharray': '5 4', 'marker-end': 'url(#arrd)' }))
+    labels.push(at ? [at[0], at[1], text, true] : [(x1 + x2) / 2 - 6, Math.max(y1, y2) + lift * 0.62, text, true])
+  }
+  back('kgate', 'key', 'changes → new revision', 64)
+  back('sgate', 'draw', 'changes → new revision', 58, [660, P.draw.b + 4])
+  const x1 = P.export.x, y1 = P.export.cy, x2 = P.draw.cx + 30, y2 = P.draw.b
+  svg.append(el('path', { d: `M${x1},${y1 + 10} C${x1 - 36},${y1 + 10} ${x2},${y2 + 30} ${x2},${y2 + 2}`, fill: 'none', stroke: css('--danger'), 'stroke-width': 1.3, 'stroke-dasharray': '5 4', 'marker-end': 'url(#arrd)' }))
+  // Boxes on top of the lines, labels on top of everything.
+  for (const [k, [, lane, title, sub]] of Object.entries(boxes)) {
+    const { x, y } = P[k]; const isGate = k === 'kgate' || k === 'sgate'
+    svg.append(el('rect', { x, y, width: W, height: H, rx: isGate ? 23 : 9, fill: css(washes[lane]), stroke: css(colors[lane]), 'stroke-width': isGate ? 2 : 1 }))
+    svg.append(el('text', { x: x + W / 2, y: y + 19, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 700, fill: css('--ink') }, title))
+    svg.append(el('text', { x: x + W / 2, y: y + 34, 'text-anchor': 'middle', 'font-size': 10.5, fill: css('--ink-soft') }, sub))
+  }
+  for (const [x, y, text, danger] of labels) label(x, y, text, danger)
+  label(P.export.x - 44, P.export.cy + 26, 'fails', true)
+}
+
+// What a traveler has.
+const groups = [
+  { k: 'battle', label: 'Battle set', n: 62, tip: 'idle, run, walk, hop, swing, thrust, shoot, cast, guard, hurt, down, victory, limit, turnaround' },
+  { k: 'field', label: 'Field set', n: 36, tip: 'walk and run facing front, back and right' },
+  { k: 'weary', label: 'weary', n: 4, tip: 'low-HP idle, with its patch' },
+  { k: 'emotes', label: 'Emotes', n: 16, tip: 'nod, surprise, laugh, sad, angry, wave (front)' },
+]
+function drawBars() {
+  const rows = [
+    { label: 'Traveler', sub: '100 outfits', segs: [['done', 62, 'Battle set', groups[0].tip], ['miss', 36, 'Field set', groups[1].tip], ['miss', 4, 'weary', groups[2].tip], ['miss', 16, 'Emotes', groups[3].tip]], total: 118 },
+    { label: 'Townsfolk', sub: '70 characters', segs: [['miss', 11, 'Base', 'the key, the battle walk, the turnaround'], ['miss', 18, 'Field walks', 'walk front, back and right'], ['miss', 16, 'Emotes', groups[3].tip]], total: 45 },
+    { label: 'Rival add-on', sub: 'up to 65, as cast', segs: [['later', 25, 'Facing right', 'idle, her weapon action, cast, hurt, down, limit, facing right']], total: 25 },
+  ]
+  const max = 118
+  const box = document.getElementById('bars'); box.replaceChildren()
+  for (const r of rows) {
+    const row = document.createElement('div'); row.className = 'barrow'
+    row.append(h(`<div class="label">${r.label}<small>${r.sub}</small></div>`))
+    const track = document.createElement('div'); track.className = 'track'
+    for (const [cls, n, name, tip] of r.segs) {
+      const s = document.createElement('div'); s.className = 'seg ' + cls; s.style.flex = `0 0 calc(${(n / max) * 100}% - 2px)`
+      s.dataset.tip = `${name}: ${n} frames · ${tip}`; s.textContent = n >= 10 ? `${name} ${n}` : String(n)
+      s.setAttribute('aria-label', s.dataset.tip); track.append(s)
+    }
+    row.append(track); row.append(h(`<div class="total">${r.total}</div>`)); box.append(row)
+  }
+  const cat = [
+    ['Battle set', 'idle 4 · run 6 · walk 6 · hop 2 · swing 6 · thrust 5 · shoot 5 · cast 6 · guard 3 · hurt 2 · down 3 · victory 6 · limit 4 · turnaround 4', '62', 'done', 'Drawn for batch 1; 35 frames face-locked'],
+    ['Field set', 'walk-front · walk-back · walk-right · run-front · run-back · run-right, 6 each', '36', 'miss', 'UA7; standing uses the turnaround stills'],
+    ['weary', 'weary 4, locked, with the weary patch', '4', 'miss', 'UA7; HP carries between fights (DN12)'],
+    ['Emotes', 'nod 3 · surprise 2 · laugh 3 · sad 2 · angry 2 · wave 4, front facing', '16', 'miss', 'UA7; bubbles are uma-art (UA8)'],
+    ['Face patches', 'blink-half · blink-closed · focus · pain · joy · shout · weary', '7', 'miss', 'Six drawn; weary with UA7'],
+    ['Held items (uma-art)', 'greatsword · axe · katana · lance · bow ×2 · five tomes ×2', '16', 'miss', 'UA8; six placeholders until then'],
+    ['Rival add-on', 'idle · her weapon action · cast · hurt · down · limit, facing right', '≈25', 'later', 'Written with uma-quest Phase 5'],
+  ]
+  const t = document.getElementById('catalog')
+  t.replaceChildren(h('<tr><th>Group</th><th>Actions and frames</th><th class="num">Frames</th><th>State</th><th>Note</th></tr>'))
+  const label = { done: 'Drawn', miss: 'To draw', later: 'Later' }
+  for (const [g, a, n, st, note] of cat) t.append(h(`<tr><td><b>${g}</b></td><td>${a}</td><td class="num">${n}</td><td><span class="pill ${st}">${label[st]}</span></td><td>${note}</td></tr>`))
+}
+
+// Facings: abstract figures (a capsule body and an arrow), never art.
+function drawFacings() {
+  const cards = [
+    ['Battle (three-quarter left)', 'Every fight action, walking left, the key frame', 'done', -1, 0.35],
+    ['Front (toward the camera)', 'Walking down the screen; emotes; a speaker turned to the camera', 'miss', 0, 1],
+    ['Back (away)', 'Walking up the screen', 'miss', 0, -1],
+    ['Right (three-quarter right)', 'Walking right; a rival on the foes\' side', 'miss', 1, 0.35],
+  ]
+  const box = document.getElementById('facingcards'); box.replaceChildren()
+  for (const [title, use, st, dx, dy] of cards) {
+    const card = document.createElement('div'); card.className = 'facing'
+    const svg = el('svg', { viewBox: '0 0 120 100', role: 'img', 'aria-label': title })
+    svg.append(el('ellipse', { cx: 60, cy: 86, rx: 26, ry: 6, fill: css('--hairline-strong') }))
+    svg.append(el('rect', { x: 46, y: 24, width: 28, height: 60, rx: 14, fill: st === 'done' ? css('--success-wash') : css('--accent-wash'), stroke: st === 'done' ? css('--success') : css('--accent'), 'stroke-width': 1.5, 'stroke-dasharray': st === 'done' ? '' : '4 3' }))
+    svg.append(el('circle', { cx: 60, cy: 22, r: 13, fill: css('--panel'), stroke: st === 'done' ? css('--success') : css('--accent'), 'stroke-width': 1.5 }))
+    const ax = 60 + dx * 34, ay = 54 + dy * 30
+    svg.append(el('line', { x1: 60, y1: 54, x2: ax, y2: ay, stroke: css('--ink-soft'), 'stroke-width': 2.5, 'stroke-linecap': 'round' }))
+    svg.append(el('circle', { cx: ax, cy: ay, r: 4, fill: css('--ink-soft') }))
+    card.append(svg)
+    card.append(h(`<b>${title}</b><span>${use}</span><div style="margin-top:6px"><span class="pill ${st}">${st === 'done' ? 'Drawn' : 'Field set, UA7'}</span></div>`))
+    box.append(card)
+  }
+}
+
+// uma-quest's needs.
+function drawQuest() {
+  const rows = [
+    ['Q4 · the stage', 'A stand-in Uma on the turned stage', '—', 'Nothing: stand-ins', ''],
+    ['Q6 · sprites in the engine', 'Leader and four followers in single file, walking every way; faces, blinks, tint', 'Battle-facing walk, run, idle, faces', 'Walk and run facing front, back, right; a loadable release', 'UA7 · UA4 · UA5'],
+    ['Q9 · the fight screen', 'Five Umas against foes, every fight event', 'The battle set', 'Ten held weapons; weary; familiars at the new scale (old ones work for now)', 'UA8 · UA7'],
+    ['Q11 · the dungeon', 'Walking, Dash, chests, Springs, downed followers', '—', 'The field set (Dash plays run-*); a downed follower is greyed by the game', 'UA7'],
+    ['Q12 · town and story runner', 'Speakers walk, emote and talk; townsfolk; portraits', 'Portraits (master data)', 'Six emotes; emote bubbles; townsfolk sets', 'UA7 · UA8 · UA10'],
+    ['Phase 5 · band 1', 'Wave 1 complete; rival bosses; band 1 townsfolk; bestiary', '—', 'Batch 1 full profile; the rival add-on; townsfolk batches; the foe format', 'UA7 · UA9 … · later'],
+    ['Phases 6–7', 'Waves 2–20', '—', 'One batch a wave', 'UA9, repeated'],
+  ]
+  const t = document.getElementById('questtable')
+  t.replaceChildren(h('<tr><th>uma-quest step</th><th>What it shows</th><th>Have</th><th>Missing</th><th>Packet</th></tr>'))
+  for (const [a, b, c, d, e] of rows) t.append(h(`<tr><td><b>${a}</b></td><td>${b}</td><td>${c}</td><td>${d}</td><td class="id">${e}</td></tr>`))
+}
+
+// The packets board.
+function drawBoard() {
+  const cols = [['Now', 'side by side'], ['Next', 'after UA1'], ['Then', 'needs your set gate'], ['Ongoing', 'a batch a wave']]
+  const lanes = [
+    ['Layout · tools', [[{ id: 'UA1', t: 'Durable layout', who: 'either', s: 'S' }], [{ id: 'UA2', t: 'scripts/sprites: export, 14 checks, repeat', who: 'either', s: 'L' }], [], []]],
+    ['Studio · gates', [[], [{ id: 'UA3', t: 'Sprite Studio in git, both gates', who: 'either', s: 'M' }], [{ id: 'gate', t: 'You: batch 1 set gate (closes H168)', who: 'you' }], [{ id: 'gates', t: 'You: a key a minute, a batch ten', who: 'you' }]]],
+    ['Schema · release', [[{ id: 'UA4', t: 'uma-data 1.4.0, outfit-sprites', who: 'either', s: 'M' }], [], [{ id: 'UA5', t: 'Pack, sprite-only publish, batch 1', who: 'claude', s: 'M' }, { id: '→ Q6', t: 'uma-quest loads from master data', who: 'exit' }], []]],
+    ['Art: batch 1', [[], [{ id: 'UA7', t: 'Field set, weary, emotes: 118 frames', who: 'art', s: 'M' }], [], []]],
+    ['Art: props', [[{ id: 'UA8', t: 'uma-art: 10 held weapons, 8 bubbles', who: 'art', s: 'M' }], [], [], []]],
+    ['Art: rollout', [[], [], [{ id: 'UA10', t: 'Townsfolk pilot: three', who: 'art', s: 'S' }], [{ id: 'UA9', t: 'Batch 2, then the template for 3–20', who: 'art', s: 'L' }]]],
+    ['Backup', [[{ id: 'UA6', t: 'Backup bucket, on your yes', who: 'claude', s: 'S' }], [], [], []]],
+  ]
+  const b = document.getElementById('board'); b.replaceChildren(h('<div></div>'))
+  for (const [c, s] of cols) b.append(h(`<div class="head">${c}<span>${s}</span></div>`))
+  for (const [lane, cells] of lanes) {
+    b.append(h(`<div class="lane">${lane}</div>`))
+    for (const cell of cells) {
+      const d = document.createElement('div'); d.className = 'cell'
+      for (const c of cell) {
+        const link = /^UA\d+$/.test(c.id) ? `<a href="../../handoff/README.md#uma-sprites-the-pipeline-ua" style="color:inherit;text-decoration:none"><b>${c.id}</b></a>` : `<b>${c.id}</b>`
+        d.append(h(`<div class="chip ${c.who}">${link}${c.t}${c.s ? `<small>Size ${c.s}</small>` : ''}</div>`))
+      }
+      b.append(d)
+    }
+  }
+}
+
+// Batches.
+function drawBatches() {
+  const g = document.getElementById('batchgrid'); g.replaceChildren()
+  for (let i = 1; i <= 20; i++) {
+    const tier = i <= 8 ? 'ss' : i <= 16 ? 'a1' : 'a2'
+    const d = document.createElement('div'); d.className = `batch ${tier}${i === 1 ? ' drawn' : ''}`
+    d.innerHTML = `${i}<small>${tier.toUpperCase()}${i === 1 ? ' · drawn' : i === 2 ? ' · UA9' : ''}</small>`
+    d.title = `Batch ${i}: wave ${i} in uma-quest`; g.append(d)
+  }
+}
+
+// Every call.
+const calls = [
+  ['CR1', 'A sprite set is one outfit at one revision; three profiles: traveler (118 frames), townsfolk (45), rival add-on (≈25)'],
+  ['CR2', 'A 256 × 256 working texture, full colour, clean antialiased edges; logical cell 64; foot (128, 240); a clear border'],
+  ['CR3', 'On the iPhone one texel is one device pixel: a cell is 85⅓ pt, a standing Uma about 69 pt; no fractional scaling'],
+  ['CR4', 'Four facings, all drawn: battle (three-quarter left), front, back and right; nothing mirrored'],
+  ['CR5', 'Seven layers; the hand crop redraws her fist over the handle; the body holds no item, shadow, floor or glow'],
+  ['CR6', 'The face-only lock: locked frames match the key exactly inside the face box (replaces SA5, SA6)'],
+  ['CR7', 'Seven patches (SA7\'s six plus weary); blinks by the game in the battle facing; no patches on other facings in v1'],
+  ['CR8', 'Per-frame fields as built, plus bounds, handOcclusion and view; events impact, release, hold, repeat'],
+  ['CR9', 'The battle set is the built 14 entries and 62 frames, with recorded reuse allowed'],
+  ['CR10', 'The field set: walk and run facing front, back and right, 36 frames; field standing uses the turnaround stills'],
+  ['CR11', 'weary, a 4-frame low-HP idle with its patch, joins the traveler profile'],
+  ['CR12', 'Six front-facing emotes (16 frames); bubbles are uma-art; cheering is victory; no talk patch'],
+  ['CR13', 'The rival add-on facing right (≈25 frames), only for travelers cast as bosses; escorts are bestiary foes'],
+  ['CR14', 'Ten held-item kinds in uma-art, 128 px cells with a grip and angle, one look per kind'],
+  ['CR15', 'Every set opens with its identity sheet, approved before anything else is drawn'],
+  ['CR16', 'Fourteen automatic checks on every revision; 12 and 13 are new'],
+  ['CR17', 'The authoring atlas is today\'s format version 1, plus revision and profile, without names'],
+  ['CR18', 'The release family outfit-sprites: a sprite set file an outfit, packed WebP pages, a sprites map in the art index'],
+  ['CR19', 'Uma sprites are private: content/authoring/sprites/ and master data\'s private release only; props are uma-art'],
+  ['CR20', 'Two owner gates in the Studio, the key per outfit and the set per batch, tied to file hashes'],
+  ['CR21', 'Approving a set is the go to publish it'],
+  ['CR22', 'Revisions are immutable; new work keeps approved frames byte for byte; the owner reviews only what\'s new'],
+  ['CR23', 'Generic tools in git (scripts/sprites, tools/studio, prompt templates); per-character inputs in content/'],
+  ['CR24', 'Batches of five, one per Way, tier order then roster order; 20 batches; batch N is uma-quest\'s wave N'],
+  ['CR25', 'Townsfolk: the 70 characters\' best-ranked unselected outfit, drawn when a scene first needs her'],
+  ['CR26', 'The release family outfit-sprites in uma-data 1.4.0'],
+  ['CR27', 'A sprite publish carries every other file of the latest release byte for byte'],
+  ['CR28', 'Games load a set only while that Uma is on screen, through their content proxy, cached'],
+  ['CR29', 'ChatGPT publishes sets as it publishes uma-art; UA5\'s first publish is Claude\'s'],
+  ['CR30', 'H168 closes at batch 1\'s set gate; format.md is its format amendment; uma-rpg\'s spec is superseded'],
+  ['CR31', 'uma-quest\'s wave 1 is batch 1; Q3 shrinks to the HD-2D research; Q6 loads from master data (its D5)'],
+  ['CR32', 'A private, versioned backup bucket for content/authoring/ that never deletes, on the owner\'s yes'],
+  ['CR33', 'Batch 1 becomes the full traveler profile (UA7) before batch 2'],
+  ['CR34', 'The rival add-on, familiars and the foe format are written when their uma-quest step nears'],
+]
+function drawCalls() {
+  const t = document.getElementById('callstable'); t.replaceChildren(h('<tr><th>Id</th><th>Call</th></tr>'))
+  for (const [id, c] of calls) t.append(h(`<tr><td class="id">${id}</td><td>${c}</td></tr>`))
+}
+
+function drawAll() { drawFlow(); drawBars(); drawFacings(); drawQuest(); drawBoard(); drawBatches(); drawCalls() }
+drawAll()
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll)
+</script>
+</body>
+</html>

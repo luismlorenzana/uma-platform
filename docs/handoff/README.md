@@ -88,7 +88,31 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** none. All platform art and active sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**Ready now:** UA1, UA4 and UA8 (the sprite pipeline, below). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+
+## Uma sprites: the pipeline (UA)
+
+Taking ChatGPT's sprite experiments into authoring and publishing ([pipeline.md](../sprites/pipeline.md), the format in
+[format.md](../sprites/format.md), CR1–CR34, P91). Ids are UA, then a number. Batch art is private, in `content/`; props
+and bubbles are uma-art.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| [UA1](tasks/UA1-durable-layout.md) | The durable layout: per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept | Either | S | — | **Ready** |
+| [UA2](tasks/UA2-sprite-tools.md) | `scripts/sprites`: export, the 14 checks, repeat and progress, tested; batch 1 rebuilt byte for byte | Either | L | UA1 | After UA1 |
+| [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | After UA1 |
+| [UA4](tasks/UA4-sprites-schema.md) | uma-data 1.4.0: the `outfit-sprites` family, parser, art-index `sprites`, fixtures | Either | M | — | **Ready** |
+| [UA5](tasks/UA5-pack-and-publish.md) | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | After UA2, UA4 |
+| [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | The owner's yes | Waiting on the owner |
+| [UA7](tasks/UA7-batch1-full-profile.md) | Art: batch 1's field set, `weary` and emotes (118 frames each) | ChatGPT | M | UA1 | After UA1 |
+| [UA8](tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons (16 textures) and eight emote bubbles | ChatGPT | M | — | **Ready** |
+| [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | After UA7 |
+| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters, for uma-quest's slice town | ChatGPT | S | UA7 | After UA7 |
+
+**Order:** UA1, UA4 and UA8 start now, side by side. UA2, UA3 and UA7 follow UA1. UA5 publishes batch 1 once UA2 and
+UA4 have landed and the owner has approved its sets. That must happen before uma-quest's Q6, which loads sprites from
+master data. uma-rpg's H168 closes at batch 1's set gate (CR30). Written later, when their uma-quest step nears: the
+rival add-on, familiars at the new scale, and the bestiary's foe format (CR34).
 
 ## Releases while packets run in parallel
 

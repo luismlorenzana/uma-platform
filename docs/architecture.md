@@ -60,8 +60,9 @@ Phase 0 replaces them with neutral master types instead of moving them as they a
 ### 2.2 Pipeline and releases
 
 ```text
-GameTora + owner overrides ─ pnpm data:import ─▶ normalized packs ─┐
-image sources ───────────── pnpm assets:import ─▶ WebP art + atlases ─┴─ pnpm release:publish ─▶ private bucket
+GameTora + owner overrides ── pnpm data:import ──▶ normalized packs     ─┐
+image sources ─────────────── pnpm assets:import ▶ WebP art + atlases   ─┼─ pnpm release:publish ─▶ private bucket
+approved sprite revisions ─── pnpm sprites:pack ─▶ outfit-sprites (P91) ─┘
 ```
 
 - **Original-game content never goes in git or on a public host** (P6). Packs, images and caches live only in the
@@ -168,8 +169,10 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 - Every asset comes from a **generator script**, so it can be regenerated and edited. `scripts/pixel-art` draws
   from code with no dependencies (`pnpm art:draw`; P35): hue-shifted six-tone ramps, dome and facet lighting, a
   selective outline and seeded detail.
-- Uma characters use the original chibi and bust art from master data, animated with code. Original art never
-  contains copied game art.
+- Uma characters use the original chibi and bust art from master data. **Uma sprites** (P91) are drawn from that art,
+  so they're private like it: authored in `content/authoring/sprites/` to [the sprite format](sprites/format.md), and
+  published only in the master-data release's `outfit-sprites` family ([the pipeline](sprites/pipeline.md)). Their
+  props and emote bubbles are original, so they're uma-art. Original art never contains copied game art.
 
 ## 6. Infrastructure (set up in Phase 0, runbook in `infra/README.md`)
 
