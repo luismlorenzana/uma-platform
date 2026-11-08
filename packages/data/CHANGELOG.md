@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.4.0
+
+### Minor Changes
+
+- Add optional outfit sprite sets, validated packed pages and frame metadata, a checked client loader, and synthetic release helpers. Existing releases and clients remain compatible.
+
 ## 1.3.0
 
 ### Minor Changes

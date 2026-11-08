@@ -299,6 +299,7 @@ paths. A missing family or key means the release has no art for it; games fall b
 | `character-dresses` | images | `<characterId>-gym\|summer\|winter\|casual` | Wiki `Game_Asset_chara_stand_<chara>_…` | ≤512 px |
 | `character-faces` | images | character id | Cut from the first of the summer, winter, gym, casual stands | 128 px square |
 | `outfit-glass` | images | outfit id | Baked from the outfit's bust by `scripts/assets/glass` (private face pins in `content/overrides/glass-pins.json`) | 512 px square, opaque |
+| `outfit-sprites` | sprite sets | outfit id | Owner-approved private sprite revisions | 256 px cells, trimmed WebP pages ≤4096 px |
 | `outfit-glass-order` | images | outfit id | The same bake: the window's pane map, each pixel its pane's place in the reveal (0 the lead, 1–250 the panes outside in, 255 the face) | 512 px square, lossless gray |
 
 `Atlas`: `frameWidth`, `frameHeight` (128), `pages: [{ path, width, height }]` (WebP, ≤4096 px), and
@@ -315,6 +316,27 @@ is drawn as it is when its value is 0 or at most 250 × lit ÷ (steps − 1), th
 dark glass otherwise. `litWindow` in `scripts/assets/src/glass.ts` is the reference. A
 bust has only 307 real pixels, so 512 px is the honest size. [new-umas.md](new-umas.md) has the import of a new outfit
 end to end.
+
+### Sprites
+
+Since uma-data 1.4.0, the art index may include `sprites: { <outfitId>: <releasePath> }`.
+Older parsers ignore it; new clients still accept indexes without it. `artPaths` includes the set paths.
+`client.spriteSet(manifest, art, outfitId)` returns a validated `SpriteSet`, or null for an absent outfit.
+Read each page with `client.file(manifest, page.path)` to check its length and SHA-256.
+
+A set contains `outfitId`, `revision`, open-string `profile`, `cell`, `logicalCell`, `foot`, `headBox`,
+`faceBox`, `hit`, `pages`, `faces` and `actions`. Pages have `{ path, width, height }`.
+Frame rectangles are flattened `{ page, x, y, w, h, dx, dy }`: page coordinates and size, then the trim's
+position in the working cell. Frames also preserve timings, locks, offsets, anchors, hold, air, bounds,
+hand crops and facing from [the authoring format](sprites/format.md). Face rectangles carry `place: { x, y, w, h }`
+for their untrimmed position in the working cell. Actions carry `loop`, events and frames; event ranges are ordered
+pairs. Names of actions and patches are open strings. The parser rejects nonexistent pages, rectangles outside
+pages or cells, invalid events, inconsistent bounds, anchors outside the cell and overflowing locked patches.
+The client also checks the requested outfit id and that every page is listed in the release manifest.
+
+Set JSON lives at `art/outfit-sprites/<outfitId>.<hash16>.json` inside the release directory (bucket prefix `files/`).
+Pages use `atlases/outfit-sprites-<outfitId>-<n>.<hash16>.webp`. No derived character art is committed.
+Tests use `syntheticSpriteSet()` and `buildMemoryRelease(undefined, { sprites, extraFiles })` only.
 
 ## Releases
 

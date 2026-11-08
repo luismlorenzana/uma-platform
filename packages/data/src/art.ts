@@ -68,6 +68,8 @@ export interface ArtImage {
 export interface ArtIndex {
   atlases: Partial<Record<AtlasFamily, Atlas>>
   images: Partial<Record<ImageFamily, Record<string, ArtImage>>>
+  /** Outfit id to a verified outfit-sprites JSON file. Absent in older releases. */
+  sprites?: Record<string, string>
 }
 
 const parseFrame: Parser<AtlasFrame> = (value, path) => {
@@ -124,7 +126,8 @@ export const parseArtIndex: Parser<ArtIndex> = (value, path) => {
       images[family] = recordOf(parseArtImage)(rawImages[family], `${path}.images.${family}`)
     }
   }
-  return { atlases, images }
+  const sprites = object(value, path).sprites
+  return { atlases, images, ...(sprites === undefined ? {} : { sprites: recordOf(releasePath)(sprites, `${path}.sprites`) }) }
 }
 
 /** Every release file path the index points at. */
@@ -132,5 +135,6 @@ export function artPaths(index: ArtIndex): string[] {
   const paths: string[] = []
   for (const atlas of Object.values(index.atlases)) paths.push(...atlas.pages.map((page) => page.path))
   for (const family of Object.values(index.images)) paths.push(...Object.values(family).map((image) => image.path))
+  paths.push(...Object.values(index.sprites ?? {}))
   return paths
 }

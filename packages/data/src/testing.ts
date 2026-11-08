@@ -1,3 +1,4 @@
+import type { SpriteSet } from './sprites.js'
 // Test helpers for games and this repo: small synthetic master records (invented names and values in the right
 // shape, never copied from real data) and an in-memory release. Imported as `@luismlorenzana/uma-data/testing`.
 
@@ -307,7 +308,7 @@ async function addFile(files: ReleaseFile[], objects: Map<string, Uint8Array>, p
  */
 export async function buildMemoryRelease(
   data: MasterData = syntheticMasterData(),
-  options: { art?: ArtIndex; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
+  options: { art?: ArtIndex; sprites?: SpriteSet[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
 ): Promise<MemoryRelease> {
   const objects = new Map<string, Uint8Array>()
   const files: ReleaseFile[] = []
@@ -320,9 +321,19 @@ export async function buildMemoryRelease(
     await addFile(files, objects, sets[name], bytes)
   }
   for (const [path, bytes] of Object.entries(options.extraFiles ?? {})) await addFile(files, objects, path, bytes)
+  const artIndex = options.art ? structuredClone(options.art) : options.sprites ? { atlases: {}, images: {} } as ArtIndex : undefined
+  if (artIndex && options.sprites) {
+    artIndex.sprites = { ...artIndex.sprites }
+    for (const sprite of options.sprites) {
+      const bytes = encoder.encode(JSON.stringify(sprite))
+      const path = `art/outfit-sprites/${sprite.outfitId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      await addFile(files, objects, path, bytes)
+      artIndex.sprites[String(sprite.outfitId)] = path
+    }
+  }
   let art: string | null = null
-  if (options.art) {
-    const bytes = encoder.encode(JSON.stringify(options.art))
+  if (artIndex) {
+    const bytes = encoder.encode(JSON.stringify(artIndex))
     art = `data/art.${(await sha256Hex(bytes)).slice(0, 16)}.json`
     await addFile(files, objects, art, bytes)
   }
@@ -360,4 +371,17 @@ export function createMemorySource(objects: ReadonlyMap<string, Uint8Array>): Re
       return bytes
     },
   }
+}
+
+/** Two invented actions over a tiny page; no original-game content. */
+export function syntheticSpriteSet(): SpriteSet {
+  const frame = { page: 0, x: 2, y: 2, w: 8, h: 12, dx: 124, dy: 229, ms: 100,
+    headLocked: false, hold: 'none', air: false, hit: { x: 128, y: 235 },
+    bounds: { left: 124, right: 131, top: 229, bottom: 240, width: 8, height: 12 } }
+  return { outfitId: 900101, revision: 1, profile: 'synthetic', cell: 256, logicalCell: 64,
+    foot: { x: 128, y: 240 }, headBox: { x: 120, y: 220, w: 20, h: 20 }, faceBox: { x: 124, y: 228, w: 8, h: 6 },
+    hit: { x: 128, y: 235 }, pages: [{ path: 'atlases/synthetic.webp', width: 32, height: 32 }],
+    faces: { blink: { page: 0, x: 12, y: 2, w: 8, h: 6, dx: 0, dy: 0, place: { x: 124, y: 228, w: 8, h: 6 } } },
+    actions: { idle: { loop: true, events: {}, frames: [{ ...frame, headLocked: true, headOffset: { x: 0, y: 0 } }] },
+      wave: { loop: false, events: { hold: [0, 0] }, frames: [{ ...frame }] } } }
 }
