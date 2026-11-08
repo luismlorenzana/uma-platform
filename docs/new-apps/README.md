@@ -103,9 +103,9 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 |---|---|---|---|---|---|
 | [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Done (2.22.0, P102) |
 | [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓ | Key gate |
-| Q7 | **The forest kit** *(uma-quest)*: Written by uma-quest's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-quest's Q5 | Waiting |
-| Q15 | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 | Waiting |
-| Q16 | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8, Q5 | Waiting |
+| [Q7](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q7-forest-kit.md) | **The forest kit** *(uma-quest)*: Written by uma-quest's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-quest's Q5 ✓ | Ready |
+| [Q15](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md) | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 ✓ | Ready |
+| [Q16](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md) | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8 ✓, Q5 ✓ | Ready |
 
 **Exit:**
 
