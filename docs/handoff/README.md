@@ -126,7 +126,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | Q7, Q15, Q16 | uma-quest's art packets ([forest kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q7-forest-kit.md), [town kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md), [foes](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md)), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5 ✓, Q8 ✓ | **Ready** (in uma-quest) |
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
-| M4, uma-farm's parcels | PO1 | `uma-post` 0.1.0: the parcel format, accept lists and caps | Claude | M | uma-farm's F7, uma-quest's Q17 | To write |
+| M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (uma-quest's interim list; Q17 settles it in a minor, P107) | Claude | M | uma-farm's F7 answered | **Written**; built after F7 |
 | | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
 
 ## Releases while packets run in parallel

@@ -137,7 +137,7 @@ The parcel package, once both games' specs name their items.
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | F9 | **The Forge and the Post** *(uma-farm)*: Written by uma-farm's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-farm's F7 | Later |
-| [PO1](#po1) | **`uma-post` 0.1.0**: The parcel package: the parcel type and its parser, each game's accept list and daily caps, and their tests. | Claude | M | uma-farm's F7, uma-quest's Q17 | To write |
+| [PO1](#po1) | **`uma-post` 0.1.0**: The parcel package: the parcel type and its parser, each game's accept list and daily caps, and their tests. | Claude | M | uma-farm's F7 (P107) | Written; built after F7 |
 
 **Exit:**
 
@@ -146,7 +146,7 @@ The parcel package, once both games' specs name their items.
 
 ## The tasks in detail
 
-What each task delivers and how we know it's done. Existing packets are linked; KL1 and PO1 need packets written.
+What each task delivers and how we know it's done. Existing packets are linked; every packet is written.
 
 ### UA5
 
@@ -303,7 +303,8 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 ### PO1
 
-**`uma-post` 0.1.0** · Claude · M · Needs: uma-farm's F7, uma-quest's Q17 · To write
+**`uma-post` 0.1.0** · Claude · M · Needs: uma-farm's F7 answered · **Written**, built after F7 (P107) ·
+[packet](../handoff/tasks/PO1-uma-post.md)
 
 **Delivers:**
 
@@ -319,7 +320,8 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 **Notes for its packet:**
 
-- uma-quest's accept list comes from its Q17 (DN14's tonic, party meal and revive), and the format from uma-farm's F7
+- The format comes from uma-farm's F7. uma-quest's list ships as FS24's interim proposal (DN14's tonic, party meal and
+  revive) and its Q17 settles it in a minor (P107). uma-rpg's and uma-racer's lists start empty
 
 ## What the games owe here
 
@@ -328,7 +330,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 | uma-quest | The kit spec (its Q5) | Q7's and Q15's uma-art families | M2 |
 | uma-quest | The foe contract (its Q16) | The foe family | M2 |
 | uma-quest | The landscape request (from its Q4) | KL1 | M3 |
-| uma-quest | Its accept list (its Q17) | PO1 | M4 |
+| uma-quest | Its accept list (its Q17); interim FS24 until then (P107) | PO1, then a minor | M4 |
 | uma-farm | The parcel format's needs (its F7) | PO1 | M4 |
 | uma-farm | The Forge's art packet (its F9) | uma-art | M4 |
 
@@ -340,7 +342,8 @@ M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
 M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (set gate) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
-M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► uma-quest's receiver
+M4  uma-farm F7 ──► PO1 (uma-quest's interim list) ──► uma-farm F10 ──► uma-quest's receiver
+     uma-quest Q17 ──► uma-post minor (its settled list)
 ```
 
 ## Your steps
@@ -366,8 +369,8 @@ M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► u
 - **Read first:** this doc, the two apps' docs ([first-slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md),
   [first-playable](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
   and the [change protocol](../change-protocol.md).
-- **Write packets for KL1 and PO1** when their requests arrive (KL1 from uma-quest's Q4, PO1 from uma-farm's F7). UA8,
-  UA10, UA9 and UA11 already have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
+- **Every packet is written.** KL1 was released in uma-kit 0.18.0 (P103). PO1 was written ahead from uma-farm's draft spec
+  and is built after the owner answers F7 (P107). UA9–UA12 have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
 - **Art packets come from the games:** uma-quest's Q7, Q15 and Q16, and uma-farm's F9. ChatGPT draws them here, merges
   and publishes the uma-art release, and logs each one's P-decision.
 - **Decisions** go in [decisions.md](../decisions.md) from P99 (fetch `main` first).
@@ -384,7 +387,7 @@ The platform's calls for the new apps. P97 logs them.
 | NA4 | Kits and foes are authored in full colour with masters and a deterministic export, like UA8's props, so they match the sprites. P97 amends P35 for them; the pixel families keep P35 |
 | NA5 | Each new uma-art family's contract is written by the game that draws it: the kit spec in uma-quest's Q5, the foe contract in its Q16 |
 | NA6 | uma-kit's landscape layout (KL1) is an opt-in kit minor, requested from uma-quest's Q4 and needed by its Phase 5; the slice draws its own few menus |
-| NA7 | `uma-post` (PO1) waits for both specs: the format from uma-farm's F7 and uma-quest's accept list from its Q17 |
+| NA7 | `uma-post` (PO1) waits for both specs: the format from uma-farm's F7 and uma-quest's accept list from its Q17. **Amended by P107:** it waits only for F7, carrying uma-quest's FS24 list as interim; Q17 settles it in a minor |
 | NA8 | `uma-work` and `uma-kit/work` serve uma-farm unchanged (FM5); master data needs nothing new for either app beyond `outfit-sprites` |
 | NA9 | UA6 finishes with the model caches removed from the bucket and a restore tested |
 | NA10 | Wave 2 (UA9) and townsfolk T2 onward (UA11) follow the slice: uma-quest needs them at its Phase 5 |
