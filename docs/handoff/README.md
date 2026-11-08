@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** UA1, UA4 and UA8 (the sprite pipeline, below). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**Ready now:** UA2, UA3, UA4 and UA8 (the sprite pipeline, below). UA7 waits for batch 1's recorded set review. Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -98,18 +98,18 @@ and bubbles are uma-art.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [UA1](tasks/UA1-durable-layout.md) | The durable layout: per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept; then batch 1's two fixes before its set gate (P92) | Either | S | — | **Ready** |
-| [UA2](tasks/UA2-sprite-tools.md) | `scripts/sprites`: export, the 14 checks, repeat and progress, tested; batch 1 rebuilt byte for byte | Either | L | UA1 | After UA1 |
-| [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | After UA1 |
+| [UA2](tasks/UA2-sprite-tools.md) | `scripts/sprites`: export, the 14 checks, repeat and progress, tested; batch 1 rebuilt byte for byte | Either | L | UA1 | **Ready** |
+| [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | **Ready** |
 | [UA4](tasks/UA4-sprites-schema.md) | uma-data 1.4.0: the `outfit-sprites` family, parser, art-index `sprites`, fixtures | Either | M | — | **Ready** |
 | [UA5](tasks/UA5-pack-and-publish.md) | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | After UA2, UA4 |
 | [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | The owner's yes | Waiting on the owner |
-| [UA7](tasks/UA7-batch1-full-profile.md) | Art: batch 1's field set, `weary` and emotes (118 frames each) | ChatGPT | M | UA1 | After UA1 |
+| [UA7](tasks/UA7-batch1-full-profile.md) | Art: batch 1's field set, `weary` and emotes (118 frames each) | ChatGPT | M | UA1; recorded batch 1 set review | Waiting on the owner |
 | [UA8](tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons (16 textures) and eight emote bubbles | ChatGPT | M | — | **Ready** |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | After UA7 |
 | [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters, for uma-quest's slice town | ChatGPT | S | UA7 | After UA7 |
 
-**Order:** UA1, UA4 and UA8 start now, side by side. UA2, UA3 and UA7 follow UA1. UA5 publishes batch 1 once UA2 and
+**Order:** UA1 is complete; UA2, UA3, UA4 and UA8 are ready. UA7 starts only after batch 1's set review is recorded.
+UA5 publishes batch 1 once UA2 and
 UA4 have landed and the owner has approved its sets. That must happen before uma-quest's Q6, which loads sprites from
 master data. uma-rpg's H168 closes at batch 1's set gate (CR30). Written later, when their uma-quest step nears: the
 rival add-on, familiars at the new scale, and the bestiary's foe format (CR34).
@@ -129,6 +129,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| UA1 | Five private outfit folders, ten revisions (seven unchanged imports + three P92 fixes), 620 body frames, 60 patches, 10 keys/atlases, 130 historical strips and six shared props; 976 PNGs including sources. All **580/580 imported native PNGs match pack SHA-256** (zero mismatches); fresh master recut repeats **350/350 current runtime files** byte for byte. 106801 r3 removes 2+2+1 opaque speck pixels; 111501 r2 removes one; 112901 r3 removes one and scales walk 1–5 uniformly about (128,240) from top rows 23/25/25/24/25 to 33 (height 208), preserving the exact key face and transforming anchors/crops. Every unlisted parent file is byte-identical. Current battle checks 1–11/14 pass; full traveler coverage remains UA7. Old packs (apart from README lines), roster and old pointer preserved; current key/set gates pending, only the earlier 106801 r1 key gate seeded. Review app launched; no publish. | Private content; this docs-only PR |
 | A05 | Native 16px Card Ticket and 24px Fatigue sweat-drop/Rest towel marks (P87), appended on the 120×244 UI sheet. All 58 earlier records/pixels, 18 other atlas files and 94 preview PNGs frozen; real-background native/2×/4× review, full checks and 499-file repeat-generation proof passed. [Uma-art 2.21.0 published](https://github.com/luismlorenzana/uma-platform/actions/runs/42071645010); Racer owns pinning, replacing stand-ins, deployment and deleting its A05 brief. | `3e23261` ([art #70](https://github.com/luismlorenzana/uma-platform/pull/70)) |
 | H156 | Three native 48px collections buildings (P86), appended in the last cells on the unchanged 288×432 sheet; all 51 older records and cutouts, 18 other atlas files and 90 dedicated previews frozen. Native/2× review, glow/edge/motif guards and ≥25% silhouette differences passed, with full platform checks. [Uma-art 2.20.0 published](https://github.com/luismlorenzana/uma-platform/actions/runs/41908742455); H158 owns the RPG pin. | `9323162` ([art #67](https://github.com/luismlorenzana/uma-platform/pull/67)) |
 | H141 | Thirteen native star/stat icons (P80), appended on the 120×220 UI atlas with all 45 earlier records and pixels, 89 older preview PNGs and the other 18 atlas files frozen. Native/2×/4× white, dark and night-sky review; all platform checks passed. [Uma-art 2.19.0 published](https://github.com/luismlorenzana/uma-platform/actions/runs/41880067892); H144 owns the RPG pin. | `b612403` ([art #64](https://github.com/luismlorenzana/uma-platform/pull/64)) |
