@@ -33,7 +33,7 @@ describe('world art part 1', () => {
     expect(checkWorldFrames(frames)).toEqual([])
     expect(checkWorldFrames(frames.slice(1)).some((s) => s.startsWith('Missing'))).toBe(true)
     expect(checkWorldFrames([...frames, frames[0]!]).some((s) => s.startsWith('Duplicate'))).toBe(true)
-  })
+  }, 20_000) // Renders all 194 frames and checks them three times: 0.13s alone, past 5s on the shared CI runner.
 
   it('packs native-size frames without overlaps and deterministically', () => {
     const frames = worldFrames(), { atlas, index } = packWorld(frames), taken = new Set<string>()
