@@ -2,6 +2,7 @@
 // The source is injected, so each game's API can read the private bucket its own way and its web app can read
 // through the API's logged-in endpoint.
 
+import { parseSpriteSet, type SpriteSet } from './sprites.js'
 import { parseArtIndex, type ArtIndex } from './art.js'
 import { MASTER_DATA_KEYS, parseSet, type MasterData, type SetItems } from './master.js'
 import { MasterDataError } from './parse.js'
@@ -87,6 +88,8 @@ export interface ReleaseClient {
   art(manifest: ReleaseManifest): Promise<ArtIndex | null>
   /** A file's verified bytes, e.g. an art image. */
   file(manifest: ReleaseManifest, path: string): Promise<Uint8Array>
+  /** A sprite set by outfit id, or null when this release has none. */
+  spriteSet(manifest: ReleaseManifest, art: ArtIndex, outfitId: number): Promise<SpriteSet | null>
   /** Every set and the art index of one release (the channel's when no version is given). */
   load(version?: string): Promise<MasterRelease>
 }
@@ -155,7 +158,20 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
         if (!listed.has(page.path)) throw new MasterDataError(release.art, `${page.path} to be in the manifest`)
       }
     }
+    for (const path of Object.values(index.sprites ?? {})) {
+      if (!listed.has(path)) throw new MasterDataError(release.art, `${path} to be in the manifest`)
+    }
     return index
+  }
+
+  async function spriteSet(release: ReleaseManifest, index: ArtIndex, outfitId: number): Promise<SpriteSet | null> {
+    const path = index.sprites?.[String(outfitId)]
+    if (!path) return null
+    const set = parseSpriteSet(json(await file(release, path), path), path)
+    if (set.outfitId !== outfitId) throw new MasterDataError(`${path}.outfitId`, String(outfitId))
+    const listed = new Set(release.files.map(entry => entry.path))
+    for (const page of set.pages) if (!listed.has(page.path)) throw new MasterDataError(path, `${page.path} to be in the manifest`)
+    return set
   }
 
   async function load(version?: string): Promise<MasterRelease> {
@@ -164,5 +180,5 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return { manifest: release, data: Object.fromEntries(entries) as unknown as MasterData, art: await art(release) }
   }
 
-  return { channel, manifest, set, art, file, load }
+  return { channel, manifest, set, art, spriteSet, file, load }
 }
