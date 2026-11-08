@@ -18,6 +18,7 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 
 ## Decisions made
 
+- **Batch T1 (P93):** these three are the first townsfolk batch; UA11's template draws T2–T8.
 - **The three, by CR25's rule:** the first three characters without a selected outfit, each in her best-ranked outfit.
   They are **103301, 112001 and 109801**, all tier B.
 - **The townsfolk profile, 45 frames each:**
@@ -40,7 +41,8 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 
 ## Done when
 
-- Three townsfolk sets are published, with all checks passing.
+- Three townsfolk sets pass every applicable check and are approved at the set review.
+- They're published with UA5's first release if they're approved by then, and with the next release otherwise.
 - The README records minutes per townsfolk set, compared with pipeline.md §9's ~3 minutes of waits.
 
 ## Deliver

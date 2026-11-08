@@ -124,9 +124,9 @@
   <h1>Uma sprites: from experiments to a pipeline</h1>
   <p>ChatGPT's experiments, written down as one format and one way from the roster to a game. The docs:
     <a href="../format.md">format.md</a> (the format, CR1–CR18) and <a href="../pipeline.md">pipeline.md</a> (the pipeline,
-    CR19–CR34). The packets, UA1–UA10, are in <a href="../../handoff/README.md#uma-sprites-the-pipeline-ua">the handoff</a>,
+    CR19–CR34). The packets, UA1–UA11, are in <a href="../../handoff/README.md#uma-sprites-the-pipeline-ua">the handoff</a>,
     and the decision is P91. Outfits appear by id only, and this page shows no character art.
-    <b>2026-11-07:</b> batch 1's battle sets are drawn; UA1, UA4 and UA8 are ready.</p>
+    <b>2026-11-08:</b> batch 1 is approved in full (118 frames each), and townsfolk are drawn ahead in batches of ten (P93).</p>
   <nav>
     <a href="#flow">Stages and gates</a>
     <a href="#profile">What a traveler has</a>
@@ -144,7 +144,7 @@
     <div class="tile"><b>62 → 118</b><span>frames a traveler, with the field set, <code>weary</code> and emotes</span></div>
     <div class="tile"><b>2 gates</b><span>yours, in the Studio: the key per outfit, the set per batch</span></div>
     <div class="tile"><b>20 batches</b><span>of five; batch N is uma-quest's wave N</span></div>
-    <div class="tile"><b>10 packets</b><span>UA1–UA10; three ready now</span></div>
+    <div class="tile"><b>11 packets</b><span>UA1–UA11; two done</span></div>
     <div class="tile"><b>≈ $0</b><span>a month: a backup bucket on your yes, the rest free tier</span></div>
   </div>
 
@@ -223,11 +223,11 @@
         <tr><td><b>Summoner</b></td><td class="id">111501</td><td class="id">111401</td></tr>
       </table>
       <table>
-        <tr><th>Townsfolk pilot (UA10)</th><th>Tier</th></tr>
+        <tr><th>Townsfolk T1, the pilot (UA10)</th><th>Tier</th></tr>
         <tr><td class="id">103301</td><td>B</td></tr>
         <tr><td class="id">112001</td><td>B</td></tr>
         <tr><td class="id">109801</td><td>B</td></tr>
-        <tr><td colspan="2" class="note">Each the best-ranked outfit of a character with no selected outfit (CR25)</td></tr>
+        <tr><td colspan="2" class="note">Each the best-ranked outfit of a character with no selected outfit (CR25). T2–T8 follow in tens (UA11)</td></tr>
       </table>
     </div>
   </section>
@@ -421,7 +421,7 @@ function drawQuest() {
     ['Q9 · the fight screen', 'Five Umas against foes, every fight event', 'The battle set', 'Ten held weapons; weary; familiars at the new scale (old ones work for now)', 'UA8 · UA7'],
     ['Q11 · the dungeon', 'Walking, Dash, chests, Springs, downed followers', '—', 'The field set (Dash plays run-*); a downed follower is greyed by the game', 'UA7'],
     ['Q12 · town and story runner', 'Speakers walk, emote and talk; townsfolk; portraits', 'Portraits (master data)', 'Six emotes; emote bubbles; townsfolk sets', 'UA7 · UA8 · UA10'],
-    ['Phase 5 · band 1', 'Wave 1 complete; rival bosses; band 1 townsfolk; bestiary', '—', 'Batch 1 full profile; the rival add-on; townsfolk batches; the foe format', 'UA7 · UA9 … · later'],
+    ['Phase 5 · band 1', 'Wave 1 complete; rival bosses; band 1 townsfolk; bestiary', '—', 'Batch 1 full profile; the rival add-on; townsfolk batches; the foe format', 'UA7 · UA9 … · UA11 · later'],
     ['Phases 6–7', 'Waves 2–20', '—', 'One batch a wave', 'UA9, repeated'],
   ]
   const t = document.getElementById('questtable')
@@ -438,7 +438,7 @@ function drawBoard() {
     ['Schema · release', [[{ id: 'UA4', t: 'uma-data 1.4.0, outfit-sprites', who: 'either', s: 'M' }], [], [{ id: 'UA5', t: 'Pack, sprite-only publish, batch 1', who: 'claude', s: 'M' }, { id: '→ Q6', t: 'uma-quest loads from master data', who: 'exit' }], []]],
     ['Art: batch 1', [[], [{ id: 'UA7', t: 'Field set, weary, emotes: 118 frames', who: 'art', s: 'M' }], [], []]],
     ['Art: props', [[{ id: 'UA8', t: 'uma-art: 10 held weapons, 8 bubbles', who: 'art', s: 'M' }], [], [], []]],
-    ['Art: rollout', [[], [], [{ id: 'UA10', t: 'Townsfolk pilot: three', who: 'art', s: 'S' }], [{ id: 'UA9', t: 'Batch 2, then the template for 3–20', who: 'art', s: 'L' }]]],
+    ['Art: rollout', [[], [], [{ id: 'UA10', t: 'Townsfolk pilot: three (T1)', who: 'art', s: 'S' }, { id: 'UA11', t: 'Townsfolk batches T2–T8', who: 'art', s: 'M' }], [{ id: 'UA9', t: 'Batch 2, then the template for 3–20', who: 'art', s: 'L' }]]],
     ['Backup', [[{ id: 'UA6', t: 'Backup bucket, on your yes', who: 'claude', s: 'S' }], [], [], []]],
   ]
   const b = document.getElementById('board'); b.replaceChildren(h('<div></div>'))
@@ -493,7 +493,7 @@ const calls = [
   ['CR22', 'Revisions are immutable; new work keeps approved frames byte for byte; the owner reviews only what\'s new'],
   ['CR23', 'Generic tools in git (scripts/sprites, tools/studio, prompt templates); per-character inputs in content/'],
   ['CR24', 'Batches of five, one per Way, tier order then roster order; 20 batches; batch N is uma-quest\'s wave N'],
-  ['CR25', 'Townsfolk: the 70 characters\' best-ranked unselected outfit, drawn when a scene first needs her'],
+  ['CR25', 'Townsfolk: the 70 characters\' best-ranked unselected outfit, drawn ahead in batches of ten (P93)'],
   ['CR26', 'The release family outfit-sprites in uma-data 1.4.0'],
   ['CR27', 'A sprite publish carries every other file of the latest release byte for byte'],
   ['CR28', 'Games load a set only while that Uma is on screen, through their content proxy, cached'],

@@ -174,9 +174,12 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
   - **Batch 1** is the five drawn.
   - **Batch 2** by the rule: 108701 (Warrior), 113301 (Spellblade), 111001 (Mage), 111801 (Healer), 111401 (Summoner).
   - You can reorder the queue in the Studio, and the rule only fills the gaps.
-- **Townsfolk** (CR25): one set for each of the 70 characters with no selected outfit. Each uses her best-ranked outfit
-  in the roster (B before F, then roster order) and is drawn when a scene first needs her. The first two or three are for
-  uma-quest's slice town (UA10).
+- **Townsfolk** (CR25, P93): one set for each of the 70 characters with no selected outfit. Each uses her best-ranked
+  outfit in the roster (B before F, then roster order).
+  - They're drawn **ahead, in batches of ten**, so towns cast from a ready pool: T1 is UA10's three for uma-quest's
+    slice town, and T2–T8 follow UA11's template (28 tier B, then 42 tier F).
+  - A townsfolk batch follows each traveler batch, unless the Studio's queue says otherwise.
+  - Each batch has one key review and one set review, like a traveler batch.
 - **Rival add-ons** follow the chapters. Each is drawn when a written chapter first casts that traveler as a boss.
 
 ## 6. Tools
@@ -262,7 +265,8 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 | [UA7](../handoff/tasks/UA7-batch1-full-profile.md) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
 | [UA8](../handoff/tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
 | [UA9](../handoff/tasks/UA9-batch-2.md) | Art: batch 2 in the full traveler profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 |
-| [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters, for uma-quest's slice town | ChatGPT | S | UA7 |
+| [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA7 |
+| [UA11](../handoff/tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 | ChatGPT | M | UA10's set gate, UA2 |
 
 **Later, written when their game step nears:**
 - the rival add-on's first set, with uma-quest's Phase 5;
@@ -315,7 +319,7 @@ than files copied out of `content/`. UA7 adds the facings Q6 walks in.
 | CR22 | Revisions are immutable folders; a fix or new actions make a new revision that keeps approved frames byte for byte, so the owner reviews only what's new |
 | CR23 | The tools are generic code in git (`scripts/sprites`, `tools/studio`, prompt templates without names); per-character prompts, configs and identity notes stay in `content/` |
 | CR24 | Batches of five, one per Way, in tier order then roster order, never two outfits of one character; 20 batches; batch N is uma-quest's wave N |
-| CR25 | Townsfolk: one set for each of the 70 characters without a selected outfit, in her best-ranked outfit (B before F), drawn when a scene first needs her |
+| CR25 | Townsfolk: one set for each of the 70 characters without a selected outfit, in her best-ranked outfit (B before F). **Amended by P93:** drawn ahead in batches of ten (T1–T8), one after each traveler batch |
 | CR26 | The release family `outfit-sprites` in uma-data 1.4.0 (format.md §13) |
 | CR27 | A sprite publish carries every other file of the latest release byte for byte |
 | CR28 | Games load a set only while that Uma is on screen, through their own content proxy, cached; they draw the revision `latest` holds |

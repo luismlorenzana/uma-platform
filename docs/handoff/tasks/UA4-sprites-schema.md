@@ -66,6 +66,6 @@ sets need the same: a type, a parser, a place in the art index, and fixtures, so
 
 ## Deliver
 
-A pull request (ChatGPT) or `main` (Claude), `feat(data): …`. Log a P-decision (from P93, after fetching `main`).
+A pull request (ChatGPT) or `main` (Claude), `feat(data): …`. Log a P-decision (from P94, after fetching `main`).
 Delete this packet and move UA4 to Done in [the handoff](../README.md). No game needs a new Actions grant: uma-data is
 already shared.

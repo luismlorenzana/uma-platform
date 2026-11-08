@@ -45,7 +45,8 @@ in git tests them, and each batch would copy them again. A hundred outfits need 
   outfit's current revision.
 - **`sprites:repeat`** exports into a temp folder and compares every byte.
 - **`sprites:progress`** rebuilds `content/authoring/sprites/progress.json` from the roster, the folders and
-  `reviews.json`. Its stages are pipeline.md §4's, by tier, Way and profile.
+  `reviews.json`. Its stages are pipeline.md §4's, by tier, Way and profile. It counts each profile on its own:
+  travelers out of 100 and townsfolk out of 70, in UA11's batch order (P93).
 - **Prompt templates without names** go in `scripts/sprites/templates/`, one per master:
   - the identity sheet, locomotion, swing, cast, reactions, and arms with victory;
   - the field facings, `weary` with the emotes, townsfolk, and the rival add-on.
@@ -77,5 +78,5 @@ in git tests them, and each batch would copy them again. A hundred outfits need 
 ## Deliver
 
 A pull request (ChatGPT) or `main` (Claude), Conventional Commits (`feat(sprites): …`). Log one P-decision for the tool
-and anything you decided (fetch `main` first; from P93). Delete this packet and move UA2 to Done in
+and anything you decided (fetch `main` first; from P94). Delete this packet and move UA2 to Done in
 [the handoff](../README.md), with the commit and the count of `literal` frames.

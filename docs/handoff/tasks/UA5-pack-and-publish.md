@@ -60,13 +60,14 @@ batches itself ([pipeline.md](../../sprites/pipeline.md) §7, CR21, CR27 and CR2
 
 ## Done when
 
-- `latest` holds batch 1's five sets, and the client's `spriteSet` returns each one with all 14 entries.
+- `latest` holds batch 1's five sets, and the client's `spriteSet` returns each one with all 27 entries.
+- It also holds UA10's three townsfolk sets if the owner approved them before the publish (P93).
 - The release's other files match the previous release byte for byte.
 - uma-rpg's site and API behave as before.
 - The encoding numbers are recorded, and pipeline.md has the steps.
 
 ## Deliver
 
-Commit to `main`, `feat(sprites): …`. Log a P-decision with the release version and the encoding numbers (from P93,
+Commit to `main`, `feat(sprites): …`. Log a P-decision with the release version and the encoding numbers (from P94,
 after fetching `main`). Delete this packet and move UA5 to Done in [the handoff](../README.md) with the release version.
 Tell uma-quest in its handoff that Q6 can load batch 1 from master data.

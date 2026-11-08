@@ -62,5 +62,5 @@ scenes need bubbles over a speaker's head. Props and bubbles are original, so th
 ## Deliver
 
 A pull request, merged and published by you as usual (`feat(art): …`). Log a P-decision, including the P35 amendment
-(from P93, after fetching `main`). Delete this packet and move UA8 to Done in [the handoff](../README.md), with the
+(from P94, after fetching `main`). Delete this packet and move UA8 to Done in [the handoff](../README.md), with the
 release. uma-quest's first packet that draws the props pins this release.
