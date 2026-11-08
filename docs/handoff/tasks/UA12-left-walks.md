@@ -66,3 +66,9 @@ it on the left turnaround still. Until then it falls back to the battle walk, so
 
 Delete this packet and move it to Done in [the handoff](../README.md), with the release. Tell uma-quest's session that
 batch 1 walks left in its own facing. It needs no pin, since it reads master data's `latest`.
+
+## Current step — 2026-11-08 (P106)
+
+The five new revisions are authored: 106801 r5, 106701 r3, 112901 r5, 111501 r4 and 113401 r3. Each has 130 frames / 7 patches / 29 actions and passes all 14 checks; 139 runtime files per set repeat exactly. All 630 prior PNGs and all 27 existing actions per traveler are unchanged. Nine built-in imagegen calls, 2,329.872 summed seconds, include four targeted accessory-side corrections; no art was mirrored.
+
+[Direction comparison](http://127.0.0.1:4318/field/?profile=traveler&batch=1#directions) supports shared timing, frame stepping and 2× inspection. [Set gate](http://127.0.0.1:4318/gates?profile=traveler&batch=1) is pending. All existing key receipts remain valid by hash. Publish remains after the owner’s set approval; `latest` still contains the pre-P105 release `4757517816a0`.

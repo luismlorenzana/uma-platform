@@ -27,7 +27,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **In progress:** UA10 (ChatGPT), drawing the owner's T1 picks (P104) with `walk-left` (P105); UA12 (ChatGPT) is ready: batch 1's left field walks (P105); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
+- **In progress:** UA10 and UA12 (ChatGPT) await their set gates: three full townsfolk and five travelers with dedicated left field walks (P106); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
 - **Your steps:**
   - the townsfolk reviews (UA10);
   - the art reviews ChatGPT asks for.
@@ -87,7 +87,7 @@ Batch 1's sets are in master data before uma-quest's Q6 needs them, and the back
 |---|---|---|---|---|---|
 | [UA5](#ua5) | **Batch 1 published**: `sprites:pack`, the sprite-only publish, the encoding decision, and batch 1's first release. | Done | M | UA2 ✓, UA4 ✓, your approval ✓ | Done (P100) |
 | [UA6](#ua6) | **The backup, finished**: The first backup verified and a restore tested, with the model caches left out. | Done | S | the bucket ✓ | Done (P99) |
-| [UA12](#ua12) | **Batch 1's left field walks**: `walk-left` and `run-left`, 12 frames a traveler, as new revisions published sprite-only. | ChatGPT | S | UA7 ✓, your set gate | Ready |
+| [UA12](#ua12) | **Batch 1's left field walks**: `walk-left` and `run-left`, 12 frames a traveler, as new revisions published sprite-only. | ChatGPT | S | UA7 ✓, your set gate | Set gate (P106) |
 
 **Exit:**
 
@@ -102,7 +102,7 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Done (2.22.0, P102) |
-| [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓ | Key gate |
+| [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓ | Set gate (P106) |
 | [Q7](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q7-forest-kit.md) | **The forest kit** *(uma-quest)*: Written by uma-quest's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-quest's Q5 ✓ | Ready |
 | [Q15](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md) | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 ✓ | Ready |
 | [Q16](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md) | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8 ✓, Q5 ✓ | Ready |
@@ -177,7 +177,7 @@ run, field facings, turnarounds, blinks). Later batches follow
 
 ### UA12
 
-**Batch 1's left field walks** · ChatGPT · S · Needs: UA7 ✓, your set gate · **Ready** · P105 ·
+**Batch 1's left field walks** · ChatGPT · S · Needs: UA7 ✓, your set gate · **Set gate** · P106 ·
 [packet](../handoff/tasks/UA12-left-walks.md)
 
 You played uma-quest's test room on 2026-11-08, and Umas walking left looked wrong: they used the battle `walk`, the
@@ -231,9 +231,9 @@ Delivered in uma-art 2.22.0: 16 held textures and eight bubbles, with source mas
 
 ### UA10
 
-**Three townsfolk** · ChatGPT · S · Needs: UA2 ✓ · Key gate (P104)
+**Three townsfolk** · ChatGPT · S · Needs: UA2 ✓ · Set gate (P106)
 
-The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md).
+The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md). All three r4 profiles pass the 14 checks with corrected left walks, 45 frames and 2 patches each. Identity approvals remain valid; the full sets await review.
 
 **Covers:** R5, N1
 
@@ -337,7 +337,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 ```
 M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
      UA12 (batch 1's left walks, P105) ──► uma-quest's left walk (D17)
-M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (drawing) ──► uma-quest Q12
+M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (set gate) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
 M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► uma-quest's receiver
@@ -347,7 +347,7 @@ M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► u
 
 | When | Step | State |
 |---|---|---|
-| When ChatGPT asks | The three townsfolk's key and set reviews (UA10) | Waiting |
+| When ChatGPT asks | The full-set reviews for three townsfolk and five left-motion traveler revisions (UA10, UA12) | Ready; keys already approved |
 | When ChatGPT asks | The looks of uma-quest's forest kit, town kit and foes | Waiting |
 | When ChatGPT asks | Batch 2's key and set reviews (UA9), after the slice | Later |
 | When ChatGPT asks | The Forge's look (uma-farm's F9) | Later |
