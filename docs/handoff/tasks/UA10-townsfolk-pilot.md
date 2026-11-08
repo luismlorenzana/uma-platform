@@ -19,8 +19,10 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 ## Decisions made
 
 - **Batch T1 (P93):** these three are the first townsfolk batch; UA11's template draws T2–T8.
-- **The three, by CR25's rule:** the first three characters without a selected outfit, each in her best-ranked outfit.
-  They are **103301, 112001 and 109801**, all tier B.
+- **The three, chosen by the owner on 2026-11-08 (P104): 101401, 100103 and 109701**, all tier F.
+  This overrides T1's default tier/roster picks. The middle choice uses a different outfit of its character. Queue order
+  and optional `townsfolkOutfits` choices preserve roster rankings; all three remain in the 70 unselected characters.
+- **Current step:** five identity stills per outfit are prepared for the key gate. Actions and blink patches wait for that approval.
 - **The townsfolk profile, 45 frames each:**
   - the key, a battle-facing still;
   - `turnaround`;

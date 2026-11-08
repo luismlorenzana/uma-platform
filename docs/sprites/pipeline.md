@@ -178,7 +178,9 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
   - **Batch 2** by the rule: 108701 (Warrior), 113301 (Spellblade), 111001 (Mage), 111801 (Healer), 111401 (Summoner).
   - You can reorder the queue in the Studio, and the rule only fills the gaps.
 - **Townsfolk** (CR25, P93): one set for each of the 70 characters with no selected outfit. Each uses her best-ranked
-  outfit in the roster (B before F, then roster order).
+  outfit in the roster (B before F, then roster order), unless the owner chooses another outfit. Optional private
+  `townsfolkOutfits` choices replace the outfit for that character without changing ranks or the 70-character scope.
+  T1 uses the owner's 101401, 100103 and 109701 (P104), ahead of the default order.
   - They're drawn **ahead, in batches of ten**, so towns cast from a ready pool: T1 is UA10's three for uma-quest's
     slice town, and T2–T8 follow UA11's template (28 tier B, then 42 tier F).
   - A townsfolk batch follows each traveler batch, unless the Studio's queue says otherwise.

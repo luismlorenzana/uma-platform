@@ -39,6 +39,9 @@ The tool never calls historical scripts in `content/review/`.
 Progress is derived separately for 100 travelers and 70 townsfolk, with the two gates checked against current hashes.
 The queue uses tier/roster order, one of each Way per traveler batch and no repeated character, with owner overrides
 in `queue.json`. Townsfolk use the best-ranked outfit of each unselected character: three in T1, then ten per batch.
+An optional `townsfolkOutfits` array selects a different outfit for an unselected character, without changing her
+roster rank or adding another character slot. The townsfolk order then uses those chosen outfit ids. Choices reject
+unknown outfits, traveler characters and multiple outfits of the same character; old queue files keep their defaults.
 The compatibility progress path is regenerated alongside the canonical path.
 
 Tests use invented shapes and temporary files. The private-content guard runs in CI; the character-name guard also

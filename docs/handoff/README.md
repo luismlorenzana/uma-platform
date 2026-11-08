@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** UA10 (ChatGPT), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103) for uma-quest's Phase 5. PO1 waits for its requests (uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**In progress:** UA10 (ChatGPT), at its key gate for the owner's chosen T1 (P104), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103) for uma-quest's Phase 5. PO1 waits for its requests (uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -100,7 +100,7 @@ and bubbles are uma-art.
 |---|---|---|---|---|---|
 | UA5 | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | Done (release `4757517816a0`, P100) |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | **Ready after the slice** |
-| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA2 ✓ | **Ready** |
+| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA2 ✓ | **Key gate** |
 | [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 (P93) | ChatGPT | M | UA10's set gate, UA2 | After UA10, UA2 |
 
 **Order:** UA1 and UA7 are complete, and the owner approved batch 1's full traveler sets on 2026-11-08 (`reviews.json`),

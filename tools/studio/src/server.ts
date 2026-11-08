@@ -57,7 +57,7 @@ async function main() {
           if (input.stamp !== before.stamp) throw new ReviewConflict('Queue changed; reload before saving')
           if (!input.value || input.value.schemaVersion !== 1 || !Array.isArray(input.value.traveler) || !Array.isArray(input.value.townsfolk)) throw new Error('Invalid queue')
           const roster = await readJson<{ rankings: Ranking[] }>(resolve(content, 'authoring/uma-art-roster.json'))
-          for (const profile of ['traveler', 'townsfolk'] as const) queue(roster.rankings, profile, input.value[profile])
+          for (const profile of ['traveler', 'townsfolk'] as const) queue(roster.rankings, profile, input.value[profile], input.value.townsfolkOutfits)
           await atomicJson(resolve(root, 'queue.json'), input.value)
           await buildProgress(content); return readQueue()
         }); queueWrite = work.catch(() => undefined); send(response, 200, await work); return

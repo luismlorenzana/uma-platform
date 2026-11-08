@@ -26,7 +26,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **Ready now:** UA10 (ChatGPT); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
+- **In progress:** UA10 (ChatGPT), at the key gate for the owner's T1 picks (P104); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
 - **Your steps:**
   - the townsfolk reviews (UA10);
   - the art reviews ChatGPT asks for.
@@ -55,7 +55,7 @@ Each requirement has an id, where it comes from, and the task that checks it.
 | R2 | A traveler set is at most about 3 MB on its WebP pages (lossless if it fits, lossy q90 otherwise) | UA5 | UA5 |
 | R3 | The client's `spriteSet` returns each published set with all 27 entries; games load a set only while that Uma is on screen | CR28, P94 | UA5 |
 | R4 | uma-art's `held/` (16 weapon textures) and `emote/` (8 bubbles) families, with grips, angles and anchors | CR14, UA8 | UA8 |
-| R5 | Three townsfolk sets (103301, 112001, 109801) in the townsfolk profile, published | CR25, P93 | UA10 |
+| R5 | Three townsfolk sets (101401, 100103, 109701) in the townsfolk profile, published | CR25, P93, P104 | UA10 |
 | R6 | uma-art families for uma-quest's kits (a biome kit, a town kit) to its kit spec, and for its foes to the contract its Q16 writes | uma-quest SL6–SL8 | Q7, Q15, Q16 |
 | R7 | uma-art buildings and pieces for uma-farm's Forge and Post | FM9 | F9 |
 | R8 | A uma-kit landscape layout for uma-quest, as a kit minor; uma-rpg and uma-racer unchanged | NG6, change protocol | KL1 |
@@ -100,7 +100,7 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Done (2.22.0, P102) |
-| [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 103301, 112001 and 109801 (batch T1). | ChatGPT | S | UA2 ✓ | Ready |
+| [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓ | Key gate |
 | Q7 | **The forest kit** *(uma-quest)*: Written by uma-quest's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-quest's Q5 | Waiting |
 | Q15 | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 | Waiting |
 | Q16 | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8, Q5 | Waiting |
@@ -205,7 +205,7 @@ Delivered in uma-art 2.22.0: 16 held textures and eight bubbles, with source mas
 
 ### UA10
 
-**Three townsfolk** · ChatGPT · S · Needs: UA2 ✓ · Ready
+**Three townsfolk** · ChatGPT · S · Needs: UA2 ✓ · Key gate (P104)
 
 The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md).
 
@@ -310,7 +310,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 ```
 M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
-M2  UA8 (ready) ──► uma-quest Q9, Q12      UA10 (ready) ──► uma-quest Q12
+M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (key gate) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
 M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► uma-quest's receiver
