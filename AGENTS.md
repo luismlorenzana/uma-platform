@@ -7,6 +7,8 @@ uma-platform is the shared foundation for the owner's personal Uma games. Read t
 1. `docs/architecture.md`: how the repos fit together. **The docs are the source of truth.** Code follows docs.
 2. `docs/roadmap.md`: which phase is active and its exit check.
 3. `docs/decisions.md`: what's decided (append-only).
+4. **The current work:** `docs/new-apps/README.md` (what uma-quest and uma-farm need) and the handoff's queue in
+   `docs/handoff/README.md`. Commands are in `README.md`.
 
 ## Hard rules
 

@@ -340,7 +340,7 @@ M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► u
   UA6, UA8, UA10, UA3, UA9 and UA11 already have packets; UA6's gets the cache clean-up added.
 - **Art packets come from the games:** uma-quest's Q7, Q15 and Q16, and uma-farm's F9. ChatGPT draws them here, merges
   and publishes the uma-art release, and logs each one's P-decision.
-- **Decisions** go in [decisions.md](../decisions.md) from P98 (fetch `main` first).
+- **Decisions** go in [decisions.md](../decisions.md) from P99 (fetch `main` first).
 
 ## Calls
 
