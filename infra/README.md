@@ -99,3 +99,10 @@ revision or its approvals. To recover an overwritten roster/review, list object 
 to the temporary directory, inspect it, and restore atomically. Do not delete backup objects as part of routine use.
 
 Verified 2026-11-08: 6,508 live objects / 2,391,485,667 bytes; 2,404,753,077 bytes including noncurrent authored versions. A restored revision matched all 185 files (38,755,938 bytes) by SHA-256. All observed excluded cache generations and abandoned `gcloud/tmp/parallel_composite_uploads/` chunks were removed after stopping the original unfiltered process and workers. Default soft-delete retention remains seven days; deleted cache bytes expire after that window. Filtered backup subsequently exited successfully. Studio gate saves serialize this backup automatically.
+
+Re-verified 2026-11-08 after UA5 (P101): no upload running; all versions listed show 6,508 live objects
+(2,391,485,667 bytes) and 5 noncurrent authored versions (13,267,410 bytes), with **no object under an excluded path,
+live or noncurrent**. The 102 removed model files (38,795,312,862 bytes) are only soft-deleted and expire on
+2026-11-15; GCS can't purge them earlier, and the window costs about $0.18 once. A second revision, 113401 r2, restored
+177/177 files identical by SHA-256 (36,400,573 bytes). `pnpm sprites:backup` then copied exactly the three files UA5
+changed (`published.json` and both progress files).
