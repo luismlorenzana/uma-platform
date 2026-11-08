@@ -9,6 +9,9 @@
 >
 > The format each set follows is [format.md](format.md) (CR1–CR18). This page's calls are CR19–CR34. Visual page:
 > [previews/pipeline.html](previews/pipeline.html). Outfits are named by id only; names come from master data.
+>
+> **Batch 1 is published** (UA5, P100): master data's `latest` is release `4757517816a0`, with the five travelers'
+> full sets in `outfit-sprites`. Later batches follow [§7 "Publishing a batch"](#publishing-a-batch).
 
 ## The short answer
 
@@ -191,8 +194,9 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
 | `pnpm sprites:repeat <outfit>` | A second export, compared byte for byte (check 14) | UA2 |
 | `pnpm sprites:progress` | Rebuilds `progress.json` from the folders and `reviews.json` | UA2 |
 | `pnpm studio` | Sprite Studio at `http://127.0.0.1:4318`: the ranker, the queue and checklist, the animation desk, both gates | UA3 |
-| `pnpm sprites:pack` | Builds the `outfit-sprites` family from approved revisions | UA5 |
-| `pnpm release:publish` | The existing publish, now with sprites | UA5 |
+| `pnpm sprites:pack` | Builds the `outfit-sprites` family from approved revisions into `content/release/` (`--measure` compares the encodings) | UA5 |
+| `pnpm release:publish -- --sprites-only` | The published `latest` plus the packed sets, every other file carried byte for byte; `--promote <version>` moves a channel | UA5 |
+| `pnpm release:check` | Reads a channel back like a game: every set, every sprite set and page, and the carry against another channel | UA5 |
 | `pnpm sprites:backup` | Copies `content/authoring/` to the backup bucket, never deleting | UA6 |
 
 UA2's four commands are implemented in `scripts/sprites/` ([usage](../../scripts/sprites/README.md)). Existing sealed revisions use reconstructed export sidecars under `export-configs/<id>/rN.json`; fresh reports go under `reports/<id>/rN/`, preserving the original receipts. New revisions use config schema version 2 in place. Exports always target a separate directory. Check 13 compares the first standing contact with its facing still and requires a constant scale for the whole cycle.
@@ -217,8 +221,62 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
 
   A game draws whatever revision `latest` holds, and can pin a release to test.
 - **Who publishes** (CR29): ChatGPT, from the owner's machine with the scoped gcloud command, as it does with uma-art.
-  UA5's first publish is Claude's, to prove the path and write the steps down. If a ChatGPT session can't reach gcloud,
+  UA5's first publish was Claude's (2026-11-08, release `4757517816a0`, P100). If a ChatGPT session can't reach gcloud,
   it hands the publish to Claude.
+
+### Publishing a batch
+
+Approving a batch's sets in the Studio is the go (CR21). From the workspace root, on the owner's machine:
+
+1. **Pack** the approved sets into the local release. It packs every outfit whose current revision's set gate is
+   approved against its files as they are now, and prints why it skips any other. A second pack gives the same bytes.
+
+   ```bash
+   pnpm sprites:pack
+   ```
+
+2. **Plan** the release. It builds on the published `latest`, carries every one of its files byte for byte except the
+   art index, and adds the packed sets and a new art index (the old one plus `sprites`). Check the line it prints: the
+   files carried, and the sets it adds.
+
+   ```bash
+   pnpm release:publish -- --sprites-only --channel candidate --dry-run
+   ```
+
+3. **Publish to `candidate`.** `latest` doesn't move, so no game sees it yet.
+
+   ```bash
+   pnpm release:publish -- --sprites-only --channel candidate
+   ```
+
+4. **Read it back** like a game. It must end with `Check passed`: every file present, every sprite set a whole set for
+   its profile (a traveler: 27 actions, 118 frames, 7 patches), every page decoded and hash-checked, every file of
+   `latest` carried byte for byte, and the art index changed only by `sprites`.
+
+   ```bash
+   pnpm release:check -- --channel candidate --against latest
+   ```
+
+5. **Say what moves**, in one line (the versions, and the sets by id and revision), then **move `latest`** and read it
+   back. Moving `latest` also records the published revisions in `content/authoring/sprites/published.json`, so the
+   Studio shows them as Published.
+
+   ```bash
+   pnpm release:publish -- --promote <version>
+   pnpm release:check -- --channel latest
+   pnpm sprites:progress
+   ```
+
+6. **Check the live games:** uma-rpg's site and `/api/health` answer as before. Games on uma-data before 1.4.0 ignore
+   `sprites`, and every file they read is the same.
+7. **Log it:** the batch's row in the handoff with the release version, and a P-decision. Tell uma-quest's handoff
+   which sets are in `latest`.
+
+**Undo:** `pnpm release:publish -- --rollback <version>` points `latest` back at the previous release. Nothing is ever
+deleted, so every older release stays loadable.
+
+**Never** mix a GameTora refresh into a sprite publish: a refresh is `pnpm data:import`, `pnpm assets:import` and a
+plain `pnpm release:publish`, its own release. A sprite-only publish never takes the local release's master sets.
 
 ## 8. Roles
 
@@ -233,7 +291,7 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
 
 | Profile | Outfits | Frames each | Frames in all | Done | Generation masters each | Generation waits |
 |---|---|---|---|---|---|---|
-| Traveler | 100 | 118 | 11,800 | 310 (batch 1's battle sets) | ~10 (6 measured, plus ~4 for the field set, `weary` and emotes) | ~8 min each, **~13 h** |
+| Traveler | 100 | 118 | 11,800 | 590 (batch 1, published) | ~10 (6 measured, plus ~4 for the field set, `weary` and emotes) | ~8 min each, **~13 h** |
 | Townsfolk | 70 | 45 | 3,150 | — | ~4 | ~3 min each, ~3.5 h |
 | Rival add-on | up to 65 | ≈25 | ≈1,600 | — | ~2 | ~1.5 min each, ~1.5 h |
 
@@ -246,7 +304,7 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
 | Piece | Free tier | Expected | A month |
 |---|---|---|---|
 | Backup bucket `gs://uma-platform-authoring` (UA6), `us-central1`, versioned | 5 GB-months of Standard storage in US regions, shared by the billing account | ~0.2 GB now, ~4 GB with the full roster (~30 MB a traveler with masters, ~10 MB a townsfolk set) | **$0** now; at most about $0.08 if other buckets use the free 5 GB |
-| Master-data bucket, sprite files added | The same | ~2–4 MB a traveler packed (UA5 measures it), ~0.3 GB at the full roster | $0 to $0.01 |
+| Master-data bucket, sprite files added | The same | **1.34–1.66 MB a traveler** (lossy q90, measured by UA5), 7.2 MB for batch 1, ~0.15 GB at the full roster | $0 to $0.01 |
 | Serving to the phone (quest-api's proxy) | 1 GB a month of Cloud Run egress in North America | A party's five sets once (~10–20 MB), then cached | $0 |
 | Generation | ChatGPT's own tool | — | $0 in the cloud |
 
@@ -262,7 +320,7 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 | UA2 (done) | `scripts/sprites` in git: export, the 14 checks, repeat and progress, tested; batch 1 reproduced byte for byte | Either | L | UA1 |
 | UA3 (done) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, both gates writing `reviews.json` | Either | M | UA1 |
 | UA4 (done) | uma-data 1.4.0: the `outfit-sprites` family, its parser, the art index's `sprites` map, synthetic fixtures | Either | M | — |
-| [UA5](../handoff/tasks/UA5-pack-and-publish.md) | Pack and publish: `sprites:pack`, the sprite-only publish, the size decision, batch 1's first release | Claude | M | UA2, UA4; your set approval |
+| UA5 (done) | Pack and publish: `sprites:pack`, the sprite-only publish, the size decision, batch 1's first release (`4757517816a0`, P100) | Claude | M | UA2, UA4; your set approval |
 | UA6 (done) | The backup bucket and `sprites:backup` | Claude | S | **Your yes** |
 | UA7 (done) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
 | [UA8](../handoff/tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
@@ -285,7 +343,7 @@ UA4 ─────────────► UA5
 UA8 (uma-art) runs alongside;  UA6 (bucket) on your yes
 ```
 
-**Before uma-quest's Q6** (its Phase 2): UA4 and UA5 publish batch 1, so Q6 loads real sets through master data rather
+**Before uma-quest's Q6** (its Phase 2): UA4 and UA5 published batch 1 (release `4757517816a0`), so Q6 loads real sets through master data rather
 than files copied out of `content/`. UA7 adds the facings Q6 walks in.
 
 ## 12. Across the repos
@@ -307,7 +365,7 @@ than files copied out of `content/`. UA7 adds the facings Q6 walks in.
 | Losing `content/authoring/`, the masters and approvals behind every set | UA6's versioned bucket, which never deletes; masters kept in each revision |
 | Style drift across 100 travelers and 20 batches | The key gate for each outfit; the version 2 face bar (format.md §5); batch 1 as the rendering reference in every prompt |
 | A style change late in the rollout | A new revision for the outfits it touches; approved frames stay until then; the release keeps the old revision until the new one is approved |
-| Release size on the phone | UA5 measures and picks the encoding; sets load only for Umas on screen, and stay cached |
+| Release size on the phone | Lossy q90 at about 1.45 MB a traveler (UA5, format.md §13); sets load only for Umas on screen, and stay cached |
 | A sprite publish disturbs uma-rpg's live master data | The sprite-only publish carries every other file byte for byte; uma-data's old parsers ignore `sprites` |
 | Names or art leaking into git | Atlases drop names (UA1); a private-content check in CI covers `scripts/sprites` and `tools/studio`; fixtures are synthetic |
 

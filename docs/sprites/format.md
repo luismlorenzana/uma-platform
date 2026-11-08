@@ -331,12 +331,38 @@ Published sets travel in master data's private release as the art family **`outf
   with each frame's `file` replaced by `{ page, x, y, w, h, dx, dy }`: its trimmed rectangle on a page, and the trim's
   offset inside the 256 cell. It also lists its pages and the revision.
 - **Pages:** WebP, at most 4096 px a side, trimmed frames packed with 2 px of transparent padding
-  (`files/atlases/outfit-sprites-<outfitId>-<n>.<hash16>.webp`). UA5 picks lossless or high-quality lossy from measured
-  sizes, then records it here.
+  (`files/atlases/outfit-sprites-<outfitId>-<n>.<hash16>.webp`).
 - **The art index** gains a top-level `sprites` map: `{ <outfitId>: <path to its sprite set file> }`. Older clients
   ignore the key, so this is a minor version of uma-data.
 - **Only approved revisions are published.** A published sprite set file never changes; a newer revision is a new file
   in a newer release.
+
+**How `pnpm sprites:pack` builds it (UA5, P100):**
+- **Trim:** each frame and face patch is cut to the rectangle of every pixel with any alpha, so the antialiased edge
+  outside the opaque `bounds` is kept. `bounds` stays as the opaque rectangle (alpha ≥ 128); a turnaround still with
+  none recorded gets it from its pixels, and `air` defaults to false.
+- **Faces:** a patch's `place` is its untrimmed face box in the cell; its `dx`, `dy` are the trim's offset inside that
+  box.
+- **Shared pixels:** identical images (the key reused as a frame, a recorded reuse) are packed once, and their frames
+  point at the same rectangle.
+- **Packing:** shelf packing, tallest first, rows of a near-square width, deterministic. Each batch-1 traveler fits on
+  one page of about 1,730–1,830 × 1,900–1,960 px.
+
+**The encoding: lossy WebP, quality 90, alpha quality 100.** Batch 1's whole traveler sets (118 frames, 7 patches),
+measured on 2026-11-08:
+
+| Outfit | Lossless | Lossy q90 | PSNR (opaque pixels) | Alpha |
+|---|---|---|---|---|
+| 106701 r2 | 3.65 MB | **1.36 MB** | 35.5 dB | exact |
+| 106801 r4 | 3.57 MB | **1.38 MB** | 33.8 dB | exact |
+| 111501 r3 | 4.44 MB | **1.66 MB** | 32.6 dB | exact |
+| 112901 r4 | 3.91 MB | **1.50 MB** | 34.6 dB | exact |
+| 113401 r2 | 3.59 MB | **1.34 MB** | 36.0 dB | exact |
+
+Lossless is over the 3 MB line for every traveler, so the rule picks lossy. The side-by-side at 1× and 2× (nearest
+neighbour, lossless, lossy and the difference ×8, on each set's worst frame and its key) shows no visible difference;
+the error sits in faint grain and in fully transparent pixels, which never draw. Lossy is 62% smaller: about 1.45 MB a
+traveler, 7.2 MB for batch 1, ~145 MB for all 100. A set loads only while its Uma is on screen.
 
 ## 14. What changed from uma-rpg's animation spec
 

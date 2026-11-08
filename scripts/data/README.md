@@ -33,7 +33,21 @@ pnpm release:publish -- --dry-run   # verify and show the plan; writes nothing
 pnpm release:publish -- --channel candidate   # upload everything, leave `latest` alone
 pnpm release:publish                # upload and move `latest`
 pnpm release:publish -- --rollback <version>  # point the channel back at a published release
+pnpm release:publish -- --sprites-only --channel candidate   # latest plus the packed sprite sets (UA5)
+pnpm release:publish -- --promote <version>   # point a channel (latest by default) at a published release
+pnpm release:check -- --channel candidate --against latest   # read a channel back like a game
 ```
+
+**Sprite-only releases** (`--sprites-only`, P100) build on the published `latest`, not on the local release: every
+file is carried byte for byte except the art index, which gains the `sprites` map of the sets `pnpm sprites:pack`
+wrote into `content/release/`. The local release's master sets are never taken, so a GameTora refresh can't ride
+along. Moving `latest` (a plain publish, `--sprites-only` or `--promote`) records the sprite revisions it serves in
+`content/authoring/sprites/published.json`. The steps for a batch are in
+[pipeline.md](../../docs/sprites/pipeline.md) §7, "Publishing a batch".
+
+`release:check` loads a channel with the release client (every set and the art index, hash-checked), confirms the
+bucket holds every file at its size, loads every sprite set with `spriteSet`, decodes and hash-checks each page, and
+with `--against` confirms the other channel's files are carried byte for byte. It ends with `Check passed`.
 
 Options: `--bucket` (or `UMA_RELEASE_BUCKET`), `--project` (or `UMA_GCP_PROJECT`), `--channel` (default `latest`),
 `--release-dir`. Defaults are the platform project and bucket (`src/publish-cli.ts`).

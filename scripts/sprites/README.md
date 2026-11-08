@@ -8,8 +8,16 @@ pnpm sprites:export <outfitId> [--revision N] [--out /temporary/output]
 pnpm sprites:verify <outfitId> | --all
 pnpm sprites:repeat [<outfitId>] [--revision N]
 pnpm sprites:progress
+pnpm sprites:pack [--measure] [--encoding lossless|lossy]
 pnpm sprites:backup
 ```
+
+`sprites:pack` (UA5, P100) writes master data's `outfit-sprites` family into `content/release/`: every outfit whose
+current revision's set gate is approved against its present file hashes, and a reason for each one it skips. Frames
+and face patches are trimmed to every visible pixel (the opaque `bounds` stay as metadata), identical images are
+shared, and everything is shelf-packed on WebP pages of at most 4096 px with 2 px padding: lossy q90 with alpha
+quality 100 by default (format.md §13). `--measure` prints both encodings' sizes and writes nothing. Publishing is
+pipeline.md §7, "Publishing a batch".
 
 Export always writes outside the immutable revision. Repeat exports into a fresh temporary directory, compares every
 runtime byte against the revision and removes the temporary directory. A mismatch exits nonzero.

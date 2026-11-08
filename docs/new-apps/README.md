@@ -26,7 +26,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **Ready now:** UA5 (Claude), and UA8 and UA10 (ChatGPT).
+- **Ready now:** UA8 and UA10 (ChatGPT). UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
 - **Your steps:**
   - the townsfolk reviews (UA10);
   - the art reviews ChatGPT asks for.
@@ -39,7 +39,7 @@
 | The sprite format and pipeline | P91–P93: [format.md](../sprites/format.md), [pipeline.md](../sprites/pipeline.md) |
 | uma-data 1.4.0, the `outfit-sprites` family | UA4, P94 |
 | The sprite tools in git | UA2, P95 |
-| Batch 1 | Five travelers at 118 frames each, approved by you on 2026-11-08 |
+| Batch 1 | Five travelers at 118 frames each, approved by you on 2026-11-08, published in release `4757517816a0` (UA5, P100) |
 | The backup bucket | UA6, P96: complete; 2.39 GB live authored content, caches removed, 185-file restore byte-identical (P99) |
 | Both apps' clouds | uma-quest's Q2 and uma-farm's F2, live in the `uma-rpg` project; both read master data |
 
@@ -84,7 +84,7 @@ Batch 1's sets are in master data before uma-quest's Q6 needs them, and the back
 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [UA5](#ua5) | **Batch 1 published**: `sprites:pack`, the sprite-only publish, the encoding decision, and batch 1's first release. | Claude | M | UA2 ✓, UA4 ✓, your approval ✓ | Ready |
+| [UA5](#ua5) | **Batch 1 published**: `sprites:pack`, the sprite-only publish, the encoding decision, and batch 1's first release. | Done | M | UA2 ✓, UA4 ✓, your approval ✓ | Done (P100) |
 | [UA6](#ua6) | **The backup, finished**: The first backup verified and a restore tested, with the model caches left out. | Done | S | the bucket ✓ | Done (P99) |
 
 **Exit:**
@@ -148,9 +148,12 @@ What each task delivers and how we know it's done. Existing packets are linked; 
 
 ### UA5
 
-**Batch 1 published** · Claude · M · Needs: UA2 ✓, UA4 ✓, your approval ✓ · Ready
+**Batch 1 published** · Done · P100
 
-The packet exists: [UA5](../handoff/tasks/UA5-pack-and-publish.md). Everything it needs has landed.
+Done 2026-11-08: master data's `latest` is release `4757517816a0`, with batch 1's five traveler sets. Lossy WebP q90
+won on batch 1's numbers (1.34–1.66 MB a traveler, against 3.57–4.44 MB lossless); every other release file is carried
+byte for byte, and uma-rpg loads the release unchanged. Later batches follow
+[pipeline.md](../sprites/pipeline.md) §7, "Publishing a batch".
 
 **Delivers:**
 
@@ -304,7 +307,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 ## The order
 
 ```
-M1  UA5 (ready) ──► uma-quest Q6          UA6 (finish the backup)
+M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
 M2  UA8 (ready) ──► uma-quest Q9, Q12      UA10 (ready) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
@@ -334,8 +337,8 @@ M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► u
 - **Read first:** this doc, the two apps' docs ([first-slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md),
   [first-playable](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
   and the [change protocol](../change-protocol.md).
-- **Write packets for KL1 and PO1** when their requests arrive (KL1 from uma-quest's Q4, PO1 from uma-farm's F7). UA5,
-  UA6, UA8, UA10, UA3, UA9 and UA11 already have packets; UA3 and UA6 are complete (P99).
+- **Write packets for KL1 and PO1** when their requests arrive (KL1 from uma-quest's Q4, PO1 from uma-farm's F7). UA8,
+  UA10, UA9 and UA11 already have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
 - **Art packets come from the games:** uma-quest's Q7, Q15 and Q16, and uma-farm's F9. ChatGPT draws them here, merges
   and publishes the uma-art release, and logs each one's P-decision.
 - **Decisions** go in [decisions.md](../decisions.md) from P99 (fetch `main` first).

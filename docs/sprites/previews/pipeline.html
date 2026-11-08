@@ -140,11 +140,11 @@
   </nav>
 
   <div class="tiles">
-    <div class="tile"><b>5 / 100</b><span>travelers drawn (battle sets), one of each Way</span></div>
+    <div class="tile"><b>5 / 100</b><span>travelers drawn in full and published (batch 1, release <code>4757517816a0</code>)</span></div>
     <div class="tile"><b>62 → 118</b><span>frames a traveler, with the field set, <code>weary</code> and emotes</span></div>
     <div class="tile"><b>2 gates</b><span>yours, in the Studio: the key per outfit, the set per batch</span></div>
     <div class="tile"><b>20 batches</b><span>of five; batch N is uma-quest's wave N</span></div>
-    <div class="tile"><b>11 packets</b><span>UA1–UA11; two done</span></div>
+    <div class="tile"><b>11 packets</b><span>UA1–UA11; UA1–UA7 done</span></div>
     <div class="tile"><b>≈ $0</b><span>a month: a backup bucket on your yes, the rest free tier</span></div>
   </div>
 
@@ -191,8 +191,8 @@
 
   <section class="card" id="packets">
     <h2>The packets</h2>
-    <p>Lanes by kind of work; columns in order. UA5 must publish batch 1 before uma-quest's Q6, which loads sprites from
-      master data.</p>
+    <p>Lanes by kind of work; columns in order. UA5 published batch 1 on 2026-11-08 (release <code>4757517816a0</code>,
+      P100), so uma-quest's Q6 loads sprites from master data.</p>
     <div class="scroll"><div class="board" id="board"></div></div>
     <div class="legend">
       <span><i style="background:var(--violet-wash);border:1px solid var(--violet)"></i>Either</span>
@@ -257,7 +257,7 @@
     <div class="scroll"><table>
       <tr><th>Piece</th><th>Free tier</th><th>Expected</th><th>A month</th></tr>
       <tr><td><b>Backup bucket</b> (UA6, on your yes), <code>us-central1</code>, versioned</td><td>5 GB-months of Standard storage in US regions, shared by the billing account</td><td>~0.2 GB now; ~4 GB at the full roster</td><td><b>$0</b>; at most ~$0.08 if the free 5 GB is used elsewhere</td></tr>
-      <tr><td><b>Master-data bucket</b>, sprite files added</td><td>The same</td><td>~2–4 MB a traveler packed (UA5 measures it); ~0.3 GB at the full roster</td><td>$0–$0.01</td></tr>
+      <tr><td><b>Master-data bucket</b>, sprite files added</td><td>The same</td><td>1.34–1.66 MB a traveler (lossy q90, measured by UA5); 7.2 MB for batch 1; ~0.15 GB at the full roster</td><td>$0–$0.01</td></tr>
       <tr><td><b>Serving to the phone</b> (quest-api's content proxy)</td><td>1 GB a month of Cloud Run egress in North America</td><td>A party's five sets once (~10–20 MB), then cached</td><td>$0</td></tr>
       <tr><td><b>Generation</b></td><td>ChatGPT's own tool</td><td>—</td><td>$0 in the cloud</td></tr>
     </table></div>
@@ -357,7 +357,7 @@ const groups = [
 ]
 function drawBars() {
   const rows = [
-    { label: 'Traveler', sub: '100 outfits', segs: [['done', 62, 'Battle set', groups[0].tip], ['miss', 36, 'Field set', groups[1].tip], ['miss', 4, 'weary', groups[2].tip], ['miss', 16, 'Emotes', groups[3].tip]], total: 118 },
+    { label: 'Traveler', sub: '100 outfits', segs: [['done', 62, 'Battle set', groups[0].tip], ['done', 36, 'Field set', groups[1].tip], ['done', 4, 'weary', groups[2].tip], ['done', 16, 'Emotes', groups[3].tip]], total: 118 },
     { label: 'Townsfolk', sub: '70 characters', segs: [['miss', 11, 'Base', 'the key, the battle walk, the turnaround'], ['miss', 18, 'Field walks', 'walk front, back and right'], ['miss', 16, 'Emotes', groups[3].tip]], total: 45 },
     { label: 'Rival add-on', sub: 'up to 65, as cast', segs: [['later', 25, 'Facing right', 'idle, her weapon action, cast, hurt, down, limit, facing right']], total: 25 },
   ]
@@ -376,10 +376,10 @@ function drawBars() {
   }
   const cat = [
     ['Battle set', 'idle 4 · run 6 · walk 6 · hop 2 · swing 6 · thrust 5 · shoot 5 · cast 6 · guard 3 · hurt 2 · down 3 · victory 6 · limit 4 · turnaround 4', '62', 'done', 'Drawn for batch 1; 35 frames face-locked'],
-    ['Field set', 'walk-front · walk-back · walk-right · run-front · run-back · run-right, 6 each', '36', 'miss', 'UA7; standing uses the turnaround stills'],
-    ['weary', 'weary 4, locked, with the weary patch', '4', 'miss', 'UA7; HP carries between fights (DN12)'],
-    ['Emotes', 'nod 3 · surprise 2 · laugh 3 · sad 2 · angry 2 · wave 4, front facing', '16', 'miss', 'UA7; bubbles are uma-art (UA8)'],
-    ['Face patches', 'blink-half · blink-closed · focus · pain · joy · shout · weary', '7', 'miss', 'Six drawn; weary with UA7'],
+    ['Field set', 'walk-front · walk-back · walk-right · run-front · run-back · run-right, 6 each', '36', 'done', 'Drawn for batch 1 (UA7); standing uses the turnaround stills'],
+    ['weary', 'weary 4, locked, with the weary patch', '4', 'done', 'Drawn for batch 1 (UA7); HP carries between fights (DN12)'],
+    ['Emotes', 'nod 3 · surprise 2 · laugh 3 · sad 2 · angry 2 · wave 4, front facing', '16', 'done', 'Drawn for batch 1 (UA7); bubbles are uma-art (UA8)'],
+    ['Face patches', 'blink-half · blink-closed · focus · pain · joy · shout · weary', '7', 'done', 'All seven drawn for batch 1'],
     ['Held items (uma-art)', 'greatsword · axe · katana · lance · bow ×2 · five tomes ×2', '16', 'miss', 'UA8; six placeholders until then'],
     ['Rival add-on', 'idle · her weapon action · cast · hurt · down · limit, facing right', '≈25', 'later', 'Written with uma-quest Phase 5'],
   ]
@@ -393,9 +393,9 @@ function drawBars() {
 function drawFacings() {
   const cards = [
     ['Battle (three-quarter left)', 'Every fight action, walking left, the key frame', 'done', -1, 0.35],
-    ['Front (toward the camera)', 'Walking down the screen; emotes; a speaker turned to the camera', 'miss', 0, 1],
-    ['Back (away)', 'Walking up the screen', 'miss', 0, -1],
-    ['Right (three-quarter right)', 'Walking right; a rival on the foes\' side', 'miss', 1, 0.35],
+    ['Front (toward the camera)', 'Walking down the screen; emotes; a speaker turned to the camera', 'done', 0, 1],
+    ['Back (away)', 'Walking up the screen', 'done', 0, -1],
+    ['Right (three-quarter right)', 'Walking right; a rival on the foes\' side', 'done', 1, 0.35],
   ]
   const box = document.getElementById('facingcards'); box.replaceChildren()
   for (const [title, use, st, dx, dy] of cards) {
