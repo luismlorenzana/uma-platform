@@ -67,6 +67,6 @@ batches itself ([pipeline.md](../../sprites/pipeline.md) §7, CR21, CR27 and CR2
 
 ## Deliver
 
-Commit to `main`, `feat(sprites): …`. Log a P-decision with the release version and the encoding numbers (from P92,
+Commit to `main`, `feat(sprites): …`. Log a P-decision with the release version and the encoding numbers (from P93,
 after fetching `main`). Delete this packet and move UA5 to Done in [the handoff](../README.md) with the release version.
 Tell uma-quest in its handoff that Q6 can load batch 1 from master data.

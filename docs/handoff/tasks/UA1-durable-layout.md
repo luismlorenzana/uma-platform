@@ -8,7 +8,8 @@ UA2, UA3, UA7**
 Batch 1's five sets live as two whole packs (`uma-sprites/` v1 and `uma-sprites-v2/`), with a pack-level pointer.
 Approvals are prose and flags, and nothing is tied to a file hash. A hundred outfits will progress on their own, so each
 needs its own immutable revisions and a recorded owner decision ([pipeline.md](../../sprites/pipeline.md) §3 and §4,
-CR20 and CR22). This packet moves what exists into that layout **without changing a byte of art**.
+CR20 and CR22). This packet moves what exists into that layout **without changing a byte of art**, then makes
+batch 1's two fixes as new revisions (P92).
 
 ## Context (read first)
 
@@ -67,6 +68,14 @@ CR20 and CR22). This packet moves what exists into that layout **without changin
 - **The roster is untouched.**
 - **Batch 1's revisions must pass the existing checks** (`verify.cjs`) from their new folders before the packet is
   done.
+- **Two fixes before batch 1's set gate (P92),** found by checks 10 and 11, which had never run. They land after the
+  migration, as each outfit's next revision, so the owner reviews fixed sets:
+  - **112901's walk:** frames 1–5 stand 8–10 texels (4–5%) taller than her key and her own walk frame 0, which pops in
+    the loop. Rescale them to the key's height, or redraw the walk against the key.
+  - **Five specks,** 1–2 texels of opaque alpha each: 106801 `walk` 0 and 3 and `shoot` 0, 111501 `shoot` 4, and
+    112901 `run` 2. Remove them in the export, as it already does for clusters under 4 texels.
+
+  So 106801 and 112901 get `r3`, and 111501 gets `r2`. Every other frame is carried byte for byte.
 
 ## Do
 
@@ -78,11 +87,14 @@ CR20 and CR22). This packet moves what exists into that layout **without changin
    new layout.
 5. Record what you did in `content/authoring/sprites/README.md`: the file counts, the hash comparison, and anything
    you couldn't place.
+6. Make the two fixes as new revisions, point `current.json` at them, and run the checks plus a one-off check 10 and 11
+   (format.md §11) on all five. Then ask the owner for batch 1's set gate in one line, with the review link.
 
 ## Done when
 
 - `content/authoring/sprites/` holds the five outfits, each with `current.json` and its revisions.
 - Every copied PNG matches its pack's hash, and each revision passes the checks.
+- The fixed revisions pass checks 1–11 and 14, with 112901's walk at her key's height.
 - No atlas carries a name, and `reviews.json` and `progress.json` parse.
 - The old packs and the roster are unchanged, apart from the README lines.
 - `git status` in uma-platform shows nothing from `content/`.
@@ -91,4 +103,4 @@ CR20 and CR22). This packet moves what exists into that layout **without changin
 
 Only the handoff row changes in git. Delete this packet and move UA1's row to Done in
 [the handoff](../README.md), with what moved (file counts) and the hash result. No P-decision is needed unless you
-changed a call; if you did, log it from P92 (fetch `main` first).
+changed a call; if you did, log it from P93 (fetch `main` first).

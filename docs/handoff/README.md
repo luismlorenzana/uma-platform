@@ -98,7 +98,7 @@ and bubbles are uma-art.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [UA1](tasks/UA1-durable-layout.md) | The durable layout: per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept | Either | S | — | **Ready** |
+| [UA1](tasks/UA1-durable-layout.md) | The durable layout: per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept; then batch 1's two fixes before its set gate (P92) | Either | S | — | **Ready** |
 | [UA2](tasks/UA2-sprite-tools.md) | `scripts/sprites`: export, the 14 checks, repeat and progress, tested; batch 1 rebuilt byte for byte | Either | L | UA1 | After UA1 |
 | [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | After UA1 |
 | [UA4](tasks/UA4-sprites-schema.md) | uma-data 1.4.0: the `outfit-sprites` family, parser, art-index `sprites`, fixtures | Either | M | — | **Ready** |

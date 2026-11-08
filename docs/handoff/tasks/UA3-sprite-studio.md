@@ -58,6 +58,6 @@ gates need one place, recorded and tied to hashes ([pipeline.md](../../sprites/p
 
 ## Deliver
 
-A pull request (ChatGPT) or `main` (Claude), `feat(studio): …`. Log a P-decision (from P92, after fetching `main`).
+A pull request (ChatGPT) or `main` (Claude), `feat(studio): …`. Log a P-decision (from P93, after fetching `main`).
 Delete this packet and move UA3 to Done in [the handoff](../README.md). Then tell the owner in one line that reviews now
 happen in the Studio, with the link `http://127.0.0.1:4318`.

@@ -286,13 +286,14 @@ They run on every revision, and a failure means a fix or a redraw. The report is
 | 7 | **Face boxes:** each sits inside its head box, and each patch inside the cell at every offset used |
 | 8 | **Anchors:** every anchor is inside the cell; every `grip` and `off` has skin or glove pixels within 3 px |
 | 9 | **Haze:** no faint alpha more than 3 px from the silhouette |
-| 10 | **Specks:** no detached opaque cluster smaller than 4 px |
-| 11 | **Standing scale:** a standing frame's top row is within 4 px of the key's |
+| 10 | **Specks:** no detached cluster of opaque pixels (alpha 128 or more) smaller than 4 texels |
+| 11 | **Standing scale:** no grounded frame of `idle`, `walk`, `run`, `guard`, `cast`, `thrust` or `shoot` stands more than 4 texels taller than the key. Strides, lunges and crouches may dip lower |
 | 12 | **Approved frames are kept:** a new revision's frames for already approved actions match them byte for byte |
 | 13 | **Facings agree:** each field facing's standing height matches its turnaround still within 4 px |
 | 14 | **Repeat:** a second export of the revision is byte for byte the same |
 
-Checks 1–11 and 14 are what ChatGPT's `verify.cjs` runs today. Checks 12 and 13 are new.
+Checks 1–9 and 14 are what ChatGPT's `verify.cjs` runs today. Checks 10–13 are new and come with UA2; 10 and 11 were
+run once by hand on batch 1 (P92).
 
 ## 12. The authoring atlas
 
@@ -378,6 +379,6 @@ Published sets travel in master data's private release as the art family **`outf
 | CR13 | The rival add-on: her fight actions facing right (about 25 frames), only for travelers cast as bosses; escorts are bestiary foes, not Umas |
 | CR14 | Ten held-item kinds in uma-art, 128 px cells with a grip and an angle, one look per kind; the six placeholders stand in until then |
 | CR15 | Every set opens with its identity sheet (key, turnaround, checklist with each ornament's side per facing), approved before anything else is drawn |
-| CR16 | Fourteen automatic checks on every revision; 12 (approved frames kept) and 13 (facings agree) are new |
+| CR16 | Fourteen automatic checks on every revision; 10 (specks), 11 (standing scale), 12 (approved frames kept) and 13 (facings agree) are new (P92) |
 | CR17 | The authoring atlas is today's format version 1, plus `revision` and `profile`, without names |
 | CR18 | The release family `outfit-sprites`: one sprite set file an outfit, trimmed frames packed on WebP pages, and a `sprites` map in the art index (a uma-data minor) |

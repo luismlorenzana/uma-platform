@@ -61,5 +61,5 @@ about 4 GB.
 
 ## Deliver
 
-Commit to `main`, `feat(infra): …`. Log a P-decision (from P92, after fetching `main`). Delete this packet and move UA6
+Commit to `main`, `feat(infra): …`. Log a P-decision (from P93, after fetching `main`). Delete this packet and move UA6
 to Done in [the handoff](../README.md), with the bucket name and the first backup's size.

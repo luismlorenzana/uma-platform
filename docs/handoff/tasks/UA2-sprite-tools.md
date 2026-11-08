@@ -77,5 +77,5 @@ in git tests them, and each batch would copy them again. A hundred outfits need 
 ## Deliver
 
 A pull request (ChatGPT) or `main` (Claude), Conventional Commits (`feat(sprites): …`). Log one P-decision for the tool
-and anything you decided (fetch `main` first; from P92). Delete this packet and move UA2 to Done in
+and anything you decided (fetch `main` first; from P93). Delete this packet and move UA2 to Done in
 [the handoff](../README.md), with the commit and the count of `literal` frames.
