@@ -29,7 +29,8 @@
     "sprites:verify": "pnpm --filter @uma-platform/sprite-pipeline run verify",
     "sprites:repeat": "pnpm --filter @uma-platform/sprite-pipeline run repeat",
     "sprites:progress": "pnpm --filter @uma-platform/sprite-pipeline run progress",
-    "sprites:backup": "node scripts/sprites/backup.mjs"
+    "sprites:backup": "node scripts/sprites/backup.mjs",
+    "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ed">
+    <title>Uma Sprite Studio — Cast board</title>
+    <link rel="stylesheet" href="/style.css">
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body><nav class="studio-nav"><a href="/">Ranker</a><a href="/queue">Queue</a><a href="/sprites/">Animation desk</a><a href="/gates">Gates</a></nav>
+    <header class="topbar">
+      <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">u.</span><span>UMA <span class="brand-light">SPRITE STUDIO</span></span></a>
+      <a href="/queue" class="local-label">Authoring checklist ↗</a>
+      <div class="file-actions"><button id="import" disabled>Import JSON</button><button id="export" class="dark" disabled>Export JSON <span aria-hidden="true">↗</span></button></div>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+    </header>
+    <main>
+      <section class="intro">
+        <div><p class="eyebrow">PRE-PRODUCTION / 01</p><h1>Find your first cast<span>.</span></h1><p class="lead">A few great Umas. A whole lot of animation.<br>Pick an authoring tier; we’ll take care of the aptitude bucket.</p></div>
+        <div class="progress-panel"><div><span id="ranked-count">—</span><span class="progress-caption">outfits sorted</span></div><p id="progress-copy">Loading your local roster…</p><progress id="progress" value="0" max="1" aria-label="Outfits sorted"></progress><span id="save-status" role="status" aria-live="polite">Opening board…</span></div>
+      </section>
+      <div id="notice" role="alert" hidden></div>
+      <section class="workspace" aria-label="Review and rank">
+        <div class="section-line"><h2><span class="section-number">01</span> The next Uma</h2><label class="advance-label"><input id="auto-next" type="checkbox" checked> Next after ranking</label></div>
+        <div class="filters">
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="Find a name, outfit, or ID…" aria-label="Search Umas"></label>
+          <select id="bucket-filter" aria-label="Filter by aptitude bucket"><option value="all">Every aptitude bucket</option></select>
+          <select id="queue-filter" aria-label="Review queue"><option value="unranked">Still to sort</option><option value="all">All outfits</option></select>
+          <label class="original-label"><input id="original-only" type="checkbox"> Original outfits only</label>
+        </div>
+        <div class="review-layout">
+          <article id="review-card" aria-live="polite"><p class="loading">Opening the local portrait album…</p></article>
+          <div class="tier-picker"><p class="eyebrow">CHOOSE AN AUTHORING TIER</p><div id="tier-buttons"></div><div class="review-actions"><button id="unrank" disabled>Remove rank</button><button id="undo" disabled>↶ Undo</button><span id="queue-position"></span><button id="previous" aria-label="Previous Uma">←</button><button id="next" aria-label="Next Uma">→</button></div><p class="keyboard-help">Keys <kbd>1</kbd>–<kbd>5</kbd> rank · <kbd>←</kbd> <kbd>→</kbd> browse</p></div>
+        </div>
+      </section>
+      <section class="board-section" aria-label="Ranked cast board">
+        <div class="section-line"><div><h2><span class="section-number">02</span> Your cast, at a glance</h2><p class="section-description">Click any portrait to revisit it. Counts follow your search, bucket, and outfit filters.</p></div><span id="board-count" class="board-count"></span></div>
+        <div class="board-scroll"><table id="board"><caption class="sr-only">Authoring tiers by running-style aptitude bucket</caption></table></div>
+        <details class="rules"><summary>How are aptitude buckets decided?</summary><p>We follow uma-rpg Classes v3: compare all four running-style grades and keep every style tied for the highest grade. Front wins any tie; pure Pace comes next; Pace with Late or End goes in Pace + Late; End alone or with Late goes in Late + End; pure Late goes in Pure Late. The bucket is automatic for each outfit.</p><p>SS is the first-pass baseline. A1 and A2 are authoring priorities for variants; they are independent of the RPG’s class tiers.</p></details>
+      </section>
+      <footer><span>Made for the work before the work.</span><span>Autosaved to <code>content/authoring/uma-art-roster.json</code></span></footer>
+    </main>
+  </body>
+</html>

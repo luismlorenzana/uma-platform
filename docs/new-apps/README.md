@@ -40,7 +40,7 @@
 | uma-data 1.4.0, the `outfit-sprites` family | UA4, P94 |
 | The sprite tools in git | UA2, P95 |
 | Batch 1 | Five travelers at 118 frames each, approved by you on 2026-11-08 |
-| The backup bucket | UA6, P96: created; the first upload is running (see UA6 below) |
+| The backup bucket | UA6, P96: complete; 2.39 GB live authored content, caches removed, 185-file restore byte-identical (P99) |
 | Both apps' clouds | uma-quest's Q2 and uma-farm's F2, live in the `uma-rpg` project; both read master data |
 
 ## Requirements
@@ -85,7 +85,7 @@ Batch 1's sets are in master data before uma-quest's Q6 needs them, and the back
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | [UA5](#ua5) | **Batch 1 published**: `sprites:pack`, the sprite-only publish, the encoding decision, and batch 1's first release. | Claude | M | UA2 ✓, UA4 ✓, your approval ✓ | Ready |
-| [UA6](#ua6) | **The backup, finished**: The first backup verified and a restore tested, with the model caches left out. | Claude | S | the bucket ✓ | Ready |
+| [UA6](#ua6) | **The backup, finished**: The first backup verified and a restore tested, with the model caches left out. | Done | S | the bucket ✓ | Done (P99) |
 
 **Exit:**
 
@@ -118,7 +118,7 @@ What uma-quest's Phase 5 needs: the landscape layout, wave 2's travelers and ban
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | [KL1](#kl1) | **The landscape kit layout**: A uma-kit minor with a landscape layout for uma-quest: its frame, bars and sheets turned for a landscape stage, opt-in, so portrait games don't change. | Claude | M | uma-quest's Q4 (the request) | To write |
-| [UA3](#ua3) | **Sprite Studio in git**: The review app in git (`pnpm studio`), with both gates writing `reviews.json`. | Either | M | UA1 ✓ | Ready |
+| [UA3](#ua3) | **Sprite Studio in git**: The review app in git (`pnpm studio`), with both gates writing `reviews.json`. | Done | M | UA1 ✓ | Done (P99) |
 | [UA9](#ua9) | **Batch 2 (wave 2)**: Five more travelers at the full profile, published; the template for batches 3–20. | ChatGPT | L | UA2 ✓, UA3, UA7 ✓ | Waiting |
 | [UA11](#ua11) | **Townsfolk T2 onward**: Townsfolk batches of ten, one after each traveler batch (P93). | ChatGPT | M | UA10's set gate, UA2 ✓ | Waiting |
 
@@ -171,15 +171,13 @@ The packet exists: [UA5](../handoff/tasks/UA5-pack-and-publish.md). Everything i
 
 ### UA6
 
-**The backup, finished** · Claude · S · Needs: the bucket ✓ · Ready
+**The backup, finished** · Done · P99
 
-The bucket exists (P96). On 2026-11-08 two uploads ran at once, and one of them didn't skip the image-model caches (about 18 GB in `azurlane-boss-study`). The sprite work and the roster were backed up whole.
-
-**Delivers:**
-
-- The stray model files removed from the bucket (and their noncurrent versions)
-- `sprites:backup`'s exclusions confirmed
-- A restore of one revision into a temporary folder, compared by hash
+The filtered backup completed on 2026-11-08 (P99): 6,508 live objects / 2,391,485,667 bytes,
+2,404,753,077 bytes including noncurrent authored versions. The original unfiltered process and workers were stopped.
+All observed model-cache generations and abandoned upload chunks were removed; deleted caches keep the default
+seven-day soft-delete window before expiring. A restored revision matches all 185 files byte for byte.
+`sprites:backup` excludes rebuildable model/binary and dependency caches; Studio gate saves queue it automatically.
 
 **Covers:** R10, N6
 
@@ -238,15 +236,15 @@ The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md).
 
 ### UA3
 
-**Sprite Studio in git** · Either · M · Needs: UA1 ✓ · Ready
+**Sprite Studio in git** · Done · P99
 
-The packet exists: [UA3](../handoff/tasks/UA3-sprite-studio.md). Batch 2 (UA9) needs it.
+Delivered: `pnpm studio`, with queue overrides, full-profile previews and both hash-bound gates. Batch 2 can use it.
 
 **Covers:** N7
 
 **Done when:**
 
-- As in its packet
+- Four pages and both previews serve locally; atomic decisions bind covered hashes and changed files invalidate approvals.
 
 ### UA9
 
@@ -337,7 +335,7 @@ M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► u
   [first-playable](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
   and the [change protocol](../change-protocol.md).
 - **Write packets for KL1 and PO1** when their requests arrive (KL1 from uma-quest's Q4, PO1 from uma-farm's F7). UA5,
-  UA6, UA8, UA10, UA3, UA9 and UA11 already have packets; UA6's gets the cache clean-up added.
+  UA6, UA8, UA10, UA3, UA9 and UA11 already have packets; UA3 and UA6 are complete (P99).
 - **Art packets come from the games:** uma-quest's Q7, Q15 and Q16, and uma-farm's F9. ChatGPT draws them here, merges
   and publishes the uma-art release, and logs each one's P-decision.
 - **Decisions** go in [decisions.md](../decisions.md) from P99 (fetch `main` first).
