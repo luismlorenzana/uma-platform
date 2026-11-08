@@ -257,8 +257,8 @@ Held items are original prop art, so they're uma-art (in git, ChatGPT's), shared
 | Fire, Blizzard, Thunder, Light and Dark Tomes | `cast` | Closed and open, one per element's colours |
 
 - **One look per kind** in v1. Grades show in menus, not in her hand.
-- Until uma-art has them (packet UA8), the six placeholders in `content/authoring/sprites/shared/` stand in: a
-  greatsword, a lance, two bows and two tomes.
+- UA8 delivers the 16 held textures in uma-art 2.22.0, with `grip`, `angle0`, `scale` and the drawn bow’s `nock`; eight 64px bubbles carry their tail-tip anchors. The six placeholders remain in `content/authoring/sprites/shared/` as history.
+- Weapons map their source grip to the frame’s `grip` at its angle. Tomes use `off` where present (otherwise `grip`), upright at 0.55 scale. The drawn bow maps its grip/nock pair to both hands without a reflection; its cross-string direction stretches to the hand separation. Redraw only the original hand crop over a front item.
 - A katana's iai draw and an axe's overhead (uma-rpg §6.3) wait for a playtest that asks for them.
 
 ## 10. Style

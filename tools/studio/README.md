@@ -34,3 +34,5 @@ The Studio serves allowlisted release images and validated paths inside the auth
 files. Writes require JSON, the loopback Host and a same-origin request. Realpath checks reject symlink escapes.
 No original art, names, private configs or reviews are bundled or committed. The old app remains in `content/` as
 history. Tests use invented records/bytes only; the sprite pipeline's local name/privacy guard covers this package.
+
+UA8 adds `/props`, the package gallery for 16 held textures and eight emote bubbles. The desk reads uma-art's atlas rectangles, grips, display scale and drawn-bow nock; the scene uses the tail anchors overhead. Hold an emote to inspect a bubble without timing the animation. The old private placeholders remain historical inputs only.

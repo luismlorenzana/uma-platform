@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "cell": 64,
+  "width": 512,
+  "height": 64,
+  "frames": {
+    "emote/exclaim": {
+      "x": 0,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "!",
+      "anchor": {
+        "x": 32.274,
+        "y": 59.599
+      }
+    },
+    "emote/question": {
+      "x": 64,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "?",
+      "anchor": {
+        "x": 32.233,
+        "y": 59.741
+      }
+    },
+    "emote/ellipsis": {
+      "x": 128,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "…",
+      "anchor": {
+        "x": 32.278,
+        "y": 59.528
+      }
+    },
+    "emote/music": {
+      "x": 192,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "♪",
+      "anchor": {
+        "x": 32.271,
+        "y": 59.599
+      }
+    },
+    "emote/sweat": {
+      "x": 256,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "Sweat drop",
+      "anchor": {
+        "x": 32.274,
+        "y": 59.599
+      }
+    },
+    "emote/anger": {
+      "x": 320,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "Anger",
+      "anchor": {
+        "x": 32.271,
+        "y": 59.599
+      }
+    },
+    "emote/heart": {
+      "x": 384,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "Heart",
+      "anchor": {
+        "x": 32.26,
+        "y": 59.599
+      }
+    },
+    "emote/zzz": {
+      "x": 448,
+      "y": 0,
+      "w": 64,
+      "h": 64,
+      "label": "zzz",
+      "anchor": {
+        "x": 32.228,
+        "y": 59.599
+      }
+    }
+  }
+}

@@ -1,7 +1,6 @@
 # @luismlorenzana/uma-art
 
-Original art for the Uma games, drawn from code by `scripts/pixel-art` (`pnpm art:draw` rewrites it). Never edit the
-files by hand.
+Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`pnpm art:draw`); full-colour sprite props come from authored masters and `scripts/authored-art` (`pnpm art:props`). Never edit exported files by hand.
 
 - `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined),
   then the ungraded Speed Ticket (A02), ten graded tonics (A04), three made-item grade rows and the Branch Gem (H73).
@@ -35,6 +34,33 @@ files by hand.
   status names in accessible labels; unknown statuses should retain the game's text fallback.
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
+
+## Held items and emote bubbles (UA8, 2.22.0)
+
+Two original full-colour families match the 256px character sprites, with clean antialiased transparency and moderate
+light from the top front-left. They contain no character art. `assets/authored/` holds the generated masters, prompts
+and pinned source anchors; `pnpm art:props` deterministically exports both families. The pixel families stay unchanged.
+
+- **`held/atlas.png` / `.json`**: 16 cells of 128px on a **512×512** atlas. Keys are `held/greatsword`, `held/axe`,
+  `held/katana`, `held/lance`, `held/bow`, `held/bow-drawn`, then closed/open pairs for `held/tome-fire`, `held/tome-ice`,
+  `held/tome-lightning`, `held/tome-light` and `held/tome-dark` (open suffix `-open`). Ice is the Blizzard Tome;
+  lightning is the Thunder Tome. Each frame has `{ x, y, w, h, label, grip: { x, y }, angle0: 'image-left', scale }`.
+  Grip/nock coordinates are relative to that cell, not the whole atlas. Scale is 1 for weapons and 0.55 for tomes.
+  `bow-drawn` also has `nock: { x, y }` for the pulling hand. A positive-determinant transform maps those two points
+  to the sprite's two hands without reflecting the artwork.
+- **`emote/atlas.png` / `.json`**: eight cells of 64px on a **512×64** atlas, keyed `emote/exclaim`, `question`,
+  `ellipsis`, `music`, `sweat`, `anger`, `heart`, `zzz` (each with the `emote/` prefix). Frame metadata adds
+  `anchor: { x, y }`, the downward tail tip, placed above the speaker's head. All share the ivory/navy frame.
+
+Both indexes are `{ schemaVersion: 1, cell, width, height, frames }`. Keep the held item separate from the body:
+behind body, body, front item, then the original hand crop. Normal weapons use the frame's grip/angle. Tomes use
+`off` where available, upright; the casting hand stays free. Closed and open states use the same hand contract.
+Never bake props into a sprite revision. Character approvals do not change when a game changes a weapon.
+
+`assets/previews/held-emote.html` and the native/2× PNGs compare dark, light and battle surfaces. Studio's `/props`
+gallery shows anchors, its animation desk reads these assets, and the scene preview places the bubbles overhead.
+Private attachment sheets cover **6,480 combinations** (81 grip frames × 16 props × five travelers), with grip error
+zero and drawn-bow nock error below 1e-12 texel; all 635 character runtime files remain unchanged.
 
 ## Collections buildings (H156, 2.20.0)
 

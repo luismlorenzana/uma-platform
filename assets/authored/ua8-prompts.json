@@ -1,0 +1,268 @@
+[
+  {
+    "key": "greatsword",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour 2D RPG held-item sprite master. Make ONE isolated weapon on genuine transparent alpha, no background, no floor, no shadow, no glow, no character, hands, text, logo or border. Polished hand-painted anime/chibi RPG prop with defined small shapes, cool shaded silver steel, restrained warm gold fittings and deep wine-red grip. Clean dark selective outline and clean antialiased edges, moderate top-front-left lighting, no photorealism, no pixel grid. The weapon's main axis must be exactly horizontal, tip/working end pointing IMAGE LEFT and grip near IMAGE RIGHT. Entire weapon visible with generous clear margins, composed for a square canvas and eventual 128-pixel cell. Practical slim handle which can be covered by a small sprite hand; no hanging ribbons or particles. A broad knightly greatsword: straight double-edged steel blade pointing left, strong central fuller and visible pale edge, modest angular gold crossguard near the right end, short dark wine-red wrapped handgrip and small gold pommel farther right. A readable elegant battle weapon, no elaborate crest.",
+    "seconds": 22.062,
+    "provider": "built-in image_gen",
+    "master": "held/greatsword-v1.png",
+    "sha256": "c799be1face263553e57130848392ea3180308a32f07555173248ce795a2f3a9",
+    "references": []
+  },
+  {
+    "key": "axe",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour 2D RPG held-item sprite master. Make ONE isolated weapon on genuine transparent alpha, no background, no floor, no shadow, no glow, no character, hands, text, logo or border. Polished hand-painted anime/chibi RPG prop with defined small shapes, cool shaded silver steel, restrained warm gold fittings and deep wine-red grip. Clean dark selective outline and clean antialiased edges, moderate top-front-left lighting, no photorealism, no pixel grid. The weapon's main axis must be exactly horizontal, tip/working end pointing IMAGE LEFT and grip near IMAGE RIGHT. Entire weapon visible with generous clear margins, composed for a square canvas and eventual 128-pixel cell. Practical slim handle which can be covered by a small sprite hand; no hanging ribbons or particles. A compact battle axe with a single crescent-shaped steel cutting head at the LEFT end, subtle steel wedge on its upper side and a smaller balanced rear poll. Its straight dark wooden haft extends horizontally toward the RIGHT, with a short wine leather grip near the right end, small gold binding bands and capped pommel. Head height roughly half of total weapon length. Clear handgrip, no spikes, no attached effects.",
+    "seconds": 40.329,
+    "provider": "built-in image_gen",
+    "master": "held/axe-v1.png",
+    "sha256": "86748ae9ed75a2e2e1a56093a77ef83b31f975a423573065418859397ceab9dd",
+    "references": []
+  },
+  {
+    "key": "katana",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour 2D RPG held-item sprite master. Make ONE isolated weapon on genuine transparent alpha, no background, no floor, no shadow, no glow, no character, hands, text, logo or border. Polished hand-painted anime/chibi RPG prop with defined small shapes, cool shaded silver steel, restrained warm gold fittings and deep wine-red grip. Clean dark selective outline and clean antialiased edges, moderate top-front-left lighting, no photorealism, no pixel grid. The weapon's main axis must be exactly horizontal, tip/working end pointing IMAGE LEFT and grip near IMAGE RIGHT. Entire weapon visible with generous clear margins, composed for a square canvas and eventual 128-pixel cell. Practical slim handle which can be covered by a small sprite hand; no hanging ribbons or particles. An elegant sheathed-free Japanese katana pointing LEFT. A long slender slightly curved silver cutting blade with crisp darker back edge; a very small oval warm gold tsuba guard near the right; short deep wine-red diamond-wrapped hilt extending RIGHT of the guard, rounded gold pommel. No scabbard. The hilt axis is exactly horizontal; only the blade has restrained graceful curvature.",
+    "seconds": 37.459,
+    "provider": "built-in image_gen",
+    "master": "held/katana-v1.png",
+    "sha256": "3c985ee5d0e0dda37710ae18c682dd5dbc56493aa968869812f9f10f6a05405e",
+    "references": []
+  },
+  {
+    "key": "lance",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour 2D RPG held-item sprite master. Make ONE isolated weapon on genuine transparent alpha, no background, no floor, no shadow, no glow, no character, hands, text, logo or border. Polished hand-painted anime/chibi RPG prop with defined small shapes, cool shaded silver steel, restrained warm gold fittings and deep wine-red grip. Clean dark selective outline and clean antialiased edges, moderate top-front-left lighting, no photorealism, no pixel grid. The weapon's main axis must be exactly horizontal, tip/working end pointing IMAGE LEFT and grip near IMAGE RIGHT. Entire weapon visible with generous clear margins, composed for a square canvas and eventual 128-pixel cell. Practical slim handle which can be covered by a small sprite hand; no hanging ribbons or particles. A long slender fantasy lance/spear pointing LEFT. A compact leaf-shaped polished steel spearhead with a central ridge at the left tip, small gold socket, then a straight long dark blue-steel and wood shaft extending RIGHT. A narrow wine-red handgrip close to the right end with two gold bands and a small capped butt farther right. A practical thrusting spear, not a jousting cone. Keep the shaft exactly horizontal and most of the image transparent.",
+    "seconds": 33.965,
+    "provider": "built-in image_gen",
+    "master": "held/lance-v1.png",
+    "sha256": "8b6296d97080f0c18ba50fa94dd7f203049e07d798ed50b6f7d6a0e2832385c6",
+    "references": []
+  },
+  {
+    "key": "bow",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original 2D full-colour RPG held bow sprite master. ONE relaxed recurve bow, aiming IMAGE LEFT: the bow limbs are a nearly vertical elegant curve like a left parenthesis (, their tips on the right, a straight taut undrawn bowstring on the RIGHT. Center handgrip is on the bowed wooden stave around 38% of the full bow image width, at mid-height. Warm brown wood, silver-blue steel limb tips and small gold fittings, short wine-red leather grip at center. Polished hand-painted anime/chibi RPG look, defined readable shapes, moderate top-front-left light, restrained dark selective outline and clean antialiased edges. Entire bow centered in a square with ample transparent margin, about twice as tall as it is wide. No arrow, hand, character, background, floor, shadow, glow, text, logo or particles. Genuine transparent alpha. This is a game-held prop, not an inventory icon frame.",
+    "seconds": 18.364,
+    "provider": "built-in image_gen",
+    "master": "held/bow-v1.png",
+    "sha256": "42c6a5a3b20f115940e27a1a6ccbaf78b071c4e8d799b5482ee35b672e09befe",
+    "references": []
+  },
+  {
+    "key": "blizzard-tome",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour RPG held tome sprite master. ONE isolated small closed fantasy book on genuine transparent alpha. No background, floor, shadow, glow, particles, hands, character, letters, logo, watermark or frame. Hand-painted anime/chibi RPG game prop, clean antialiased silhouette with restrained dark selective outline. Moderate top-front-left lighting. Clear chunky readable shapes suitable for reduction to a 128-pixel working cell. Closed book shown in a shallow three-quarter view from the front and above: spine on image left, front cover fully visible, cream page block visible along the right and bottom edges, centered. Upright orientation, no dramatic tilt, all corners visible with generous transparent margins. A sturdy leather cover, discreet warm gold corner protectors, one simple raised central element motif and a narrow ribbon bookmark; no intricate filigree. Element BLIZZARD: deep icy blue leather cover, a simple embossed pale cyan six-arm snowflake inside a small silver lozenge, muted silver corner guards and a pale blue bookmark. The motif is solid decoration, never glowing.",
+    "seconds": 46.192,
+    "provider": "built-in image_gen",
+    "master": "held/blizzard-tome-v1.png",
+    "sha256": "1827304258ab2d566ea87deb09dbb54f8be6a1ef47c8aa46885a0a7d7b72167f",
+    "references": []
+  },
+  {
+    "key": "fire-tome",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour RPG held tome sprite master. ONE isolated small closed fantasy book on genuine transparent alpha. No background, floor, shadow, glow, particles, hands, character, letters, logo, watermark or frame. Hand-painted anime/chibi RPG game prop, clean antialiased silhouette with restrained dark selective outline. Moderate top-front-left lighting. Clear chunky readable shapes suitable for reduction to a 128-pixel working cell. Closed book shown in a shallow three-quarter view from the front and above: spine on image left, front cover fully visible, cream page block visible along the right and bottom edges, centered. Upright orientation, no dramatic tilt, all corners visible with generous transparent margins. A sturdy leather cover, discreet warm gold corner protectors, one simple raised central element motif and a narrow ribbon bookmark; no intricate filigree. Element FIRE: deep brick-red leather cover, a simple embossed orange flame set inside a small gold lozenge, warm gold clasps and a burnt-orange bookmark. The motif is solid decoration, never glowing.",
+    "seconds": 71.403,
+    "provider": "built-in image_gen",
+    "master": "held/fire-tome-v1.png",
+    "sha256": "cd0a96f9ba101835c3659d79badc4eedfe17e08f9446853b43f8225796473edd",
+    "references": []
+  },
+  {
+    "key": "light-tome",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour RPG held tome sprite master. ONE isolated small closed fantasy book on genuine transparent alpha. No background, floor, shadow, glow, particles, hands, character, letters, logo, watermark or frame. Hand-painted anime/chibi RPG game prop, clean antialiased silhouette with restrained dark selective outline. Moderate top-front-left lighting. Clear chunky readable shapes suitable for reduction to a 128-pixel working cell. Closed book shown in a shallow three-quarter view from the front and above: spine on image left, front cover fully visible, cream page block visible along the right and bottom edges, centered. Upright orientation, no dramatic tilt, all corners visible with generous transparent margins. A sturdy leather cover, discreet warm gold corner protectors, one simple raised central element motif and a narrow ribbon bookmark; no intricate filigree. Element LIGHT: warm ivory leather cover with restrained pale-gold edging, a simple solid gold eight-ray sun embossed inside a small gold lozenge, gold fittings and a cream bookmark. Pale cover edges remain outlined and readable on white. The motif is solid decoration, never glowing.",
+    "seconds": 41.412,
+    "provider": "built-in image_gen",
+    "master": "held/light-tome-v1.png",
+    "sha256": "23ce7e2f522f28e725b7779f36e3a2d91e8002a36d278f53b5f3bbe11d9ee10e",
+    "references": []
+  },
+  {
+    "key": "dark-tome",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour RPG held tome sprite master. ONE isolated small closed fantasy book on genuine transparent alpha. No background, floor, shadow, glow, particles, hands, character, letters, logo, watermark or frame. Hand-painted anime/chibi RPG game prop, clean antialiased silhouette with restrained dark selective outline. Moderate top-front-left lighting. Clear chunky readable shapes suitable for reduction to a 128-pixel working cell. Closed book shown in a shallow three-quarter view from the front and above: spine on image left, front cover fully visible, cream page block visible along the right and bottom edges, centered. Upright orientation, no dramatic tilt, all corners visible with generous transparent margins. A sturdy leather cover, discreet warm gold corner protectors, one simple raised central element motif and a narrow ribbon bookmark; no intricate filigree. Element DARK: rich dark plum leather cover with near-black blue spine, a simple embossed muted lavender crescent moon inside a small silver lozenge, muted silver fittings and a violet bookmark. Keep form readable against a dark backdrop. The motif is solid decoration, never glowing.",
+    "seconds": 79.712,
+    "provider": "built-in image_gen",
+    "master": "held/dark-tome-v1.png",
+    "sha256": "746d70da933b0f5b1ce0e3c2ff697e80ae11c5b6a433cec7bf0db20e13a9f81d",
+    "references": []
+  },
+  {
+    "key": "thunder-tome",
+    "family": "held",
+    "prompt": "Use case: stylized-concept. Asset type: original full-colour RPG held tome sprite master. ONE isolated small closed fantasy book on genuine transparent alpha. No background, floor, shadow, glow, particles, hands, character, letters, logo, watermark or frame. Hand-painted anime/chibi RPG game prop, clean antialiased silhouette with restrained dark selective outline. Moderate top-front-left lighting. Clear chunky readable shapes suitable for reduction to a 128-pixel working cell. Closed book shown in a shallow three-quarter view from the front and above: spine on image left, front cover fully visible, cream page block visible along the right and bottom edges, centered. Upright orientation, no dramatic tilt, all corners visible with generous transparent margins. A sturdy leather cover, discreet warm gold corner protectors, one simple raised central element motif and a narrow ribbon bookmark; no intricate filigree. Element THUNDER: deep blue-violet leather cover, a bold single golden lightning bolt embossed within a small gold lozenge, warm gold fittings and a muted yellow bookmark. The motif is solid decoration, never glowing.",
+    "seconds": 122.414,
+    "provider": "built-in image_gen",
+    "master": "held/thunder-tome-v1.png",
+    "sha256": "dddca58fe17b7a942846dad35caa204c5c020d993a068eb64e82200d8ad89e2f",
+    "references": []
+  },
+  {
+    "key": "fire-tome-open",
+    "family": "held",
+    "prompt": "Edit the supplied closed fire elemental tome into its OPEN casting state for the same original RPG prop. Preserve the exact cover colours, binding material, metal corner style and ribbon colour of this book. Show ONE open book resting upright in two unseen hands, with its center spine vertical in image center and its bottom spine point easy to anchor. Wide symmetrical two-page spread viewed slightly from above, no tilt: blank warm cream pages, a few understated non-letter decorative rules, a clear deep center fold, and the reference's leather covers and metal corner pieces peeking around both outside page edges. The open book should be wider than tall; its pages sit flat with slightly curled outer top corners. Ribbon rests in the center gutter. No letter, word, printed passage, character, hand, magic glow, particles, floor, cast shadow or background. Entire open book centered with generous clear margins on genuine transparent alpha, polished full-colour hand-painted anime/chibi RPG style, clean antialiased edges, moderate top-front-left lighting. Keep ornamentation simple enough for the 128-pixel working sprite.",
+    "seconds": 43.739,
+    "provider": "built-in image_gen",
+    "master": "held/fire-tome-open-v1.png",
+    "sha256": "a61c165c6328782078bd29bbe6a9d4eafcd2f64c83dd855ec1aeb2eff1abdb6b",
+    "references": [
+      "held/fire-tome-v1.png"
+    ]
+  },
+  {
+    "key": "blizzard-tome-open",
+    "family": "held",
+    "prompt": "Edit the supplied closed blizzard elemental tome into its OPEN casting state for the same original RPG prop. Preserve the exact cover colours, binding material, metal corner style and ribbon colour of this book. Show ONE open book resting upright in two unseen hands, with its center spine vertical in image center and its bottom spine point easy to anchor. Wide symmetrical two-page spread viewed slightly from above, no tilt: blank warm cream pages, a few understated non-letter decorative rules, a clear deep center fold, and the reference's leather covers and metal corner pieces peeking around both outside page edges. The open book should be wider than tall; its pages sit flat with slightly curled outer top corners. Ribbon rests in the center gutter. No letter, word, printed passage, character, hand, magic glow, particles, floor, cast shadow or background. Entire open book centered with generous clear margins on genuine transparent alpha, polished full-colour hand-painted anime/chibi RPG style, clean antialiased edges, moderate top-front-left lighting. Keep ornamentation simple enough for the 128-pixel working sprite.",
+    "seconds": 68.613,
+    "provider": "built-in image_gen",
+    "master": "held/blizzard-tome-open-v1.png",
+    "sha256": "696583715706d50d587f8eb67cf817f41ae0a673aea98910f6df7495c645eca5",
+    "references": [
+      "held/blizzard-tome-v1.png"
+    ]
+  },
+  {
+    "key": "bow-drawn",
+    "family": "held",
+    "prompt": "Edit the supplied original game bow master into the DRAWN version of exactly the same bow. Preserve the wood, silver-blue tips, gold fittings, wine-red center handgrip, shape language, lighting and transparent background. Keep the bow aiming IMAGE LEFT, limb tips at top and bottom on the right. Pull the midpoint of the bowstring far to IMAGE RIGHT, creating one clear taut V: a straight string from top tip to a nock at image-right middle, then a straight string to bottom tip. The drawn nock must be clearly separated from the center stave grip by about 40% of the entire bow's height. Keep the whole bow, both limb tips and nock visible with roomy margins on a square transparent canvas. Make the string a dark defined cord thick enough to remain a visible one-pixel line when this entire prop is reduced to 128 pixels tall. No arrow, hand, person, ground, glow, shadow, extra object or text. Clean antialiased full-colour anime/chibi RPG prop, moderate top-front-left light.",
+    "seconds": 103.258,
+    "provider": "built-in image_gen",
+    "master": "held/bow-drawn-v1.png",
+    "sha256": "7b886bae4dda56c5de1dd6c6511b001607543e0a2b388c53850a7120e1745be9",
+    "references": [
+      "held/bow-v1.png"
+    ]
+  },
+  {
+    "key": "thunder-tome-open",
+    "family": "held",
+    "prompt": "Edit the supplied closed thunder elemental tome into its OPEN casting state for the same original RPG prop. Preserve the exact cover colours, binding material, metal corner style and ribbon colour of this book. Show ONE open book resting upright in two unseen hands, with its center spine vertical in image center and its bottom spine point easy to anchor. Wide symmetrical two-page spread viewed slightly from above, no tilt: blank warm cream pages, a few understated non-letter decorative rules, a clear deep center fold, and the reference's leather covers and metal corner pieces peeking around both outside page edges. The open book should be wider than tall; its pages sit flat with slightly curled outer top corners. Ribbon rests in the center gutter. No letter, word, printed passage, character, hand, magic glow, particles, floor, cast shadow or background. Entire open book centered with generous clear margins on genuine transparent alpha, polished full-colour hand-painted anime/chibi RPG style, clean antialiased edges, moderate top-front-left lighting. Keep ornamentation simple enough for the 128-pixel working sprite.",
+    "seconds": 36.377,
+    "provider": "built-in image_gen",
+    "master": "held/thunder-tome-open-v1.png",
+    "sha256": "7b0fd824f50e938fb6201515f6092f3b36be689907b8753ce31842613a35c036",
+    "references": [
+      "held/thunder-tome-v1.png"
+    ]
+  },
+  {
+    "key": "dark-tome-open",
+    "family": "held",
+    "prompt": "Edit the supplied closed dark elemental tome into its OPEN casting state for the same original RPG prop. Preserve the exact cover colours, binding material, metal corner style and ribbon colour of this book. Show ONE open book resting upright in two unseen hands, with its center spine vertical in image center and its bottom spine point easy to anchor. Wide symmetrical two-page spread viewed slightly from above, no tilt: blank warm cream pages, a few understated non-letter decorative rules, a clear deep center fold, and the reference's leather covers and metal corner pieces peeking around both outside page edges. The open book should be wider than tall; its pages sit flat with slightly curled outer top corners. Ribbon rests in the center gutter. No letter, word, printed passage, character, hand, magic glow, particles, floor, cast shadow or background. Entire open book centered with generous clear margins on genuine transparent alpha, polished full-colour hand-painted anime/chibi RPG style, clean antialiased edges, moderate top-front-left lighting. Keep ornamentation simple enough for the 128-pixel working sprite.",
+    "seconds": 74.19,
+    "provider": "built-in image_gen",
+    "master": "held/dark-tome-open-v1.png",
+    "sha256": "3dec06d2cf2cac5a758503fe1ded68f3cd7176e04bef16d00abd3e95c8235677",
+    "references": [
+      "held/dark-tome-v1.png"
+    ]
+  },
+  {
+    "key": "light-tome-open",
+    "family": "held",
+    "prompt": "Edit the supplied closed light elemental tome into its OPEN casting state for the same original RPG prop. Preserve the exact cover colours, binding material, metal corner style and ribbon colour of this book. Show ONE open book resting upright in two unseen hands, with its center spine vertical in image center and its bottom spine point easy to anchor. Wide symmetrical two-page spread viewed slightly from above, no tilt: blank warm cream pages, a few understated non-letter decorative rules, a clear deep center fold, and the reference's leather covers and metal corner pieces peeking around both outside page edges. The open book should be wider than tall; its pages sit flat with slightly curled outer top corners. Ribbon rests in the center gutter. No letter, word, printed passage, character, hand, magic glow, particles, floor, cast shadow or background. Entire open book centered with generous clear margins on genuine transparent alpha, polished full-colour hand-painted anime/chibi RPG style, clean antialiased edges, moderate top-front-left lighting. Keep ornamentation simple enough for the 128-pixel working sprite.",
+    "seconds": 114.856,
+    "provider": "built-in image_gen",
+    "master": "held/light-tome-open-v1.png",
+    "sha256": "ec361ae301e4bf6e875d1b21424040df9d1c9539a0281272ff2c29a32b18bb0f",
+    "references": [
+      "held/light-tome-v1.png"
+    ]
+  },
+  {
+    "key": "exclaim",
+    "family": "emote",
+    "prompt": "Use case: stylized-concept. Asset type: original 2D RPG emote bubble sprite, designed to read at 64 by 64 pixels. ONE small round ivory speech bubble with a short centered triangular tail pointing straight DOWN from its bottom center. Centered symmetrical shape on a square genuine transparent canvas with generous transparent margins. Bold readable charcoal-navy outline, ivory fill with subtle warm shading at the lower-right edge and tiny soft top-left painted highlight. Flat clean full-colour anime/chibi RPG graphic; clean antialiased edges, no thick glossy bevel, no glow, no cast shadow or background. Inside the bubble put exactly ONE large bold dark navy exclamation mark: ! . Straight clear stem and separate round dot, vertically centered, balanced generous padding. No other glyph, words, face, character, hand, object, frame, logo or decorative particles. The bubble's bottom tail is the anchor above a speaker's head.",
+    "seconds": 31.837,
+    "provider": "built-in image_gen",
+    "master": "emote/exclaim-v1.png",
+    "sha256": "0b2bca3d3006bafbef1e4676830b58018f0ce3eca926c95bf2c7abccd6d517aa",
+    "references": []
+  },
+  {
+    "key": "ellipsis",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with exactly THREE bold round dark navy dots in a centered horizontal row: \u2026 . Clear equal spacing, no extra punctuation. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 34.736,
+    "provider": "built-in image_gen",
+    "master": "emote/ellipsis-v1.png",
+    "sha256": "882319be1892dd642e3d1ff14d1a1c8eed64ecd0144f74cc4e4841b05f9e88a5",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "question",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with one large bold navy QUESTION MARK, exactly ? , with a separate round dot. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 67.151,
+    "provider": "built-in image_gen",
+    "master": "emote/question-v1.png",
+    "sha256": "c8dd50df4301c557fd50e98e1a052917b57783a6d006035073f64a53a3ff65d0",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "music",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with one large dark navy eighth-note music glyph, exactly \u266a , with a round note head, straight stem and one clear flag. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 103.989,
+    "provider": "built-in image_gen",
+    "master": "emote/music-v1.png",
+    "sha256": "19e53b5c29e1f57af09df0c47faef70dd735d8e08d993c90abd2f5071753ea12",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "heart",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with one large rose-pink heart with two rounded lobes, a clear upper notch and a pointed lower tip; tiny white painted highlight, restrained darker lower-right shading. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 35.602,
+    "provider": "built-in image_gen",
+    "master": "emote/heart-v1.png",
+    "sha256": "4fb3727bfda2821222ae33b0f16f0bd98ba8ed6309b5d733f4d0f6f110fea51c",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "sweat",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with one large sky-blue teardrop/sweat drop, with a pointed top, rounded bottom, slightly deeper blue lower-right shading and a tiny painted white top-left reflection. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 68.994,
+    "provider": "built-in image_gen",
+    "master": "emote/sweat-v1.png",
+    "sha256": "29211b396352fdec273ccebecf247dc7355e5851d2ff85ffae063df3d2fc58b1",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "anger",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with one large red anime anger/vein mark: four thick rounded L-shaped corners facing outwards around a small cross-shaped center gap. Clear symmetric red four-prong anger symbol, no face. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 102.556,
+    "provider": "built-in image_gen",
+    "master": "emote/anger-v1.png",
+    "sha256": "82502efda9293955f612625987dd5ef3f8ab14b53cda3eac27b21cd7406c8654",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  },
+  {
+    "key": "zzz",
+    "family": "emote",
+    "prompt": "Edit the supplied original emote bubble. Keep its ivory circular bubble, centered downward triangular tail, dark navy outline, overall dimensions, top-left highlight, slight warm lower-right shading and transparent background. Change ONLY the exclamation-mark symbol inside the bubble. Replace it with exactly three lowercase dark navy z letters, exactly zzz , as a compact readable diagonal rising slightly rightward. No uppercase Z, no extra punctuation. Center the new symbol in the same inner space, with generous padding so it stays readable at 64 by 64 pixels. No other glyph, text, face, character, hand, floor, drop shadow, glow, background or extra decoration. Preserve genuine transparent alpha outside the exact bubble silhouette. Clean antialiased full-colour RPG UI sprite.",
+    "seconds": 32.359,
+    "provider": "built-in image_gen",
+    "master": "emote/zzz-v1.png",
+    "sha256": "7e77a91c550b6957192de9142228c93e06a20484525bf684b67419560ddaecfb",
+    "references": [
+      "emote/exclaim-v1.png"
+    ]
+  }
+]

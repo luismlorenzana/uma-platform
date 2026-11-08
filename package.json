@@ -32,7 +32,8 @@
     "sprites:progress": "pnpm --filter @uma-platform/sprite-pipeline run progress",
     "sprites:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run pack",
     "sprites:backup": "node scripts/sprites/backup.mjs",
-    "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start"
+    "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start",
+    "art:props": "pnpm --filter @uma-platform/authored-art run draw"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

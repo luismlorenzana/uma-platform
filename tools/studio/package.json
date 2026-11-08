@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",
-    "@uma-platform/sprite-pipeline": "workspace:*"
+    "@uma-platform/sprite-pipeline": "workspace:*",
+    "@luismlorenzana/uma-art": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

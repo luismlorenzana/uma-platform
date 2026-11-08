@@ -1,3 +1,4 @@
+import { propArt } from './prop-art.js'
 import { readFile, readdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { current, readJson, reviewState, scope, queue, nextBatch, maybeJson, type NativeAtlas, type Ranking, type QueueOverride } from '@uma-platform/sprite-pipeline'
@@ -30,7 +31,6 @@ export async function spriteReview(content: string, catalog: Catalog, search = n
       changed: state.key.changed || state.set.changed, missingHashes: [...state.key.missing, ...state.set.missing],
       keyGate: state.gates?.key, setGate: state.gates?.set, fullProfile: Object.values(a.actions).reduce((n, v) => n + v.frames.length, 0) === 118 })
   }
-  const held = await maybeJson<Record<string, { file: string }>>(resolve(root, 'shared/held.json'), {})
-  for (const prop of Object.values(held)) prop.file = '/sprite-assets/shared/' + prop.file
-  return { characters, held, missing, batch: batchNumber, profile, coverage: profile, pendingOwnerReview: missing.length > 0 || characters.some(c => !c.keyApproved || !c.setApproved) }
+  const props = await propArt()
+  return { characters, ...props, missing, batch: batchNumber, profile, coverage: profile, pendingOwnerReview: missing.length > 0 || characters.some(c => !c.keyApproved || !c.setApproved) }
 }

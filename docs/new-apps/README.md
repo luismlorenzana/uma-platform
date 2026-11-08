@@ -26,7 +26,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **Ready now:** UA8 and UA10 (ChatGPT). UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
+- **Ready now:** UA10 (ChatGPT); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
 - **Your steps:**
   - the townsfolk reviews (UA10);
   - the art reviews ChatGPT asks for.
@@ -99,7 +99,7 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Ready |
+| [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Done (2.22.0, P102) |
 | [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 103301, 112001 and 109801 (batch T1). | ChatGPT | S | UA2 ✓ | Ready |
 | Q7 | **The forest kit** *(uma-quest)*: Written by uma-quest's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-quest's Q5 | Waiting |
 | Q15 | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 | Waiting |
@@ -192,9 +192,9 @@ seven-day soft-delete window before expiring. A restored revision matches all 18
 
 ### UA8
 
-**Weapons and bubbles** · ChatGPT · M · Needs: — · Ready
+**Weapons and bubbles** · Done · P102
 
-The packet exists: [UA8](../handoff/tasks/UA8-held-items-and-bubbles.md).
+Delivered in uma-art 2.22.0: 16 held textures and eight bubbles, with source masters and deterministic export. Studio reads the package. Local attachment sheets cover all 6,480 grip-frame combinations without changing character art.
 
 **Covers:** R4, N2, NA4
 
