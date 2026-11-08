@@ -278,6 +278,8 @@ deleted, so every older release stays loadable.
 **Never** mix a GameTora refresh into a sprite publish: a refresh is `pnpm data:import`, `pnpm assets:import` and a
 plain `pnpm release:publish`, its own release. A sprite-only publish never takes the local release's master sets.
 
+UA8 is delivered in uma-art **2.22.0**: 16 held textures and eight bubbles, with committed original masters and deterministic export (`pnpm art:props`). Studio uses them in `/props`, the animation desk and the scene preview. The six private placeholders remain for history. Character runtime art and its approvals are unchanged.
+
 ## 8. Roles
 
 | Who | Does |
@@ -323,7 +325,7 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 | UA5 (done) | Pack and publish: `sprites:pack`, the sprite-only publish, the size decision, batch 1's first release (`4757517816a0`, P100) | Claude | M | UA2, UA4; your set approval |
 | UA6 (done) | The backup bucket and `sprites:backup` | Claude | S | **Your yes** |
 | UA7 (done) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
-| [UA8](../handoff/tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
+| UA8 (done) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
 | [UA9](../handoff/tasks/UA9-batch-2.md) | Art: batch 2 in the full traveler profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 |
 | [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA7 |
 | [UA11](../handoff/tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 | ChatGPT | M | UA10's set gate, UA2 |

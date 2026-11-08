@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.22.0
+
+### Minor Changes
+
+- Add full-colour held items and emote bubbles: sixteen weapon textures with grip/nock metadata and eight 64px bubbles with overhead anchors. Authored masters export deterministically; existing pixel families stay byte-identical.
+
 ## 2.21.0
 
 ### Minor Changes

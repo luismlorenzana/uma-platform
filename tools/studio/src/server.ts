@@ -1,3 +1,4 @@
+import { artRoot, propArt } from './prop-art.js'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { BackupQueue } from './backup.js'
@@ -63,6 +64,7 @@ async function main() {
       }
       send(response, 404, { error: 'Unknown write route' }); return
     }
+    if (path === '/api/prop-art') { send(response, 200, await propArt()); return }
     if (path === '/api/catalog') { send(response, 200, catalog); return }
     if (path === '/api/rankings') { send(response, 200, await rankings.read()); return }
     if (path === '/api/authoring') { send(response, 200, await buildProgress(content, false)); return }
@@ -70,6 +72,7 @@ async function main() {
     if (path === '/api/backup') { send(response, 200, backups.status); return }
     if (path === '/api/reviews') { send(response, 200, await reviews.read()); return }
     if (path === '/api/sprite-review') { send(response, 200, await spriteReview(content, catalog, url.searchParams)); return }
+    if (/^\/studio-art\/(held|emote)\/atlas\.(png|json)$/.test(path)) { await serve(response, await inside(artRoot, path.slice(12))); return }
     if (path.startsWith('/sprite-assets/')) { await serve(response, await inside(root, decodeURIComponent(path.slice(15)))); return }
     if (path.startsWith('/authoring-art/')) {
       const id = Number(path.split('/').pop()), progress = await buildProgress(content, false), key = progress.entries.find(e => e.outfitId === id)?.key
@@ -77,7 +80,7 @@ async function main() {
       await serve(response, await inside(content, key)); return
     }
     if (images.has(path)) { await serve(response, await inside(release, path.slice(1))); return }
-    const pages: Record<string, string> = { '/': 'src/index.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/style.css': 'src/style.css', '/app.js': 'dist/app.js', '/model.js': 'dist/model.js' }
+    const pages: Record<string, string> = { '/': 'src/index.html', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/style.css': 'src/style.css', '/app.js': 'dist/app.js', '/model.js': 'dist/model.js', '/sprites/placement.js': 'dist/held-placement.js' }
     if (pages[path]) { await serve(response, resolve(tool, pages[path])); return }
     if (path === '/sprites' || path === '/field') { response.writeHead(302, { location: path + '/' + url.search }); response.end(); return }
     if (path.startsWith('/sprites/')) { await serve(response, await inside(resolve(tool, 'public/desk'), decodeURIComponent(path.slice(9)) || 'index.html')); return }

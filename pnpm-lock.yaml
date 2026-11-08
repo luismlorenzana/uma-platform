@@ -144,6 +144,25 @@ importers:
         specifier: ^3.2.7
         version: 3.2.7(@types/node@22.20.5)(jsdom@26.1.0)(tsx@4.23.15)
 
+  scripts/authored-art:
+    dependencies:
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.5
+        version: 22.20.5
+      tsx:
+        specifier: ^4.20.6
+        version: 4.23.15
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/node@22.20.5)(jsdom@26.1.0)(tsx@4.23.15)
+
   scripts/data:
     dependencies:
       '@luismlorenzana/uma-data':
@@ -208,6 +227,9 @@ importers:
 
   tools/studio:
     dependencies:
+      '@luismlorenzana/uma-art':
+        specifier: workspace:*
+        version: link:../../packages/art
       '@luismlorenzana/uma-data':
         specifier: workspace:*
         version: link:../../packages/data

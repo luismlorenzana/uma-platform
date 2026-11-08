@@ -1,7 +1,7 @@
 {
   "name": "@luismlorenzana/uma-art",
-  "version": "2.21.0",
-  "description": "Original art for the Uma games, generated from code in scripts/pixel-art: item, dish and gear icons, Hub buildings and terrain tiles, each as one atlas plus its index. Private; personal use only.",
+  "version": "2.22.0",
+  "description": "Original game art: pixel families drawn from code and full-colour held props and emotes exported from authored masters.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
@@ -33,7 +33,11 @@
     "./fx/atlas.json": "./fx/atlas.json",
     "./ui/atlas.png": "./ui/atlas.png",
     "./ui/atlas.json": "./ui/atlas.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./held/atlas.png": "./held/atlas.png",
+    "./held/atlas.json": "./held/atlas.json",
+    "./emote/atlas.png": "./emote/atlas.png",
+    "./emote/atlas.json": "./emote/atlas.json"
   },
   "files": [
     "items",
@@ -45,6 +49,8 @@
     "world",
     "fx",
     "ui",
-    "README.md"
+    "README.md",
+    "held",
+    "emote"
   ]
 }

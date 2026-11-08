@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "key": "greatsword",
+      "family": "held",
+      "master": "held/greatsword-v1.png",
+      "sha256": "c799be1face263553e57130848392ea3180308a32f07555173248ce795a2f3a9",
+      "sourceAnchor": {
+        "x": 1079.42,
+        "y": 625.79
+      },
+      "anchor": {
+        "x": 108,
+        "y": 64
+      },
+      "scale": 1,
+      "label": "Greatsword"
+    },
+    {
+      "key": "axe",
+      "family": "held",
+      "master": "held/axe-v1.png",
+      "sha256": "86748ae9ed75a2e2e1a56093a77ef83b31f975a423573065418859397ceab9dd",
+      "sourceAnchor": {
+        "x": 1035.272,
+        "y": 607.927
+      },
+      "anchor": {
+        "x": 108,
+        "y": 64
+      },
+      "scale": 1,
+      "label": "Axe"
+    },
+    {
+      "key": "katana",
+      "family": "held",
+      "master": "held/katana-v1.png",
+      "sha256": "3c985ee5d0e0dda37710ae18c682dd5dbc56493aa968869812f9f10f6a05405e",
+      "sourceAnchor": {
+        "x": 1122.203,
+        "y": 633.576
+      },
+      "anchor": {
+        "x": 108,
+        "y": 64
+      },
+      "scale": 1,
+      "label": "Katana"
+    },
+    {
+      "key": "lance",
+      "family": "held",
+      "master": "held/lance-v1.png",
+      "sha256": "8b6296d97080f0c18ba50fa94dd7f203049e07d798ed50b6f7d6a0e2832385c6",
+      "sourceAnchor": {
+        "x": 1090.385,
+        "y": 623.838
+      },
+      "anchor": {
+        "x": 108,
+        "y": 64
+      },
+      "scale": 1,
+      "label": "Lance"
+    },
+    {
+      "key": "bow",
+      "family": "held",
+      "master": "held/bow-v1.png",
+      "sha256": "42c6a5a3b20f115940e27a1a6ccbaf78b071c4e8d799b5482ee35b672e09befe",
+      "sourceAnchor": {
+        "x": 308.183,
+        "y": 862.073
+      },
+      "anchor": {
+        "x": 45,
+        "y": 64
+      },
+      "scale": 1,
+      "label": "Bow · relaxed"
+    },
+    {
+      "key": "bow-drawn",
+      "family": "held",
+      "master": "held/bow-drawn-v1.png",
+      "sha256": "7b886bae4dda56c5de1dd6c6511b001607543e0a2b388c53850a7120e1745be9",
+      "sourceAnchor": {
+        "x": 355.215,
+        "y": 622.985
+      },
+      "anchor": {
+        "x": 45,
+        "y": 64
+      },
+      "scale": 1,
+      "nock": {
+        "x": 1055.142,
+        "y": 615.182
+      },
+      "label": "Bow · drawn"
+    },
+    {
+      "key": "tome-fire",
+      "family": "held",
+      "master": "held/fire-tome-v1.png",
+      "sha256": "cd0a96f9ba101835c3659d79badc4eedfe17e08f9446853b43f8225796473edd",
+      "sourceAnchor": {
+        "x": 642,
+        "y": 1016.5
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Fire Tome · closed"
+    },
+    {
+      "key": "tome-fire-open",
+      "family": "held",
+      "master": "held/fire-tome-open-v1.png",
+      "sha256": "a61c165c6328782078bd29bbe6a9d4eafcd2f64c83dd855ec1aeb2eff1abdb6b",
+      "sourceAnchor": {
+        "x": 767.5,
+        "y": 829.9
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Fire Tome · open"
+    },
+    {
+      "key": "tome-ice",
+      "family": "held",
+      "master": "held/blizzard-tome-v1.png",
+      "sha256": "1827304258ab2d566ea87deb09dbb54f8be6a1ef47c8aa46885a0a7d7b72167f",
+      "sourceAnchor": {
+        "x": 620.5,
+        "y": 1044.8
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Blizzard Tome · closed"
+    },
+    {
+      "key": "tome-ice-open",
+      "family": "held",
+      "master": "held/blizzard-tome-open-v1.png",
+      "sha256": "696583715706d50d587f8eb67cf817f41ae0a673aea98910f6df7495c645eca5",
+      "sourceAnchor": {
+        "x": 768,
+        "y": 820.9
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Blizzard Tome · open"
+    },
+    {
+      "key": "tome-lightning",
+      "family": "held",
+      "master": "held/thunder-tome-v1.png",
+      "sha256": "dddca58fe17b7a942846dad35caa204c5c020d993a068eb64e82200d8ad89e2f",
+      "sourceAnchor": {
+        "x": 595.5,
+        "y": 1078
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Thunder Tome · closed"
+    },
+    {
+      "key": "tome-lightning-open",
+      "family": "held",
+      "master": "held/thunder-tome-open-v1.png",
+      "sha256": "7b0fd824f50e938fb6201515f6092f3b36be689907b8753ce31842613a35c036",
+      "sourceAnchor": {
+        "x": 766.5,
+        "y": 842
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Thunder Tome · open"
+    },
+    {
+      "key": "tome-light",
+      "family": "held",
+      "master": "held/light-tome-v1.png",
+      "sha256": "23ce7e2f522f28e725b7779f36e3a2d91e8002a36d278f53b5f3bbe11d9ee10e",
+      "sourceAnchor": {
+        "x": 609.5,
+        "y": 1045
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Light Tome · closed"
+    },
+    {
+      "key": "tome-light-open",
+      "family": "held",
+      "master": "held/light-tome-open-v1.png",
+      "sha256": "ec361ae301e4bf6e875d1b21424040df9d1c9539a0281272ff2c29a32b18bb0f",
+      "sourceAnchor": {
+        "x": 767.5,
+        "y": 806.7
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Light Tome · open"
+    },
+    {
+      "key": "tome-dark",
+      "family": "held",
+      "master": "held/dark-tome-v1.png",
+      "sha256": "746d70da933b0f5b1ce0e3c2ff697e80ae11c5b6a433cec7bf0db20e13a9f81d",
+      "sourceAnchor": {
+        "x": 604.5,
+        "y": 1038.8
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Dark Tome · closed"
+    },
+    {
+      "key": "tome-dark-open",
+      "family": "held",
+      "master": "held/dark-tome-open-v1.png",
+      "sha256": "3dec06d2cf2cac5a758503fe1ded68f3cd7176e04bef16d00abd3e95c8235677",
+      "sourceAnchor": {
+        "x": 767,
+        "y": 842.6
+      },
+      "anchor": {
+        "x": 64,
+        "y": 94
+      },
+      "scale": 0.55,
+      "label": "Dark Tome · open"
+    },
+    {
+      "key": "exclaim",
+      "family": "emote",
+      "master": "emote/exclaim-v1.png",
+      "sha256": "0b2bca3d3006bafbef1e4676830b58018f0ce3eca926c95bf2c7abccd6d517aa",
+      "sourceAnchor": {
+        "x": 623.818,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "!"
+    },
+    {
+      "key": "question",
+      "family": "emote",
+      "master": "emote/question-v1.png",
+      "sha256": "c8dd50df4301c557fd50e98e1a052917b57783a6d006035073f64a53a3ff65d0",
+      "sourceAnchor": {
+        "x": 623.231,
+        "y": 1039
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "?"
+    },
+    {
+      "key": "ellipsis",
+      "family": "emote",
+      "master": "emote/ellipsis-v1.png",
+      "sha256": "882319be1892dd642e3d1ff14d1a1c8eed64ecd0144f74cc4e4841b05f9e88a5",
+      "sourceAnchor": {
+        "x": 623.875,
+        "y": 1036
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "…"
+    },
+    {
+      "key": "music",
+      "family": "emote",
+      "master": "emote/music-v1.png",
+      "sha256": "19e53b5c29e1f57af09df0c47faef70dd735d8e08d993c90abd2f5071753ea12",
+      "sourceAnchor": {
+        "x": 623.769,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "♪"
+    },
+    {
+      "key": "sweat",
+      "family": "emote",
+      "master": "emote/sweat-v1.png",
+      "sha256": "29211b396352fdec273ccebecf247dc7355e5851d2ff85ffae063df3d2fc58b1",
+      "sourceAnchor": {
+        "x": 623.818,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "Sweat drop"
+    },
+    {
+      "key": "anger",
+      "family": "emote",
+      "master": "emote/anger-v1.png",
+      "sha256": "82502efda9293955f612625987dd5ef3f8ab14b53cda3eac27b21cd7406c8654",
+      "sourceAnchor": {
+        "x": 623.769,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "Anger"
+    },
+    {
+      "key": "heart",
+      "family": "emote",
+      "master": "emote/heart-v1.png",
+      "sha256": "4fb3727bfda2821222ae33b0f16f0bd98ba8ed6309b5d733f4d0f6f110fea51c",
+      "sourceAnchor": {
+        "x": 623.621,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "Heart"
+    },
+    {
+      "key": "zzz",
+      "family": "emote",
+      "master": "emote/zzz-v1.png",
+      "sha256": "7e77a91c550b6957192de9142228c93e06a20484525bf684b67419560ddaecfb",
+      "sourceAnchor": {
+        "x": 623.167,
+        "y": 1037
+      },
+      "anchor": {
+        "x": 32,
+        "y": 60
+      },
+      "scale": 1,
+      "label": "zzz"
+    }
+  ]
+}

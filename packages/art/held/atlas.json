@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "cell": 128,
+  "width": 512,
+  "height": 512,
+  "frames": {
+    "held/greatsword": {
+      "x": 0,
+      "y": 0,
+      "w": 128,
+      "h": 128,
+      "label": "Greatsword",
+      "grip": {
+        "x": 107.737,
+        "y": 63.88
+      },
+      "angle0": "image-left",
+      "scale": 1
+    },
+    "held/axe": {
+      "x": 128,
+      "y": 0,
+      "w": 128,
+      "h": 128,
+      "label": "Axe",
+      "grip": {
+        "x": 108.383,
+        "y": 63.964
+      },
+      "angle0": "image-left",
+      "scale": 1
+    },
+    "held/katana": {
+      "x": 256,
+      "y": 0,
+      "w": 128,
+      "h": 128,
+      "label": "Katana",
+      "grip": {
+        "x": 108.493,
+        "y": 64.124
+      },
+      "angle0": "image-left",
+      "scale": 1
+    },
+    "held/lance": {
+      "x": 384,
+      "y": 0,
+      "w": 128,
+      "h": 128,
+      "label": "Lance",
+      "grip": {
+        "x": 108.082,
+        "y": 63.692
+      },
+      "angle0": "image-left",
+      "scale": 1
+    },
+    "held/bow": {
+      "x": 0,
+      "y": 128,
+      "w": 128,
+      "h": 128,
+      "label": "Bow · relaxed",
+      "grip": {
+        "x": 45.194,
+        "y": 63.8
+      },
+      "angle0": "image-left",
+      "scale": 1
+    },
+    "held/bow-drawn": {
+      "x": 128,
+      "y": 128,
+      "w": 128,
+      "h": 128,
+      "label": "Bow · drawn",
+      "grip": {
+        "x": 45.125,
+        "y": 63.603
+      },
+      "angle0": "image-left",
+      "scale": 1,
+      "nock": {
+        "x": 114.336,
+        "y": 62.831
+      }
+    },
+    "held/tome-fire": {
+      "x": 256,
+      "y": 128,
+      "w": 128,
+      "h": 128,
+      "label": "Fire Tome · closed",
+      "grip": {
+        "x": 63.591,
+        "y": 93.583
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-fire-open": {
+      "x": 384,
+      "y": 128,
+      "w": 128,
+      "h": 128,
+      "label": "Fire Tome · open",
+      "grip": {
+        "x": 63.958,
+        "y": 93.888
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-ice": {
+      "x": 0,
+      "y": 256,
+      "w": 128,
+      "h": 128,
+      "label": "Blizzard Tome · closed",
+      "grip": {
+        "x": 64.357,
+        "y": 94.314
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-ice-open": {
+      "x": 128,
+      "y": 256,
+      "w": 128,
+      "h": 128,
+      "label": "Blizzard Tome · open",
+      "grip": {
+        "x": 64.5,
+        "y": 93.736
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-lightning": {
+      "x": 256,
+      "y": 256,
+      "w": 128,
+      "h": 128,
+      "label": "Thunder Tome · closed",
+      "grip": {
+        "x": 63.62,
+        "y": 93.706
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-lightning-open": {
+      "x": 384,
+      "y": 256,
+      "w": 128,
+      "h": 128,
+      "label": "Thunder Tome · open",
+      "grip": {
+        "x": 63.877,
+        "y": 94.07
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-light": {
+      "x": 0,
+      "y": 384,
+      "w": 128,
+      "h": 128,
+      "label": "Light Tome · closed",
+      "grip": {
+        "x": 64.446,
+        "y": 94.481
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-light-open": {
+      "x": 128,
+      "y": 384,
+      "w": 128,
+      "h": 128,
+      "label": "Light Tome · open",
+      "grip": {
+        "x": 64.457,
+        "y": 94.114
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-dark": {
+      "x": 256,
+      "y": 384,
+      "w": 128,
+      "h": 128,
+      "label": "Dark Tome · closed",
+      "grip": {
+        "x": 64.02,
+        "y": 93.854
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    },
+    "held/tome-dark-open": {
+      "x": 384,
+      "y": 384,
+      "w": 128,
+      "h": 128,
+      "label": "Dark Tome · open",
+      "grip": {
+        "x": 63.917,
+        "y": 93.765
+      },
+      "angle0": "image-left",
+      "scale": 0.55
+    }
+  }
+}
