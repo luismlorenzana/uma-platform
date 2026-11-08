@@ -1,6 +1,6 @@
 # Uma sprites: authoring and publishing
 
-> **Status: 2026-11-07. The plan for taking ChatGPT's sprite experiments into a pipeline (P91).** The owner likes the
+> **Status: 2026-11-08. The plan for taking ChatGPT's sprite experiments into a pipeline (P91).** The owner likes the
 > results: five complete battle sets at art set version 2. This page says:
 > - what the experiments built;
 > - what uma-quest's planned work still needs;
@@ -45,7 +45,7 @@ All of it is private, in uma-platform's ignored `content/`:
 | Piece | Where it is now | State |
 |---|---|---|
 | The owner's roster: 272 outfits ranked, 100 selected (SS 40, A1 40, A2 20), 20 for each Way | `content/authoring/uma-art-roster.json` | Durable; the ranker writes it |
-| Batch 1: 106801 (Warrior), 106701 (Healer), 112901 (Mage), 111501 (Summoner), 113401 (Spellblade) | `content/authoring/uma-sprites-v2/`, with v1 in `uma-sprites/` and the pointer in `uma-sprites-current.json` | 62 frames, 6 patches and 14 entries each, all checks passing; v2 re-authored 106801 and 112901's faces. **Your visual review is pending** |
+| Batch 1: 106801 (Warrior), 106701 (Healer), 112901 (Mage), 111501 (Summoner), 113401 (Spellblade) | `content/authoring/uma-sprites-v2/`, with v1 in `uma-sprites/` and the pointer in `uma-sprites-current.json` | 62 frames, 6 patches and 14 entries each, all checks passing; v2 re-authored 106801 and 112901's faces. **The five full traveler sets were approved on 2026-11-08 against all 635 runtime hashes** |
 | The baseline study (106801 and 100701) | `content/review/sprite-baseline/` (546 MB of studies, rejected attempts and viewers) | H168 in uma-rpg: keys and turnarounds approved 2026-11-06, the full set pending |
 | Sprite Studio: the ranker, the 100-outfit checklist and the animation desk | `content/review/sprite-ranker/`, at `http://127.0.0.1:4318` | Works, but it's in `content/`, so it isn't versioned |
 | The export, the checks and the viewer | `export-full.cjs`, `verify.cjs`, `player.js`, `timeline.mjs`, and others, beside each study | Work, but each study has its own copy |
@@ -195,6 +195,8 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
 | `pnpm release:publish` | The existing publish, now with sprites | UA5 |
 | `pnpm sprites:backup` | Copies `content/authoring/` to the backup bucket, never deleting | UA6 |
 
+UA2's four commands are implemented in `scripts/sprites/` ([usage](../../scripts/sprites/README.md)). Existing sealed revisions use reconstructed export sidecars under `export-configs/<id>/rN.json`; fresh reports go under `reports/<id>/rN/`, preserving the original receipts. New revisions use config schema version 2 in place. Exports always target a separate directory. Check 13 compares the first standing contact with its facing still and requires a constant scale for the whole cycle.
+
 They're TypeScript in git with Vitest on synthetic fixtures: invented shapes, never Uma art. They port the logic of
 ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance).
 
@@ -205,7 +207,7 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
   - packed WebP pages;
   - a `sprites` map in the art index.
 
-  It's added in uma-data 1.4.0 (UA4).
+  It's available in uma-data 1.4.0 (UA4).
 - **A sprite publish changes nothing else** (CR27). The new manifest carries every other file of the latest release
   byte for byte. A master-data refresh (GameTora) is its own publish, as today.
 - **How games load a set** (CR28):
@@ -248,7 +250,7 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
 | Serving to the phone (quest-api's proxy) | 1 GB a month of Cloud Run egress in North America | A party's five sets once (~10–20 MB), then cached | $0 |
 | Generation | ChatGPT's own tool | — | $0 in the cloud |
 
-Nothing here is created before your yes on UA6.
+The owner approved UA6 on 2026-11-08. The private versioned authoring bucket now exists; it backs up authored inputs and decisions, excluding rebuildable downloaded models, binaries and dependency caches. See the measured size and restore instructions in [infra/README.md](../../infra/README.md).
 
 ## 11. The packets
 
@@ -257,7 +259,7 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 | Id | What | Who | Size | Needs |
 |---|---|---|---|---|
 | [UA1](../handoff/tasks/UA1-durable-layout.md) | The durable layout: batch 1 and the study moved into per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept, marked superseded | Either | S | — |
-| [UA2](../handoff/tasks/UA2-sprite-tools.md) | `scripts/sprites` in git: export, the 14 checks, repeat and progress, tested; batch 1 reproduced byte for byte | Either | L | UA1 |
+| UA2 (done) | `scripts/sprites` in git: export, the 14 checks, repeat and progress, tested; batch 1 reproduced byte for byte | Either | L | UA1 |
 | [UA3](../handoff/tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, both gates writing `reviews.json` | Either | M | UA1 |
 | [UA4](../handoff/tasks/UA4-sprites-schema.md) | uma-data 1.4.0: the `outfit-sprites` family, its parser, the art index's `sprites` map, synthetic fixtures | Either | M | — |
 | [UA5](../handoff/tasks/UA5-pack-and-publish.md) | Pack and publish: `sprites:pack`, the sprite-only publish, the size decision, batch 1's first release | Claude | M | UA2, UA4; your set approval |
