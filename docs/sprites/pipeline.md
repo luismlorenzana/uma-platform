@@ -29,12 +29,12 @@
   - sets publish into master data's private release, the way busts and faces already do;
   - games load them by outfit id.
 - **What uma-quest still needs** beyond the five battle sets:
-  - the **field set**: walking and running in three more facings;
+  - the **field set**: walking and running in four field facings (left added by P105);
   - `weary`, and **six emotes**;
   - the **townsfolk** profile and the **rival** add-on;
   - **ten held weapons** and **emote bubbles** (uma-art).
 
-  The traveler profile grows from 62 to **118 frames**.
+  The traveler profile grows from 62 to **130 frames** (118 until P105 added the left field walks).
 - **The order:** the layout and the format first, then the tools, the Studio and the schema, then the first publish
   before uma-quest's Q6. Batch 1's missing actions are drawn at the same time, and from batch 2 every batch is a
   uma-quest wave.
@@ -81,7 +81,7 @@ uma-quest's plan and campaign, packet by packet. "Have" means drawn and checked 
 | uma-quest step | What it shows | Have | Missing | Packet |
 |---|---|---|---|---|
 | **Q4, the stage** (Phase 2) | A stand-in Uma on the turned stage | — | Nothing: it uses stand-ins | — |
-| **Q6, sprites in the engine** (Phase 2) | The leader and four followers in single file, walking every way (DN24, DN25); faces and blinks; scene tint | Battle facing: `walk`, `run`, `idle`, faces | **Walk and run facing front, back and right**; a loadable release | UA7; UA4 and UA5 |
+| **Q6, sprites in the engine** (Phase 2) | The leader and four followers in single file, walking every way (DN24, DN25); faces and blinks; scene tint | Battle facing ✓; walk and run facing front, back and right ✓ (UA7); release `4757517816a0` ✓ (UA5) | **Walk and run facing left** (P105, after the owner's play) | UA12 |
 | **Q9, the fight screen** (Phase 3) | Five Umas against foes, every fight event | The battle set ✓ | **Held weapons** for ten kinds (placeholders work for the slice); `weary` for carried HP (DN12); familiars at the new scale (the old two-pose pixel ones work until then) | UA8, UA7 |
 | **Q11, the dungeon** (Phase 3) | Walking and Dash; chests; Springs; downed followers | — | The field set (Dash plays `run-*`). A downed follower walks greyed by the game, with no new art | UA7 |
 | **Q12, the town and the story runner** (Phase 3) | Speakers walking, emoting and talking; townsfolk walking; portraits by the text box (CM17) | Portraits are master data's busts ✓ | **Six emotes; emote bubbles; townsfolk sets** for the slice's town | UA7, UA8, UA10 |
@@ -295,7 +295,7 @@ UA8 is delivered in uma-art **2.22.0**: 16 held textures and eight bubbles, with
 
 | Profile | Outfits | Frames each | Frames in all | Done | Generation masters each | Generation waits |
 |---|---|---|---|---|---|---|
-| Traveler | 100 | 118 | 11,800 | 590 (batch 1, published) | ~10 (6 measured, plus ~4 for the field set, `weary` and emotes) | ~8 min each, **~13 h** |
+| Traveler | 100 | 130 | 13,000 | 590 of batch 1's 650 (published at 118; UA12 adds the left walks) | ~11 (6 measured, plus ~5 for the field set, `weary` and emotes) | ~9 min each, **~15 h** |
 | Townsfolk | 70 | 45 | 3,150 | — | ~4 | ~3 min each, ~3.5 h |
 | Rival add-on | up to 65 | ≈25 | ≈1,600 | — | ~2 | ~1.5 min each, ~1.5 h |
 
@@ -316,7 +316,7 @@ UA3 and UA6 are complete (P99). Reviews now happen in the versioned Studio at `h
 
 ## 11. The packets
 
-All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or racer's A).
+All in uma-platform. Ids UA1–UA12 (they don't collide with D, P, S, H, Q, F or racer's A).
 
 | Id | What | Who | Size | Needs |
 |---|---|---|---|---|
@@ -331,6 +331,7 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 | [UA9](../handoff/tasks/UA9-batch-2.md) | Art: batch 2 in the full traveler profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 |
 | [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA7 |
 | [UA11](../handoff/tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 | ChatGPT | M | UA10's set gate, UA2 |
+| [UA12](../handoff/tasks/UA12-left-walks.md) | Art: batch 1's `walk-left` and `run-left` as new revisions, published sprite-only (P105) | ChatGPT | S | UA7 |
 
 **Later, written when their game step nears:**
 - the rival add-on's first set, with uma-quest's Phase 5;
@@ -343,6 +344,7 @@ UA1 ──┬─► UA2 ──┬─► UA5 (first publish, after your set appro
       ├─► UA3 ──┼─► UA9 (batch 2 …) ──► batches 3–20
       │         │
       └─► UA7 ──┴─► UA10
+                └──► UA12 (batch 1's left walks, P105) ──► uma-quest walks left in the field facing
 UA4 ─────────────► UA5
 UA8 (uma-art) runs alongside;  UA6 (bucket) on your yes
 ```

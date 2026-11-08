@@ -16,10 +16,18 @@ function argument(name: string): string | null {
   return index < 0 ? null : process.argv[index + 1] ?? null
 }
 
-/** Profiles with a fixed catalog (format.md §7): body frames, face patches and, for travelers, the 27 actions. */
-const PROFILES: Record<string, { actions?: number; frames: number; faces: number }> = {
-  traveler: { actions: 27, frames: 118, faces: 7 },
-  townsfolk: { frames: 45, faces: 2 },
+/** A profile's whole catalog (format.md §7): actions, body frames and face patches. */
+interface Catalog { actions: number; frames: number; faces: number; requires: string[]; before?: string }
+/**
+ * Each profile's catalog, the current one first. A traveler set published before P105 (batch 1 at 118 frames, without
+ * `walk-left` and `run-left`) still passes, with a note, until its next revision replaces it.
+ */
+const PROFILES: Record<string, Catalog[]> = {
+  traveler: [
+    { actions: 29, frames: 130, faces: 7, requires: ['walk-left', 'run-left'] },
+    { actions: 27, frames: 118, faces: 7, requires: [], before: 'P105' },
+  ],
+  townsfolk: [{ actions: 12, frames: 45, faces: 2, requires: ['walk-left'] }],
 }
 
 async function main(): Promise<void> {
@@ -53,12 +61,11 @@ async function main(): Promise<void> {
   for (const outfitId of sprites) {
     const set = (await client.spriteSet(manifest, art!, outfitId))!
     const frames = Object.values(set.actions).reduce((sum, action) => sum + action.frames.length, 0)
-    const expected = PROFILES[set.profile]
+    const catalogs = PROFILES[set.profile]
     const counts = `${Object.keys(set.actions).length} actions, ${frames} frames, ${Object.keys(set.faces).length} patches`
-    if (expected && ((expected.actions !== undefined && Object.keys(set.actions).length !== expected.actions) ||
-      frames !== expected.frames || Object.keys(set.faces).length !== expected.faces)) {
-      failures.push(`${outfitId}: ${counts}, not a whole ${set.profile} set (format.md §7)`)
-    }
+    const match = catalogs?.find((c) => Object.keys(set.actions).length === c.actions && frames === c.frames &&
+      Object.keys(set.faces).length === c.faces && c.requires.every((name) => name in set.actions))
+    if (catalogs && !match) failures.push(`${outfitId}: ${counts}, not a whole ${set.profile} set (format.md §7)`)
     for (const page of set.pages) {
       const bytes = await client.file(manifest, page.path)
       const meta = await sharp(bytes).metadata()
@@ -67,6 +74,7 @@ async function main(): Promise<void> {
       pageBytes += bytes.byteLength
     }
     console.log(`Sprite set ${outfitId} r${set.revision} ${set.profile}: ${counts}, ${set.pages.length} page(s)`)
+    if (match?.before) console.log(`  ${outfitId} is drawn to the catalog before ${match.before}; its next revision completes it`)
   }
   if (sprites.length > 0) console.log(`Sprite pages: ${pages} decoded, ${(pageBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 

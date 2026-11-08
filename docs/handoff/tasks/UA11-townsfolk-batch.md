@@ -43,7 +43,8 @@ nothing else unless a measured number says to.
 - **Profile `townsfolk`, 45 frames:**
   - the key, a battle-facing still;
   - `turnaround`;
-  - the battle `walk`, plus `walk-front`, `walk-back` and `walk-right`;
+  - `walk-front`, `walk-back`, `walk-right` and `walk-left` (P105: `walk-left`, drawn as the left turnaround still,
+    replaced the battle `walk`);
   - the six emotes;
   - both blink patches.
 - **Two reviews a batch:**
@@ -52,7 +53,7 @@ nothing else unless a measured number says to.
 
   Each decision goes in `reviews.json` per outfit, tied to file hashes, as for travelers.
 - **The checks are format.md §11's,** wherever the profile has the frames. The face lock and check 11 run on the
-  battle-facing walk against the key; check 13 compares each field walk with its turnaround still.
+  key; check 13 compares each field walk, left included, with its turnaround still.
 - **The rendering reference** is batch 1's approved sets and UA10's.
 - **Order with travelers (P93):** a townsfolk batch follows each traveler batch, unless the Studio's queue says
   otherwise.

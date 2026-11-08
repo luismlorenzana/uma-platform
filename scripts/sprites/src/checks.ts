@@ -3,10 +3,20 @@ import { bounds, handDistance, haze, smallClusters } from './pixels.js'
 
 export const BATTLE_COUNTS = { idle: 4, run: 6, hop: 2, swing: 6, thrust: 5, shoot: 5, cast: 6, guard: 3, hurt: 2, down: 3, victory: 6, limit: 4, walk: 6, turnaround: 4 }
 export const EMOTE_COUNTS = { nod: 3, surprise: 2, laugh: 3, sad: 2, angry: 2, wave: 4 }
-export const FIELD_COUNTS = Object.fromEntries(['front', 'back', 'right'].flatMap(v => [['walk-' + v, 6], ['run-' + v, 6]])) as Record<string, number>
+/** The field set walks and runs in all four facings; left is drawn to match the left turnaround still (P105). */
+export const FIELD_COUNTS = Object.fromEntries(['front', 'back', 'right', 'left'].flatMap(v => [['walk-' + v, 6], ['run-' + v, 6]])) as Record<string, number>
+/** Townsfolk walk in the four field facings; `walk-left` replaced the battle `walk` (P105). */
 export const profileCounts = (profile: string, coverage?: string): Record<string, number> => profile === 'townsfolk'
-  ? { idle: 1, walk: 6, turnaround: 4, 'walk-front': 6, 'walk-back': 6, 'walk-right': 6, ...EMOTE_COUNTS }
+  ? { idle: 1, turnaround: 4, 'walk-front': 6, 'walk-back': 6, 'walk-right': 6, 'walk-left': 6, ...EMOTE_COUNTS }
   : coverage === 'battle' ? BATTLE_COUNTS : { ...BATTLE_COUNTS, ...FIELD_COUNTS, weary: 4, ...EMOTE_COUNTS }
+/** A whole set's body frames and face patches (format.md §7.7): a traveler 130 and 7, townsfolk 45 and 2. */
+export const profileTotals = (profile: string, coverage?: string): { frames: number; faces: number } => ({
+  frames: Object.values(profileCounts(profile, coverage)).reduce((n, v) => n + v, 0),
+  faces: profile === 'townsfolk' ? 2 : coverage === 'battle' ? 6 : 7,
+})
+/** The catalog's actions a set doesn't have yet, e.g. a set drawn before P105 lacks `walk-left` and `run-left`. */
+export const missingActions = (profile: string, actions: Record<string, unknown>, coverage?: string): string[] =>
+  Object.keys(profileCounts(profile, coverage)).filter(name => !(name in actions))
 export interface CheckContext {
   atlas: NativeAtlas; pixels: Record<string, Pixels>; hashes: Record<string, string>
   keyPins: Record<string, string>; priorPins: Record<string, string>; priorActions?: NativeAtlas['actions']
@@ -22,7 +32,7 @@ export const checks: Record<number, Check> = {
   1(c) {
     const errors: string[] = [], counts = profileCounts(c.atlas.profile, c.coverage)
     for (const [name, count] of Object.entries(counts)) if (c.atlas.actions[name]?.frames.length !== count) errors.push(`${name}: expected ${count} frames`)
-    if (Object.keys(c.atlas.faces).length !== (c.atlas.profile === 'townsfolk' ? 2 : c.coverage === 'battle' ? 6 : 7)) errors.push('patch count')
+    if (Object.keys(c.atlas.faces).length !== profileTotals(c.atlas.profile, c.coverage).faces) errors.push('patch count')
     for (const [name, a] of Object.entries(c.atlas.actions)) for (const event of Object.values(a.events)) {
       const indices = Array.isArray(event) ? event : [event]
       if (indices.some(i => !Number.isInteger(i) || i < 0 || i >= a.frames.length) || (Array.isArray(event) && (event.length !== 2 || event[0]! > event[1]!))) errors.push(`${name}: event outside frames`)
@@ -86,7 +96,7 @@ export const checks: Record<number, Check> = {
   },
   13(c) {
     const errors: string[] = []
-    for (const [name, a] of Object.entries(c.atlas.actions)) if (/^(walk|run)-(front|back|right)$/.test(name)) {
+    for (const [name, a] of Object.entries(c.atlas.actions)) if (/^(walk|run)-(front|back|right|left)$/.test(name)) {
       const view = name.split('-')[1], reference = c.atlas.actions.turnaround?.frames.find(f => f.view === view)
       if (!reference || Math.abs(bounds(c.pixels[a.frames[0]!.file]!).height - bounds(c.pixels[reference.file]!).height) > 4) errors.push(`${name}: standing height`)
       const scales = c.config.facingScales?.[name], first = scales?.[0]

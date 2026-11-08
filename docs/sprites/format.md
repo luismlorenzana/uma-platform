@@ -16,7 +16,7 @@ A **sprite set** is one outfit's animation art at one **revision**. A **profile*
 
 | Profile | Who | Actions | Body frames | Face patches |
 |---|---|---|---|---|
-| **Traveler** | The 100 selected outfits (tiers SS, A1, A2) | Battle set, field set, `weary`, emotes | **118** | 7 |
+| **Traveler** | The 100 selected outfits (tiers SS, A1, A2) | Battle set, field set, `weary`, emotes | **130** | 7 |
 | **Townsfolk** | One outfit for each of the 70 other characters | Key, turnaround, walk in four facings, emotes | **45** | 2 (blinks) |
 | **Rival add-on** | A traveler who appears as a boss | Her fight actions facing right | **≈25** | — |
 
@@ -40,10 +40,16 @@ owner approves it in the Studio ([pipeline.md](pipeline.md) §4).
 
 | Facing | Used for | Drawn as |
 |---|---|---|
-| **Battle** (three-quarter, turned to image-left) | Every fight action, walking left in the field, the key frame | The battle set |
+| **Battle** (three-quarter, turned to image-left) | Every fight action, the key frame | The battle set |
 | **Front** (toward the camera) | Walking down the screen, emotes, a speaker turned to the camera | The field set and the emotes |
 | **Back** (away from the camera) | Walking up the screen | The field set |
 | **Right** (three-quarter, turned to image-right) | Walking right; a rival on the foes' side | The field set and the rival add-on |
+| **Left** (turned to image-left, as the left turnaround still) | Walking left in the field (P105) | The field set |
+
+The battle facing and the field's left both turn to image-left, but they aren't the same drawing. The battle set holds
+the fight stance. The field's left is a relaxed walk drawn to match the left turnaround still, the way the right walk
+matches the right one. The owner played uma-quest's test room on 2026-11-08, saw the battle walk standing in for left,
+and asked for this.
 
 **Nothing is ever mirrored** (uma-rpg SA3, uma-quest DN25). Ornaments, parts and bows sit on one side, so every facing
 is drawn. The four turnaround stills (front, back, left, right) are the reference for every facing, and they also serve
@@ -148,16 +154,20 @@ Times are milliseconds at 1×. The game scales them for 1×, 2× and 4× and for
 share one correctly raised arm at two weapon angles, and `guard`'s recovery may be the key itself. The batch README
 records every reuse.
 
-### 7.2 The field set: new, 36 frames
+### 7.2 The field set: new, 48 frames
 
 | Action | Frames | Times | Plays | Face | Held |
 |---|---|---|---|---|---|
-| `walk-front`, `walk-back`, `walk-right` | 6 each | 110 each | Loop | Drawn | `back` (at rest, or hidden by her body facing back) |
-| `run-front`, `run-back`, `run-right` | 6 each | 75 each | Loop | Drawn | `back` |
+| `walk-front`, `walk-back`, `walk-right`, `walk-left` | 6 each | 110 each | Loop | Drawn | `back` (at rest, or hidden by her body facing back) |
+| `run-front`, `run-back`, `run-right`, `run-left` | 6 each | 75 each | Loop | Drawn | `back` |
 
-- Walking left in the field is the battle `walk` and `run`.
-- **Standing in the field** is the turnaround still for that facing (left: the battle `idle`). The game may add a
-  one-texel breathing bob. No new idle frames are drawn.
+- **Walking left** is `walk-left` and `run-left`, drawn to match the left turnaround still (P105). The battle `walk`
+  and `run` are for fights.
+- **Standing in the field** is the turnaround still for that facing, left included. The game may add a one-texel
+  breathing bob. No new idle frames are drawn.
+- **Sets drawn before P105** (batch 1's first published revisions, 118 frames) have no `walk-left` or `run-left`. Until
+  their next revision, a game walks them left with the battle `walk` and `run` and stands them on the battle `idle`, as
+  uma-quest does (its D17).
 - Contact frames land on row 240. Run flight phases are `air`. A facing's standing height matches its turnaround still
   within 4 px (check 13).
 - Dash in a dungeon (uma-quest DN26) plays `run-*`. Followers in single file (DN24) use the same actions.
@@ -191,9 +201,10 @@ fights (DN12), so a hurt party starts its next fight weary. It was uma-rpg's "la
 
 ### 7.5 The townsfolk profile: 45 frames
 
-The key (1), `turnaround` (4), the battle `walk` (6) plus `walk-front`, `walk-back` and `walk-right` (18), and the six
-emotes (16), with both blink patches. She has no fight, run or `weary` frames. Her key is a single battle-facing still:
-standing, she shows it in the battle facing and the turnaround stills in the others.
+The key (1), `turnaround` (4), `walk-front`, `walk-back`, `walk-right` and `walk-left` (24), and the six emotes (16),
+with both blink patches. She has no fight, run or `weary` frames. `walk-left` takes the place of the battle `walk` she
+had before P105. She never fights, so the battle walk only ever stood in for left. Her key is a single battle-facing
+still; standing in the field, she shows the turnaround still for her facing.
 
 ### 7.6 The rival add-on: about 25 frames, facing right
 
@@ -216,12 +227,12 @@ add-on (uma-quest's Phase 4 may revise this). It's drawn only for travelers a wr
 | Group | Frames | Traveler | Townsfolk | Rival add-on |
 |---|---|---|---|---|
 | Battle set | 62 | ✓ | — | — |
-| Field set | 36 | ✓ | 18 (walks only) | — |
-| Key, battle `walk` and `turnaround` (townsfolk) | — | (in the battle set) | 11 | — |
+| Field set | 48 | ✓ | 24 (walks only) | — |
+| Key and `turnaround` (townsfolk) | — | (in the battle set) | 5 | — |
 | `weary` | 4 | ✓ | — | — |
 | Emotes | 16 | ✓ | ✓ | — |
 | Facing right | ≈25 | — | — | ✓ |
-| **Total** | | **118** | **45** | **≈25** |
+| **Total** | | **130** | **45** | **≈25** |
 
 ## 8. The key frame and the identity sheet
 
@@ -348,8 +359,8 @@ Published sets travel in master data's private release as the art family **`outf
 - **Packing:** shelf packing, tallest first, rows of a near-square width, deterministic. Each batch-1 traveler fits on
   one page of about 1,730–1,830 × 1,900–1,960 px.
 
-**The encoding: lossy WebP, quality 90, alpha quality 100.** Batch 1's whole traveler sets (118 frames, 7 patches),
-measured on 2026-11-08:
+**The encoding: lossy WebP, quality 90, alpha quality 100.** Batch 1's whole traveler sets (118 frames, 7 patches,
+before P105's left walks), measured on 2026-11-08:
 
 | Outfit | Lossless | Lossy q90 | PSNR (opaque pixels) | Alpha |
 |---|---|---|---|---|
@@ -362,7 +373,8 @@ measured on 2026-11-08:
 Lossless is over the 3 MB line for every traveler, so the rule picks lossy. The side-by-side at 1× and 2× (nearest
 neighbour, lossless, lossy and the difference ×8, on each set's worst frame and its key) shows no visible difference;
 the error sits in faint grain and in fully transparent pixels, which never draw. Lossy is 62% smaller: about 1.45 MB a
-traveler, 7.2 MB for batch 1, ~145 MB for all 100. A set loads only while its Uma is on screen.
+traveler, 7.2 MB for batch 1, ~145 MB for all 100. P105's 12 left-walk frames add about a tenth: ~1.6 MB a traveler,
+~160 MB for all 100, still well under the 3 MB line. A set loads only while its Uma is on screen.
 
 ## 14. What changed from uma-rpg's animation spec
 
@@ -390,16 +402,16 @@ traveler, 7.2 MB for batch 1, ~145 MB for all 100. A set loads only while its Um
 
 | Id | Call |
 |---|---|
-| CR1 | A sprite set is one outfit's art at one revision. Three profiles say what it must have: traveler (118 frames), townsfolk (45), rival add-on (≈25) |
+| CR1 | A sprite set is one outfit's art at one revision. Three profiles say what it must have: traveler (130 frames since P105, 118 before), townsfolk (45), rival add-on (≈25) |
 | CR2 | A 256 × 256 working texture, full colour, clean antialiased edges; logical cell 64; foot (128, 240); a clear border (replaces SA2 and SA15) |
 | CR3 | On the iPhone one texel is one device pixel: a cell is 85⅓ pt, a standing Uma about 69 pt; no fractional scaling |
-| CR4 | Four facings, all drawn: battle (three-quarter left), front, back and right (three-quarter right); nothing is mirrored |
+| CR4 | Five facings, all drawn: battle (three-quarter left, the fight stance), front, back, right (three-quarter right) and the field's left (as the left turnaround still, P105); nothing is mirrored |
 | CR5 | Seven layers; the hand crop redraws her fist over the handle; the body holds no item, shadow, floor or glow |
 | CR6 | The face-only lock: locked frames match the key exactly inside the face box; hair and ornaments keep each pose's drawing (replaces SA5 and SA6) |
 | CR7 | Seven patches: the six of SA7 plus `weary`; the game runs blinks, in the battle facing only; other facings carry no patches in v1 |
 | CR8 | Per-frame fields as built, plus `bounds`, `handOcclusion` and `view`; events `impact`, `release`, `hold`, `repeat` |
 | CR9 | The battle set is the built 14 entries and 62 frames, with recorded reuse allowed |
-| CR10 | The field set: walk and run facing front, back and right, 36 frames; standing in the field uses the turnaround stills |
+| CR10 | The field set: walk and run facing front, back, right and left, 48 frames (left added by P105); standing in the field uses the turnaround stills, left included |
 | CR11 | `weary`, a 4-frame low-HP idle with its patch, joins the traveler profile, because uma-quest carries HP between fights |
 | CR12 | Six front-facing emotes, 16 frames: `nod`, `surprise`, `laugh`, `sad`, `angry`, `wave`. Bubbles are uma-art, cheering is `victory`, and there's no talk patch |
 | CR13 | The rival add-on: her fight actions facing right (about 25 frames), only for travelers cast as bosses; escorts are bestiary foes, not Umas |

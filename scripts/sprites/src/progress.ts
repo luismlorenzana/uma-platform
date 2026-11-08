@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { atomicJson, current, hash, inside, maybeJson, readJson } from './io.js'
 import { queue, nextBatch, scope, stage, type Ranking, type QueueOverride } from './queue.js'
+import { missingActions, profileTotals } from './checks.js'
 import { reviewState } from './reviews.js'
 import { runtimeFiles, type NativeAtlas } from './types.js'
 
@@ -24,7 +25,8 @@ export async function buildProgress(content: string, persist = true) {
       const v = await maybeJson<{ checks?: Record<string, boolean>; files?: Record<string, string> }>(reportPath,
         await maybeJson(resolve(dir, 'verification.json'), {}))
       const frames = Object.values(a.actions).reduce((n, aa) => n + aa.frames.length, 0), faces = Object.keys(a.faces).length
-      const drawn = frames === (profile === 'traveler' ? 118 : 45) && faces === (profile === 'traveler' ? 7 : 2)
+      const whole = profileTotals(profile), missing = missingActions(profile, a.actions)
+      const drawn = frames === whole.frames && faces === whole.faces && missing.length === 0
       let verified = drawn && !!v.checks && Object.keys(v.checks).length === 14 && Object.values(v.checks).every(Boolean)
       if (verified) for (const file of runtimeFiles(a)) if (!v.files?.[file] || hash(await readFile(await inside(dir, file))) !== v.files[file]) { verified = false; break }
       const changed = state.key.changed || state.set.changed, pub = published[String(a.id)]
@@ -35,12 +37,15 @@ export async function buildProgress(content: string, persist = true) {
         revision: a.revision, artRevision: `r${a.revision}`, frames, expressions: faces, actions: Object.keys(a.actions).length,
         key: `authoring/sprites/${a.id}/r${a.revision}/${a.approvedKey}`, keyGate: state.gates?.key.decision ?? null,
         setGate: state.gates?.set.decision ?? null, changed, published: pub?.revision === a.revision ? pub.version : null,
-        note: changed ? 'Files changed since approval; review again.' : state.set.approved ? 'Full profile approved against file hashes.' : verified ? 'Verified; set review pending.' : 'Authoring in progress.',
+        note: changed ? 'Files changed since approval; review again.' : missing.length > 0 && state.set.approved
+          ? `Approved before the catalog grew; the next revision adds ${missing.join(', ')}.`
+          : state.set.approved ? 'Full profile approved against file hashes.' : verified ? 'Verified; set review pending.' : 'Authoring in progress.',
         verification: `authoring/sprites/${a.id}/r${a.revision}/verification.json` })
     } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
     entries.push(row)
   }
-  const complete = new Set(entries.filter(e => e.fullyAuthored).map(e => e.outfitId))
+  // A set approved at an earlier catalog (batch 1 before P105) is still taken: its next revision adds the new actions.
+  const complete = new Set(entries.filter(e => e.fullyAuthored || e.ownerReviewed).map(e => e.outfitId))
   const totals = Object.fromEntries((['traveler', 'townsfolk'] as const).map(profile => [profile, {
     total: scope(roster.rankings, profile, override.townsfolkOutfits).length, verified: entries.filter(e => e.profile === profile && e.fullyAuthored).length,
     approved: entries.filter(e => e.profile === profile && e.ownerReviewed).length,

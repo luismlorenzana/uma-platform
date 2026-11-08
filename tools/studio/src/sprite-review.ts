@@ -1,7 +1,7 @@
 import { propArt } from './prop-art.js'
 import { readFile, readdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { current, readJson, reviewState, queue, nextBatch, maybeJson, type NativeAtlas, type Ranking, type QueueOverride } from '@uma-platform/sprite-pipeline'
+import { current, readJson, reviewState, queue, nextBatch, maybeJson, profileTotals, type NativeAtlas, type Ranking, type QueueOverride } from '@uma-platform/sprite-pipeline'
 import type { Catalog } from './model.js'
 
 export async function spriteReview(content: string, catalog: Catalog, search = new URLSearchParams()) {
@@ -29,7 +29,7 @@ export async function spriteReview(content: string, catalog: Catalog, search = n
     characters.push({ ...a, name: uma?.name ?? String(id), references: uma?.references ?? [],
       atlasFile: prefix + 'atlas.json', identityFile: prefix + 'identity.md', keyApproved: state.key.approved, setApproved: state.set.approved,
       changed: state.key.changed || state.set.changed, missingHashes: [...state.key.missing, ...state.set.missing],
-      keyGate: state.gates?.key, setGate: state.gates?.set, fullProfile: Object.values(a.actions).reduce((n, v) => n + v.frames.length, 0) === (profile === 'townsfolk' ? 45 : 118) })
+      keyGate: state.gates?.key, setGate: state.gates?.set, fullProfile: Object.values(a.actions).reduce((n, v) => n + v.frames.length, 0) === profileTotals(profile).frames })
   }
   const props = await propArt()
   return { characters, ...props, missing, batch: batchNumber, profile, coverage: profile, pendingOwnerReview: missing.length > 0 || characters.some(c => !c.keyApproved || !c.setApproved) }

@@ -18,6 +18,7 @@
   | **UA5** | Batch 1's five sprite sets published in master data's `outfit-sprites` | uma-quest's Q6 |
   | **UA8** | Ten held weapons and eight emote bubbles in uma-art | Q9 and Q12 |
   | **UA10** | Three townsfolk, published with or after UA5 | Q12 |
+  | **UA12** | Batch 1's left field walks, `walk-left` and `run-left` (P105) | uma-quest's left walk (its D17) |
   | **KL1** | uma-kit's landscape layout, a kit minor | uma-quest's Phase 5, not the slice |
   | **PO1** | `uma-post` 0.1.0, the parcel format and accept lists | uma-farm's F10 |
 
@@ -26,7 +27,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **In progress:** UA10 (ChatGPT), at the key gate for the owner's T1 picks (P104); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
+- **In progress:** UA10 (ChatGPT), drawing the owner's T1 picks (P104) with `walk-left` (P105); UA12 (ChatGPT) is ready: batch 1's left field walks (P105); UA8 shipped in uma-art 2.22.0. UA5 is done: batch 1 is in `latest` (release `4757517816a0`, P100).
 - **Your steps:**
   - the townsfolk reviews (UA10);
   - the art reviews ChatGPT asks for.
@@ -86,10 +87,11 @@ Batch 1's sets are in master data before uma-quest's Q6 needs them, and the back
 |---|---|---|---|---|---|
 | [UA5](#ua5) | **Batch 1 published**: `sprites:pack`, the sprite-only publish, the encoding decision, and batch 1's first release. | Done | M | UA2 ✓, UA4 ✓, your approval ✓ | Done (P100) |
 | [UA6](#ua6) | **The backup, finished**: The first backup verified and a restore tested, with the model caches left out. | Done | S | the bucket ✓ | Done (P99) |
+| [UA12](#ua12) | **Batch 1's left field walks**: `walk-left` and `run-left`, 12 frames a traveler, as new revisions published sprite-only. | ChatGPT | S | UA7 ✓, your set gate | Ready |
 
 **Exit:**
 
-- `latest` holds batch 1's five sets; the client's `spriteSet` returns each with all 27 entries
+- `latest` holds batch 1's five sets; the client's `spriteSet` returns each with all 27 entries (29 after UA12)
 - uma-rpg's site and API behave as before
 - The backup holds `content/authoring/` and restores, without model caches
 
@@ -172,6 +174,29 @@ run, field facings, turnarounds, blinks). Later batches follow
 - The other release files match byte for byte
 - uma-rpg is unaffected
 - uma-quest's handoff is told that Q6 can load batch 1
+
+### UA12
+
+**Batch 1's left field walks** · ChatGPT · S · Needs: UA7 ✓, your set gate · **Ready** · P105 ·
+[packet](../handoff/tasks/UA12-left-walks.md)
+
+You played uma-quest's test room on 2026-11-08, and Umas walking left looked wrong: they used the battle `walk`, the
+fight stance. P105 gives travelers `walk-left` and `run-left`, drawn to match the left turnaround still, so the profile
+grows from 118 to 130 frames. Townsfolk get `walk-left` in place of their battle walk and stay at 45. uma-quest already
+plays the new actions when a set has them and falls back until then (its D17).
+
+**Delivers:**
+
+- A new revision for each of batch 1's five, with `walk-left` (6 frames, 110 ms) and `run-left` (6 frames, 75 ms, `air`
+  flight phases)
+- Your set gate on the five, then a sprite-only release
+
+**Covers:** R1, R3, N1, N3
+
+**Done when:**
+
+- `latest` holds the five at 130 frames, and `release:check` passes with no pre-P105 notes
+- uma-quest's session is told that batch 1 walks left in its own facing
 
 ### UA6
 
@@ -311,7 +336,8 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 ```
 M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
-M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (key gate) ──► uma-quest Q12
+     UA12 (batch 1's left walks, P105) ──► uma-quest's left walk (D17)
+M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (drawing) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
 M4  uma-farm F7 + uma-quest Q17 ──► PO1 ──► uma-farm F10 ──► uma-quest's receiver

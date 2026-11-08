@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checks, profileCounts, runChecks, type CheckContext } from './checks.js'
+import { checks, missingActions, profileCounts, profileTotals, runChecks, type CheckContext } from './checks.js'
 import type { NativeFrame, Pixels } from './types.js'
 import { queue, nextBatch, scope, stage, type Ranking } from './queue.js'
 
@@ -13,6 +13,38 @@ function fixture(): CheckContext {
   return { atlas, pixels: { 'key.png': { ...p, data: Buffer.from(p.data) }, 'body.png': p, 'face.png': { width: 8, height: 8, data: Buffer.alloc(8 * 8 * 4, 255) } }, hashes: { 'body.png': 'a', 'key.png': 'a' }, keyPins: { 'key.png': 'a' }, priorPins: { 'body.png': 'a' }, repeat: true,
     config: { schemaVersion: 2, atlasText: '', outputs: {}, handPalette: 'skin', facingScales: Object.fromEntries(Object.keys(atlas.actions).filter(k => k.includes('-')).map(k => [k, Array.from({ length: 6 }, () => ({ sx: 1, sy: 1 }))])) } }
 }
+describe('the catalog (format.md §7, P105)', () => {
+  it('walks and runs a traveler in all four field facings: 29 actions, 130 frames, 7 patches', () => {
+    const counts = profileCounts('traveler')
+    expect(Object.keys(counts)).toHaveLength(29)
+    expect([counts['walk-left'], counts['run-left']]).toEqual([6, 6])
+    expect(profileTotals('traveler')).toEqual({ frames: 130, faces: 7 })
+    expect(profileTotals('traveler', 'battle')).toEqual({ frames: 62, faces: 6 })
+  })
+  it('gives townsfolk walk-left in place of the battle walk, so they stay at 45 frames', () => {
+    const counts = profileCounts('townsfolk')
+    expect(counts['walk-left']).toBe(6)
+    expect(counts.walk).toBeUndefined()
+    expect(profileTotals('townsfolk')).toEqual({ frames: 45, faces: 2 })
+  })
+  it("names what a set drawn before P105 lacks", () => {
+    const before = Object.fromEntries(Object.keys(profileCounts('traveler')).filter(name => !name.endsWith('-left')).map(name => [name, {}]))
+    expect(missingActions('traveler', before)).toEqual(['walk-left', 'run-left'])
+    expect(missingActions('traveler', profileCounts('traveler'))).toEqual([])
+  })
+  it('fails check 1 on a set without the left walks, and check 13 holds them to the left turnaround', () => {
+    const c = fixture()
+    delete c.atlas.actions['walk-left']
+    expect(checks[1]!(c)).toContain('walk-left: expected 6 frames')
+    const d = fixture()
+    d.config.facingScales!['run-left']![2]!.sx = 1.1
+    expect(checks[13]!(d)).toEqual(['run-left: cycle scale'])
+    const e = fixture()
+    e.atlas.actions.turnaround!.frames = e.atlas.actions.turnaround!.frames.filter(f => f.view !== 'left')
+    expect(checks[13]!(e)).toEqual(['walk-left: standing height', 'run-left: standing height'])
+  })
+})
+
 describe('fourteen pure checks', () => {
   it('accepts the invented complete profile', () => { expect(runChecks(fixture()).failures).toEqual([]) })
   const mutations: [number, (c: CheckContext) => void][] = [

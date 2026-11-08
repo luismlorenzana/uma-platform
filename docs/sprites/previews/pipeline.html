@@ -124,9 +124,9 @@
   <h1>Uma sprites: from experiments to a pipeline</h1>
   <p>ChatGPT's experiments, written down as one format and one way from the roster to a game. The docs:
     <a href="../format.md">format.md</a> (the format, CR1–CR18) and <a href="../pipeline.md">pipeline.md</a> (the pipeline,
-    CR19–CR34). The packets, UA1–UA11, are in <a href="../../handoff/README.md#uma-sprites-the-pipeline-ua">the handoff</a>,
+    CR19–CR34). The packets, UA1–UA12, are in <a href="../../handoff/README.md#uma-sprites-the-pipeline-ua">the handoff</a>,
     and the decision is P91. Outfits appear by id only, and this page shows no character art.
-    <b>2026-11-08:</b> batch 1 is approved in full (118 frames each), and townsfolk are drawn ahead in batches of ten (P93).</p>
+    <b>2026-11-08:</b> batch 1 is approved in full (118 frames each), and townsfolk are drawn ahead in batches of ten (P93). After the owner played uma-quest's test room, P105 gave travelers <code>walk-left</code> and <code>run-left</code> (130 frames) and townsfolk <code>walk-left</code> in place of the battle walk; UA12 adds them to batch 1.</p>
   <nav>
     <a href="#flow">Stages and gates</a>
     <a href="#profile">What a traveler has</a>
@@ -141,10 +141,10 @@
 
   <div class="tiles">
     <div class="tile"><b>5 / 100</b><span>travelers drawn in full and published (batch 1, release <code>4757517816a0</code>)</span></div>
-    <div class="tile"><b>62 → 118</b><span>frames a traveler, with the field set, <code>weary</code> and emotes</span></div>
+    <div class="tile"><b>62 → 130</b><span>frames a traveler, with the field set (four facings, P105), <code>weary</code> and emotes</span></div>
     <div class="tile"><b>2 gates</b><span>yours, in the Studio: the key per outfit, the set per batch</span></div>
     <div class="tile"><b>20 batches</b><span>of five; batch N is uma-quest's wave N</span></div>
-    <div class="tile"><b>11 packets</b><span>UA1–UA11; UA1–UA7 done</span></div>
+    <div class="tile"><b>12 packets</b><span>UA1–UA12; UA1–UA8 done</span></div>
     <div class="tile"><b>≈ $0</b><span>a month: a backup bucket on your yes, the rest free tier</span></div>
   </div>
 
@@ -236,7 +236,7 @@
     <h2>Volume and time</h2>
     <div class="scroll"><table>
       <tr><th>Profile</th><th class="num">Outfits</th><th class="num">Frames each</th><th class="num">Frames in all</th><th class="num">Drawn</th><th class="num">Masters each</th><th class="num">Generation waits</th></tr>
-      <tr><td><b>Traveler</b></td><td class="num">100</td><td class="num">118</td><td class="num">11,800</td><td class="num">310</td><td class="num">~10</td><td class="num">~13 h</td></tr>
+      <tr><td><b>Traveler</b></td><td class="num">100</td><td class="num">130</td><td class="num">13,000</td><td class="num">590</td><td class="num">~11</td><td class="num">~15 h</td></tr>
       <tr><td><b>Townsfolk</b></td><td class="num">70</td><td class="num">45</td><td class="num">3,150</td><td class="num">—</td><td class="num">~4</td><td class="num">~3.5 h</td></tr>
       <tr><td><b>Rival add-on</b></td><td class="num">up to 65</td><td class="num">≈25</td><td class="num">≈1,600</td><td class="num">—</td><td class="num">~2</td><td class="num">~1.5 h</td></tr>
     </table></div>
@@ -351,17 +351,17 @@ function drawFlow() {
 // What a traveler has.
 const groups = [
   { k: 'battle', label: 'Battle set', n: 62, tip: 'idle, run, walk, hop, swing, thrust, shoot, cast, guard, hurt, down, victory, limit, turnaround' },
-  { k: 'field', label: 'Field set', n: 36, tip: 'walk and run facing front, back and right' },
+  { k: 'field', label: 'Field set', n: 48, tip: 'walk and run facing front, back, right and left (left: P105)' },
   { k: 'weary', label: 'weary', n: 4, tip: 'low-HP idle, with its patch' },
   { k: 'emotes', label: 'Emotes', n: 16, tip: 'nod, surprise, laugh, sad, angry, wave (front)' },
 ]
 function drawBars() {
   const rows = [
-    { label: 'Traveler', sub: '100 outfits', segs: [['done', 62, 'Battle set', groups[0].tip], ['done', 36, 'Field set', groups[1].tip], ['done', 4, 'weary', groups[2].tip], ['done', 16, 'Emotes', groups[3].tip]], total: 118 },
-    { label: 'Townsfolk', sub: '70 characters', segs: [['miss', 11, 'Base', 'the key, the battle walk, the turnaround'], ['miss', 18, 'Field walks', 'walk front, back and right'], ['miss', 16, 'Emotes', groups[3].tip]], total: 45 },
+    { label: 'Traveler', sub: '100 outfits', segs: [['done', 62, 'Battle set', groups[0].tip], ['done', 36, 'Field set', 'walk and run facing front, back and right'], ['miss', 12, 'Left', 'walk-left and run-left, P105: batch 1 adds them in UA12'], ['done', 4, 'weary', groups[2].tip], ['done', 16, 'Emotes', groups[3].tip]], total: 130 },
+    { label: 'Townsfolk', sub: '70 characters', segs: [['miss', 5, 'Base', 'the key, the turnaround'], ['miss', 24, 'Field walks', 'walk front, back, right and left (left replaced the battle walk, P105)'], ['miss', 16, 'Emotes', groups[3].tip]], total: 45 },
     { label: 'Rival add-on', sub: 'up to 65, as cast', segs: [['later', 25, 'Facing right', 'idle, her weapon action, cast, hurt, down, limit, facing right']], total: 25 },
   ]
-  const max = 118
+  const max = 130
   const box = document.getElementById('bars'); box.replaceChildren()
   for (const r of rows) {
     const row = document.createElement('div'); row.className = 'barrow'
@@ -417,7 +417,7 @@ function drawFacings() {
 function drawQuest() {
   const rows = [
     ['Q4 · the stage', 'A stand-in Uma on the turned stage', '—', 'Nothing: stand-ins', ''],
-    ['Q6 · sprites in the engine', 'Leader and four followers in single file, walking every way; faces, blinks, tint', 'Battle-facing walk, run, idle, faces', 'Walk and run facing front, back, right; a loadable release', 'UA7 · UA4 · UA5'],
+    ['Q6 · sprites in the engine', 'Leader and four followers in single file, walking every way; faces, blinks, tint', 'Battle set; walk and run facing front, back, right; release 4757517816a0', 'Walk and run facing left (P105, after the owner’s play)', 'UA12'],
     ['Q9 · the fight screen', 'Five Umas against foes, every fight event', 'The battle set', 'Ten held weapons; weary; familiars at the new scale (old ones work for now)', 'UA8 · UA7'],
     ['Q11 · the dungeon', 'Walking, Dash, chests, Springs, downed followers', '—', 'The field set (Dash plays run-*); a downed follower is greyed by the game', 'UA7'],
     ['Q12 · town and story runner', 'Speakers walk, emote and talk; townsfolk; portraits', 'Portraits (master data)', 'Six emotes; emote bubbles; townsfolk sets', 'UA7 · UA8 · UA10'],
@@ -436,7 +436,7 @@ function drawBoard() {
     ['Layout · tools', [[{ id: 'UA1', t: 'Durable layout; batch 1’s two fixes', who: 'either', s: 'S' }], [{ id: 'UA2', t: 'scripts/sprites: export, 14 checks, repeat', who: 'either', s: 'L' }], [], []]],
     ['Studio · gates', [[], [{ id: 'UA3', t: 'Sprite Studio in git, both gates', who: 'either', s: 'M' }], [{ id: 'gate', t: 'You: batch 1 set gate (closes H168)', who: 'you' }], [{ id: 'gates', t: 'You: a key a minute, a batch ten', who: 'you' }]]],
     ['Schema · release', [[{ id: 'UA4', t: 'uma-data 1.4.0, outfit-sprites', who: 'either', s: 'M' }], [], [{ id: 'UA5', t: 'Pack, sprite-only publish, batch 1', who: 'claude', s: 'M' }, { id: '→ Q6', t: 'uma-quest loads from master data', who: 'exit' }], []]],
-    ['Art: batch 1', [[], [{ id: 'UA7', t: 'Field set, weary, emotes: 118 frames', who: 'art', s: 'M' }], [], []]],
+    ['Art: batch 1', [[{ id: 'UA12', t: 'Left field walks: 12 frames each (P105)', who: 'art', s: 'S' }], [{ id: 'UA7', t: 'Done: field set, weary, emotes (118 frames)', who: 'art', s: 'M' }], [], []]],
     ['Art: props', [[{ id: 'UA8', t: 'Done: uma-art 2.22.0, 10 weapons, 8 bubbles', who: 'art', s: 'M' }], [], [], []]],
     ['Art: rollout', [[], [], [{ id: 'UA10', t: 'Townsfolk pilot: three (T1)', who: 'art', s: 'S' }, { id: 'UA11', t: 'Townsfolk batches T2–T8', who: 'art', s: 'M' }], [{ id: 'UA9', t: 'Batch 2, then the template for 3–20', who: 'art', s: 'L' }]]],
     ['Backup', [[{ id: 'UA6', t: 'Backup bucket, on your yes', who: 'claude', s: 'S' }], [], [], []]],
@@ -469,16 +469,16 @@ function drawBatches() {
 
 // Every call.
 const calls = [
-  ['CR1', 'A sprite set is one outfit at one revision; three profiles: traveler (118 frames), townsfolk (45), rival add-on (≈25)'],
+  ['CR1', 'A sprite set is one outfit at one revision; three profiles: traveler (130 frames since P105, 118 before), townsfolk (45), rival add-on (≈25)'],
   ['CR2', 'A 256 × 256 working texture, full colour, clean antialiased edges; logical cell 64; foot (128, 240); a clear border'],
   ['CR3', 'On the iPhone one texel is one device pixel: a cell is 85⅓ pt, a standing Uma about 69 pt; no fractional scaling'],
-  ['CR4', 'Four facings, all drawn: battle (three-quarter left), front, back and right; nothing mirrored'],
+  ['CR4', 'Five facings, all drawn: battle (the fight stance), front, back, right and the field’s left (as the left turnaround still, P105); nothing mirrored'],
   ['CR5', 'Seven layers; the hand crop redraws her fist over the handle; the body holds no item, shadow, floor or glow'],
   ['CR6', 'The face-only lock: locked frames match the key exactly inside the face box (replaces SA5, SA6)'],
   ['CR7', 'Seven patches (SA7\'s six plus weary); blinks by the game in the battle facing; no patches on other facings in v1'],
   ['CR8', 'Per-frame fields as built, plus bounds, handOcclusion and view; events impact, release, hold, repeat'],
   ['CR9', 'The battle set is the built 14 entries and 62 frames, with recorded reuse allowed'],
-  ['CR10', 'The field set: walk and run facing front, back and right, 36 frames; field standing uses the turnaround stills'],
+  ['CR10', 'The field set: walk and run facing front, back, right and left, 48 frames (left: P105); field standing uses the turnaround stills, left included'],
   ['CR11', 'weary, a 4-frame low-HP idle with its patch, joins the traveler profile'],
   ['CR12', 'Six front-facing emotes (16 frames); bubbles are uma-art; cheering is victory; no talk patch'],
   ['CR13', 'The rival add-on facing right (≈25 frames), only for travelers cast as bosses; escorts are bestiary foes'],

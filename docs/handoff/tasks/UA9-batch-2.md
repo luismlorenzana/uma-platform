@@ -47,7 +47,8 @@ change nothing else unless a measured number says to.
 ## Do
 
 1. Draw the five identity sheets, and ask for the key gate in one line, with the Studio link.
-2. After approval, draw the full profile for each: 118 frames and 7 patches. Export, verify and repeat.
+2. After approval, draw the full profile for each: 130 frames and 7 patches, `walk-left` and `run-left` included (P105).
+   Export, verify and repeat.
 3. Ask for the set gate in one line. Apply any changes as new revisions.
 4. Publish, and read the release back.
 

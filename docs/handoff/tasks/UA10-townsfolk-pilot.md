@@ -16,6 +16,13 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 - UA7's revisions: their field set and emotes are the reference for drawing and timing.
 - Each townsfolk outfit's master-data portrait, bust and chibis.
 
+> **Changed on 2026-11-08 (P105): `walk-left` replaces the battle `walk`.** The three r2 revisions already hold a battle
+> `walk`. Before verifying, replace it with `walk-left`: 6 frames at 110 ms, looping, drawn to match the left turnaround
+> still the way `walk-right` matches the right one, with faces as drawn and `hold: back`. Add `walk-left` to the export
+> config's `facingScales`. Check 1 now fails a townsfolk set without `walk-left`, and check 13 holds it to the left
+> still. The profile stays at 45 frames. The reason: the owner played uma-quest's test room and found the battle walk
+> wrong for walking left (format.md §3, §7.5).
+
 ## Decisions made
 
 - **Batch T1 (P93):** these three are the first townsfolk batch; UA11's template draws T2–T8.
@@ -26,7 +33,7 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 - **The townsfolk profile, 45 frames each:**
   - the key, a battle-facing still;
   - `turnaround`;
-  - the battle `walk`, plus `walk-front`, `walk-back` and `walk-right`;
+  - `walk-front`, `walk-back`, `walk-right` and `walk-left` (P105: `walk-left` replaced the battle `walk`);
   - the six emotes;
   - both blink patches.
 
