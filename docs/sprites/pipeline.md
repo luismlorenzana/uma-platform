@@ -295,12 +295,12 @@ UA8 is delivered in uma-art **2.22.0**: 16 held textures and eight bubbles, with
 
 | Profile | Outfits | Frames each | Frames in all | Done | Generation masters each | Generation waits |
 |---|---|---|---|---|---|---|
-| Traveler | 100 | 130 | 13,000 | 590 of batch 1's 650 (published at 118; UA12 adds the left walks) | ~11 (6 measured, plus ~5 for the field set, `weary` and emotes) | ~9 min each, **~15 h** |
-| Townsfolk | 70 | 45 | 3,150 | — | ~4 | ~3 min each, ~3.5 h |
+| Traveler | 100 | 130 | 13,000 | 650 drawn; 590 published (UA12’s 60 left frames await the set gate) | ~11 (6 measured, plus ~5 for the field set, `weary` and emotes) | ~9 min each, **~15 h** |
+| Townsfolk | 70 | 45 | 3,150 | 135 drawn, set gate pending (UA10) | 7–8 measured in pilot | 11.83–21.43 min summed tool duration in pilot (P106); old ~3 min estimate not achieved |
 | Rival add-on | up to 65 | ≈25 | ≈1,600 | — | ~2 | ~1.5 min each, ~1.5 h |
 
 - The measured base is from H168 and batch 1: 5–6 calls and 4.5–4.8 minutes of waits for each Uma's battle set.
-- Export, checks and fixes come on top. Batch 1's README records them.
+- Export, checks and fixes come on top. Batch 1's README records them. UA10’s pilot measurements include identity generation, full-profile drawing and left-walk corrections. They sum tool durations with retries and overlapping queue waits, not elapsed wall-clock or active editing time; they are not a new forecast for all 70 townsfolk.
 - **Your time:** about a minute a key, ten minutes a batch, and about 4 hours over all 20 batches.
 
 ## 10. What it costs

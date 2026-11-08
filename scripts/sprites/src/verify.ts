@@ -28,7 +28,7 @@ export async function verifyRevision(root: string, dir: string, configPath?: str
   const report = { schemaVersion: 2, outfitId: a.id, revision: a.revision, profile: a.profile, ...result,
     files: hashes, frames: Object.values(a.actions).reduce((n, v) => n + v.frames.length, 0),
     facePatches: Object.keys(a.faces).length, repeatExport: repeat, passed: result.failures.length === 0,
-    check13Scope: 'First standing contact matches its facing still within 4px; all poses retain one cycle scale. Left standing uses the key/idle.' }
+    check13Scope: 'First standing contact matches its facing still within 4px; all poses retain one cycle scale. All four field facings, including left, use their own turnaround still.' }
   // The approved revision is sealed, including its original config and verification receipt.
   const sealed = state.gates?.set.decision === 'approved' || state.gates?.key.decision === 'approved'
   const output = sealed ? resolve(root, 'reports', String(a.id), basename(dir), 'verification.json') : resolve(dir, 'verification.json')

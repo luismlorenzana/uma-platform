@@ -36,3 +36,5 @@ No original art, names, private configs or reviews are bundled or committed. The
 history. Tests use invented records/bytes only; the sprite pipeline's local name/privacy guard covers this package.
 
 UA8 adds `/props`, the package gallery for 16 held textures and eight emote bubbles. The desk reads uma-art's atlas rectangles, grips, display scale and drawn-bow nock; the scene uses the tail anchors overhead. Hold an emote to inspect a bubble without timing the animation. The old private placeholders remain historical inputs only.
+
+The field preview’s **Direction check** (`#directions`) plays left and right walk/run cycles on one clock, with pause, frame stepping and native/2× zoom. Townsfolk offer walking only. In a townsfolk batch, its character picker also offers batch 1’s key-approved travelers; the scene’s companion picker includes them while extended sets await their set gate. NPC desks hide combat equipment and the combat formation, and expression choices follow each set’s actual patches.

@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**In progress:** UA10 (ChatGPT), drawing the owner's chosen T1 (P104) with P105's `walk-left`; UA12 (ChatGPT) is ready: batch 1's left field walks (P105), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103) for uma-quest's Phase 5. PO1 waits for its requests (uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**In progress:** UA10 and UA12 (ChatGPT) await their set gates: three full townsfolk profiles and five travelers with dedicated left walk/run cycles (P106), for the new apps ([the new-apps brief](../new-apps/README.md), below). Batch 1 is published: master data's `latest` is `4757517816a0` (UA5, P100). UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103) for uma-quest's Phase 5. PO1 waits for its requests (uma-farm's F7 and uma-quest's Q17). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -99,13 +99,13 @@ and bubbles are uma-art.
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | UA5 | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | Done (release `4757517816a0`, P100) |
-| [UA12](tasks/UA12-left-walks.md) | Art: batch 1's `walk-left` and `run-left` (12 frames each) as new revisions, published sprite-only (P105, from uma-quest's D17) | ChatGPT | S | UA7 ✓; the owner's set gate | **Ready** |
+| [UA12](tasks/UA12-left-walks.md) | Art: batch 1's `walk-left` and `run-left` (12 frames each) as new revisions, published sprite-only (P105, from uma-quest's D17) | ChatGPT | S | UA7 ✓; the owner's set gate | **Set gate** (five verified new revisions, P106) |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile (130 frames since P105); the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | **Ready after the slice** |
-| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town; `walk-left` replaces the battle `walk` (P105) | ChatGPT | S | UA2 ✓ | **Drawing** (keys approved) |
+| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town; `walk-left` replaces the battle `walk` (P105) | ChatGPT | S | UA2 ✓ | **Set gate** (three verified full profiles; keys approved, P106) |
 | [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 (P93) | ChatGPT | M | UA10's set gate, UA2 | After UA10, UA2 |
 
 **Order:** UA1 and UA7 are complete, and the owner approved batch 1's full traveler sets on 2026-11-08 (`reviews.json`),
-which closed uma-rpg's H168 (its D310). UA2 and UA4 are complete. UA3, UA5 and UA6 are complete; UA8 is complete; UA10 is ready. UA5 published batch 1 on 2026-11-08 (release `4757517816a0`),
+which closed uma-rpg's H168 (its D310). UA2 and UA4 are complete. UA3, UA5 and UA6 are complete; UA8 is complete; UA10 and UA12 await their set gates (P106). UA5 published batch 1 on 2026-11-08 (release `4757517816a0`),
 so uma-quest's Q6 loads sprites from master data; it confirmed all five sets parse and play. After the owner's play of
 uma-quest's test room, P105 gave travelers `walk-left` and `run-left` (130 frames) and townsfolk `walk-left` in place of
 the battle `walk`: UA12 adds them to batch 1, before UA9. UA10's townsfolk publish with a later release, by [pipeline.md](../sprites/pipeline.md) §7's "Publishing a batch". Townsfolk follow UA11's batches, one after each traveler batch (P93). Written later, when their uma-quest step nears: the
@@ -122,7 +122,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 |---|---|---|---|---|---|---|
 | M1, uma-quest's engine | UA5 | Batch 1 published in master data: release `4757517816a0` | Claude | M | UA2 ✓, UA4 ✓, approval ✓ | **Done** (P100); uma-quest's Q6 loads it: all five sets parse and play (walk, run, field facings, turnarounds, blinks) |
 | | UA6 | Backup complete: 2.39 GB live authored content, caches removed; 185-file restore byte-identical | Done | — | — | **Done** |
-| M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 ready before Q12 |
+| M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 set gate before Q12 |
 | | Q7, Q15, Q16 | uma-quest's art packets ([forest kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q7-forest-kit.md), [town kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md), [foes](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md)), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5 ✓, Q8 ✓ | **Ready** (in uma-quest) |
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |

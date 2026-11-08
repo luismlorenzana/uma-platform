@@ -29,7 +29,7 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 - **The three, chosen by the owner on 2026-11-08 (P104): 101401, 100103 and 109701**, all tier F.
   This overrides T1's default tier/roster picks. The middle choice uses a different outfit of its character. Queue order
   and optional `townsfolkOutfits` choices preserve roster rankings; all three remain in the 70 unselected characters.
-- **Current step:** five identity stills per outfit are prepared for the key gate. Actions and blink patches wait for that approval.
+- **Current step (2026-11-08, P106):** identities approved; all three r4 full profiles are verified and await the set gate. Each has 45 body frames, 2 blink patches and 12 actions, including the corrected independently drawn left-profile walk. [Compare directions](http://127.0.0.1:4318/field/?profile=townsfolk&batch=1#directions), [review sets](http://127.0.0.1:4318/gates?profile=townsfolk&batch=1). No new release yet.
 - **The townsfolk profile, 45 frames each:**
   - the key, a battle-facing still;
   - `turnaround`;
@@ -58,3 +58,9 @@ three of them, enough for the slice's one town, and measures it ([format.md](../
 
 Delete this packet and move it to Done in [the handoff](../README.md), with the release. Back up `content/authoring/`.
 Tell uma-quest that Q12 can cast the three.
+
+## Pilot measurements
+
+All 14 checks pass, with 48 runtime files per outfit reproduced byte for byte. The approved identity stills and identity checklists are unchanged; key receipts carry their original covered hashes. Earlier r1–r3 remain available. Scene preview pairs each NPC with a key-approved traveler.
+
+Measured built-in generation duration across identities, profile drawing and the left-walk corrections: 101401, 8 calls / 11.83 minutes; 100103, 8 / 18.71; 109701, 7 / 21.43. These are summed tool durations including retries and overlapping queued calls, not active editing or elapsed wall-clock. The pilot is slower than pipeline.md §9’s estimated ~3 minutes. Private per-revision READMEs, prompts, masters and export recipes retain the evidence.
