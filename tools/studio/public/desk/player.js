@@ -46,7 +46,8 @@ if(canonicalBatch){
  document.querySelector('header .eyebrow').textContent=report.characters.length+' current revisions · '+(approved?'approved':'review pending');
 
  const stats=document.querySelectorAll('.stats strong');stats[3].textContent=Object.keys(report.held).length+' held textures · uma-art '+report.heldSource.version;stats[1].textContent=report.characters[0].totalBodyFrames+' body frames each';stats[2].textContent=Object.keys(report.characters[0].faces).length+' face patches each';
- if(full){const link=document.createElement('a');link.href='/field/#field';link.textContent='Traveler field & scene';document.querySelector('nav').prepend(link)}
+ if(full||report.profile==='townsfolk'){const link=document.createElement('a');link.href='/field/'+location.search+'#field';link.textContent=(full?'Traveler':'Townsfolk')+' field & scene';document.querySelector('nav').prepend(link)}
+ if(report.profile==='townsfolk')$('battle').hidden=true;
  $('load-status').replaceChildren();const strong=document.createElement('strong');strong.textContent=approved?'Current full-set approval recorded':'Current art · review pending';
  const text=document.createElement('p');text.textContent=report.characters.map(c=>c.name+' r'+c.revision+' · '+Object.values(c.actions).reduce((n,a)=>n+a.frames.length,0)+' frames · '+Object.keys(c.faces).length+' patches').join(' / ')+(approved?'. Approval hashes match the current files.':'. Review in Gates.');$('load-status').append(strong,text);
  const approval=$('approval');approval.replaceChildren();const heading=document.createElement('h2');heading.textContent='Current keys and four turnarounds';const note=document.createElement('p');note.textContent=report.characters.every(c=>c.keyApproved)?'All current keys and turnarounds retain their recorded approval. The file hashes match.':'Current key approval is pending or its file hashes have changed.';approval.append(heading,note);
