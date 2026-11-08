@@ -250,7 +250,7 @@ ChatGPT's scripts, which must give the same bytes for batch 1 (UA2's acceptance)
 | Serving to the phone (quest-api's proxy) | 1 GB a month of Cloud Run egress in North America | A party's five sets once (~10–20 MB), then cached | $0 |
 | Generation | ChatGPT's own tool | — | $0 in the cloud |
 
-The owner approved UA6 on 2026-11-08. The private versioned authoring bucket now exists; it backs up authored inputs and decisions, excluding rebuildable downloaded models, binaries and dependency caches. See the measured size and restore instructions in [infra/README.md](../../infra/README.md).
+UA3 and UA6 are complete (P99). Reviews now happen in the versioned Studio at `http://127.0.0.1:4318`; each gate records its covered hashes and queues a background backup. The owner approved UA6 on 2026-11-08. The private versioned authoring bucket now exists; it backs up authored inputs and decisions, excluding rebuildable downloaded models, binaries and dependency caches. See the measured size and restore instructions in [infra/README.md](../../infra/README.md).
 
 ## 11. The packets
 
@@ -258,13 +258,13 @@ All in uma-platform. Ids UA1–UA10 (they don't collide with D, P, S, H, Q, F or
 
 | Id | What | Who | Size | Needs |
 |---|---|---|---|---|
-| [UA1](../handoff/tasks/UA1-durable-layout.md) | The durable layout: batch 1 and the study moved into per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept, marked superseded | Either | S | — |
+| UA1 (done) | The durable layout: batch 1 and the study moved into per-outfit revisions, `current.json`, `reviews.json`, regenerated progress; old packs kept, marked superseded | Either | S | — |
 | UA2 (done) | `scripts/sprites` in git: export, the 14 checks, repeat and progress, tested; batch 1 reproduced byte for byte | Either | L | UA1 |
-| [UA3](../handoff/tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, both gates writing `reviews.json` | Either | M | UA1 |
-| [UA4](../handoff/tasks/UA4-sprites-schema.md) | uma-data 1.4.0: the `outfit-sprites` family, its parser, the art index's `sprites` map, synthetic fixtures | Either | M | — |
+| UA3 (done) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, both gates writing `reviews.json` | Either | M | UA1 |
+| UA4 (done) | uma-data 1.4.0: the `outfit-sprites` family, its parser, the art index's `sprites` map, synthetic fixtures | Either | M | — |
 | [UA5](../handoff/tasks/UA5-pack-and-publish.md) | Pack and publish: `sprites:pack`, the sprite-only publish, the size decision, batch 1's first release | Claude | M | UA2, UA4; your set approval |
-| [UA6](../handoff/tasks/UA6-authoring-backup.md) | The backup bucket and `sprites:backup` | Claude | S | **Your yes** |
-| [UA7](../handoff/tasks/UA7-batch1-full-profile.md) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
+| UA6 (done) | The backup bucket and `sprites:backup` | Claude | S | **Your yes** |
+| UA7 (done) | Art: batch 1's field set, `weary` and emotes, as a new revision each | ChatGPT | M | UA1 |
 | [UA8](../handoff/tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons and eight emote bubbles | ChatGPT | M | — |
 | [UA9](../handoff/tasks/UA9-batch-2.md) | Art: batch 2 in the full traveler profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 |
 | [UA10](../handoff/tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA7 |

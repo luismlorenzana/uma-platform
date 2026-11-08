@@ -97,3 +97,5 @@ CLOUDSDK_ACTIVE_CONFIG_NAME=default CLOUDSDK_CORE_PROJECT=uma-platform-lm \
 Compare relative-path inventories and hashes before moving a restore into place. Never overwrite a surviving
 revision or its approvals. To recover an overwritten roster/review, list object versions, copy the chosen generation
 to the temporary directory, inspect it, and restore atomically. Do not delete backup objects as part of routine use.
+
+Verified 2026-11-08: 6,508 live objects / 2,391,485,667 bytes; 2,404,753,077 bytes including noncurrent authored versions. A restored revision matched all 185 files (38,755,938 bytes) by SHA-256. All observed excluded cache generations and abandoned `gcloud/tmp/parallel_composite_uploads/` chunks were removed after stopping the original unfiltered process and workers. Default soft-delete retention remains seven days; deleted cache bytes expire after that window. Filtered backup subsequently exited successfully. Studio gate saves serialize this backup automatically.
