@@ -24,7 +24,12 @@
     "art:icons": "pnpm --filter @uma-platform/pixel-art run icons",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "publish-packages": "changeset publish"
+    "publish-packages": "changeset publish",
+    "sprites:export": "pnpm --filter @uma-platform/sprite-pipeline run export",
+    "sprites:verify": "pnpm --filter @uma-platform/sprite-pipeline run verify",
+    "sprites:repeat": "pnpm --filter @uma-platform/sprite-pipeline run repeat",
+    "sprites:progress": "pnpm --filter @uma-platform/sprite-pipeline run progress",
+    "sprites:backup": "node scripts/sprites/backup.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",

@@ -68,3 +68,32 @@ gcloud storage cat gs://uma-platform-master-data/channels/v1/latest.json
 
 Nothing is ever deleted from the bucket (P23). If storage ever needs pruning, delete only objects that no manifest
 under `manifests/` references, and never a manifest.
+
+## Authoring backup (UA6)
+
+The owner approved `gs://uma-platform-authoring` on 2026-11-08. It uses Standard storage in `us-central1`,
+uniform access, enforced public access prevention, object versioning, default seven-day soft delete and label
+`app=platform`. No service accounts were granted access. Never change the shell's active work configuration.
+
+```sh
+pnpm sprites:backup
+CLOUDSDK_ACTIVE_CONFIG_NAME=default CLOUDSDK_CORE_PROJECT=uma-platform-lm \
+  gcloud storage buckets describe gs://uma-platform-authoring --format=json
+```
+
+The script recursively rsyncs `content/authoring/` without destination deletion. It excludes rebuildable
+`draw-things/models/`, `draw-things/bin/`, `node_modules/` and `.cache/` directories. The initial directory contained
+about 35.4 GB logically, mostly downloaded checkpoint files and an unfinished sparse download; those caches
+are excluded. Art, masters, raw generation outputs, configs, roster and reviews are included. Existing object
+versions preserve overwrites. Run after every gate and at the end of each art packet.
+
+Restore to a temporary directory first, then compare SHA-256 of every relative file against the original inventory:
+
+```sh
+CLOUDSDK_ACTIVE_CONFIG_NAME=default CLOUDSDK_CORE_PROJECT=uma-platform-lm \
+  gcloud storage rsync gs://uma-platform-authoring/authoring/sprites/<id>/rN /tmp/authoring-restore/<id>/rN --recursive
+```
+
+Compare relative-path inventories and hashes before moving a restore into place. Never overwrite a surviving
+revision or its approvals. To recover an overwritten roster/review, list object versions, copy the chosen generation
+to the temporary directory, inspect it, and restore atomically. Do not delete backup objects as part of routine use.

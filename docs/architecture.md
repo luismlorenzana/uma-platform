@@ -180,6 +180,7 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 |---|---|
 | GCP project | `uma-platform-lm` (`uma-platform` was taken, P34) |
 | Bucket | `gs://uma-platform-master-data`: private, `us-central1`, uniform access, public access prevention on |
+| Authoring backup | `gs://uma-platform-authoring`: private, `us-central1`, uniform access, public access prevention, object versioning and default seven-day soft delete; owner approved 2026-11-08. No game service accounts granted access. Rebuildable model/binary/dependency caches excluded |
 | Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket. Planned: `quest-api-runtime` and `farm-api-runtime` (project `uma-rpg`), granted by their Q2 and F2 (P88) |
 | Publishing | From the owner's machine, with gcloud scoped by environment variables |
 

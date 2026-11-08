@@ -88,7 +88,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
 
-**Ready now:** UA2, UA3, UA4, UA8 and UA10 (the sprite pipeline, below). Batch 1 is approved in full; UA5 waits only on UA2 and UA4. Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
+**Ready now:** UA3, UA5, UA8 and UA10 (the sprite pipeline, below). Batch 1 is approved in full; UA2 and UA4 are delivered; UA5 can pack and publish. Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
 ## Uma sprites: the pipeline (UA)
 
@@ -98,18 +98,18 @@ and bubbles are uma-art.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [UA2](tasks/UA2-sprite-tools.md) | `scripts/sprites`: export, the 14 checks, repeat and progress, tested; batch 1 rebuilt byte for byte | Either | L | UA1 | **Ready** |
 | [UA3](tasks/UA3-sprite-studio.md) | Sprite Studio in git (`pnpm studio`): ranker, queue, animation desk, the key and set gates | Either | M | UA1 | **Ready** |
-| [UA5](tasks/UA5-pack-and-publish.md) | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | After UA2, UA4 |
-| [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | The owner's yes | Waiting on the owner |
+| [UA5](tasks/UA5-pack-and-publish.md) | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | **Ready** |
+| [UA6](tasks/UA6-authoring-backup.md) | A private, versioned backup bucket for `content/authoring/` | Claude | S | Owner yes received 2026-11-08 | Bucket created; first backup/restore in progress |
 | [UA8](tasks/UA8-held-items-and-bubbles.md) | Art, uma-art: ten held weapons (16 textures) and eight emote bubbles | ChatGPT | M | — | **Ready** |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile; the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | After UA2, UA3 |
-| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA4 | uma-data 1.4.0: optional sprite index, packed-set types/parser, verified client loader and synthetic memory fixtures; backwards compatible, rejection tests. | This PR; release workflow |
+| [UA10](tasks/UA10-townsfolk-pilot.md) | Art: the townsfolk profile on three characters (batch T1), for uma-quest's slice town | ChatGPT | S | UA2 | Versioned export, 14 pure checks, repeat, progress, templates and privacy guards. All 15 revisions repeat **1,335/1,335 files**; 70 explicit literals across history, five in current batch. Current five pass all checks; **635/635 files** repeat; all 2,032 sealed revision files unchanged. Progress: 5/100 travelers, 0/70 townsfolk. | This PR |
+| UA4 | uma-data 1.4.0: optional sprite index, packed-set types/parser, verified client loader and synthetic memory fixtures; backwards compatible, rejection tests. | This PR; release workflow |
 | UA7 | **Ready** |
 | [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 (P93) | ChatGPT | M | UA10's set gate, UA2 | After UA10, UA2 |
 
 **Order:** UA1 and UA7 are complete, and the owner approved batch 1's full traveler sets on 2026-11-08 (`reviews.json`),
-which closed uma-rpg's H168 (its D310). UA2, UA3, UA4, UA8 and UA10 are ready. UA5 publishes batch 1, plus UA10's
+which closed uma-rpg's H168 (its D310). UA2 and UA4 are complete. UA3, UA5, UA8 and UA10 are ready. UA5 publishes batch 1, plus UA10's
 townsfolk if they're approved by then, once UA2 and UA4 have landed. That must happen before uma-quest's Q6, which loads sprites from
 master data. Townsfolk follow UA11's batches, one after each traveler batch (P93). Written later, when their uma-quest step nears: the
 rival add-on, familiars at the new scale, and the bestiary's foe format (CR34).
