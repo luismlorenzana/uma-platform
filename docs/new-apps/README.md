@@ -20,7 +20,7 @@
   | **UA10** | Three townsfolk, published with or after UA5 | Q12 |
   | **UA12** | Batch 1's left field walks, `walk-left` and `run-left` (P105) | uma-quest's left walk (its D17) |
   | **KL1** | uma-kit's landscape layout, a kit minor | uma-quest's Phase 5, not the slice |
-  | **PO1** | `uma-post` 0.1.0, the parcel format and accept lists | uma-farm's F10 |
+  | **PO1** | `uma-post` 0.1.0, the parcel format and accept lists. Parked: parcels are "later" (P109) | uma-farm's F10 (parked) |
 
 - **The games' art lands here too.** uma-quest's sessions write three ChatGPT packets: the forest kit (Q7), a town kit
   (Q15) and the slice's foes (Q16). uma-farm's writes one: the Forge and the Post (F9). ChatGPT ships them as uma-art
@@ -131,12 +131,13 @@ What uma-quest's Phase 5 needs: the landscape layout, wave 2's travelers and ban
 
 ### M4 · For uma-farm's parcels
 
-The parcel package, once both games' specs name their items.
+The parcel package, once both games' specs name their items. **Parked (P109):** the owner moved parcels to "later"
+(uma-farm D22). The farm comes first with its own loop, and PO1 waits until uma-farm asks again.
 
 | Id | Task | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | F9 | **The Forge and the Post** *(uma-farm)*: Written by uma-farm's session; ChatGPT draws it here and publishes a uma-art release. | ChatGPT | M | uma-farm's F7 | Later |
-| [PO1](#po1) | **`uma-post` 0.1.0**: The parcel package: the parcel type and its parser, each game's accept list and daily caps, and their tests. | Claude | M | uma-farm's F7 (P107) | Written; built after F7 |
+| [PO1](#po1) | **`uma-post` 0.1.0**: The parcel package: the parcel type and its parser, each game's accept list and daily caps, and their tests. | Claude | M | uma-farm asks again | Parked (P109) |
 
 **Exit:**
 
@@ -287,7 +288,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 ### PO1
 
-**`uma-post` 0.1.0** · Claude · M · Needs: uma-farm's F7 answered · **Written**, built after F7 (P107) ·
+**`uma-post` 0.1.0** · Claude · M · Needs: uma-farm asks again · **Parked** (P109; written ahead, P107) ·
 [packet](../handoff/tasks/PO1-uma-post.md)
 
 **Delivers:**
@@ -317,6 +318,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 | uma-quest | Its accept list (its Q17); interim FS24 until then (P107) | PO1, then a minor | M4 |
 | uma-farm | The parcel format's needs (its F7) | PO1 | M4 |
 | uma-farm | The Forge's art packet (its F9) | uma-art | M4 |
+| uma-farm | Likely, on the owner's yes: the shared HD-2D stage (`uma-stage`, its FR1, FR3, FR12, FR13, FR15), after uma-quest's measured plays (P109) | a new packet | Later |
 
 ## The order
 
@@ -326,7 +328,7 @@ M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
 M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (done) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
-M4  uma-farm F7 ──► PO1 (uma-quest's interim list) ──► uma-farm F10 ──► uma-quest's receiver
+M4  (parked, P109)  uma-farm asks again ──► PO1 (uma-quest's interim list) ──► uma-farm F10 ──► uma-quest's receiver
      uma-quest Q17 ──► uma-post minor (its settled list)
 ```
 
@@ -354,7 +356,7 @@ M4  uma-farm F7 ──► PO1 (uma-quest's interim list) ──► uma-farm F10 
   [first-playable](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
   and the [change protocol](../change-protocol.md).
 - **Every packet is written.** KL1 was released in uma-kit 0.18.0 (P103). PO1 was written ahead from uma-farm's draft spec
-  and is built after the owner answers F7 (P107). UA9–UA12 have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
+  (P107) and is parked until uma-farm asks again (P109). UA9–UA12 have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
 - **Art packets come from the games:** uma-quest's Q7, Q15 and Q16, and uma-farm's F9. ChatGPT draws them here, merges
   and publishes the uma-art release, and logs each one's P-decision.
 - **Decisions** go in [decisions.md](../decisions.md) from P99 (fetch `main` first).

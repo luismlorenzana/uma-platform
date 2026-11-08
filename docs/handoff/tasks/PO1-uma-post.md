@@ -3,7 +3,8 @@
 **uma-platform's `packages/post` · Claude · M · Needs: uma-farm's F7 answered (its spec's §5; uma-farm took P107 as its D19) · Unblocks: uma-farm's
 F10 (the Post and the sender), then each game's receiver, uma-quest's first**
 
-> **Written ahead, 2026-11-08 (P107), from uma-farm's draft spec. Don't build it before the owner answers F7.** Step 1
+> **Parked, 2026-11-08 (P109): the owner moved parcels to "later" (uma-farm D22). Build nothing until uma-farm asks
+> again with the answers that touch its §5.** Written ahead the same day (P107) from uma-farm's draft spec. Step 1
 > re-reads the spec's §5 after those answers and applies whatever they changed.
 
 ## Why

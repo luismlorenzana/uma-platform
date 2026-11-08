@@ -87,6 +87,7 @@ Now     SA7 (racer: the plaza crowd, kit 0.3.0)
 | H73 | Weapon Gem, Armor Fittings, Accessory Setting and Branch Gem icons in uma-art; [source brief](https://github.com/luismlorenzana/uma-rpg/blob/3b5b68efe72e3ac234c572f36a7eeb92eabc41bf/docs/handoff/tasks/H73-made-item-icons-art.md) | uma-platform | ChatGPT | M | — | Done (`64c3a15`, [#49](https://github.com/luismlorenzana/uma-platform/pull/49), uma-art 2.13.0; [published](https://github.com/luismlorenzana/uma-platform/actions/runs/40200573898)) |
 | **Parked** | | | | | | |
 | [SE5](tasks/SE5-shared-push.md) | Push shared (`uma-server/push`) | uma-platform, uma-rpg | — | M | The owner asks for push in uma-racer | Parked |
+| [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0, the parcel format and accept lists (P107) | uma-platform | — | M | uma-farm asks again (its D22) | Parked (P109) |
 
 **Art delivery:** UA10 and UA12 are complete: three townsfolk and five travelers with dedicated left walk/run cycles are approved and published in master-data `latest`, release `7c34dbe2c8de` (P108). The next art priorities are uma-quest’s forest kit (Q7), town kit (Q15) and foes (Q16); UA9 and UA11 follow the slice. UA2–UA8 are delivered, and KL1 is released in uma-kit 0.18.0 (P103). PO1’s packet is written ahead and waits for uma-farm’s F7 answers (P107). Other platform art and sibling packets are complete; A05 adoption belongs to Racer. SE5 stays parked.
 
@@ -123,7 +124,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | Q7, Q15, Q16 | uma-quest's art packets ([forest kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q7-forest-kit.md), [town kit](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md), [foes](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md)), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5 ✓, Q8 ✓ | **Ready** (in uma-quest) |
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
-| M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (uma-quest's interim list; Q17 settles it in a minor, P107) | Claude | M | uma-farm's F7 answered | **Written**; built after F7 |
+| M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (P107) | Claude | M | uma-farm asks again | **Parked** (P109: the owner moved parcels to later, uma-farm D22) |
 | | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
 
 ## Releases while packets run in parallel
