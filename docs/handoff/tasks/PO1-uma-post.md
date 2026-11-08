@@ -1,6 +1,6 @@
 # PO1 — `@luismlorenzana/uma-post` 0.1.0: the parcel format and the accept lists
 
-**uma-platform's `packages/post` · Claude · M · Needs: uma-farm's F7 answered (its spec's §5) · Unblocks: uma-farm's
+**uma-platform's `packages/post` · Claude · M · Needs: uma-farm's F7 answered (its spec's §5; uma-farm took P107 as its D19) · Unblocks: uma-farm's
 F10 (the Post and the sender), then each game's receiver, uma-quest's first**
 
 > **Written ahead, 2026-11-08 (P107), from uma-farm's draft spec. Don't build it before the owner answers F7.** Step 1
@@ -31,7 +31,7 @@ agree on one format and one check, and each game sets its own accept list and da
   no dependencies.
 - **0.1.0 doesn't wait for uma-quest's Q17 (P107).** It carries uma-quest's list as uma-farm's FS24 proposes it
   (`tonic` 10, `party-meal` 5, `revive` 3 a day, each its own cap group), as **uma-quest's interim list** (`version:
-  1`), once uma-quest's session agrees. Q17 confirms or changes it in a minor, and the list's version goes up.
+  1`), agreed by uma-quest's session (its D19). Q17 confirms or changes it in a minor, and the list's version goes up.
   uma-quest's receiver comes after uma-farm's F10, so the interim list changes nothing in uma-quest before Q17.
 - **Every game has a list from 0.1.0, so `ACCEPT_LISTS` stays a total record.** uma-rpg's and uma-racer's start empty
   (`version: 0`, no items, no caps). `checkParcel` refuses anything addressed to them as `unknown-item`, and the farm
@@ -53,7 +53,7 @@ agree on one format and one check, and each game sets its own accept list and da
 ## Do
 
 1. **Re-read uma-farm's spec §5 after the owner's F7 answers,** and apply what they changed (ids, caps, names, the
-   shape) to these decisions. Ask uma-quest's session to confirm FS24's list as its interim list, if it hasn't yet.
+   shape) to these decisions.
 2. **Create `packages/post`** as `@luismlorenzana/uma-post`, copying `packages/work`'s layout and builds. Add its README
    (the format, the check order, how a game adds its list) and a desktop HTML page in `docs/post/` with a parcel's life
    and the lists.
