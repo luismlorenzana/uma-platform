@@ -105,7 +105,7 @@ and bubbles are uma-art.
 
 **Order:** UA1 and UA7 are complete, and the owner approved batch 1's full traveler sets on 2026-11-08 (`reviews.json`),
 which closed uma-rpg's H168 (its D310). UA2 and UA4 are complete. UA3, UA5 and UA6 are complete; UA8 is complete; UA10 is ready. UA5 published batch 1 on 2026-11-08 (release `4757517816a0`),
-so uma-quest's Q6 loads sprites from master data. UA10's townsfolk publish with a later release, by [pipeline.md](../sprites/pipeline.md) §7's "Publishing a batch". Townsfolk follow UA11's batches, one after each traveler batch (P93). Written later, when their uma-quest step nears: the
+so uma-quest's Q6 loads sprites from master data; it confirmed all five sets parse and play. UA10's townsfolk publish with a later release, by [pipeline.md](../sprites/pipeline.md) §7's "Publishing a batch". Townsfolk follow UA11's batches, one after each traveler batch (P93). Written later, when their uma-quest step nears: the
 rival add-on, familiars at the new scale, and the bestiary's foe format (CR34).
 
 ## The new apps: what uma-quest and uma-farm need (NA)
@@ -117,11 +117,11 @@ need from here, in order. A uma-platform session writes the missing packets from
 
 | Milestone | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|---|
-| M1, uma-quest's engine | UA5 | Batch 1 published in master data: release `4757517816a0` | Claude | M | UA2 ✓, UA4 ✓, approval ✓ | **Done** (P100); uma-quest's Q6 can load it |
+| M1, uma-quest's engine | UA5 | Batch 1 published in master data: release `4757517816a0` | Claude | M | UA2 ✓, UA4 ✓, approval ✓ | **Done** (P100); uma-quest's Q6 loads it: all five sets parse and play (walk, run, field facings, turnarounds, blinks) |
 | | UA6 | Backup complete: 2.39 GB live authored content, caches removed; 185-file restore byte-identical | Done | — | — | **Done** |
 | M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 ready before Q12 |
 | | Q7, Q15, Q16 | uma-quest's art packets (forest kit, town kit, foes), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5, Q8 | Incoming |
-| M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); uma-quest adopts it in Phase 5 |
+| M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
 | M4, uma-farm's parcels | PO1 | `uma-post` 0.1.0: the parcel format, accept lists and caps | Claude | M | uma-farm's F7, uma-quest's Q17 | To write |
 | | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |

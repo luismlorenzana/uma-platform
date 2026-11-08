@@ -152,7 +152,8 @@ What each task delivers and how we know it's done. Existing packets are linked; 
 
 Done 2026-11-08: master data's `latest` is release `4757517816a0`, with batch 1's five traveler sets. Lossy WebP q90
 won on batch 1's numbers (1.34–1.66 MB a traveler, against 3.57–4.44 MB lossless); every other release file is carried
-byte for byte, and uma-rpg loads the release unchanged. Later batches follow
+byte for byte, and uma-rpg loads the release unchanged. uma-quest's Q6 loads it: all five sets parse and play (walk,
+run, field facings, turnarounds, blinks). Later batches follow
 [pipeline.md](../sprites/pipeline.md) §7, "Publishing a batch".
 
 **Delivers:**
@@ -219,7 +220,7 @@ The packet exists: [UA10](../handoff/tasks/UA10-townsfolk-pilot.md).
 
 **The landscape kit layout** · Claude · M · Needs: uma-quest's Q4 ✓ · **Released** (uma-kit 0.18.0, P103)
 
-Released 2026-11-08 from uma-quest's [request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md): `KitStage` puts the kit on a game's own stage, with the landscape sheet and frame. Review page: [kit/previews/landscape.html](../kit/previews/landscape.html). uma-rpg and uma-racer pass their checks on it and need no pin. What's left is uma-quest's: its Phase 5 packet pins 0.18.0 and draws its menus with it.
+Released 2026-11-08 from uma-quest's [request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md): `KitStage` puts the kit on a game's own stage, with the landscape sheet and frame. Review page: [kit/previews/landscape.html](../kit/previews/landscape.html). uma-rpg and uma-racer pass their checks on it and need no pin. What's left is uma-quest's, recorded in its D15: its first Phase 5 menu packet pins 0.18.0 and puts `KitStage` inside its `TurnedStage`; the slice keeps its own menus (SL10).
 
 **Delivers:**
 
