@@ -13,7 +13,7 @@ export async function buildProgress(content: string, persist = true) {
     battleSetComplete: boolean; battleOwnerReviewed: boolean; ownerReviewed: boolean; revision: number | null; artRevision: string | null;
     frames: number; expressions: number; actions: number; key: string | null; keyGate: string | null; setGate: string | null;
     note: string; verification: string | null; changed: boolean; published: string | null })[] = []
-  for (const profile of ['traveler', 'townsfolk'] as const) for (const r of queue(roster.rankings, profile, override[profile])) {
+  for (const profile of ['traveler', 'townsfolk'] as const) for (const r of queue(roster.rankings, profile, override[profile], override.townsfolkOutfits)) {
     const row = { ...r, profile, phase: 'Queued', fullyAuthored: false, fullTravelerProfileComplete: false, battleSetComplete: false,
       battleOwnerReviewed: false, ownerReviewed: false, revision: null as number | null, artRevision: null as string | null,
       frames: 0, expressions: 0, actions: 0, key: null as string | null, keyGate: null as string | null, setGate: null as string | null,
@@ -42,9 +42,9 @@ export async function buildProgress(content: string, persist = true) {
   }
   const complete = new Set(entries.filter(e => e.fullyAuthored).map(e => e.outfitId))
   const totals = Object.fromEntries((['traveler', 'townsfolk'] as const).map(profile => [profile, {
-    total: scope(roster.rankings, profile).length, verified: entries.filter(e => e.profile === profile && e.fullyAuthored).length,
+    total: scope(roster.rankings, profile, override.townsfolkOutfits).length, verified: entries.filter(e => e.profile === profile && e.fullyAuthored).length,
     approved: entries.filter(e => e.profile === profile && e.ownerReviewed).length,
-    nextBatch: nextBatch(queue(roster.rankings, profile, override[profile]), profile, complete, entries.filter(e => e.profile === 'townsfolk' && e.fullyAuthored).length >= 3).map(r => r.outfitId),
+    nextBatch: nextBatch(queue(roster.rankings, profile, override[profile], override.townsfolkOutfits), profile, complete, entries.filter(e => e.profile === 'townsfolk' && e.fullyAuthored).length >= 3).map(r => r.outfitId),
   }]))
   const progress = { schemaVersion: 2, updatedAt: new Date().toISOString(), rosterRevision: roster.revision, coverage: 'traveler',
     completionDefinition: 'Each profile has its own complete frame/patch catalog and all 14 checks. Approvals are verified against current file hashes.', totals, entries }

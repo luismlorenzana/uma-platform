@@ -48,6 +48,15 @@ describe('queue and stages', () => {
     expect(() => queue(rows, 'traveler', [8])).toThrow()
   })
   it('takes best-ranked townsfolk outfit for unselected characters', () => { expect(scope(rows, 'townsfolk').map(r => r.outfitId)).toEqual([9]) })
+  it('uses an owner-selected townsfolk outfit without changing rankings or traveler scope', () => {
+    const before = JSON.stringify(rows)
+    expect(queue(rows, 'townsfolk', [8], [8]).map(r => r.outfitId)).toEqual([8])
+    expect(scope(rows, 'townsfolk', [8])).toHaveLength(1)
+    expect(scope(rows, 'traveler', [8])).toEqual(scope(rows, 'traveler'))
+    expect(JSON.stringify(rows)).toBe(before)
+    for (const invalid of [[8, 9], [8, 8], [1], [999]]) expect(() => scope(rows, 'townsfolk', invalid)).toThrow()
+    expect(() => queue(rows, 'townsfolk', [9], [8])).toThrow()
+  })
   it('changed hashes override every later stage', () => {
     expect(stage({ started: true, key: true, drawn: true, verified: true, approved: true, published: true, changed: true })).toBe('Changed since approval')
     expect(stage({ started: true, key: true, drawn: true, verified: true, approved: true })).toBe('Set approved')
