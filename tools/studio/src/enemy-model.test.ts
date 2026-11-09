@@ -31,6 +31,7 @@ describe('portable enemy authoring plan', () => {
     expect(plan.enemies[0]).toMatchObject({ id: 'demo-amber', name: 'Amber Sentinel', sourceTier: 'boss', bucket: 'elite', tier: 'SS', order: 1 })
     expect(plan.enemies[1]).toMatchObject({ id: 'demo-cobalt', name: 'Cobalt Ranger', bucket: 'regular', tier: null, order: null })
     expect(plan.summary).toMatchObject({ total: 3, ranked: 1, unranked: 2 })
+    expect(plan.referenceRoot).toBe('authoring/enemies')
     expect(parseEnemyRankings(JSON.parse(JSON.stringify(plan)) as unknown)).toEqual(state)
   })
   it('orders by priority, uses owner order within a tier, and moves only within that tier', () => {

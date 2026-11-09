@@ -52,7 +52,8 @@ authoring. The ranker cannot serve arbitrary files or custom study artwork.
 The independent `content/authoring/enemy-art-roster.json` is both the canonical state and the full export. Atomic,
 serialized saves use revision checks. It includes all catalog names/IDs and source metadata, chosen roles, nullable
 tiers/orders, notes, counts and `authoringOrder`. Priority sorts SS → A1 → A2 → B → F; array order breaks ties within
-a tier. Unranked entries remain in `enemies` with null tier/order and are excluded from `authoringOrder`. There is
+a tier. Reference paths resolve under the plan's `referenceRoot`, relative to `UMA_CONTENT_DIR`. Unranked entries
+remain in `enemies` with null tier/order and are excluded from `authoringOrder`. There is
 no live-game roster write, image generation, owner-image access or cloud operation when ranking. The export endpoint
 is `GET /api/enemies/export`; rankings use `GET/PUT /api/enemies/rankings`.
 

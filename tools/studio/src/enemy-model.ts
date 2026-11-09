@@ -107,7 +107,7 @@ export function exportEnemyPlan(catalog: EnemyCatalog, state: EnemyRankings) {
     return { ...u, bucket: r.bucket, tier: r.tier, order: orders.get(u.id) ?? null, note: r.note }
   })
   return {
-    ...state, catalogVersion: catalog.sourceVersion, sources: catalog.sources,
+    ...state, catalogVersion: catalog.sourceVersion, sources: catalog.sources, referenceRoot: 'authoring/enemies',
     tierOrder: ENEMY_TIERS.map(t => t.id), buckets: ENEMY_BUCKETS.map(b => b.id),
     summary: { total: enemies.length, ranked: queue.length, unranked: enemies.length - queue.length,
       franchises: Object.fromEntries(FRANCHISES.map(f => [f.id, enemies.filter(e => e.franchise === f.id).length])),
