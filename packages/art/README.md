@@ -499,6 +499,18 @@ Use whichever structure family fits a screen; compact art is authored at 32px, n
 `stage-compact-{1x,2x}.png` and `stage-compact.html` show nine states per biome. `stage-compact-sample.png` pairs
 open/cleared regular, elite and boss art for Meadow, Coast, Volcano, Glacier and Underworld at 3×.
 
+## Full-colour forest kit (Q7)
+
+`kit-forest/atlas.png` and `kit-forest/atlas.json` export 37 original full-colour frames for uma-quest's 128-texel kit
+contract (`formatVersion: 1`, `kind: "biome"`). One 2048×2048 page holds four weighted floors, three walls, a wall top,
+two risers, four-band stairs, a void, 14 decorations, six dungeon pieces and five battle layers. Props carry `foot`,
+`blocks` and optional `light`; consumers read named rectangles, never atlas row arithmetic.
+
+Floors meet in any unrotated order; wall and riser variants meet horizontally. Live-light metadata belongs to the
+lantern (warm, radius 4, flicker), spring (cool, radius 3) and waystone (soft, radius 3). The game supplies cast shadows.
+All prior uma-art files are unchanged. Masters and [review sheets](../../assets/authored/kit-forest/review/index.html)
+stay in the repo; only the atlas files ship. `pnpm art:kits kit-forest` repeats their exact bytes (P97).
+
 ## Battle backdrops (H08)
 
 The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**

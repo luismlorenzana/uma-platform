@@ -1,0 +1,370 @@
+{
+  "tool": "built-in imagegen",
+  "originalArt": true,
+  "assets": [
+    {
+      "key": "floor-1",
+      "master": "floor-1-v1.png",
+      "sha256": "3bab8a490c321cd18006767ee13c1a9f351af3bdae4c2b6caede868e61cf2e70",
+      "prompt": "Use case: stylized-concept.\nAsset: floor-1, one ORIGINAL forest game floor asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A calm dense carpet of short mossy grass, mostly mid olive and sage green, a few tiny soft earth patches, very low contrast. Orthographic top-down texture, fills the entire square; no horizon, objects, border or perspective. Seamless repeating ground.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.",
+      "references": [],
+      "seconds": 15.475
+    },
+    {
+      "key": "floor-2",
+      "master": "floor-2-v1.png",
+      "sha256": "9db059b2c8bd08c85e4f02f05883b5b97f2e58b0053bb561722e9bd8139ad5e4",
+      "prompt": "Use case: stylized-concept.\nAsset: floor-2, one ORIGINAL forest game floor asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Short grass with a few flattened pale sage blades and tiny clover patches. Mostly calm olive green, same mid-tone as the main grass. Orthographic top-down, fills square; seamless repeat in any arrangement.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: style and material reference only. Draw the requested distinct variant with the same palette and scale; do not add framing or perspective.",
+      "references": [
+        "floor-1-v1.png"
+      ],
+      "seconds": 41.856
+    },
+    {
+      "key": "floor-3",
+      "master": "floor-3-v1.png",
+      "sha256": "e0112a83da49cbe5a4030899a9731d713f8a96deee6ce8a40f743523de72dc14",
+      "prompt": "Use case: stylized-concept.\nAsset: floor-3, one ORIGINAL forest game floor asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Soft moss mixed with sparse short grass and a few small warm bare-earth flecks. Calm mid green, low contrast. Orthographic top-down, full square seamless texture.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: style and material reference only. Draw the requested distinct variant with the same palette and scale; do not add framing or perspective.",
+      "references": [
+        "floor-1-v1.png"
+      ],
+      "seconds": 61.874
+    },
+    {
+      "key": "floor-4",
+      "master": "floor-4-v1.png",
+      "sha256": "4f31df5f9b8ca496c9ff40844916f9f9d3b3bea59c35225bd4649885ae0a0baf",
+      "prompt": "Use case: stylized-concept.\nAsset: floor-4, one ORIGINAL forest game floor asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Slightly worn mossy grass with thin scattered warm brown soil and sparse leaf fragments. Predominantly mid green, calm walkable surface. Orthographic top-down, seamless full square.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: style and material reference only. Draw the requested distinct variant with the same palette and scale; do not add framing or perspective.",
+      "references": [
+        "floor-1-v1.png"
+      ],
+      "seconds": 21.969
+    },
+    {
+      "key": "wall-1",
+      "master": "wall-1-v1.png",
+      "sha256": "1ebd2e870900fec6b4c50cb6e7f75fd70b2edc68fd0775420432eb5fcb6fcb9a",
+      "prompt": "Use case: stylized-concept.\nAsset: wall-1, one ORIGINAL forest game wall asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A straight-on south-facing forest wall panel, twice as tall as wide: layered muted grey rock, small hanging moss patches and a few thin woody roots. Full-bleed rectangular material, no side faces, ground, perspective or framing. Horizontal seamless repeat, softly darkened at foot.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.",
+      "references": [],
+      "seconds": 36.493
+    },
+    {
+      "key": "wall-2",
+      "master": "wall-2-v1.png",
+      "sha256": "37cd9e07117efc45653281d5a9103d5864b78e102ce501e7a3145e34087f19cb",
+      "prompt": "Use case: stylized-concept.\nAsset: wall-2, one ORIGINAL forest game wall asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A straight-on tall forest wall panel of rounded grey stone ledges with warm thin branching tree roots and restrained moss. Twice as tall as wide; full-bleed rectangle, horizontal seamless repeat, no visible sides or ground.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: style and material reference only. Draw the requested distinct variant with the same palette and scale; do not add framing or perspective.",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 88.012
+    },
+    {
+      "key": "wall-3",
+      "master": "wall-3-v1.png",
+      "sha256": "ab56a75d7e03e6e4c333574e7d14607d5319a5ee5fc85eccf625c6d2bb253011",
+      "prompt": "Use case: stylized-concept.\nAsset: wall-3, one ORIGINAL forest game wall asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A straight-on tall forest wall panel of large muted grey rocks, shallow cracks, a few moss clumps and root ends. Twice as tall as wide; full-bleed rectangular face, horizontal seamless repeat, no side faces or ground.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 129.754
+    },
+    {
+      "key": "wall-top",
+      "master": "wall-top-v1.png",
+      "sha256": "f79768ce614cf1e4c74b4c48d7b02cdbf274c484eda9122cc0ca53323d7ac9fe",
+      "prompt": "Use case: stylized-concept.\nAsset: wall-top, one ORIGINAL forest game wall-top asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: The flat TOP surface of a mossy stone forest wall, viewed orthographically straight down. Mostly muted grey broad rocks with moss in joints. Full square seamless texture, no edges, sides or perspective.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 86.02
+    },
+    {
+      "key": "riser-1",
+      "master": "riser-1-v1.png",
+      "sha256": "77abc2486454fcd07c47b4d65f1502cfc702b47b5e396601ebd0afaddbd3a674",
+      "prompt": "Use case: stylized-concept.\nAsset: riser-1, one ORIGINAL forest game riser asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Straight-on earth-and-rock terrace face. The top one eighth of the image is a thin hanging green grass lip; below is warm compact brown earth and a few small stones. Full rectangular material, no side face or perspective, horizontal seamless repeat.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 19.967
+    },
+    {
+      "key": "riser-2",
+      "master": "riser-2-v1.png",
+      "sha256": "1bc0208621faa5b12a52c03035349199322726169524852e3f53aa648d095ea7",
+      "prompt": "Use case: stylized-concept.\nAsset: riser-2, one ORIGINAL forest game riser asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Straight-on terrace face with warm compact earth, grey stones and a few fine root ends. A hanging green grass lip occupies only the top one eighth. Full square rectangular material, horizontal seamless repeat, no perspective.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 58.006
+    },
+    {
+      "key": "stairs",
+      "master": "stairs-v1.png",
+      "sha256": "237e8f910e04eeeedff71047a55db941e6fd579758acbbf04af87dd7a01d8bf1",
+      "prompt": "Use case: stylized-concept.\nAsset: stairs, one ORIGINAL forest game stairs asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: Orthographic top-down texture of four stone step treads arranged in exactly four equal horizontal bands. Lowest tread at image bottom, highest at top. Moss only at small stone joints; full square. No stair side or front faces and no perspective. Each tread is a flat grey rock strip.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 109.177
+    },
+    {
+      "key": "void",
+      "master": "void-v1.png",
+      "sha256": "d52d544f9dabe98d9c8a672a855bb979f559b2dd85daf18d06f51c8c3f941ed9",
+      "prompt": "Use case: stylized-concept.\nAsset: void, one ORIGINAL forest game void asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A quiet dark muted forest ravine bottom: soft deep blue-green and moss-black mist texture, flat and seamless, no glow, no objects, low contrast and full bleed.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "wall-1-v1.png"
+      ],
+      "seconds": 37.676
+    },
+    {
+      "key": "tree-1",
+      "master": "tree-1-v1.png",
+      "sha256": "3ae9cca8958048e3561b8bc28b3d3df9f17851bed6b791adef8fac68a3a6ec3c",
+      "prompt": "Use case: stylized-concept.\nAsset: tree-1, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete broad deciduous oak tree, rounded layered canopy in sage and moss green, a warm brown forked trunk, small root flare. Upright south-facing sprite with a slight view of branch tops, entire silhouette isolated, no ground patch. About 320 native texels tall.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.",
+      "references": [],
+      "seconds": 72.23
+    },
+    {
+      "key": "tree-2",
+      "master": "tree-2-v1.png",
+      "sha256": "1ae4005920f02ddb51e34ae438d2657428d9bf94d2a28e56433eac9351444a45",
+      "prompt": "Use case: stylized-concept.\nAsset: tree-2, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete slender forest birch tree with a softly rounded airy green canopy, two pale cream trunks with muted dark bark marks, modest root flare. Upright south-facing sprite, entire silhouette isolated, no ground patch. About 320 native texels tall.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 180.481
+    },
+    {
+      "key": "tree-3",
+      "master": "tree-3-v1.png",
+      "sha256": "af55cace63e86b815acc7282881d539e9bbbcbc207aaf611c1c639a5124ab0ea",
+      "prompt": "Use case: stylized-concept.\nAsset: tree-3, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete young broad conifer, three to four generous rounded tiers of moss-green needle foliage, warm brown trunk visible at bottom. Upright south-facing sprite, entire silhouette isolated, no ground patch. About 320 native texels tall.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 32.535
+    },
+    {
+      "key": "bush-1",
+      "master": "bush-1-v1.png",
+      "sha256": "f159a3b963042574579745cb9adf62959e7fb30d8c84c4dad60e2e2999b94d05",
+      "prompt": "Use case: stylized-concept.\nAsset: bush-1, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One low rounded dense woodland bush, three overlapping clusters of sage-green leaves, tiny warm stems barely visible. Entire isolated silhouette, upright south-facing sprite, no soil or cast shadow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 140.142
+    },
+    {
+      "key": "bush-2",
+      "master": "bush-2-v1.png",
+      "sha256": "1c2eb3f627025fdc523f2f198147200812f4085a941ec1a17c8285c94586b697",
+      "prompt": "Use case: stylized-concept.\nAsset: bush-2, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One low spreading woodland shrub with small rounded muted green leaves and a few tiny cream blossoms. Entire isolated silhouette, upright south-facing sprite, no ground or cast shadow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 62.092
+    },
+    {
+      "key": "rock-1",
+      "master": "rock-1-v1.png",
+      "sha256": "1d979a14e6931754a8425427a5976fcd41e218d0f89367f2c08cd7deedb41134",
+      "prompt": "Use case: stylized-concept.\nAsset: rock-1, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small squat irregular muted grey forest stone, soft worn facets and a tiny moss patch on upper left. Entire isolated silhouette, south-facing upright sprite with visible top, no ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 88.606
+    },
+    {
+      "key": "rock-2",
+      "master": "rock-2-v1.png",
+      "sha256": "e605eca2a645933c4baa749bfae9d9097e1adb0bab43d8f277b2df7a57996b4f",
+      "prompt": "Use case: stylized-concept.\nAsset: rock-2, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One medium wide low grey woodland boulder, softly angular layers with a thin moss seam. Entire isolated silhouette, south-facing sprite with visible top, no ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 105.967
+    },
+    {
+      "key": "rock-3",
+      "master": "rock-3-v1.png",
+      "sha256": "194927dd24631e44f1f6703bb7d2c7e708a753cb18a8d070e8914e4a2eb0eba3",
+      "prompt": "Use case: stylized-concept.\nAsset: rock-3, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One taller narrow irregular weathered grey woodland rock, a few shallow cracks and restrained moss. Entire isolated silhouette, south-facing upright sprite with visible top, no ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 86.036
+    },
+    {
+      "key": "stump",
+      "master": "stump-v1.png",
+      "sha256": "58ecc8dcaff06ff033ddc4b9f5556c4505e9c22cc0e054be87f11b9ffb0cd3fe",
+      "prompt": "Use case: stylized-concept.\nAsset: stump, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One old broad tree stump, warm brown bark, pale honey cut top with readable growth rings, small root flare and a little moss. Complete isolated south-facing sprite, no ground patch.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 55.007
+    },
+    {
+      "key": "flowers",
+      "master": "flowers-v1.png",
+      "sha256": "b986034438e8a33cbc3ccf38168dfbbde8954c2469d78ed8e63200d9c5f92021",
+      "prompt": "Use case: stylized-concept.\nAsset: flowers, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small low patch of five tiny ivory and pale yellow wildflowers on short muted green stems and leaves. Complete isolated south-facing sprite, no soil patch or vase.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 112.062
+    },
+    {
+      "key": "grass",
+      "master": "grass-v1.png",
+      "sha256": "3e2adba2eedeac6a7282cd9bcb2b497bddac098e49aba725356d1c9637ee0758",
+      "prompt": "Use case: stylized-concept.\nAsset: grass, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small tuft of short broad woodland grass blades, five to eight gently curved sage and moss-green leaves. Complete isolated south-facing sprite, no ground patch.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 26.144
+    },
+    {
+      "key": "fallen-log",
+      "master": "fallen-log-v1.png",
+      "sha256": "85b7e7a5df8e19eb2ba07f7474727b676338246b053b314105b8abc2928db5f6",
+      "prompt": "Use case: stylized-concept.\nAsset: fallen-log, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One fallen forest log lying horizontally, warm brown textured bark, pale honey cut end on the left, a few restrained moss patches. Complete isolated south-facing sprite, no ground, no detached debris.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 136.31
+    },
+    {
+      "key": "mushrooms",
+      "master": "mushrooms-v1.png",
+      "sha256": "4be5859cd3743714145206d941e38550ab05b84c9911d21a040bf6cffdf290d3",
+      "prompt": "Use case: stylized-concept.\nAsset: mushrooms, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small cluster of three rounded chestnut-brown and cream forest mushrooms, short cream stems and a few tiny moss leaves. Complete isolated south-facing sprite, no ground patch.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 156.771
+    },
+    {
+      "key": "lantern",
+      "master": "lantern-v1.png",
+      "sha256": "677ef267145092c7d06d1240a1ed6640b6e2127e4e10319676d407420fa23103",
+      "prompt": "Use case: stylized-concept.\nAsset: lantern, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One slender upright timber trail lantern post with a wrought dark iron hanging lantern, small warm amber glass light inside, modest carved wooden brace and complete post foot. South-facing game sprite, no outward glow, cast shadow or ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 23.643
+    },
+    {
+      "key": "chest-closed",
+      "master": "chest-closed-v1.png",
+      "sha256": "0871cca93c6a96f4a69edc6ecae053d358d925be7f1e5c59ad22312e529e0f47",
+      "prompt": "Use case: stylized-concept.\nAsset: chest-closed, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small CLOSED honey-brown wooden dungeon treasure chest, rounded lid, dark iron straps, restrained brass latch. South-facing game sprite with a little top visible; complete isolated silhouette, no treasure around it, no ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 89.788
+    },
+    {
+      "key": "chest-open",
+      "master": "chest-open-v1.png",
+      "sha256": "5d1f80b31b1aa1fc2c8a0a9d043f49425edf53011fbd13e106e091305430cfaa",
+      "prompt": "Use case: stylized-concept.\nAsset: chest-open, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small OPEN honey-brown wooden dungeon treasure chest, rounded lid raised behind the box, dark iron straps and brass latch, dark warm empty interior. South-facing game sprite, complete isolated silhouette, no glow or treasure outside, no ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. Keep the same chest body, iron straps and brass latch as the reference, with only the lid raised.",
+      "references": [
+        "chest-closed-v1.png"
+      ],
+      "seconds": 21.853
+    },
+    {
+      "key": "spring",
+      "master": "spring-v1.png",
+      "sha256": "cfa7773bd934d78d90384e71ebba13f200e311acc11d97f082516ba8307e323b",
+      "prompt": "Use case: stylized-concept.\nAsset: spring, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One low circular forest spring basin of worn mossy grey stones, clear calm pale turquoise water inside, two small clusters of fern leaves. Slight view of the top, south-facing upright game prop. Entire isolated silhouette including basin, no surrounding ground, no glow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 186.724
+    },
+    {
+      "key": "waystone",
+      "master": "waystone-v1.png",
+      "sha256": "ee312a090d0d54c31378eaca01a96e10732b0648d1faad5c72f36ec90d026336",
+      "prompt": "Use case: stylized-concept.\nAsset: waystone, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One upright ancient rounded grey-green stone waymarker with a small simple abstract carved diamond rune, pale teal inlay without outward glow, a mossy base. South-facing complete isolated game sprite, no text or ground.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 150.13
+    },
+    {
+      "key": "stairs-down",
+      "master": "stairs-down-v1.png",
+      "sha256": "daf74f51345ace3e664c27ae8924cf653585383091258b1cbe878c12dfa9fdd4",
+      "prompt": "Use case: stylized-concept.\nAsset: stairs-down, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small forest dungeon entrance descending into darkness: mossy grey stone rectangular stairwell rim, four broad stone treads receding downward inside a dark opening, lowest part in shadow. South-facing game prop with visible step tops, complete isolated silhouette, no surrounding ground, no text.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 59.319
+    },
+    {
+      "key": "stairs-up",
+      "master": "stairs-up-v1.png",
+      "sha256": "ee4307d96bc26b90ee7ec19382a0563ef9335c027ee90fdea0e65bac9682471b",
+      "prompt": "Use case: stylized-concept.\nAsset: stairs-up, one ORIGINAL forest game prop asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One small free-standing mossy grey stone staircase exit, four broad ascending steps toward a low rounded stone arch opening at the rear. South-facing game prop with visible step tops, complete isolated silhouette, no surrounding ground, no text.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 119.423
+    },
+    {
+      "key": "battle-ground",
+      "master": "battle-ground-v1.png",
+      "sha256": "e1a490d5db2674a558506b53b271704ed7196effa3115bf7e8c042e0d5af7608",
+      "prompt": "Use case: stylized-concept.\nAsset: battle-ground, one ORIGINAL forest game battle-ground asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A wide panoramic walkable forest battle ground STRIP, predominantly calm moss-green short grass with sparse tiny warm earth flecks and no props. Flat game-painted ground from a shallow elevated front view, no horizon. 4:1 horizontal composition, full bleed, seamless left to right. No cast shadows.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "floor-1-v1.png"
+      ],
+      "seconds": 36.184
+    },
+    {
+      "key": "battle-back",
+      "master": "battle-back-v1.png",
+      "sha256": "ec1de18ff260c3f384a31924faccf7ee02c6ff7e3b3ed3efc7cb2b44e9f437f9",
+      "prompt": "Use case: stylized-concept.\nAsset: battle-back, one ORIGINAL forest game battle-back asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: A wide panoramic distant sunlit temperate forest battle BACKGROUND, layered muted sage and deep green trees, light warm sky above, a gentle clearing at foot. Horizon around two thirds down. Quiet central space behind fighters, slightly softened distant shapes. 4:1 horizontal composition, full bleed, seamless left to right, no foreground objects or characters.\nComposition: Full-bleed rectangular texture with all corners filled, no border. Match the requested viewing direction.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 52.571
+    },
+    {
+      "key": "battle-mid-1",
+      "master": "battle-mid-1-v1.png",
+      "sha256": "2a1cba6112218a74029d752d96bac1d5c3e1cbb85d4a829b85c6eb03270f498b",
+      "prompt": "Use case: stylized-concept.\nAsset: battle-mid-1, one ORIGINAL forest game battle-mid asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete medium forest oak tree with broad layered moss-green canopy and warm brown trunk, slightly subdued contrast for a mid-distance battle prop. South-facing isolated upright sprite, no ground or cast shadow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 87.4
+    },
+    {
+      "key": "battle-mid-2",
+      "master": "battle-mid-2-v1.png",
+      "sha256": "b369cd205a176b7e813f6bd738f1949ffd96adaadd5f9ec51859b7058a8cc8b6",
+      "prompt": "Use case: stylized-concept.\nAsset: battle-mid-2, one ORIGINAL forest game battle-mid asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete low group of two worn grey rocks beside a small sage-green bush, subdued contrast for a mid-distance battle prop. South-facing isolated sprite, no ground patch or cast shadow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 115.218
+    },
+    {
+      "key": "battle-mid-3",
+      "master": "battle-mid-3-v1.png",
+      "sha256": "beff26df326c2ac0b88e2ab4aac740813b4ee41c018823af7424de96dd62e3e6",
+      "prompt": "Use case: stylized-concept.\nAsset: battle-mid-3, one ORIGINAL forest game battle-mid asset.\nOriginal full-colour hand-painted 2D HD-2D JRPG game asset. Clean rounded forms, crisp antialiased edges, restrained painterly detail, readable at small size, moderate cel-like shading, warm daylight from upper front-left. Temperate sunlit level-one forest: moss greens, warm earth, muted grey stone. Not pixel art, not photorealistic. No characters, lettering, watermark, glow, or cast shadows.\nSubject: One complete fallen warm-brown woodland trunk with a short broken upward branch and a small fern cluster, subdued contrast for a mid-distance battle prop. South-facing isolated sprite, no ground or cast shadow.\nComposition: One centered complete object, generous transparent margin on every side. Genuine transparent background; do not include a contact shadow, backdrop or base platform.\nNo additional objects. No UI, labels or montage.\nInput image: rendering style/material reference only. Draw ONLY the requested subject and its specified viewing direction. Do not copy unrelated objects or composition. ",
+      "references": [
+        "tree-1-v1.png"
+      ],
+      "seconds": 134.386
+    }
+  ]
+}

@@ -37,7 +37,9 @@
     "./held/atlas.png": "./held/atlas.png",
     "./held/atlas.json": "./held/atlas.json",
     "./emote/atlas.png": "./emote/atlas.png",
-    "./emote/atlas.json": "./emote/atlas.json"
+    "./emote/atlas.json": "./emote/atlas.json",
+    "./kit-forest/atlas.png": "./kit-forest/atlas.png",
+    "./kit-forest/atlas.json": "./kit-forest/atlas.json"
   },
   "files": [
     "items",
@@ -51,6 +53,7 @@
     "ui",
     "README.md",
     "held",
-    "emote"
+    "emote",
+    "kit-forest"
   ]
 }

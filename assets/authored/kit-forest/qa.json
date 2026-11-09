@@ -1,0 +1,36 @@
+{
+  "packet": "Q7",
+  "status": "visual-review-pending",
+  "frames": 37,
+  "page": [
+    2048,
+    2048
+  ],
+  "runtimeSha256": {
+    "atlas.png": "a6b283cf50c20d792b677d3517209f5fc0f1df214dd006a35c501d273ef119f9",
+    "atlas.json": "72603313815afdda51e9508f1f3d6b3a093667918ee7861bb31867e55e3024b7"
+  },
+  "checks": {
+    "build": "pass",
+    "lint": "pass",
+    "tests": "pass",
+    "repeat": "byte-identical",
+    "legacyFilesUnchanged": 24,
+    "orderedFloorPairs": 16,
+    "horizontalWallPairs": 9,
+    "horizontalRiserPairs": 4,
+    "propFeet": "pass",
+    "clearMargins": "pass",
+    "atlasGapTexels": 2
+  },
+  "quest": {
+    "commit": "3296df73ccb8ca6972c55256e6e91df50bfcc384",
+    "parseKitAtlas": "pass",
+    "missing": [],
+    "builder": "roomGeometry + buildWorld",
+    "faces": 220,
+    "props": 14,
+    "notes": "Q5 test room plus three authored tree placements; Q12/Q11 owns consumer acceptance."
+  },
+  "ownerApproval": null
+}
