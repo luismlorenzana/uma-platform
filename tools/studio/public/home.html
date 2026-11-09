@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed"><title>Uma Studio</title>
+  <link rel="stylesheet" href="/tiers.css"><script type="module" src="/home-app.js"></script>
+</head>
+<body class="home">
+  <nav id="nav" class="studio-nav" aria-label="Studio"></nav>
+  <header class="topbar"><a href="/" class="brand"><span class="brand-mark" aria-hidden="true">u.</span><span>UMA <span>STUDIO</span></span></a><span class="local">LOCAL AUTHORING · NEVER PUBLISHED</span><div class="file-actions"><a class="button dark" href="/api/tiers/plan" download>Export plan ↗</a></div></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">PRE-PRODUCTION / TIER AUTHORING</p><h1>Who’s in, and who comes first<span>.</span></h1><p class="lead">Seven boards, one scale. SS, S and A are each board’s cast.<br>B, F and unranked flow down to the board below.</p></div>
+      <div class="flow" aria-label="How boards hand their leftovers down"><div class="flow-col"><span class="flow-node">Playable Umas</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node soft">Uma NPCs</span></div><div class="flow-col"><span class="flow-trio"><span class="flow-node">Azur Lane</span><span class="flow-node">Genshin</span><span class="flow-node">WuWa</span></span><span class="flow-caption">bosses</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node">Key enemies</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node soft">Regular enemies <em>+ NIKKE</em></span></div></div>
+    </section>
+    <div id="notice" role="alert" hidden></div>
+    <section class="board-section" aria-label="Boards and tools"><div class="section-line"><h2><span class="section-number">01</span> Open a board</h2></div><div id="groups"><p class="loading">Counting the boards…</p></div></section>
+    <section class="board-section" aria-label="Dashboard"><div class="section-line"><div><h2><span class="section-number">02</span> The numbers</h2><p class="section-description">Live from the boards. A character counts once, however many outfits she has.</p></div></div>
+      <div id="kpis" class="kpis"></div>
+      <div class="dash-grid"><div class="dash-card"><h3>Every board by tier</h3><div class="table-scroll"><table id="table" class="dash-table"></table></div></div>
+        <div class="dash-card"><h3>Careers</h3><div id="careers"></div></div></div>
+      <div class="dash-card"><h3>Sources</h3><ul class="sources"><li><strong>Umas</strong>: the local master release <code id="release">…</code>, outfits grouped by character.</li><li><strong>Azur Lane and NIKKE</strong>: the private enemy catalog in <code>content/authoring/enemies/</code>.</li></ul><ul id="imports" class="sources"></ul></div>
+    </section>
+    <footer><span>Everything here stays on this machine and in the private authoring backup.</span><span>Plan: <code>content/authoring/tiers/plan.json</code></span></footer>
+  </main>
+</body></html>

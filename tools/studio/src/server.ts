@@ -8,12 +8,11 @@ import { dirname, resolve, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { atomicJson, buildProgress, content as defaultContent, hash, maybeJson, queue, readJson, type QueueOverride, type Ranking } from '@uma-platform/sprite-pipeline'
 import { inside, loadCatalog } from './catalog.js'
-import { RankingStore, ConflictError } from './store.js'
 import { ReviewStore, ReviewConflict } from './review-store.js'
 import { spriteReview } from './sprite-review.js'
-import { loadEnemyCatalog } from './enemy-catalog.js'
-import { EnemyRankingStore } from './enemy-store.js'
-import { exportEnemyPlan } from './enemy-model.js'
+import { enemyImageFiles, loadTierCatalog } from './tier-catalog.js'
+import { TierStore, TierConflict } from './tier-store.js'
+import { boardOf, type BoardId } from './tier-model.js'
 
 const here = dirname(fileURLToPath(import.meta.url)), tool = resolve(here, '..')
 const content = resolve(process.env.UMA_CONTENT_DIR ?? defaultContent), release = resolve(content, 'release'), root = resolve(content, 'authoring/sprites')
@@ -33,11 +32,13 @@ async function serve(response: ServerResponse, file: string) {
   const bytes = await readFile(file); response.writeHead(200, { 'content-type': type, 'cache-control': 'no-cache' }); response.end(bytes)
 }
 async function main() {
-  const catalog = await loadCatalog(release), rankings = new RankingStore(resolve(content, 'authoring/uma-art-roster.json'), catalog.umas), reviews = new ReviewStore(root)
-  await rankings.read()
-  const enemyCatalog = await loadEnemyCatalog(content), enemyRankings = new EnemyRankingStore(resolve(content, 'authoring/enemy-art-roster.json'), enemyCatalog)
-  await enemyRankings.read()
-  const enemyImages = new Set(enemyCatalog.units.flatMap(u => Object.values(u.images)))
+  const catalog = await loadCatalog(release), reviews = new ReviewStore(root)
+  // The tier boards (P113): the catalog and imports load once; restart the Studio after `pnpm tiers:import`.
+  const tiers = await loadTierCatalog(content), tierStore = new TierStore(content, tiers.catalog)
+  const seeded = await tierStore.ensure(tiers.legacy)
+  if (seeded.length) console.log(`Seeded tier boards from the old boards: ${seeded.join(', ')}`)
+  const enemyImages = enemyImageFiles(tiers.catalog)
+  const importSummary = tiers.imports.map(i => ({ franchise: i.franchise, source: i.source, filter: i.filter, importedAt: i.importedAt, units: i.units.length }))
   const backups = new BackupQueue(async () => { await promisify(execFile)(process.execPath, [resolve(tool, '../../scripts/sprites/backup.mjs')], { env: { ...process.env, UMA_CONTENT_DIR: content }, maxBuffer: 16 * 1024 * 1024 }) })
   const images = new Set(catalog.umas.flatMap(u => [u.portrait, u.face, ...(u.references?.map(r => r.path) ?? [])]).filter((p): p is string => !!p))
   let queueWrite: Promise<unknown> = Promise.resolve()
@@ -54,8 +55,7 @@ async function main() {
     if (request.method !== 'GET') {
       if ((request.headers.origin && request.headers.origin !== `http://${host}`) || request.headers['sec-fetch-site'] === 'cross-site' || request.headers['content-type']?.split(';')[0] !== 'application/json') { send(response, 403, { error: 'Save from the local Studio' }); return }
       if (request.method !== 'PUT') { send(response, 405, { error: 'Method not allowed' }); return }
-      if (path === '/api/rankings') { send(response, 200, await rankings.save(await body(request))); return }
-      if (path === '/api/enemies/rankings') { send(response, 200, await enemyRankings.save(await body(request))); return }
+      if (path.startsWith('/api/tiers/') && boardOf(path.slice(11))) { send(response, 200, await tierStore.save(path.slice(11) as BoardId, await body(request))); return }
       if (path === '/api/reviews') { const saved = await reviews.save(await body(request)); await buildProgress(content); void backups.schedule(); send(response, 200, saved); return }
       if (path === '/api/queue') {
         const input = await body(request) as { stamp?: string; value?: QueueOverride }
@@ -73,18 +73,17 @@ async function main() {
     }
     if (path === '/api/prop-art') { send(response, 200, await propArt()); return }
     if (path === '/api/catalog') { send(response, 200, catalog); return }
-    if (path === '/api/enemies/catalog') { send(response, 200, enemyCatalog); return }
-    if (path === '/api/enemies/rankings') { send(response, 200, await enemyRankings.read()); return }
-    if (path === '/api/enemies/export') {
-      response.setHeader('content-disposition', 'attachment; filename="enemy-authoring-plan.json"')
-      send(response, 200, exportEnemyPlan(enemyCatalog, await enemyRankings.read())); return
+    if (path === '/api/tiers') { send(response, 200, { catalog: tiers.catalog, states: await tierStore.readAll(), imports: importSummary }); return }
+    if (path === '/api/tiers/plan') {
+      response.setHeader('content-disposition', 'attachment; filename="tier-plan.json"')
+      send(response, 200, await tierStore.plan()); return
     }
+    if (path.startsWith('/api/tiers/') && boardOf(path.slice(11))) { send(response, 200, await tierStore.read(path.slice(11) as BoardId)); return }
     if (path.startsWith('/enemy-assets/')) {
       const relative = decodeURIComponent(path.slice('/enemy-assets/'.length))
       if (!enemyImages.has(relative)) { send(response, 404, { error: 'Not a catalog reference image' }); return }
       await serve(response, await inside(resolve(content, 'authoring/enemies'), relative)); return
     }
-    if (path === '/api/rankings') { send(response, 200, await rankings.read()); return }
     if (path === '/api/authoring') { send(response, 200, await buildProgress(content, false)); return }
     if (path === '/api/queue') { send(response, 200, await readQueue()); return }
     if (path === '/api/backup') { send(response, 200, backups.status); return }
@@ -98,18 +97,21 @@ async function main() {
       await serve(response, await inside(content, key)); return
     }
     if (images.has(path)) { await serve(response, await inside(release, path.slice(1))); return }
-    const pages: Record<string, string> = { '/': 'src/index.html', '/enemies': 'public/enemies.html', '/enemies/': 'public/enemies.html', '/enemy-app.js': 'dist/enemy-app.js', '/enemy-model.js': 'dist/enemy-model.js', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/style.css': 'src/style.css', '/app.js': 'dist/app.js', '/model.js': 'dist/model.js', '/sprites/placement.js': 'dist/held-placement.js' }
+    const pages: Record<string, string> = { '/': 'public/home.html', '/tier-model.js': 'dist/tier-model.js', '/tier-app.js': 'dist/tier-app.js', '/home-app.js': 'dist/home-app.js', '/tier-ui.js': 'dist/tier-ui.js', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/sprites/placement.js': 'dist/held-placement.js' }
     if (pages[path]) { await serve(response, resolve(tool, pages[path])); return }
+    if (path.startsWith('/tiers/') && boardOf(path.slice(7))) { await serve(response, resolve(tool, 'public/board.html')); return }
+    // The two old rankers became tier boards (P113).
+    if (path === '/enemies' || path === '/enemies/' || path === '/tiers' || path === '/tiers/') { response.writeHead(302, { location: '/' }); response.end(); return }
     if (path === '/sprites' || path === '/field') { response.writeHead(302, { location: path + '/' + url.search }); response.end(); return }
     if (path.startsWith('/sprites/')) { await serve(response, await inside(resolve(tool, 'public/desk'), decodeURIComponent(path.slice(9)) || 'index.html')); return }
     if (path.startsWith('/field/')) { await serve(response, await inside(resolve(tool, 'public/field'), decodeURIComponent(path.slice(7)) || 'index.html')); return }
     await serve(response, await inside(resolve(tool, 'public'), path.slice(1)))
   })().catch((error: unknown) => {
     if (response.headersSent) { response.end(); return }
-    const status = error instanceof ReviewConflict || error instanceof ConflictError ? 409 : (error as NodeJS.ErrnoException).code === 'ENOENT' ? 404 : 400
+    const status = error instanceof ReviewConflict || error instanceof TierConflict ? 409 : (error as NodeJS.ErrnoException).code === 'ENOENT' ? 404 : 400
     send(response, status, { error: error instanceof Error ? error.message : 'Request failed' })
   }) })
   server.on('error', error => { console.error(error.message); process.exitCode = 1 })
-  server.listen(port, '127.0.0.1', () => console.log(`Sprite Studio: http://127.0.0.1:${port}`))
+  server.listen(port, '127.0.0.1', () => console.log(`Uma Studio: http://127.0.0.1:${port}`))
 }
 main().catch((error: unknown) => { console.error(error instanceof Error ? error.message : error); process.exitCode = 1 })

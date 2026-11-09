@@ -127,6 +127,19 @@ need from here, in order. A uma-platform session writes the missing packets from
 | M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (P107) | Claude | M | uma-farm asks again | **Parked** (P109: the owner moved parcels to later, uma-farm D22) |
 | | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
 
+## Tier authoring (TA)
+
+One local Studio with seven boards on one scale ([authoring/tiers.md](../authoring/tiers.md), TS1–TS14,
+[page](../authoring/previews/tiers.html), P113–P116). The boards decide what gets authored and in what order; their one
+output is the private `content/authoring/tiers/plan.json`.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| TA1 | The Studio's home and seven boards, the per-character Uma board, the Genshin Impact and Wuthering Waves imports | Claude | L | — | **Done** (P113–P115) |
+| [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's NPC ranking | Queued |
+| TA3 | uma-quest's careers: a career a character, at least three bosses from the boss boards (P116) | uma-quest's session | M | — | Requested |
+| TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | ChatGPT (Q39) | S | Q39 | With Q39 |
+
 ## Releases while packets run in parallel
 
 Several packets release uma-kit; three create packages (`uma-work`, `uma-server`).
@@ -142,6 +155,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| TA1 | **Tier authoring**: `pnpm studio` opens a home (a tile for each of seven boards and five sprite tools, then the numbers) and one board page for all seven, on one scale, SS, S, A, B, F, with leftovers flowing down. Umas per character (65 in the cast, 133 outfits), enemies on Azur Lane bosses, Key and Regular from their old roles, and 82 Genshin Impact and 46 Wuthering Waves characters imported locally. [Doc](../authoring/tiers.md), [page](../authoring/previews/tiers.html). | `COMMIT` · P113–P116 |
 | KF1 | uma-kit **0.19.0**, from uma-farm's F18 (its D31): the raised disc draws its `badge` (top-right, on the ring) and an optional `glow` (pulsing, still under reduced motion), portrait and landscape; `WorkProvider`'s `formatDuration(ms, 'left' \| 'length' \| 'ago')` words every work-screen duration. 0.17.0 portrait and H118 work snapshots unchanged; uma-rpg (226.97 KB of 230) and uma-racer (150.53 KB of 180) pass their checks on the packed kit. [Review page](../kit/previews/raised-and-durations.html). | `02e126c`, [published](https://github.com/luismlorenzana/uma-platform/actions/runs/42631418022) · P112 |
 | Q15 | uma-art **2.24.0**: 32 original Warrior town frames on one 2048px page, 33 retained masters/prompts, reproducible export and native/2× sheets plus actual Quest town captures. Owner approved; parser and builder pass. All 26 previous runtime files unchanged. Quest’s consumer pins it and maps `stall`/`flowers` to `stall-1`/`flower-box`. | P111 · this PR |
 | Q7 | uma-art **2.23.0**: 37 original forest frames on one 2048px page, pinned masters/prompts, deterministic export, native/2× room and battle reviews. Owner approved; Quest parser and builder pass. All 24 prior art files unchanged. Quest’s consumer pins it. | P110 · this PR |

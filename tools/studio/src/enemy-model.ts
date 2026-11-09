@@ -1,3 +1,4 @@
+// Legacy: the old enemy board's format (P113). The tier boards read it once, to seed themselves, and never write it.
 export const ENEMY_TIERS = [
   { id: 'SS', label: 'First pass', description: 'Start authoring here.' },
   { id: 'A1', label: 'Next wave', description: 'Follow the first cast.' },

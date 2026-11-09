@@ -1,3 +1,4 @@
+// The Uma outfit catalog and the old outfit roster's format. The roster is frozen (P114): the sprite queue reads it; the tier boards seed from it.
 import type { AptitudeGrade } from '@luismlorenzana/uma-data'
 
 export const TIERS = [

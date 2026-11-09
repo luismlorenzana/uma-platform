@@ -245,6 +245,9 @@ importers:
       '@uma-platform/sprite-pipeline':
         specifier: workspace:*
         version: link:../../scripts/sprites
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
     devDependencies:
       '@types/node':
         specifier: ^22.20.5

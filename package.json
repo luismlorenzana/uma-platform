@@ -33,6 +33,7 @@
     "sprites:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run pack",
     "sprites:backup": "node scripts/sprites/backup.mjs",
     "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start",
+    "tiers:import": "pnpm --filter @uma-platform/studio run import",
     "art:props": "pnpm --filter @uma-platform/authored-art run draw",
     "art:kits": "pnpm --filter @uma-platform/authored-art run kits",
     "art:kits:previews": "pnpm --filter @uma-platform/authored-art run kit-previews"

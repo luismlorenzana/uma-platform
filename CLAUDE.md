@@ -77,4 +77,5 @@ type credentials into a sign-in page. Scope gcloud with `CLOUDSDK_ACTIVE_CONFIG_
 
 The commands are in [README.md](README.md) ("Develop", "Make a master data release", "Releasing a package"):
 `NODE_AUTH_TOKEN=$(gh auth token) pnpm install`, `pnpm lint`, `pnpm test`, `pnpm build`, and the `sprites:*` tools.
-The sprite review app runs locally (`content/review/sprite-ranker/start.command` today; `pnpm studio` after UA3).
+The Uma Studio runs locally with `pnpm studio` (http://127.0.0.1:4318): the tier boards ([docs/authoring/tiers.md](docs/authoring/tiers.md))
+and the sprite tools.

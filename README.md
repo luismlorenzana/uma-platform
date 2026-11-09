@@ -30,7 +30,7 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `packages/work` | `@luismlorenzana/uma-work`: the work engine both games run, jobs, queues, tickets and building levels ([README](packages/work/README.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
 | `scripts/authored-art` | Original full-colour props: committed masters → deterministic held/emote atlases (`pnpm art:props`) |
-| `tools/studio` | Local Uma/enemy rankers, authoring queues, animation desk, gates and props (`pnpm studio`) |
+| `tools/studio` | Uma Studio (`pnpm studio`): the local tier boards for Umas, NPCs, bosses and enemies ([tiers](docs/authoring/tiers.md)), plus the sprite queue, animation desk, gates and props; `pnpm tiers:import <genshin\|wuwa>` |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
 | `assets/` | **In git.** Original art for the games (item icons so far) and its previews |
