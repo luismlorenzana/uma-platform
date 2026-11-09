@@ -1,6 +1,6 @@
 {
   "packet": "Q7",
-  "status": "visual-review-pending",
+  "status": "approved",
   "frames": 37,
   "page": [
     2048,
@@ -32,5 +32,13 @@
     "props": 14,
     "notes": "Q5 test room plus three authored tree placements; Q12/Q11 owns consumer acceptance."
   },
-  "ownerApproval": null
+  "ownerApproval": {
+    "answer": "Approve the forest kit",
+    "scope": "Q7 room, props, terrain and battle set for uma-art publication",
+    "runtimeSha256": {
+      "atlas.png": "a6b283cf50c20d792b677d3517209f5fc0f1df214dd006a35c501d273ef119f9",
+      "atlas.json": "72603313815afdda51e9508f1f3d6b3a093667918ee7861bb31867e55e3024b7"
+    },
+    "recordedAt": "2026-11-09T02:28:52Z"
+  }
 }

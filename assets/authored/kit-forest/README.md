@@ -24,4 +24,5 @@ set. Room captures use uma-quest's actual `roomGeometry` and `buildWorld`, with 
 only the atlas export and asset sheets are deterministic. The runtime package contains `atlas.png` and `atlas.json`,
 not these masters or review sheets. uma-quest's consuming packet owns pinning the release and in-game acceptance.
 
-Visual owner approval is pending; this is a review candidate.
+The owner approved this kit for uma-art publication on 2026-11-08: “Approve the forest kit”.
+`qa.json` binds that approval to the runtime atlas hashes and records parser/builder evidence.
