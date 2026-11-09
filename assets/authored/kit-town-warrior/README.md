@@ -29,4 +29,5 @@ The repeat checks cover both kits, every shared edge pair, transparent margins, 
 gaps. All 26 files published through uma-art 2.23.0 stay byte-identical. The package ships only the runtime atlas;
 masters and reviews stay in the repo. Quest's game session owns the consumer pin and in-game acceptance.
 
-Visual owner approval is pending; this is a review candidate.
+The owner approved the full review for publication on 2026-11-08: “Approve the Warrior town kit”.
+`qa.json` binds that approval to the runtime atlas hashes and records parser/builder evidence.

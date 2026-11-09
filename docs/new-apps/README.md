@@ -27,7 +27,7 @@
   releases, as the change protocol says.
 - **Kits and foes are authored in full colour,** like UA8's props, so they match the sprites. P97 amends P35 for them
   (NA4).
-- **Art delivery:** UA10 and UA12 are complete: three full townsfolk and five travelers with dedicated left field walks are approved and in `latest` (release `7c34dbe2c8de`, P108). UA8 shipped in uma-art 2.22.0. Q7 shipped in uma-art 2.23.0 (P110); the next art priorities are Q15 and Q16; UA9 and UA11 follow the slice.
+- **Art delivery:** UA10 and UA12 are complete: three full townsfolk and five travelers with dedicated left field walks are approved and in `latest` (release `7c34dbe2c8de`, P108). UA8 shipped in uma-art 2.22.0. Q7 and Q15 shipped in uma-art 2.23.0/2.24.0 (P110/P111); the next art priority is Q16; UA9 and UA11 follow the slice.
 - **Your steps:**
   - the art reviews ChatGPT asks for.
 
@@ -103,7 +103,7 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 | [UA8](#ua8) | **Weapons and bubbles**: Ten held weapons (16 textures) and eight emote bubbles in uma-art's new `held/` and `emote/` families. | ChatGPT | M | — | Done (2.22.0, P102) |
 | [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓, your set gate ✓ | Done (`7c34dbe2c8de`, P108) |
 | Q7 | **The forest kit** *(uma-quest)*: 37 original frames, approved; [native/2× review](../../assets/authored/kit-forest/review/index.html). | ChatGPT | M | uma-quest's Q5 ✓ | Done (2.23.0, P110) |
-| [Q15](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q15-town-kit.md) | **A town kit** *(uma-quest)*: The Warrior region's town kit, the same way. | ChatGPT | M | uma-quest's Q5 ✓ | Ready |
+| Q15 | **The Warrior town kit** *(uma-quest)*: 32 original frames, approved; [native/2× review](../../assets/authored/kit-town-warrior/review/index.html). | ChatGPT | M | uma-quest's Q5 ✓ | Done (2.24.0, P111) |
 | [Q16](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md) | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8 ✓, Q5 ✓ | Ready |
 
 **Exit:**

@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.24.0
+
+### Minor Changes
+
+- 1643d5a: Add the original Warrior town kit for uma-quest: 32 full-colour street, building, sign and market-prop frames on one 2048px atlas. Commit authored masters, prompt provenance, native/2× reviews and deterministic export settings; preserve all previously published art bytes.
+
 ## 2.23.0
 
 ### Minor Changes
