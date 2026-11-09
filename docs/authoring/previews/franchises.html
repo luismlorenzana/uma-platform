@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boss Franchises</title>
+<!-- docs/authoring/franchises.md on one page: the six boss boards' sources, and the ranked candidates for more. No character art or names. -->
+<style>
+  :root {
+    --page: #f5f3ed; --panel: #fffefa; --raised: #f9f8f3; --sunken: #ecebe4;
+    --ink: #202b2b; --ink-soft: #5d6766; --ink-faint: #8b9493;
+    --accent: #e36642; --accent-wash: #fbe9e1; --info: #426b85; --info-wash: #e2ecf2; --success: #327d66; --success-wash: #e1f0ea;
+    --ss: #ead6bb; --ss-ink: #68451c; --s: #dce7d2; --s-ink: #416136; --a: #d7e5eb; --a-ink: #3d6176; --b: #e6ddeb; --b-ink: #6f507e; --f: #e4e4de; --f-ink: #64675f;
+    --hairline: rgb(32 43 43 / 0.09); --hairline-strong: rgb(32 43 43 / 0.18); --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+      --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+      --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+      --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+    --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+    --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+    --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 16px 56px; }
+  .eyebrow { font-size: 10px; letter-spacing: .16em; font-weight: 750; color: var(--ink-faint); text-transform: uppercase; margin: 0 0 10px; }
+  h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -.045em; line-height: 1.08; margin: 0 0 12px; font-weight: 650; }
+  h1 span { color: var(--accent); }
+  h2 { font-size: 20px; letter-spacing: -.02em; margin: 0 0 6px; font-weight: 650; }
+  h3 { font-size: 14px; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  .lead { font-size: 16px; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 22px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  section.card { background: var(--panel); border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 18px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font-size: 28px; letter-spacing: -.04em; line-height: 1.1; color: var(--ink); font-weight: 650; }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 9px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  thead th { color: var(--ink-faint); font-weight: 600; font-size: 11px; letter-spacing: .04em; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  .badge { display: inline-grid; place-items: center; min-width: 30px; height: 24px; padding: 0 6px; border-radius: 5px; font-weight: 750; font-size: 12px; }
+  .t-SS { background: var(--ss); color: var(--ss-ink); } .t-S { background: var(--s); color: var(--s-ink); } .t-A { background: var(--a); color: var(--a-ink); }
+  .t-B { background: var(--b); color: var(--b-ink); } .t-F { background: var(--f); color: var(--f-ink); } .t-none { background: var(--sunken); color: var(--ink-faint); }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--sunken); color: var(--ink-soft); }
+  .pill.cast { background: var(--success-wash); color: var(--success); } .pill.down { background: var(--accent-wash); color: var(--accent); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .reasons { counter-reset: r; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .reasons li { counter-increment: r; background: var(--raised); border-radius: 10px; padding: 12px 14px; margin: 0; font-size: 13px; }
+  .reasons li::before { content: counter(r); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 11px; margin-right: 6px; }
+  .reasons b { color: var(--ink); }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">uma-platform · tier authoring · P118–P119</p>
+  <h1>More boss franchises<span>.</span></h1>
+  <p class="lead">Honkai: Star Rail and Zenless Zone Zero are boss boards now. Next, in order: Arknights: Endfield, Punishing: Gray Raven and Honkai Impact 3rd. The art is there; the catch is data, since none of them publishes a list with a gender field.</p>
+  <nav><a href="#built">Built today</a><a href="#candidates">The candidates</a><a href="#calls">Calls</a><a href="tiers.html">Tier authoring</a><a href="../franchises.md">Markdown</a></nav>
+  <div class="tiles">
+    <div class="tile"><b>5</b><span>boss boards</span></div>
+    <div class="tile"><b>235</b><span>female characters imported (82 + 46 + 59 + 48)</span></div>
+    <div class="tile"><b>3</b><span>recommended next franchises</span></div>
+    <div class="tile"><b>12</b><span>candidates ranked</span></div>
+  </div>
+  <section class="card" id="built">
+    <h2>The four imports built today</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Board</th><th>List</th><th>Female filter</th><th>Images</th><th class="num">Characters</th></tr></thead>
+      <tbody>
+        <tr><td><b>Genshin Impact</b></td><td>Project Amber, <code>gi.yatta.moe</code></td><td>Body type GIRL, LADY or LOLI</td><td>Face; wish splash, a 2:3 middle cut as the figure</td><td class="num">82</td></tr>
+        <tr><td><b>Wuthering Waves</b></td><td>Encore, <code>api.encore.moe</code></td><td>Listed as female; the Rover once</td><td>Face; full-body portrait (skin preview for the newest); card</td><td class="num">46</td></tr>
+        <tr><td><b>Honkai: Star Rail</b></td><td>Project Yatta, <code>sr.yatta.moe</code>, and StarRailRes</td><td>Pronouns in her own stories; eight checked by hand, by id; the Trailblazer once</td><td>Face; the 2048 portrait as figure and splash</td><td class="num">59</td></tr>
+        <tr><td><b>Zenless Zone Zero</b></td><td>Enka's agent list and English names</td><td>Internal name says <code>Avatar_Female</code></td><td>Face; full-body portrait</td><td class="num">48</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="card" id="candidates">
+    <h2>The candidates, best first</h2>
+    <p>Statuses checked on the web on 2026-11-09; (est.) marks an approximate roster.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>#</th><th>Franchise</th><th>Status</th><th>Art fit</th><th>Female roster</th><th>What an import could read</th><th>Call</th></tr></thead>
+      <tbody><tr><td class="id">1</td><td><b>Arknights: Endfield</b><br><span class="note">Hypergryph / Gryphline</span></td><td>Global since 22 Jan 2026 · <a href="https://www.animenewsnetwork.com/press-release/2026-01-22/arknights-endfield-is-out-now-on-pc-playstation-5-and-mobile/.233347">source</a></td><td>3D cel-shaded open world; the closest match</td><td>~20 of 33</td><td>endfield.wiki.gg (MediaWiki API); no gender field</td><td><span class="pill cast">Strong</span></td></tr><tr><td class="id">2</td><td><b>Punishing: Gray Raven</b><br><span class="note">Kuro Games</span></td><td>Live, new characters in 2026 · <a href="https://labs.invenglobal.com/articles/23015/punishing-gray-raven-adds-new-construct-lucia-crimson-weave-and-successfully-concludes-first-pop-up-event">source</a></td><td>3D action from WuWa's studio</td><td>~2/3 of ~30 (est.)</td><td>grayravens.com, biligame wiki; no gender field</td><td><span class="pill cast">Strong</span></td></tr><tr><td class="id">3</td><td><b>Honkai Impact 3rd</b><br><span class="note">HoYoverse</span></td><td>Live, v9.0 Aug 2026 · <a href="https://www.siliconera.com/senadina-returns-as-a-honkai-impact-3rd-as-an-astralop/">source</a></td><td>Battlesuit art as good as HSR</td><td>~35 valkyries, nearly all female (est.)</td><td>Fandom wiki only</td><td><span class="pill cast">Strong (weak data)</span></td></tr><tr><td class="id">4</td><td><b>Neverness to Everness</b><br><span class="note">Hotta</span></td><td>Global since 29 Apr 2026 · <a href="https://www.rpgsite.net/news/19734-neverness-to-everness-release-date-pre-registration-link">source</a></td><td>3D urban open world, Genshin/ZZZ polish</td><td>~13 of 20</td><td>Fan wikis only</td><td><span class="pill cast">Strong (weak data)</span></td></tr><tr><td class="id">5</td><td><b>Snowbreak: Containment Zone</b><br><span class="note">Seasun</span></td><td>Live, Jan 2026 update · <a href="https://animecorner.me/snowbreak-containment-zone-marks-2-5-year-anniversary-with-major-back-from-bygone-update/">source</a></td><td>Detailed 3D anime shooter</td><td>All female, 30+</td><td>Fan wikis and guides</td><td><span class="pill cast">Strong art, poor data</span></td></tr><tr><td class="id">6</td><td><b>Duet Night Abyss</b><br><span class="note">Pan Studio</span></td><td>Global since 28 Oct 2025 · <a href="https://www.rpgsite.net/news/18268-duet-night-abyss-launches-on-october-28-for-mobile-devices-and-pc-gacha-style-banners-for-characters-weapons-removed">source</a></td><td>3D gothic anime action</td><td>20+, mixed</td><td>GameWith, fan lists</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">7</td><td><b>Tower of Fantasy</b><br><span class="note">Hotta</span></td><td>Live, Sep 2026 update · <a href="https://massivelyop.com/2026/09/16/tower-of-fantasy-brings-a-new-story-and-a-new-character-in-the-between-twilight-and-dawn-update/">source</a></td><td>3D MMO; older, less polished</td><td>~60, 2/3 female (est.)</td><td>dvaJi/tof-builds (GitHub); gender unverified</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">8</td><td><b>Girls' Frontline 2: Exilium</b><br><span class="note">MICA</span></td><td>Live, Sep 2026 update · <a href="https://www.gematsu.com/2026/09/girls-frontline-2-exilium-chiral-redundancy-update-introduces-ots-14-the-first-mod-doll-nemesis-gnosis-and-major-rewards">source</a></td><td>3D, more realistic</td><td>~40, all female</td><td>iopwiki.com (MediaWiki)</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">9</td><td><b>Fate/Grand Order</b><br><span class="note">Lasengle</span></td><td>Live</td><td>2D, many illustrators</td><td>~450, 55% female (est.)</td><td>Atlas Academy API, explicit gender: best data</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">10</td><td><b>Arknights</b><br><span class="note">Hypergryph / Yostar</span></td><td>Live</td><td>Top splash art, flat 2D</td><td>~400, 2/3 female</td><td>Kengxxiao/ArknightsGameData (Chinese)</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">11</td><td><b>Blue Archive</b><br><span class="note">Nexon / Yostar</span></td><td>Live · <a href="https://www.animenewsnetwork.com/press-release/2026-05-28/blue-archive-ex-decagrammaton-chapter-3-update-introduces-new-event-story-unique-students-and-more/.237888">source</a></td><td>Cute flat 2D, chibi battles</td><td>200+, all female</td><td>SchaleDB students list</td><td><span class="pill ">Possible</span></td></tr><tr><td class="id">12</td><td><b>Strinova, Etheria: Restart</b><br><span class="note">various</span></td><td>Live</td><td>3D, less polished</td><td>20–30 each, mostly female</td><td>Fan wikis</td><td><span class="pill down">Skip for now</span></td></tr></tbody>
+    </table></div>
+    <h3>Not now</h3>
+    <p>Ananta launches globally on 15 Jan 2027. Azur Promilia launches 26 Nov 2026 in Asia only. Ash Echoes shut down in June 2026. Aether Gazer stopped content updates in July 2026. Infinity Nikki has one playable character, and Limbus Company a fixed twelve. Reverse: 1999, Epic Seven and Path to Nowhere are 2D, with weak data.</p>
+  </section>
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Id</th><th>Call</th></tr></thead>
+      <tbody>
+        <tr><td class="id">FR1</td><td>Honkai: Star Rail and Zenless Zone Zero are boss boards now, female characters to start</td></tr>
+        <tr><td class="id">FR2</td><td>Next, in order: Arknights: Endfield, Punishing: Gray Raven, Honkai Impact 3rd</td></tr>
+        <tr><td class="id">FR3</td><td>Without a gender field, import from the wiki with a female list checked by hand, by id</td></tr>
+        <tr><td class="id">FR4</td><td>2D franchises (FGO, Arknights, Blue Archive) wait: their art doesn't match the 3D boss look</td></tr>
+        <tr><td class="id">FR5</td><td>Each new franchise is one packet (TA6), a new board on Key enemies' list, and a row here</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main>
+</body>
+</html>

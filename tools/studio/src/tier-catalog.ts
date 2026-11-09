@@ -4,10 +4,10 @@ import { loadCatalog } from './catalog.js'
 import { loadEnemyCatalog } from './enemy-catalog.js'
 import { parseEnemyRankings } from './enemy-model.js'
 import { parseRankings } from './model.js'
-import { CATEGORIES, LEGACY_TIER, type Category, type EnemyUnit, type Franchise, type LegacyBoards, type TierCatalog, type UmaCharacter } from './tier-model.js'
+import { CATEGORIES, LEGACY_TIER, leadOutfit, type Category, type EnemyUnit, type Franchise, type LegacyBoards, type TierCatalog, type UmaCharacter } from './tier-model.js'
 
 /** Locally imported franchises (P115): `content/authoring/enemies/imports/<franchise>.json`. */
-export const IMPORTED = ['genshin', 'wuwa'] as const
+export const IMPORTED = ['genshin', 'wuwa', 'hsr', 'zzz'] as const
 export type ImportedFranchise = typeof IMPORTED[number]
 export interface ImportUnit { id: string; name: string; category: Category; details: string[]; images: { face?: string; art?: string; splash?: string } }
 export interface EnemyImport {
@@ -21,7 +21,7 @@ export interface EnemyImport {
   units: ImportUnit[]
 }
 const object = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
-export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-' }
+export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-', hsr: 'hsr-', zzz: 'zzz-' }
 
 /** Only images the importer wrote: `assets/enemies/<id>-<kind>.<hash8>.webp`, never another local path. */
 export function parseEnemyImport(value: unknown): EnemyImport {
@@ -85,14 +85,15 @@ export async function loadTierCatalog(content: string): Promise<{ catalog: TierC
   const outfitTier = new Map(legacy.outfits.map((r) => [r.outfitId, LEGACY_TIER[r.tier] ?? null]))
   const byCharacter = new Map<number, UmaCharacter>()
   for (const o of outfits.umas) {
-    const character = byCharacter.get(o.characterId) ?? { id: String(o.characterId), name: o.name, face: null, portrait: null, outfits: [] }
-    character.outfits.push({ id: o.id, title: o.title, original: o.original, way: o.bucket, face: o.face, portrait: o.portrait, before: outfitTier.get(o.id) ?? null })
+    const character = byCharacter.get(o.characterId) ?? { id: String(o.characterId), name: o.name, face: null, portrait: null, outfits: [], lead: o.id }
+    character.outfits.push({ id: o.id, title: o.title, original: o.original, way: o.bucket, strategy: { ...o.strategy }, face: o.face, portrait: o.portrait, before: outfitTier.get(o.id) ?? null })
     byCharacter.set(o.characterId, character)
   }
   const umas = [...byCharacter.values()].map((c) => {
     c.outfits.sort((a, b) => Number(b.original) - Number(a.original) || a.id - b.id)
-    const lead = c.outfits[0]
-    return { ...c, face: lead?.face ?? null, portrait: lead?.portrait ?? null }
+    // Her face is her original outfit's; her playstyle starts from her lead outfit (P117).
+    const first = c.outfits[0], lead = leadOutfit(c.outfits) ?? first
+    return { ...c, face: first?.face ?? null, portrait: first?.portrait ?? null, lead: lead?.id ?? 0 }
   }).sort((a, b) => a.name.localeCompare(b.name) || Number(a.id) - Number(b.id))
   const old = new Map(legacy.enemies.map((r) => [r.enemyId, r]))
   const url = (images: Partial<Record<'face' | 'art' | 'splash', string>>) => Object.fromEntries(Object.entries(images).map(([k, p]) => [k, `/enemy-assets/${p}`]))

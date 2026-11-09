@@ -5,13 +5,13 @@ import sharp from 'sharp'
 import { afterAll, describe, expect, it } from 'vitest'
 import { parseEnemyImport } from './tier-catalog.js'
 import { BOARDS, type TierCatalog } from './tier-model.js'
-import { encode, genshinCandidates, wuwaCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
+import { encode, genshinCandidates, hsrCandidates, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
 import { TierConflict, TierStore } from './tier-store.js'
 
 // Invented records and generated pixels only.
-const look = (id: number) => ({ id, title: `Look ${id}`, original: true, way: 'front' as const, face: null, portrait: null, before: null })
+const look = (id: number) => ({ id, title: `Look ${id}`, original: true, way: 'front' as const, strategy: { front: 'A', pace: 'B', late: 'B', end: 'C' }, face: null, portrait: null, before: null })
 const catalog: TierCatalog = { release: 'synthetic', enemies: [],
-  umas: [{ id: '701', name: 'Runner 701', face: null, portrait: null, outfits: [look(70101)] }, { id: '702', name: 'Runner 702', face: null, portrait: null, outfits: [look(70201)] }] }
+  umas: [{ id: '701', name: 'Runner 701', face: null, portrait: null, lead: 70101, outfits: [look(70101)] }, { id: '702', name: 'Runner 702', face: null, portrait: null, lead: 70201, outfits: [look(70201)] }] }
 const avatar = (id: number, name: string, bodyType: string, release = 1_600_000_000): AmberAvatar =>
   ({ id, rank: 4, name, element: 'Ice', weaponType: 'WEAPON_POLE', region: 'NORTHLAND', bodyType, icon: `UI_AvatarIcon_X${id}`, release })
 
@@ -37,6 +37,30 @@ describe('the Wuthering Waves list', () => {
     ])
     expect(list.map((c) => c.name)).toEqual(['Rover', 'Mira'])
     expect(list[1]).toMatchObject({ key: '6', details: ['4★', 'Aero'], images: { art: { url: 'https://x/resource/p6.webp', fallbacks: ['https://x/resource/s6.webp'] } } })
+  })
+})
+
+describe('the Honkai: Star Rail list', () => {
+  it('reads gender from the stories, keeps the female Trailblazer once, and skips the unreleased', () => {
+    expect(pronounGender('She left home. Her ship was old; she kept it anyway.')).toBe('female')
+    expect(pronounGender('He left home. His ship was old; he kept it.')).toBe('male')
+    expect(pronounGender('They left home. The ship was old.')).toBeNull()
+    const yatta = (id: number, name: string, release = 1_600_000_000) => ({ id, name, rank: 5, types: { pathType: 'Knight', combatType: 'Thunder' }, release })
+    const res = (id: number, tag: string) => ({ id: String(id), tag, icon: `icon/character/${id}.png`, portrait: `image/character_portrait/${id}.png` })
+    const list = hsrCandidates([yatta(2001, 'Vela'), yatta(2002, 'Oren'), yatta(2003, 'Nova <unbreak>II</unbreak>'), yatta(2004, 'Soon', 4_000_000_000), yatta(8001, 'Trailblazer'), yatta(8002, 'Trailblazer'), yatta(8004, 'Trailblazer')],
+      { 2001: res(2001, 'vela'), 2002: res(2002, 'oren'), 2003: res(2003, 'nova'), 2004: res(2004, 'soon'), 8001: res(8001, 'playerboy'), 8002: res(8002, 'playergirl'), 8004: res(8004, 'playergirl2') },
+      new Map([[2001, 'female'], [2002, 'male'], [2003, 'female'], [2004, 'female']]), 2_000_000_000_000)
+    expect(list.map((c) => `${c.key} ${c.name}`)).toEqual(['2001 Vela', '2003 Nova II', '8002 Trailblazer'])
+    expect(list[0]?.details).toEqual(['5★', 'Preservation', 'Lightning'])
+  })
+})
+
+describe('the Zenless Zone Zero list', () => {
+  it('keeps the agents whose internal name says Female, named from the English locale', () => {
+    const agent = (Name: string) => ({ Name, Rarity: 4, ProfessionType: 'Stun', ElementTypes: ['Elec'], Image: '/ui/zzz/IconRole01.png', CircleIcon: '/ui/zzz/IconRoleCircle01.png' })
+    const list = zzzCandidates({ 2: agent('Avatar_Male_Size03_Oren'), 1: agent('Avatar_Female_Size02_Vela'), 3: agent('Avatar_Female_Size01_Unnamed') }, { Avatar_Female_Size02_Vela: 'Vela', Avatar_Male_Size03_Oren: 'Oren' })
+    expect(list).toEqual([expect.objectContaining({ key: '1', name: 'Vela', details: ['S-rank', 'Stun', 'Electric'] })])
+    expect(Object.keys(list[0]!.images)).toEqual(['face', 'art'])
   })
 })
 

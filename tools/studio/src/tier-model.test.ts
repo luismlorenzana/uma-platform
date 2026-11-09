@@ -1,23 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, boardStats, careerMath, emptyBoard, move, ordered, parseBoard, place, pools, seedBoards, setMember, setNote, setTier, tierPlan,
-  type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter,
+  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setTier, setWay, tierPlan,
+  type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
 } from './tier-model.js'
 
 // Invented records only: no master data, no franchise names, no images.
-const uma = (id: string, outfits: number[]): UmaCharacter => ({
-  id, name: `Runner ${id}`, face: null, portrait: null,
-  outfits: outfits.map((o) => ({ id: o, title: `Look ${o}`, original: o % 100 === 1, way: 'front', face: null, portrait: null, before: null })),
+const grades = { front: 'A', pace: 'B', late: 'C', end: 'G' }
+const uma = (id: string, outfits: number[], ways: Way[] = []): UmaCharacter => ({
+  id, name: `Runner ${id}`, face: null, portrait: null, lead: outfits[0]!,
+  outfits: outfits.map((o, i) => ({ id: o, title: `Look ${o}`, original: o % 100 === 1, way: ways[i] ?? 'front', strategy: grades, face: null, portrait: null, before: null })),
 })
 const unit = (id: string, franchise: EnemyUnit['franchise'], category: EnemyUnit['category'] = 'regular'): EnemyUnit => ({
   id, name: `Foe ${id}`, franchise, category, studyAvailable: false, images: {}, details: [], before: null,
 })
 const catalog: TierCatalog = {
   release: 'synthetic',
-  umas: [uma('701', [70101, 70102]), uma('702', [70201]), uma('703', [70301]), uma('704', [70401, 70402, 70403])],
+  umas: [uma('701', [70101, 70102], ['front', 'late']), uma('702', [70201], ['pace']), uma('703', [70301], ['late-end']), uma('704', [70401, 70402, 70403])],
   enemies: [
     unit('al-a', 'azurlane', 'boss'), unit('al-b', 'azurlane', 'boss'), unit('al-c', 'azurlane', 'key'), unit('al-d', 'azurlane'),
-    unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('nk-1', 'nikke'),
+    unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('hsr-1', 'hsr', 'playable'), unit('zzz-1', 'zzz', 'playable'), unit('nk-1', 'nikke'),
   ],
 }
 const empty = (): BoardStates => Object.fromEntries(BOARDS.map((b) => [b.id, emptyBoard(b.id)])) as BoardStates
@@ -38,9 +39,9 @@ describe('pools', () => {
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }]
     expect(ids(states, 'azurlane-bosses')).toEqual(['al-a', 'al-b'])
     expect(ids(states, 'genshin-bosses')).toEqual(['gi-1', 'gi-2'])
-    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1'])
+    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1'])
     states['key-enemies'].entries = [{ id: 'al-c', tier: 'A', note: '' }, { id: 'gi-2', tier: 'B', note: '' }]
-    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1'])
+    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1'])
   })
   it('ignores a tier on a board the entry has left', () => {
     const states = empty()
@@ -126,5 +127,32 @@ describe('careers and the plan', () => {
       expect.objectContaining({ order: 1, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 2, id: '702', tier: 'S' }),
     ])
     expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.map((e) => e.id)).toEqual(['703', '704'])
+  })
+})
+
+describe('playstyles', () => {
+  it('reads a playstyle from the best running-style grades, ties included', () => {
+    expect(bestStyles({ front: 'A', pace: 'S', late: 'S', end: 'B' })).toEqual(['pace', 'late'])
+  })
+  it('leads with her best old tier, then her original outfit, then the lowest id', () => {
+    const o = (id: number, before: 'SS' | 'B' | null, original = false) => ({ ...uma('9', [id]).outfits[0]!, original, before })
+    expect(leadOutfit([o(90102, 'B'), o(90103, 'SS'), o(90101, null, true)])?.id).toBe(90103)
+    expect(leadOutfit([o(90102, null), o(90101, null, true)])?.id).toBe(90101)
+    expect(leadOutfit([o(90103, null), o(90102, null)])?.id).toBe(90102)
+  })
+  it('takes her lead outfit’s playstyle unless the owner picks another of hers, on either board', () => {
+    const states = empty(), runner = catalog.umas[0]!
+    expect(playstyleOf(runner, states)).toBe('front')
+    states.umas = setWay(states.umas, runner, 'late')
+    expect(states.umas.entries).toEqual([{ id: '701', tier: null, note: '', way: 'late' }])
+    expect(playstyleOf(runner, states)).toBe('late')
+    expect(setWay(states.umas, runner, 'pace-late')).not.toBe(states.umas)
+    expect(playstyleOf(runner, { umas: setWay(states.umas, runner, 'pace-late') })).toBe('front')
+    states.umas = setTier(states.umas, '701', 'B')
+    expect(states.umas.entries).toEqual([{ id: '701', tier: 'B', note: '', way: 'late' }])
+    expect(setWay(setTier(states.umas, '701', null), runner, 'front').entries).toEqual([])
+    expect(playstyleCounts(catalog, states).npcs.unranked).toMatchObject({ late: 1, front: 1, pace: 1, 'late-end': 1 })
+    expect(() => parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '701', tier: null, note: '', way: 'late' }] }, 'npcs')).toThrow()
+    expect(() => parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: null, note: '', way: 'magic' }] }, 'umas')).toThrow()
   })
 })

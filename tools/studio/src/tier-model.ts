@@ -16,7 +16,7 @@ export const inCast = (tier: Tier | null | undefined): boolean => tier === 'SS' 
 /** The old boards' five tiers on the new scale (P113): SS stays, A1 is S, A2 is A, B and F stay. */
 export const LEGACY_TIER: Readonly<Record<string, Tier>> = { SS: 'SS', A1: 'S', A2: 'A', B: 'B', F: 'F' }
 
-export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'key-enemies' | 'regular-enemies'
+export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'hsr-bosses' | 'zzz-bosses' | 'key-enemies' | 'regular-enemies'
 export type BoardGroup = 'umas' | 'bosses' | 'enemies'
 export interface Board {
   readonly id: BoardId
@@ -49,7 +49,13 @@ export const BOARDS: readonly Board[] = [
   { id: 'wuwa-bosses', kind: 'enemy', group: 'bosses', title: 'Wuthering Waves bosses', short: 'WuWa', from: [], next: 'key-enemies',
     blurb: 'New to the roster: female resonators, imported locally.',
     pool: 'Every Wuthering Waves character in the local import (female resonators to start).' },
-  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses'], next: 'regular-enemies',
+  { id: 'hsr-bosses', kind: 'enemy', group: 'bosses', title: 'Honkai: Star Rail bosses', short: 'HSR', from: [], next: 'key-enemies',
+    blurb: 'New to the roster: female characters, imported locally.',
+    pool: 'Every Honkai: Star Rail character in the local import (female characters to start).' },
+  { id: 'zzz-bosses', kind: 'enemy', group: 'bosses', title: 'Zenless Zone Zero bosses', short: 'ZZZ', from: [], next: 'key-enemies',
+    blurb: 'New to the roster: female agents, imported locally.',
+    pool: 'Every Zenless Zone Zero agent in the local import (female agents to start).' },
+  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses'], next: 'regular-enemies',
     blurb: 'They escort the bosses and lead the regular groups.',
     pool: 'Every other Azur Lane unit, plus each boss board’s B, F and unranked.' },
   { id: 'regular-enemies', kind: 'enemy', group: 'enemies', title: 'Regular enemies', short: 'Regular', from: ['key-enemies'], next: null,
@@ -58,20 +64,37 @@ export const BOARDS: readonly Board[] = [
 ]
 export const BOARD_IDS = BOARDS.map((b) => b.id)
 export const boardOf = (id: string): Board | undefined => BOARDS.find((b) => b.id === id)
-export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses']
+export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses']
 
 // ---- The catalog the boards rank ----
 
+/**
+ * The five playstyles: the old outfit board's aptitude buckets (uma-rpg Classes v3 / CV19), each with its calling. An
+ * outfit's comes from her best running-style grades; a character's from her lead outfit unless the owner picks (P117).
+ */
 export const WAYS = [
-  { id: 'front', label: 'Warrior' }, { id: 'pace', label: 'Spellblade' }, { id: 'pace-late', label: 'Mage' },
-  { id: 'late', label: 'Healer' }, { id: 'late-end', label: 'Summoner' },
+  { id: 'front', label: 'Warrior', bucket: 'Front / Front + Pace', short: 'Front', rule: 'Front among the best styles wins every tie.' },
+  { id: 'pace', label: 'Spellblade', bucket: 'Pure Pace', short: 'Pace', rule: 'Pace is the only style at the highest grade.' },
+  { id: 'pace-late', label: 'Mage', bucket: 'Pace + Late', short: 'Pace + Late', rule: 'Pace tied with Late or End, with no Front.' },
+  { id: 'late', label: 'Healer', bucket: 'Pure Late', short: 'Late', rule: 'Late is the only style at the highest grade.' },
+  { id: 'late-end', label: 'Summoner', bucket: 'Late + End', short: 'Late + End', rule: 'End alone or tied with Late, with no Front or Pace.' },
 ] as const
 export type Way = typeof WAYS[number]['id']
+export const isWay = (value: unknown): value is Way => WAYS.some((w) => w.id === value)
+export const STYLES = ['front', 'pace', 'late', 'end'] as const
+export type Strategy = Record<typeof STYLES[number], string>
+const GRADES = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G']
+/** Every running style tied for her highest grade: the ones that decide her playstyle. */
+export function bestStyles(strategy: Strategy): (typeof STYLES[number])[] {
+  const top = Math.min(...STYLES.map((s) => GRADES.indexOf(strategy[s])))
+  return STYLES.filter((s) => GRADES.indexOf(strategy[s]) === top)
+}
 export interface UmaOutfit {
   id: number
   title: string
   original: boolean
   way: Way
+  strategy: Strategy
   face: string | null
   portrait: string | null
   /** Its tier on the old outfit board, on the new scale (P113), or null. */
@@ -84,10 +107,25 @@ export interface UmaCharacter {
   face: string | null
   portrait: string | null
   outfits: UmaOutfit[]
+  /** Her lead outfit: her best tier on the old outfit board, then her original outfit, then the lowest id. */
+  lead: number
 }
+/** Her lead outfit, by the rule above. */
+export function leadOutfit(outfits: readonly UmaOutfit[]): UmaOutfit | undefined {
+  const rank = (o: UmaOutfit) => (o.before ? TIER_IDS.indexOf(o.before) : TIER_IDS.length)
+  return [...outfits].sort((a, b) => rank(a) - rank(b) || Number(b.original) - Number(a.original) || a.id - b.id)[0]
+}
+/** A character's playstyle: the owner's pick on the Playable board when it is one of her outfits' playstyles, else her lead outfit's. */
+export function playstyleOf(uma: UmaCharacter, states: Pick<BoardStates, 'umas'>): Way {
+  const pick = states.umas.entries.find((e) => e.id === uma.id)?.way
+  if (pick && uma.outfits.some((o) => o.way === pick)) return pick
+  return uma.outfits.find((o) => o.id === uma.lead)?.way ?? uma.outfits[0]?.way ?? 'front'
+}
+export const waysOf = (uma: UmaCharacter): Way[] => WAYS.map((w) => w.id).filter((w) => uma.outfits.some((o) => o.way === w))
 export const FRANCHISES = [
   { id: 'azurlane', label: 'Azur Lane' }, { id: 'genshin', label: 'Genshin Impact' },
-  { id: 'wuwa', label: 'Wuthering Waves' }, { id: 'nikke', label: 'NIKKE' },
+  { id: 'wuwa', label: 'Wuthering Waves' }, { id: 'hsr', label: 'Honkai: Star Rail' }, { id: 'zzz', label: 'Zenless Zone Zero' },
+  { id: 'nikke', label: 'NIKKE' },
 ] as const
 export type Franchise = typeof FRANCHISES[number]['id']
 export const CATEGORIES = [
@@ -112,7 +150,13 @@ export interface TierCatalog { release: string; umas: UmaCharacter[]; enemies: E
 
 // ---- A board's saved state ----
 
-export interface TierEntry { id: string; tier: Tier | null; note: string }
+export interface TierEntry {
+  id: string
+  tier: Tier | null
+  note: string
+  /** Playable Umas only: her playstyle, when the owner picks one of her outfits' other playstyles (P117). */
+  way?: Way
+}
 export interface BoardState {
   schemaVersion: 1
   kind: 'tier-board'
@@ -140,9 +184,11 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
   const id = value.board as BoardId, seen = new Set<string>()
   const entries = value.entries.map((e: unknown): TierEntry => {
     if (!object(e) || typeof e.id !== 'string' || !idPattern.test(e.id) || seen.has(e.id) || !(e.tier === null || isTier(e.tier)) ||
-        typeof e.note !== 'string' || e.note.length > 4000) throw new Error('Each entry needs a unique id, a tier (or null) and a note of at most 4,000 characters.')
+        typeof e.note !== 'string' || e.note.length > 4000 || (e.way !== undefined && (value.board !== 'umas' || !isWay(e.way)))) {
+      throw new Error('Each entry needs a unique id, a tier (or null) and a note of at most 4,000 characters; only Playable Umas entries carry a playstyle.')
+    }
     seen.add(e.id)
-    return { id: e.id, tier: e.tier, note: e.note }
+    return { id: e.id, tier: e.tier, note: e.note, ...(e.way !== undefined ? { way: e.way as Way } : {}) }
   })
   const state: BoardState = { schemaVersion: 1, kind: 'tier-board', board: id, revision: Number(value.revision), updatedAt: value.updatedAt as string | null, entries }
   if (id === 'azurlane-bosses') {
@@ -174,6 +220,8 @@ export function pools(catalog: TierCatalog, states: BoardStates): Pools {
     'azurlane-bosses': al.filter((u) => members.has(u.id)).map((u) => u.id),
     'genshin-bosses': catalog.enemies.filter((u) => u.franchise === 'genshin').map((u) => u.id),
     'wuwa-bosses': catalog.enemies.filter((u) => u.franchise === 'wuwa').map((u) => u.id),
+    'hsr-bosses': catalog.enemies.filter((u) => u.franchise === 'hsr').map((u) => u.id),
+    'zzz-bosses': catalog.enemies.filter((u) => u.franchise === 'zzz').map((u) => u.id),
     'key-enemies': al.filter((u) => !members.has(u.id)).map((u) => u.id),
     'regular-enemies': catalog.enemies.filter((u) => u.franchise === 'nikke').map((u) => u.id),
   }
@@ -213,21 +261,32 @@ const bump = (state: BoardState, entries: TierEntry[], members = state.members):
 export function setTier(state: BoardState, id: string, tier: Tier | null): BoardState {
   const current = state.entries.find((e) => e.id === id)
   if ((current?.tier ?? null) === tier) return state
-  const rest = state.entries.filter((e) => e.id !== id), note = current?.note ?? ''
-  if (tier === null && !note) return bump(state, rest)
-  return bump(state, [...rest, { id, tier, note }])
+  const rest = state.entries.filter((e) => e.id !== id), note = current?.note ?? '', way = current?.way
+  if (tier === null && !note && !way) return bump(state, rest)
+  return bump(state, [...rest, { id, tier, note, ...(way ? { way } : {}) }])
 }
 export function setNote(state: BoardState, id: string, note: string): BoardState {
   const current = state.entries.find((e) => e.id === id)
   if ((current?.note ?? '') === note) return state
   if (!current) return note ? bump(state, [...state.entries, { id, tier: null, note }]) : state
-  if (current.tier === null && !note) return bump(state, state.entries.filter((e) => e.id !== id))
+  if (current.tier === null && !note && !current.way) return bump(state, state.entries.filter((e) => e.id !== id))
   return bump(state, state.entries.map((e) => (e.id === id ? { ...e, note } : e)))
+}
+/** Playable Umas: picks her playstyle; her lead outfit's clears the pick. */
+export function setWay(state: BoardState, uma: UmaCharacter, way: Way): BoardState {
+  const current = state.entries.find((e) => e.id === uma.id), lead = uma.outfits.find((o) => o.id === uma.lead)?.way
+  const pick = way === lead ? undefined : way
+  if (current?.way === pick) return state
+  const { way: _, ...rest } = current ?? { id: uma.id, tier: null, note: '' }
+  const next: TierEntry = { ...rest, ...(pick ? { way: pick } : {}) }
+  if (!current) return pick ? bump(state, [...state.entries, next]) : state
+  if (next.tier === null && !next.note && !next.way) return bump(state, state.entries.filter((e) => e.id !== uma.id))
+  return bump(state, state.entries.map((e) => (e.id === uma.id ? next : e)))
 }
 /** Puts `id` in `tier` just before `before` (an entry of that tier), or at the tier's end. */
 export function place(state: BoardState, id: string, tier: Tier, before: string | null): BoardState {
   if (before === id) return state
-  const current = state.entries.find((e) => e.id === id), moved: TierEntry = { id, tier, note: current?.note ?? '' }
+  const current = state.entries.find((e) => e.id === id), moved: TierEntry = { id, tier, note: current?.note ?? '', ...(current?.way ? { way: current.way } : {}) }
   const rest = state.entries.filter((e) => e.id !== id), at = before ? rest.findIndex((e) => e.id === before && e.tier === tier) : -1
   return bump(state, at < 0 ? [...rest, moved] : [...rest.slice(0, at), moved, ...rest.slice(at)])
 }
@@ -275,7 +334,7 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
   const stats = Object.fromEntries(BOARDS.map((b) => [b.id, boardStats(all[b.id], states[b.id])])) as Record<BoardId, BoardStats>
   const describe = (id: string) => {
     const uma = umas.get(id)
-    if (uma) return { name: uma.name, characterId: Number(uma.id), outfits: uma.outfits.map((o) => o.id), ways: [...new Set(uma.outfits.map((o) => o.way))] }
+    if (uma) return { name: uma.name, characterId: Number(uma.id), playstyle: playstyleOf(uma, states), lead: uma.lead, outfits: uma.outfits.map((o) => o.id), ways: waysOf(uma) }
     const unit = enemies.get(id)
     return unit ? { name: unit.name, franchise: unit.franchise, category: unit.category } : { name: id }
   }
@@ -292,7 +351,18 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
       }
     }),
     careers: careerMath(stats),
+    playstyles: playstyleCounts(catalog, states, all),
   }
+}
+
+/** Playable Umas and Uma NPCs, each tier by playstyle (the old outfit board's grid, P117). */
+export function playstyleCounts(catalog: TierCatalog, states: BoardStates, all = pools(catalog, states)) {
+  const umas = new Map(catalog.umas.map((u) => [u.id, u]))
+  return Object.fromEntries((['umas', 'npcs'] as const).map((board) => {
+    const tiers = tierMap(states[board]), grid = Object.fromEntries([...TIERS.map((t) => t.id), 'unranked'].map((t) => [t, Object.fromEntries(WAYS.map((w) => [w.id, 0]))])) as Record<Tier | 'unranked', Record<Way, number>>
+    for (const m of all[board]) { const u = umas.get(m.id); if (u) grid[tiers.get(m.id) ?? 'unranked'][playstyleOf(u, states)]++ }
+    return [board, grid]
+  })) as Record<'umas' | 'npcs', Record<Tier | 'unranked', Record<Way, number>>>
 }
 
 // ---- Seeding from the old boards (P113) ----

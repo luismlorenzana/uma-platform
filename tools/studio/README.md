@@ -8,11 +8,13 @@ Pages:
 
 - **Home** (`/`): a tile for each tier board and sprite tool, then the numbers: each board's cast, every board by
   tier, the career math (P116) and the sources.
-- **Tier boards** (`/tiers/<board>`, P113): Playable Umas (`umas`), Uma NPCs (`npcs`), Azur Lane, Genshin Impact and
-  Wuthering Waves bosses (`azurlane-bosses`, `genshin-bosses`, `wuwa-bosses`), Key enemies (`key-enemies`) and
-  Regular enemies (`regular-enemies`). One scale, SS, S, A, B, F: SS to A are a board's cast; B, F and unranked flow to
-  the board below (Playable → NPCs; the boss boards → Key → Regular, which also takes NIKKE). Umas rank per character
-  (P114), with every outfit on her card and her outfit count on the tier list. Keys `1`–`5` rank, `0` unranks, arrows
+- **Tier boards** (`/tiers/<board>`, P113): Playable Umas (`umas`), Uma NPCs (`npcs`), Azur Lane, Genshin Impact,
+  Wuthering Waves, Honkai: Star Rail and Zenless Zone Zero bosses (`azurlane-bosses`, `genshin-bosses`, `wuwa-bosses`,
+  `hsr-bosses`, `zzz-bosses`), Key enemies (`key-enemies`) and Regular enemies (`regular-enemies`). One scale, SS, S,
+  A, B, F: SS to A are a board's cast; B, F and unranked flow to the board below (Playable → NPCs; the boss boards →
+  Key → Regular, which also takes NIKKE). Umas rank per character (P114) on the old board's playstyle grid (P117):
+  tiers down, the five playstyles across; a character's playstyle is her lead outfit's unless the card's pick says
+  otherwise; every outfit is on her card with its grades, and her outfit count is on her portrait. Keys `1`–`5` rank, `0` unranks, arrows
   browse, `[` `]` move within a tier; notes, multi-level undo, drag and drop, a filtered bulk B or F, and board
   import and export. Each board saves to `content/authoring/tiers/<board>.json`; every save rewrites
   `content/authoring/tiers/plan.json`, the plan later tools read. A missing board is seeded once from the old rosters.
@@ -53,12 +55,14 @@ history. Tests use invented records/bytes only; the sprite pipeline's local name
 - **Azur Lane and NIKKE:** `content/authoring/enemies/catalog.json`, the private schema-1 catalog imported from
   uma-rpg's enemy release (strict `assets/enemies/<id>-<kind>.<hash8>.webp` paths). The old enemy roster
   `content/authoring/enemy-art-roster.json` is history; its roles and tiers seeded the boards and show on each card.
-- **Genshin Impact and Wuthering Waves** (P115): `pnpm tiers:import genshin` and `pnpm tiers:import wuwa` read the
-  public character lists (Project Amber, Encore), keep the female characters, download each one's face, portrait and
+- **Genshin Impact, Wuthering Waves, Honkai: Star Rail and Zenless Zone Zero** (P115, P118): `pnpm tiers:import
+  <genshin|wuwa|hsr|zzz>` reads the public character lists (Project Amber, Encore, Project Yatta with StarRailRes, Enka),
+  keeps the female characters (HSR by its stories' pronouns plus a by-id list checked by hand), download each one's face, portrait and
   splash once into the ignored `content/authoring/enemies/.cache/`, and write WebP references beside the others plus
   `content/authoring/enemies/imports/<franchise>.json`. Owner-supplied images go in `content/authoring/enemies/inbox/`
   with `inbox/<franchise>.json` (`{ "units": [{ "key", "name", "category", "face", "art", "splash" }] }`).
-  `--offline` re-cuts from the cache. Restart the Studio after an import.
+  `--offline` re-cuts from the cache. Restart the Studio after an import. The next franchises are ranked in
+  [docs/authoring/franchises.md](../../docs/authoring/franchises.md).
 
 The Studio serves only catalog images and release art, never arbitrary files. No tier, name or image is committed.
 

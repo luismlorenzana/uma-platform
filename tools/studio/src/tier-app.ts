@@ -1,7 +1,7 @@
 // A tier board (P113): one page for all seven boards, set up from the board id in the URL.
 import {
-  BOARDS, TIERS, boardOf, boardStats, inCast, move, ordered, parseBoard, place, pools, setMember, setNote, setTier,
-  type Board, type BoardId, type BoardState, type EnemyUnit, type PoolMember, type Pools, type Tier, type UmaCharacter,
+  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, inCast, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setTier, setWay, waysOf,
+  type Board, type BoardId, type BoardState, type EnemyUnit, type PoolMember, type Pools, type Tier, type UmaCharacter, type Way,
 } from './tier-model.js'
 import { api, boardTitle, categoryLabel, el, esc, franchiseLabel, nav, roleLabel, wayLabel, type TierData } from './tier-ui.js'
 
@@ -26,6 +26,8 @@ let umaIndex = new Map<string, UmaCharacter>(), enemyIndex = new Map<string, Ene
 const nameOf = (id: string): string => umaIndex.get(id)?.name ?? enemyIndex.get(id)?.name ?? id
 const entry = (id: string) => state().entries.find((e) => e.id === id)
 const tierOf = (id: string): Tier | null => entry(id)?.tier ?? null
+/** A character's playstyle, the same on both Uma boards: it lives on the Playable board (P117). */
+const styleOf = (id: string): Way | null => { const u = umaIndex.get(id); return u && data ? playstyleOf(u, data.states) : null }
 
 function recompute(): void {
   all = pools(data!.catalog, data!.states)
@@ -40,8 +42,7 @@ function facetList(): Facet[] {
   const list: Facet[] = []
   const present = <T extends string>(values: T[]) => [...new Set(values)]
   if (isUma) {
-    list.push({ key: 'way', label: 'Every Way', options: [['front', 'Warrior'], ['pace', 'Spellblade'], ['pace-late', 'Mage'], ['late', 'Healer'], ['late-end', 'Summoner']],
-      test: (m, v) => !!umaIndex.get(m.id)?.outfits.some((o) => o.way === v) })
+    list.push({ key: 'way', label: 'Every playstyle', options: WAYS.map((w) => [w.id, `${w.bucket} · ${w.label}`]), test: (m, v) => styleOf(m.id) === v })
     list.push({ key: 'outfits', label: 'Any outfit count', options: [['one', 'One outfit'], ['many', 'Two or more outfits']],
       test: (m, v) => ((umaIndex.get(m.id)?.outfits.length ?? 0) > 1) === (v === 'many') })
   } else {
@@ -97,8 +98,24 @@ function umaCard(u: UmaCharacter): string {
     `<div class="outfit-strip" role="list" aria-label="Outfits">${u.outfits.map((o) => `<button role="listitem" class="outfit ${o.id === shown.id ? 'active' : ''}" data-outfit="${o.id}" aria-pressed="${o.id === shown.id}">` +
       `<span class="outfit-face">${o.face ? `<img src="${esc(o.face)}" alt="" loading="lazy">` : ''}</span><span class="outfit-copy"><strong>${esc(o.title)}</strong><span>${esc(wayLabel(o.way))}${o.original ? ' · original' : ''}</span></span>` +
       `${o.before ? `<span class="before tier-${o.before}" title="Its tier on the old outfit board">${o.before}</span>` : ''}</button>`).join('')}</div>` +
-    `<div class="profile-copy"><p class="identity-id">CHARACTER ${esc(u.id)}</p><h3>${esc(u.name)}</h3><p class="chips">${viaChip(members.get(u.id))}` +
+    `<div class="profile-copy">${styleTag(u)}<p class="identity-id">CHARACTER ${esc(u.id)}</p><h3>${esc(u.name)}</h3>${playstyle(u, shown)}<p class="chips">${viaChip(members.get(u.id))}` +
     `${u.outfits.some((o) => o.before) ? chip(`Old outfit board: best ${bestBefore(u)}`) : chip('Not on the old outfit board')}</p></div>`
+}
+function styleTag(u: UmaCharacter): string {
+  const style = WAYS.find((w) => w.id === styleOf(u.id))!
+  return `<span class="bucket-tag" title="${esc(style.rule)}">${esc(style.bucket)} <span>/ ${esc(style.label)}</span></span>`
+}
+/** Her playstyle (the old board's bucket and its calling), the shown outfit's running-style grades, and a pick when her outfits differ. */
+function playstyle(u: UmaCharacter, shown: UmaCharacter['outfits'][number]): string {
+  const style = WAYS.find((w) => w.id === styleOf(u.id))!, own = WAYS.find((w) => w.id === shown.way)!, best = bestStyles(shown.strategy), ways = waysOf(u)
+  const lead = u.outfits.find((o) => o.id === u.lead)
+  return `<div class="playstyle">` +
+    `<div class="aptitudes" aria-label="Running style aptitudes of ${esc(shown.title)}">${STYLES.map((st) => `<span class="aptitude ${best.includes(st) ? 'best' : ''}"><span>${st.charAt(0).toUpperCase() + st.slice(1)}</span><strong>${esc(shown.strategy[st])}</strong></span>`).join('')}</div>` +
+    `<p class="aptitude-caption">${esc(shown.title)}: the highlighted grades make her ${esc(own.bucket)} (${esc(own.label)}).${lead && shown.id !== lead.id ? ` Her playstyle comes from ${esc(lead.title)}, her lead outfit.` : ' Her lead outfit sets her playstyle.'}</p>` +
+    (ways.length > 1 ? `<div class="playstyle-pick" role="group" aria-label="Her playstyle"><span>Her outfits span ${ways.length} playstyles:</span>${ways.map((w) => {
+      const x = WAYS.find((y) => y.id === w)!
+      return `<button data-way="${w}" aria-pressed="${style.id === w}" class="${style.id === w ? 'chosen' : ''}" ${busy ? 'disabled' : ''}>${esc(x.label)}</button>`
+    }).join('')}</div>` : '') + `</div>`
 }
 function bestBefore(u: UmaCharacter): string {
   return TIERS.find((t) => u.outfits.some((o) => o.before === t.id))?.id ?? '—'
@@ -166,10 +183,30 @@ function tile(id: string): string {
   const count = u ? `<span class="outfit-count" aria-label="${u.outfits.length} outfits">${u.outfits.length}</span>` : ''
   return `<button class="tile ${id === selected ? 'selected' : ''} ${e ? `franchise-${e.franchise}` : ''}" draggable="${busy ? 'false' : 'true'}" data-select="${esc(id)}" data-id="${esc(id)}" title="${esc(`${nameOf(id)}${tier ? ` · ${tier}` : ''}`)}" aria-label="${esc(nameOf(id))}">${face(id)}${count}</button>`
 }
+/** The old outfit board's grid, per character: tiers down, the five playstyles across (P117). */
+function renderPlaystyleGrid(shown: PoolMember[], list: ReturnType<typeof ordered>, unranked: PoolMember[]): string {
+  const ids = new Set(shown.map((m) => m.id)), byStyle = new Map(shown.map((m) => [m.id, styleOf(m.id)]))
+  const head = `<thead><tr><th scope="col" class="corner">TIER</th>${WAYS.map((w) => {
+    const inWay = shown.filter((m) => byStyle.get(m.id) === w.id), cast = inWay.filter((m) => inCast(tierOf(m.id))).length, ranked = inWay.filter((m) => tierOf(m.id)).length
+    return `<th scope="col" title="${esc(w.rule)}"><span class="column-title">${esc(w.bucket)}</span><span class="column-subtitle">${esc(w.label)} <span>${cast} cast · ${ranked}/${inWay.length}</span></span></th>`
+  }).join('')}</tr></thead>`
+  const row = (tier: Tier | null, label: string, members: string[]) => {
+    const cells = WAYS.map((w) => {
+      const here = members.filter((id) => byStyle.get(id) === w.id)
+      return `<td data-row="${tier ?? 'none'}" data-way="${w.id}"><span class="cell-count">${here.length || '—'}</span><div class="cell-tiles">${here.map((id) => tile(id)).join('')}</div></td>`
+    }).join('')
+    return `<tr class="${tier ? `tier-${tier} ${inCast(tier) ? 'cast' : 'leaves'}` : 'unranked'}"><th scope="row" class="grid-tier" data-row="${tier ?? 'none'}"><span class="tier-badge">${tier ?? '—'}</span><span class="row-copy"><strong>${esc(label)}</strong><span>${members.length}</span></span></th>${cells}</tr>`
+  }
+  const body = TIERS.map((t) => row(t.id, t.label, list.filter((e) => e.tier === t.id && ids.has(e.id)).map((e) => e.id))).join('') + row(null, 'Unranked', unranked.map((m) => m.id))
+  return `<div class="grid-scroll"><table class="playstyle-grid"><caption class="sr-only">${esc(board.title)} by tier and playstyle</caption>${head}<tbody>${body}</tbody></table></div>`
+}
 function renderTierList(shown: PoolMember[]): void {
   const ids = new Set(shown.map((m) => m.id)), poolIds = new Set(pool.map((m) => m.id))
   const list = ordered(state(), poolIds), unranked = shown.filter((m) => !tierOf(m.id))
   el('board-count').textContent = shown.length === pool.length ? `${pool.length} on this board` : `${shown.length} of ${pool.length} shown`
+  el('bulk').innerHTML = unranked.length && shown.length < pool.length
+    ? `Rank the ${unranked.length} unranked shown as ${(['B', 'F'] as const).map((t) => `<button class="bulk-rank" data-bulk="${t}" ${busy ? 'disabled' : ''}>${t}</button>`).join('')}` : ''
+  if (isUma) { el('tierlist').innerHTML = renderPlaystyleGrid(shown, list, unranked); return }
   const rows = TIERS.map((t) => {
     const inTier = list.filter((e) => e.tier === t.id && ids.has(e.id))
     return `<div class="tier-row tier-${t.id} ${inCast(t.id) ? 'cast' : 'leaves'}" data-row="${t.id}"><div class="row-head"><span class="tier-badge">${t.id}</span><span class="row-copy"><strong>${t.label}</strong><span>${inTier.length}</span></span></div><div class="row-tiles">${inTier.map((e) => tile(e.id)).join('') || '<span class="row-empty">Drop here</span>'}</div></div>`
@@ -177,8 +214,6 @@ function renderTierList(shown: PoolMember[]): void {
   const limit = showAll ? unranked.length : 80
   rows.push(`<div class="tier-row unranked" data-row="none"><div class="row-head"><span class="tier-badge">—</span><span class="row-copy"><strong>Unranked</strong><span>${unranked.length}</span></span></div><div class="row-tiles">${unranked.slice(0, limit).map((m) => tile(m.id)).join('') || '<span class="row-empty">None</span>'}${unranked.length > limit ? `<button class="more" data-more>Show all ${unranked.length}</button>` : ''}</div></div>`)
   el('tierlist').innerHTML = rows.join('')
-  el('bulk').innerHTML = unranked.length && shown.length < pool.length
-    ? `Rank the ${unranked.length} unranked shown as ${(['B', 'F'] as const).map((t) => `<button class="bulk-rank" data-bulk="${t}" ${busy ? 'disabled' : ''}>${t}</button>`).join('')}` : ''
 }
 
 // ---- Saving ----
@@ -240,6 +275,10 @@ document.addEventListener('click', (event) => {
     // Only with a filter on, so a whole board is never ranked by accident; one undo restores it.
     const tier = target.dataset.bulk as Tier, ids = visible().filter((m) => !tierOf(m.id)).map((m) => m.id)
     if (ids.length && confirm(`Rank ${ids.length} unranked portraits as ${tier} on ${board.title}? One undo restores them.`)) void save(ids.reduce((s, id) => setTier(s, id, tier), state()))
+  }
+  else if (target.dataset.way && selected) {
+    const u = umaIndex.get(selected)
+    if (u) void save(setWay(data.states.umas, u, target.dataset.way as Way))
   }
   else if (target.dataset.member && selected) {
     const id = selected, alState = data.states['azurlane-bosses']
@@ -305,7 +344,11 @@ list.addEventListener('drop', (event) => {
   const id = dragged, before = (event.target as HTMLElement).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
   dragged = null
   selected = id
-  void save(row.dataset.row === 'none' ? setTier(state(), id, null) : place(state(), id, row.dataset.row as Tier, before))
+  let next = row.dataset.row === 'none' ? setTier(state(), id, null) : place(state(), id, row.dataset.row as Tier, before)
+  // On the Playable grid, dropping into another playstyle she has an outfit in picks that playstyle too.
+  const u = umaIndex.get(id), way = row.dataset.way as Way | undefined
+  if (board.id === 'umas' && u && way && way !== styleOf(id) && u.outfits.some((o) => o.way === way)) next = setWay(next, u, way)
+  void save(next)
 })
 
 // ---- Start ----

@@ -64,3 +64,53 @@ export async function encode(bytes: Buffer, cut: Source['cut']): Promise<Buffer>
   const trimmed = await image.trim().toBuffer()
   return sharp(trimmed).resize(480, 720, { fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toBuffer()
 }
+
+// ---- Honkai: Star Rail: Project Yatta's list, StarRailRes's images, gender from the character's own stories ----
+
+export interface YattaStarRail { id: number; name: string; rank: number; types: { pathType: string; combatType: string }; release: number }
+export interface StarRailResCharacter { id: string; tag: string; icon: string; portrait: string }
+const HSR_PATH: Record<string, string> = { Knight: 'Preservation', Rogue: 'The Hunt', Mage: 'Erudition', Warlock: 'Nihility', Warrior: 'Destruction', Shaman: 'Harmony', Priest: 'Abundance', Memory: 'Remembrance' }
+const HSR_TYPE: Record<string, string> = { Thunder: 'Lightning' }
+/**
+ * No Star Rail list carries a gender, so it's read from the character's own third-person story text: "she/her" against
+ * "he/him", plus "girl/woman/lady" against "boy/man". Clear only with three or more and twice the other side.
+ */
+export function pronounGender(text: string): 'female' | 'male' | null {
+  const count = (re: RegExp) => (text.match(re) ?? []).length
+  const she = count(/\b(she|her|hers|herself|girl|woman|lady|sister|daughter|princess|queen)\b/gi)
+  const he = count(/\b(he|him|his|himself|boy|man|gentleman|brother|son|prince|king)\b/gi)
+  if (she >= 3 && she > he * 2) return 'female'
+  if (he >= 3 && he > she * 2) return 'male'
+  return null
+}
+/** Checked by hand (2026-11-09) where a character's stories don't settle it: by id, never by name. */
+export const HSR_GENDER: Readonly<Record<number, 'female' | 'male'>> = { 1105: 'female', 1207: 'female', 1210: 'female', 1221: 'female', 1224: 'female', 1313: 'male', 1405: 'male', 1415: 'female' }
+const plain = (name: string) => name.replace(/<[^>]*>/g, '').trim()
+export function hsrCandidates(list: YattaStarRail[], res: Record<string, StarRailResCharacter>, gender: ReadonlyMap<number, 'female' | 'male' | null>, now = Date.now()): Candidate[] {
+  const seen = new Set<string>(), base = 'https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/'
+  return list.filter((a) => a.release * 1000 <= now).sort((a, b) => a.id - b.id).flatMap((a): Candidate[] => {
+    const r = res[String(a.id)], trailblazer = a.id >= 8000
+    // The Trailblazer is one character on several Paths: the female Trailblazer once.
+    const female = trailblazer ? !!r?.tag.includes('playergirl') : (HSR_GENDER[a.id] ?? gender.get(a.id)) === 'female'
+    const name = trailblazer ? 'Trailblazer' : plain(a.name)
+    if (!female || !r || seen.has(name)) return []
+    seen.add(name)
+    return [{ key: String(a.id), name, category: 'playable', details: [`${a.rank}★`, HSR_PATH[a.types.pathType] ?? a.types.pathType, HSR_TYPE[a.types.combatType] ?? a.types.combatType],
+      images: { face: { url: base + r.icon, cut: 'face' }, art: { url: base + r.portrait, cut: 'trim-figure' }, splash: { url: base + r.portrait, cut: 'splash' } } }]
+  })
+}
+
+// ---- Zenless Zone Zero: Enka's agent list, whose internal names say Female or Male ----
+
+export interface EnkaAgent { Name: string; Rarity: number; ProfessionType: string; ElementTypes: string[]; Image: string; CircleIcon: string }
+const ZZZ_ELEMENT: Record<string, string> = { Elec: 'Electric', Physics: 'Physical', Ether: 'Ether', Fire: 'Fire', Ice: 'Ice', FireFrost: 'Frost', AuricEther: 'Auric Ink', Wind: 'Wind', Lumen: 'Lumen' }
+export function zzzCandidates(agents: Record<string, EnkaAgent>, names: Record<string, string>): Candidate[] {
+  const seen = new Set<string>()
+  return Object.entries(agents).sort((a, b) => Number(a[0]) - Number(b[0])).flatMap(([id, a]): Candidate[] => {
+    const name = names[a.Name]
+    if (!a.Name.startsWith('Avatar_Female_') || !name || seen.has(name)) return []
+    seen.add(name)
+    return [{ key: id, name, category: 'playable', details: [a.Rarity >= 4 ? 'S-rank' : 'A-rank', a.ProfessionType, ...a.ElementTypes.map((e) => ZZZ_ELEMENT[e] ?? e)].slice(0, 4),
+      images: { face: { url: `https://enka.network${a.CircleIcon}`, cut: 'face' }, art: { url: `https://enka.network${a.Image}`, cut: 'trim-figure' } } }]
+  })
+}

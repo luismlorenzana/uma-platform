@@ -14,7 +14,7 @@ import { extname, resolve } from 'node:path'
 import { content as defaultContent } from '@uma-platform/sprite-pipeline'
 import { IMPORT_PREFIX, IMPORTED, parseEnemyImport, type EnemyImport, type ImportedFranchise, type ImportUnit } from './tier-catalog.js'
 import { CATEGORIES, type Category } from './tier-model.js'
-import { encode, genshinCandidates, wuwaCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type Kind, type Source } from './tier-sources.js'
+import { encode, genshinCandidates, HSR_GENDER, hsrCandidates, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type EnkaAgent, type Kind, type Source, type StarRailResCharacter, type YattaStarRail } from './tier-sources.js'
 
 const AGENT = 'uma-studio-import/1.0 (local authoring tool)'
 
@@ -31,7 +31,7 @@ async function cached(url: string, franchise: ImportedFranchise, json = false): 
   const response = await fetch(url, { headers: { 'user-agent': AGENT, accept: json ? 'application/json' : 'image/*' } })
   if (response.status === 404) return null
   const type = response.headers.get('content-type') ?? ''
-  if (!response.ok || (json ? !type.includes('json') : !type.startsWith('image/'))) throw new Error(`${url}: ${response.status} ${type}`)
+  if (!response.ok || (json ? !/json|text\/plain/.test(type) : !type.startsWith('image/'))) throw new Error(`${url}: ${response.status} ${type}`)
   const bytes = Buffer.from(await response.arrayBuffer())
   await mkdir(resolve(enemies, '.cache', franchise), { recursive: true })
   await writeFile(file, bytes)
@@ -73,19 +73,37 @@ async function atomic(path: string, value: unknown): Promise<void> {
 }
 
 async function run(franchise: ImportedFranchise): Promise<void> {
-  const prefix = IMPORT_PREFIX[franchise]
+  const prefix = IMPORT_PREFIX[franchise], problems: string[] = []
   let roster: Candidate[], source: string
   if (franchise === 'genshin') {
     const list = await json<{ data: { items: Record<string, AmberAvatar> } }>('https://gi.yatta.moe/api/v2/en/avatar', franchise)
     roster = genshinCandidates(Object.values(list.data.items))
     source = 'Project Amber (gi.yatta.moe): body type GIRL, LADY or LOLI, released'
+  } else if (franchise === 'hsr') {
+    const list = Object.values((await json<{ data: { items: Record<string, YattaStarRail> } }>('https://sr.yatta.moe/api/v2/en/avatar', franchise)).data.items)
+    const res = await json<Record<string, StarRailResCharacter>>('https://raw.githubusercontent.com/Mar-7th/StarRailRes/master/index_min/en/characters.json', franchise)
+    const gender = new Map<number, 'female' | 'male' | null>(), unclear: string[] = []
+    for (const a of list.filter((x) => x.id < 8000 && x.release * 1000 <= Date.now())) {
+      const d = (await json<{ data: { fetter?: { description?: string }; script?: { story?: { text: string }[] } } }>(`https://sr.yatta.moe/api/v2/en/avatar/${a.id}`, franchise)).data
+      const g = pronounGender([d.fetter?.description ?? '', ...(d.script?.story ?? []).map((s) => s.text)].join(' '))
+      gender.set(a.id, g)
+      if (!g && !HSR_GENDER[a.id]) unclear.push(`${a.name} (${a.id})`)
+    }
+    if (unclear.length) problems.push(`unclear from their stories, left out: ${unclear.join(', ')}`)
+    roster = hsrCandidates(list, res, gender)
+    source = 'Project Yatta (sr.yatta.moe) and StarRailRes: female by the pronouns in each character’s own stories, released'
+  } else if (franchise === 'zzz') {
+    const agents = await json<Record<string, EnkaAgent>>('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/zzz/avatars.json', franchise)
+    const locs = await json<{ en: Record<string, string> }>('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/zzz/locs.json', franchise)
+    roster = zzzCandidates(agents, locs.en)
+    source = 'Enka (EnkaNetwork/API-docs): agents whose internal name is Avatar_Female'
   } else {
     const list = await json<{ roleList: EncoreRole[] }>('https://api.encore.moe/en/character', franchise), details = []
     for (const role of list.roleList) details.push({ role, detail: await json<EncoreDetail>(`https://api.encore.moe/en/character/${role.Id}`, franchise) })
     roster = wuwaCandidates(details)
     source = 'Encore (api.encore.moe): playable resonators listed as female'
   }
-  const extra = await inbox(franchise), units: ImportUnit[] = [], problems: string[] = []
+  const extra = await inbox(franchise), units: ImportUnit[] = []
   await mkdir(resolve(enemies, 'assets/enemies'), { recursive: true })
   for (const c of [...roster, ...extra]) {
     const id = `${prefix}${c.key}`, images: ImportUnit['images'] = {}

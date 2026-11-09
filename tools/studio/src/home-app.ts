@@ -1,5 +1,5 @@
 // The Studio's home (P113): a tile for every tier board and sprite tool, then the numbers across them.
-import { BOARDS, BOSS_BOARDS, MIN_CAREER_BOSSES, TIERS, boardStats, careerMath, parseBoard, pools, type BoardId, type BoardStats } from './tier-model.js'
+import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, WAYS, boardStats, careerMath, inCast, parseBoard, playstyleCounts, pools, type BoardId, type BoardStats } from './tier-model.js'
 import { api, el, esc, nav, type TierData } from './tier-ui.js'
 
 const SPRITE_TOOLS = [
@@ -50,10 +50,18 @@ function render(data: TierData): void {
     `<table class="career-table"><thead><tr><th scope="col">Tier</th><th scope="col" class="num">Playable Umas</th><th scope="col" class="num">Bosses</th><th scope="col" class="num">Bosses a career</th><th scope="col" class="num">Careers a boss</th></tr></thead><tbody>${careers.tiers.map((t) => `<tr><th scope="row"><span class="tier-badge small tier-${t.tier}">${t.tier}</span></th><td class="num">${t.umas}</td><td class="num">${t.bosses}</td><td class="num strong">${t.umas ? t.bossesPerCareer : '—'}</td><td class="num">${t.careersPerBoss ?? '—'}</td></tr>`).join('')}</tbody>` +
     `<tfoot><tr><th scope="row">All</th><td class="num">${careers.umas}</td><td class="num">${careers.bosses}</td><td class="num" colspan="2">${careers.fights} boss fights in all</td></tr></tfoot></table>`
 
-  el('imports').innerHTML = (['genshin', 'wuwa'] as const).map((f) => {
-    const i = data.imports.find((x) => x.franchise === f), title = f === 'genshin' ? 'Genshin Impact' : 'Wuthering Waves'
+  el('imports').innerHTML = (['genshin', 'wuwa', 'hsr', 'zzz'] as const).map((f) => {
+    const i = data.imports.find((x) => x.franchise === f), title = FRANCHISES.find((x) => x.id === f)?.label ?? f
     return i ? `<li><strong>${title}</strong>: ${i.units} characters (${esc(i.filter)}), from ${esc(i.source)}, ${esc(i.importedAt.slice(0, 10))}</li>` : `<li><strong>${title}</strong>: not imported yet. Run <code>pnpm tiers:import ${f}</code>, then restart the Studio.</li>`
   }).join('')
+
+  // The old outfit board's grid, per character: Playable Umas by tier and playstyle (P117).
+  const grid = playstyleCounts(data.catalog, data.states, all).umas
+  el('playstyles').innerHTML = `<caption class="sr-only">Playable Umas by tier and playstyle</caption><thead><tr><th scope="col">Tier</th>${WAYS.map((w) => `<th scope="col" class="num" title="${esc(w.rule)}">${esc(w.bucket)}<br><span class="muted">${esc(w.label)}</span></th>`).join('')}<th scope="col" class="num">All</th></tr></thead><tbody>${
+    [...TIERS.map((t) => t.id), 'unranked' as const].map((t) => {
+      const row = grid[t], total = WAYS.reduce((n, w) => n + row[w.id], 0)
+      return `<tr><th scope="row">${t === 'unranked' ? 'Unranked' : `<span class="tier-badge small tier-${t}">${t}</span>`}</th>${WAYS.map((w) => `<td class="num ${t !== 'unranked' && inCast(t) ? 'cast' : ''}">${row[w.id] || '<span class="zero">·</span>'}</td>`).join('')}<td class="num total">${total}</td></tr>`
+    }).join('')}</tbody><tfoot><tr><th scope="row">Cast</th>${WAYS.map((w) => `<td class="num total">${grid.SS[w.id] + grid.S[w.id] + grid.A[w.id]}</td>`).join('')}<td class="num total">${stats.umas.cast}</td></tr></tfoot>`
   el('release').textContent = data.catalog.release
   for (const seg of document.querySelectorAll<HTMLElement>('.seg')) seg.style.flexGrow = seg.dataset.grow ?? '0'
 }
