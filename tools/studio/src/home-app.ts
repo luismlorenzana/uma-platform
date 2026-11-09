@@ -1,5 +1,5 @@
 // The Studio's home (P113): a tile for every tier board and sprite tool, then the numbers across them.
-import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, WAYS, boardStats, careerMath, inCast, parseBoard, playstyleCounts, pools, type BoardId, type BoardStats } from './tier-model.js'
+import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, WAYS, boardStats, careerMath, importBoardOf, inCast, leftOut, parseBoard, playstyleCounts, pools, type BoardId, type BoardStats } from './tier-model.js'
 import { api, el, esc, nav, type TierData } from './tier-ui.js'
 
 const SPRITE_TOOLS = [
@@ -50,9 +50,10 @@ function render(data: TierData): void {
     `<table class="career-table"><thead><tr><th scope="col">Tier</th><th scope="col" class="num">Playable Umas</th><th scope="col" class="num">Bosses</th><th scope="col" class="num">Bosses a career</th><th scope="col" class="num">Careers a boss</th></tr></thead><tbody>${careers.tiers.map((t) => `<tr><th scope="row"><span class="tier-badge small tier-${t.tier}">${t.tier}</span></th><td class="num">${t.umas}</td><td class="num">${t.bosses}</td><td class="num strong">${t.umas ? t.bossesPerCareer : '—'}</td><td class="num">${t.careersPerBoss ?? '—'}</td></tr>`).join('')}</tbody>` +
     `<tfoot><tr><th scope="row">All</th><td class="num">${careers.umas}</td><td class="num">${careers.bosses}</td><td class="num" colspan="2">${careers.fights} boss fights in all</td></tr></tfoot></table>`
 
-  el('imports').innerHTML = (['genshin', 'wuwa', 'hsr', 'zzz'] as const).map((f) => {
+  el('imports').innerHTML = BOARDS.flatMap((b) => (b.franchise ? [b.franchise] : [])).map((f) => {
     const i = data.imports.find((x) => x.franchise === f), title = FRANCHISES.find((x) => x.id === f)?.label ?? f
-    return i ? `<li><strong>${title}</strong>: ${i.units} characters (${esc(i.filter)}), from ${esc(i.source)}, ${esc(i.importedAt.slice(0, 10))}</li>` : `<li><strong>${title}</strong>: not imported yet. Run <code>pnpm tiers:import ${f}</code>, then restart the Studio.</li>`
+    const out = leftOut(data.states[importBoardOf(f)!.id]).length
+    return i ? `<li><strong>${title}</strong>: ${i.units} (${esc(i.filter)})${out ? `, ${out} left out` : ''}, from ${esc(i.source)}, ${esc(i.importedAt.slice(0, 10))}</li>` : `<li><strong>${title}</strong>: not imported yet. Run <code>pnpm tiers:import ${f}</code>, then restart the Studio.</li>`
   }).join('')
 
   // The old outfit board's grid, per character: Playable Umas by tier and playstyle (P117).

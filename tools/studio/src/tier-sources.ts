@@ -114,3 +114,74 @@ export function zzzCandidates(agents: Record<string, EnkaAgent>, names: Record<s
       images: { face: { url: `https://enka.network${a.CircleIcon}`, cut: 'face' }, art: { url: `https://enka.network${a.Image}`, cut: 'trim-figure' } } }]
   })
 }
+
+// ---- Wiki imports, unfiltered (P120): Honkai Impact 3rd's battlesuits and Punishing: Gray Raven's frames ----
+
+/** A wiki page as the importer reads it through the MediaWiki API: its title, its categories, its wikitext. */
+export interface WikiPage { title: string; categories?: string[]; content?: string }
+/** The wiki files each image may come from, best first; the importer resolves them to URLs. */
+export type WikiImages = Partial<Record<Kind, { files: string[]; cut: 'face' | 'center-figure' | 'trim-figure' | 'splash' }>>
+/** A stable id from a wiki title: "Lucia: Crimson Weave" is `lucia-crimson-weave`. */
+export const slug = (title: string): string => title.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90)
+function resolved(spec: WikiImages, url: (file: string) => string | undefined): Candidate['images'] {
+  const images: Candidate['images'] = {}
+  for (const [kind, s] of Object.entries(spec) as [Kind, NonNullable<WikiImages[Kind]>][]) {
+    const urls = s.files.map(url).filter((u): u is string => !!u)
+    if (urls[0]) images[kind] = { url: urls[0], fallbacks: urls.slice(1), cut: s.cut }
+  }
+  return images
+}
+function unique(list: Candidate[]): Candidate[] {
+  const seen = new Set<string>()
+  return list.flatMap((c) => {
+    if (!c.key || seen.has(c.key)) return []
+    seen.add(c.key)
+    return [c]
+  })
+}
+
+/** A battlesuit's files on the Honkai Impact 3rd wiki: "A: B" is filed as "A - B". */
+export function hi3Images(title: string): WikiImages {
+  const base = title.replace(/: /g, ' - ')
+  return {
+    face: { files: [`${base} (Icon).png`, `${base} (Avatar).png`], cut: 'face' },
+    art: { files: [`${base}.png`, `${base} (Thumbnail).png`], cut: 'center-figure' },
+    splash: { files: [`${base}.png`], cut: 'splash' },
+  }
+}
+/** Every battlesuit, one card each; its valkyrie, rank and type come from the page's categories. */
+export function hi3Candidates(pages: WikiPage[], url: (file: string) => string | undefined): Candidate[] {
+  return unique([...pages].sort((a, b) => a.title.localeCompare(b.title)).map((p): Candidate => {
+    const cats = (p.categories ?? []).map((c) => c.replace(/^Category:/, ''))
+    const rank = cats.map((c) => /^(\w+)-rank Battlesuits$/.exec(c)?.[1]).find(Boolean)
+    const type = cats.map((c) => /^(\w+)-type Battlesuits$/.exec(c)?.[1]).find(Boolean)
+    const valkyrie = cats.filter((c) => !/-(rank|type) Battlesuits$/.test(c)).map((c) => /^(.+) Battlesuits$/.exec(c)?.[1]?.replace(/^"(.*)"$/, '$1')).find(Boolean)
+    return { key: slug(p.title), name: p.title, category: 'playable', details: [valkyrie, rank && `${rank}-rank`, type].filter((d): d is string => !!d).map((d) => d.slice(0, 40)), images: resolved(hi3Images(p.title), url) }
+  }))
+}
+
+/** The `{{Character}}` infobox on a Punishing: Gray Raven wiki page (grayravens.com), as name/value pairs. */
+export function pgrInfobox(content: string): Record<string, string> {
+  const box = /\{\{Character\s*\n([\s\S]*?)\n\}\}/.exec(content)?.[1] ?? ''
+  return Object.fromEntries(box.split('\n').flatMap((line) => {
+    const m = /^\|\s*([\w ]+?)\s*=\s*(.*)$/.exec(line)
+    return m ? [[m[1]!, m[2]!.trim()]] : []
+  }))
+}
+/** A frame's files on grayravens.com: the frame name without spaces or apostrophes. */
+export function pgrImages(frame: string): WikiImages {
+  const base = frame.replace(/[ ']/g, '')
+  return { face: { files: [`Dialogue-${base}-Icon.png`], cut: 'face' }, art: { files: [`Character-${base}-Portrait.png`], cut: 'trim-figure' } }
+}
+/** Every frame, one card each. A collaboration character has no frame name of her own ("2B"), and is tagged. */
+export function pgrCandidates(pages: WikiPage[], url: (file: string) => string | undefined): Candidate[] {
+  return unique([...pages].sort((a, b) => a.title.localeCompare(b.title)).flatMap((p): Candidate[] => {
+    const box = pgrInfobox(p.content ?? '')
+    if (!box.Name || !box.Frame) return []
+    const elements = [...(box.Element ?? '').replace(/\[\[[^\]]*\]\]/g, '').matchAll(/([A-Za-z]+)\s*\((\d+)%\)/g)].sort((a, b) => Number(b[2]) - Number(a[2]))
+    const collab = box.Frame === box.Name
+    return [{ key: slug(p.title), name: p.title, category: 'playable',
+      details: [box.Rank && `${box.Rank}-Rank`, box.Class, elements[0]?.[1], collab && 'Collab'].filter((d): d is string => typeof d === 'string' && d.length > 0).map((d) => d.slice(0, 40)),
+      images: resolved(pgrImages(box.Frame), url) }]
+  }))
+}

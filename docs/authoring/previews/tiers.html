@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tier Authoring</title>
-<!-- docs/authoring/tiers.md on one page: the nine boards, how leftovers flow, the career math, why it stays local, what's
+<!-- docs/authoring/tiers.md on one page: the eleven boards, how leftovers flow, the career math, why it stays local, what's
      saved and what comes next. Self-contained, light and dark. No character art and no character names. -->
 <style>
   :root {
@@ -75,16 +75,16 @@
 <body>
 <main>
   <p class="eyebrow">uma-platform · tier authoring · P113–P119 · TA1</p>
-  <h1>One local Studio, nine boards, and a career for every Uma<span>.</span></h1>
-  <p class="lead">The two old rankers became one app with nine tier boards on one scale, a home with a dashboard, and a local import for four new franchises. The Uma boards keep the old playstyle grid. Every playable Uma gets a career that fights at least three bosses.</p>
+  <h1>One local Studio, eleven boards, and a career for every Uma<span>.</span></h1>
+  <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. The Uma boards keep the old playstyle grid; two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
   <nav><a href="#boards">The boards</a><a href="#playstyles">Playstyles</a><a href="#flow">How leftovers flow</a><a href="#careers">Careers</a><a href="#local">Why local</a><a href="#saved">What's saved</a><a href="#next">What's next</a><a href="#calls">Calls</a><a href="franchises.html">More franchises</a><a href="../tiers.md">Markdown</a></nav>
 
   <div class="tiles">
-    <div class="tile"><b>9</b><span>tier boards on one scale</span></div>
+    <div class="tile"><b>11</b><span>tier boards on one scale</span></div>
     <div class="tile"><b>65</b><span>playable Umas (133 outfits)</span></div>
     <div class="tile"><b>70</b><span>Umas for the NPC board</span></div>
     <div class="tile"><b>52</b><span>Azur Lane bosses in the cast</span></div>
-    <div class="tile"><b>235</b><span>new boss candidates imported (82 + 46 + 59 + 48)</span></div>
+    <div class="tile"><b>432</b><span>new boss candidates imported (82 + 46 + 59 + 48 + 111 + 86)</span></div>
     <div class="tile"><b>≥ 3</b><span>bosses in every career</span></div>
   </div>
 
@@ -101,8 +101,19 @@
         <tr><td></td><td><b>Wuthering Waves bosses</b></td><td>46 female resonators, imported locally</td><td>Key enemies</td></tr>
         <tr><td></td><td><b>Honkai: Star Rail bosses</b></td><td>59 female characters, imported locally</td><td>Key enemies</td></tr>
         <tr><td></td><td><b>Zenless Zone Zero bosses</b></td><td>48 female agents, imported locally</td><td>Key enemies</td></tr>
+        <tr><td></td><td><b>Honkai Impact 3rd bosses</b></td><td>111 battlesuits, unfiltered, minus the ones left out</td><td>Key enemies</td></tr>
+        <tr><td></td><td><b>Punishing: Gray Raven bosses</b></td><td>86 frames, unfiltered, minus the ones left out</td><td>Key enemies</td></tr>
         <tr><td>Enemies</td><td><b>Key enemies</b></td><td>Every other Azur Lane unit, plus the boss boards' leftovers</td><td>Regular enemies</td></tr>
         <tr><td></td><td><b>Regular enemies</b></td><td>Every NIKKE unit, plus Key's leftovers</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Unfiltered imports, and Left out</h3>
+    <p>Honkai Impact 3rd and Punishing: Gray Raven have no gender indicator, so they come in whole from their wikis, <b>one card a battlesuit or frame</b>, and the owner sorts them (P120). The card names the valkyrie or construct, and the search finds her other battlesuits. Any imported unit's card has <b>Leave out of every board</b> (P121): it goes to its board's <b>Left out</b> row and is on no board's list, so it never flows to Key or Regular. Ranking it, or dragging it to a row, brings it back.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Import</th><th>Read from</th><th>Filter</th><th>On the card</th><th class="num">Units</th></tr></thead>
+      <tbody>
+        <tr><td><b>Honkai Impact 3rd</b></td><td>The wiki's API (<code>honkaiimpact3.fandom.com</code>), Category:Battlesuits</td><td><span class="pill">none</span></td><td>Valkyrie, rank, type; head icon, figure, splash</td><td class="num">111</td></tr>
+        <tr><td><b>Punishing: Gray Raven</b></td><td>GRAY RAVENS' API (<code>grayravens.com</code>), Category:Character</td><td><span class="pill">none</span></td><td>Rank, class, element, Collab; face, waist-up portrait</td><td class="num">86</td></tr>
       </tbody>
     </table></div>
     <h3>One scale</h3>
@@ -137,7 +148,7 @@
   <section class="card" id="flow">
     <h2>How leftovers flow</h2>
     <p>A board never changes another. It only decides who stays in its cast; whoever it leaves out appears on the board below, with a chip saying where they came from.</p>
-    <svg viewBox="0 0 900 300" role="img" aria-label="Playable Umas flow to Uma NPCs. The five boss boards flow to Key enemies, which flow to Regular enemies, which also take every NIKKE unit.">
+    <svg viewBox="0 0 900 300" role="img" aria-label="Playable Umas flow to Uma NPCs. The seven boss boards flow to Key enemies, which flow to Regular enemies, which also take every NIKKE unit.">
       <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--accent)"/></marker></defs>
       <g font-size="13" font-weight="650">
         <rect x="20" y="40" width="190" height="52" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="115" y="71" text-anchor="middle" fill="var(--ink)">Playable Umas</text>
@@ -146,14 +157,14 @@
         <text x="125" y="150" font-size="11" font-weight="500" fill="var(--ink-soft)">B, F, unranked</text>
         <rect x="290" y="20" width="160" height="44" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="370" y="47" text-anchor="middle" fill="var(--ink)">Azur Lane bosses</text>
         <rect x="290" y="74" width="160" height="44" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="370" y="101" text-anchor="middle" fill="var(--ink)">Genshin bosses</text>
-        <rect x="290" y="128" width="160" height="44" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="370" y="155" text-anchor="middle" fill="var(--ink)">WuWa, HSR, ZZZ bosses</text>
+        <rect x="290" y="128" width="160" height="58" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="370" y="153" text-anchor="middle" fill="var(--ink)">WuWa, HSR, ZZZ,</text><text x="370" y="172" text-anchor="middle" fill="var(--ink)">HI3, PGR bosses</text>
         <rect x="530" y="74" width="150" height="44" rx="10" fill="var(--panel)" stroke="var(--hairline-strong)"/><text x="605" y="101" text-anchor="middle" fill="var(--ink)">Key enemies</text>
         <rect x="530" y="210" width="150" height="44" rx="10" fill="var(--raised)" stroke="var(--hairline-strong)"/><text x="605" y="237" text-anchor="middle" fill="var(--ink)">Regular enemies</text>
         <rect x="740" y="210" width="130" height="44" rx="10" fill="var(--sunken)" stroke="var(--hairline)"/><text x="805" y="237" text-anchor="middle" fill="var(--ink-soft)">every NIKKE unit</text>
         <rect x="740" y="74" width="130" height="44" rx="10" fill="var(--sunken)" stroke="var(--hairline)"/><text x="805" y="94" text-anchor="middle" fill="var(--ink-soft)">other Azur Lane</text><text x="805" y="110" text-anchor="middle" font-size="11" font-weight="500" fill="var(--ink-faint)">units</text>
       </g>
       <g stroke="var(--accent)" stroke-width="2" fill="none" marker-end="url(#arrow)">
-        <path d="M450 42 C500 42 495 92 526 94"/><path d="M450 96 L526 96"/><path d="M450 150 C500 150 495 100 526 98"/>
+        <path d="M450 42 C500 42 495 92 526 94"/><path d="M450 96 L526 96"/><path d="M450 157 C500 157 495 100 526 98"/>
         <line x1="605" y1="118" x2="605" y2="206"/>
       </g>
       <g stroke="var(--ink-faint)" stroke-width="1.5" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow)">
@@ -172,7 +183,7 @@
         <thead><tr><th>A career needs</th><th>It comes from</th></tr></thead>
         <tbody>
           <tr><td>The Uma herself</td><td><b>Playable Umas</b>, SS to A, one career a character</td></tr>
-          <tr><td>At least three bosses</td><td>The three <b>boss boards</b>, SS to A</td></tr>
+          <tr><td>At least three bosses</td><td>The seven <b>boss boards</b>, SS to A</td></tr>
           <tr><td>Escorts and group leaders</td><td><b>Key enemies</b></td></tr>
           <tr><td>The random fights</td><td><b>Regular enemies</b></td></tr>
           <tr><td>Rivals, friends and towns</td><td><b>Uma NPCs</b> and other playable Umas</td></tr>
@@ -187,7 +198,7 @@
           <tr><td><b>All</b></td><td class="num"><b>65</b></td><td class="num"><b>52</b></td><td class="num" colspan="2"><b>195 boss fights</b></td></tr>
         </tbody>
       </table>
-      <p class="note">At the first state, before the four new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 today; the 235 imports cover the gap, and S needs them most.</p></div>
+      <p class="note">At the first state, before the six new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 today; the 432 imports cover the gap, and S needs them most.</p></div>
     </div>
   </section>
 
@@ -198,7 +209,7 @@
       <li><b>The references are private.</b> Every portrait is original franchise art. Like the Uma sprites, it never goes in git, uma-art or a public URL.</li>
       <li><b>Nothing ships from here.</b> The boards decide what gets authored and when; the art still passes its own gates and releases.</li>
       <li><b>No cloud, no cost.</b> Loopback only, atomic JSON files, and the existing private backup.</li>
-      <li><b>One place to look.</b> Two rankers on two scales became nine boards on one, with one home.</li>
+      <li><b>One place to look.</b> Two rankers on two scales became eleven boards on one, with one home.</li>
     </ol>
   </section>
 
@@ -207,7 +218,7 @@
     <div class="scroll"><table>
       <thead><tr><th>File, in the ignored <code>content/authoring/</code></th><th>What it is</th></tr></thead>
       <tbody>
-        <tr><td><code>tiers/&lt;board&gt;.json</code></td><td>One board: entries (<code>id</code>, <code>tier</code>, <code>note</code>) in authoring order, and its revision. Azur Lane bosses also has <code>members</code>.</td></tr>
+        <tr><td><code>tiers/&lt;board&gt;.json</code></td><td>One board: entries (<code>id</code>, <code>tier</code>, <code>note</code>) in authoring order, and its revision. Azur Lane bosses also has <code>members</code>; an imported boss board has <code>out</code>, the units left out of every board.</td></tr>
         <tr><td><code>tiers/plan.json</code></td><td><b>The plan the later tools read</b>: every board in order, with names, Ways or franchises, where each came from, and the career numbers. Rewritten on every save.</td></tr>
         <tr><td><code>enemies/imports/&lt;franchise&gt;.json</code></td><td>A local import: its source, filter and units, with images in <code>enemies/assets/</code>.</td></tr>
         <tr><td><code>uma-art-roster.json</code>, <code>enemy-art-roster.json</code></td><td>The old boards, frozen. The sprite queue reads the first until TA2; the second is history.</td></tr>
@@ -222,9 +233,9 @@
       <tbody>
         <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after the NPC ranking</td></tr>
         <tr><td class="id">TA3</td><td><b>uma-quest's careers.</b> A career is a character's, with at least three bosses from the boss boards; uma-quest revises CM1–CM36 in its repo.</td><td>uma-quest</td><td>uma-quest's session</td></tr>
-        <tr><td class="id">TA4</td><td><b>Q39 reads the plan.</b> Boss slots from the boss boards, Key and Regular from theirs; EN1's subjects grow to four franchises.</td><td>uma-quest, uma-platform</td><td>ChatGPT</td></tr>
+        <tr><td class="id">TA4</td><td><b>Q39 reads the plan.</b> Boss slots from the seven boss boards, Key and Regular from theirs, never a left-out unit; EN1's subjects grow to eight franchises.</td><td>uma-quest, uma-platform</td><td>ChatGPT</td></tr>
         <tr><td class="id">TA5</td><td>More imports when wanted: male characters, non-playable bosses through the inbox.</td><td>uma-platform</td><td>Claude</td></tr>
-        <tr><td class="id">TA6</td><td><b>The next franchise</b>, on the owner's pick: <a href="franchises.html">ranked here</a>; Arknights: Endfield, Punishing: Gray Raven and Honkai Impact 3rd first.</td><td>uma-platform</td><td>Claude</td></tr>
+        <tr><td class="id">TA6</td><td><b>The next franchise</b>, on the owner's pick: <a href="franchises.html">ranked here</a>. Honkai Impact 3rd and Punishing: Gray Raven are built; Arknights: Endfield is next.</td><td>uma-platform</td><td>Claude</td></tr>
       </tbody>
     </table></div>
   </section>
@@ -236,7 +247,7 @@
       <tbody>
         <tr><td class="id">TS1</td><td><b>One local Studio</b> with a home: a tile for each board and sprite tool, then a dashboard</td></tr>
         <tr><td class="id">TS2</td><td><b>One scale: SS, S, A, B, F.</b> SS to A are the cast; B, F and unranked flow down</td></tr>
-        <tr><td class="id">TS3</td><td>Playable → NPCs; the five boss boards → Key → Regular (+ NIKKE)</td></tr>
+        <tr><td class="id">TS3</td><td>Playable → NPCs; the seven boss boards → Key → Regular (+ NIKKE)</td></tr>
         <tr><td class="id">TS4</td><td><b>Umas per character</b>, each face with her outfit count</td></tr>
         <tr><td class="id">TS5</td><td>The first state keeps every old call: best outfit's tier; A1→S, A2→A; enemies on their old role's board</td></tr>
         <tr><td class="id">TS6</td><td>Azur Lane bosses is a curated list; a card adds or removes a unit</td></tr>
@@ -251,6 +262,8 @@
         <tr><td class="id">TS15</td><td><b>The Uma boards keep the old playstyle grid</b>, the outfit's grades on the card, and the home's playstyle table</td></tr>
         <tr><td class="id">TS16</td><td>A character's playstyle is her lead outfit's, unless the owner picks another of hers</td></tr>
         <tr><td class="id">TS17</td><td>Honkai: Star Rail and Zenless Zone Zero are boss boards; <a href="franchises.html">the next franchises</a> are ranked</td></tr>
+        <tr><td class="id">TS18</td><td><b>Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered</b>: one card a battlesuit or frame, from their wikis; the owner sorts them</td></tr>
+        <tr><td class="id">TS19</td><td><b>Any imported unit can be left out of every board</b>, from its card or its board's Left out row; ranking or dragging it brings it back</td></tr>
       </tbody>
     </table></div>
   </section>

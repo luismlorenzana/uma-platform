@@ -5,7 +5,7 @@ import sharp from 'sharp'
 import { afterAll, describe, expect, it } from 'vitest'
 import { parseEnemyImport } from './tier-catalog.js'
 import { BOARDS, type TierCatalog } from './tier-model.js'
-import { encode, genshinCandidates, hsrCandidates, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
+import { encode, genshinCandidates, hi3Candidates, hsrCandidates, pgrCandidates, pronounGender, slug, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
 import { TierConflict, TierStore } from './tier-store.js'
 
 // Invented records and generated pixels only.
@@ -52,6 +52,32 @@ describe('the Honkai: Star Rail list', () => {
       new Map([[2001, 'female'], [2002, 'male'], [2003, 'female'], [2004, 'female']]), 2_000_000_000_000)
     expect(list.map((c) => `${c.key} ${c.name}`)).toEqual(['2001 Vela', '2003 Nova II', '8002 Trailblazer'])
     expect(list[0]?.details).toEqual(['5★', 'Preservation', 'Lightning'])
+  })
+})
+
+describe('the wiki imports (unfiltered)', () => {
+  const url = (file: string) => (file.includes('Missing') ? undefined : `https://wiki.example/${encodeURIComponent(file)}`)
+  it('makes stable ids from titles', () => {
+    expect(slug('Vela: Bright Sünde Δ')).toBe('vela-bright-sunde')
+    expect(slug('No. 7: Night')).toBe('no-7-night')
+  })
+  it('keeps every battlesuit, with its valkyrie, rank and type from the categories', () => {
+    const list = hi3Candidates([
+      { title: 'Storm Lance: Dawn', categories: ['Category:Battlesuits', 'Category:Vela Tess Battlesuits', 'Category:S-rank Battlesuits', 'Category:PSY-type Battlesuits', 'Category:Version 1.0 Content'] },
+      { title: 'Missing Figure', categories: ['Category:"Odo" Battlesuits', 'Category:A-rank Battlesuits'] },
+    ], url)
+    expect(list.map((c) => [c.key, c.name, c.details])).toEqual([['missing-figure', 'Missing Figure', ['Odo', 'A-rank']], ['storm-lance-dawn', 'Storm Lance: Dawn', ['Vela Tess', 'S-rank', 'PSY']]])
+    expect(list[1]?.images).toMatchObject({
+      face: { url: 'https://wiki.example/Storm%20Lance%20-%20Dawn%20(Icon).png', cut: 'face' },
+      art: { url: 'https://wiki.example/Storm%20Lance%20-%20Dawn.png', fallbacks: ['https://wiki.example/Storm%20Lance%20-%20Dawn%20(Thumbnail).png'], cut: 'center-figure' },
+    })
+    expect(list[0]?.images).toEqual({})
+  })
+  it('keeps every frame from its infobox, and tags a collaboration character', () => {
+    const page = (title: string, name: string, frame: string, element: string) => ({ title, content: `{{Character Top Nav}}\n{{Character\n|Name=${name}\n|Frame=${frame}\n|Rank=S\n|Class=Attacker\n|Element=[[File:Element-Fire-Icon.png|25x25px|link=]]${element}\n}}\n` })
+    const list = pgrCandidates([page('Vela: Ember Song', 'Vela', "Ember Song", 'Physical (30%) Fire (70%)'), page('X9', 'X9', 'X9', 'Dark (100%)'), { title: 'Test:1', content: 'no infobox' }], url)
+    expect(list.map((c) => [c.key, c.details])).toEqual([['vela-ember-song', ['S-Rank', 'Attacker', 'Fire']], ['x9', ['S-Rank', 'Attacker', 'Dark', 'Collab']]])
+    expect(list[0]?.images).toMatchObject({ face: { url: 'https://wiki.example/Dialogue-EmberSong-Icon.png' }, art: { url: 'https://wiki.example/Character-EmberSong-Portrait.png', cut: 'trim-figure' } })
   })
 })
 

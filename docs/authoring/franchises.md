@@ -1,32 +1,32 @@
 # More boss franchises: what else matches Genshin Impact and Wuthering Waves
 
-> **Status: 2026-11-09, research for the owner (P119).** The owner asked which franchises have art as good as Genshin
-> Impact and Wuthering Waves, to grow the boss boards. Honkai: Star Rail and Zenless Zone Zero were built straight away
-> (P118). This page ranks the next candidates on art fit, female roster and whether a local import can read them, and
+> **Status: 2026-11-09, research for the owner (P119); Honkai Impact 3rd and Punishing: Gray Raven built the same day
+> (P120).** The owner asked which franchises have art as good as Genshin Impact and Wuthering Waves, to grow the boss
+> boards. Honkai: Star Rail and Zenless Zone Zero were built straight away (P118). The owner then asked for Honkai Impact
+> 3rd and Punishing: Gray Raven too, unfiltered, to sort by hand (P120, P121). This page ranks the next candidates on art fit, female roster and whether a local import can read them, and
 > recommends an order. Statuses were checked on the web on 2026-11-09; *(estimate)* marks approximate rosters. Visual
 > page: [previews/franchises.html](previews/franchises.html). Part of [tiers.md](tiers.md).
 
 ## The short answer
 
-- **Built now (P118):** Honkai: Star Rail (59 female characters) and Zenless Zone Zero (48 female agents), as two
-  more boss boards beside Azur Lane, Genshin Impact and Wuthering Waves.
-- **Recommended next, in order:**
-  1. **Arknights: Endfield**, the closest look to Genshin and WuWa;
-  2. **Punishing: Gray Raven**, from the WuWa studio;
-  3. **Honkai Impact 3rd**, HoYoverse's all-female action game.
-
-  All three are live 3D anime action games with premium official art and mostly female casts.
-- **The catch is data, not art.** None of them has a public JSON list with a gender field like the four already built.
-  Each import would read a wiki through its API and keep a female list checked by hand, by id, as HSR's eight
-  ambiguous characters are (P118). That's one packet a franchise, **TA6**, built when the owner says which.
+- **Built (P118):** Honkai: Star Rail (59 female characters) and Zenless Zone Zero (48 female agents), as two more
+  boss boards beside Azur Lane, Genshin Impact and Wuthering Waves.
+- **Built, unfiltered (P120):** Honkai Impact 3rd (111 battlesuits) and Punishing: Gray Raven (86 frames). Neither has a
+  gender indicator, so the owner sorts them: any imported unit can be **left out of every board** (P121). Each
+  battlesuit or frame is its own card, since each has its own art.
+- **Recommended next:** **Arknights: Endfield**, the closest look to Genshin and WuWa. It's live, 3D and mostly
+  female, and endfield.wiki.gg has a MediaWiki API like the two just built.
+- **The catch is data, not art.** The rest of the list has no public JSON with a gender field like the first four
+  built. Each would read a wiki through its API, either unfiltered and sorted by hand (P120) or with a female list
+  checked by hand, by id (FR3). That's one packet a franchise, **TA6**, built when the owner says which.
 
 ## The candidates
 
 | # | Franchise (developer) | Status, late 2026 | Art fit | Female roster | What an import could read | Call |
 |---|---|---|---|---|---|---|
 | 1 | **Arknights: Endfield** (Hypergryph / Gryphline) | Global since 22 Jan 2026 | 3D cel-shaded open world; the closest match | About 20 of 33 operators | endfield.wiki.gg (MediaWiki API, icons and portraits); no gender field | **Strong** |
-| 2 | **Punishing: Gray Raven** (Kuro Games) | Live, new characters in 2026 | 3D anime action from WuWa's studio; strong art for every frame | About two thirds of ~30 characters *(estimate)* | grayravens.com, wiki.biligame.com/zspms; no gender field | **Strong** |
-| 3 | **Honkai Impact 3rd** (HoYoverse) | Live, v9.0 in Aug 2026 | HoYoverse 3D action; battlesuit art as good as HSR | About 35 valkyries, 100+ battlesuits, nearly all female *(estimate)* | Fandom wiki only; a gender field isn't needed | **Strong** (weak data) |
+| 2 | **Punishing: Gray Raven** (Kuro Games) | Live, new characters in 2026 | 3D anime action from WuWa's studio; strong art for every frame | 86 frames, about two thirds female; 7 collaborations | grayravens.com's MediaWiki API: infobox and images; no gender field | **Built** (P120) |
+| 3 | **Honkai Impact 3rd** (HoYoverse) | Live, v9.1 | HoYoverse 3D action; battlesuit art as good as HSR | 111 battlesuits of about 40 valkyries, nearly all female | honkaiimpact3.fandom.com's MediaWiki API: categories and images | **Built** (P120) |
 | 4 | **Neverness to Everness** (Hotta) | Global since 29 Apr 2026 | 3D urban open world, Genshin and ZZZ polish | About 13 of 20 | Fan wikis only; no API | **Strong** (weak data) |
 | 5 | **Snowbreak: Containment Zone** (Seasun) | Live, anniversary update Jan 2026 | Detailed 3D anime shooter | All female, 30+ with variants | Fan wikis and guide sites | **Strong** art, poor data |
 | 6 | **Duet Night Abyss** (Pan Studio) | Global since 28 Oct 2025 | 3D gothic anime action | 20+, mixed | GameWith and fan lists | Possible |
@@ -60,16 +60,19 @@ Sources for each status, from the research on 2026-11-09:
 - Ash Echoes: [Notebookcheck](https://www.notebookcheck.net/Ash-Echoes-shuts-down-June-18.1291282.0.html)
 - Aether Gazer: [GameGeeker](https://gamegeeker.com/news/aether-gazer-stops-content-updates)
 
-## How the four built today are read
+## How the six built today are read
 
-| Board | List | Female filter | Images | Characters |
+| Board | List | Female filter | Images | Units |
 |---|---|---|---|---:|
 | Genshin Impact | Project Amber, `gi.yatta.moe` | Body type GIRL, LADY or LOLI | Face icon; wish splash, with a 2:3 middle cut as the figure | 82 |
 | Wuthering Waves | Encore, `api.encore.moe` | Listed as female; the Rover once | Face; full-body portrait (a skin preview for the newest); card | 46 |
 | Honkai: Star Rail | Project Yatta, `sr.yatta.moe`, with StarRailRes for images | Pronouns in the character's own stories; eight checked by hand, by id; the Trailblazer once | Face icon; the 2048 portrait as figure and splash | 59 |
 | Zenless Zone Zero | Enka's agent list and English names (EnkaNetwork/API-docs) | The internal name says `Avatar_Female` | Face; full-body portrait (no splash) | 48 |
+| Honkai Impact 3rd | The wiki's API (`honkaiimpact3.fandom.com`), Category:Battlesuits; valkyrie, rank and type from each page's categories | None: the owner leaves out what doesn't fit (P121) | Head icon; the 960 × 660 figure, a 2:3 middle cut as the portrait and whole as the splash | 111 |
+| Punishing: Gray Raven | GRAY RAVENS' API (`grayravens.com`), Category:Character; rank, class and element from the infobox | None: the owner leaves out what doesn't fit (P121) | Dialogue icon; the 1000 × 1080 waist-up portrait (no splash) | 86 |
 
-A character with two forms (the Rover, the Trailblazer, March 7th's second Path) is imported once. Every import is
+A character with two forms (the Rover, the Trailblazer, March 7th's second Path) is imported once. In Honkai Impact 3rd
+and Punishing: Gray Raven, a battlesuit or frame is its own unit: each has its own art. Every import is
 `pnpm tiers:import <franchise>`, private in `content/authoring/enemies/`, and re-runnable without losing a rank (P115).
 
 ## The calls
@@ -81,3 +84,6 @@ A character with two forms (the Rover, the Trailblazer, March 7th's second Path)
 | FR3 | A franchise without a gender field imports from its wiki with a female list checked by hand, by id, kept with the import code |
 | FR4 | 2D franchises (FGO, Arknights, Blue Archive) wait: their art doesn't match the 3D boss look, though FGO's data is the best |
 | FR5 | Each new franchise is one packet (TA6), a new board on Key enemies' list, and a line in this page's table |
+| FR6 | **Honkai Impact 3rd and Punishing: Gray Raven are built unfiltered**, at the owner's word (P120): one card a battlesuit or frame, read from their wikis' APIs |
+| FR7 | **Any imported unit can be left out of every board** (P121); for an unfiltered import, that replaces FR3's hand list |
+| FR8 | **Arknights: Endfield is next** (TA6), unfiltered like FR6 unless the owner asks for a female list |

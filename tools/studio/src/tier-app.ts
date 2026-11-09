@@ -1,6 +1,6 @@
-// A tier board (P113): one page for all seven boards, set up from the board id in the URL.
+// A tier board (P113): one page for every board, set up from the board id in the URL.
 import {
-  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, inCast, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setTier, setWay, waysOf,
+  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, importBoardOf, inCast, leftOut, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setOut, setTier, setWay, waysOf,
   type Board, type BoardId, type BoardState, type EnemyUnit, type PoolMember, type Pools, type Tier, type UmaCharacter, type Way,
 } from './tier-model.js'
 import { api, boardTitle, categoryLabel, el, esc, franchiseLabel, nav, roleLabel, wayLabel, type TierData } from './tier-ui.js'
@@ -25,6 +25,8 @@ const enemies = (): Map<string, EnemyUnit> => new Map(data!.catalog.enemies.map(
 let umaIndex = new Map<string, UmaCharacter>(), enemyIndex = new Map<string, EnemyUnit>()
 const nameOf = (id: string): string => umaIndex.get(id)?.name ?? enemyIndex.get(id)?.name ?? id
 const entry = (id: string) => state().entries.find((e) => e.id === id)
+/** Left out of every board (P121): only an imported boss board lists them, in its own Left out row. */
+const isOut = (id: string): boolean => !!board.franchise && leftOut(state()).includes(id) && enemyIndex.has(id)
 const tierOf = (id: string): Tier | null => entry(id)?.tier ?? null
 /** A character's playstyle, the same on both Uma boards: it lives on the Playable board (P117). */
 const styleOf = (id: string): Way | null => { const u = umaIndex.get(id); return u && data ? playstyleOf(u, data.states) : null }
@@ -69,8 +71,11 @@ function buildFacets(): void {
 function visible(): PoolMember[] {
   const term = search.value.trim().toLocaleLowerCase()
   const active = facetDefs.map((f) => [f, (document.getElementById(`facet-${f.key}`) as HTMLSelectElement | null)?.value ?? 'all'] as const).filter(([, v]) => v !== 'all')
-  return pool.filter((m) => `${nameOf(m.id)} ${m.id} ${umaIndex.get(m.id)?.outfits.map((o) => `${o.title} ${o.id}`).join(' ') ?? ''}`.toLocaleLowerCase().includes(term) &&
-    active.every(([f, v]) => f.test(m, v)))
+  return pool.filter((m) => matches(m.id, term) && active.every(([f, v]) => f.test(m, v)))
+}
+/** The search reads the name, the id, an Uma's outfits and an enemy's details (a battlesuit's valkyrie, say). */
+function matches(id: string, term: string): boolean {
+  return `${nameOf(id)} ${id} ${umaIndex.get(id)?.outfits.map((o) => `${o.title} ${o.id}`).join(' ') ?? ''} ${enemyIndex.get(id)?.details.join(' ') ?? ''}`.toLocaleLowerCase().includes(term)
 }
 function reviewQueue(): PoolMember[] {
   const q = queueFilter.value
@@ -126,11 +131,16 @@ function enemyCard(u: EnemyUnit): string {
     `${src ? `<button class="reference-open" data-enlarge="${esc(src)}" aria-label="Enlarge"><img src="${esc(src)}" alt="${esc(u.name)}" fetchpriority="high"></button>` : '<div class="missing-art">No reference image</div>'}` +
     `<span class="reference-caption">ORIGINAL REFERENCE · ${kind.toUpperCase()}</span>${tier ? `<span class="current-rank tier-${tier}">TIER ${tier}</span>` : ''}</div>` +
     `<div class="reference-tabs">${(['art', 'splash', 'face'] as const).filter((k) => u.images[k]).map((k) => `<button data-mode="${k}" class="${kind === k ? 'active' : ''}" aria-pressed="${kind === k}">${k === 'art' ? 'Portrait' : k === 'splash' ? 'Splash' : 'Face'}</button>`).join('')}</div>` +
-    `<div class="profile-copy"><p class="identity-id">${esc(u.id)}</p><h3>${esc(u.name)}</h3><p class="chips">${chip(`Original: ${categoryLabel(u.category)}`)}${u.details.map((d) => chip(d)).join('')}` +
+    `<div class="profile-copy"><p class="identity-id">${esc(u.id)}</p><h3>${esc(u.name)}</h3><p class="chips">${isOut(u.id) ? chip('Left out of every board', 'chip-out') : ''}${chip(`Original: ${categoryLabel(u.category)}`)}${u.details.map((d) => chip(d)).join('')}` +
     `${viaChip(members.get(u.id))}${u.before ? chip(`Old board: ${roleLabel(u.before.role)} · ${u.before.tier ?? 'unranked'}`, 'chip-before') : ''}</p></div>`
 }
 function membership(id: string): string {
-  const unit = enemyIndex.get(id)
+  const unit = enemyIndex.get(id), home = unit ? importBoardOf(unit.franchise) : undefined
+  if (unit && home) {
+    // An imported unit can leave every board from wherever it shows; it comes back from its own board's Left out row.
+    if (isOut(id)) return `<div class="membership"><p>Left out of every board. Rank it, drag it to a row, or:</p><button data-out="back" ${busy ? 'disabled' : ''}>Bring it back, unranked</button></div>`
+    return `<div class="membership"><p>Not a fit for the roster (a male character from an unfiltered import, say)? It leaves ${esc(home.title)} and every board below.</p><button data-out="leave" ${busy ? 'disabled' : ''}>Leave out of every board</button></div>`
+  }
   if (!unit || unit.franchise !== 'azurlane') return ''
   if (board.id === 'azurlane-bosses') return `<div class="membership"><p>On the Azur Lane bosses board.</p><button data-member="out" ${busy ? 'disabled' : ''}>Not a boss: move to Key enemies</button></div>`
   if (board.id === 'key-enemies' && members.get(id)?.via === null) return `<div class="membership"><p>An Azur Lane unit that isn’t on the bosses board.</p><button data-member="in" ${busy ? 'disabled' : ''}>Make it an Azur Lane boss</button></div>`
@@ -140,11 +150,12 @@ function membership(id: string): string {
 function render(): void {
   if (!data) return
   const stats = boardStats(pool, state()), rows = reviewQueue(), shown = visible()
-  if (selected && !members.has(selected)) selected = null
+  if (selected && !members.has(selected) && !isOut(selected)) selected = null
   selected ??= rows[0]?.id ?? null
   if (selected !== decodeURIComponent(location.hash.slice(1))) history.replaceState(null, '', selected ? `#${encodeURIComponent(selected)}` : location.pathname)
   el('ranked-count').textContent = String(stats.ranked)
-  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (SS, S, A) · ${stats.unranked} still to rank`
+  const out = board.franchise ? leftOut(state()).filter((id) => enemyIndex.has(id)).length : 0
+  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (SS, S, A) · ${stats.unranked} still to rank${out ? ` · ${out} left out` : ''}`
   const p = el<HTMLProgressElement>('progress'); p.value = stats.ranked; p.max = stats.pool || 1
   el('save-status').textContent = busy ? 'Saving…' : state().updatedAt ? `✓ Saved · revision ${state().revision}` : 'Ready'
   const tier = selected ? tierOf(selected) : null
@@ -172,10 +183,9 @@ function render(): void {
   }
   renderTierList(shown)
 }
-function emptyTitle(): string { return board.id === 'genshin-bosses' || board.id === 'wuwa-bosses' ? 'Nothing imported yet.' : 'This board is empty.' }
+function emptyTitle(): string { return board.franchise && !leftOut(state()).length ? 'Nothing imported yet.' : 'This board is empty.' }
 function emptyCopy(): string {
-  if (board.id === 'genshin-bosses') return 'Run the local import (pnpm tiers:import genshin), then restart the Studio.'
-  if (board.id === 'wuwa-bosses') return 'Run the local import (pnpm tiers:import wuwa), then restart the Studio.'
+  if (board.franchise) return leftOut(state()).length ? 'Every unit is left out; bring one back from the Left out row.' : `Run the local import (pnpm tiers:import ${board.franchise}), then restart the Studio.`
   return board.from.length ? `It fills with what ${board.from.map((b) => boardTitle(b)).join(', ')} leave in B, F or unranked.` : 'Its catalog is missing.'
 }
 function tile(id: string): string {
@@ -213,6 +223,11 @@ function renderTierList(shown: PoolMember[]): void {
   })
   const limit = showAll ? unranked.length : 80
   rows.push(`<div class="tier-row unranked" data-row="none"><div class="row-head"><span class="tier-badge">—</span><span class="row-copy"><strong>Unranked</strong><span>${unranked.length}</span></span></div><div class="row-tiles">${unranked.slice(0, limit).map((m) => tile(m.id)).join('') || '<span class="row-empty">None</span>'}${unranked.length > limit ? `<button class="more" data-more>Show all ${unranked.length}</button>` : ''}</div></div>`)
+  if (board.franchise) {
+    // Left out of every board (P121): drop a portrait here to leave it out, drag one to a tier to bring it back.
+    const term = search.value.trim().toLocaleLowerCase(), out = leftOut(state()).filter((id) => enemyIndex.has(id) && matches(id, term))
+    rows.push(`<div class="tier-row left-out" data-row="out"><div class="row-head"><span class="tier-badge">✕</span><span class="row-copy"><strong>Left out</strong><span>${out.length} · on no board</span></span></div><div class="row-tiles">${out.map((id) => tile(id)).join('') || '<span class="row-empty">Drop here to leave out</span>'}</div></div>`)
+  }
   el('tierlist').innerHTML = rows.join('')
 }
 
@@ -237,7 +252,8 @@ function rank(tier: Tier | null): void {
   const advance = el<HTMLInputElement>('auto-next').checked && tier !== null && !tierOf(id)
   const after = advance ? rows.slice(index + 1).find((m) => !tierOf(m.id)) ?? rows.find((m) => m.id !== id && !tierOf(m.id)) : undefined
   if (after) { selected = after.id; outfit = null }
-  void save(setTier(state(), id, tier))
+  // Ranking a left-out unit brings it back first (P121).
+  void save(setTier(isOut(id) ? setOut(state(), id, false) : state(), id, tier))
 }
 function step(direction: 1 | -1): void {
   const rows = reviewQueue()
@@ -279,6 +295,12 @@ document.addEventListener('click', (event) => {
   else if (target.dataset.way && selected) {
     const u = umaIndex.get(selected)
     if (u) void save(setWay(data.states.umas, u, target.dataset.way as Way))
+  }
+  else if (target.dataset.out && selected) {
+    const id = selected, home = importBoardOf(enemyIndex.get(id)?.franchise ?? '')
+    if (!home) return
+    if (target.dataset.out === 'leave') step(1)
+    void save(setOut(data.states[home.id], id, target.dataset.out === 'leave'))
   }
   else if (target.dataset.member && selected) {
     const id = selected, alState = data.states['azurlane-bosses']
@@ -344,7 +366,9 @@ list.addEventListener('drop', (event) => {
   const id = dragged, before = (event.target as HTMLElement).closest<HTMLElement>('[data-id]')?.dataset.id ?? null
   dragged = null
   selected = id
-  let next = row.dataset.row === 'none' ? setTier(state(), id, null) : place(state(), id, row.dataset.row as Tier, before)
+  // The Left out row leaves a unit out of every board; any other row brings a left-out unit back first (P121).
+  const from = isOut(id) && row.dataset.row !== 'out' ? setOut(state(), id, false) : state()
+  let next = row.dataset.row === 'out' ? setOut(state(), id, true) : row.dataset.row === 'none' ? setTier(from, id, null) : place(from, id, row.dataset.row as Tier, before)
   // On the Playable grid, dropping into another playstyle she has an outfit in picks that playstyle too.
   const u = umaIndex.get(id), way = row.dataset.way as Way | undefined
   if (board.id === 'umas' && u && way && way !== styleOf(id) && u.outfits.some((o) => o.way === way)) next = setWay(next, u, way)

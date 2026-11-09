@@ -7,7 +7,7 @@ import { parseRankings } from './model.js'
 import { CATEGORIES, LEGACY_TIER, leadOutfit, type Category, type EnemyUnit, type Franchise, type LegacyBoards, type TierCatalog, type UmaCharacter } from './tier-model.js'
 
 /** Locally imported franchises (P115): `content/authoring/enemies/imports/<franchise>.json`. */
-export const IMPORTED = ['genshin', 'wuwa', 'hsr', 'zzz'] as const
+export const IMPORTED = ['genshin', 'wuwa', 'hsr', 'zzz', 'hi3', 'pgr'] as const
 export type ImportedFranchise = typeof IMPORTED[number]
 export interface ImportUnit { id: string; name: string; category: Category; details: string[]; images: { face?: string; art?: string; splash?: string } }
 export interface EnemyImport {
@@ -21,7 +21,7 @@ export interface EnemyImport {
   units: ImportUnit[]
 }
 const object = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
-export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-', hsr: 'hsr-', zzz: 'zzz-' }
+export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-', hsr: 'hsr-', zzz: 'zzz-', hi3: 'hi3-', pgr: 'pgr-' }
 
 /** Only images the importer wrote: `assets/enemies/<id>-<kind>.<hash8>.webp`, never another local path. */
 export function parseEnemyImport(value: unknown): EnemyImport {

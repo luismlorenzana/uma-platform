@@ -1,9 +1,10 @@
-// pnpm tiers:import <genshin|wuwa> [--offline]
+// pnpm tiers:import <genshin|wuwa|hsr|zzz|hi3|pgr> [--offline]
 //
 // The local import for the new boss boards (P115). It reads the franchise's public character list, keeps the female
-// characters, downloads each one's released face, portrait and splash once into the ignored download cache, re-encodes
-// them as WebP beside the Azur Lane and NIKKE references, and writes `content/authoring/enemies/imports/<franchise>.json`.
-// Everything lands in the gitignored content folder; nothing is published.
+// characters (Honkai Impact 3rd and Punishing: Gray Raven come unfiltered from their wikis, P120), downloads each one's
+// released face, portrait and splash once into the ignored download cache, re-encodes them as WebP beside the Azur Lane
+// and NIKKE references, and writes `content/authoring/enemies/imports/<franchise>.json`. Everything lands in the
+// gitignored content folder; nothing is published.
 //
 // Owner-supplied images go through the same step: list them in `content/authoring/enemies/inbox/<franchise>.json`
 // (`{ "units": [{ "key", "name", "category", "face"?, "art"?, "splash"? }] }`, image paths relative to that folder)
@@ -14,7 +15,7 @@ import { extname, resolve } from 'node:path'
 import { content as defaultContent } from '@uma-platform/sprite-pipeline'
 import { IMPORT_PREFIX, IMPORTED, parseEnemyImport, type EnemyImport, type ImportedFranchise, type ImportUnit } from './tier-catalog.js'
 import { CATEGORIES, type Category } from './tier-model.js'
-import { encode, genshinCandidates, HSR_GENDER, hsrCandidates, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type EnkaAgent, type Kind, type Source, type StarRailResCharacter, type YattaStarRail } from './tier-sources.js'
+import { encode, genshinCandidates, hi3Candidates, hi3Images, HSR_GENDER, hsrCandidates, pgrCandidates, pgrImages, pgrInfobox, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type EnkaAgent, type Kind, type Source, type StarRailResCharacter, type WikiImages, type WikiPage, type YattaStarRail } from './tier-sources.js'
 
 const AGENT = 'uma-studio-import/1.0 (local authoring tool)'
 
@@ -43,7 +44,45 @@ async function json<T>(url: string, franchise: ImportedFranchise): Promise<T> {
   return JSON.parse(bytes.toString('utf8')) as T
 }
 
-// ---- Genshin Impact: Project Amber's character list ----
+// ---- MediaWiki: a category's pages, and the URLs of named files ----
+
+type Query = Record<string, string | number>
+interface WikiResponse { query?: { pages?: { title: string; missing?: boolean; categories?: { title: string }[]; revisions?: { slots: { main: { content: string } } }[]; imageinfo?: { url: string }[] }[]; normalized?: { from: string; to: string }[] }; continue?: Query }
+async function wikiQuery(api: string, params: Query, franchise: ImportedFranchise): Promise<WikiResponse> {
+  const url = new URL(api)
+  for (const [k, v] of Object.entries({ action: 'query', format: 'json', formatversion: 2, ...params })) url.searchParams.set(k, String(v))
+  return json<WikiResponse>(url.href, franchise)
+}
+/** Every page in a category (main namespace), with its categories or its wikitext, following the API's continuation. */
+async function wikiPages(api: string, category: string, prop: 'categories' | 'revisions', franchise: ImportedFranchise): Promise<WikiPage[]> {
+  const pages = new Map<string, WikiPage>()
+  const params: Query = { generator: 'categorymembers', gcmtitle: `Category:${category}`, gcmnamespace: 0, gcmlimit: 50, prop,
+    ...(prop === 'categories' ? { cllimit: 'max' } : { rvprop: 'content', rvslots: 'main' }) }
+  let more: Query = {}
+  for (let i = 0; i < 40; i++) {
+    const d = await wikiQuery(api, { ...params, ...more }, franchise)
+    for (const p of d.query?.pages ?? []) {
+      const page = pages.get(p.title) ?? { title: p.title }
+      if (p.categories) page.categories = [...(page.categories ?? []), ...p.categories.map((c) => c.title)]
+      if (p.revisions?.[0]) page.content = p.revisions[0].slots.main.content
+      pages.set(p.title, page)
+    }
+    if (!d.continue) break
+    more = d.continue
+  }
+  return [...pages.values()]
+}
+/** The download URL of each named file that exists, fifty names a request. */
+async function wikiFiles(api: string, specs: WikiImages[], franchise: ImportedFranchise): Promise<Map<string, string>> {
+  const names = [...new Set(specs.flatMap((s) => Object.values(s).flatMap((x) => x.files)))].sort(), urls = new Map<string, string>()
+  for (let i = 0; i < names.length; i += 50) {
+    const batch = names.slice(i, i + 50), d = await wikiQuery(api, { titles: batch.map((n) => `File:${n}`).join('|'), prop: 'imageinfo', iiprop: 'url' }, franchise)
+    const to = new Map((d.query?.normalized ?? []).map((n) => [n.from, n.to]))
+    const found = new Map((d.query?.pages ?? []).flatMap((p) => (p.imageinfo?.[0]?.url ? [[p.title, p.imageinfo[0].url] as const] : [])))
+    for (const n of batch) { const u = found.get(to.get(`File:${n}`) ?? `File:${n}`); if (u) urls.set(n, u) }
+  }
+  return urls
+}
 
 // ---- Owner-supplied images ----
 
@@ -74,8 +113,20 @@ async function atomic(path: string, value: unknown): Promise<void> {
 
 async function run(franchise: ImportedFranchise): Promise<void> {
   const prefix = IMPORT_PREFIX[franchise], problems: string[] = []
-  let roster: Candidate[], source: string
-  if (franchise === 'genshin') {
+  let roster: Candidate[], source: string, filter = 'female characters'
+  if (franchise === 'hi3') {
+    const api = 'https://honkaiimpact3.fandom.com/api.php', pages = await wikiPages(api, 'Battlesuits', 'categories', franchise)
+    const files = await wikiFiles(api, pages.map((p) => hi3Images(p.title)), franchise)
+    roster = hi3Candidates(pages, (f) => files.get(f))
+    source = 'The Honkai Impact 3rd wiki (honkaiimpact3.fandom.com): every page in Category:Battlesuits'
+    filter = 'every battlesuit, unfiltered'
+  } else if (franchise === 'pgr') {
+    const api = 'https://grayravens.com/w/api.php', pages = await wikiPages(api, 'Character', 'revisions', franchise)
+    const files = await wikiFiles(api, pages.flatMap((p) => { const frame = pgrInfobox(p.content ?? '').Frame; return frame ? [pgrImages(frame)] : [] }), franchise)
+    roster = pgrCandidates(pages, (f) => files.get(f))
+    source = 'GRAY RAVENS, the Punishing: Gray Raven wiki (grayravens.com): every page in Category:Character with a frame infobox'
+    filter = 'every frame, unfiltered'
+  } else if (franchise === 'genshin') {
     const list = await json<{ data: { items: Record<string, AmberAvatar> } }>('https://gi.yatta.moe/api/v2/en/avatar', franchise)
     roster = genshinCandidates(Object.values(list.data.items))
     source = 'Project Amber (gi.yatta.moe): body type GIRL, LADY or LOLI, released'
@@ -121,12 +172,12 @@ async function run(franchise: ImportedFranchise): Promise<void> {
     units.push({ id, name: c.name, category: c.category, details: c.details, images })
     process.stdout.write('.')
   }
-  const result: EnemyImport = parseEnemyImport({ schemaVersion: 1, kind: 'enemy-import', franchise, source: source + (extra.length ? `; ${extra.length} from the inbox` : ''), filter: 'female characters', importedAt: new Date().toISOString(), units })
+  const result: EnemyImport = parseEnemyImport({ schemaVersion: 1, kind: 'enemy-import', franchise, source: source + (extra.length ? `; ${extra.length} from the inbox` : ''), filter, importedAt: new Date().toISOString(), units })
   await atomic(resolve(enemies, 'imports', `${franchise}.json`), result)
   // Drop this franchise's images that the new import no longer names (an older crop, a removed character).
   const keep = new Set(units.flatMap((u) => Object.values(u.images)).map((p) => p!.slice('assets/enemies/'.length)))
   for (const file of await readdir(resolve(enemies, 'assets/enemies'))) if (file.startsWith(prefix) && !keep.has(file)) await unlink(resolve(enemies, 'assets/enemies', file))
-  console.log(`\n${franchise}: ${units.length} characters (${roster.length} from the list, ${extra.length} from the inbox) → content/authoring/enemies/imports/${franchise}.json`)
+  console.log(`\n${franchise}: ${units.length} units (${roster.length} from the list, ${extra.length} from the inbox) → content/authoring/enemies/imports/${franchise}.json`)
   for (const p of problems) console.log(`  · ${p}`)
   console.log('Restart the Studio to see them.')
 }

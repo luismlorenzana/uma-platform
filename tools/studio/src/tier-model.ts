@@ -16,7 +16,7 @@ export const inCast = (tier: Tier | null | undefined): boolean => tier === 'SS' 
 /** The old boards' five tiers on the new scale (P113): SS stays, A1 is S, A2 is A, B and F stay. */
 export const LEGACY_TIER: Readonly<Record<string, Tier>> = { SS: 'SS', A1: 'S', A2: 'A', B: 'B', F: 'F' }
 
-export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'hsr-bosses' | 'zzz-bosses' | 'key-enemies' | 'regular-enemies'
+export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'hsr-bosses' | 'zzz-bosses' | 'hi3-bosses' | 'pgr-bosses' | 'key-enemies' | 'regular-enemies'
 export type BoardGroup = 'umas' | 'bosses' | 'enemies'
 export interface Board {
   readonly id: BoardId
@@ -32,6 +32,8 @@ export interface Board {
   readonly from: readonly BoardId[]
   /** Where this board's B, F and unranked go. */
   readonly next: BoardId | null
+  /** An imported boss board: the franchise whose local import is its base, minus the ones left out (P121). */
+  readonly franchise?: Franchise
 }
 export const BOARDS: readonly Board[] = [
   { id: 'umas', kind: 'uma', group: 'umas', title: 'Playable Umas', short: 'Playable', from: [], next: 'npcs',
@@ -43,19 +45,25 @@ export const BOARDS: readonly Board[] = [
   { id: 'azurlane-bosses', kind: 'enemy', group: 'bosses', title: 'Azur Lane bosses', short: 'Azur Lane', from: [], next: 'key-enemies',
     blurb: 'The bosses already sorted on the old enemy board, on the new scale.',
     pool: 'The Azur Lane units marked Boss. Add or remove one from its card.' },
-  { id: 'genshin-bosses', kind: 'enemy', group: 'bosses', title: 'Genshin Impact bosses', short: 'Genshin', from: [], next: 'key-enemies',
+  { id: 'genshin-bosses', kind: 'enemy', group: 'bosses', title: 'Genshin Impact bosses', short: 'Genshin', from: [], next: 'key-enemies', franchise: 'genshin',
     blurb: 'New to the roster: female characters, imported locally.',
     pool: 'Every Genshin Impact character in the local import (female characters to start).' },
-  { id: 'wuwa-bosses', kind: 'enemy', group: 'bosses', title: 'Wuthering Waves bosses', short: 'WuWa', from: [], next: 'key-enemies',
+  { id: 'wuwa-bosses', kind: 'enemy', group: 'bosses', title: 'Wuthering Waves bosses', short: 'WuWa', from: [], next: 'key-enemies', franchise: 'wuwa',
     blurb: 'New to the roster: female resonators, imported locally.',
     pool: 'Every Wuthering Waves character in the local import (female resonators to start).' },
-  { id: 'hsr-bosses', kind: 'enemy', group: 'bosses', title: 'Honkai: Star Rail bosses', short: 'HSR', from: [], next: 'key-enemies',
+  { id: 'hsr-bosses', kind: 'enemy', group: 'bosses', title: 'Honkai: Star Rail bosses', short: 'HSR', from: [], next: 'key-enemies', franchise: 'hsr',
     blurb: 'New to the roster: female characters, imported locally.',
     pool: 'Every Honkai: Star Rail character in the local import (female characters to start).' },
-  { id: 'zzz-bosses', kind: 'enemy', group: 'bosses', title: 'Zenless Zone Zero bosses', short: 'ZZZ', from: [], next: 'key-enemies',
+  { id: 'zzz-bosses', kind: 'enemy', group: 'bosses', title: 'Zenless Zone Zero bosses', short: 'ZZZ', from: [], next: 'key-enemies', franchise: 'zzz',
     blurb: 'New to the roster: female agents, imported locally.',
     pool: 'Every Zenless Zone Zero agent in the local import (female agents to start).' },
-  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses'], next: 'regular-enemies',
+  { id: 'hi3-bosses', kind: 'enemy', group: 'bosses', title: 'Honkai Impact 3rd bosses', short: 'HI3', from: [], next: 'key-enemies', franchise: 'hi3',
+    blurb: 'New to the roster: every battlesuit, unfiltered. Leave out the ones that don’t fit.',
+    pool: 'Every Honkai Impact 3rd battlesuit in the local import, unfiltered, minus the ones left out.' },
+  { id: 'pgr-bosses', kind: 'enemy', group: 'bosses', title: 'Punishing: Gray Raven bosses', short: 'PGR', from: [], next: 'key-enemies', franchise: 'pgr',
+    blurb: 'New to the roster: every frame, unfiltered. Leave out the ones that don’t fit.',
+    pool: 'Every Punishing: Gray Raven frame in the local import, unfiltered, minus the ones left out.' },
+  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses'], next: 'regular-enemies',
     blurb: 'They escort the bosses and lead the regular groups.',
     pool: 'Every other Azur Lane unit, plus each boss board’s B, F and unranked.' },
   { id: 'regular-enemies', kind: 'enemy', group: 'enemies', title: 'Regular enemies', short: 'Regular', from: ['key-enemies'], next: null,
@@ -64,7 +72,9 @@ export const BOARDS: readonly Board[] = [
 ]
 export const BOARD_IDS = BOARDS.map((b) => b.id)
 export const boardOf = (id: string): Board | undefined => BOARDS.find((b) => b.id === id)
-export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses']
+export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses']
+/** The imported boss boards, whose units can be left out of every board (P121). */
+export const importBoardOf = (franchise: string): Board | undefined => BOARDS.find((b) => b.franchise === franchise)
 
 // ---- The catalog the boards rank ----
 
@@ -125,7 +135,7 @@ export const waysOf = (uma: UmaCharacter): Way[] => WAYS.map((w) => w.id).filter
 export const FRANCHISES = [
   { id: 'azurlane', label: 'Azur Lane' }, { id: 'genshin', label: 'Genshin Impact' },
   { id: 'wuwa', label: 'Wuthering Waves' }, { id: 'hsr', label: 'Honkai: Star Rail' }, { id: 'zzz', label: 'Zenless Zone Zero' },
-  { id: 'nikke', label: 'NIKKE' },
+  { id: 'hi3', label: 'Honkai Impact 3rd' }, { id: 'pgr', label: 'Punishing: Gray Raven' }, { id: 'nikke', label: 'NIKKE' },
 ] as const
 export type Franchise = typeof FRANCHISES[number]['id']
 export const CATEGORIES = [
@@ -167,6 +177,8 @@ export interface BoardState {
   entries: TierEntry[]
   /** Azur Lane bosses only: who is on the board. */
   members?: string[]
+  /** Imported boss boards only: units left out of every board (P121). */
+  out?: string[]
 }
 export type BoardStates = Record<BoardId, BoardState>
 export const emptyBoard = (board: BoardId): BoardState => ({
@@ -197,6 +209,12 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
     }
     state.members = [...value.members as string[]]
   }
+  if (value.out !== undefined) {
+    if (!boardOf(id)?.franchise || !Array.isArray(value.out) || !value.out.every((m) => typeof m === 'string' && idPattern.test(m)) || new Set(value.out).size !== value.out.length) {
+      throw new Error('Only an imported boss board leaves units out, as a list of unique ids.')
+    }
+    state.out = [...value.out as string[]]
+  }
   return state
 }
 
@@ -214,17 +232,13 @@ export const tierMap = (state: BoardState): Map<string, Tier | null> => new Map(
 /** Every board's members in board order: its base, then the B, F and unranked of the boards above it. */
 export function pools(catalog: TierCatalog, states: BoardStates): Pools {
   const al = catalog.enemies.filter((u) => u.franchise === 'azurlane'), members = new Set(states['azurlane-bosses'].members ?? [])
-  const base: Record<BoardId, string[]> = {
-    umas: catalog.umas.map((u) => u.id),
-    npcs: [],
-    'azurlane-bosses': al.filter((u) => members.has(u.id)).map((u) => u.id),
-    'genshin-bosses': catalog.enemies.filter((u) => u.franchise === 'genshin').map((u) => u.id),
-    'wuwa-bosses': catalog.enemies.filter((u) => u.franchise === 'wuwa').map((u) => u.id),
-    'hsr-bosses': catalog.enemies.filter((u) => u.franchise === 'hsr').map((u) => u.id),
-    'zzz-bosses': catalog.enemies.filter((u) => u.franchise === 'zzz').map((u) => u.id),
-    'key-enemies': al.filter((u) => !members.has(u.id)).map((u) => u.id),
-    'regular-enemies': catalog.enemies.filter((u) => u.franchise === 'nikke').map((u) => u.id),
-  }
+  // An imported board's base is its franchise's import, minus the units left out: those are on no board at all.
+  const imported = (b: Board) => { const out = new Set(states[b.id].out ?? []); return catalog.enemies.filter((u) => u.franchise === b.franchise && !out.has(u.id)).map((u) => u.id) }
+  const base = Object.fromEntries(BOARDS.map((b) => [b.id, b.franchise ? imported(b) : []])) as Record<BoardId, string[]>
+  base.umas = catalog.umas.map((u) => u.id)
+  base['azurlane-bosses'] = al.filter((u) => members.has(u.id)).map((u) => u.id)
+  base['key-enemies'] = al.filter((u) => !members.has(u.id)).map((u) => u.id)
+  base['regular-enemies'] = catalog.enemies.filter((u) => u.franchise === 'nikke').map((u) => u.id)
   const result = {} as Pools
   for (const board of BOARDS) {
     const seen = new Set<string>(), list: PoolMember[] = []
@@ -256,6 +270,8 @@ export function ordered(state: BoardState, pool: ReadonlySet<string>): TierEntry
   return TIERS.flatMap((t) => state.entries.filter((e) => e.tier === t.id && pool.has(e.id)))
 }
 const bump = (state: BoardState, entries: TierEntry[], members = state.members): BoardState => ({ ...state, entries, ...(members ? { members } : {}) })
+/** Units left out of every board, on an imported boss board. */
+export const leftOut = (state: BoardState): string[] => state.out ?? []
 
 /** A new tier goes to the end of that tier; the same tier keeps its place. An unranked entry with no note is dropped. */
 export function setTier(state: BoardState, id: string, tier: Tier | null): BoardState {
@@ -309,6 +325,16 @@ export function setMember(state: BoardState, id: string, member: boolean): Board
   return member ? bump(state, state.entries, [...members, id]) : bump(state, state.entries.filter((e) => e.id !== id), members.filter((m) => m !== id))
 }
 
+/**
+ * An imported boss board: leaves a unit out of every board (it loses its tier and note here), or brings it back unranked
+ * (P121). A unit that doesn't fit the roster, such as a male character from an unfiltered import, leaves this way.
+ */
+export function setOut(state: BoardState, id: string, out: boolean): BoardState {
+  const list = leftOut(state)
+  if (list.includes(id) === out) return state
+  return { ...state, entries: out ? state.entries.filter((e) => e.id !== id) : state.entries, out: out ? [...list, id] : list.filter((m) => m !== id) }
+}
+
 // ---- Careers: how many bosses each playable Uma meets ----
 
 export const MIN_CAREER_BOSSES = 3
@@ -348,6 +374,7 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
       return {
         id: b.id, title: b.title, pool: b.pool, next: b.next, revision: states[b.id].revision, updatedAt: states[b.id].updatedAt, stats: stats[b.id],
         order, unranked: pool.filter((m) => !ranked.has(m.id)).map((m) => ({ id: m.id, note: notes.get(m.id) ?? '', via: m.via, ...describe(m.id) })),
+        ...(b.franchise ? { leftOut: leftOut(states[b.id]).filter((id) => enemies.has(id)).map((id) => ({ id, ...describe(id) })) } : {}),
       }
     }),
     careers: careerMath(stats),

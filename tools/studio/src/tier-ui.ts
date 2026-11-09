@@ -19,7 +19,7 @@ export const wayLabel = (v: string): string => WAYS.find((w) => w.id === v)?.lab
 export const boardTitle = (id: BoardId | null): string => BOARDS.find((b) => b.id === id)?.title ?? ''
 export const roleLabel = (v: string): string => ({ regular: 'Regular', elite: 'Elite', boss: 'Boss' })[v] ?? v
 
-/** The Studio's one navigation bar: home, the seven boards, then the sprite tools. */
+/** The Studio's one navigation bar: home, every board by group, then the sprite tools. */
 export function nav(current: string): string {
   const link = (href: string, label: string) => `<a href="${href}"${href === current ? ' aria-current="page"' : ''}>${esc(label)}</a>`
   return `${link('/', 'Home')}<span class="nav-group">Umas</span>${BOARDS.filter((b) => b.group === 'umas').map((b) => link(`/tiers/${b.id}`, b.short)).join('')}` +

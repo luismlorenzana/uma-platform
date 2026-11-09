@@ -53,7 +53,7 @@ export class TierStore {
   async save(board: BoardId, value: unknown): Promise<BoardState> {
     const requested = parseBoard(value, board)
     const known = new Set([...this.catalog.umas.map((u) => u.id), ...this.catalog.enemies.map((u) => u.id)])
-    if (requested.entries.some((e) => !known.has(e.id)) || requested.members?.some((m) => !known.has(m))) {
+    if (requested.entries.some((e) => !known.has(e.id)) || requested.members?.some((m) => !known.has(m)) || requested.out?.some((m) => !known.has(m))) {
       throw new Error('An id in this board is not in the catalog. No changes were saved.')
     }
     const write = this.pending.then(async () => {

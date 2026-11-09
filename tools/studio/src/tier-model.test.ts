@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setTier, setWay, tierPlan,
+  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan,
   type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
 } from './tier-model.js'
 
@@ -18,7 +18,8 @@ const catalog: TierCatalog = {
   umas: [uma('701', [70101, 70102], ['front', 'late']), uma('702', [70201], ['pace']), uma('703', [70301], ['late-end']), uma('704', [70401, 70402, 70403])],
   enemies: [
     unit('al-a', 'azurlane', 'boss'), unit('al-b', 'azurlane', 'boss'), unit('al-c', 'azurlane', 'key'), unit('al-d', 'azurlane'),
-    unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('hsr-1', 'hsr', 'playable'), unit('zzz-1', 'zzz', 'playable'), unit('nk-1', 'nikke'),
+    unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('hsr-1', 'hsr', 'playable'), unit('zzz-1', 'zzz', 'playable'),
+    unit('hi3-1', 'hi3', 'playable'), unit('hi3-2', 'hi3', 'playable'), unit('pgr-1', 'pgr', 'playable'), unit('nk-1', 'nikke'),
   ],
 }
 const empty = (): BoardStates => Object.fromEntries(BOARDS.map((b) => [b.id, emptyBoard(b.id)])) as BoardStates
@@ -39,9 +40,22 @@ describe('pools', () => {
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }]
     expect(ids(states, 'azurlane-bosses')).toEqual(['al-a', 'al-b'])
     expect(ids(states, 'genshin-bosses')).toEqual(['gi-1', 'gi-2'])
-    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1'])
+    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
     states['key-enemies'].entries = [{ id: 'al-c', tier: 'A', note: '' }, { id: 'gi-2', tier: 'B', note: '' }]
-    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1'])
+    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
+  })
+  it('takes a left-out unit off every board, and brings it back unranked', () => {
+    const states = empty()
+    states['hi3-bosses'] = setTier(states['hi3-bosses'], 'hi3-2', 'S')
+    states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-2', true)
+    expect(states['hi3-bosses']).toMatchObject({ entries: [], out: ['hi3-2'] })
+    expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1'])
+    expect(ids(states, 'key-enemies')).not.toContain('hi3-2')
+    expect(ids(states, 'regular-enemies')).not.toContain('hi3-2')
+    expect(setOut(states['hi3-bosses'], 'hi3-2', true)).toBe(states['hi3-bosses'])
+    states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-2', false)
+    expect(states['hi3-bosses']).toMatchObject({ entries: [], out: [] })
+    expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1', 'hi3-2'])
   })
   it('ignores a tier on a board the entry has left', () => {
     const states = empty()
@@ -85,6 +99,10 @@ describe('files', () => {
       { ...board, entries: [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-a', tier: 'B', note: '' }] },
     ]) expect(() => parseBoard(bad, 'azurlane-bosses')).toThrow()
     expect(() => parseBoard(emptyBoard('umas'), 'npcs')).toThrow()
+    const pgr = { ...emptyBoard('pgr-bosses'), out: ['pgr-1'] }
+    expect(parseBoard(JSON.parse(JSON.stringify(pgr)) as unknown, 'pgr-bosses')).toEqual(pgr)
+    expect(() => parseBoard({ ...pgr, out: ['pgr-1', 'pgr-1'] }, 'pgr-bosses')).toThrow()
+    expect(() => parseBoard({ ...emptyBoard('key-enemies'), out: ['pgr-1'] }, 'key-enemies')).toThrow()
   })
 })
 
@@ -127,6 +145,10 @@ describe('careers and the plan', () => {
       expect.objectContaining({ order: 1, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 2, id: '702', tier: 'S' }),
     ])
     expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.map((e) => e.id)).toEqual(['703', '704'])
+    states['pgr-bosses'] = setOut(states['pgr-bosses'], 'pgr-1', true)
+    const later = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
+    expect(later.boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1', franchise: 'pgr' }], unranked: [] })
+    expect(later.boards.find((b) => b.id === 'key-enemies')).not.toHaveProperty('leftOut')
   })
 })
 
