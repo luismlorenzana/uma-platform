@@ -7,7 +7,9 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "draw": "node --import tsx src/build.ts",
-    "previews": "node --import tsx src/preview-cli.ts"
+    "previews": "node --import tsx src/preview-cli.ts",
+    "kits": "node --import tsx src/kits.ts",
+    "kit-previews": "node --import tsx src/kit-previews.ts"
   },
   "dependencies": {
     "sharp": "^0.34.5"

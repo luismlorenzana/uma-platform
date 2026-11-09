@@ -1,5 +1,8 @@
 # Authored original art
 
+Q7 adds the [forest kit](kit-forest/README.md): 37 original terrain, prop and battle assets, with pinned masters,
+prompt provenance, a deterministic atlas export and [native/2× reviews](kit-forest/review/index.html).
+
 UA8's 24 masters were generated with the built-in imagegen tool: 16 held-item textures and eight emote bubbles.
 No character art or original-game image was used as input. The open books reference their own closed covers;
 the drawn bow references the relaxed bow; the seven bubble variants reference the first bubble.

@@ -1,0 +1,584 @@
+{
+  "schemaVersion": 1,
+  "id": "kit-forest",
+  "kind": "biome",
+  "assets": [
+    {
+      "key": "floor-1",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-1-v1.png",
+      "sha256": "3bab8a490c321cd18006767ee13c1a9f351af3bdae4c2b6caede868e61cf2e70",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 4
+    },
+    {
+      "key": "floor-2",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-2-v1.png",
+      "sha256": "9db059b2c8bd08c85e4f02f05883b5b97f2e58b0053bb561722e9bd8139ad5e4",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 2
+    },
+    {
+      "key": "floor-3",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-3-v1.png",
+      "sha256": "e0112a83da49cbe5a4030899a9731d713f8a96deee6ce8a40f743523de72dc14",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 2
+    },
+    {
+      "key": "floor-4",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-4-v1.png",
+      "sha256": "4f31df5f9b8ca496c9ff40844916f9f9d3b3bea59c35225bd4649885ae0a0baf",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 1
+    },
+    {
+      "key": "wall-1",
+      "role": "wall",
+      "w": 128,
+      "h": 256,
+      "master": "wall-1-v1.png",
+      "sha256": "1ebd2e870900fec6b4c50cb6e7f75fd70b2edc68fd0775420432eb5fcb6fcb9a",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "wall"
+    },
+    {
+      "key": "wall-2",
+      "role": "wall",
+      "w": 128,
+      "h": 256,
+      "master": "wall-2-v1.png",
+      "sha256": "37cd9e07117efc45653281d5a9103d5864b78e102ce501e7a3145e34087f19cb",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "wall"
+    },
+    {
+      "key": "wall-3",
+      "role": "wall",
+      "w": 128,
+      "h": 256,
+      "master": "wall-3-v1.png",
+      "sha256": "ab56a75d7e03e6e4c333574e7d14607d5319a5ee5fc85eccf625c6d2bb253011",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "wall"
+    },
+    {
+      "key": "wall-top",
+      "role": "wall-top",
+      "w": 128,
+      "h": 128,
+      "master": "wall-top-v1.png",
+      "sha256": "f79768ce614cf1e4c74b4c48d7b02cdbf274c484eda9122cc0ca53323d7ac9fe",
+      "mode": "texture",
+      "seam": "xy"
+    },
+    {
+      "key": "riser-1",
+      "role": "riser",
+      "w": 128,
+      "h": 128,
+      "master": "riser-1-v1.png",
+      "sha256": "77abc2486454fcd07c47b4d65f1502cfc702b47b5e396601ebd0afaddbd3a674",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "riser"
+    },
+    {
+      "key": "riser-2",
+      "role": "riser",
+      "w": 128,
+      "h": 128,
+      "master": "riser-2-v1.png",
+      "sha256": "1bc0208621faa5b12a52c03035349199322726169524852e3f53aa648d095ea7",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "riser"
+    },
+    {
+      "key": "stairs",
+      "role": "stairs",
+      "w": 128,
+      "h": 128,
+      "master": "stairs-v1.png",
+      "sha256": "237e8f910e04eeeedff71047a55db941e6fd579758acbbf04af87dd7a01d8bf1",
+      "mode": "texture",
+      "seam": "x"
+    },
+    {
+      "key": "void",
+      "role": "void",
+      "w": 128,
+      "h": 128,
+      "master": "void-v1.png",
+      "sha256": "d52d544f9dabe98d9c8a672a855bb979f559b2dd85daf18d06f51c8c3f941ed9",
+      "mode": "texture",
+      "seam": "xy"
+    },
+    {
+      "key": "tree-1",
+      "role": "prop",
+      "w": 352,
+      "h": 352,
+      "master": "tree-1-v1.png",
+      "sha256": "3ae9cca8958048e3561b8bc28b3d3df9f17851bed6b791adef8fac68a3a6ec3c",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 577,
+        "y": 1210
+      },
+      "foot": {
+        "x": 166,
+        "y": 340
+      },
+      "blocks": true
+    },
+    {
+      "key": "tree-2",
+      "role": "prop",
+      "w": 352,
+      "h": 352,
+      "master": "tree-2-v1.png",
+      "sha256": "1ae4005920f02ddb51e34ae438d2657428d9bf94d2a28e56433eac9351444a45",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 491,
+        "y": 1471
+      },
+      "foot": {
+        "x": 169,
+        "y": 340
+      },
+      "blocks": true
+    },
+    {
+      "key": "tree-3",
+      "role": "prop",
+      "w": 352,
+      "h": 352,
+      "master": "tree-3-v1.png",
+      "sha256": "af55cace63e86b815acc7282881d539e9bbbcbc207aaf611c1c639a5124ab0ea",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 531,
+        "y": 1360
+      },
+      "foot": {
+        "x": 172,
+        "y": 340
+      },
+      "blocks": true
+    },
+    {
+      "key": "bush-1",
+      "role": "prop",
+      "w": 160,
+      "h": 128,
+      "master": "bush-1-v1.png",
+      "sha256": "f159a3b963042574579745cb9adf62959e7fb30d8c84c4dad60e2e2999b94d05",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 777,
+        "y": 854
+      },
+      "foot": {
+        "x": 82,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "bush-2",
+      "role": "prop",
+      "w": 160,
+      "h": 128,
+      "master": "bush-2-v1.png",
+      "sha256": "1c2eb3f627025fdc523f2f198147200812f4085a941ec1a17c8285c94586b697",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 846,
+        "y": 836
+      },
+      "foot": {
+        "x": 88,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "rock-1",
+      "role": "prop",
+      "w": 96,
+      "h": 96,
+      "master": "rock-1-v1.png",
+      "sha256": "1d979a14e6931754a8425427a5976fcd41e218d0f89367f2c08cd7deedb41134",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 758,
+        "y": 733
+      },
+      "foot": {
+        "x": 48,
+        "y": 84
+      },
+      "blocks": true
+    },
+    {
+      "key": "rock-2",
+      "role": "prop",
+      "w": 128,
+      "h": 112,
+      "master": "rock-2-v1.png",
+      "sha256": "e605eca2a645933c4baa749bfae9d9097e1adb0bab43d8f277b2df7a57996b4f",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 769,
+        "y": 750
+      },
+      "foot": {
+        "x": 55,
+        "y": 100
+      },
+      "blocks": true
+    },
+    {
+      "key": "rock-3",
+      "role": "prop",
+      "w": 128,
+      "h": 160,
+      "master": "rock-3-v1.png",
+      "sha256": "194927dd24631e44f1f6703bb7d2c7e708a753cb18a8d070e8914e4a2eb0eba3",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 466,
+        "y": 1373
+      },
+      "foot": {
+        "x": 58,
+        "y": 148
+      },
+      "blocks": true
+    },
+    {
+      "key": "stump",
+      "role": "prop",
+      "w": 128,
+      "h": 128,
+      "master": "stump-v1.png",
+      "sha256": "58ecc8dcaff06ff033ddc4b9f5556c4505e9c22cc0e054be87f11b9ffb0cd3fe",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 654,
+        "y": 811
+      },
+      "foot": {
+        "x": 52,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "flowers",
+      "role": "prop",
+      "w": 128,
+      "h": 80,
+      "master": "flowers-v1.png",
+      "sha256": "b986034438e8a33cbc3ccf38168dfbbde8954c2469d78ed8e63200d9c5f92021",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 781,
+        "y": 761
+      },
+      "foot": {
+        "x": 67,
+        "y": 68
+      },
+      "blocks": false
+    },
+    {
+      "key": "grass",
+      "role": "prop",
+      "w": 96,
+      "h": 80,
+      "master": "grass-v1.png",
+      "sha256": "3e2adba2eedeac6a7282cd9bcb2b497bddac098e49aba725356d1c9637ee0758",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 758,
+        "y": 789
+      },
+      "foot": {
+        "x": 48,
+        "y": 68
+      },
+      "blocks": false
+    },
+    {
+      "key": "fallen-log",
+      "role": "prop",
+      "w": 224,
+      "h": 112,
+      "master": "fallen-log-v1.png",
+      "sha256": "85b7e7a5df8e19eb2ba07f7474727b676338246b053b314105b8abc2928db5f6",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 459,
+        "y": 610
+      },
+      "foot": {
+        "x": 34,
+        "y": 100
+      },
+      "blocks": true
+    },
+    {
+      "key": "mushrooms",
+      "role": "prop",
+      "w": 96,
+      "h": 96,
+      "master": "mushrooms-v1.png",
+      "sha256": "4be5859cd3743714145206d941e38550ab05b84c9911d21a040bf6cffdf290d3",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 636,
+        "y": 960
+      },
+      "foot": {
+        "x": 50,
+        "y": 84
+      },
+      "blocks": false
+    },
+    {
+      "key": "lantern",
+      "role": "prop",
+      "w": 80,
+      "h": 224,
+      "master": "lantern-v1.png",
+      "sha256": "677ef267145092c7d06d1240a1ed6640b6e2127e4e10319676d407420fa23103",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 418,
+        "y": 1459
+      },
+      "foot": {
+        "x": 27,
+        "y": 212
+      },
+      "blocks": true,
+      "light": {
+        "color": "#ffc46b",
+        "radius": 4,
+        "flicker": true
+      }
+    },
+    {
+      "key": "chest-closed",
+      "role": "prop",
+      "w": 128,
+      "h": 112,
+      "master": "chest-closed-v1.png",
+      "sha256": "0871cca93c6a96f4a69edc6ecae053d358d925be7f1e5c59ad22312e529e0f47",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 766,
+        "y": 817
+      },
+      "foot": {
+        "x": 64,
+        "y": 100
+      },
+      "blocks": true
+    },
+    {
+      "key": "chest-open",
+      "role": "prop",
+      "w": 128,
+      "h": 144,
+      "master": "chest-open-v1.png",
+      "sha256": "5d1f80b31b1aa1fc2c8a0a9d043f49425edf53011fbd13e106e091305430cfaa",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 766,
+        "y": 899
+      },
+      "foot": {
+        "x": 64,
+        "y": 132
+      },
+      "blocks": true
+    },
+    {
+      "key": "spring",
+      "role": "prop",
+      "w": 192,
+      "h": 144,
+      "master": "spring-v1.png",
+      "sha256": "cfa7773bd934d78d90384e71ebba13f200e311acc11d97f082516ba8307e323b",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 728,
+        "y": 838
+      },
+      "foot": {
+        "x": 91,
+        "y": 132
+      },
+      "blocks": false,
+      "light": {
+        "color": "#81ceff",
+        "radius": 3
+      }
+    },
+    {
+      "key": "waystone",
+      "role": "prop",
+      "w": 112,
+      "h": 224,
+      "master": "waystone-v1.png",
+      "sha256": "ee312a090d0d54c31378eaca01a96e10732b0648d1faad5c72f36ec90d026336",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 489,
+        "y": 1361
+      },
+      "foot": {
+        "x": 54,
+        "y": 212
+      },
+      "blocks": true,
+      "light": {
+        "color": "#b7e0c5",
+        "radius": 3
+      }
+    },
+    {
+      "key": "stairs-down",
+      "role": "prop",
+      "w": 192,
+      "h": 160,
+      "master": "stairs-down-v1.png",
+      "sha256": "daf74f51345ace3e664c27ae8924cf653585383091258b1cbe878c12dfa9fdd4",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 761,
+        "y": 908
+      },
+      "foot": {
+        "x": 95,
+        "y": 148
+      },
+      "blocks": false
+    },
+    {
+      "key": "stairs-up",
+      "role": "prop",
+      "w": 192,
+      "h": 192,
+      "master": "stairs-up-v1.png",
+      "sha256": "ee4307d96bc26b90ee7ec19382a0563ef9335c027ee90fdea0e65bac9682471b",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 574,
+        "y": 1207
+      },
+      "foot": {
+        "x": 93,
+        "y": 180
+      },
+      "blocks": false
+    },
+    {
+      "key": "battle-ground",
+      "role": "battle-ground",
+      "w": 1024,
+      "h": 256,
+      "master": "battle-ground-v1.png",
+      "sha256": "e1a490d5db2674a558506b53b271704ed7196effa3115bf7e8c042e0d5af7608",
+      "mode": "texture",
+      "seam": "x"
+    },
+    {
+      "key": "battle-back",
+      "role": "battle-back",
+      "w": 2048,
+      "h": 512,
+      "master": "battle-back-v1.png",
+      "sha256": "ec1de18ff260c3f384a31924faccf7ee02c6ff7e3b3ed3efc7cb2b44e9f437f9",
+      "mode": "texture",
+      "seam": "x"
+    },
+    {
+      "key": "battle-mid-1",
+      "role": "battle-mid",
+      "w": 320,
+      "h": 352,
+      "master": "battle-mid-1-v1.png",
+      "sha256": "2a1cba6112218a74029d752d96bac1d5c3e1cbb85d4a829b85c6eb03270f498b",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 577,
+        "y": 1211
+      },
+      "foot": {
+        "x": 151,
+        "y": 340
+      }
+    },
+    {
+      "key": "battle-mid-2",
+      "role": "battle-mid",
+      "w": 256,
+      "h": 160,
+      "master": "battle-mid-2-v1.png",
+      "sha256": "b369cd205a176b7e813f6bd738f1949ffd96adaadd5f9ec51859b7058a8cc8b6",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 798,
+        "y": 750
+      },
+      "foot": {
+        "x": 137,
+        "y": 148
+      }
+    },
+    {
+      "key": "battle-mid-3",
+      "role": "battle-mid",
+      "w": 288,
+      "h": 224,
+      "master": "battle-mid-3-v1.png",
+      "sha256": "beff26df326c2ac0b88e2ab4aac740813b4ee41c018823af7424de96dd62e3e6",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 355,
+        "y": 657
+      },
+      "foot": {
+        "x": 44,
+        "y": 212
+      }
+    }
+  ]
+}
