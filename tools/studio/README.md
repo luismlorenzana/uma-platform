@@ -4,9 +4,13 @@ Run `pnpm studio` at the workspace root and open **http://127.0.0.1:4318**.
 It binds only to loopback. `UMA_CONTENT_DIR` selects another private content folder; `UMA_STUDIO_PORT` is available
 for isolated verification. The client builds before startup; the server loads private data at runtime.
 
-Four pages:
+Pages:
 
 - **Ranker** (`/`): the existing roster board. Only this page writes the roster.
+- **Enemy ranker** (`/enemies`): original enemy portraits and splash art, editable Regular/Elite/Boss buckets,
+  SS/A1/A2/B/F authoring priorities, auto-advance, notes, undo, an album and a tier board. The queue has earlier/later
+  controls within each tier. Franchise, original-category, study, role and search filters never limit an export.
+  Import/export uses the complete named authoring plan, including unranked entries and stable IDs.
 - **Queue** (`/queue`, with `/authoring` retained): travelers and townsfolk, tier/Way/stage filters, next batch,
   drag ordering and accessible up/down buttons. Reset clears that profile's override.
 - **Animation desk** (`/sprites/`): stepping, speeds, holds/repeats/revive, face patches, held layers, anchors,
@@ -34,6 +38,24 @@ The Studio serves allowlisted release images and validated paths inside the auth
 files. Writes require JSON, the loopback Host and a same-origin request. Realpath checks reject symlink escapes.
 No original art, names, private configs or reviews are bundled or committed. The old app remains in `content/` as
 history. Tests use invented records/bytes only; the sprite pipeline's local name/privacy guard covers this package.
+
+## Enemy planning inputs
+
+`content/authoring/enemies/catalog.json` is a private schema-1 catalog with `sourceVersion`, `sources`, `importedAt`
+and `units`. Each unit has a stable string `id`, `name`, `franchise` (`azurlane` or `nikke`), original `sourceTier`
+(`regular`, `key`, `subboss`, `boss`), an editable `defaultBucket` (`regular`, `elite`, `boss`), `studyAvailable` (whether a
+prior study is available), and `images` (`face`, `art`, optional `splash`). Image paths are strictly original-release
+files of the form `assets/enemies/<id>-<kind>.<hash8>.webp`, relative to that folder. Import catalog metadata and
+copy the existing released images there before startup. No catalog gives an empty state; it does not disable Uma
+authoring. The ranker cannot serve arbitrary files or custom study artwork.
+
+The independent `content/authoring/enemy-art-roster.json` is both the canonical state and the full export. Atomic,
+serialized saves use revision checks. It includes all catalog names/IDs and source metadata, chosen roles, nullable
+tiers/orders, notes, counts and `authoringOrder`. Priority sorts SS → A1 → A2 → B → F; array order breaks ties within
+a tier. Reference paths resolve under the plan's `referenceRoot`, relative to `UMA_CONTENT_DIR`. Unranked entries
+remain in `enemies` with null tier/order and are excluded from `authoringOrder`. There is
+no live-game roster write, image generation, owner-image access or cloud operation when ranking. The export endpoint
+is `GET /api/enemies/export`; rankings use `GET/PUT /api/enemies/rankings`.
 
 UA8 adds `/props`, the package gallery for 16 held textures and eight emote bubbles. The desk reads uma-art's atlas rectangles, grips, display scale and drawn-bow nock; the scene uses the tail anchors overhead. Hold an emote to inspect a bubble without timing the animation. The old private placeholders remain historical inputs only.
 
