@@ -305,8 +305,8 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 
 **Notes for its packet:**
 
-- The format comes from uma-farm's F7. uma-quest's list ships as FS24's interim proposal (DN14's tonic, party meal and
-  revive) and its Q17 settles it in a minor (P107). uma-rpg's and uma-racer's lists start empty
+- The format comes from uma-farm's F7. uma-quest's list is final (its Q17, D26): tonic 10, party meal 5 and revive 3 a
+  day, shipped as its list version 1. uma-rpg's and uma-racer's lists start empty
 
 ## What the games owe here
 
@@ -315,7 +315,8 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 | uma-quest | The kit spec (its Q5) | Q7's and Q15's uma-art families | M2 |
 | uma-quest | The foe contract (its Q16) | The foe family | M2 |
 | uma-quest | The landscape request (from its Q4) | KL1 | M3 |
-| uma-quest | Its accept list (its Q17); interim FS24 until then (P107) | PO1, then a minor | M4 |
+| uma-quest | Its accept list: **final** ([Q17, D26](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/spec/05-accept-list.md)), unchanged from D19's interim | PO1 | M4 ✓ |
+| uma-quest | Phase 5's townsfolk request, about 20 for band 1 (its Q23) | UA11's townsfolk batches | Later |
 | uma-farm | The parcel format's needs (its F7) | PO1 | M4 |
 | uma-farm | The Forge's art packet (its F9) | uma-art | M4 |
 | uma-farm | Likely, on the owner's yes: the shared HD-2D stage (`uma-stage`, its FR1, FR3, FR12, FR13, FR15), after uma-quest's measured plays (P109) | a new packet | Later |
@@ -328,8 +329,7 @@ M1  UA5 (done) ──► uma-quest Q6           UA6 (done)
 M2  UA8 (done, 2.22.0) ──► uma-quest Q9, Q12      UA10 (done) ──► uma-quest Q12
      uma-quest Q5 ──► Q7, Q15 (ChatGPT, uma-art)     uma-quest Q8 ──► Q16 (ChatGPT, uma-art)
 M3  uma-quest Q4 ──► KL1 ──► uma-quest Phase 5     UA3 ──► UA9 (wave 2)     UA10 ──► UA11 (T2…)
-M4  (parked, P109)  uma-farm asks again ──► PO1 (uma-quest's interim list) ──► uma-farm F10 ──► uma-quest's receiver
-     uma-quest Q17 ──► uma-post minor (its settled list)
+M4  (parked, P109)  uma-farm asks again ──► PO1 (uma-quest's final list, Q17 ✓) ──► uma-farm F10 ──► uma-quest's receiver
 ```
 
 ## Your steps

@@ -20,7 +20,7 @@ agree on one format and one check, and each game sets its own accept list and da
 - uma-farm's design spec: [§5, "Accept lists and caps" (FS22–FS27)](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/spec.md#5-accept-lists-and-caps-fs22fs27)
   and [§7, the queue (FS32)](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/spec.md#7-the-queue-fs32).
   §5.5 is the package's shape, as drafted.
-- uma-quest's DN14 and D4 (its field items come from the farm) and its Q17, which settles uma-quest's own list later.
+- uma-quest's list, final: its [design spec part 5](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/spec/05-accept-list.md) (Q17, D26, SP57–SP61).
 - `packages/work` (`@luismlorenzana/uma-work`): the package to copy for layout, ESM and CJS builds, `publishConfig`
   and the first Changesets release.
 
@@ -30,10 +30,10 @@ agree on one format and one check, and each game sets its own accept list and da
   `RefusalReason`, `Accepted`, `AcceptList`, `ACCEPT_LISTS`, `parseParcel`, `checkParcel`, `capsLeft`, and the API
   shapes `ParcelsReply`, `ClaimsRequest` and `ClaimsReply`. Types and pure functions only: no fetch code, no network,
   no dependencies.
-- **0.1.0 doesn't wait for uma-quest's Q17 (P107).** It carries uma-quest's list as uma-farm's FS24 proposes it
-  (`tonic` 10, `party-meal` 5, `revive` 3 a day, each its own cap group), as **uma-quest's interim list** (`version:
-  1`), agreed by uma-quest's session (its D19). Q17 confirms or changes it in a minor, and the list's version goes up.
-  uma-quest's receiver comes after uma-farm's F10, so the interim list changes nothing in uma-quest before Q17.
+- **uma-quest's list is final** (its Q17, D26, SP57–SP61, 2026-11-08). It ships in 0.1.0 as uma-quest's list
+  `version: 1`, unchanged from the interim list it agreed to in D19: `tonic` (Tonic) 10, `party-meal` (Party meal) 5,
+  and `revive` (Revive) 3 a day, each item its own cap group. Nothing else is accepted (no materials, gold, gear or
+  MP items). The items' effects are uma-quest's own and don't belong in `uma-post`.
 - **Every game has a list from 0.1.0, so `ACCEPT_LISTS` stays a total record.** uma-rpg's and uma-racer's start empty
   (`version: 0`, no items, no caps). `checkParcel` refuses anything addressed to them as `unknown-item`, and the farm
   offers nothing for them. Their sessions add their lists (FS25, FS26) as minors: uma-rpg's after the owner's go,
@@ -66,7 +66,7 @@ agree on one format and one check, and each game sets its own accept list and da
 
 ## Done when
 
-- `@luismlorenzana/uma-post` 0.1.0 is published, with uma-quest's interim list and the empty lists for uma-rpg and
+- `@luismlorenzana/uma-post` 0.1.0 is published, with uma-quest's final list and the empty lists for uma-rpg and
   uma-racer.
 - `pnpm lint`, `pnpm test` and `pnpm build` pass, and CI is green.
 - uma-farm's F10 pins it. A parcel sent from the farm is checked by the same `checkParcel` on both sides.
