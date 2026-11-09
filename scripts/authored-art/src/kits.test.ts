@@ -40,7 +40,8 @@ it('rebuilds the complete forest kit from pinned masters and keeps every frame s
         .toEqual(b.rgba.subarray(y * b.spec.w * 4, (y * b.spec.w + 1) * 4))
     }
   }
-}, 30000)
+// The full 63 MB master export shares two CI CPUs with the other art suites (~76s there, ~7s locally).
+}, 120000)
 it('preserves every previously published uma-art 2.22 PNG and atlas record', async () => {
   const pins = JSON.parse(await readFile(resolve(kitProject, 'scripts/authored-art/legacy-2.22.json'), 'utf8')) as Record<string, string>
   for (const [file, hash] of Object.entries(pins)) expect(sha(await readFile(resolve(kitProject, file))), file).toBe(hash)
