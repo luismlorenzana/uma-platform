@@ -1,0 +1,372 @@
+{
+  "tool": "built-in imagegen",
+  "originalArt": true,
+  "successfulCalls": 33,
+  "seconds": 3455.03,
+  "assets": [
+    {
+      "key": "banner",
+      "master": "banner-v1.png",
+      "selected": true,
+      "sha256": "1dd0cd78d4da9021435beb348ded5772292c82f64d09f52a2f8fa6a921738d1a",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: banner, one original town kit prop.\nSubject: One complete sturdy dark-iron pole with a long deep-red hanging cloth banner, gold border and one simple gold diamond emblem, restrained folds, pointed cloth bottom. South-facing isolated upright game prop. No lettering, ground, shadow or glow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 198.693
+    },
+    {
+      "key": "barrel",
+      "master": "barrel-v1.png",
+      "selected": true,
+      "sha256": "8a2dda0761abf2425d4c08a36797baa2d08e557b4f33b442aa62da9f47b1d908",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: barrel, one original town kit prop.\nSubject: One sturdy honey-brown wooden barrel with dark iron hoops and closed round plank top, modest top visible from 35 degrees, south-facing isolated game prop. No ground, shadow, markings or extra objects.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 115.723
+    },
+    {
+      "key": "bench",
+      "master": "bench-v1.png",
+      "selected": true,
+      "sha256": "7b7b760045fb09d1b338a419bcd6f607667b9bb9d027517ae7f5d56d43d7306b",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: bench, one original town kit prop.\nSubject: One simple sturdy chestnut timber street bench with a low straight back, four short legs and dark iron joiners. South-facing complete isolated upright game prop, modest seat top visible. No ground, shadow or extra objects.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 189.491
+    },
+    {
+      "key": "building-wall-1",
+      "master": "building-wall-1-v1.png",
+      "selected": true,
+      "sha256": "eafa3dbff4e2854485668328990b84b0d920935af1b984cd186d5db25426e499",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: building-wall-1, one original town kit building-wall.\nSubject: One modular building facade LEVEL of plain warm grey dressed stone masonry. Flat orthographic SOUTH-facing front, no top or sides, no windows or door. Full bleed square, seamless left/right and stacked, restrained edge highlights.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nFacade continuity: add a narrow straight dark chestnut framing timber along BOTH far vertical edges and the very top and bottom. Keep plain stone infill and no diagonal beams.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "../kit-forest/masters/wall-1-v1.png"
+      ],
+      "seconds": 50.962
+    },
+    {
+      "key": "building-wall-2",
+      "master": "building-wall-2-v1.png",
+      "selected": true,
+      "sha256": "2cbc2f34533c0f3b9812f9644940241ea42babb6912c5a35f63fad283b52010e",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: building-wall-2, one original town kit building-wall.\nSubject: One modular building facade LEVEL: warm cream plaster infill, dark chestnut timber upright at both far edges and a narrow horizontal timber at the top and bottom. Flat orthographic SOUTH-facing front. No windows or door, no diagonal beams or perspective. Full bleed, repeating left/right and stacked.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 136.655
+    },
+    {
+      "key": "building-wall-3",
+      "master": "building-wall-3-v1.png",
+      "selected": true,
+      "sha256": "0eeff5676088030376fbc22148bcccdf2d2887c369dea6cd76477cd249599876",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: building-wall-3, one original town kit building-wall.\nSubject: One compatible facade LEVEL: warm cream plaster with slightly worn subtle texture, dark chestnut timber upright at both far edges and a narrow horizontal timber top/bottom. Flat orthographic SOUTH front. No windows, doors or diagonal beams. Full bleed square repeating left/right and stacked.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 113.04
+    },
+    {
+      "key": "crate",
+      "master": "crate-v1.png",
+      "selected": true,
+      "sha256": "380da740e19f0754e849b73b1048faaa0ddd67499385a88761d8928cc2b0325f",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: crate, one original town kit prop.\nSubject: One sturdy closed honey-brown wooden market crate with simple diagonal plank bracing and dark iron corners, modest top visible from 35 degrees, south-facing isolated game prop. No ground, shadow, markings or extra objects.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 162.423
+    },
+    {
+      "key": "door",
+      "master": "door-v1.png",
+      "selected": false,
+      "sha256": "898d886101f03da8588af6877c46759e5836560083a99ed10c7e764ac857ede2",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: door, one original town kit door.\nSubject: One tall narrow ground-storey facade column, sturdy chestnut arched wooden door with dark iron hinges and small brass latch, warm grey stone jambs and cream plaster above the arch. Door on bottom street edge, no steps or ground patch. Flat orthographic SOUTH-facing, two levels tall, full bleed rectangular column, no visible side faces.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nFacade continuity: narrow dark chestnut vertical framing posts along BOTH far left and right edges, about 3% of column width each, matching the reference wall module. Stone door jambs sit inside these posts.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-2-v1.png"
+      ],
+      "seconds": 132.507
+    },
+    {
+      "key": "door",
+      "master": "door-v2.png",
+      "selected": true,
+      "sha256": "40bf4fe1d2ca19fa5a191bef9fee3ead781ce1e4829c4fb465aa4113264cb527",
+      "prompt": "Use case: precise-object-edit. Asset: ONE original modular game DOOR COLUMN, full-bleed portrait 1:2 surface, intended to export to 128 by 256 texels. Image 1 is the edit target: keep its painted chestnut door, iron hinges, brass handle and warm grey arched stone jambs. Image 2 is a rendering/material reference only. Remove the entire roof, upper window, plants and red banner from Image 1. Enlarge the complete arched DOOR and stone jambs so they occupy the bottom NINETY PERCENT of this entire image, a normal full-height adult doorway. Keep a narrow strip of blank cream plaster above the arch (top ten percent) and narrow dark timber framing along far left and right. The door's bottom touches the bottom image edge. The door itself spans about seventy-five percent of image width. Flat orthographic south-facing texture, no side faces, no eaves or upper storey, no separate props. Same warm upper-front-left lighting, original full-colour hand-painted moderate shading and crisp small-size readability. No text, characters, extra windows, signs, banners, roof tiles, vegetation, ground, steps or shadows. This is ONLY a tall door column, not a whole building. Fill all corners with opaque facade material.",
+      "references": [
+        "masters/door-v1.png",
+        "masters/building-wall-2-v1.png"
+      ],
+      "seconds": 28.216
+    },
+    {
+      "key": "fence",
+      "master": "fence-v1.png",
+      "selected": true,
+      "sha256": "f3a0edd6270974f81c838081235001c877b526d3d1f61c0dceca799ba80064a3",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: fence, one original town kit prop.\nSubject: One sturdy chestnut wooden town fence section with two squared posts and two straight horizontal rails, small iron joiners. Complete south-facing isolated upright game prop, no ground or shadows.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 210.581
+    },
+    {
+      "key": "floor-1",
+      "master": "floor-1-v1.png",
+      "selected": true,
+      "sha256": "a630b935ca82c2b294e3fdbac4c5c56bc8b446fbaa0a396e41435b5d53b52eb4",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: floor-1, one original town kit floor.\nSubject: A calm medium-grey cobblestone street tile, evenly laid small rounded stones with warm grey joints and sparse muted moss. Direct top-down, flat full bleed, no perspective. Seamless all four edges.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "../kit-forest/masters/floor-1-v1.png"
+      ],
+      "seconds": 22.13
+    },
+    {
+      "key": "floor-2",
+      "master": "floor-2-v1.png",
+      "selected": true,
+      "sha256": "af01444018ef0e4454e606dedd753ff9fdaba2013604a9a61bbf50a585088c46",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: floor-2, one original town kit floor.\nSubject: A compatible medium-grey cobble street tile, slightly larger worn stones and tiny warm sandy joints. Same value and edge treatment as the reference, direct top-down, seamless all four edges.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/floor-1-v1.png"
+      ],
+      "seconds": 28.174
+    },
+    {
+      "key": "floor-3",
+      "master": "floor-3-v1.png",
+      "selected": true,
+      "sha256": "5f98447c0f0ec1545195602b56efa223de65b087ebe6da73a0792eb1731eee0f",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: floor-3, one original town kit floor.\nSubject: A compatible medium-grey street tile of broad worn flagstones with subtle beige flecks. Same value and edge treatment as reference, direct top-down, seamless all four edges.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/floor-1-v1.png"
+      ],
+      "seconds": 46.957
+    },
+    {
+      "key": "floor-4",
+      "master": "floor-4-v1.png",
+      "selected": true,
+      "sha256": "49d1874bfa8784ed28e5a3f1b69ac3c7c441de4c1b3364daace65c687e9bfd2d",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: floor-4, one original town kit floor.\nSubject: A compatible medium-grey cobble street tile with a few quiet moss seams and small irregular stones. Same value and edge treatment as reference, direct top-down, seamless all four edges.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/floor-1-v1.png"
+      ],
+      "seconds": 66.956
+    },
+    {
+      "key": "flower-box",
+      "master": "flower-box-v1.png",
+      "selected": true,
+      "sha256": "4bc27035fe99c9a2505123a083cc95caad704201c598b85b1608888ba12b9021",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: flower-box, one original town kit prop.\nSubject: One complete long chestnut timber window or street flower box with a restrained cluster of white and muted red flowers, fresh moss-green leaves. South-facing isolated upright game prop, no wall, ground, shadow or glow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 160.927
+    },
+    {
+      "key": "lantern",
+      "master": "lantern-v1.png",
+      "selected": true,
+      "sha256": "a1d90b34ee65e21580041492b382f32bd4119715acd3f930134faee4b0e28151",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: lantern, one original town kit prop.\nSubject: One complete town street lantern on a sturdy dark wrought-iron post, warm amber glass in a simple square housing, small brass cap, broad iron foot. South-facing isolated upright game prop, no halo, cast light, ground or shadow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 79.12
+    },
+    {
+      "key": "noticeboard",
+      "master": "noticeboard-v1.png",
+      "selected": true,
+      "sha256": "4ee24497c1aa4f0736392d73a748fd6090a18dc994a4c41e47fb38015adb8f99",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: noticeboard, one original town kit prop.\nSubject: One sturdy chestnut timber public noticeboard on two posts with a small red-brown roof cap, two or three blank cream parchment notices and tiny red wax seals. South-facing isolated complete upright game prop, no text, ground or shadows.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 41.349
+    },
+    {
+      "key": "riser-1",
+      "master": "riser-1-v1.png",
+      "selected": true,
+      "sha256": "ac46a6bce95a47e9098df0fbe5f13e1ee6b6f31127406efa2af17fea388a60a0",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: riser-1, one original town kit riser.\nSubject: A straight SOUTH FACING low stone retaining face, sturdy warm grey masonry. Full bleed square. Across the top exactly one eighth of image height is a light flat stone KERB LIP; lower seven eighths is vertical darker stone. No grass or perspective side. Repeats horizontally.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 143.303
+    },
+    {
+      "key": "riser-2",
+      "master": "riser-2-v1.png",
+      "selected": true,
+      "sha256": "0481d88eb93f8a30960ccac4c1b892463ed378ed85eae1777b3a0161d35566c3",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: riser-2, one original town kit riser.\nSubject: Second compatible SOUTH FACING stone retaining wall, a few larger worn warm grey blocks. Full bleed square. Top exactly one eighth is a light stone kerb lip; lower seven eighths is darker vertical stone. Repeats horizontally.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 78.988
+    },
+    {
+      "key": "roof-1",
+      "master": "roof-1-v1.png",
+      "selected": true,
+      "sha256": "e42f2bb792fbadab0d487badc9ace5251cd8d2f55b2d4970237d1b3de398e75c",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: roof-1, one original town kit roof.\nSubject: A repeating red-brown terracotta roof TILE TEXTURE: orderly overlapping small rounded clay tiles, four horizontal courses, top edge toward the roof ridge and bottom toward eave. Texture plane only, direct face-on, no building, sky, ridge cap or gutters. Full bleed square, seamless left/right and up/down.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 157.43
+    },
+    {
+      "key": "roof-2",
+      "master": "roof-2-v1.png",
+      "selected": true,
+      "sha256": "a65abab2d454225625e17f11d08a5d83c563086b877f259ca671d60e02b07665",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: roof-2, one original town kit roof.\nSubject: A compatible red-brown terracotta roof TILE TEXTURE, slightly varied worn tiles and a few subtle darker red pieces, four horizontal overlapping courses. Top edge toward ridge. Plane only, no building or sky or ridge cap. Full bleed square seamless left/right and up/down.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 177.534
+    },
+    {
+      "key": "sign-inn",
+      "master": "sign-inn-v1.png",
+      "selected": true,
+      "sha256": "0758163260f3aa47903b72da972c69b126b81746aeb4f15473d27143c3c8e51e",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: sign-inn, one original town kit sign.\nSubject: One hanging inn sign, a honey-brown wooden shield board with a clear simple GOLD BED pictogram, sturdy small iron bracket above. Front-facing isolated complete object, no lettering, wall or ground. Bottom center is hanging anchor.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 101.421
+    },
+    {
+      "key": "sign-shop",
+      "master": "sign-shop-v1.png",
+      "selected": true,
+      "sha256": "72176320f4986d67d500f657dd1fc73c7bd31b7a5ad0227d8bb0fe5395814a06",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: sign-shop, one original town kit sign.\nSubject: One hanging shop sign, a matching honey-brown wooden shield board with a clear simple GOLD POUCH pictogram, sturdy small iron bracket above. Front-facing isolated complete object, no lettering, wall or ground. Bottom center is hanging anchor.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 47.926
+    },
+    {
+      "key": "stairs",
+      "master": "stairs-v1.png",
+      "selected": true,
+      "sha256": "acb51ec2810ffaf9f69048a766675d861c67cbf70737666f8abf28a53e7f4111",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: stairs, one original town kit stairs.\nSubject: A TOP-DOWN texture for FOUR stone stair treads: exactly four equal horizontal bands, each one quarter image height. Tops ONLY, no risers, perspective or diagonal lines. Warm-grey stone, bottom band lowest. Full bleed square, repeats horizontally.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 31.128
+    },
+    {
+      "key": "stall-1",
+      "master": "stall-1-v1.png",
+      "selected": true,
+      "sha256": "70e741e55a9f6818a361c55cdc9af23cfa24d2ab31b8c71be7e6ddef4c293c05",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: stall-1, one original town kit prop.\nSubject: One complete small wooden fruit market stall with deep-red cloth awning, gold edging and two timber posts. A few orderly red apples and gold pears on counter, a plain wooden base. South-facing upright game prop, modest top surfaces visible from 35 degrees. No people, letters, ground or shadow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 84.66
+    },
+    {
+      "key": "stall-2",
+      "master": "stall-2-v1.png",
+      "selected": true,
+      "sha256": "40daac117a227e36f9289d6cf1f10145a0149110d4a99de1cd105b0893dfcd85",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: stall-2, one original town kit prop.\nSubject: One complete small wooden general-goods market stall, matching deep-red cloth awning and gold edging, two timber posts. Two closed cloth sacks and a few rolled cloth bolts on the counter, plain wooden base. South-facing upright prop, modest top surfaces visible from 35 degrees. No people, letters, ground or shadow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/well-v1.png"
+      ],
+      "seconds": 49.025
+    },
+    {
+      "key": "tree-1",
+      "master": "tree-1-v1.png",
+      "selected": true,
+      "sha256": "9a93a3ea690e090b71fa3005ce020cc639b35702053300aaff40535c97b49ff9",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: tree-1, one original town kit prop.\nSubject: One complete leafy street tree, broad compact round moss-green canopy, sturdy warm chestnut trunk and small roots. Same 320-texel apparent height and painted density as forest trees. South-facing isolated upright game prop, no planter, ground or shadow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "../kit-forest/masters/tree-1-v1.png"
+      ],
+      "seconds": 132.564
+    },
+    {
+      "key": "wall-1",
+      "master": "wall-1-v1.png",
+      "selected": true,
+      "sha256": "0dc2488c49c8b453501986430058611f68c923d48748f3ad78db4f82dc9e7914",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: wall-1, one original town kit wall.\nSubject: A tall narrow SOUTH FACING town wall face of warm grey sturdy irregular masonry. Flat orthographic front, two tile levels tall, full bleed. No coping, sky, visible top or sides. Seamless horizontally.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 85.965
+    },
+    {
+      "key": "wall-2",
+      "master": "wall-2-v1.png",
+      "selected": true,
+      "sha256": "5c3bc19a5e818866de80489723b7cdf362578e1d7e867bfe2cc9d413140ac811",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: wall-2, one original town kit wall.\nSubject: A second compatible SOUTH FACING town wall face, warm grey squared dressed stone with small worn corners. Flat orthographic front two tile levels tall, full bleed, no sky, top or sides. Seamless horizontally.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 121.918
+    },
+    {
+      "key": "wall-top",
+      "master": "wall-top-v1.png",
+      "selected": true,
+      "sha256": "c103225f92fdbd188821bc5586369160ade57783ef97a853af0da9cc8017e04c",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: wall-top, one original town kit wall-top.\nSubject: Top-down warm-grey stone walkway or coping, flat full-bleed stone surface, no perspective sides, moderately worn slab joints. Seamless all four edges.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-1-v1.png"
+      ],
+      "seconds": 55.647
+    },
+    {
+      "key": "well",
+      "master": "well-v1.png",
+      "selected": true,
+      "sha256": "ba20e8e82a77a3b9107c7f0adfdec51051c821700cec6e8ad78aea33b9b58f0b",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: well, one original town kit prop.\nSubject: One sturdy market-town well: low round warm-grey stone basin, two chestnut timber posts, simple wooden winch, small red-brown clay-tiled canopy roof. Complete south-facing upright game prop with modest top surfaces visible from 35 degrees. No ground patch, cast shadow or glow.\nComposition: One centered complete isolated object, generous genuinely transparent margin on every side. No backdrop, base platform or other subjects.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "../kit-forest/masters/tree-1-v1.png"
+      ],
+      "seconds": 104.393
+    },
+    {
+      "key": "window-1",
+      "master": "window-1-v1.png",
+      "selected": true,
+      "sha256": "e19e25f093ec6a12ac20d718baabc1881cc1f9d96a805b91eec92a2ab3bd380e",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: window-1, one original town kit window.\nSubject: One upper-storey facade module: a centered small square leaded warm dark-glass window in chestnut frame, warm cream plaster behind, narrow dark chestnut timber at left/right and top/bottom edge. Flat orthographic SOUTH-facing. Full bleed square; no projecting sill, side face or ground. Match building-wall plaster and framing.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-2-v1.png"
+      ],
+      "seconds": 95.713
+    },
+    {
+      "key": "window-2",
+      "master": "window-2-v1.png",
+      "selected": true,
+      "sha256": "3b668c5cc50986615ef55f5b882d92cd1fc3581892295457fcbfc83b48500ead",
+      "prompt": "Use case: stylized-concept.\nOriginal full-colour hand-painted HD-2D JRPG game art, matching the supplied original forest kit's clean rounded shapes, moderate cel-like shading and restrained painterly detail. Crisp antialiased edges, readable at native small size. Warm daylight from upper front-left. Warrior region: sturdy warm-grey stone and chestnut timber market town, cream plaster, red-brown roofs, deep red and gold cloth, muted moss-green foliage. Not pixel art, not photorealistic. No characters, text, logos, watermark, glow or cast shadows.\nAsset: window-2, one original town kit window.\nSubject: One compatible upper-storey facade module: centered chestnut-framed small window with open deep-red wooden shutters and dark warm glass, cream plaster behind, narrow dark chestnut timber on all outer edges. Flat orthographic SOUTH-facing full bleed square. Match building-wall plaster and framing.\nComposition: Full-bleed rectangular surface, every corner filled, no border. Match the specified viewing direction.\nInput image: original rendering style and material reference only. Draw ONLY the requested subject and specified view. Do not copy the reference object, background, framing or unrelated shapes.",
+      "references": [
+        "masters/building-wall-2-v1.png"
+      ],
+      "seconds": 203.511
+    }
+  ]
+}

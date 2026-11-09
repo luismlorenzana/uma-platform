@@ -1,7 +1,7 @@
 {
   "name": "@luismlorenzana/uma-art",
   "version": "2.23.0",
-  "description": "Original game art: pixel families drawn from code and full-colour held props and emotes exported from authored masters.",
+  "description": "Original game art: pixel families and full-colour props, emotes and HD-2D world kits exported from authored masters.",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
@@ -39,7 +39,9 @@
     "./emote/atlas.png": "./emote/atlas.png",
     "./emote/atlas.json": "./emote/atlas.json",
     "./kit-forest/atlas.png": "./kit-forest/atlas.png",
-    "./kit-forest/atlas.json": "./kit-forest/atlas.json"
+    "./kit-forest/atlas.json": "./kit-forest/atlas.json",
+    "./kit-town-warrior/atlas.png": "./kit-town-warrior/atlas.png",
+    "./kit-town-warrior/atlas.json": "./kit-town-warrior/atlas.json"
   },
   "files": [
     "items",
@@ -54,6 +56,7 @@
     "README.md",
     "held",
     "emote",
-    "kit-forest"
+    "kit-forest",
+    "kit-town-warrior"
   ]
 }
