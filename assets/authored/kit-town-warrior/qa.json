@@ -1,0 +1,53 @@
+{
+  "packet": "Q15",
+  "status": "approved",
+  "frames": 32,
+  "page": [
+    2048,
+    2048
+  ],
+  "runtimeSha256": {
+    "atlas.png": "f2a0a18ecda0af1066f30c76ffe4bb35e2ae6384f260cf3892b186c07293a4eb",
+    "atlas.json": "5d9f7ab93d27b17393561e507250c84c7184764166c89054c61fe844699a4699"
+  },
+  "checks": {
+    "authoredArtLint": "pass",
+    "authoredArtTests": "pass",
+    "repeat": "byte-identical",
+    "legacyFilesUnchanged": 26,
+    "orderedFloorPairs": 16,
+    "horizontalWallPairs": 4,
+    "horizontalRiserPairs": 4,
+    "roofPairs": 4,
+    "facadeWindowPairs": 25,
+    "propFeet": "pass",
+    "clearMargins": "pass",
+    "atlasGapTexels": 2,
+    "build": "pass",
+    "lint": "pass",
+    "tests": "pass"
+  },
+  "quest": {
+    "commit": "274f1a90afaa5c98f4ce5c6bee71bb494ba3128e",
+    "parseKitAtlas": "pass",
+    "missing": [],
+    "builder": "townGeometry + buildWorld",
+    "faces": 450,
+    "props": 15,
+    "standIns": 3,
+    "previewFrameMapping": {
+      "stall": "stall-1",
+      "flowers": "flower-box"
+    },
+    "notes": "Q5 test town plus five additional prop placements. Consumer maps the stand-in names to the packet names when pinning."
+  },
+  "ownerApproval": {
+    "recordedAt": "2026-11-09T03:45:25Z",
+    "answer": "Approve the Warrior town kit",
+    "scope": "Q15 buildings, streets, signs and market props for uma-art publication",
+    "runtimeSha256": {
+      "atlas.png": "f2a0a18ecda0af1066f30c76ffe4bb35e2ae6384f260cf3892b186c07293a4eb",
+      "atlas.json": "5d9f7ab93d27b17393561e507250c84c7184764166c89054c61fe844699a4699"
+    }
+  }
+}

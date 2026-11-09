@@ -511,6 +511,20 @@ lantern (warm, radius 4, flicker), spring (cool, radius 3) and waystone (soft, r
 All prior uma-art files are unchanged. Masters and [review sheets](../../assets/authored/kit-forest/review/index.html)
 stay in the repo; only the atlas files ship. `pnpm art:kits kit-forest` repeats their exact bytes (P97).
 
+## Full-colour Warrior town kit (Q15)
+
+`kit-town-warrior/atlas.png` and `.json` export 32 original frames on one 2048×2048 page (`formatVersion: 1`,
+`kind: "town"`, 128 texels per tile). Ten street/terrace frames accompany eight facade/roof modules, two pictogram
+signs and twelve market props. Warm grey stone, cream plaster, chestnut timber, red-brown tiles and red/gold cloth
+match the forest kit's painted light and density. The 128×256 `door` is a full-height arched column; facade and
+window modules share their framing edges. Floors and roofs join in any unrotated variant order.
+
+Props use `foot` and `blocks`; signs have bottom-middle feet. `lantern` adds warm radius-4 flickering light metadata.
+Use the packet's exact names: `stall-1`, `stall-2` and `flower-box` replace the stand-in town's `stall` and `flowers`.
+All prior runtime files, including the forest kit, are byte-identical. The [review](../../assets/authored/kit-town-warrior/review/index.html)
+shows native/2× sheets, one- and two-storey buildings and original scale stand-ins, rendered by Quest's builder.
+`pnpm art:kits kit-town-warrior` repeats the shipped atlas bytes. Masters and reviews stay out of the package (P97).
+
 ## Battle backdrops (H08)
 
 The world atlas also includes nineteen `backdrop/<biome>` frames, **128×48** each, bringing the family to **329**

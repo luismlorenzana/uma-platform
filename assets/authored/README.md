@@ -1,5 +1,8 @@
 # Authored original art
 
+Q15 adds the [Warrior town kit](kit-town-warrior/README.md): 32 original terrain, facade, sign and market-prop
+frames, [native/2× reviews](kit-town-warrior/review/index.html), and the same deterministic kit exporter.
+
 Q7 adds the [forest kit](kit-forest/README.md): 37 original terrain, prop and battle assets, with pinned masters,
 prompt provenance, a deterministic atlas export and [native/2× reviews](kit-forest/review/index.html).
 

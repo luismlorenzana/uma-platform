@@ -10,6 +10,7 @@ export const sha = (v: Uint8Array | string): string => createHash('sha256').upda
 export interface KitSpec {
   key: string; role: string; w: number; h: number; master: string; sha256: string
   mode: 'texture' | 'cutout'; seam?: 'x' | 'xy'; edgeGroup?: string; weight?: number
+  fit?: 'cover' | 'fill'; edgeBand?: number
   foot?: { x: number; y: number }; sourceFoot?: { x: number; y: number }; blocks?: boolean
   light?: { color: string; radius: number; flicker?: boolean }
 }
@@ -70,9 +71,9 @@ export async function renderKitFrame(root: string, id: string, spec: KitSpec): P
   let rgba: Buffer
   if (spec.mode === 'texture') {
     rgba = await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
-      .resize(spec.w, spec.h, { fit: 'cover', position: spec.role === 'riser' ? 'north' : 'centre', kernel: 'lanczos3' }).raw().toBuffer()
+      .resize(spec.w, spec.h, { fit: spec.fit ?? 'cover', position: spec.role === 'riser' ? 'north' : 'centre', kernel: 'lanczos3' }).raw().toBuffer()
     for (let i = 3; i < rgba.length; i += 4) if (rgba[i] !== 255) throw Error('Texture is not opaque: ' + spec.key)
-    if (spec.seam) rgba = periodic(rgba, spec.w, spec.h, spec.seam)
+    if (spec.seam) rgba = periodic(rgba, spec.w, spec.h, spec.seam, spec.edgeBand)
   } else {
     if (!spec.foot) throw Error('No prop foot: ' + spec.key)
     const b = alphaBounds(data, info.width, info.height)
@@ -107,7 +108,7 @@ export async function renderKit(root: string, id: string): Promise<{ config: Kit
     if (spec.edgeGroup && spec.seam) {
       const reference = groups.get(spec.edgeGroup)
       if (reference) {
-        f.rgba = commonEdges(f.rgba, reference, spec.w, spec.h, spec.seam)
+        f.rgba = commonEdges(f.rgba, reference, spec.w, spec.h, spec.seam, spec.edgeBand)
         f.png = await sharp(f.rgba, { raw: { width: spec.w, height: spec.h, channels: 4 } }).png().toBuffer()
       } else groups.set(spec.edgeGroup, f.rgba)
     }

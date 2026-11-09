@@ -166,7 +166,7 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 
 - `assets/` holds art made for these games: tilesets, Hub and farm maps (Tiled or LDtk), buildings, crops, UI frames,
   icons and effects. It's original, so it lives in git (P15).
-- Pixel families come from **generator scripts**: `scripts/pixel-art` draws from code without dependencies (`pnpm art:draw`; P35). Full-colour props, kits and foes use authored masters and a deterministic export (P97); `scripts/authored-art` exports the held-item and emote families (`pnpm art:props`). Masters and prompts for original art are committed; character-derived masters stay private.
+- Pixel families come from **generator scripts**: `scripts/pixel-art` draws from code without dependencies (`pnpm art:draw`; P35). Full-colour props, kits and foes use authored masters and a deterministic export (P97); `scripts/authored-art` exports held items and emotes (`pnpm art:props`) and world kits (`pnpm art:kits <kit-id>`). Masters and prompts for original art are committed; character-derived masters stay private.
 - Uma characters use the original chibi and bust art from master data. **Uma sprites** (P91) are drawn from that art,
   so they're private like it: authored in `content/authoring/sprites/` to [the sprite format](sprites/format.md), and
   published only in the master-data release's `outfit-sprites` family ([the pipeline](sprites/pipeline.md)). Their

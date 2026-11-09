@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 1,
+  "id": "kit-town-warrior",
+  "kind": "town",
+  "assets": [
+    {
+      "key": "floor-1",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-1-v1.png",
+      "sha256": "a630b935ca82c2b294e3fdbac4c5c56bc8b446fbaa0a396e41435b5d53b52eb4",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 4
+    },
+    {
+      "key": "floor-2",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-2-v1.png",
+      "sha256": "af01444018ef0e4454e606dedd753ff9fdaba2013604a9a61bbf50a585088c46",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 2
+    },
+    {
+      "key": "floor-3",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-3-v1.png",
+      "sha256": "5f98447c0f0ec1545195602b56efa223de65b087ebe6da73a0792eb1731eee0f",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 2
+    },
+    {
+      "key": "floor-4",
+      "role": "floor",
+      "w": 128,
+      "h": 128,
+      "master": "floor-4-v1.png",
+      "sha256": "49d1874bfa8784ed28e5a3f1b69ac3c7c441de4c1b3364daace65c687e9bfd2d",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "floor",
+      "weight": 1
+    },
+    {
+      "key": "wall-1",
+      "role": "wall",
+      "w": 128,
+      "h": 256,
+      "master": "wall-1-v1.png",
+      "sha256": "0dc2488c49c8b453501986430058611f68c923d48748f3ad78db4f82dc9e7914",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "wall"
+    },
+    {
+      "key": "wall-2",
+      "role": "wall",
+      "w": 128,
+      "h": 256,
+      "master": "wall-2-v1.png",
+      "sha256": "5c3bc19a5e818866de80489723b7cdf362578e1d7e867bfe2cc9d413140ac811",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "wall"
+    },
+    {
+      "key": "wall-top",
+      "role": "wall-top",
+      "w": 128,
+      "h": 128,
+      "master": "wall-top-v1.png",
+      "sha256": "c103225f92fdbd188821bc5586369160ade57783ef97a853af0da9cc8017e04c",
+      "mode": "texture",
+      "seam": "xy"
+    },
+    {
+      "key": "riser-1",
+      "role": "riser",
+      "w": 128,
+      "h": 128,
+      "master": "riser-1-v1.png",
+      "sha256": "ac46a6bce95a47e9098df0fbe5f13e1ee6b6f31127406efa2af17fea388a60a0",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "riser",
+      "fit": "fill"
+    },
+    {
+      "key": "riser-2",
+      "role": "riser",
+      "w": 128,
+      "h": 128,
+      "master": "riser-2-v1.png",
+      "sha256": "0481d88eb93f8a30960ccac4c1b892463ed378ed85eae1777b3a0161d35566c3",
+      "mode": "texture",
+      "seam": "x",
+      "edgeGroup": "riser",
+      "fit": "fill"
+    },
+    {
+      "key": "stairs",
+      "role": "stairs",
+      "w": 128,
+      "h": 128,
+      "master": "stairs-v1.png",
+      "sha256": "acb51ec2810ffaf9f69048a766675d861c67cbf70737666f8abf28a53e7f4111",
+      "mode": "texture",
+      "seam": "x",
+      "fit": "fill"
+    },
+    {
+      "key": "building-wall-1",
+      "role": "building-wall",
+      "w": 128,
+      "h": 128,
+      "master": "building-wall-1-v1.png",
+      "sha256": "eafa3dbff4e2854485668328990b84b0d920935af1b984cd186d5db25426e499",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "facade",
+      "edgeBand": 4,
+      "fit": "fill"
+    },
+    {
+      "key": "building-wall-2",
+      "role": "building-wall",
+      "w": 128,
+      "h": 128,
+      "master": "building-wall-2-v1.png",
+      "sha256": "2cbc2f34533c0f3b9812f9644940241ea42babb6912c5a35f63fad283b52010e",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "facade",
+      "edgeBand": 4,
+      "fit": "fill"
+    },
+    {
+      "key": "building-wall-3",
+      "role": "building-wall",
+      "w": 128,
+      "h": 128,
+      "master": "building-wall-3-v1.png",
+      "sha256": "0eeff5676088030376fbc22148bcccdf2d2887c369dea6cd76477cd249599876",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "facade",
+      "edgeBand": 4,
+      "fit": "fill"
+    },
+    {
+      "key": "window-1",
+      "role": "window",
+      "w": 128,
+      "h": 128,
+      "master": "window-1-v1.png",
+      "sha256": "e19e25f093ec6a12ac20d718baabc1881cc1f9d96a805b91eec92a2ab3bd380e",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "facade",
+      "edgeBand": 4,
+      "fit": "fill"
+    },
+    {
+      "key": "window-2",
+      "role": "window",
+      "w": 128,
+      "h": 128,
+      "master": "window-2-v1.png",
+      "sha256": "3b668c5cc50986615ef55f5b882d92cd1fc3581892295457fcbfc83b48500ead",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "facade",
+      "edgeBand": 4,
+      "fit": "fill"
+    },
+    {
+      "key": "door",
+      "role": "door",
+      "w": 128,
+      "h": 256,
+      "master": "door-v2.png",
+      "sha256": "40bf4fe1d2ca19fa5a191bef9fee3ead781ce1e4829c4fb465aa4113264cb527",
+      "mode": "texture",
+      "seam": "x",
+      "fit": "fill",
+      "edgeBand": 4
+    },
+    {
+      "key": "roof-1",
+      "role": "roof",
+      "w": 128,
+      "h": 128,
+      "master": "roof-1-v1.png",
+      "sha256": "e42f2bb792fbadab0d487badc9ace5251cd8d2f55b2d4970237d1b3de398e75c",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "roof",
+      "fit": "fill"
+    },
+    {
+      "key": "roof-2",
+      "role": "roof",
+      "w": 128,
+      "h": 128,
+      "master": "roof-2-v1.png",
+      "sha256": "a65abab2d454225625e17f11d08a5d83c563086b877f259ca671d60e02b07665",
+      "mode": "texture",
+      "seam": "xy",
+      "edgeGroup": "roof",
+      "fit": "fill"
+    },
+    {
+      "key": "sign-inn",
+      "role": "sign",
+      "w": 128,
+      "h": 112,
+      "master": "sign-inn-v1.png",
+      "sha256": "0758163260f3aa47903b72da972c69b126b81746aeb4f15473d27143c3c8e51e",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 652,
+        "y": 1149
+      },
+      "foot": {
+        "x": 64,
+        "y": 100
+      }
+    },
+    {
+      "key": "sign-shop",
+      "role": "sign",
+      "w": 128,
+      "h": 112,
+      "master": "sign-shop-v1.png",
+      "sha256": "72176320f4986d67d500f657dd1fc73c7bd31b7a5ad0227d8bb0fe5395814a06",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 648,
+        "y": 1149
+      },
+      "foot": {
+        "x": 64,
+        "y": 100
+      }
+    },
+    {
+      "key": "well",
+      "role": "prop",
+      "w": 224,
+      "h": 272,
+      "master": "well-v1.png",
+      "sha256": "ba20e8e82a77a3b9107c7f0adfdec51051c821700cec6e8ad78aea33b9b58f0b",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 626,
+        "y": 1137
+      },
+      "foot": {
+        "x": 107,
+        "y": 260
+      },
+      "blocks": true
+    },
+    {
+      "key": "stall-1",
+      "role": "prop",
+      "w": 288,
+      "h": 256,
+      "master": "stall-1-v1.png",
+      "sha256": "70e741e55a9f6818a361c55cdc9af23cfa24d2ab31b8c71be7e6ddef4c293c05",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 614,
+        "y": 1103
+      },
+      "foot": {
+        "x": 134,
+        "y": 244
+      },
+      "blocks": true
+    },
+    {
+      "key": "stall-2",
+      "role": "prop",
+      "w": 288,
+      "h": 256,
+      "master": "stall-2-v1.png",
+      "sha256": "40daac117a227e36f9289d6cf1f10145a0149110d4a99de1cd105b0893dfcd85",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 630,
+        "y": 1090
+      },
+      "foot": {
+        "x": 139,
+        "y": 244
+      },
+      "blocks": true
+    },
+    {
+      "key": "fence",
+      "role": "prop",
+      "w": 160,
+      "h": 144,
+      "master": "fence-v1.png",
+      "sha256": "f3a0edd6270974f81c838081235001c877b526d3d1f61c0dceca799ba80064a3",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 880,
+        "y": 785
+      },
+      "foot": {
+        "x": 80,
+        "y": 132
+      },
+      "blocks": true
+    },
+    {
+      "key": "barrel",
+      "role": "prop",
+      "w": 112,
+      "h": 144,
+      "master": "barrel-v1.png",
+      "sha256": "8a2dda0761abf2425d4c08a36797baa2d08e557b4f33b442aa62da9f47b1d908",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 643,
+        "y": 1091
+      },
+      "foot": {
+        "x": 56,
+        "y": 132
+      },
+      "blocks": true
+    },
+    {
+      "key": "crate",
+      "role": "prop",
+      "w": 128,
+      "h": 128,
+      "master": "crate-v1.png",
+      "sha256": "380da740e19f0754e849b73b1048faaa0ddd67499385a88761d8928cc2b0325f",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 577,
+        "y": 1042
+      },
+      "foot": {
+        "x": 55,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "bench",
+      "role": "prop",
+      "w": 192,
+      "h": 128,
+      "master": "bench-v1.png",
+      "sha256": "7b7b760045fb09d1b338a419bcd6f607667b9bb9d027517ae7f5d56d43d7306b",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 882,
+        "y": 814
+      },
+      "foot": {
+        "x": 95,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "flower-box",
+      "role": "prop",
+      "w": 176,
+      "h": 128,
+      "master": "flower-box-v1.png",
+      "sha256": "4bc27035fe99c9a2505123a083cc95caad704201c598b85b1608888ba12b9021",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 885,
+        "y": 761
+      },
+      "foot": {
+        "x": 88,
+        "y": 116
+      },
+      "blocks": true
+    },
+    {
+      "key": "noticeboard",
+      "role": "prop",
+      "w": 160,
+      "h": 224,
+      "master": "noticeboard-v1.png",
+      "sha256": "4ee24497c1aa4f0736392d73a748fd6090a18dc994a4c41e47fb38015adb8f99",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 654,
+        "y": 1119
+      },
+      "foot": {
+        "x": 80,
+        "y": 212
+      },
+      "blocks": true
+    },
+    {
+      "key": "banner",
+      "role": "prop",
+      "w": 112,
+      "h": 256,
+      "master": "banner-v1.png",
+      "sha256": "1dd0cd78d4da9021435beb348ded5772292c82f64d09f52a2f8fa6a921738d1a",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 513,
+        "y": 1496
+      },
+      "foot": {
+        "x": 56,
+        "y": 244
+      },
+      "blocks": true
+    },
+    {
+      "key": "tree-1",
+      "role": "prop",
+      "w": 352,
+      "h": 352,
+      "master": "tree-1-v1.png",
+      "sha256": "9a93a3ea690e090b71fa3005ce020cc639b35702053300aaff40535c97b49ff9",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 602,
+        "y": 1206
+      },
+      "foot": {
+        "x": 172,
+        "y": 340
+      },
+      "blocks": true
+    },
+    {
+      "key": "lantern",
+      "role": "prop",
+      "w": 96,
+      "h": 256,
+      "master": "lantern-v1.png",
+      "sha256": "a1d90b34ee65e21580041492b382f32bd4119715acd3f930134faee4b0e28151",
+      "mode": "cutout",
+      "sourceFoot": {
+        "x": 516,
+        "y": 1477
+      },
+      "foot": {
+        "x": 49,
+        "y": 244
+      },
+      "blocks": true,
+      "light": {
+        "color": "#ffc46b",
+        "radius": 4,
+        "flicker": true
+      }
+    }
+  ]
+}
