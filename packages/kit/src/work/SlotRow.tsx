@@ -8,7 +8,6 @@ import { WorkItem } from './art.js'
 import { useTap, useWork, TapNoteLine } from './context.js'
 import { RecallSheet, SpeedUpControls, WORK_BUTTON } from './controls.js'
 import { QueueChips, QueueCount, QueueLine } from './QueueChips.js'
-import { durationText } from './words.js'
 import type { SlotCardModel } from './model.js'
 
 const ICON = 'flex size-11 shrink-0 items-center justify-center rounded-full border border-hairline-strong bg-panel text-ink disabled:opacity-45'
@@ -44,7 +43,7 @@ function SlotEntry(props: SlotRowProps & { compact: boolean }) {
 }
 
 function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = false, what, onFace, compact, card }: SlotRowProps & { compact: boolean; card: SlotCardModel }) {
-  const { view, actions, copy, requestLabel, umaName } = useWork()
+  const { view, actions, copy, requestLabel, umaName, formatDuration } = useWork()
   const tap = useTap()
   const [sheet, setSheet] = useState<'speed' | 'more' | 'recall' | null>(null)
   if (card.kind === 'free') {
@@ -62,7 +61,7 @@ function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = fa
   const icon = what?.icon ?? (described.item === undefined ? null : <WorkItem id={described.item} />)
   const ready = !card.running
   const queueFull = card.queue.length >= MAX_QUEUE
-  const voice = copy(card.running ? 'cardRunning' : 'cardReady', { uma: umaName(card.outfitId), what: name, made: card.made, count: card.count, left: durationText(card.leftMs) })
+  const voice = copy(card.running ? 'cardRunning' : 'cardReady', { uma: umaName(card.outfitId), what: name, made: card.made, count: card.count, left: formatDuration(card.leftMs, 'left') })
   const face = <FaceRing outfitId={card.outfitId} progress={card.progress} ready={ready} size={compact ? 40 : 44} />
   return <article data-kit={compact ? 'peek-row' : 'slot-row'} data-slot-card={ready ? 'ready' : 'running'} data-slot={slot.slot} data-outfit={card.outfitId}
     aria-label={voice} className="space-y-1 rounded-md border border-hairline bg-panel px-1.5 py-1 shadow-1">
@@ -72,7 +71,7 @@ function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = fa
       <span aria-hidden className="flex size-8 shrink-0 items-center justify-center">{icon}</span>
       <span aria-hidden className="min-w-0 flex-1 leading-tight tabular-nums">
         <span className="block truncate text-[14px] font-semibold">×{card.count}<span className="font-normal text-ink-soft"> · {card.made}/{card.count}</span></span>
-        <span className={`block text-[13px] font-semibold ${ready ? 'text-accent-strong' : ''}`}>{ready ? copy('done') : durationText(card.leftMs)}</span>
+        <span className={`block text-[13px] font-semibold ${ready ? 'text-accent-strong' : ''}`}>{ready ? copy('done') : formatDuration(card.leftMs, 'left')}</span>
       </span>
       {compact && <QueueCount n={card.queue.length} />}
       {card.waiting > 0 && actions.collect && <button type="button" disabled={tap.pending} data-action="collect" aria-label={copy('collectLabel', { n: card.waiting, what: name })}
@@ -85,7 +84,7 @@ function Row({ slot, startTo, onStart, queueTo, onQueue, startLabel, repeat = fa
     {!compact && card.queue.length > 0 && <div className="pl-[52px]"><QueueLine outfitId={card.outfitId} /></div>}
     <TapNoteLine tap={tap} className="pl-[52px]" />
     <Sheet open={sheet === 'speed' && card.running} onClose={() => setSheet(null)} title={copy('speedTitle', { what: name })} closeLabel={copy('close')}>
-      <p className="mb-2 text-[13px] text-ink-soft">{copy('speedLeft', { time: durationText(card.leftMs) })} · {copy('ticketsHeld', { n: view.speed(card.outfitId).have })}</p>
+      <p className="mb-2 text-[13px] text-ink-soft">{copy('speedLeft', { time: formatDuration(card.leftMs, 'left') })} · {copy('ticketsHeld', { n: view.speed(card.outfitId).have })}</p>
       <SpeedUpControls outfitId={card.outfitId} />
     </Sheet>
     <Sheet open={sheet === 'more' && card.running} onClose={() => setSheet(null)} title={`${umaName(card.outfitId)} · ${name}`} closeLabel={copy('close')}>

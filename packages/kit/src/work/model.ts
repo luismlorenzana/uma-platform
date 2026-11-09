@@ -119,7 +119,9 @@ export interface SizeRule {
 }
 export interface SizeChipView { readonly size: number; readonly endsAt: number; readonly ms: number; readonly duration: string; readonly idleMs: number }
 export interface SizeChipsView { readonly chips: readonly SizeChipView[]; readonly marked: number | null; readonly fit: string | null; readonly overnight: boolean }
-export function sizeChipsView(start: number, itemSeconds: readonly number[], max: number, rule: SizeRule = { mode: 'count' }): SizeChipsView {
+/** `format` words each chip's `duration` (a job's length); `SizeChips` passes the game's `formatDuration` (0.19.0). */
+export function sizeChipsView(start: number, itemSeconds: readonly number[], max: number, rule: SizeRule = { mode: 'count' },
+  format: (ms: number) => string = durationText): SizeChipsView {
   const limit = Math.max(1, Math.min(Math.floor(max), itemSeconds.length))
   if (itemSeconds.length === 0) return { chips: [], marked: null, fit: null, overnight: false }
   const sizes = [...new Set([...(rule.sizes ?? Array.from({ length: limit }, (_, i) => i + 1)), limit])]
@@ -130,7 +132,7 @@ export function sizeChipsView(start: number, itemSeconds: readonly number[], max
   return {
     chips: sizes.map((size) => {
       const ms = itemSeconds.slice(0, size).reduce((sum, seconds) => sum + seconds * 1000, 0)
-      return { size, endsAt: start + ms, ms, duration: durationText(ms), idleMs: recommendation?.idleMs?.[size] ?? 0 }
+      return { size, endsAt: start + ms, ms, duration: format(ms), idleMs: recommendation?.idleMs?.[size] ?? 0 }
     }),
     marked, fit: recommendation?.label ?? null, overnight: recommendation?.overnight ?? false,
   }

@@ -12,7 +12,6 @@ import type { JobQuery } from './job-query.js'
 import type { SizeRule } from './model.js'
 import { SizeChips } from './SizeChips.js'
 import { chooseSlot, type JobPreview } from './view.js'
-import { durationText } from './words.js'
 
 export interface JobSelection { readonly outfitId: string | null; readonly job: string | null; readonly count: number }
 export interface JobSheetProps<T extends UmaPickerRow = UmaPickerRow> {
@@ -46,7 +45,7 @@ export function JobSheet<T extends UmaPickerRow>(props: JobSheetProps<T>) {
 }
 
 function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, rows, request, renderWhat, initialJob, sizeRule, sizePlacement = 'after-what', preserveCountOnJobChange = false, maxCount, disabled, picker, renderPreview, empty, onClose, onDone }: JobSheetProps<T> & { query: JobQuery }) {
-  const { view, copy, actions, umaName, itemName, refusal } = useWork()
+  const { view, copy, actions, umaName, itemName, refusal, formatDuration } = useWork()
   const tap = useTap()
   const [pickerOpen, setPickerOpen] = useState(false)
   const ranked = rows.map((row) => ({ ...row, free: isFree(view.settled, row.id) })).sort(picker?.order ?? workOrder)
@@ -81,7 +80,7 @@ function JobSheetBody<T extends UmaPickerRow>({ query, building, room, title, ro
   return <>
     <Sheet open onClose={onClose} title={title} closeLabel={copy('close')} footer={<div className="space-y-1">
       <button type="button" data-action="job-submit" className={`${WORK_PRIMARY_BUTTON} w-full`} disabled={tap.pending || blocked !== null || operation === undefined}
-        onClick={() => void submit()}>{preview === null ? copy(mode === 'queue' ? 'queueNext' : 'start') : copy('submit', { action: copy(mode === 'queue' ? 'queueNext' : 'start'), n: chosenCount, time: durationText(preview.ms) })}</button>
+        onClick={() => void submit()}>{preview === null ? copy(mode === 'queue' ? 'queueNext' : 'start') : copy('submit', { action: copy(mode === 'queue' ? 'queueNext' : 'start'), n: chosenCount, time: formatDuration(preview.ms, 'length') })}</button>
       {blocked !== null && <p data-kit="job-why" className="text-[13px] text-ink-soft">{blocked}</p>}<TapNoteLine tap={tap} />
     </div>}>
       <div data-kit="job-sheet" data-building={building} className="space-y-3" onPointerDown={(event) => event.stopPropagation()} onPointerUp={(event) => event.stopPropagation()}>

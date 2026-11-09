@@ -2,7 +2,7 @@ import { createContext, useContext, useMemo, useRef, useState, type ReactNode } 
 import type { QueueInput, Refusal, SpeedUpInput, StartInput, WorkEnv, WorkState } from '@luismlorenzana/uma-work'
 import type { TicketOffer } from './model.js'
 import { workView, type WorkView } from './view.js'
-import { durationText, itemsList, workWords, type WorkCopy, type WorkNames, type WorkWords } from './words.js'
+import { defaultDurationFormat, itemsList, workWords, type DurationFormat, type WorkCopy, type WorkNames, type WorkWords } from './words.js'
 
 export type WorkAnswer = void | Refusal | { readonly kind: 'done' | 'say'; readonly message?: string } |
   { readonly kind: 'ask'; readonly message: string; readonly confirm: () => WorkAnswer | Promise<WorkAnswer> }
@@ -29,6 +29,8 @@ interface WorkContextValue {
   readonly umaName: (id: string) => string; readonly itemName: (id: string) => string; readonly placeName: (id: string) => string
   readonly requestLabel: (request: import('@luismlorenzana/uma-work').WorkRequest) => RequestLabel
   readonly refusal: (refusal: Refusal) => string
+  /** Every duration the work screens print goes through this (0.19.0). */
+  readonly formatDuration: DurationFormat
   readonly restartRefusal: (outfitId: string) => Refusal | null
   readonly money: (amount: number) => ReactNode
   readonly pending: boolean
@@ -36,12 +38,14 @@ interface WorkContextValue {
 }
 const WorkContext = createContext<WorkContextValue | null>(null)
 
-export function WorkProvider<S extends WorkState>({ state, now, env, actions, names = {}, words, ticketOffer, describeRequest, formatRefusal, checkRestart, renderMoney, children }: {
+export function WorkProvider<S extends WorkState>({ state, now, env, actions, names = {}, words, ticketOffer, describeRequest, formatRefusal, formatDuration = defaultDurationFormat, checkRestart, renderMoney, children }: {
   readonly state: S; readonly now: number; readonly env: WorkEnv<S>; readonly actions: WorkActions
   readonly names?: WorkNames; readonly words?: Partial<WorkWords>
   readonly ticketOffer?: (state: S, count: number) => TicketOffer | null
   readonly describeRequest?: WorkContextValue['requestLabel']
   readonly formatRefusal?: (refusal: Refusal) => string
+  /** Words a duration by where it is printed: `left`, `length` or `ago` (0.19.0). Defaults to `durationText` for all three. */
+  readonly formatDuration?: DurationFormat
   /** Pure preview of the game's complete restart, including alternate slots or restored queues. */
   readonly checkRestart?: (state: S, outfitId: string) => Refusal | null
   readonly renderMoney?: (amount: number) => ReactNode
@@ -57,11 +61,11 @@ export function WorkProvider<S extends WorkState>({ state, now, env, actions, na
   const refusal = (value: Refusal) => formatRefusal?.(value) ?? value.message.replace(/\{(\w+)\}/g, (whole, key: string) => {
     const field = value.data?.[key]
     if (typeof field === 'string') return key === 'uma' ? umaName(field) : key === 'item' ? itemName(field) : key === 'place' ? placeName(field) : field
-    if (typeof field === 'number') return key === 'time' ? durationText(field - now) : field.toLocaleString('en-US')
+    if (typeof field === 'number') return key === 'time' ? formatDuration(Math.max(0, field - now), 'left') : field.toLocaleString('en-US')
     return whole
   })
   return <WorkContext.Provider value={{
-    view, actions, copy, umaName, itemName, placeName, refusal, pending,
+    view, actions, copy, umaName, itemName, placeName, refusal, formatDuration, pending,
     restartRefusal: (id) => checkRestart === undefined ? view.restart(id) : checkRestart(view.projection.current, id),
     requestLabel: describeRequest ?? ((request) => {
       const row = request as { readonly item?: string; readonly count?: number; readonly unlocks?: readonly unknown[] }

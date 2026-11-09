@@ -65,6 +65,12 @@ root.render(
   (`data-kit="tier-shifter"`) at the same spot. Its hit box is the bar row's height and 44 pt wide from the crest's left
   edge, above the account link and below the chips, and it adds no width. `state` defaults to `{ back: true }`, so Back
   closes the sheet it opens. Without it the bar is unchanged.
+- **`BottomBar`** takes `tabs`, `menu` and `label`. A `BarTab` has `key`, `to`, `label`, `Icon`, `active`, and optional
+  `raised` (the gold centre disc), `badge` (a count, hidden at 0) and `badgeLabel` (the tab's accessible name while the
+  badge shows). Since 0.19.0 the raised disc draws its `badge` too, at its top-right on the ring, and takes
+  `glow: true`: a soft accent halo that pulses, still under reduced motion (uma-farm's End the day, uma-platform P112).
+  Without either the disc is 0.18.0's markup. Review page:
+  [docs/kit/previews/raised-and-durations.html](../../docs/kit/previews/raised-and-durations.html).
 
 ## On a game's own stage: the landscape layout (0.18.0)
 
@@ -160,7 +166,11 @@ import {
 ```
 
 - **`WorkProvider`** takes `state`, integer-millisecond `now`, `env`, `actions`, optional `names`, `words`,
-  `describeRequest`, `formatRefusal`, `renderMoney`, `ticketOffer(state, count)` and `checkRestart(state, outfitId)`. Wrap it in the existing
+  `describeRequest`, `formatRefusal`, `formatDuration`, `renderMoney`, `ticketOffer(state, count)` and
+  `checkRestart(state, outfitId)`. `formatDuration(ms, use)` (0.19.0) words every duration the work screens print, by
+  where: `left` (a running job's time left, its VoiceOver line, the speed-up sheet, a refusal's `{time}`), `length` (the
+  size chips and their idle time, the queue line, the job sheet's submit button) and `ago` (a stopped queue). It defaults
+  to `durationText` for all three and is on `useWork()` for a game's own rows (uma-farm's day clock, P112). Wrap it in the existing
   `AlbumArtProvider` and `MotionRoot`; faces are SB3's `FaceTile`. `WorkArtProvider.Item` receives `{ id, size }`.
   `useWorkView()` exposes selectors built once for that state/clock/env. Queue projection settles all workers in the
   engine's order, without collecting their outputs, so warnings account for competing stock.
@@ -212,7 +222,8 @@ import {
   the tile's bottom-right corner, so one family's grades tell apart. Target planning stays in the game. `StoppedQueueCard` takes
   `outfitId`, optional `onDone` and `children` for game-owned recovery suggestions such as buying or making inputs.
 - **Pure exports:** `workView`, `projectWork`, `heldCard`, `slotCards`, `speedUpModel`, `recallPreview`, `queueChips`,
-  `sizeChipsView`, `upgradeView`, `chooseSlot`, `shortItems`, `durationText`, `workWords` and `itemsList`.
+  `sizeChipsView` (an optional fifth argument words each chip's duration), `upgradeView`, `chooseSlot`, `shortItems`,
+  `durationText`, `defaultDurationFormat`, `workWords` and `itemsList`; the `DurationUse` and `DurationFormat` types.
   The work subpath loads in Node without Phaser, Firebase, or uma-data. jsdom is a development-only dependency for
   testing real React actions, confirmation flows, and the entry-change safeguard.
 

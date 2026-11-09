@@ -1,14 +1,13 @@
 import { ArrowUpIcon, CloseIcon, WarningIcon } from '../ui/icons/index.js'
 import { useItemList, useTap, useWork, TapNoteLine } from './context.js'
 import { WorkItem } from './art.js'
-import { durationText } from './words.js'
 
 export function QueueCount({ n }: { n: number }) {
   const { copy } = useWork()
   return n <= 0 ? null : <span aria-label={copy('queued', { n })} className="rounded-full bg-scrim px-1.5 text-[11px] leading-5 font-bold text-ink-on-dark">+{n}</span>
 }
 export function QueueChips({ outfitId, compact = false }: { outfitId: string; compact?: boolean }) {
-  const { view, actions, requestLabel, copy, refusal } = useWork()
+  const { view, actions, requestLabel, copy, refusal, formatDuration } = useWork()
   const list = useItemList()
   const tap = useTap()
   const chips = view.queues(outfitId)
@@ -18,7 +17,7 @@ export function QueueChips({ outfitId, compact = false }: { outfitId: string; co
       {chips.map((chip) => {
         const what = requestLabel(chip.request)
         const name = `${what.name}${what.count === undefined ? '' : ` ×${what.count}`}`
-        const label = chip.ms === null ? copy('queueUnknown', { what: name }) : copy('queueLine', { what: name, time: durationText(chip.ms) })
+        const label = chip.ms === null ? copy('queueUnknown', { what: name }) : copy('queueLine', { what: name, time: formatDuration(chip.ms, 'length') })
         const warning = chip.refusal !== null ? refusal(chip.refusal) : chip.short.length > 0 ? copy('short', { items: list(chip.short) }) : null
         return <li key={chip.index} data-queued={chip.index} aria-label={[label, warning].filter(Boolean).join('. ')}
           className={`flex items-center gap-1 rounded-sm bg-sunken px-1.5 ${compact ? 'min-h-6 max-w-full text-[11px]' : 'min-h-11 text-[13px]'} ${warning === null ? 'text-ink-soft' : 'text-warning'}`}>

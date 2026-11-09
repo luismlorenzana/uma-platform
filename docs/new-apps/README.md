@@ -319,6 +319,7 @@ The template exists: [UA11](../handoff/tasks/UA11-townsfolk-batch.md).
 | uma-quest | Phase 5's townsfolk request, about 20 for band 1 (its Q23) | UA11's townsfolk batches | Later |
 | uma-farm | The parcel format's needs (its F7) | PO1 | M4 |
 | uma-farm | The Forge's art packet (its F9) | uma-art | M4 |
+| uma-farm | Two "Both apps" kit options (its F18, D31): the raised tab's badge and glow, and the work screens' duration format | KF1, uma-kit 0.19.0 (P112) | ✓ |
 | uma-farm | Likely, on the owner's yes: the shared HD-2D stage (`uma-stage`, its FR1, FR3, FR12, FR13, FR15), after uma-quest's measured plays (P109) | a new packet | Later |
 
 ## The order

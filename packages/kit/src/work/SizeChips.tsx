@@ -2,7 +2,6 @@ import { useEffect, useId } from 'react'
 import { CheckIcon, MoonIcon } from '../ui/icons/index.js'
 import { useWork } from './context.js'
 import { sizeChipsView, type SizeRule } from './model.js'
-import { durationText } from './words.js'
 
 export interface SizeChipsProps {
   readonly start: number; readonly itemSeconds: readonly number[]; readonly max: number
@@ -10,9 +9,9 @@ export interface SizeChipsProps {
   readonly rule?: SizeRule; readonly heading?: boolean
 }
 export function SizeChips({ start, itemSeconds, max, value, onChange, rule, heading = true }: SizeChipsProps) {
-  const { copy } = useWork()
+  const { copy, formatDuration } = useWork()
   const id = useId()
-  const view = sizeChipsView(start, itemSeconds, max, rule)
+  const view = sizeChipsView(start, itemSeconds, max, rule, (ms) => formatDuration(ms, 'length'))
   const chosen = view.chips.some((chip) => chip.size === value) ? value : view.marked
   useEffect(() => { if (chosen !== null && chosen !== value) onChange(chosen) }, [chosen, value, onChange])
   if (view.chips.length === 0) return null
@@ -22,7 +21,7 @@ export function SizeChips({ start, itemSeconds, max, value, onChange, rule, head
     <div role="radiogroup" aria-labelledby={id} className="grid grid-cols-5 gap-1.5">
       {view.chips.map((chip, index) => {
         const marked = chip.size === view.marked && view.fit !== null
-        const time = chip.idleMs > 0 ? copy('idle', { time: chip.duration, idle: durationText(chip.idleMs) }) : chip.duration
+        const time = chip.idleMs > 0 ? copy('idle', { time: chip.duration, idle: formatDuration(chip.idleMs, 'length') }) : chip.duration
         return <button key={chip.size} type="button" role="radio" aria-checked={chosen === chip.size}
           tabIndex={chosen === chip.size ? 0 : -1} aria-label={`${copy('sizeLabel', { n: chip.size, time })}${marked ? `, ${view.fit}` : ''}`}
           data-size={chip.size} data-marked={marked || undefined} onClick={() => onChange(chip.size)}

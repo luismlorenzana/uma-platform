@@ -55,6 +55,15 @@ export function durationText(ms: number): string {
   return hours === 0 ? `${minutes}m` : minutes % 60 === 0 ? `${hours}h` : `${hours}h ${minutes % 60}m`
 }
 
+/**
+ * Where the kit prints a duration (0.19.0): the time `left` on a running job, a job's or a queued job's `length`, or how
+ * long `ago` a queue stopped. A game on its own clock words them its own way (uma-farm's day clock prints "1 day",
+ * "Tomorrow", "Yesterday"); by default all three are `durationText`.
+ */
+export type DurationUse = 'left' | 'length' | 'ago'
+export type DurationFormat = (ms: number, use: DurationUse) => string
+export const defaultDurationFormat: DurationFormat = (ms) => durationText(ms)
+
 export interface WorkNames {
   readonly uma?: (id: string) => string
   readonly item?: (id: string) => string

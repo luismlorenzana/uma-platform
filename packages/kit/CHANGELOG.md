@@ -1,5 +1,15 @@
 # @luismlorenzana/uma-kit
 
+## 0.19.0
+
+### Minor Changes
+
+- Two options from uma-farm's F18 (its D31; uma-platform P112). `BottomBar`: the raised disc draws `BarTab.badge` like the
+  other tabs (hidden at 0, at the disc's top-right on its ring), and the new `BarTab.glow` adds a soft accent halo that
+  pulses, still under reduced motion, in the portrait bar and on the landscape rail. Work: `WorkProvider`'s new
+  `formatDuration(ms, use)` words every duration the work screens print, by where (`left`, `length` or `ago`), and is on
+  `useWork()`; `sizeChipsView` takes an optional format. Without them the markup and the text are 0.18.0's.
+
 ## 0.18.0
 
 ### Minor Changes
