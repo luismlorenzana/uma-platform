@@ -11,6 +11,9 @@ import { inside, loadCatalog } from './catalog.js'
 import { RankingStore, ConflictError } from './store.js'
 import { ReviewStore, ReviewConflict } from './review-store.js'
 import { spriteReview } from './sprite-review.js'
+import { loadEnemyCatalog } from './enemy-catalog.js'
+import { EnemyRankingStore } from './enemy-store.js'
+import { exportEnemyPlan } from './enemy-model.js'
 
 const here = dirname(fileURLToPath(import.meta.url)), tool = resolve(here, '..')
 const content = resolve(process.env.UMA_CONTENT_DIR ?? defaultContent), release = resolve(content, 'release'), root = resolve(content, 'authoring/sprites')
@@ -32,6 +35,9 @@ async function serve(response: ServerResponse, file: string) {
 async function main() {
   const catalog = await loadCatalog(release), rankings = new RankingStore(resolve(content, 'authoring/uma-art-roster.json'), catalog.umas), reviews = new ReviewStore(root)
   await rankings.read()
+  const enemyCatalog = await loadEnemyCatalog(content), enemyRankings = new EnemyRankingStore(resolve(content, 'authoring/enemy-art-roster.json'), enemyCatalog)
+  await enemyRankings.read()
+  const enemyImages = new Set(enemyCatalog.units.flatMap(u => Object.values(u.images)))
   const backups = new BackupQueue(async () => { await promisify(execFile)(process.execPath, [resolve(tool, '../../scripts/sprites/backup.mjs')], { env: { ...process.env, UMA_CONTENT_DIR: content }, maxBuffer: 16 * 1024 * 1024 }) })
   const images = new Set(catalog.umas.flatMap(u => [u.portrait, u.face, ...(u.references?.map(r => r.path) ?? [])]).filter((p): p is string => !!p))
   let queueWrite: Promise<unknown> = Promise.resolve()
@@ -49,6 +55,7 @@ async function main() {
       if ((request.headers.origin && request.headers.origin !== `http://${host}`) || request.headers['sec-fetch-site'] === 'cross-site' || request.headers['content-type']?.split(';')[0] !== 'application/json') { send(response, 403, { error: 'Save from the local Studio' }); return }
       if (request.method !== 'PUT') { send(response, 405, { error: 'Method not allowed' }); return }
       if (path === '/api/rankings') { send(response, 200, await rankings.save(await body(request))); return }
+      if (path === '/api/enemies/rankings') { send(response, 200, await enemyRankings.save(await body(request))); return }
       if (path === '/api/reviews') { const saved = await reviews.save(await body(request)); await buildProgress(content); void backups.schedule(); send(response, 200, saved); return }
       if (path === '/api/queue') {
         const input = await body(request) as { stamp?: string; value?: QueueOverride }
@@ -66,6 +73,17 @@ async function main() {
     }
     if (path === '/api/prop-art') { send(response, 200, await propArt()); return }
     if (path === '/api/catalog') { send(response, 200, catalog); return }
+    if (path === '/api/enemies/catalog') { send(response, 200, enemyCatalog); return }
+    if (path === '/api/enemies/rankings') { send(response, 200, await enemyRankings.read()); return }
+    if (path === '/api/enemies/export') {
+      response.setHeader('content-disposition', 'attachment; filename="enemy-authoring-plan.json"')
+      send(response, 200, exportEnemyPlan(enemyCatalog, await enemyRankings.read())); return
+    }
+    if (path.startsWith('/enemy-assets/')) {
+      const relative = decodeURIComponent(path.slice('/enemy-assets/'.length))
+      if (!enemyImages.has(relative)) { send(response, 404, { error: 'Not a catalog reference image' }); return }
+      await serve(response, await inside(resolve(content, 'authoring/enemies'), relative)); return
+    }
     if (path === '/api/rankings') { send(response, 200, await rankings.read()); return }
     if (path === '/api/authoring') { send(response, 200, await buildProgress(content, false)); return }
     if (path === '/api/queue') { send(response, 200, await readQueue()); return }
@@ -80,7 +98,7 @@ async function main() {
       await serve(response, await inside(content, key)); return
     }
     if (images.has(path)) { await serve(response, await inside(release, path.slice(1))); return }
-    const pages: Record<string, string> = { '/': 'src/index.html', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/style.css': 'src/style.css', '/app.js': 'dist/app.js', '/model.js': 'dist/model.js', '/sprites/placement.js': 'dist/held-placement.js' }
+    const pages: Record<string, string> = { '/': 'src/index.html', '/enemies': 'public/enemies.html', '/enemies/': 'public/enemies.html', '/enemy-app.js': 'dist/enemy-app.js', '/enemy-model.js': 'dist/enemy-model.js', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/style.css': 'src/style.css', '/app.js': 'dist/app.js', '/model.js': 'dist/model.js', '/sprites/placement.js': 'dist/held-placement.js' }
     if (pages[path]) { await serve(response, resolve(tool, pages[path])); return }
     if (path === '/sprites' || path === '/field') { response.writeHead(302, { location: path + '/' + url.search }); response.end(); return }
     if (path.startsWith('/sprites/')) { await serve(response, await inside(resolve(tool, 'public/desk'), decodeURIComponent(path.slice(9)) || 'index.html')); return }
