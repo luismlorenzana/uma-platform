@@ -2,7 +2,7 @@
 // (`ranker/plan.json`, pulled to `content/authoring/tiers/plan.json`). Character Art follows its identities and batches
 // (P131).
 import {
-  batchOf, BOARDS, BOSS_BOARDS, boardStats, careerMath, inCast, isUmaTier, leftOut, ordered, outfitIndex, tierIdsOf, tierMap, TIERS, UMA_TIERS, WAYS,
+  batchOf, BOARDS, BOSS_BOARDS, boardStats, careerMath, inCast, isUmaTier, leftOut, ordered, outfitIndex, PLAYABLE_TIERS, tierIdsOf, tierMap, TIERS, UMA_TIERS, WAYS,
   type AnyTier, type Board, type BoardId, type BoardStates, type BoardStats, type PoolMember, type TierCatalog, type UmaTier, type Way,
 } from './model.js'
 import { defaultOutfit, identities, identityByOutfit, outfitPick, ownOutfits, playstyleOf, type UmaIdentity, type UmaProfiles } from './profiles.js'
@@ -52,23 +52,27 @@ export function allStats(catalog: TierCatalog, states: BoardStates, profiles: Um
 
 /** Each identity's place in the ranking: her best-ranked outfit's tier and position, or unranked. */
 export interface RankedIdentity extends UmaIdentity {
-  /** Her best outfit's tier on Playable Umas, or null. */
-  tier: UmaTier | null
+  /** Her best outfit's tier on Playable Umas (a batch, or F when every ranked outfit of hers is F), or null. */
+  tier: UmaTier | 'F' | null
   /** Her best outfit's position in the whole ranking, 1-based, or null. */
   order: number | null
   /** Her outfits in ranking order, then her unranked ones. */
-  ranked: { outfitId: number; tier: UmaTier | null; order: number | null }[]
+  ranked: { outfitId: number; tier: UmaTier | 'F' | null; order: number | null }[]
 }
-/** Every identity in ranking order (T1 first, board order within a tier), then the unranked by name. */
+/** Is an identity in one of the ten batches? */
+export const inBatch = (i: Pick<RankedIdentity, 'tier'>): boolean => isUmaTier(i.tier)
+/** Every identity in ranking order (T1 first, board order within a tier), then the unranked by name, then F (P133). */
 export function rankedIdentities(catalog: TierCatalog, states: BoardStates, profiles: UmaProfiles): RankedIdentity[] {
   const pool = new Set(catalog.umas.flatMap((u) => u.outfits.map((o) => String(o.id))))
-  const order = new Map(ordered(states.umas, pool).map((e, i) => [Number(e.id), { tier: e.tier as UmaTier, order: i + 1 }]))
+  const order = new Map(ordered(states.umas, pool).map((e, i) => [Number(e.id), { tier: e.tier as UmaTier | 'F', order: i + 1 }]))
   return identities(catalog, profiles).map((identity): RankedIdentity => {
     const ranked = identity.outfits.map((o) => ({ outfitId: o.id, tier: order.get(o.id)?.tier ?? null, order: order.get(o.id)?.order ?? null }))
       .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity) || a.outfitId - b.outfitId)
     return { ...identity, tier: ranked[0]?.tier ?? null, order: ranked[0]?.order ?? null, ranked }
-  }).sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity) || a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
+  }).sort((a, b) => group(a) - group(b) || (a.order ?? 0) - (b.order ?? 0) || a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
 }
+/** Batches first, then the unranked, then F. */
+const group = (i: RankedIdentity): number => (inBatch(i) ? 0 : i.tier === null ? 1 : 2)
 
 /** The plan every later tool reads (schema 2, P131). */
 export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: UmaProfiles, generatedAt: string) {
@@ -90,10 +94,10 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: Um
     const unit = enemies.get(id)
     return unit ? { name: unit.name, franchise: unit.franchise, category: unit.category } : { name: id }
   }
-  const ranked = rankedIdentities(catalog, states, profiles), careers = ranked.filter((i) => i.tier !== null).length
+  const ranked = rankedIdentities(catalog, states, profiles), careers = ranked.filter(inBatch).length
   return {
     schemaVersion: 2, kind: 'tier-plan', generatedAt, release: catalog.release, profilesRevision: profiles.revision,
-    umaTiers: UMA_TIERS.map((t) => t.id), tierOrder: TIERS.map((t) => t.id),
+    umaTiers: UMA_TIERS.map((t) => t.id), playableTiers: PLAYABLE_TIERS.map((t) => t.id), tierOrder: TIERS.map((t) => t.id),
     boards: BOARDS.map((b) => {
       const pool = all[b.id], ids = new Set(pool.map((m) => m.id)), via = new Map(pool.map((m) => [m.id, m]))
       const notes = new Map(states[b.id].entries.map((e) => [e.id, e.note]))
@@ -107,10 +111,10 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: Um
         ...(b.franchise ? { leftOut: leftOut(states[b.id]).filter((id) => enemies.has(id)).map((id) => ({ id, ...describe(b.id, id) })) } : {}),
       }
     }),
-    /** Every Uma identity in ranking order, then the unranked: how Character Art lays out its album (P131). */
+    /** Every Uma identity in ranking order, then the unranked, then F: how Character Art lays out its album (P131, P133). */
     identities: ranked.map((i) => ({
       id: i.id, characterId: Number(i.characterId), name: i.name, sister: i.sister ? { relation: i.sister.relation, age: i.sister.age } : null,
-      defaultOutfit: i.defaultOutfit, tier: i.tier, batch: i.tier ? batchOf(i.tier) : null, order: i.order, outfits: i.ranked,
+      defaultOutfit: i.defaultOutfit, tier: i.tier, batch: isUmaTier(i.tier) ? batchOf(i.tier) : null, notUsed: i.tier === 'F', order: i.order, outfits: i.ranked,
     })),
     /** The ten art batches: each tier's outfits in order (P131). */
     batches: UMA_TIERS.map((t) => ({ batch: batchOf(t.id), tier: t.id, outfits: states.umas.entries.filter((e) => e.tier === t.id && outfits.has(Number(e.id))).map((e) => Number(e.id)) })),

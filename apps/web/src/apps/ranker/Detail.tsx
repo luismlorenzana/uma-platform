@@ -60,7 +60,7 @@ export function Detail({ board, item, tier, moves }: { board: BoardId; item: Ite
 
       <div className="flex flex-wrap gap-1.5" role="group" aria-label="Tier">
         {tiersOf(board).map((t, i) => (
-          <button key={t.id} type="button" onClick={() => moves.rank(t.id)} aria-pressed={tier === t.id} title={`${t.label}: ${t.description} (key ${board === 'umas' ? (i + 1) % 10 : i + 1})`}
+          <button key={t.id} type="button" onClick={() => moves.rank(t.id)} aria-pressed={tier === t.id} title={`${t.label}: ${t.description} (key ${board === 'umas' ? (t.id === 'F' ? 'F' : (i + 1) % 10) : i + 1})`}
             className={`tier-badge tier-${t.id} min-h-10 min-w-10 rounded-sm px-2 font-display text-sm font-bold text-ink ${tier === t.id ? 'ring-2 ring-ink' : ''}`}>{t.id}</button>
         ))}
         <button type="button" onClick={() => moves.rank(null)} className="min-h-10 rounded-sm bg-sunken px-3 text-sm text-ink-soft" title="Unrank (Backspace)">Unrank</button>

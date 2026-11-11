@@ -30,8 +30,8 @@ const empty = (): BoardStates => Object.fromEntries(BOARDS.map((b) => [b.id, emp
 const ids = (states: BoardStates, board: BoardId, p = profiles) => pools(catalog, states, p)[board].map((m) => m.id)
 
 describe('the scales (P131)', () => {
-  it('gives Playable Umas ten straight tiers, Uma NPCs SSS to F, every other board SS to F', () => {
-    expect(tiersOf('umas').map((t) => t.id)).toEqual(['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'])
+  it('gives Playable Umas ten straight tiers and F, Uma NPCs SSS to F, every other board SS to F', () => {
+    expect(tiersOf('umas').map((t) => t.id)).toEqual(['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'F'])
     expect(tiersOf('npcs').map((t) => t.id)).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
     expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'A', 'B', 'F'])
   })
@@ -75,6 +75,25 @@ describe('pools', () => {
   })
 })
 
+describe('tier F on Playable Umas (P133)', () => {
+  it('is not a batch or the cast: her character still comes down to NPCs, and she sorts after the unranked', () => {
+    const states = empty()
+    states.umas.entries = [{ id: '70101', tier: 'F', note: '' }, { id: '70102', tier: 'F', note: '' }, { id: '70201', tier: 'T2', note: '' }]
+    expect(boardStats(pools(catalog, states, profiles).umas, states.umas)).toMatchObject({ ranked: 3, cast: 1, tiers: { F: 2, T2: 1 } })
+    expect(ids(states, 'npcs')).toEqual(['701', '703', '704'])
+    expect(rankedIdentities(catalog, states, profiles).map((i) => `${i.id}:${i.tier ?? '-'}`)).toEqual(['702:T2', '703:-', '704:-', 's70103:-', '701:F'])
+    const plan = tierPlan(catalog, states, profiles, 'x')
+    expect(plan.careers.careers).toBe(1)
+    expect(plan.identities.find((i) => i.id === '701')).toMatchObject({ tier: 'F', batch: null, notUsed: true })
+    expect(plan.batches.flatMap((b) => b.outfits)).toEqual([70201])
+    expect(plan.playableTiers.at(-1)).toBe('F')
+  })
+  it('takes F in a board file, and steps down into it from the bottom of T10', () => {
+    const board = parseBoard({ ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T10', note: '' }, { id: '70201', tier: 'F', note: '' }] }, 'umas')
+    expect(ordered(shift(board, '70101', 1, new Set(['70101', '70201'])), new Set(['70101', '70201'])).map((e) => `${e.id}:${e.tier}`)).toEqual(['70101:F', '70201:F'])
+  })
+})
+
 describe('edits', () => {
   const base: BoardState = { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T1', note: '' }, { id: '70201', tier: 'T1', note: 'n' }, { id: '70301', tier: 'T2', note: '' }] }
   const all = new Set(['70101', '70102', '70201', '70301', '70401'])
@@ -99,7 +118,7 @@ describe('edits', () => {
     expect(order(shift(base, '70301', 1, all))).toEqual(['70101:T1', '70201:T1', '70301:T3'])
     expect(shift(base, '70101', -1, all)).toBe(base)
     expect(shift(base, '70401', 1, all)).toBe(base)
-    const bottom = setTier(base, '70401', 'T10')
+    const bottom = setTier(base, '70401', 'F')
     expect(shift(bottom, '70401', 1, all)).toBe(bottom)
   })
   it('moves a whole tier up or down, landing next to the boundary', () => {

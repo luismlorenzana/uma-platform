@@ -23,7 +23,7 @@ export const masterWords = (master: MasterState): string =>
 
 type Summary = { status: 'loading' } | { status: 'ready'; lines: readonly SummaryLine[] } | { status: 'error' }
 
-/** One sub-app's tile: its title and line, then its numbers once its summary answers. */
+/** One sub-app's tile: its title, then its numbers once its summary answers (its line is the tooltip). */
 export function Tile({ app }: { app: SubApp }) {
   const [summary, setSummary] = useState<Summary>(app.summary ? { status: 'loading' } : { status: 'ready', lines: [] })
   useEffect(() => {
@@ -33,9 +33,8 @@ export function Tile({ app }: { app: SubApp }) {
     return () => { live = false }
   }, [app])
   return (
-    <Link to={`/${app.id}`} className="flex min-h-36 flex-col gap-2 rounded-lg bg-panel p-4 shadow-1 transition hover:shadow-2 focus-visible:outline-2 focus-visible:outline-accent">
+    <Link to={`/${app.id}`} title={app.blurb} className="flex min-h-32 flex-col gap-2 rounded-lg bg-panel p-4 shadow-1 transition hover:shadow-2 focus-visible:outline-2 focus-visible:outline-accent">
       <span className="font-display text-xl font-bold tracking-tight text-ink">{app.title}</span>
-      <span className="text-sm text-ink-soft">{app.blurb}</span>
       <span className="mt-auto flex flex-wrap gap-x-4 gap-y-1 text-sm">
         {summary.status === 'loading' && <span className="text-ink-faint">Loading</span>}
         {summary.status === 'error' && <span className="text-ink-faint">Numbers unavailable</span>}

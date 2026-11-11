@@ -2,7 +2,7 @@
 
 > **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
 > and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
-> each, with sisters ranked as Umas of their own. CA1 is next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> each, plus F for Umas not used, and 22 sisters ranked as Umas of their own (P131, P133). CA1 is next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -10,7 +10,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP36.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP40.
 
 ## The short answer
 
@@ -115,6 +115,10 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP33 | **Store and tools as built:** `ranker/boards/`, `profiles.json`, `plan.json`, `legacy.json`, `catalog/enemies.json`, `imports/`, `assets/`; `pnpm ranker:seed`, `ranker:push`, `ranker:pull` |
 | AP34 | **The Studio's boards retire:** its board links open the Ranker; the sprite tools and `pnpm tiers:import` stay |
 | AP35 | **The plan is live while you rank;** a batch whose art has started is locked and never moves |
+| AP37 | **Umas per tier** (P133): a strip of every tier's Uma count on the board, a count on each row, and Umas per tier first on the home; an Uma counts once per tier, and unranked means nothing ranked |
+| AP38 | **F on Playable Umas** (P133): Umas not used, after T10, in no batch and not the cast; key `F`; its row starts collapsed |
+| AP39 | **Eleven more sisters** (P133), named by Claude: 110602, 103103, 102602, 104002, 104003, 101602, 100402, 100602, 100603, 104502, 104503. Locked-in defaults stay the main Uma's; Royce and Royce has one outfit, so none; outfits keep their ranks |
+| AP40 | **Landing pages show numbers, not explanations** (P133); the little to know sits behind the (i) |
 | AP36 | **RK2, the pass after your ranking:** lock the ten batches as the art queue, revisit the sisters, point the sprite queue (TA2) at the plan. A later re-rank or a bigger change is a manual pass with Claude |
 
 ## Uma Character Art

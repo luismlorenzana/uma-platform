@@ -38,6 +38,8 @@ const UMA_TIER_IDS: readonly string[] = UMA_TIERS.map((t) => t.id)
 export const isUmaTier = (value: unknown): value is UmaTier => typeof value === 'string' && UMA_TIER_IDS.includes(value)
 /** An Uma tier's batch number, 1 to 10. */
 export const batchOf = (tier: UmaTier): number => UMA_TIER_IDS.indexOf(tier) + 1
+/** Playable Umas' F (P133): outfits the owner won't use. Not a batch and not the cast; its row starts collapsed. */
+export const UMA_F = { id: 'F', label: 'Not used', description: 'Outfits you won’t use: in no batch.' } as const
 export type AnyTier = Tier | UmaTier
 export interface TierInfo { readonly id: AnyTier; readonly label: string; readonly description: string }
 
@@ -103,14 +105,16 @@ export const boardOf = (id: string): Board | undefined => BOARDS.find((b) => b.i
 export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses']
 /** The imported boss boards, whose units can be left out of every board (P121). */
 export const importBoardOf = (franchise: string): Board | undefined => BOARDS.find((b) => b.franchise === franchise)
-/** A board's tiers, best first: T1–T10 on Playable Umas (P131), SSS to F on Uma NPCs (P124), SS to F elsewhere. */
+/** Playable Umas' tiers: the ten batches, then F (P131, P133). */
+export const PLAYABLE_TIERS: readonly TierInfo[] = [...UMA_TIERS, UMA_F]
+/** A board's tiers, best first: T1–T10 and F on Playable Umas (P131, P133), SSS to F on Uma NPCs (P124), SS to F elsewhere. */
 export function tiersOf(board: BoardId): readonly TierInfo[] {
-  if (board === 'umas') return UMA_TIERS
+  if (board === 'umas') return PLAYABLE_TIERS
   return boardOf(board)?.kind === 'uma' ? TIERS : TIERS.filter((t) => t.id !== 'SSS')
 }
 export const tierIdsOf = (board: BoardId): AnyTier[] => tiersOf(board).map((t) => t.id)
 export const hasTier = (board: BoardId, tier: unknown): tier is AnyTier => tiersOf(board).some((t) => t.id === tier)
-/** In the board's cast: any tier on Playable Umas, where every tier is a batch; SSS to A elsewhere. */
+/** In the board's cast: a batch (T1–T10) on Playable Umas, where F is not used; SSS to A elsewhere. */
 export function inCast(board: BoardId, tier: AnyTier | null | undefined): boolean {
   if (!tier) return false
   return board === 'umas' ? isUmaTier(tier) : (CAST_TIERS as readonly string[]).includes(tier)
@@ -250,7 +254,7 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
         !(e.tier === null || hasTier(boardId, e.tier)) || typeof e.note !== 'string' || e.note.length > 4000 ||
         Object.keys(e).some((k) => !['id', 'tier', 'note'].includes(k))) {
       throw new Error(boardId === 'umas'
-        ? 'Each Playable Umas entry needs a unique outfit id, a tier from T1 to T10 or null, and a note of at most 4,000 characters.'
+        ? 'Each Playable Umas entry needs a unique outfit id, a tier from T1 to T10, F or null, and a note of at most 4,000 characters.'
         : 'Each entry needs a unique id, a tier of this board (SSS is for Uma NPCs only) or null, and a note of at most 4,000 characters.')
     }
     seen.add(e.id)

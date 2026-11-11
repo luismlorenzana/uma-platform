@@ -1,6 +1,6 @@
 // The Ranker's routes (RK1), under /api/ranker, behind the owner guard like every route.
 import { BadRequestException, Body, ConflictException, Controller, Get, HttpCode, Inject, NotFoundException, Param, Post, Put } from '@nestjs/common'
-import { boardOf, BOARDS, pools, rankedIdentities, type BoardId } from '@uma-platform/tiers'
+import { boardOf, BOARDS, inBatch, inCast, pools, rankedIdentities, type BoardId } from '@uma-platform/tiers'
 import { CatalogService } from './catalog.service'
 import { RankerConflict, RankerInvalid, RankerStore } from './ranker.store'
 
@@ -30,11 +30,12 @@ export class RankerController {
   @Get('summary')
   async summary() {
     const [loaded, states, { profiles }] = await Promise.all([this.catalogs.get(), this.store.boards(), this.store.profiles()])
-    const all = pools(loaded.catalog, states, profiles), ranked = all.umas.filter((m) => states.umas.entries.some((e) => e.id === m.id && e.tier)).length
-    const identities = rankedIdentities(loaded.catalog, states, profiles), inBatches = identities.filter((i) => i.tier).length
+    const all = pools(loaded.catalog, states, profiles), tiers = new Map(states.umas.entries.map((e) => [e.id, e.tier]))
+    const batched = all.umas.filter((m) => inCast('umas', tiers.get(m.id))).length
+    const umas = rankedIdentities(loaded.catalog, states, profiles).filter(inBatch).length
     return [
-      { label: `of ${all.umas.length} outfits ranked`, value: String(ranked) },
-      { label: 'Umas in the 10 batches', value: String(inBatches) },
+      { label: 'Umas in the 10 batches', value: String(umas) },
+      { label: `of ${all.umas.length} outfits in a batch`, value: String(batched) },
       { label: 'boards', value: String(BOARDS.length) },
     ]
   }

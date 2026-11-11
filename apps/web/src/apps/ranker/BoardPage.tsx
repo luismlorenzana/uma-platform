@@ -13,7 +13,7 @@ import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router'
 import { Art } from './art'
 import { useRanker } from './data'
 import { Detail, TierBadge, type Moves } from './Detail'
-import { items, matches, type Item } from './view'
+import { items, matches, umaCount, type Item } from './view'
 
 function useWide(): boolean {
   const query = '(min-width: 1024px)'
@@ -51,6 +51,8 @@ export function BoardPage() {
   const [way, setWay] = useState<Way | 'all'>('all')
   const [onlyUnranked, setOnlyUnranked] = useState(false)
   const [dropAt, setDropAt] = useState<string | null>(null)
+  /** Playable Umas' F row starts collapsed (P133). */
+  const [showF, setShowF] = useState(false)
   const search = useRef<HTMLInputElement>(null)
   const file = useRef<HTMLInputElement>(null)
   const wide = useWide()
@@ -72,9 +74,17 @@ export function BoardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, poolIds, byId, query, way, id])
   const tierOf = useMemo(() => new Map(state?.entries.map((e) => [e.id, e.tier]) ?? []), [state])
+  /** Every tier's cards, ignoring the filters: what each count says. */
+  const totals = useMemo(() => new Map(tiers.map((t) => [t.id, list.filter((i) => tierOf.get(i.id) === t.id)])), [tiers, list, tierOf])
+  const allUnranked = useMemo(() => list.filter((i) => !tierOf.get(i.id)), [list, tierOf])
+  /** Umas with nothing ranked at all: an Uma with one outfit in a tier isn't unranked, whatever her other outfits are. */
+  const idle = useMemo(() => {
+    const ranked = new Set(list.filter((i) => tierOf.get(i.id)).map((i) => i.identity ?? i.id))
+    return new Set(allUnranked.map((i) => i.identity ?? i.id).filter((x) => !ranked.has(x))).size
+  }, [list, tierOf, allUnranked])
   const unranked = useMemo(() => list.filter((i) => !tierOf.get(i.id) && shown(i)), [list, tierOf, query, way]) // eslint-disable-line react-hooks/exhaustive-deps
   const leftOut = useMemo(() => (data && board?.franchise && state?.out ? items(id, state.out.map((o) => ({ id: o, via: null, viaTier: null })), data.catalog, data.profiles) : []), [data, board, state, id])
-  const visible = useMemo(() => [...(onlyUnranked ? [] : rows.flatMap((r) => r.items)), ...unranked], [rows, unranked, onlyUnranked])
+  const visible = useMemo(() => [...(onlyUnranked ? [] : rows.filter((r) => r.tier.id !== 'F' || id !== 'umas' || showF).flatMap((r) => r.items)), ...unranked], [rows, unranked, onlyUnranked, showF, id])
   const current = selected ? byId.get(selected) ?? leftOut.find((i) => i.id === selected) ?? null : null
 
   const change = useCallback((next: (s: BoardState) => BoardState) => { if (state) edit(id, next(state)) }, [state, edit, id])
@@ -111,6 +121,7 @@ export function BoardPage() {
         return
       }
       if (e.key === 'Backspace' || e.key === 'Delete') { e.preventDefault(); moves.rank(null); return }
+      if ((e.key === 'f' || e.key === 'F') && id === 'umas') { moves.rank('F'); return }
       if (e.key === '[' || e.key === '{') { moves[e.shiftKey || e.key === '{' ? 'tierStep' : 'shift'](-1); return }
       if (e.key === ']' || e.key === '}') { moves[e.shiftKey || e.key === '}' ? 'tierStep' : 'shift'](1); return }
       if ((e.key === 'd' || e.key === 'D') && id === 'umas') {
@@ -142,15 +153,26 @@ export function BoardPage() {
   const status = saving[id] === 'saving' ? 'Saving…' : saving[id] === 'failed' ? 'Not saved' : 'Saved'
   const stats = { ranked: list.filter((i) => tierOf.get(i.id)).length, pool: list.length }
 
-  const rowView = (key: string, label: ReactNode, sub: string, cls: string, cards: Item[], tier: AnyTier | null | 'out') => (
+  /** "6 Umas · 7 outfits" on Playable Umas, where an Uma can have several outfits in a tier; a plain count elsewhere. */
+  const count = (cards: readonly Item[]) => {
+    const umas = umaCount(cards)
+    return board.kind === 'outfit' ? `${umas} Uma${umas === 1 ? '' : 's'}${cards.length !== umas ? ` · ${cards.length} outfits` : ''}` : String(cards.length)
+  }
+  const unrankedCount = board.kind === 'outfit' ? `${idle} Uma${idle === 1 ? '' : 's'} with none ranked · ${allUnranked.length} outfits` : String(allUnranked.length)
+  const rowView = (key: string, label: ReactNode, hint: string, cls: string, cards: Item[], all: readonly Item[], tier: AnyTier | null | 'out', open = true, toggle?: () => void) => (
     <section key={key} className={`tier-row ${cls} rounded-md bg-panel shadow-1 ${dropAt === key ? 'drop-target' : ''}`}
       onDragOver={tier === 'out' ? undefined : over(key)} onDragLeave={() => setDropAt(null)} onDrop={tier === 'out' ? undefined : drop(tier)}>
-      <header className="flex items-baseline gap-2 px-3 pt-2">
-        {label}<span className="text-xs text-ink-faint">{sub}</span><span className="ml-auto text-xs text-ink-faint">{cards.length}</span>
+      <header className="flex items-center gap-2 px-3 py-2" title={hint}>
+        {toggle
+          ? <button type="button" onClick={toggle} aria-expanded={open} className="flex items-center gap-2">{label}<span aria-hidden className="text-ink-faint">{open ? '▾' : '▸'}</span></button>
+          : label}
+        <span className="ml-auto text-xs text-ink-soft">{tier === null ? unrankedCount : count(all)}</span>
       </header>
-      <div className="flex min-h-16 flex-wrap gap-1.5 p-2">
-        {cards.map((i) => <Card key={i.id} item={i} selected={i.id === current?.id} onSelect={() => select(i.id === current?.id ? null : i.id)} onDragStart={drag(i)} />)}
-      </div>
+      {open && (
+        <div className="flex min-h-16 flex-wrap gap-1.5 px-2 pb-2">
+          {cards.map((i) => <Card key={i.id} item={i} selected={i.id === current?.id} onSelect={() => select(i.id === current?.id ? null : i.id)} onDragStart={drag(i)} />)}
+        </div>
+      )}
     </section>
   )
 
@@ -158,7 +180,8 @@ export function BoardPage() {
   return (
     <AppFrame
       top={<PlaceHeader title={board.title} onBack={() => void navigate('/ranker')} words={{ back: 'Uma Ranker', about: 'About this board' }}
-        about={<><p>{board.blurb}</p><p>{board.pool}</p>{board.next && <p>Leftovers go to {BOARDS.find((b) => b.id === board.next)?.title}.</p>}</>}>
+        about={<><p>{board.pool}{board.next ? ` Leftovers go to ${BOARDS.find((b) => b.id === board.next)?.title}.` : ''}</p>
+          <p>Keys: {id === 'umas' ? '1–9 and 0 for T1–T10, F for F' : `1–${tiers.length} for ${tiers.map((t) => t.id).join(', ')}, 0 unranks`}; Backspace unranks; arrows browse; [ ] one place; Shift+[ ] a whole tier{id === 'umas' ? '; D her default outfit' : ''}; Cmd/Ctrl+Z undoes; / searches.</p></>}>
         <span className="hidden text-xs text-ink-faint sm:inline">{status}</span>
         <Button size="sm" variant="tertiary" disabled={!canUndo(id)} onClick={() => undo(id)} title="Undo (Cmd/Ctrl+Z)">Undo</Button>
       </PlaceHeader>}
@@ -179,9 +202,19 @@ export function BoardPage() {
               <Chip selected={onlyUnranked} onClick={() => setOnlyUnranked((v) => !v)}>Unranked only</Chip>
               <span className="text-sm text-ink-soft">{stats.ranked} of {stats.pool} ranked</span>
             </div>
-            {!onlyUnranked && rows.map((r) => rowView(r.tier.id, <TierBadge tier={r.tier.id} />, `${r.tier.label} · ${r.tier.description}`, `tier-${r.tier.id}`, r.items, r.tier.id))}
-            {rowView('unranked', <span className="font-display font-bold">Unranked</span>, board.kind === 'outfit' ? 'Outfits not in a batch yet; Umas with none ranked stay Uma NPCs.' : 'Leftovers flow to the next board.', 'unranked', unranked, null)}
-            {board.franchise && leftOut.length > 0 && rowView('out', <span className="font-display font-bold">Left out</span>, 'On no board. Rank one to bring it back.', 'unranked opacity-80', leftOut, 'out')}
+            <ul className="flex flex-wrap gap-1.5 text-sm" aria-label={board.kind === 'outfit' ? 'Umas per tier' : 'Per tier'}>
+              {tiers.map((t) => (
+                <li key={t.id} className="flex items-center gap-1 rounded-sm bg-panel px-1.5 py-1 shadow-1" title={`${t.label}: ${count(totals.get(t.id) ?? [])}`}>
+                  <TierBadge tier={t.id} /><b className="min-w-5 text-center font-display">{umaCount(totals.get(t.id) ?? [])}</b>
+                </li>
+              ))}
+              <li className="flex items-center gap-1 rounded-sm bg-panel px-2 py-1 text-ink-soft shadow-1" title={`Unranked: ${unrankedCount}`}>Unranked <b className="font-display text-ink">{board.kind === 'outfit' ? idle : allUnranked.length}</b></li>
+            </ul>
+            {!onlyUnranked && rows.map((r) => r.tier.id === 'F' && id === 'umas'
+              ? rowView('F', <><TierBadge tier="F" /><span className="text-sm text-ink-soft">Not used</span></>, r.tier.description, 'tier-F', r.items, totals.get('F') ?? [], 'F', showF, () => setShowF((v) => !v))
+              : rowView(r.tier.id, <TierBadge tier={r.tier.id} />, `${r.tier.label}: ${r.tier.description}`, `tier-${r.tier.id}`, r.items, totals.get(r.tier.id) ?? [], r.tier.id))}
+            {rowView('unranked', <span className="font-display font-bold">Unranked</span>, board.kind === 'outfit' ? 'Umas with no outfit in a batch stay Uma NPCs.' : 'Leftovers flow to the next board.', 'unranked', unranked, allUnranked, null)}
+            {board.franchise && leftOut.length > 0 && rowView('out', <span className="font-display font-bold">Left out</span>, 'On no board. Rank one to bring it back.', 'unranked opacity-80', leftOut, leftOut, 'out')}
             {unranked.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 text-sm text-ink-soft">
                 <span>Rank the {unranked.length} shown unranked as</span>
@@ -197,7 +230,7 @@ export function BoardPage() {
         </main>
         {wide && (
           <aside className="h-full w-96 shrink-0 overflow-y-auto border-l border-hairline bg-panel p-4" aria-label="Card">
-            {panel ?? <p className="text-sm text-ink-soft">Pick a card to rank it. Keys: {id === 'umas' ? '1–9 and 0 for T1–T10' : `1–${tiers.length} for ${tiers.map((t) => t.id).join(', ')}, 0 unranks`}; Backspace unranks; arrows browse; [ ] move one place; Shift+[ ] a whole tier{id === 'umas' ? '; D makes an outfit her default' : ''}.</p>}
+            {panel ?? <p className="text-sm text-ink-soft">Pick a card.</p>}
           </aside>
         )}
       </div>
