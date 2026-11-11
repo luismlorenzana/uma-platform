@@ -119,6 +119,8 @@ jobs:
           curl --fail --silent --show-error --retry 10 --retry-delay 3 "${{ steps.deploy-api.outputs.url }}/api/health" > /dev/null
           test "$(curl --silent "${{ steps.deploy-api.outputs.url }}/api/health" | python3 -c 'import json,sys; print(json.load(sys.stdin)["build"])')" = "${GITHUB_SHA}"
           test "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${{ steps.deploy-api.outputs.url }}/api/master/channels/v1/latest.json")" = "401"
+          # A bad token is a 401, never a 500: Firebase Admin must load inside the image (SH2's first deploy).
+          test "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' -H 'Authorization: Bearer not-a-token' "${{ steps.deploy-api.outputs.url }}/api/master/channels/v1/latest.json")" = "401"
 
       - name: Deploy web to Firebase Hosting
         run: pnpm dlx firebase-tools@15.22.4 deploy --only hosting:uma-platform --project="${GCP_PROJECT_ID}" --non-interactive
