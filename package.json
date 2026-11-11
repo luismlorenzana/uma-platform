@@ -38,6 +38,7 @@
     "ranker:seed": "turbo run build --filter=@uma-platform/tiers... --output-logs=errors-only && pnpm --filter @uma-platform/ranker-scripts run seed",
     "ranker:push": "pnpm --filter @uma-platform/ranker-scripts run push",
     "ranker:pull": "pnpm --filter @uma-platform/ranker-scripts run pull",
+    "ranker:plan": "pnpm --filter @uma-platform/ranker-scripts run plan",
     "art:props": "pnpm --filter @uma-platform/authored-art run draw",
     "art:kits": "pnpm --filter @uma-platform/authored-art run kits",
     "art:kits:previews": "pnpm --filter @uma-platform/authored-art run kit-previews",

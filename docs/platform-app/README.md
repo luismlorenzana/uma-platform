@@ -2,7 +2,7 @@
 
 > **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
 > and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
-> each, plus F for Umas not used, and 22 sisters ranked as Umas of their own (P131, P133). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
+> each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
 > records (CA2, P136). Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
@@ -113,13 +113,15 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP30 | **The move:** the old cast of 60, in its order, became each Uma's default outfit spread evenly, six a tier; everything else starts unranked with its old tiers as hints; the old board is archived; every lettered board moved unchanged |
 | AP31 | **Careers:** every ranked Uma, sisters included, is a career of at least three bosses, counted as one pool |
 | AP32 | **The plan, schema 2:** each outfit with its Uma and batch, `identities` in ranking order, and the ten `batches`. Character Art lays its album out by it |
-| AP33 | **Store and tools as built:** `ranker/boards/`, `profiles.json`, `plan.json`, `legacy.json`, `catalog/enemies.json`, `imports/`, `assets/`; `pnpm ranker:seed`, `ranker:push`, `ranker:pull` |
+| AP33 | **Store and tools as built:** `ranker/boards/`, `profiles.json`, `plan.json`, `legacy.json`, `catalog/enemies.json`, `imports/`, `assets/`; `pnpm ranker:seed`, `ranker:push`, `ranker:pull`, and `ranker:plan` (P138) |
 | AP34 | **The Studio's boards retire:** its board links open the Ranker; the sprite tools and `pnpm tiers:import` stay |
 | AP35 | **The plan is live while you rank;** a batch whose art has started is locked and never moves |
 | AP37 | **Umas per tier** (P133): a strip of every tier's Uma count on the board, a count on each row, and Umas per tier first on the home; an Uma counts once per tier, and unranked means nothing ranked |
 | AP38 | **F on Playable Umas** (P133): Umas not used, after T10, in no batch and not the cast; key `F`; its row starts collapsed |
 | AP39 | **Eleven more sisters** (P133), named by Claude: 110602, 103103, 102602, 104002, 104003, 101602, 100402, 100602, 100603, 104502, 104503. Locked-in defaults stay the main Uma's; Royce and Royce has one outfit, so none; outfits keep their ranks |
 | AP40 | **Landing pages show numbers, not explanations** (P133); the little to know sits behind the (i) |
+| AP51 | **Five more sisters** (P138), named by Claude: 100401, 103101, 101803, 109302, 107801, so every Uma in the ten batches is one card (100 Umas: 76 characters, 24 sisters; 27 sisters in all). Locked-in defaults stay the main Uma's (Maruzensky's 100403, Ines Fujin's 103102); outfits keep their ranks |
+| AP52 | **`pnpm ranker:plan`** (P138) rebuilds the bucket's plan as the Ranker does, for a change that went around the API (Claude's profile pushes); the Ranker's scripts run on Windows too |
 | AP36 | **RK2, the pass after your ranking:** lock the ten batches as the art queue, revisit the sisters, point the sprite queue (TA2) at the plan. A later re-rank or a bigger change is a manual pass with Claude |
 
 ## Uma Character Art

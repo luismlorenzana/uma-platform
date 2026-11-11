@@ -32,7 +32,7 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `scripts/authored-art` | Original full-colour props: committed masters → deterministic held/emote atlases (`pnpm art:props`) |
 | `apps/web`, `apps/api` | **The Uma Platform app** at https://uma-platform.web.app: one signed-in site with a tile for each sub-app ([design](docs/platform-app/README.md), [infrastructure](docs/platform-app/infrastructure.md), P127) |
 | `packages/tiers` | `@uma-platform/tiers` (private): the tier boards' model, shared by the Ranker, its scripts and the sprite queue |
-| `scripts/ranker` | `pnpm ranker:seed`, `ranker:push`, `ranker:pull`: the Ranker's files between this Mac and its bucket (P131) |
+| `scripts/ranker` | `pnpm ranker:seed`, `ranker:push`, `ranker:pull`, `ranker:plan`: the Ranker's files between this computer and its bucket, and its plan rebuilt after a profile push (P131, P138) |
 | `tools/studio` | Uma Studio (`pnpm studio`): the sprite queue, animation desk, gates and props; its tier boards moved online as the Uma Ranker (P131); `pnpm tiers:import <genshin\|wuwa\|hsr\|zzz\|hi3\|pgr>` |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |

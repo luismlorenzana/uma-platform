@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { seedMirror, type SeedInputs } from './lib.js'
+import { gcloudCommand, seedMirror, type SeedInputs } from './lib.js'
+
+describe('starting gcloud', () => {
+  it('runs gcloud directly on macOS and Linux', () => {
+    expect(gcloudCommand(['storage', 'cp', 'a', 'gs://b/c'], 'darwin')).toEqual({ file: 'gcloud', args: ['storage', 'cp', 'a', 'gs://b/c'], shell: false })
+  })
+  it('runs gcloud.cmd through the shell on Windows, every argument quoted', () => {
+    expect(gcloudCommand(['storage', 'objects', 'describe', 'gs://b/p.json', '--format=value(generation)'], 'win32'))
+      .toEqual({ file: 'gcloud.cmd', args: ['"storage"', '"objects"', '"describe"', '"gs://b/p.json"', '"--format=value(generation)"'], shell: true })
+    expect(() => gcloudCommand(['a"b'], 'win32')).toThrow(/quote/)
+  })
+})
 
 // Invented records only.
 const strategy = { front: 'A', pace: 'B', late: 'C', end: 'D' } as never

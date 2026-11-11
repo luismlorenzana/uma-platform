@@ -17,12 +17,21 @@ export const mirror = resolve(content, 'authoring/ranker')
 export const BUCKET = process.env.CONTENT_BUCKET ?? 'uma-platform-content'
 export const REMOTE = `gs://${BUCKET}/ranker`
 
+/** How to start gcloud on this platform. On Windows gcloud is `gcloud.cmd`, which Node only runs through the shell, so
+ *  every argument is quoted for cmd.exe (none of ours holds a quote). Elsewhere it runs directly. */
+export function gcloudCommand(args: string[], platform: NodeJS.Platform = process.platform): { file: string; args: string[]; shell: boolean } {
+  if (platform !== 'win32') return { file: 'gcloud', args, shell: false }
+  if (args.some((a) => a.includes('"'))) throw new Error('A gcloud argument with a quote cannot be passed through cmd.exe.')
+  return { file: 'gcloud.cmd', args: args.map((a) => `"${a}"`), shell: true }
+}
+
 /** gcloud storage, scoped to the owner's default configuration and the games' project; never `config set`. */
 export function gcloud(args: string[], options: { allowFail?: boolean } = {}): string {
   try {
-    return execFileSync('gcloud', ['storage', ...args], {
+    const command = gcloudCommand(['storage', ...args])
+    return execFileSync(command.file, command.args, {
       env: { ...process.env, CLOUDSDK_ACTIVE_CONFIG_NAME: 'default', CLOUDSDK_CORE_PROJECT: process.env.CLOUDSDK_CORE_PROJECT ?? 'uma-rpg' },
-      stdio: ['ignore', 'pipe', options.allowFail ? 'pipe' : 'inherit'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', options.allowFail ? 'pipe' : 'inherit'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: command.shell,
     })
   } catch (error) {
     if (options.allowFail) return ''

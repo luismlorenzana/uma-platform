@@ -8,6 +8,7 @@
     "seed": "node --import tsx src/seed.ts",
     "push": "node --import tsx src/push.ts",
     "pull": "node --import tsx src/pull.ts",
+    "plan": "node --import tsx src/plan.ts",
     "lint": "tsc --noEmit",
     "test": "vitest run"
   },
