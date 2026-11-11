@@ -86,7 +86,7 @@
     <div class="tile"><b>1</b><span>new bucket; no database</span></div>
     <div class="tile"><b>~$0.01</b><span>a month, under the $5 alert</span></div>
     <div class="tile"><b>22</b><span>sisters, ranked as Umas of their own</span></div>
-    <div class="tile"><b>48</b><span>calls, AP1–AP48</span></div>
+    <div class="tile"><b>50</b><span>calls, AP1–AP50</span></div>
   </div>
 
   <section class="card" id="apps">
@@ -94,7 +94,7 @@
     <p>Each sub-app has its own route, its own API routes and its own code folder, and never imports from another one (AP1). A sub-app that isn't built yet has no tile.</p>
     <div class="apps">
       <div class="app"><h3>Uma Ranker</h3><p>Every board online at <code>/ranker</code>. Playable Umas ranks all 272 outfits on ten tiers, T1–T10, one art batch each; one place or a whole tier up and down; sisters rank as Umas of their own. The bucket is the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy.</p><span class="pill ready">RK1 live</span> <span class="pill wait">RK2 after your ranking</span></div>
-      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>, laid out by the Ranker's ten batches: adult travelers (baseline, keys, faces) and every Uma and sister (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 live</span> <span class="pill ready">CA2 live</span></div>
+      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>, laid out by the Ranker's ten batches: adult travelers (baseline, keys, faces) and every Uma and sister (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs; CA3 the full-body 3D render.</p><span class="pill ready">CA1 live</span> <span class="pill ready">CA2 live</span> <span class="pill ready">CA3 live</span></div>
       <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
       <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
     </div>
@@ -144,7 +144,7 @@
       <text x="756" y="358" style="fill: var(--ink-soft); font-size: 12px">the release: every outfit's and character's art</text>
       <text x="756" y="378" style="fill: var(--ink-soft); font-size: 12px">source-art/: the adult sets' archives</text>
     </svg>
-    <p class="note">The full-body 3D renders (portraits and dresses) and the chibis in master data are already the originals' size, 512 px, so no new store is needed for inputs (AP21).</p>
+    <p class="note">The stands (portraits and dresses) and chibis are the originals' size, 512 px, but the stand is waist up; the full-body 3D render, head to toe, joined master data as <code>outfit-renders</code> in CA3 (AP21, AP49).</p>
   </section>
 
   <section class="card" id="cloud">
@@ -193,11 +193,12 @@
         <tr><td class="id">RK2</td><td>The pass after your ranking: lock the ten batches, revisit the sisters, TA2 reads the plan</td><td>Claude</td><td>M</td><td>RK1 ✓, your ranking</td><td><span class="pill wait">Your ranking</span></td></tr>
         <tr><td class="id">CA1</td><td>Uma Character Art: uma-quest's Album moved here, laid out by the Ranker's batches</td><td>Claude</td><td>M</td><td>SH2 ✓, RK1 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">CA3</td><td>Full body: the 3D render as master data's <code>outfit-renders</code>, in Character Art</td><td>Claude</td><td>S</td><td>CA2 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
     </table></div>
-    <p class="note">SH1, SH2, RK1, CA1 and CA2 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
+    <p class="note">SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
   </section>
 
   <section class="card" id="calls">
@@ -225,7 +226,7 @@
         <tr><td class="id">AP18</td><td><b>Franchise imports stay local</b>, then <code>pnpm ranker:push</code> uploads images and lists, never overwriting</td></tr>
         <tr><td class="id">AP19</td><td><b>RK2 follows RK1:</b> Umas by outfit again, with the new ranking you describe</td></tr>
         <tr><td class="id">AP20</td><td><b>CA1 moves uma-quest's Album as it is:</b> adult travelers and every Uma, copied at a recorded commit</td></tr>
-        <tr><td class="id">AP21</td><td><b>The full-body art is already full size</b> (512 px, like the originals), so master data holds every input picture</td></tr>
+        <tr><td class="id">AP21</td><td><b>The stands are full size, but waist up</b> (512 px, like the originals; corrected by AP49)</td></tr>
         <tr><td class="id">AP22</td><td><b>CA2 adds</b> chibi sprite sets, support card art, each adult set's inputs and its source-art release record</td></tr>
         <tr><td class="id">AP41</td><td><b>Every Uma in the Ranker's order:</b> T1–T10 by place, the unranked, F collapsed; sisters by name; the first tab</td></tr>
         <tr><td class="id">AP42</td><td><b>The order is fresh on every load,</b> from the Ranker's files and master data</td></tr>
@@ -235,6 +236,8 @@
         <tr><td class="id">AP46</td><td><b>Support cards:</b> her character's, SSR first, with their art</td></tr>
         <tr><td class="id">AP47</td><td><b>Source art:</b> each adult set's release record; archives never unpacked</td></tr>
         <tr><td class="id">AP48</td><td><b>The inputs:</b> portrait and chibis, the approved chibi sprite, the shared references counted</td></tr>
+        <tr><td class="id">AP49</td><td><b>Full body</b> (CA3): the 3D render, head to toe, as master data's <code>outfit-renders</code>, 768×1024 lossless, first on her page; the still only</td></tr>
+        <tr><td class="id">AP50</td><td><b>No game reads it:</b> older parsers skip the new family; uma-quest's adult travelers take it as an input</td></tr>
         <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>
         <tr><td class="id">AP25</td><td><b>Playable Umas ranks every outfit on ten straight tiers</b>, T1–T10, each an art batch; keys 1–9 and 0</td></tr>
         <tr><td class="id">AP26</td><td><b>Up and down:</b> one place crosses a tier's edge; a whole-tier step lands next to the boundary</td></tr>

@@ -153,7 +153,7 @@ output is the private `content/authoring/tiers/plan.json`.
 
 One signed-in site, `uma-platform.web.app`, in the `uma-rpg` project, with sub-apps behind tiles
 ([platform-app/README.md](../platform-app/README.md), AP1–AP24, [page](../platform-app/previews/platform-app.html),
-P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1, CA1 and CA2 are done; RK2 follows the owner's ranking; GA1–GA3 and PB1 when the owner asks.
+P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows the owner's ranking; GA1–GA3 and PB1 when the owner asks.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
@@ -163,6 +163,7 @@ P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1
 | RK2 | The pass after the owner's ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan (AP36) | Claude | M | RK1 ✓, the owner's ranking | After the ranking |
 | CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker's batches | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
 | CA2 | Chibi sprite sets, support card art, adult sets' inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
+| CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓ | **Done** (P137) |
 | — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 ✓ | Written as its [Q56](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q56-album-moves-to-the-platform.md) (`fa47214`) |
 | GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
 

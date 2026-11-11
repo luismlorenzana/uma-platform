@@ -14,7 +14,7 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
 
 /**
  * Per-record WebP images, keyed by:
- * - `outfit-portraits`: outfit id (full stand, ≤512 px)
+ * - `outfit-portraits`: outfit id (the stand: a waist-up 3D render, ≤512 px)
  * - `outfit-busts`: outfit id (head and shoulders, ≤256 px square)
  * - `outfit-faces`: outfit id (face crop, ≤192 px square)
  * - `support-card-art`: support card id (full illustration, ≤600 px)
@@ -24,6 +24,7 @@ export type AtlasFamily = (typeof ATLAS_FAMILIES)[number]
  * - `outfit-glass`: outfit id (the bust as a stained-glass window, ≤512 px square, opaque)
  * - `outfit-glass-order`: outfit id (the window's pane map, its size, lossless gray: each pixel its pane's place in the
  *   reveal, 0 the lead, 1–250 the panes outside in, 255 the face)
+ * - `outfit-renders`: outfit id (the full-body 3D render, head to toe, ≤1024 px tall, transparent, lossless; since 1.5.0)
  */
 export const IMAGE_FAMILIES = [
   'outfit-portraits',
@@ -35,6 +36,7 @@ export const IMAGE_FAMILIES = [
   'character-faces',
   'outfit-glass',
   'outfit-glass-order',
+  'outfit-renders',
 ] as const
 export type ImageFamily = (typeof IMAGE_FAMILIES)[number]
 

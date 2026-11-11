@@ -47,10 +47,10 @@ export interface PlanSpritesOnlyOptions {
   now?: () => Date
 }
 
-async function remoteBase(storage: ReleaseStorageClient, from: string): Promise<{ manifest: ReleaseManifest; index: Record<string, unknown> }> {
+export async function remoteBase(storage: ReleaseStorageClient, from: string): Promise<{ manifest: ReleaseManifest; index: Record<string, unknown> }> {
   const channelPath = releasePaths.channel(from)
   const pointer = parseRemoteChannel(await storage.read(channelPath), channelPath)
-  if (!pointer) throw new Error(`${channelPath} doesn't exist; a sprite-only release builds on a published one`)
+  if (!pointer) throw new Error(`${channelPath} doesn't exist; a release on latest builds on a published one`)
   const raw = await storage.read(pointer.manifest)
   if (!raw) throw new Error(`${pointer.manifest} is missing from the bucket`)
   const manifest = parseReleaseManifest(JSON.parse(raw.toString('utf8')) as unknown, pointer.manifest)
@@ -101,18 +101,36 @@ export async function planSpritesOnly(options: PlanSpritesOnlyOptions): Promise<
   // The published index, untouched except for its `sprites` map: earlier sets stay unless a newer one replaces them.
   const merged = { ...((baseIndex.sprites as Record<string, string> | undefined) ?? {}), ...localSprites }
   const sprites = Object.fromEntries(Object.entries(merged).sort(([a], [b]) => Number(a) - Number(b)))
-  const nextIndex = { ...baseIndex, sprites }
-  const indexJson = JSON.stringify(nextIndex)
+  const composed = await composeOnBase({ base, nextIndex: { ...baseIndex, sprites }, added: spriteFiles, localPaths, stagingDir: options.stagingDir, now })
+  for (const set of Object.values(sprites)) if (!composed.manifest.files.some((file) => file.path === set)) throw new Error(`${set} is in the sprites map but not in the release`)
+  return { base, ...composed, localPaths, added, sprites }
+}
+
+/**
+ * A release that is `base` with a new art index and the files it adds: every other file of `base` carried byte for
+ * byte, its master sets and sources untouched. Writes the index and the manifest to `stagingDir`; shared by the
+ * sprite-only and the families-only releases.
+ */
+export async function composeOnBase(options: {
+  base: ReleaseManifest
+  nextIndex: Record<string, unknown>
+  added: readonly ReleaseFile[]
+  localPaths: Map<string, string>
+  stagingDir: string
+  now: () => Date
+}): Promise<{ manifest: ReleaseManifest; manifestPath: string }> {
+  const { base } = options
+  const indexJson = JSON.stringify(options.nextIndex)
   parseArtIndex(JSON.parse(indexJson) as unknown, 'art index')
   const indexSha = sha256(indexJson)
   const indexFile: ReleaseFile = { path: `data/art.${indexSha.slice(0, NAME_HASH_LENGTH)}.json`, bytes: Buffer.byteLength(indexJson), sha256: indexSha }
   await mkdir(resolve(options.stagingDir, 'data'), { recursive: true })
   const indexPath = resolve(options.stagingDir, ...indexFile.path.split('/'))
   await writeFile(indexPath, indexJson, 'utf8')
-  localPaths.set(indexFile.path, indexPath)
+  options.localPaths.set(indexFile.path, indexPath)
 
   const files = new Map(base.files.filter((file) => file.path !== base.art).map((file) => [file.path, file]))
-  for (const file of [...spriteFiles, indexFile]) {
+  for (const file of [...options.added, indexFile]) {
     const existing = files.get(file.path)
     if (existing && (existing.sha256 !== file.sha256 || existing.bytes !== file.bytes)) throw new Error(`${file.path} differs from the published file of that name`)
     files.set(file.path, file)
@@ -122,7 +140,7 @@ export async function planSpritesOnly(options: PlanSpritesOnlyOptions): Promise<
     schemaMajor: SCHEMA_MAJOR,
     schemaVersion: await schemaVersion(),
     version: await releaseVersion(sorted.map((file) => file.sha256)),
-    createdAt: now().toISOString(),
+    createdAt: options.now().toISOString(),
     sources: base.sources,
     sets: base.sets,
     art: indexFile.path,
@@ -134,8 +152,7 @@ export async function planSpritesOnly(options: PlanSpritesOnlyOptions): Promise<
   checkCarried(base, manifest)
   const manifestPath = resolve(options.stagingDir, MANIFEST_FILE)
   await writeFile(manifestPath, manifestJson, 'utf8')
-  for (const set of Object.values(sprites)) if (!files.has(set)) throw new Error(`${set} is in the sprites map but not in the release`)
-  return { base, manifest, manifestPath, localPaths, added, sprites }
+  return { manifest, manifestPath }
 }
 
 /** Every file of `base` but its art index is in `next` with the same bytes and hash; the sets are the same files. */
@@ -148,7 +165,7 @@ export function checkCarried(base: ReleaseManifest, next: ReleaseManifest): { ca
     if (!same || same.sha256 !== file.sha256 || same.bytes !== file.bytes) throw new Error(`${file.path} isn't carried byte for byte`)
     carried += 1
   }
-  if (JSON.stringify(base.sets) !== JSON.stringify(next.sets)) throw new Error('The master sets changed in a sprite-only release')
+  if (JSON.stringify(base.sets) !== JSON.stringify(next.sets)) throw new Error('The master sets changed in a release on latest')
   return { carried }
 }
 

@@ -10,7 +10,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CONTENT } from '../../content/client'
 import { KEY_SETS, KEYS } from './content'
-import { byPlace, loadAlbum, picturesOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry } from './data'
+import { byPlace, loadAlbum, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry } from './data'
 import { drawKeyFace, drawKeyPose } from './keyCanvas'
 import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
 import { SpritePlayer } from './SpritePlayer'
@@ -150,6 +150,7 @@ function UmaTile({ entry, path, onOpen }: { entry: AlbumEntry; path: string | nu
 function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; onClose: () => void }) {
   const keys = useKeys(entry.adult ? entry.outfitId : null)
   const pictures = useMemo(() => picturesOf(data.art, entry), [data.art, entry])
+  const render = renderOf(data.art, entry.outfitId)
   return (
     <div className="fixed inset-0 z-20 overflow-y-auto bg-page pb-safe" role="dialog" aria-label={entry.name}>
       <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur">
@@ -165,6 +166,14 @@ function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; 
           <section className="rounded-lg bg-panel p-3 text-sm">
             <p className="text-ink-soft">{entry.sisterOf}’s {entry.sister.relation} · {entry.sister.age}</p>
             <p className="mt-1">{entry.sister.profile}</p>
+          </section>
+        )}
+        {render && (
+          <section className="flex flex-col gap-3">
+            <h3 className="font-display text-base font-bold">Full body <span className="text-sm font-normal text-ink-soft">3D render · {render.width}×{render.height} · lossless</span></h3>
+            <figure className="flex justify-center rounded-lg bg-panel p-3">
+              <ArtImg path={render.path} alt={`${entry.name}: full body`} box="flex min-h-96 items-end justify-center" className="max-h-[36rem] w-auto object-contain" />
+            </figure>
           </section>
         )}
         {entry.adult && (

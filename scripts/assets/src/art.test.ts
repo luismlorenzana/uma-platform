@@ -2,7 +2,7 @@ import { syntheticMasterData } from '@luismlorenzana/uma-data/testing'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { ART_FAMILIES, bustCrop, encodeArt, encodeBust, encodeFace, faceCrop } from './art'
-import { artSources, outfitChibiUrl, outfitIconUrl, outfitPortraitUrl, scenarioIconUrl, supportCardArtUrl, supportCardIconUrl } from './sources'
+import { artSources, outfitChibiUrl, outfitIconUrl, outfitPortraitUrl, outfitRenderUrl, scenarioIconUrl, supportCardArtUrl, supportCardIconUrl } from './sources'
 
 describe('art sources', () => {
   it('derives each family URL from the original ids', () => {
@@ -14,6 +14,7 @@ describe('art sources', () => {
     expect(outfitChibiUrl(900101, 'a')).toBe('https://media.gametora.com/umamusume/characters/chibi/900101_0010.png')
     expect(outfitChibiUrl(900101, 'b')).toBe('https://media.gametora.com/umamusume/characters/chibi/900101_0011.png')
     expect(scenarioIconUrl(99)).toBe('https://media.gametora.com/umamusume/scenarios/hero/thumb/99.png')
+    expect(outfitRenderUrl(900101)).toBe('https://media.gametora.com/umamusume/characters/render/trainee/idle/900101.png')
   })
 
   it('lists every skill icon once, Global icons included, and applies scenario overrides', () => {
@@ -24,6 +25,7 @@ describe('art sources', () => {
     expect(sources.scenarioIcons).toEqual([{ id: '99', url: 'https://example.test/crest.png' }])
     expect(sources.outfitIcons).toEqual([{ id: '900101', url: outfitIconUrl({ id: 900101, characterId: 9001 }) }])
     expect(sources.supportCardArt).toEqual([{ id: '99001', url: supportCardArtUrl(99001) }])
+    expect(sources.outfitRenders).toEqual([{ id: '900101', url: outfitRenderUrl(900101) }])
   })
 })
 
@@ -47,6 +49,17 @@ describe('art encoding', () => {
     const small = await sharp({ create: { width: 64, height: 64, channels: 3, background: '#fff' } }).png().toBuffer()
     const encoded = await encodeArt(ART_FAMILIES['outfit-portraits'], { id: 'u2', bytes: small, cacheHit: false })
     expect(encoded.width).toBe(64)
+  })
+
+  it('keeps the full-body render whole: its own size, transparent, pixel for pixel (P137)', async () => {
+    const rgba = Buffer.alloc(768 * 1024 * 4)
+    for (let i = 0; i < 768 * 1024; i += 1) rgba.set([i % 251, (i >> 3) % 241, (i >> 7) % 239, i % 3 === 0 ? 0 : 255], i * 4)
+    const source = await sharp(rgba, { raw: { width: 768, height: 1024, channels: 4 } }).png().toBuffer()
+    const render = await encodeArt(ART_FAMILIES['outfit-renders'], { id: 'r1', bytes: source, cacheHit: false })
+    expect([render.width, render.height]).toEqual([768, 1024])
+    const back = await sharp(render.bytes).ensureAlpha().raw().toBuffer()
+    const visible = (b: Buffer) => Buffer.from(b.filter((_, j) => b[j - (j % 4) + 3] !== 0))
+    expect(visible(back).equals(visible(rgba))).toBe(true)
   })
 })
 

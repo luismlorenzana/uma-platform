@@ -1,5 +1,5 @@
 // CLI for `pnpm release:check` (UA5): reads a published channel back the way a game will and checks it.
-//   pnpm release:check -- --channel candidate --against latest
+//   pnpm release:check -- --channel candidate --against latest [--added-families=outfit-renders]
 // It loads the channel with the release client (every set and the art index, hash-checked), confirms the bucket holds
 // every file at its size, loads each sprite set with `spriteSet` and decodes each of its pages, and with `--against`
 // confirms every file of the other channel's release is carried byte for byte.
@@ -35,6 +35,8 @@ async function main(): Promise<void> {
   const bucket = argument('--bucket') ?? process.env.UMA_RELEASE_BUCKET ?? DEFAULT_BUCKET
   const channel = argument('--channel') ?? 'latest'
   const against = argument('--against')
+  // A families-only release (P137) may add these image families to the art index, and nothing else.
+  const addedFamilies = (argument('--added-families') ?? '').split(',').filter(Boolean)
   const storage = new GcloudStorageClient(bucket, project)
   const source: ReleaseSource = {
     async read(path) {
@@ -83,13 +85,22 @@ async function main(): Promise<void> {
     if (base.version === manifest.version) console.log(`${against} is the same release`)
     else {
       const { carried } = checkCarried(base, manifest)
-      console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; the art index changed only by \`sprites\``)
+      const allowed = ['`sprites`', ...addedFamilies.map((family) => `\`${family}\``)].join(' and ')
+      console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; the art index may change only by ${allowed}`)
       if (base.art && manifest.art) {
         const read = async (path: string) => JSON.parse(new TextDecoder().decode(await client.file(path === base.art ? base : manifest, path))) as Record<string, unknown>
         const [before, after] = await Promise.all([read(base.art), read(manifest.art)])
         parseArtIndex(after, manifest.art)
-        const strip = ({ sprites: _sprites, ...rest }: Record<string, unknown>) => JSON.stringify(rest)
-        if (strip(before) !== strip(after)) failures.push('The art index changed beyond its sprites map')
+        const strip = ({ sprites: _sprites, images, ...rest }: Record<string, unknown>) => {
+          const kept = Object.fromEntries(Object.entries((images ?? {}) as Record<string, unknown>).filter(([family]) => !addedFamilies.includes(family)))
+          return JSON.stringify({ ...rest, images: kept })
+        }
+        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites map${addedFamilies.length ? ' and the added families' : ''}`)
+        const beforeImages = (before.images ?? {}) as Record<string, unknown>, afterImages = (after.images ?? {}) as Record<string, Record<string, unknown>>
+        for (const family of addedFamilies) {
+          if (family in beforeImages) failures.push(`${family} was already in ${against}`)
+          else console.log(`Added ${family}: ${Object.keys(afterImages[family] ?? {}).length} images`)
+        }
       }
     }
   }

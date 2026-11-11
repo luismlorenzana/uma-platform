@@ -77,6 +77,15 @@ pnpm release:check -- --channel candidate --against latest           # read it b
 pnpm release:publish -- --promote <version>                          # then move latest
 ```
 
+**A new art family** (an additive one, like `outfit-renders`, P137) publishes the same way, on top of `latest`:
+
+```bash
+pnpm assets:import -- --families=outfit-renders                       # GameTora → content/release/
+pnpm release:publish -- --add-families=outfit-renders --channel candidate
+pnpm release:check -- --channel candidate --against latest --added-families=outfit-renders
+pnpm release:publish -- --promote <version>
+```
+
 The first run on a machine needs the private inputs (P31): `content/overrides/scenario-icons.json` and the owner's
 wiki art folder, staged once with `pnpm assets:import -- --source dir:~/Documents/uma-content`. Downloads are cached
 in `scripts/*/.cache/`, so later runs only fetch what's new. Publishing uses the owner's `default` gcloud

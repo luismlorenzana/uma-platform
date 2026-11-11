@@ -77,6 +77,15 @@ describe('parseArtIndex', () => {
     expect(parseArtIndex(roundTrip(index), 'art')).toEqual(index)
   })
 
+  it('parses the additive full-body render family (1.5.0)', () => {
+    const index = syntheticArtIndex('atlases/a.webp', 'art/outfit-portraits/900101.aa.webp')
+    index.images['outfit-renders'] = {
+      '900101': { path: 'art/outfit-renders/900101.dd.webp', width: 768, height: 1024 },
+    }
+    expect(parseArtIndex(roundTrip(index), 'art')).toEqual(index)
+    // An older reader, without the family, drops it and keeps the rest (as the first test shows for any new family).
+  })
+
   it('rejects a frame on a page the atlas lacks', () => {
     const index = syntheticArtIndex('atlases/a.webp', 'art/b.webp')
     index.atlases['outfit-icons']!.frames['900101']!.page = 1

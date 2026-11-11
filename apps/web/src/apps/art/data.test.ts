@@ -1,6 +1,6 @@
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { describe, expect, it } from 'vitest'
-import { picturesOf, sections, tileOf, umaCount, type AlbumEntry } from './data'
+import { picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry } from './data'
 
 // Invented records only (copied from uma-quest's album/data.test.ts at 6c572e6, then extended).
 const img = (path: string) => ({ path, width: 10, height: 10 })
@@ -12,6 +12,7 @@ const art = {
     'outfit-chibis': { '900101-a': img('art/a.webp'), '900101-b': img('art/b.webp') },
     'character-dresses': { '9001-summer': img('art/s.webp') },
     'character-faces': { 9001: img('art/cf.webp') },
+    'outfit-renders': { 900101: { path: 'art/r.webp', width: 768, height: 1024 } },
   },
 } as unknown as ArtIndex
 const entry = (outfitId: number, over: Partial<AlbumEntry> = {}): AlbumEntry => ({
@@ -22,6 +23,11 @@ describe('Character Art (CA1)', () => {
   it('lists every picture master data has for her, in order, and skips what it lacks', () => {
     expect(picturesOf(art, entry(900101)).map((p) => p.label)).toEqual(['Portrait', 'Face', 'Chibi A', 'Chibi B', 'Character face', 'Summer dress'])
     expect(picturesOf(null, entry(900101))).toEqual([])
+  })
+  it('finds her full-body render on its own, apart from the grid (P137)', () => {
+    expect(renderOf(art, 900101)).toEqual({ label: 'Full body', path: 'art/r.webp', width: 768, height: 1024 })
+    expect(renderOf(art, 900201)).toBeNull()
+    expect(renderOf(null, 900101)).toBeNull()
   })
   it('tiles her face crop, else her portrait', () => {
     expect(tileOf(art, 900101)).toBe('art/f.webp')

@@ -126,6 +126,13 @@ export function picturesOf(art: ArtIndex | null, entry: Pick<AlbumEntry, 'outfit
   ]
 }
 
+/** Her full-body 3D render, head to toe (master data's `outfit-renders`, 1.5.0, P137): the reference for authoring her. */
+export function renderOf(art: ArtIndex | null, outfitId: number): AlbumPicture | null {
+  const images = art?.images as Partial<Record<string, Record<string, { path: string; width: number; height: number }>>> | undefined
+  const img = images?.['outfit-renders']?.[String(outfitId)]
+  return img ? { label: 'Full body', path: img.path, width: img.width, height: img.height } : null
+}
+
 /** The small picture a grid tile shows: her face crop, else her bust or portrait. */
 export function tileOf(art: ArtIndex | null, outfitId: number): string | null {
   const o = String(outfitId)

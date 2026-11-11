@@ -6,6 +6,7 @@ import { resolve } from 'node:path'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
 import { moveChannel, publishManifest, publishRelease, type PublishReleaseResult } from './publish'
 import { DEFAULT_CONTENT_DIR, DEFAULT_RELEASE_DIR } from './release-dir'
+import { planFamiliesOnly } from './families-only'
 import { planSpritesOnly, recordPublished } from './sprites-only'
 
 const PUBLISHED_SPRITES = resolve(DEFAULT_CONTENT_DIR, 'authoring/sprites/published.json')
@@ -38,7 +39,18 @@ async function main(): Promise<void> {
     return
   }
   let result: PublishReleaseResult
-  if (process.argv.includes('--sprites-only')) {
+  const addFamilies = argument('--add-families')
+  if (addFamilies) {
+    const staging = await mkdtemp(resolve(tmpdir(), 'uma-families-only-'))
+    try {
+      const plan = await planFamiliesOnly({ releaseDir, storage, families: addFamilies.split(',').filter(Boolean), stagingDir: staging })
+      console.log(`Families-only release on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
+        `adds ${Object.entries(plan.added).map(([family, count]) => `${family} (${count})`).join(', ')}, ${bytes(plan.addedBytes)}`)
+      result = await publishManifest({ manifest: plan.manifest, manifestPath: plan.manifestPath, localPaths: plan.localPaths, storage, channel, dryRun })
+    } finally {
+      await rm(staging, { recursive: true, force: true })
+    }
+  } else if (process.argv.includes('--sprites-only')) {
     const staging = await mkdtemp(resolve(tmpdir(), 'uma-sprites-only-'))
     try {
       const plan = await planSpritesOnly({ releaseDir, storage, stagingDir: staging })

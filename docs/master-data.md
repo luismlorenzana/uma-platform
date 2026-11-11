@@ -291,7 +291,7 @@ paths. A missing family or key means the release has no art for it; games fall b
 | `support-card-icons` | atlas | support card id | GameTora `support_card_s_<id>` | 128 px frames |
 | `skill-icons` | atlas | skill icon id | GameTora `skills/icon/<id>` (every `iconId` and `globalIconId`) | 128 px frames |
 | `scenario-icons` | atlas | scenario id | GameTora scenario crest | 128 px frames |
-| `outfit-portraits` | images | outfit id | GameTora full stand | ≤512 px, transparent |
+| `outfit-portraits` | images | outfit id | GameTora stand (a waist-up 3D render) | ≤512 px, transparent |
 | `outfit-busts` | images | outfit id | Cut from the portrait (head band centroid; private pins in `content/overrides/bust-crops.json`) | 256 px square |
 | `outfit-faces` | images | outfit id | Tight crop derived from the outfit's bust (private pins in `content/overrides/face-crops.json`) | 192 px square |
 | `support-card-art` | images | support card id | GameTora `supports/full/<id>` | ≤600 px, opaque |
@@ -301,6 +301,7 @@ paths. A missing family or key means the release has no art for it; games fall b
 | `outfit-glass` | images | outfit id | Baked from the outfit's bust by `scripts/assets/glass` (private face pins in `content/overrides/glass-pins.json`) | 512 px square, opaque |
 | `outfit-sprites` | sprite sets | outfit id | Owner-approved private sprite revisions | 256 px cells, trimmed WebP pages ≤4096 px |
 | `outfit-glass-order` | images | outfit id | The same bake: the window's pane map, each pixel its pane's place in the reveal (0 the lead, 1–250 the panes outside in, 255 the face) | 512 px square, lossless gray |
+| `outfit-renders` | images | outfit id | GameTora `characters/render/trainee/idle/<outfitId>` (its "3D model (static)": the full-body render, head to toe; P137, uma-data 1.5.0) | 768×1024, transparent, lossless |
 
 `Atlas`: `frameWidth`, `frameHeight` (128), `pages: [{ path, width, height }]` (WebP, ≤4096 px), and
 `frames: { <key>: { page, x, y, width, height } }`. Frames sit on a 132 px grid with 2 px transparent padding.
@@ -309,6 +310,11 @@ Wiki art comes from the owner's local folder (`pnpm assets:import -- --source di
 robots.txt closes `/w/`, where its images sit. A chibi the folder lacks comes from GameTora, so only a new character's
 stands need saving by hand. GameTora sources are downloaded at most 8 at a time (6 for full-size art)
 and cached; missing sources are skipped with a warning.
+
+`outfit-renders` is the one picture that shows the whole outfit, shoes included: every other outfit family is cut from
+the waist-up stand. It's kept lossless at its own size because it's a reference for character authoring (uma-quest's
+adult travelers), not a game sprite; Uma Character Art shows it first in an outfit's page. No game reads it, and older
+uma-data parsers skip a family they don't know, so adding it changed nothing for the games.
 
 `outfit-glass` derives from original art, so it's a release family with the same privacy as the busts, not uma-art; so does
 its pane map, `outfit-glass-order`, which a game uses to light the window pane by pane (uma-rpg's collections, P84): a pixel

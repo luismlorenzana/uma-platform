@@ -4,7 +4,7 @@
 import sharp from 'sharp'
 import { downloadImages, type DownloadFailure, type DownloadedImage, type ImageSource } from './download'
 
-export type ArtFamily = 'outfit-portraits' | 'outfit-busts' | 'outfit-faces' | 'support-card-art'
+export type ArtFamily = 'outfit-portraits' | 'outfit-busts' | 'outfit-faces' | 'support-card-art' | 'outfit-renders'
 
 export interface ArtFamilyConfig {
   family: ArtFamily
@@ -13,8 +13,10 @@ export interface ArtFamilyConfig {
   quality: number
   /** Portraits keep their cut-out; card art is a full opaque illustration. */
   alpha: boolean
+  /** Kept exactly, pixel for pixel: a reference for authoring (P137). `quality` is ignored. */
+  lossless?: boolean
   /** The download cache it reads: busts are cut from the portrait sources, never fetched twice. */
-  source: 'outfit-portraits' | 'support-card-art'
+  source: 'outfit-portraits' | 'support-card-art' | 'outfit-renders'
 }
 
 export const ART_FAMILIES: Record<ArtFamily, ArtFamilyConfig> = {
@@ -24,6 +26,8 @@ export const ART_FAMILIES: Record<ArtFamily, ArtFamilyConfig> = {
   'outfit-busts': { family: 'outfit-busts', maxSize: 256, quality: 82, alpha: true, source: 'outfit-portraits' },
   // Face-and-ears tiles for dense lists, pickers, workers, pips and seats.
   'outfit-faces': { family: 'outfit-faces', maxSize: 192, quality: 82, alpha: true, source: 'outfit-portraits' },
+  // The full-body 3D render (P137): head to toe at its own 768 × 1024, transparent and lossless, for character authoring.
+  'outfit-renders': { family: 'outfit-renders', maxSize: 1024, quality: 100, alpha: true, lossless: true, source: 'outfit-renders' },
 }
 
 export interface ArtImage {
@@ -138,7 +142,9 @@ export async function encodeArt(config: ArtFamilyConfig, image: DownloadedImage)
     fit: 'inside',
     withoutEnlargement: true,
   })
-  const encoded = config.alpha
+  const encoded = config.lossless
+    ? pipeline.webp({ lossless: true, effort: 5 })
+    : config.alpha
     ? pipeline.webp({ quality: config.quality, alphaQuality: 90, effort: 5 })
     : pipeline.flatten({ background: '#ffffff' }).webp({ quality: config.quality, effort: 5 })
   const { data, info } = await encoded.toBuffer({ resolveWithObject: true })

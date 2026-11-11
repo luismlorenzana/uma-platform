@@ -11,7 +11,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP48.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP50.
 
 ## The short answer
 
@@ -127,7 +127,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Id | Call |
 |---|---|
 | AP20 | **CA1 moves uma-quest's Album here, laid out by the Ranker** (AP32: the ten batches in order, each Uma and sister in ranking order, then the unranked): **Adult travelers** (each one's standing baseline stills, all twelve battle keys put together as the fight draws them, and her ten faces) and **Every Uma** (272 outfits by name, searchable, each with her portrait, bust, face, glass window, chibis A and B, and her character's face and four dresses). The code is copied from uma-quest at a recorded commit; the art is read at run time, hash-checked and kept on the device |
-| AP21 | **The full-body art is already full size.** The 3D full-body renders (`outfit-portraits` and `character-dresses`) and the chibis come from GameTora and the wiki at 512 px, the size of the originals on this Mac (`scripts/assets/.cache`, 272 stands, 540 dresses, 536 chibis), so master data already holds every input picture. No new store is needed |
+| AP21 | **The stands are full size, but waist up** (corrected by AP49): `outfit-portraits` and `character-dresses` and the chibis come from GameTora and the wiki at 512 px, the size of the originals (`scripts/assets/.cache`, 272 stands, 540 dresses, 536 chibis). The stand is a waist-up 3D render, so no picture showed an outfit head to toe until CA3 |
 | AP22 | **CA2 adds what the Album doesn't show:** each outfit's chibi sprite set (`outfit-sprites`, played by action and facing, frame by frame); each character's support card art (`support-card-art`, by the card's `characterId`); and, for an adult traveler, her authoring inputs (the master data portrait and chibi, her approved chibi sprite, the shared references) with her source-art release (batch, date, approval, file count and hashes, from its manifest). The tar archives themselves aren't unpacked |
 | AP41 | **Every Uma in the Ranker's order** (P135): T1 to T10, each outfit by her place, then the unranked, then F collapsed; a sister by her own name and profile; Every Uma is the first tab |
 | AP42 | **The order is fresh on every load:** `/api/art/order` reads the Ranker's files in the bucket and master data, through the shared tier model |
@@ -137,6 +137,8 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP46 | **Support cards:** her character's cards, SSR first, with their art; a sister's page lists her sister's |
 | AP47 | **Source art:** an adult set's release record from the master bucket's `source-art/` (release, approval, revision, personality, files, archive); archives never unpacked |
 | AP48 | **The inputs:** her master data portrait and chibis, her approved chibi sprite, and the shared references (counted, inside the archive) |
+| AP49 | **Full body** (CA3, P137): GameTora's full-body 3D render, head to toe, joins master data as `outfit-renders` (uma-data 1.5.0): 768×1024, transparent, lossless, every outfit. It's the first picture on an outfit's page. The still only: the idle animation stays out (your call) |
+| AP50 | **No game reads it:** older uma-data parsers skip an unknown family, so the games stay pinned where they are; uma-quest's adult travelers take it as an authoring input |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 
 ## Later
@@ -155,10 +157,11 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | RK2 | The pass after your ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan | Claude | M | RK1 ✓, your ranking | After your ranking |
 | CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
+| CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2, RK1, CA1 and CA2 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask.
+**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask.
 
 ## Your steps
 

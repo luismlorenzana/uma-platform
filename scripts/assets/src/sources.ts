@@ -11,9 +11,12 @@ const GAMETORA_MEDIA = 'https://media.gametora.com/umamusume'
 export const outfitIconUrl = (outfit: Pick<Outfit, 'id' | 'characterId'>): string =>
   `${GAMETORA_IMAGES}/characters/thumb/chara_stand_${outfit.characterId}_${outfit.id}.png`
 
-/** The full stand beside the thumbnail (about 512 px). Busts are cut from it. */
+/** The stand beside the thumbnail: a waist-up 3D render, about 512 px. Busts are cut from it. */
 export const outfitPortraitUrl = (outfit: Pick<Outfit, 'id' | 'characterId'>): string =>
   `${GAMETORA_IMAGES}/characters/chara_stand_${outfit.characterId}_${outfit.id}.png`
+
+/** The full-body 3D render, head to toe (768 × 1024, transparent): GameTora's "3D model (static)" (P137). */
+export const outfitRenderUrl = (outfitId: number): string => `${GAMETORA_MEDIA}/characters/render/trainee/idle/${outfitId}.png`
 
 /** A chibi by outfit id. Pose `a` is the original's `0010`, `b` its `0011`, as on the wiki. */
 export const outfitChibiUrl = (outfitId: number, pose: 'a' | 'b'): string =>
@@ -31,6 +34,7 @@ export const scenarioIconUrl = (scenarioId: number): string => `${GAMETORA_MEDIA
 export interface ArtSources {
   outfitIcons: ImageSource[]
   outfitPortraits: ImageSource[]
+  outfitRenders: ImageSource[]
   supportCardIcons: ImageSource[]
   supportCardArt: ImageSource[]
   skillIcons: ImageSource[]
@@ -50,6 +54,7 @@ export function artSources(
   return {
     outfitIcons: sets.outfits.map((outfit) => ({ id: String(outfit.id), url: outfitIconUrl(outfit) })),
     outfitPortraits: sets.outfits.map((outfit) => ({ id: String(outfit.id), url: outfitPortraitUrl(outfit) })),
+    outfitRenders: sets.outfits.map((outfit) => ({ id: String(outfit.id), url: outfitRenderUrl(outfit.id) })),
     supportCardIcons: sets.supportCards.map((card) => ({ id: String(card.id), url: supportCardIconUrl(card.id) })),
     supportCardArt: sets.supportCards.map((card) => ({ id: String(card.id), url: supportCardArtUrl(card.id) })),
     skillIcons: [...iconIds].sort((left, right) => left - right).map((iconId) => ({ id: String(iconId), url: skillIconUrl(iconId) })),

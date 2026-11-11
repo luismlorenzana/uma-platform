@@ -162,6 +162,7 @@ async function main(): Promise<void> {
   if (wanted('outfit-faces')) images.push(await buildImages('outfit-faces', sources.outfitPortraits, false))
   if (wanted('outfit-glass') || wanted('outfit-glass-order')) images.push(...(await buildGlass(inputs, sources.outfitPortraits)))
   if (wanted('support-card-art')) images.push(await buildImages('support-card-art', sources.supportCardArt, refresh))
+  if (wanted('outfit-renders')) images.push(await buildImages('outfit-renders', sources.outfitRenders, refresh))
   images.push(...(await buildWiki(inputs.outfits, false, refresh, wanted)))
 
   const manifest = await writeArt({ releaseDir, atlases, images })
