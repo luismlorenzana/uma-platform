@@ -15,7 +15,7 @@ const art = {
   },
 } as unknown as ArtIndex
 const entry = (outfitId: number, over: Partial<AlbumEntry> = {}): AlbumEntry => ({
-  outfitId, characterId: Math.floor(outfitId / 100), name: `Runner ${outfitId}`, title: 'Test', adult: false, sisterOf: null, sister: null, tier: null, order: null, ...over,
+  outfitId, characterId: Math.floor(outfitId / 100), name: `Runner ${outfitId}`, title: 'Test', adult: false, sisterOf: null, sister: null, tier: null, order: null, sprite: false, ...over,
 })
 
 describe('Character Art (CA1)', () => {

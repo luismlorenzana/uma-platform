@@ -23,9 +23,20 @@ export interface AlbumEntry {
   /** Her tier on Playable Umas, and her place in the whole ranking. */
   tier: AnyTier | null
   order: number | null
+  /** She has a chibi sprite set in master data (`outfit-sprites`, CA2). */
+  sprite: boolean
 }
 
-export interface AlbumData { entries: AlbumEntry[]; art: ArtIndex | null; release: string }
+/** A support card of her character's, with its art (CA2). */
+export interface SupportCard { id: number; title: string; rarity: 1 | 2 | 3; type: string; art: string | null }
+
+export interface AlbumData {
+  entries: AlbumEntry[]
+  art: ArtIndex | null
+  release: string
+  /** Each character's support cards, SSR first (CA2). */
+  cards: Map<number, SupportCard[]>
+}
 
 interface Order {
   release: string
@@ -40,8 +51,8 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
   album ??= (async () => {
     const client = await CONTENT.release()
     const manifest = await CONTENT.manifest()
-    const [outfits, characters, art, adult, order] = await Promise.all([
-      client.set(manifest, 'outfits'), client.set(manifest, 'characters'), client.art(manifest),
+    const [outfits, characters, supports, art, adult, order] = await Promise.all([
+      client.set(manifest, 'outfits'), client.set(manifest, 'characters'), client.set(manifest, 'support-cards'), client.art(manifest),
       keyOutfitIds(KEYS).catch(() => [] as number[]), request<Order>('/api/art/order'),
     ])
     // Names and titles as the Ranker shows them (the Global text first), so both pages say the same.
@@ -56,10 +67,18 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
           outfitId: o.id as number, characterId: o.characterId as number, name: r?.name ?? character,
           title: (o.title.global ?? o.title.en ?? o.title.ja).replace(/^\[(.*)\]$/, '$1'), adult: keyed.has(o.id as number),
           sisterOf: r?.sister ? character : null, sister: r?.sister ?? null, tier: r?.tier ?? null, order: r?.order ?? null,
+          sprite: !!art?.sprites?.[String(o.id)],
         }
       })
       .sort(byPlace)
-    return { entries, art, release: manifest.version }
+    const cards = new Map<number, SupportCard[]>()
+    for (const c of supports) {
+      const list = cards.get(c.characterId as number) ?? []
+      list.push({ id: c.id as number, title: (c.title.global ?? c.title.en ?? c.title.ja).replace(/^\[(.*)\]$/, '$1'), rarity: c.rarity as 1 | 2 | 3, type: c.type, art: art?.images['support-card-art']?.[String(c.id)]?.path ?? null })
+      cards.set(c.characterId as number, list)
+    }
+    for (const list of cards.values()) list.sort((a, b) => b.rarity - a.rarity || a.id - b.id)
+    return { entries, art, release: manifest.version, cards }
   })()
   album.catch(() => { album = null })
   return album

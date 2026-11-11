@@ -3,6 +3,7 @@ import type { FileSource } from '@luismlorenzana/uma-server/content'
 import { emptyBoard, emptyProfiles } from '@uma-platform/tiers'
 import { describe, expect, it } from 'vitest'
 import { ArtService } from './art.service'
+import { sourceReleases } from './art.sources'
 
 // Invented records only: uma-data's synthetic release, with a second, invented outfit for character 9001.
 const data = () => { const d = syntheticMasterData(); d.outfits = [...d.outfits, { ...d.outfits[0]!, id: 900102, variant: 'summer' }]; return d }
@@ -24,5 +25,22 @@ describe('Character Art’s order (CA1)', () => {
       expect.objectContaining({ outfitId: 900101, identity: '9001', sister: null, tier: 'F', order: 2 }),
       expect.objectContaining({ outfitId: 900102, identity: 's900102', name: 'Sister 9001', sister: { relation: 'twin', age: 'an invented age', profile: 'Invented.' }, tier: 'T2', order: 1 }),
     ])
+  })
+})
+
+describe('the adult sets’ source-art records (CA2)', () => {
+  it('reads each batch from its channel, counts her files and the shared ones, and stops at the first missing batch', async () => {
+    const root = 'source-art/adult-travelers/batch-1'
+    const objects = new Map<string, Uint8Array>([
+      [`${root}/channels/latest.json`, json({ manifest: `gs://bucket/${root}/releases/v1/manifest.json`, outfitIds: [900101], version: 'v1' })],
+      [`${root}/releases/v1/manifest.json`, json({ version: 'v1', archive: { bytes: 99, sha256: 'ab' }, deliveryCatalog: [{ outfitId: 900101, revision: 'set-r1', personality: 'calm', ownerWord: 'Approve it', recordedAt: '2026-01-01' }] })],
+      [`${root}/releases/v1/inventory.json`, json({ files: [{ file: '900101/a.png', bytes: 10 }, { file: '900101/b.png', bytes: 5 }, { file: 'references/r.png', bytes: 7 }] })],
+      [`${root}/releases/v1/publication-receipt.json`, json({ publishedAt: '2026-01-02' })],
+    ])
+    const releases = await sourceReleases(files(objects))
+    expect(releases).toEqual([{
+      batch: 'batch-1', version: 'v1', publishedAt: '2026-01-02', approvedAt: null, ownerWord: null, archive: { bytes: 99, sha256: 'ab' }, files: 3, bytes: 22,
+      shared: { files: 1, bytes: 7 }, outfits: { '900101': { revision: 'set-r1', personality: 'calm', ownerWord: 'Approve it', recordedAt: '2026-01-01', files: 2, bytes: 15 } },
+    }])
   })
 })

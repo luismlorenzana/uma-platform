@@ -153,7 +153,7 @@ output is the private `content/authoring/tiers/plan.json`.
 
 One signed-in site, `uma-platform.web.app`, in the `uma-rpg` project, with sub-apps behind tiles
 ([platform-app/README.md](../platform-app/README.md), AP1–AP24, [page](../platform-app/previews/platform-app.html),
-P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1 and CA1 are done; RK2 follows the owner's ranking; CA2 is next.
+P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1, CA1 and CA2 are done; RK2 follows the owner's ranking; GA1–GA3 and PB1 when the owner asks.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
@@ -162,7 +162,7 @@ P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1
 | RK1 | Uma Ranker: every board online, Playable Umas per outfit on ten tiers (one art batch each), sisters, the bucket store, `ranker:seed`, `ranker:push`, `ranker:pull`, the Studio's boards retired | Claude | L | SH2 ✓ | **Done** (P131) |
 | RK2 | The pass after the owner's ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan (AP36) | Claude | M | RK1 ✓, the owner's ranking | After the ranking |
 | CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker's batches | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
-| CA2 | Chibi sprite sets, support card art, adult sets' inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
+| CA2 | Chibi sprite sets, support card art, adult sets' inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 ✓ | Written as its [Q56](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q56-album-moves-to-the-platform.md) (`fa47214`) |
 | GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
 
@@ -181,6 +181,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| CA2 | **Character Art's second pass:** a chibi sprite player for every outfit with a master data sprite set (every action, own timings, play, pause, steps); her character's support cards with their art; each adult set's source-art record from the master bucket (release, approval, revision, personality, files, archive; never unpacked). [Design](../platform-app/README.md) AP45–AP48 | P136 |
 | CA1 | **Uma Character Art, live** at https://uma-platform.web.app/art: uma-quest's Album (copied at `6c572e6`) in the kit's frame, Every Uma laid out by the Ranker (T1–T10 by place, the unranked, F collapsed; sisters by name with their profiles), the adult travelers' keys from uma-quest's pack read only, the order fresh from the bucket on every load. [Design](../platform-app/README.md) AP41–AP44 | `cea0b60` (P135) |
 | RK1+ | **The Ranker's polish:** Umas per tier on the board and the home; F on Playable Umas (not used, collapsed, key F); eleven more sisters in the live profiles (22 in all; Royce and Royce has one outfit); numbers-only landing pages. [Design](../platform-app/README.md) AP37–AP40 | `ea805b3` (P133) |
 | RK1 | **Uma Ranker, live** at https://uma-platform.web.app/ranker: every board from `gs://uma-platform-content/ranker/`; Playable Umas per outfit on T1–T10 (one art batch each), one place or a whole tier up and down; 11 sisters in the private profiles; the old cast of 60 spread six a tier; the plan's schema 2 (identities, batches) for Character Art; `ranker:seed`, `ranker:push`, `ranker:pull`; the Studio's boards retired to links. [Design](../platform-app/README.md) AP25–AP36 | `af100ab`, `97f2be7`; deploy run [43064470175](https://github.com/luismlorenzana/uma-platform/actions/runs/43064470175) |

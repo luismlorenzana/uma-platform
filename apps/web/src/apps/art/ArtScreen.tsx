@@ -13,8 +13,45 @@ import { KEY_SETS, KEYS } from './content'
 import { byPlace, loadAlbum, picturesOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry } from './data'
 import { drawKeyFace, drawKeyPose } from './keyCanvas'
 import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
+import { SpritePlayer } from './SpritePlayer'
+import { request } from '../../api/client'
 
 type Keys = LoadedKeys<HTMLImageElement>
+const RARITY = { 1: 'R', 2: 'SR', 3: 'SSR' } as const
+
+/** An adult set's source-art record (CA2): its batch's release and her own entry in it. */
+interface SourceOutfit { revision: string | null; personality: string | null; ownerWord: string | null; recordedAt: string | null; files: number; bytes: number }
+interface SourceRelease {
+  batch: string; version: string; publishedAt: string | null; approvedAt: string | null; ownerWord: string | null
+  archive: { bytes: number; sha256: string }; files: number; bytes: number; shared: { files: number; bytes: number }; outfits: Record<string, SourceOutfit>
+}
+let sourcesLoading: Promise<SourceRelease[]> | null = null
+const loadSources = (): Promise<SourceRelease[]> => {
+  sourcesLoading ??= request<SourceRelease[]>('/api/art/sources')
+  sourcesLoading.catch(() => { sourcesLoading = null })
+  return sourcesLoading
+}
+const mb = (bytes: number) => `${(bytes / 1_000_000).toFixed(1)} MB`
+const day = (iso: string | null) => (iso ? iso.slice(0, 10) : '—')
+
+function SourceRecord({ outfitId }: { outfitId: number }) {
+  const [releases, setReleases] = useState<SourceRelease[] | null>(null)
+  useEffect(() => { let live = true; loadSources().then((r) => { if (live) setReleases(r) }, () => { if (live) setReleases([]) }); return () => { live = false } }, [])
+  if (!releases) return <p className="text-sm text-ink-soft">Loading</p>
+  const release = releases.find((r) => r.outfits[String(outfitId)])
+  const own = release?.outfits[String(outfitId)]
+  if (!release || !own) return <p className="text-sm text-ink-soft">Not in a source-art release yet.</p>
+  return (
+    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 rounded-lg bg-panel p-3 text-sm">
+      <dt className="text-ink-soft">Release</dt><dd><code className="text-xs">{release.version}</code> · {release.batch}</dd>
+      <dt className="text-ink-soft">Approved</dt><dd>“{own.ownerWord ?? release.ownerWord ?? '—'}” · {day(own.recordedAt ?? release.approvedAt)}</dd>
+      <dt className="text-ink-soft">Set</dt><dd>{own.revision ?? '—'} · {own.personality ?? '—'}</dd>
+      <dt className="text-ink-soft">Her files</dt><dd>{own.files} · {mb(own.bytes)}</dd>
+      <dt className="text-ink-soft">Shared</dt><dd>{release.shared.files} files (references, body standard) · {mb(release.shared.bytes)}</dd>
+      <dt className="text-ink-soft">Archive</dt><dd>{release.files} files · {mb(release.archive.bytes)} · published {day(release.publishedAt)}</dd>
+    </dl>
+  )
+}
 const EXPRESSIONS = ['default', 'blink-half', 'blink-closed', 'focus', 'shout', 'hurt', 'weary', 'smile', 'surprise', 'worried'] as const
 const POSE_LABEL: Record<string, string> = { 'cast-charge': 'cast · charge', 'cast-release': 'cast · release' }
 
@@ -174,6 +211,18 @@ function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; 
             )}
           </section>
         )}
+        {entry.sprite && (
+          <section className="flex flex-col gap-3">
+            <h3 className="font-display text-base font-bold">Chibi sprites</h3>
+            <SpritePlayer outfitId={entry.outfitId} name={entry.name} />
+          </section>
+        )}
+        {entry.adult && (
+          <section className="flex flex-col gap-3">
+            <h3 className="font-display text-base font-bold">Source art</h3>
+            <SourceRecord outfitId={entry.outfitId} />
+          </section>
+        )}
         <section className="flex flex-col gap-3">
           <h3 className="font-display text-base font-bold">Master data</h3>
           {pictures.length === 0 && <p className="text-sm text-ink-soft">No pictures in this release.</p>}
@@ -186,6 +235,19 @@ function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; 
             ))}
           </div>
         </section>
+        {(data.cards.get(entry.characterId)?.length ?? 0) > 0 && (
+          <section className="flex flex-col gap-3">
+            <h3 className="font-display text-base font-bold">{entry.sisterOf ? `${entry.sisterOf}’s support cards` : 'Support cards'} <span className="text-sm font-normal text-ink-soft">{data.cards.get(entry.characterId)!.length}</span></h3>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {data.cards.get(entry.characterId)!.map((c) => (
+                <figure key={c.id} className="flex flex-col items-center gap-1 rounded-lg bg-panel p-2">
+                  {c.art ? <ArtImg path={c.art} alt={c.title} box="flex min-h-24 items-center" className="max-h-56 max-w-full rounded-md object-contain" /> : <div className="h-24 w-full rounded-md bg-sunken" />}
+                  <figcaption className="text-center text-xs"><b>{RARITY[c.rarity]}</b> <span className="text-ink-soft">{c.type}</span><br />{c.title}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   )

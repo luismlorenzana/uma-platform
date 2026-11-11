@@ -28,7 +28,7 @@
 - **The Uma Platform app:** [docs/platform-app/README.md](docs/platform-app/README.md) (P127–P129, AP1–AP24): one
   signed-in site in the `uma-rpg` project, with sub-apps behind tiles (Uma Ranker, Uma Character Art, later the games'
   art and publishing). Live (P130); the Uma Ranker is live (RK1, P131): Playable Umas per outfit on ten art batches, with
-  sisters in the private `ranker/profiles.json`; Uma Character Art is live, laid out by the Ranker (CA1, P135); RK2
+  sisters in the private `ranker/profiles.json`; Uma Character Art is live, laid out by the Ranker (CA1, CA2, P135, P136); RK2
   after the owner's ranking. Claude owns Uma Studio and the app.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
