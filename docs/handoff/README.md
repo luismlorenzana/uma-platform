@@ -148,6 +148,23 @@ output is the private `content/authoring/tiers/plan.json`.
 | TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | Claude (with Q39, P126) | S | Q39 | With Q39 |
 | TA6 | The next boss franchise, one packet each: Arknights: Endfield next ([ranked](../authoring/franchises.md)); Honkai Impact 3rd and Punishing: Gray Raven are built (TA1++) | Claude | M | The owner's pick | Waiting on the pick |
 
+## The Uma Platform app (SH, RK, CA)
+
+One signed-in site, `uma-platform.web.app`, in the `uma-rpg` project, with sub-apps behind tiles
+([platform-app/README.md](../platform-app/README.md), AP1–AP24, [page](../platform-app/previews/platform-app.html),
+P127–P129). Order: SH1 now; SH2 on the owner's go; RK1 and CA1 side by side after it; RK2 and CA2 follow.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| [SH1](tasks/SH1-platform-app-shell.md) | The app, local: `apps/web`, `apps/api`, the home tiles, the master data proxy, `packages/tiers`, the private-content check | Claude | M | — | Ready |
+| [SH2](tasks/SH2-platform-app-cloud.md) | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, isolation checks, a placeholder live | Claude | M | SH1, the owner's go, then two console entries | Waiting on the go |
+| [RK1](tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the Studio's boards read only | Claude | L | SH2 | After SH2 |
+| RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, the owner's description | Written from the description |
+| [CA1](tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 | After SH2 |
+| CA2 | Chibi sprite sets, support card art, adult sets' inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
+| — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 live | Requested then |
+| GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
+
 ## Releases while packets run in parallel
 
 Several packets release uma-kit; three create packages (`uma-work`, `uma-server`).

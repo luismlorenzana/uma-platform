@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uma Platform App</title>
+<!-- docs/platform-app/README.md on one page: the signed-in platform site, its sub-apps, its cloud, its bill and its packets. No character art or names. -->
+<style>
+  :root {
+    --page: #f5f3ed; --panel: #fffefa; --raised: #f9f8f3; --sunken: #ecebe4;
+    --ink: #202b2b; --ink-soft: #5d6766; --ink-faint: #8b9493;
+    --accent: #e36642; --accent-wash: #fbe9e1; --info: #426b85; --info-wash: #e2ecf2; --success: #327d66; --success-wash: #e1f0ea;
+    --warn: #9a6a14; --warn-wash: #f6ecd8;
+    --hairline: rgb(32 43 43 / 0.09); --hairline-strong: rgb(32 43 43 / 0.18); --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+      --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+      --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+      --warn: #e0b05a; --warn-wash: #2e2414;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+    --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+    --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+    --warn: #e0b05a; --warn-wash: #2e2414;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 16px 56px; }
+  .eyebrow { font-size: 10px; letter-spacing: .16em; font-weight: 750; color: var(--ink-faint); text-transform: uppercase; margin: 0 0 10px; }
+  h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -.045em; line-height: 1.08; margin: 0 0 12px; font-weight: 650; }
+  h1 span { color: var(--accent); }
+  h2 { font-size: 20px; letter-spacing: -.02em; margin: 0 0 6px; font-weight: 650; }
+  h3 { font-size: 14px; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  .lead { font-size: 16px; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 22px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  section.card { background: var(--panel); border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 18px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font-size: 28px; letter-spacing: -.04em; line-height: 1.1; color: var(--ink); font-weight: 650; }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 9px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  thead th { color: var(--ink-faint); font-weight: 600; font-size: 11px; letter-spacing: .04em; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--sunken); color: var(--ink-soft); white-space: nowrap; }
+  .pill.ready { background: var(--success-wash); color: var(--success); }
+  .pill.wait { background: var(--warn-wash); color: var(--warn); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10px; }
+  .app { background: var(--raised); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--hairline); }
+  .app h3 { margin: 0 0 4px; font-size: 15px; color: var(--ink); }
+  .app p { margin: 4px 0 8px; font-size: 13px; }
+  .app.later { opacity: .7; border-style: dashed; }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .steps li { counter-increment: s; background: var(--raised); border-radius: 10px; padding: 12px 14px; margin: 0; font-size: 13px; }
+  .steps li::before { content: counter(s); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 11px; margin-right: 6px; }
+  .steps b { color: var(--ink); }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">uma-platform · the platform app · P127–P129 · planned 2026-11-11</p>
+  <h1>One signed-in home for the platform's tools<span>.</span></h1>
+  <p class="lead">An Uma Platform website in the <code>uma-rpg</code> project, with Google sign-in and the games' shell. Each sub-app opens from its own tile: first the <b>Uma Ranker</b> (today's Studio boards, moved online), then <b>Uma Character Art</b> (uma-quest's Album, moved here). Nothing is built or created yet.</p>
+  <nav><a href="#apps">Sub-apps</a><a href="#map">How it fits</a><a href="#cloud">Cloud</a><a href="#cost">Cost</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../README.md">Markdown</a></nav>
+  <div class="tiles">
+    <div class="tile"><b>2</b><span>sub-apps first: Ranker, Character Art</span></div>
+    <div class="tile"><b>11</b><span>boards move online as they are (RK1)</span></div>
+    <div class="tile"><b>272</b><span>outfits and 10 adult sets in Character Art (CA1)</span></div>
+    <div class="tile"><b>1</b><span>new bucket; no database</span></div>
+    <div class="tile"><b>~$0.01</b><span>a month, under the $5 alert</span></div>
+    <div class="tile"><b>24</b><span>calls, AP1–AP24</span></div>
+  </div>
+
+  <section class="card" id="apps">
+    <h2>The sub-apps</h2>
+    <p>Each sub-app has its own route, its own API routes and its own code folder, and never imports from another one (AP1). A sub-app that isn't built yet has no tile.</p>
+    <div class="apps">
+      <div class="app"><h3>Uma Ranker</h3><p>The eleven boards, with every rule from P113–P125, online at <code>/ranker</code>. Taps on a phone, keys on desktop. The bucket becomes the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy for local tools.</p><span class="pill ready">RK1 after SH2</span> <span class="pill wait">RK2: per outfit, your new ranking</span></div>
+      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>: adult travelers (baseline, keys, faces) and every Uma (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 after SH2</span> <span class="pill later">CA2 after CA1</span></div>
+      <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
+      <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
+    </div>
+  </section>
+
+  <section class="card" id="map">
+    <h2>How it fits</h2>
+    <p>One site and one API. The platform reads what master data and the games publish, and writes only to its own bucket.</p>
+    <svg viewBox="0 0 1100 420" role="img" aria-label="The site's tiles lead to two sub-apps, which call the platform API, which reads three buckets">
+      <rect x="20" y="20" width="1060" height="120" rx="14" style="fill: var(--raised); stroke: var(--hairline-strong)"/>
+      <text x="40" y="48" style="fill: var(--ink); font-weight: 650; font-size: 15px">uma-platform.web.app · Google sign-in, owner only</text>
+      <rect x="40" y="62" width="200" height="62" rx="10" style="fill: var(--success-wash)"/>
+      <text x="56" y="88" style="fill: var(--success); font-weight: 700; font-size: 14px">Uma Ranker</text>
+      <text x="56" y="108" style="fill: var(--ink-soft); font-size: 12px">/ranker · RK1</text>
+      <rect x="256" y="62" width="200" height="62" rx="10" style="fill: var(--success-wash)"/>
+      <text x="272" y="88" style="fill: var(--success); font-weight: 700; font-size: 14px">Character Art</text>
+      <text x="272" y="108" style="fill: var(--ink-soft); font-size: 12px">/art · CA1</text>
+      <rect x="472" y="62" width="180" height="62" rx="10" style="fill: var(--sunken); stroke: var(--hairline-strong); stroke-dasharray: 4 4"/>
+      <text x="488" y="88" style="fill: var(--ink-faint); font-weight: 700; font-size: 13px">Quest/Farm/Platform Art</text>
+      <text x="488" y="108" style="fill: var(--ink-faint); font-size: 12px">later · GA1–GA3</text>
+      <rect x="668" y="62" width="150" height="62" rx="10" style="fill: var(--sunken); stroke: var(--hairline-strong); stroke-dasharray: 4 4"/>
+      <text x="684" y="88" style="fill: var(--ink-faint); font-weight: 700; font-size: 14px">Publish</text>
+      <text x="684" y="108" style="fill: var(--ink-faint); font-size: 12px">later · PB1</text>
+      <text x="840" y="88" style="fill: var(--ink-soft); font-size: 12px">Shell: uma-kit AppFrame,</text>
+      <text x="840" y="106" style="fill: var(--ink-soft); font-size: 12px">AccountBar, AuthProvider</text>
+      <line x1="140" y1="124" x2="140" y2="190" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <line x1="356" y1="124" x2="356" y2="190" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <rect x="20" y="190" width="1060" height="70" rx="14" style="fill: var(--info-wash)"/>
+      <text x="40" y="218" style="fill: var(--info); font-weight: 700; font-size: 15px">platform-api · Cloud Run, us-central1, min 0, max 1</text>
+      <text x="40" y="242" style="fill: var(--ink-soft); font-size: 12px">/api/ranker/…  ·  /api/art/…  ·  /api/master/… (uma-server's proxy)  ·  owner guard on every route but /api/health</text>
+      <line x1="180" y1="260" x2="180" y2="310" style="stroke: var(--accent); stroke-width: 2"/>
+      <text x="190" y="290" style="fill: var(--accent); font-size: 11px; font-weight: 700">read + write</text>
+      <line x1="540" y1="260" x2="540" y2="310" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <text x="550" y="290" style="fill: var(--ink-faint); font-size: 11px">read, traveler-keys/ only</text>
+      <line x1="900" y1="260" x2="900" y2="310" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <text x="910" y="290" style="fill: var(--ink-faint); font-size: 11px">read</text>
+      <rect x="20" y="310" width="330" height="92" rx="12" style="fill: var(--accent-wash)"/>
+      <text x="36" y="336" style="fill: var(--accent); font-weight: 700; font-size: 13px">gs://uma-platform-content (new)</text>
+      <text x="36" y="358" style="fill: var(--ink-soft); font-size: 12px">ranker/boards/*.json · ranker/plan.json</text>
+      <text x="36" y="378" style="fill: var(--ink-soft); font-size: 12px">ranker/assets/ · ranker/imports/ · versioned</text>
+      <rect x="380" y="310" width="330" height="92" rx="12" style="fill: var(--raised); stroke: var(--hairline-strong)"/>
+      <text x="396" y="336" style="fill: var(--ink); font-weight: 700; font-size: 13px">gs://uma-quest-content (uma-quest's)</text>
+      <text x="396" y="358" style="fill: var(--ink-soft); font-size: 12px">traveler-keys/: the adult key pack</text>
+      <text x="396" y="378" style="fill: var(--ink-soft); font-size: 12px">and baseline stills (Q45, Q53)</text>
+      <rect x="740" y="310" width="340" height="92" rx="12" style="fill: var(--raised); stroke: var(--hairline-strong)"/>
+      <text x="756" y="336" style="fill: var(--ink); font-weight: 700; font-size: 13px">gs://uma-platform-master-data</text>
+      <text x="756" y="358" style="fill: var(--ink-soft); font-size: 12px">the release: every outfit's and character's art</text>
+      <text x="756" y="378" style="fill: var(--ink-soft); font-size: 12px">source-art/: the adult sets' archives</text>
+    </svg>
+    <p class="note">The full-body 3D renders (portraits and dresses) and the chibis in master data are already the originals' size, 512 px, so no new store is needed for inputs (AP21).</p>
+  </section>
+
+  <section class="card" id="cloud">
+    <h2>The cloud, in <code>uma-rpg</code></h2>
+    <p>The games' pattern (IN1–IN26), with app id <code>platform</code>. An idempotent <code>infra/bootstrap.sh</code> creates it, every command scoped to the project; the active gcloud account never changes.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Piece</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td><b>Site</b></td><td><code>uma-platform</code> (<code>uma-platform-lm</code> if taken), 20 versions kept; Firebase web app "Uma Platform web"</td></tr>
+        <tr><td><b>API</b></td><td>Cloud Run <code>platform-api</code>: us-central1, min 0, max 1, 512 MiB, 1 CPU, public at the edge, guarded</td></tr>
+        <tr><td><b>Accounts</b></td><td><code>platform-api-runtime</code> (its bucket, read master data, read <code>traveler-keys/</code>); <code>platform-deploy</code> (its service and images only)</td></tr>
+        <tr><td><b>Bucket</b></td><td><code>gs://uma-platform-content</code>: uniform access, public access prevented, versioned</td></tr>
+        <tr><td><b>Database</b></td><td>None: boards are JSON objects written with <code>ifGenerationMatch</code>, the Studio's revision check (AP10)</td></tr>
+        <tr><td><b>Images</b></td><td>Artifact Registry <code>platform</code>, last 3</td></tr>
+        <tr><td><b>Deploy</b></td><td>Provider <code>uma-platform</code> in <code>github-actions</code>, only <code>main</code> of <code>luismlorenzana/uma-platform</code>; <code>deploy-app.yml</code> on changes to <code>apps/</code> or the packages they use</td></tr>
+        <tr><td><b>Sign-in</b></td><td>The project's Firebase Auth and allowed email; the domain added to authorized domains by the bootstrap; two OAuth client entries are yours</td></tr>
+        <tr><td><b>Isolation</b></td><td>Policy Troubleshooter: no database, no <code>gs://uma-rpg-content</code>, nothing in <code>gs://uma-quest-content</code> outside <code>traveler-keys/</code>, no other service or image repository</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="cost">
+    <h2>What it costs</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Piece</th><th>Size</th><th>Free tier</th><th class="num">A month</th></tr></thead>
+      <tbody>
+        <tr><td><b>Hosting site</b></td><td>~2 MB of app</td><td>10 GB stored, 360 MB a day</td><td class="num">$0</td></tr>
+        <tr><td><b>platform-api</b></td><td>a few thousand requests</td><td>2M requests, 180,000 vCPU-s, 360,000 GiB-s</td><td class="num">$0</td></tr>
+        <tr><td><b>Images</b></td><td>~0.15 GB</td><td>0.5 GB, shared with the games (0.37 GB today)</td><td class="num">≤$0.01</td></tr>
+        <tr><td><b>Bucket</b></td><td>~0.2 GB</td><td>5 GB-months in us-central1, shared on the billing account</td><td class="num">$0–$0.004</td></tr>
+        <tr><td><b>Bucket operations</b></td><td>thousands of reads, hundreds of writes</td><td>50,000 Class B, 5,000 Class A</td><td class="num">$0</td></tr>
+        <tr><td><b>Pictures to the phone</b></td><td>~0.3 GB once, then cached</td><td>1 GB from Cloud Run in North America</td><td class="num">$0</td></tr>
+        <tr><td><b>Total</b></td><td></td><td></td><td class="num"><b>~$0.01</b></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="packets">
+    <h2>The packets</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Id</th><th>What</th><th>Who</th><th>Size</th><th>Needs</th><th>State</th></tr></thead>
+      <tbody>
+        <tr><td class="id"><a href="../../handoff/tasks/SH1-platform-app-shell.md">SH1</a></td><td>The app, local: <code>apps/web</code>, <code>apps/api</code>, the home tiles, the master data proxy, <code>packages/tiers</code>, the private-content check</td><td>Claude</td><td>M</td><td>—</td><td><span class="pill ready">Ready</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/SH2-platform-app-cloud.md">SH2</a></td><td>The cloud and the deploy; a placeholder live</td><td>Claude</td><td>M</td><td>SH1, your go, your two console entries</td><td><span class="pill wait">Your go</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/RK1-ranker-online.md">RK1</a></td><td>Uma Ranker: the boards online, the bucket store, <code>ranker:pull</code> and <code>ranker:push</code></td><td>Claude</td><td>L</td><td>SH2</td><td><span class="pill ready">After SH2</span></td></tr>
+        <tr><td class="id">RK2</td><td>Umas split by outfit, and the new ranking</td><td>Claude</td><td>M</td><td>RK1, your description</td><td><span class="pill wait">Your description</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/CA1-character-art.md">CA1</a></td><td>Uma Character Art: uma-quest's Album moved here</td><td>Claude</td><td>M</td><td>SH2</td><td><span class="pill ready">After SH2</span></td></tr>
+        <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1</td><td><span class="pill later">After CA1</span></td></tr>
+        <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
+        <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Order: SH1 now; SH2 on your go; RK1 and CA1 side by side after it; RK2 and CA2 follow.</p>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Id</th><th>Call</th></tr></thead>
+      <tbody>
+        <tr><td class="id">AP1</td><td><b>One site, sub-apps inside it:</b> a lazy route, a code folder and an API module each; no sub-app imports another, and a test checks it</td></tr>
+        <tr><td class="id">AP2</td><td><b>In uma-platform's monorepo</b> (<code>apps/web</code>, <code>apps/api</code>): workspace packages with no release step; Publish can call the release scripts</td></tr>
+        <tr><td class="id">AP3</td><td><b>The games' stack, copied from uma-quest</b> at a recorded commit; local ports 8111 and 5204</td></tr>
+        <tr><td class="id">AP4</td><td><b>The home is tiles</b>, each with live numbers from its sub-app's summary; unbuilt sub-apps have none</td></tr>
+        <tr><td class="id">AP5</td><td><b>Owner only:</b> the games' Firebase Auth and allowed email, uma-server's guard</td></tr>
+        <tr><td class="id">AP6</td><td><b>Nothing private in git:</b> names, art, boards and imports read at run time; the private-content check covers <code>apps/</code></td></tr>
+        <tr><td class="id">AP7</td><td><b>Deploys on push to main</b> when <code>apps/</code> or its packages change, keyless, health checked against the commit</td></tr>
+        <tr><td class="id">AP8</td><td><b>The pieces</b>, named <code>platform</code> per IN4, in project <code>uma-rpg</code>, labelled <code>app=platform</code></td></tr>
+        <tr><td class="id">AP9</td><td><b>One private bucket</b>, <code>gs://uma-platform-content</code>, versioned; the runtime account administers only it</td></tr>
+        <tr><td class="id">AP10</td><td><b>No database:</b> generation preconditions are the revision check, versioning is the history</td></tr>
+        <tr><td class="id">AP11</td><td><b>Reads</b> master data like the games, and uma-quest's <code>traveler-keys/</code> read only: a deliberate exception to IN2</td></tr>
+        <tr><td class="id">AP12</td><td><b>Sign-in:</b> the bootstrap adds the authorized domain; you add the redirect URI and JavaScript origin</td></tr>
+        <tr><td class="id">AP13</td><td><b>Isolation is checked</b> with Policy Troubleshooter for both accounts</td></tr>
+        <tr><td class="id">AP14</td><td><b>RK1 moves the boards as they are</b>, every rule from P113–P125, rewritten in React with taps on a phone</td></tr>
+        <tr><td class="id">AP15</td><td><b>The tier model becomes <code>packages/tiers</code></b>, shared by the web app, the API, the Studio and the sprite queue</td></tr>
+        <tr><td class="id">AP16</td><td><b>The bucket is the source of truth:</b> a one-time upload at the current revisions, then 409 on a lost race</td></tr>
+        <tr><td class="id">AP17</td><td><b><code>pnpm ranker:pull</code></b> keeps the local copy for local tools; the Studio's boards turn read only, its sprite tools stay</td></tr>
+        <tr><td class="id">AP18</td><td><b>Franchise imports stay local</b>, then <code>pnpm ranker:push</code> uploads images and lists, never overwriting</td></tr>
+        <tr><td class="id">AP19</td><td><b>RK2 follows RK1:</b> Umas by outfit again, with the new ranking you describe</td></tr>
+        <tr><td class="id">AP20</td><td><b>CA1 moves uma-quest's Album as it is:</b> adult travelers and every Uma, copied at a recorded commit</td></tr>
+        <tr><td class="id">AP21</td><td><b>The full-body art is already full size</b> (512 px, like the originals), so master data holds every input picture</td></tr>
+        <tr><td class="id">AP22</td><td><b>CA2 adds</b> chibi sprite sets, support card art, each adult set's inputs and its source-art release record</td></tr>
+        <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>
+        <tr><td class="id">AP24</td><td><b>Later:</b> GA1–GA3 (Quest, Farm and Platform Art) and PB1 (Publish), as packets when you ask</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="steps">
+    <h2>Your steps</h2>
+    <ol class="steps">
+      <li><b>Now:</b> the go for the cloud, one word (about $0.01 a month).</li>
+      <li><b>After SH2's bootstrap:</b> two entries on the OAuth client in <a href="https://console.cloud.google.com/apis/credentials?project=uma-rpg">the console</a>: the redirect URI <code>https://uma-platform.web.app/__/auth/handler</code> and the origin <code>https://uma-platform.web.app</code>.</li>
+      <li><b>Before RK2:</b> how the new Uma ranking should work.</li>
+      <li><b>When each lands:</b> a look at the Ranker and at Character Art on your phone.</li>
+    </ol>
+  </section>
+</main>
+</body>
+</html>

@@ -25,6 +25,9 @@
 - **Uma sprites:** [docs/sprites/format.md](docs/sprites/format.md) and [pipeline.md](docs/sprites/pipeline.md) (CR1–CR34).
   Uma sprites derive from original art, so they're private: `content/authoring/sprites/` and master data's private
   release only, never git or uma-art. Props, bubbles, kits and foes are original and go to uma-art.
+- **The Uma Platform app:** [docs/platform-app/README.md](docs/platform-app/README.md) (P127–P129, AP1–AP24): one
+  signed-in site in the `uma-rpg` project, with sub-apps behind tiles (Uma Ranker, Uma Character Art, later the games'
+  art and publishing). SH1, then SH2 on the owner's go, then RK1 and CA1. Claude owns Uma Studio and the app.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
 ## Autonomy: what you do without asking
