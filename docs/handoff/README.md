@@ -152,15 +152,15 @@ output is the private `content/authoring/tiers/plan.json`.
 
 One signed-in site, `uma-platform.web.app`, in the `uma-rpg` project, with sub-apps behind tiles
 ([platform-app/README.md](../platform-app/README.md), AP1–AP24, [page](../platform-app/previews/platform-app.html),
-P127–P129). Order: SH1 now; SH2 on the owner's go; RK1 and CA1 side by side after it; RK2 and CA2 follow.
+P127–P130; [infrastructure](../platform-app/infrastructure.md)). SH1 and SH2 are done; RK1 and CA1 can run side by side now; RK2 and CA2 follow.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [SH1](tasks/SH1-platform-app-shell.md) | The app, local: `apps/web`, `apps/api`, the home tiles, the master data proxy, `packages/tiers`, the private-content check | Claude | M | — | Ready |
-| [SH2](tasks/SH2-platform-app-cloud.md) | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, isolation checks, a placeholder live | Claude | M | SH1, the owner's go, then two console entries | Waiting on the go |
-| [RK1](tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the Studio's boards read only | Claude | L | SH2 | After SH2 |
+| SH1 | The app, local: `apps/web`, `apps/api`, the home tiles, the master data proxy, `packages/tiers`, the private-content check | Claude | M | — | **Done** (P130) |
+| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, isolation checks, live at https://uma-platform.web.app | Claude | M | SH1 ✓, the owner's go ✓; the owner's two console entries for sign-in | **Done** (P130); sign-in waits on the console entries |
+| [RK1](tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the Studio's boards read only | Claude | L | SH2 ✓ | Ready |
 | RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, the owner's description | Written from the description |
-| [CA1](tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 | After SH2 |
+| [CA1](tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |
 | CA2 | Chibi sprite sets, support card art, adult sets' inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
 | — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 live | Requested then |
 | GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
@@ -180,6 +180,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| SH1, SH2 | **The Uma Platform app, live** at https://uma-platform.web.app: `apps/web` and `apps/api` copied from uma-quest at `47ca16d` on uma-kit's shell and sign-in, a tile home, the master data proxy, `packages/tiers` shared with the Studio, checks for private content, sub-app boundaries and the Hosting site; `infra/bootstrap.sh` made the pieces in `uma-rpg` (run twice, nothing new the second time), `deploy-app.yml` deploys on app changes; isolation checked; CI runs tests one package at a time. [Design](../platform-app/README.md), [infrastructure](../platform-app/infrastructure.md) | `96c9393`, `9549f33`, `ae51b07`; deploy run [43051193940](https://github.com/luismlorenzana/uma-platform/actions/runs/43051193940) |
 | TA1++++ | **A default outfit for each Uma with two or more**: locked in on her card or with `D`, saved on Playable Umas for both Uma boards; it sets her portrait, the outfit her card opens on and her playstyle, and the plan's `defaultOutfit` for TA2. [Tiers](../authoring/tiers.md). | `a88aa7e`, [CI](https://github.com/luismlorenzana/uma-platform/actions/runs/43034124193) · P125 |
 | TA1+++ | **SSS and plain tier rows on the Uma boards**: Playable Umas and Uma NPCs rank SSS, SS, S, A, B, F in the same rows as every board, without the playstyle grid; her playstyle stays on her card, in the filter and in the plan. Every other board keeps SS to F, and SSS Umas' careers meet SS bosses. Playable Umas kept its ranks. [Tiers](../authoring/tiers.md). | `ab32f81`, [CI](https://github.com/luismlorenzana/uma-platform/actions/runs/42949270888); `d32ecdb`, [CI](https://github.com/luismlorenzana/uma-platform/actions/runs/42950767257) · P122–P124 |
 | TA1++ | **Honkai Impact 3rd and Punishing: Gray Raven boss boards, unfiltered, and Left out**: 111 battlesuits and 86 frames from their wikis' MediaWiki APIs, one card each, with the valkyrie or construct, rank and type or class on the card. Any imported unit can be left out of every board from its card or its board's Left out row, and comes back when ranked or dragged. Eleven boards. [Tiers](../authoring/tiers.md), [franchises](../authoring/franchises.md). | `f6fe07c`, [CI](https://github.com/luismlorenzana/uma-platform/actions/runs/42676846736) · P120–P121 |

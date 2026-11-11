@@ -75,9 +75,9 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">uma-platform · the platform app · P127–P129 · planned 2026-11-11</p>
+  <p class="eyebrow">uma-platform · the platform app · P127–P130 · live 2026-11-11</p>
   <h1>One signed-in home for the platform's tools<span>.</span></h1>
-  <p class="lead">An Uma Platform website in the <code>uma-rpg</code> project, with Google sign-in and the games' shell. Each sub-app opens from its own tile: first the <b>Uma Ranker</b> (today's Studio boards, moved online), then <b>Uma Character Art</b> (uma-quest's Album, moved here). Nothing is built or created yet.</p>
+  <p class="lead">An Uma Platform website in the <code>uma-rpg</code> project, with Google sign-in and the games' shell. Each sub-app opens from its own tile: first the <b>Uma Ranker</b> (today's Studio boards, moved online), then <b>Uma Character Art</b> (uma-quest's Album, moved here). Live at <a href="https://uma-platform.web.app">uma-platform.web.app</a> since SH1 and SH2; sign-in waits on your two console entries.</p>
   <nav><a href="#apps">Sub-apps</a><a href="#map">How it fits</a><a href="#cloud">Cloud</a><a href="#cost">Cost</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../README.md">Markdown</a></nav>
   <div class="tiles">
     <div class="tile"><b>2</b><span>sub-apps first: Ranker, Character Art</span></div>
@@ -92,8 +92,8 @@
     <h2>The sub-apps</h2>
     <p>Each sub-app has its own route, its own API routes and its own code folder, and never imports from another one (AP1). A sub-app that isn't built yet has no tile.</p>
     <div class="apps">
-      <div class="app"><h3>Uma Ranker</h3><p>The eleven boards, with every rule from P113–P125, online at <code>/ranker</code>. Taps on a phone, keys on desktop. The bucket becomes the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy for local tools.</p><span class="pill ready">RK1 after SH2</span> <span class="pill wait">RK2: per outfit, your new ranking</span></div>
-      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>: adult travelers (baseline, keys, faces) and every Uma (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 after SH2</span> <span class="pill later">CA2 after CA1</span></div>
+      <div class="app"><h3>Uma Ranker</h3><p>The eleven boards, with every rule from P113–P125, online at <code>/ranker</code>. Taps on a phone, keys on desktop. The bucket becomes the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy for local tools.</p><span class="pill ready">RK1 ready</span> <span class="pill wait">RK2: per outfit, your new ranking</span></div>
+      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>: adult travelers (baseline, keys, faces) and every Uma (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 ready</span> <span class="pill later">CA2 after CA1</span></div>
       <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
       <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
     </div>
@@ -186,17 +186,17 @@
     <div class="scroll"><table>
       <thead><tr><th>Id</th><th>What</th><th>Who</th><th>Size</th><th>Needs</th><th>State</th></tr></thead>
       <tbody>
-        <tr><td class="id"><a href="../../handoff/tasks/SH1-platform-app-shell.md">SH1</a></td><td>The app, local: <code>apps/web</code>, <code>apps/api</code>, the home tiles, the master data proxy, <code>packages/tiers</code>, the private-content check</td><td>Claude</td><td>M</td><td>—</td><td><span class="pill ready">Ready</span></td></tr>
-        <tr><td class="id"><a href="../../handoff/tasks/SH2-platform-app-cloud.md">SH2</a></td><td>The cloud and the deploy; a placeholder live</td><td>Claude</td><td>M</td><td>SH1, your go, your two console entries</td><td><span class="pill wait">Your go</span></td></tr>
-        <tr><td class="id"><a href="../../handoff/tasks/RK1-ranker-online.md">RK1</a></td><td>Uma Ranker: the boards online, the bucket store, <code>ranker:pull</code> and <code>ranker:push</code></td><td>Claude</td><td>L</td><td>SH2</td><td><span class="pill ready">After SH2</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/SH1-platform-app-shell.md">SH1</a></td><td>The app, local: <code>apps/web</code>, <code>apps/api</code>, the home tiles, the master data proxy, <code>packages/tiers</code>, the private-content check</td><td>Claude</td><td>M</td><td>—</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/SH2-platform-app-cloud.md">SH2</a></td><td>The cloud and the deploy; a placeholder live</td><td>Claude</td><td>M</td><td>SH1 ✓, your go ✓</td><td><span class="pill ready">Done</span> <span class="pill wait">Console entries</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/RK1-ranker-online.md">RK1</a></td><td>Uma Ranker: the boards online, the bucket store, <code>ranker:pull</code> and <code>ranker:push</code></td><td>Claude</td><td>L</td><td>SH2 ✓</td><td><span class="pill ready">Ready</span></td></tr>
         <tr><td class="id">RK2</td><td>Umas split by outfit, and the new ranking</td><td>Claude</td><td>M</td><td>RK1, your description</td><td><span class="pill wait">Your description</span></td></tr>
-        <tr><td class="id"><a href="../../handoff/tasks/CA1-character-art.md">CA1</a></td><td>Uma Character Art: uma-quest's Album moved here</td><td>Claude</td><td>M</td><td>SH2</td><td><span class="pill ready">After SH2</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/CA1-character-art.md">CA1</a></td><td>Uma Character Art: uma-quest's Album moved here</td><td>Claude</td><td>M</td><td>SH2 ✓</td><td><span class="pill ready">Ready</span></td></tr>
         <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1</td><td><span class="pill later">After CA1</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
     </table></div>
-    <p class="note">Order: SH1 now; SH2 on your go; RK1 and CA1 side by side after it; RK2 and CA2 follow.</p>
+    <p class="note">SH1 and SH2 are done; RK1 and CA1 can run side by side now; RK2 and CA2 follow. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
   </section>
 
   <section class="card" id="calls">
@@ -235,8 +235,8 @@
   <section class="card" id="steps">
     <h2>Your steps</h2>
     <ol class="steps">
-      <li><b>Now:</b> the go for the cloud, one word (about $0.01 a month).</li>
-      <li><b>After SH2's bootstrap:</b> two entries on the OAuth client in <a href="https://console.cloud.google.com/apis/credentials?project=uma-rpg">the console</a>: the redirect URI <code>https://uma-platform.web.app/__/auth/handler</code> and the origin <code>https://uma-platform.web.app</code>.</li>
+      <li><b>Done:</b> the go for the cloud.</li>
+      <li><b>Now:</b> two entries on the OAuth client in <a href="https://console.cloud.google.com/apis/credentials?project=uma-rpg">the console</a>: the redirect URI <code>https://uma-platform.web.app/__/auth/handler</code> and the origin <code>https://uma-platform.web.app</code>.</li>
       <li><b>Before RK2:</b> how the new Uma ranking should work.</li>
       <li><b>When each lands:</b> a look at the Ranker and at Character Art on your phone.</li>
     </ol>

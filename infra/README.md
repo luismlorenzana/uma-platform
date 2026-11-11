@@ -106,3 +106,10 @@ live or noncurrent**. The 102 removed model files (38,795,312,862 bytes) are onl
 2026-11-15; GCS can't purge them earlier, and the window costs about $0.18 once. A second revision, 113401 r2, restored
 177/177 files identical by SHA-256 (36,400,573 bytes). `pnpm sprites:backup` then copied exactly the three files UA5
 changed (`published.json` and both progress files).
+
+## The Uma Platform app's cloud (SH2, P127)
+
+The app lives in the games' project, `uma-rpg`, not here: `bash infra/bootstrap.sh` (with
+`CLOUDSDK_ACTIVE_CONFIG_NAME=default`) makes its site, API, accounts, images, deploy sign-in and its bucket
+`gs://uma-platform-content`, and grants its runtime account read on this project's master bucket. It is idempotent.
+Every value, the isolation checks, the bill and the rollback: [docs/platform-app/infrastructure.md](../docs/platform-app/infrastructure.md).

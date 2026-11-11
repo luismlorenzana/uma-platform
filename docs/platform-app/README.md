@@ -1,6 +1,7 @@
 # The Uma Platform app
 
-> **Status: 2026-11-11 (P127–P129), planned; nothing is built or created yet.** The owner's direction: an Uma Platform
+> **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); sign-in waits on the owner's two
+> console entries. RK1 and CA1 are next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -122,22 +123,22 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [SH1](../handoff/tasks/SH1-platform-app-shell.md) | The app, local: `apps/web` and `apps/api`, the home tiles, sign-in (off locally), the master data proxy, the private-content check, `packages/tiers` | Claude | M | — | Ready |
-| [SH2](../handoff/tasks/SH2-platform-app-cloud.md) | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, a placeholder live | Claude | M | SH1, your go, then your two console entries | Waiting on your go |
-| [RK1](../handoff/tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the local boards read-only | Claude | L | SH2 | Ready after SH2 |
+| SH1 | The app, local: `apps/web` and `apps/api`, the home tiles, sign-in (off locally), the master data proxy, the private-content check, `packages/tiers` | Claude | M | — | **Done** (P130) |
+| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓ | **Done** (P130); sign-in waits on your two console entries |
+| [RK1](../handoff/tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the local boards read-only | Claude | L | SH2 ✓ | Ready |
 | RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, your description | Written from your description |
-| [CA1](../handoff/tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 | Ready after SH2 |
+| [CA1](../handoff/tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1 now; SH2 on your go; RK1 and CA1 can run side by side after it; RK2 and CA2 follow.
+**Order:** SH1 and SH2 are done; RK1 and CA1 can run side by side now; RK2 and CA2 follow.
 
 ## Your steps
 
 | When | What |
 |---|---|
-| Now | **The go for the cloud** (AP8–AP13, about $0.01 a month): one word |
-| After SH2's bootstrap | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
+| ~~Now~~ Done 2026-11-11 | ~~The go for the cloud~~: "Go, start SH1" |
+| **Now** | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
 | Before RK2 | How the new Uma ranking should work |
 | When each lands | A look at the Ranker and at Character Art on your phone |

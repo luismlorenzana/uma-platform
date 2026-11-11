@@ -47,7 +47,7 @@ jobs:
       - name: Verify
         run: |
           pnpm lint
-          pnpm test
+          pnpm test:ci
           pnpm build
 
       - name: Set a git identity for release tags

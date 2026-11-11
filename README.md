@@ -30,11 +30,13 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `packages/work` | `@luismlorenzana/uma-work`: the work engine both games run, jobs, queues, tickets and building levels ([README](packages/work/README.md)) |
 | `scripts/data` | GameTora importer and the release publisher ([README](scripts/data/README.md)) |
 | `scripts/authored-art` | Original full-colour props: committed masters → deterministic held/emote atlases (`pnpm art:props`) |
+| `apps/web`, `apps/api` | **The Uma Platform app** at https://uma-platform.web.app: one signed-in site with a tile for each sub-app ([design](docs/platform-app/README.md), [infrastructure](docs/platform-app/infrastructure.md), P127) |
+| `packages/tiers` | `@uma-platform/tiers` (private): the tier boards' model, shared by the Studio and the app |
 | `tools/studio` | Uma Studio (`pnpm studio`): the local tier boards for Umas, NPCs, bosses and enemies ([tiers](docs/authoring/tiers.md)), plus the sprite queue, animation desk, gates and props; `pnpm tiers:import <genshin\|wuwa\|hsr\|zzz\|hi3\|pgr>` |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
 | `assets/` | **In git.** Original art for the games (item icons so far) and its previews |
-| `infra/` | GCP project and bucket runbook ([README](infra/README.md)) |
+| `infra/` | GCP project and bucket runbook ([README](infra/README.md)); `bootstrap.sh`, the app's cloud in the `uma-rpg` project |
 | `content/` | **Gitignored.** Private inputs (`overrides/`) and the local release (`release/`). Never commit it |
 
 ## Develop
@@ -47,6 +49,10 @@ pnpm lint     # type-check every package
 pnpm test     # Vitest, synthetic fixtures only, no network
 pnpm build
 ```
+
+The Uma Platform app runs locally on two dev servers (`.claude/launch.json`: `platform-api` on 8111 with sign-in off,
+`platform-web` on 5204), reading master data from `content/release`. A push to `main` that touches `apps/` or a package
+it uses deploys it (`.github/workflows/deploy-app.yml`).
 
 ## Make a master data release
 

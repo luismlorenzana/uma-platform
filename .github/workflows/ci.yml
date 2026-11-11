@@ -39,7 +39,9 @@ jobs:
         run: pnpm lint
 
       - name: Run tests
-        run: pnpm test
+        # One package at a time: parallel Vitest suites starve the two-core runner (uma-rpg D256; the app's packages
+        # pushed scripts/pixel-art's heaviest test past its timeout, SH2).
+        run: pnpm test:ci
 
       - name: Build packages
         run: pnpm build

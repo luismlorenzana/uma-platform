@@ -25,6 +25,10 @@ of their own (P88). Games never import from each other and never read each other
 uma-farm's one-way parcels, capped by each receiving game (P89).
 New games start with fresh saves; nothing carries over from uma-racer (P4).
 
+uma-platform also runs **the Uma Platform app** (P127, [design](platform-app/README.md)): one signed-in site for the
+platform's own tools, in uma-rpg's project with every piece its own, like the games. It reads master data and what the
+games publish, and writes only to its own bucket.
+
 `uma-planner` is **not part of this initiative** (P12). It may be used once as a source for initial loads into
 uma-platform. It never consumes uma-platform.
 
@@ -179,8 +183,9 @@ Rules that carry over from uma-racer (`docs/research/game-web-tech.md` there):
 | GCP project | `uma-platform-lm` (`uma-platform` was taken, P34) |
 | Bucket | `gs://uma-platform-master-data`: private, `us-central1`, uniform access, public access prevention on |
 | Authoring backup | `gs://uma-platform-authoring`: private, `us-central1`, uniform access, public access prevention, object versioning and default seven-day soft delete; owner approved 2026-11-08. No game service accounts granted access. Rebuildable model/binary/dependency caches excluded |
-| Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket. Planned: `quest-api-runtime` and `farm-api-runtime` (project `uma-rpg`), granted by their Q2 and F2 (P88) |
+| Read access | Each game's Cloud Run service account: `roles/storage.objectViewer` on the bucket. Planned: `quest-api-runtime` and `farm-api-runtime` (project `uma-rpg`), granted by their Q2 and F2 (P88); `platform-api-runtime`, the Uma Platform app's, granted by SH2 (P127) |
 | Publishing | From the owner's machine, with gcloud scoped by environment variables |
+| The Uma Platform app | In project `uma-rpg` (P127): site `uma-platform`, Cloud Run `platform-api`, bucket `gs://uma-platform-content`; `platform-api-runtime` reads the master bucket, and uma-quest's `traveler-keys/` under an IAM condition ([infrastructure](platform-app/infrastructure.md)) |
 
 **Local gcloud has two accounts, and the active one is the owner's work account. Never change it.** Scope every command
 with `CLOUDSDK_ACTIVE_CONFIG_NAME` and `CLOUDSDK_CORE_PROJECT`, never `gcloud config set`.
