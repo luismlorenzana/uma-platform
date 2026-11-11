@@ -1,7 +1,7 @@
 # The Uma Platform API image (SH2), adapted from uma-quest's at 47ca16d. Build from the repo root:
 #   docker build -f apps/api/Dockerfile -t platform-api .
-# Every package it needs is in this workspace (uma-server), so no registry token is involved. .dockerignore keeps the
-# context to the manifests, the lockfile, apps/api and packages/server.
+# Every package it needs is in this workspace (uma-server, uma-data, tiers), so no registry token is involved.
+# .dockerignore keeps the context to the manifests, the lockfile, apps/api and those packages.
 #
 # Not `pnpm deploy`: its legacy mode re-resolves the whole workspace and fails on packages that live only on GitHub
 # Packages. Instead the builder installs the API's own graph in place and builds it, and the image keeps that install
