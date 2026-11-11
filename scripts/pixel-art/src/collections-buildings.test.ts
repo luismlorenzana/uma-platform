@@ -48,8 +48,9 @@ describe('H156 appended collections buildings', () => {
 
   it('fills the last three cells on the same sheet, in order, at ground line 44 without smoke', () => {
     const { index, img } = savedAtlas('buildings')
-    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([288, 432, 54])
-    expect(PLACES.slice(51)).toEqual(COLLECTIONS)
+    // F25 part A (P126) appends the Dorm and the shipping bin: one row below, the buildings sheet now 288×480.
+    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([288, 480, 56])
+    expect(PLACES.slice(51, 54)).toEqual(COLLECTIONS) // F25 part A appends two after them.
     expect(COLLECTIONS.map(p => p.id)).toEqual(['gallery', 'trials', 'drill-yard'])
     expect(COLLECTIONS.map(p => p.at)).toEqual([{ x: .5, y: .84 }, { x: .2, y: .52 }, { x: .8, y: .52 }])
     COLLECTIONS.forEach((p, i) => {

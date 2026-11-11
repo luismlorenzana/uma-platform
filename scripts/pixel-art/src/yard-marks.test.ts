@@ -38,14 +38,17 @@ describe('A05 Card Ticket and Training Yard marks', () => {
   it('keeps all 18 other atlas files and 94 older preview PNGs byte-identical', () => {
     expect(Object.keys(baseline.artFiles)).toHaveLength(18)
     expect(Object.keys(baseline.previews)).toHaveLength(94)
-    for (const [file, sha] of Object.entries(baseline.artFiles)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
-    for (const [file, sha] of Object.entries(baseline.previews)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
+    // F25 part A's fresh 2.24.0 baseline owns the buildings sheet and its two general previews, which grew by one row.
+    const f25 = ['buildings/atlas.png', 'buildings/atlas.json', 'buildings.png', 'buildings-contact-3x.png']
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!f25.includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
+    for (const [file, sha] of Object.entries(baseline.previews)) if (!f25.includes(file)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
   })
 
   it('appends exactly the requested native cells without overlapping earlier frames', () => {
     const { index } = savedAtlas('ui')
-    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 244, 61])
-    expect(FRAME_SPECS.slice(58).map(f => f.id)).toEqual(ids)
+    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
+    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 276, 71])
+    expect(FRAME_SPECS.slice(58, 61).map(f => f.id)).toEqual(ids) // F25 part A appends ten after them.
     expect(YARD_MARKS).toEqual(['fatigue', 'rest'])
     expect(ids.map(id => index.frames[id])).toEqual([
       { x: 0, y: 220, w: 16, h: 16, group: 'currency', key: 'card-ticket' },

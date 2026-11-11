@@ -104,6 +104,28 @@ supplies the ungraded item, appended after all material families. Do not give ut
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
 
+## The farm's M4 marks and places (uma-farm F25 part A, 2.25.0)
+
+The first packet drawn by Claude under P126. `ui/farm.ts` paints ten native 16px marks: the farm's gold (a coin stack
+with a loose coin, so its silhouette differs from Prize Money's coin face), a seed-packet badge sized to sit on a 32px
+crop icon's bottom-right quarter, a quality star, the bond (two hearts parted by a dark seam) and affinity (one heart with
+a sparkle) hearts, the Farm Rank rosette, and the four seasons (a notched five-petal blossom, a sun, a tilted maple
+leaf, a snowflake). `spec.ts` appends `currency/gold`, five `farm/*` and four `season/*` after A05's 61 records; they
+take two new rows at y=244 and y=260, so the sheet grows only down to **120×276**. `buildings/farm.ts` appends the Dorm
+(green shingles, two dormers, a porch, a chimney with smoke) and the shipping bin (lid propped open, a crate of turnips)
+on a new row at y=432; the buildings sheet grows to **288×480**. The farmlands review mock places them on its middle path.
+
+`testing/legacy-f25-2.24.0.json`, captured before drawing, freezes all 61 older UI records and 54 places with their
+cutouts, both whole old regions including gaps, the 24 other atlas files and 101 of the 103 earlier preview PNGs (the two
+general buildings previews grow, as in H156). Older tests' count guards advance to 71 UI frames and 56 places, and A05
+hands the buildings sheet to this baseline. `farm-m4.test.ts` checks the append metadata, determinism, clear borders,
+shape distinctions (gold against Prize Money, the two hearts, affinity against `stat/hp`, the four seasons pairwise, all
+above 25% silhouette difference) and that the badge leaves a crop's other three quarters untouched. Racer's currency
+previews exclude the farm's gold, so they stay byte-identical.
+
+`ui/farm-preview.ts` writes `farm-m4-marks-{1x,2x,4x}.png`; `buildings/build.ts` writes `farm-m4-buildings-{1x,2x}.png`
+on farmlands ground; `ui/build.ts` writes the labelled `farm-m4.html` and a `ui.html#farm-m4` section.
+
 ## Card Ticket and Training Yard marks (A05, 2.21.0)
 
 `ui/yard.ts` draws a native 16px violet fanned-card ticket with a pale star, distinct from the older gold punched

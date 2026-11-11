@@ -1,0 +1,1208 @@
+{
+  "source": "97f2be7",
+  "version": "2.24.0",
+  "ui": {
+    "width": 120,
+    "height": 244,
+    "rgba": "5746540a5bf42cb5a8a3f2edad7b28f5bc885cc03884312f9a1ed7a7ef228703",
+    "frames": {
+      "class/brawler": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "brawler",
+        "rgba": "5a80df689576577a747dc5bf21e5cbf06c3531b77a9e66e26f79790371f5f7b7"
+      },
+      "class/mage": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "mage",
+        "rgba": "bcce884a2c3a94b660594ee6bd081356d0a8b91bbed694a4dcdd9c4e9399df43"
+      },
+      "class/spellblade": {
+        "x": 48,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "spellblade",
+        "rgba": "0757f6267be1bd9b57eb2ea533dec376dd01ff51ac575f6e6ae704ebf7034c9c"
+      },
+      "class/cleric": {
+        "x": 72,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "cleric",
+        "rgba": "dd7ddd7fd05c18782b9cff0261d9cfe3e5c2c30b0dc3a86d8bc320d8e626d6fa"
+      },
+      "class/summoner": {
+        "x": 96,
+        "y": 0,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "summoner",
+        "rgba": "94a22b2c4c22dd55e009a580d3ba8efa2f4f6c52d6ca8b530135c6145f7ddc75"
+      },
+      "status/armor-break": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "armor-break",
+        "rgba": "79d928f614d9fae99ea1050be34f22909fc36a83c9c1105b04216954f6a3232f"
+      },
+      "status/mind-break": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "mind-break",
+        "rgba": "57afbd0c84b73f3c0ac7f77c664bd01c6a47ee9a667c9902c9081f857f5eef4c"
+      },
+      "status/enfeeble": {
+        "x": 24,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "enfeeble",
+        "rgba": "bc03753e721c54b332c8d0ecab82b047091da5c034dac28f8580b61e9ec08075"
+      },
+      "status/shatter": {
+        "x": 36,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "shatter",
+        "rgba": "449aef9fc09b32988c1f2598d5284af7791ce392e1bc271e40b3a163cc1e2bee"
+      },
+      "status/hex": {
+        "x": 48,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "hex",
+        "rgba": "aa7bddc6fbed5c20d2f8f99923d29aeaf572b11ec27f24def48ead62fe95df97"
+      },
+      "status/brave": {
+        "x": 60,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "brave",
+        "rgba": "fa4ff8ee9d164c0f1ddafcbe2fc7236bfd9b62c45ca6eb9874b83431fcf4b27a"
+      },
+      "status/faith": {
+        "x": 72,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "faith",
+        "rgba": "247ed07a59fb866203d3782a8f4138cf47a9558177503cdbf27990543b86f641"
+      },
+      "status/aegis": {
+        "x": 84,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "aegis",
+        "rgba": "e6b94ab46d735474d7df582e26238285087850b6b6ee502967f81bfaa1f4324e"
+      },
+      "status/breaker": {
+        "x": 96,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "breaker",
+        "rgba": "841b1909878bcb734193081e1a8483d4596d28a84a1eb8c8bcca4552aee8d40c"
+      },
+      "status/clarity": {
+        "x": 108,
+        "y": 24,
+        "w": 12,
+        "h": 12,
+        "group": "status",
+        "key": "clarity",
+        "rgba": "69acee5e439896a241c2f672016d012a15c6eb939d95c491711db7bf559c9715"
+      },
+      "currency/prize-money": {
+        "x": 0,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "prize-money",
+        "rgba": "ed920fab7cf1851a69c7751c91247993f54ffcc564632acfd7c7f2af21b9a6f1"
+      },
+      "currency/speed-ticket": {
+        "x": 16,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "speed-ticket",
+        "rgba": "ea09bb2e8f96a14f47e77fa160b930981ada26499a45e30dc2752d21b50f78ec"
+      },
+      "currency/uma-ticket": {
+        "x": 32,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "uma-ticket",
+        "rgba": "565961ec203d12b71d88ef9f21dc7e28f79618b892be25f79ee4f06ac0014227"
+      },
+      "tier/1": {
+        "x": 48,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "1",
+        "rgba": "ba9e4cde48b9bdb56c2f20ee396f454f5dd2602895e178af51f957280a82d42c"
+      },
+      "tier/2": {
+        "x": 60,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "2",
+        "rgba": "c30b84d9bc8846870ace2e37328f9868f46b22f0f0f079fdf4abaf1d3d1dbf87"
+      },
+      "tier/3": {
+        "x": 72,
+        "y": 36,
+        "w": 12,
+        "h": 12,
+        "group": "tier",
+        "key": "3",
+        "rgba": "443aca4b81c6a639a76c1c2f696626ff17cb1b53f9f6f2ec9aee2e9eb109cf50"
+      },
+      "currency/laurel": {
+        "x": 84,
+        "y": 36,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "laurel",
+        "rgba": "e7fe4983bdbe12f1127635e3fd9e9d18febdd0355a0a5f508734cd165a6824f0"
+      },
+      "front/iron": {
+        "x": 0,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "iron",
+        "rgba": "994a20be62d9c16bd0b2993302035e28628f154818f9359dc0817f61ff7f143a"
+      },
+      "front/arcane": {
+        "x": 16,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "arcane",
+        "rgba": "bfb52cb80a5eeb75ad2d54945f1508d514fa01d961b1fea8f355dc05f64a78a3"
+      },
+      "front/duel": {
+        "x": 32,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "duel",
+        "rgba": "cdc49893b7c46ee4698630b661b2573aa973992ebebe6d5384dc4a85c5dd86b1"
+      },
+      "front/horde": {
+        "x": 48,
+        "y": 52,
+        "w": 16,
+        "h": 16,
+        "group": "front",
+        "key": "horde",
+        "rgba": "714ec0bea94fcad2a6c2e8543af7c5e36b2d97dc29e176ca954b7581c50b667e"
+      },
+      "achievement/seal-iron": {
+        "x": 0,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-iron",
+        "rgba": "eefa9e69021eb56554cecb1dc32be9530773d572e272ca7c1e3230a9d1d62696"
+      },
+      "achievement/seal-arcane": {
+        "x": 24,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-arcane",
+        "rgba": "3ec13cb764235cafef6f73947ed681397e95e2e888c30d0bbcfc8a0535e622b9"
+      },
+      "achievement/seal-duel": {
+        "x": 48,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-duel",
+        "rgba": "94cd0587d9d71b9dfd0e6e55d9515897dfb688e97976bae13aefe168a6322537"
+      },
+      "achievement/seal-horde": {
+        "x": 72,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "seal-horde",
+        "rgba": "3e5595efef17ff74ce2ee3148cf63783b2767cad42153add379f06a315e7283e"
+      },
+      "achievement/rift-conquered": {
+        "x": 96,
+        "y": 68,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "rift-conquered",
+        "rgba": "dea538b8982346ae9847a22ff5c81854073b9598a77a9694793b2c081b28439b"
+      },
+      "achievement/iron-will": {
+        "x": 0,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "iron-will",
+        "rgba": "9426c800792985376d0e05d98d2b4ce6bbaabfae0f9ba821c7c8f24f5c114c64"
+      },
+      "achievement/arcane-purity": {
+        "x": 24,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "arcane-purity",
+        "rgba": "44abd591b3546e0ccc85a12f224cf55048aa05857ac0b79e1211ddd05f1e6524"
+      },
+      "achievement/untouched": {
+        "x": 48,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "untouched",
+        "rgba": "653b1cf72dfab80724aa5ed1968c6a3b4c063685a50d2611e568ed8da2bf2809"
+      },
+      "achievement/swift-convergence": {
+        "x": 72,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "swift-convergence",
+        "rgba": "491c65da445efbc5fda71176003559d75fac3e8e966a611f1951f908b99b3fb9"
+      },
+      "achievement/bestiary": {
+        "x": 96,
+        "y": 92,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "bestiary",
+        "rgba": "997be832cedd3e83cb04d495511ac3e9e4b8ddded8c5379d105a1ab6384a4a20"
+      },
+      "achievement/crossover": {
+        "x": 0,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "achievement",
+        "key": "crossover",
+        "rgba": "cb8448e53eba7ac6c15b455d0a2461396e619776cb3fdece35bed8e2b8ec39a5"
+      },
+      "class/paladin": {
+        "x": 24,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "paladin",
+        "rgba": "5073d96bcb7686badde0e482380fbee10aa48deda4405d502a793a09ac83f265"
+      },
+      "class/tomeblade": {
+        "x": 48,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "tomeblade",
+        "rgba": "09b0f61cc73859bc0d1ceca90e17887f555fa998e1201f911ee72a4858451e66"
+      },
+      "class/armsummoner": {
+        "x": 72,
+        "y": 116,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "armsummoner",
+        "rgba": "4f85fedffcbc965fe39f325de48acd81642e9e6af95dd4652a8e5adbe709e48f"
+      },
+      "class/recruit": {
+        "x": 0,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "recruit",
+        "rgba": "f73442050d2fcf335b5850084fbd0c6ca73c42b3c4b8aeb2f2db060c7770872f"
+      },
+      "class/duelist": {
+        "x": 24,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "duelist",
+        "rgba": "e0fb5fbc9e2d11d84213f2f4718bfe6bb3edbed48e00f989e35bc2f1f0656f5f"
+      },
+      "class/acolyte": {
+        "x": 48,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "acolyte",
+        "rgba": "8e55614db3069af2b137de9ba0b833e4fa6452ef0916a010c07ccbc0e2826a5b"
+      },
+      "class/caller": {
+        "x": 72,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "caller",
+        "rgba": "30e56b76a6a08c4c35b07638e67796b0663586500ef63f14111630eeb5bebb8e"
+      },
+      "class/apprentice": {
+        "x": 96,
+        "y": 140,
+        "w": 24,
+        "h": 24,
+        "group": "class",
+        "key": "apprentice",
+        "rgba": "3c742bebb54b81ed1acfb24f79d99271eef941721fac79e725dd2d9982792497"
+      },
+      "star/planet": {
+        "x": 0,
+        "y": 164,
+        "w": 24,
+        "h": 24,
+        "group": "star",
+        "key": "planet",
+        "rgba": "012cb583bd5f7174f9d4a06bfb5108b1d97ad93e6e641f35e641bac6b54edee7"
+      },
+      "star/prowess": {
+        "x": 24,
+        "y": 164,
+        "w": 24,
+        "h": 24,
+        "group": "star",
+        "key": "prowess",
+        "rgba": "204469cb5915bf3d9533aeff06336cae2ab4217d86e2cb64717b12ca2046e4bb"
+      },
+      "star/vigor": {
+        "x": 48,
+        "y": 164,
+        "w": 24,
+        "h": 24,
+        "group": "star",
+        "key": "vigor",
+        "rgba": "69d82dc9cab02985508e2bcf6d8e488edb98d86fef2c4a2e525b5ddeb2b255c7"
+      },
+      "star/guard": {
+        "x": 72,
+        "y": 164,
+        "w": 24,
+        "h": 24,
+        "group": "star",
+        "key": "guard",
+        "rgba": "bb32c1ee03c84d4addb299c21bbcda2df68d9278c5d149a2ef344fa75b45a2dd"
+      },
+      "star/template": {
+        "x": 96,
+        "y": 164,
+        "w": 24,
+        "h": 24,
+        "group": "star",
+        "key": "template",
+        "rgba": "9885a011439d9379d03efb28964761e46e2cb4f19763a10ad20729eee4e17d3d"
+      },
+      "stat/hp": {
+        "x": 0,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "hp",
+        "rgba": "069b8b7381c783d06f8410216e1368c051d8091efd0ac63f592a1147a7c8297c"
+      },
+      "stat/mp": {
+        "x": 16,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "mp",
+        "rgba": "9efea7b3ec38bd7d050ac93cbeb8bf7af8fa92d9c066db52e445ef1672e802a8"
+      },
+      "stat/atk": {
+        "x": 32,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "atk",
+        "rgba": "0fe872fbf3889da304adcd167ef1f84227788e0d883cf0d40cfc1dc52d8eec74"
+      },
+      "stat/matk": {
+        "x": 48,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "matk",
+        "rgba": "cfa20c9e02f9d4178c0bccecfee2253f7a8544a58fb56ccfee358d8dae5a22d4"
+      },
+      "stat/def": {
+        "x": 64,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "def",
+        "rgba": "9bc44bad433bc874194a9fec4021b8cec8736c14cfacea007f1b16259c6eced1"
+      },
+      "stat/mdef": {
+        "x": 80,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "mdef",
+        "rgba": "ed9e120c761071b1b3a6821dae39992acf5825920104c910c85912e170ece41e"
+      },
+      "stat/evasion": {
+        "x": 96,
+        "y": 188,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "evasion",
+        "rgba": "cd7cf81fee352f3f05b94176ef3b36e9784a6ddbc2703755ec954c3d185c644b"
+      },
+      "stat/limit": {
+        "x": 0,
+        "y": 204,
+        "w": 16,
+        "h": 16,
+        "group": "stat",
+        "key": "limit",
+        "rgba": "c24c2f7ae7d83a47793ff770853a64bd45d103ea49f9bb1d6d32a0daf9b59c59"
+      },
+      "currency/card-ticket": {
+        "x": 0,
+        "y": 220,
+        "w": 16,
+        "h": 16,
+        "group": "currency",
+        "key": "card-ticket",
+        "rgba": "5f67c5072ef3a1571d7e6b6957d90abc937f965c64c8bab5f23c9eba7259f104"
+      },
+      "yard/fatigue": {
+        "x": 16,
+        "y": 220,
+        "w": 24,
+        "h": 24,
+        "group": "yard",
+        "key": "fatigue",
+        "rgba": "3682b4273ff42ee86a2b96a60395ff35551b8cc7c1ea3d68cf884c52fd5887d4"
+      },
+      "yard/rest": {
+        "x": 40,
+        "y": 220,
+        "w": 24,
+        "h": 24,
+        "group": "yard",
+        "key": "rest",
+        "rgba": "8967626a7ebe048d3f98c9c4ab89d8bb6c8376bace530019019ac3aa6c0afb82"
+      }
+    }
+  },
+  "buildings": {
+    "width": 288,
+    "height": 432,
+    "rgba": "6d4d688b3a6a105c2605ef1e2eabd9b8dbf01f16de22af4cdd994740ddbc358c",
+    "frames": {
+      "fields": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "ce879ee98368ab91863029759ead884bbd8264c4f8d33b45e6e2f6e9beaf6a09"
+      },
+      "orchard": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "e25e8f06a2b56190bf274a3c0ba8f14baa0b5bac7f1ea726c63e78da66fe9d75"
+      },
+      "fishery": {
+        "x": 96,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "8c765a4d5391b51313fd6b4aff503e794b27cdb29c7c269e464500d8c67b55bb"
+      },
+      "herb-garden": {
+        "x": 144,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "9f307cf6ec98db9a2bbc66ff563fcf335ac28a81d29a23bed1dd5759b0bb0aa6"
+      },
+      "vegetable-garden": {
+        "x": 192,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "b9e84135151e579ce8b8e9d67f3f6da7a9ca45b1c8683d9a8d28286f426c7ad0"
+      },
+      "mushroom-cave": {
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "84dd031d6d808a8f44fe16fc05c8628e4916d09169ce9c69af52eb06cdfe127b"
+      },
+      "sugar-grove": {
+        "x": 0,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "4924d8af35c81b6be41e5ac349e02f116042c70ecd3c312ac022a4464a2deeac"
+      },
+      "nut-grove": {
+        "x": 48,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "b9743c35d57fdbdb67686e3831f07a9b0703888f22177f3b7e4463e02bfd8779"
+      },
+      "pantry": {
+        "x": 96,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "rgba": "19bd5b0c121e4ab1b50de667b5c62feb048456ee49cc20fc7cf63684427cd6d1"
+      },
+      "kitchen": {
+        "x": 144,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "farmlands",
+        "anchorY": 44,
+        "smoke": {
+          "x": 38,
+          "y": 4
+        },
+        "rgba": "b6789122a8fcf650a5523b9f6bdf19fdde29914725d7a46439241f068382dc9d"
+      },
+      "monster-den": {
+        "x": 192,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "c3a041ee13006e64863e5f33faab2b7f3a48824f52edfc3cb12b681f8a85a7ba"
+      },
+      "ley-spring": {
+        "x": 240,
+        "y": 48,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "51693b5e65521250a986a765acc85533e4f9b880ba7d93ddd07c38acc40577ae"
+      },
+      "mine": {
+        "x": 0,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "9bb7d3da080004d35f9ae775440a97dfaf8c221a862a1f566e934cdba67a29bf"
+      },
+      "crystal-cavern": {
+        "x": 48,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "fdfa45731bcacde0041a41b8417a2bdd6dc869e931967117eeb6f59dfdfdbdda"
+      },
+      "quarry": {
+        "x": 96,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "ba5a52db6805a703d355e77b8a05f10a8067796dfd09181e9fccda62daa475af"
+      },
+      "meadow": {
+        "x": 144,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "8792abd290ebaea7f9871aeab1341ac20f8be784890ed66480d15162a2a7d768"
+      },
+      "forest": {
+        "x": 192,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "45f53b46f71e088d6aeef291c1a606b5e9cd255d37171e82e4fb83a3b4e04010"
+      },
+      "fossil-dig": {
+        "x": 240,
+        "y": 96,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "68dc95d9021b4826903d7499580a248dfc254268e25f4fb77d374a58b1c44de8"
+      },
+      "workbench": {
+        "x": 0,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "43379b659c2d0caa3d1ae435e9cfcc537d7e68a17f783b010564abb3c3fbc9b2"
+      },
+      "forge": {
+        "x": 48,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 11,
+          "y": 2
+        },
+        "rgba": "4ea1633c24ffc15ef26f5141511a5eaa8fa8697a315e2f158521964eb4ef07bf"
+      },
+      "brawler-dojo": {
+        "x": 96,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "3c94688a0bf5210ce630891c1055ee4a98f39ce5fbd65f8f8e04d17dd3658d33"
+      },
+      "mage-tower": {
+        "x": 144,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "0317ee5e260a35665e95e98a52d734cbb9f5286fae2e3189ae6303980fb7ff1c"
+      },
+      "spell-blade-salle": {
+        "x": 192,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "9420d9803afb21e4d0aaae30cadb32a294a1a3888cc52ff45d5cd5e075b6f6a7"
+      },
+      "cleric-chapel": {
+        "x": 240,
+        "y": 144,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "0d70f1ba0dd351095d25863c92dcf37332769175f060f71334d90f08035823c8"
+      },
+      "summoner-circle": {
+        "x": 0,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "9a673260c3e62b97936b67aba2bc1799a8bc250d6361a2bbe8f6909be7e6e292"
+      },
+      "rangers-lodge": {
+        "x": 48,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "ebbe6b98c9051b628f451b1d1ece68cacf6c6e7309af9b96aedd7b2d93dbfe29"
+      },
+      "lancers-barracks": {
+        "x": 96,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "342dc2f633fba5fc20fdbd8e9ae2652e1c81f7da48d66e902a1197f307a19ff0"
+      },
+      "arcane-armory": {
+        "x": 144,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "e041dc81ff5fc823d465a327388118638569e755fcf09f7e552b110cbee644d3"
+      },
+      "knights-bastion": {
+        "x": 192,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "cdbf1e3b7dcef8249b70b170ea9709e28b8eec72192315ca33b4f88495f1fc0a"
+      },
+      "stable": {
+        "x": 240,
+        "y": 192,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "4bd8e97f41c34771d584f697ca72fff9359376d1d84845329fe9a5a8c4ed4251"
+      },
+      "party-hall": {
+        "x": 0,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "96a9dc816e1ee69dcb4e63af418bbab0bc8ed3552b831ee30f0aa54ce83fefc4"
+      },
+      "scenario-gate": {
+        "x": 48,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "1c9c943e16b77207ed6858f6a186c10d1b34ee3ce8f26e0484513cf177cc2dcf"
+      },
+      "warehouse": {
+        "x": 96,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "c0e16ae12cd1ab77f3ab8a6df99d00bc508e79f80fb4c22b53970396673a33d9"
+      },
+      "exchange": {
+        "x": 144,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "61cb63cf5b3ee2d761ee8a2733a5471bac730618ab2c773a17ee9dea74dcf5b7"
+      },
+      "observatory": {
+        "x": 192,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "a6aff070ecbcb4514da0d40e79257a9cde98cbed1c65b729eb609ba29a302529"
+      },
+      "tier-finale": {
+        "x": 240,
+        "y": 240,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "ff951d6798511d0527466091809ff2af51004dd017a7172f1622bf325f11a080"
+      },
+      "card-library": {
+        "x": 0,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "town",
+        "anchorY": 44,
+        "rgba": "9c7a5c35ca6bfca58c0b9dfb77122b0d94b413f7d2595eced1422d082cfbae65"
+      },
+      "gym": {
+        "x": 48,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "779981f9ad18968a8dcc42b4a6651c56753ac0bb041fdb744e33392da6a67b5a"
+      },
+      "racecourse": {
+        "x": 96,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44,
+        "rgba": "fe2909e7ebbf47484a0f24d71297de964efa95fb2ba285d69bd1eaacccc1f33c"
+      },
+      "trophy-hall": {
+        "x": 144,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "racing",
+        "anchorY": 44,
+        "rgba": "0cb9657d621a6a3ce6c4daff377af871f843ae69129d933ce5e6d2c5c3ba7f46"
+      },
+      "lapidary": {
+        "x": 192,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "433bc2f5c12c922e206d63ff138af9eb4a8a5d9fffb260e742d586076683c6fd"
+      },
+      "rift": {
+        "x": 240,
+        "y": 288,
+        "w": 48,
+        "h": 48,
+        "page": "battle",
+        "anchorY": 44,
+        "rgba": "0e71908be13039fe97e7c747d955f46d3b3ab48a62003e61d28e5d82e0527ca0"
+      },
+      "mine-workbench": {
+        "x": 0,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 6,
+          "y": 13
+        },
+        "rgba": "1ccda34e63eefe7ba91e0e0a1927c29ee169bd41b70b02da86399f949ae00e4d"
+      },
+      "fields-workbench": {
+        "x": 48,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "9003753ec737bc7d6ff9e1e376e55ae561314021c1ef6160672d31212177d618"
+      },
+      "forest-workbench": {
+        "x": 96,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "e582ed72825304bc79747d2a6bef6ee36660084988f64ed62d1799beb54b7a88"
+      },
+      "fishery-workbench": {
+        "x": 144,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "3229a50135a70e7ca84584ae18ca2c3d5cd22b3b3d543620c460126bfd06bfb3"
+      },
+      "den-workbench": {
+        "x": 192,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "rgba": "dc1ae3150fc7b5a67f7325b293385b9328e91eeb5b01288045bcbfbf12156dfb"
+      },
+      "weapon-forge": {
+        "x": 240,
+        "y": 336,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 9,
+          "y": 2
+        },
+        "rgba": "5a53a4f5e103f6d4fd584584eae6ce0f54b6e79300eeeb18a3891b6cb88ee6c0"
+      },
+      "tome-forge": {
+        "x": 0,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 35.5,
+          "y": 5
+        },
+        "rgba": "bfc02954d6de8d49d28e1e36e51491bf2263390c06891cc1fa88eccf7d8e5b12"
+      },
+      "charm-forge": {
+        "x": 48,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "wilds",
+        "anchorY": 44,
+        "smoke": {
+          "x": 31.5,
+          "y": 7
+        },
+        "rgba": "b4901d38a97b07e52426bdc3c372d7419b49195c445d9b8581ba80bdaf8fe02f"
+      },
+      "healer-sanctum": {
+        "x": 96,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "682fc7f446bb1edc3dbb35e2098e8f33df552abe163f2b76c4645786e9429b8f"
+      },
+      "gallery": {
+        "x": 144,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "learning",
+        "anchorY": 44,
+        "rgba": "ee9655d85c9eff3a866b7bdb08efa9cd4c9455b87cca63bf0e0519c61c6b73c7"
+      },
+      "trials": {
+        "x": 192,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "battle",
+        "anchorY": 44,
+        "rgba": "2c8f4ccd6a5acd899c0c4dfd5bac1f6b618558d374d547d505b449536bb645ba"
+      },
+      "drill-yard": {
+        "x": 240,
+        "y": 384,
+        "w": 48,
+        "h": 48,
+        "page": "battle",
+        "anchorY": 44,
+        "rgba": "1a716d3a902bd69aaca903f98c3cb70ef4d30169129b99d0016f8d6256f2414b"
+      }
+    }
+  },
+  "artFiles": {
+    "dishes/atlas.json": "c221bd09d32f6d4e9040b9bc97675293e2ea6df2977e95f7a5539b3f4d52fd30",
+    "dishes/atlas.png": "dae9ded75ffee31c80043db78cdaaf06c83af525dbbb153145451c5a0418931b",
+    "emote/atlas.json": "db7d2867824dfb2ce0714a77fa2ccea0b79568fb84a20955413c6dccd6383163",
+    "emote/atlas.png": "767907311b27dc685e92b9eb41ccde4d1de99bfa8ea6b58450d95501c7a3a79f",
+    "fx/atlas.json": "fa3d015bfb73c462ca34de619312a730d5ac24bdf5134bf33fa2a363fa4214a1",
+    "fx/atlas.png": "f9f2ce52e3a4ce2c50924e706cfcad12ed855ad854a175d9e5a5a83a35a6ffaf",
+    "gear/atlas.json": "c6e30247d8424e684d7be68b5b62ec8a37b76e88d18d35a30199e0ebc29aef21",
+    "gear/atlas.png": "6be0aacb98318f5fbb10f182c11dde528d1a66b1da254dd8a736d1365bd7722b",
+    "gems/atlas.json": "661c5b17c4e69753f5eea9741df25bd6dd20da57aa36b4d6a407ec4ca6534875",
+    "gems/atlas.png": "28bb1bbacf01e60e5b9de7a302f1d60ae1c80ada951704aa9f0113668f1070f6",
+    "held/atlas.json": "b8426944ef534a82c31ee27dce80c92de75d48ed85ee468bcde859785fae1208",
+    "held/atlas.png": "15c2932c1cda6f85b07e72319a07eeb2caef34e10fca6688a80c4aa369dd2fee",
+    "items/atlas.json": "7c3393fd5a46011dc7ed78aaddc0fc6b54c40bea4e17749b801334545026d611",
+    "items/atlas.png": "7b8c8af711bf1edfeaa565ac6b82312f421257d5a1777f68f3bba0850890ca18",
+    "kit-forest/atlas.json": "72603313815afdda51e9508f1f3d6b3a093667918ee7861bb31867e55e3024b7",
+    "kit-forest/atlas.png": "a6b283cf50c20d792b677d3517209f5fc0f1df214dd006a35c501d273ef119f9",
+    "kit-town-warrior/atlas.json": "5d9f7ab93d27b17393561e507250c84c7184764166c89054c61fe844699a4699",
+    "kit-town-warrior/atlas.png": "f2a0a18ecda0af1066f30c76ffe4bb35e2ae6384f260cf3892b186c07293a4eb",
+    "tiles/atlas.json": "ae95b8880ef61e4530e4b3b8acdb3d3a98723a5f2727f81c39893a33d0954fce",
+    "tiles/atlas.png": "2053b6eaba961592aa0242ce3d115ec24a10b7ec382cc1edcce254a967c1796d",
+    "world/atlas.json": "a55773f8d81d42ac8fb60234294ad3ac20abd4404db614451b01743a5a02cb46",
+    "world/atlas.png": "ee9c00019f670537452c005315aa664acb9bc04dbdf10de276f4733be760a7d0",
+    "world/stages-compact.json": "0c0227dc5dffde776076ee59f34f8aeb9c5a163566c4d0375f8ebe00b15ff6b7",
+    "world/stages-compact.png": "4849eb3284963b965f6fe7bda5f3b7c268423dde74e29b7d965929a01a1c1fc0"
+  },
+  "previews": {
+    "backdrops.png": "65778eac43bbba6a35c26249871d3448ddcb6a042d39b55d8943eff7eb8c88b4",
+    "battle-hub-2x.png": "100fa0d067f3213a0e48d3c7ec200286ecdd65415d6c70030e60a8ebc3e91d20",
+    "battle-tiles-2x.png": "db483461ca5b667c5a5b0f42bf48806622372445acdba9ba8e67b51cb6cae697",
+    "buildings-contact-3x.png": "51e02bc065e17cdac689324e4f20f1cbe81c71143e1e18cf2d082a5de357a43c",
+    "buildings.png": "888ae4097731009d3a619867196ca85846e4fc65a89e595a2c6558d7c0477ca3",
+    "calibration.png": "c804309a42285faf60b6c6638832d66225c92ee9da865b5f30cfccb68fdac848",
+    "classes-v3-emblems-1x.png": "ebcec0bb52eff88948b44c4b30390074947e9a4aae5f529ff5adc3c4a113d27f",
+    "classes-v3-emblems-2x.png": "e0b72b68d02c5f27c9c80b96dcfe8f3b40d2d7f9867dc2b06b22fdf9842140ca",
+    "classes-v3-emblems-4x.png": "40e2cfb6e9e2244a27f1346bef23d1969d5c9a1d095a34672622fa1219f99aba",
+    "collections-buildings-1x.png": "7d8a536fd51e8e48d5952c34fed24ff80fb9e8932f597fff8ff268c414fd769f",
+    "collections-buildings-2x.png": "4e796d9b5910030a54abef8a1981efc941f2292b8a7ed9104954e39a83efa4ea",
+    "dishes.png": "479a02a8ffde99c41b02e78a65310ea7db5e542d5f40e40f9fe1b6484897a0cc",
+    "fx-1x.png": "2b37fe5a496cd6ec4b197310c7829e35cc564901c20fec829c6346b03e2fe9b9",
+    "fx.png": "bd7e786b241c18e50811ce090b43ff205c608a93fa1844f953b7eb70da7b59b4",
+    "gear-1x.png": "fd620a150952e67dfc13e0f51a1ae2c04cc7e08d3adf8abea008a1c2a12cac7e",
+    "gear-armor-d103-1x.png": "05c48816bb66946ae40b1e0a596944515a1282695b2f5b14eb01fcf06e64fccd",
+    "gear-armor-d103.png": "5d6ec1cca82503e56dd803d0071fd0d0889f5bf5f41d68e3e99f5c44f662f58d",
+    "gear-d124-1x.png": "8e567bdf38fb63946554fb9a3c2065f106e9150448c165f595ca16cf46919384",
+    "gear-d124-2x.png": "4a752d2fd3c87958ae33ef119e2897ce4ab203c05344a226c23bd55e0d26b8d3",
+    "gear-hues-1x.png": "b3c297cd0df123ecc56e34a36dbf31b7dccc0866036ffd6d60537b29d0202472",
+    "gear-hues-2x.png": "6935470838f709319f7e0f91816825f596802a915680a009f18945c88a613935",
+    "gear.png": "e08d410295ba7c5e7fa70952043547bc7bde6ad1124c07a1861c12abc8bad6d1",
+    "gems-1x.png": "da6e35a7e5d86f7047138acae2e4b67503bf7f183dba7092181ca182442ef6c2",
+    "gems-2x.png": "4c0e79778a045fd17e19438799b18d44655c4e6158f9dbf7b07a16865eb5603a",
+    "gems-planets-2x.png": "a1be85d162240e52b139d39aa86f07ce3386a276054369b2d6a347dde668b0c8",
+    "healer-sanctum-2x.png": "6dc8e447abd52fb022df60c3ce749f9fc885baff741928c7d927dad864a5b8b3",
+    "held-emote-battle-1x.png": "3f47f0a4983e61c5931998c8a03121ece4f3a123c1705f39772d9831a0798483",
+    "held-emote-battle-2x.png": "6f276e2d220797c56aad9fd553ce92e4425e8b0a72e27eb441f6749f207dc2bf",
+    "held-emote-dark-1x.png": "564551325c5b3457bd0be4d7497790b44561aaf6f4f15bc552e7a43d0fcd0b87",
+    "held-emote-dark-2x.png": "34871e0d5adb6616ad314406bbf919a8a154249588cfdb5303304abe3ea0779f",
+    "held-emote-light-1x.png": "7eb1fca965e19fa192bb3437398063b805b2d7449f0c3576cf75b724c0ace932",
+    "held-emote-light-2x.png": "04bad53eae8054b494a2c058eecd486ad6f8b45ac5f71a4ddc8ba5af1d6ba575",
+    "items.png": "ce18e701fefa1b59b1963022e7dfcc6b7eaaa5260ec560b37a31dc7ebe903e92",
+    "lapidary-2x.png": "6f028ecc6b04cd3cf80018092474bc28290899dd3f64fb98a80437bcb4d3ebe2",
+    "laurel-marks-1x.png": "099adf63cc25a5c2e7710d71c325a7471fcd113035385347326aca4acbb2a527",
+    "laurel-marks-2x.png": "a6bf9a3b4f6a31fbf05cd66c67304aa7b0fe6500bfeec7ad7d50a6afe7db3a41",
+    "laurel-marks-4x.png": "b1a773595e2881fb9e92a37954179b7602371ef69b297d6dd33bc64c5b53f427",
+    "made-items-1x.png": "b3d624732bd0d657dd3e184563c15d9f8adb8ed8931c5d820ea1e1662e8a4d21",
+    "made-items-2x.png": "269d097857aa9340d66b55bb06357c88aca1cdcadf039aef3d2034cc60877b19",
+    "made-items-4x.png": "cc4d1e595ade6fa0d2f701f94ac71ab65d83e235b3d3386537d8f165f56d4753",
+    "paladin-bastion-2x.png": "fbe700830d7cbc87d17ee4b64a2b3c50b448a84dfb557fc587e75c15b4e47e54",
+    "paladin-emblems-1x.png": "da3b98660ee6ae9ed9e31fe7c04c02ab538f93cc7660eac80a67c9d76544a7b1",
+    "paladin-emblems-2x.png": "a6abefd4698a97beafa2e9cd69299768655e4870ee7522a5eb347f969ca247b1",
+    "paladin-emblems-4x.png": "745a458447086518b4535a036b693920b1e459a82f1bfcc0a987d762ce5e3a41",
+    "racer-buildings-2x.png": "ec99e5250ff88489bd15adebaf59d22747737573140d6e7584e6b0ecee603770",
+    "racer-marks-1x.png": "e759a950922b876e094d446fe384fea5965b1deb6724a80a9323e64b3dca99af",
+    "racer-marks-2x.png": "4dda2bedddae74b1462f4b0dd905fe58ea4b826dfa15c03d8295acd639b254d9",
+    "racer-marks-4x.png": "33e7f8cf455f8ffd57b152143e6dc65ccd092651b755664161811fd64fef174a",
+    "racer-ticket-items-2x.png": "277d6204d92f9001b0247c6fd2166c7d2555465f412299de941fccc7ce0abd94",
+    "racer-tonics-128px.png": "4da4e2efb8d94ec06ce6a576eeafbf104c0c731e494846d75ebc66604f6654ae",
+    "racer-tonics-16px.png": "382890e58e099a219abf9d95f035f0683f8f9e4d4bf99f42fb3ce37530b1799b",
+    "racer-tonics-24px.png": "9ad69c0589adfa91fadc3ff5833182e2bfcb6c0f0d52ddf5fdce340d344b0b00",
+    "racer-tonics-32px.png": "f7279f692a114d8469bf04944482870613a1928eb6206c4e148b43be031c5948",
+    "racer-tonics-64px.png": "efb13a91d07094302fa576eeaf1a3069d3546fe8b129a36ce5fea9b3f38a4682",
+    "racer-yard-marks-1x.png": "fd624dbf943d7659c29b2151600c0b04145442788464f1d82106fbdebca92484",
+    "racer-yard-marks-2x.png": "9b69d540e9635015672a6fc64dbcd9c7aa8936b0e6c9d22b28b3c7ced8ceffdd",
+    "racer-yard-marks-4x.png": "9e1000eb26e4acb0bb322aca5d930568ba15fed2fe1bb38ce8b619e7cf9419b0",
+    "racing-hub-2x.png": "97633caeb1c6a6ef7de898d61517ae98168c4947492d9fdd464a4cfa5f20f8b2",
+    "racing-tiles-2x.png": "400a19e22e2f0a1c0ef9091c1b939b0896e5e4173d9f009e23c4dbc32612159a",
+    "rift-2x.png": "cf8ed0e5808856742b2361de5726cb9c78fd509f708a3521af96d3ea5abf17ee",
+    "rift-battle-hub-2x.png": "ff4a17f6627946e9dafc75b23f6725b3662733c7654daa2d8420e82f577803a7",
+    "rift-marks-1x.png": "f2a862ca9c510dda59431a4449634275437978202d395c0d56a6998dc2d37654",
+    "rift-marks-2x.png": "40849d4d832c09f81973b3302caf457c5e282f79861e29d9cf52b8a8946b8dd4",
+    "rift-marks-4x.png": "9487404a9654fa0c5369f86ef8c73787998847db0642bbb13994ff07c02a644f",
+    "stage-buildings-1x.png": "17c27ddeac6757be3ec45d803fc624fa0578da7264a43c89b65abbcb6db92bec",
+    "stage-buildings-2x.png": "1b5027da480662dc333dcc39e1879a4a62a68fec770eb691480fffc5b767262d",
+    "stage-buildings-sample.png": "3c8fdfcd47c74078ec22c3c23f88857ecc4522a19515db3e7090fd48fd415431",
+    "stage-compact-1x.png": "1e5df0e0e7432ff513a6731243c33b6753c27c1ea50ed96a02f50a5ce844247d",
+    "stage-compact-2x.png": "5643cccb416eac6c613c2ac89395db8328cb6dac25212e2198eb5786e0e35200",
+    "stage-compact-sample.png": "9e0a6f7c01ea962180169b9b0f938759de622ce493412c27af240c6209eb43ec",
+    "star-crests-1x.png": "6da94132186b01b2afadc244b81d5ef935f477c718c795f99feee524cf8b871c",
+    "star-crests-2x.png": "faec7ec00f0263add396c0732e155e23e143f88ab7861d811683a0c4f0c8e8c6",
+    "star-crests-4x.png": "0b295d9a45ec3b2248e9ebc4e1cdf76c74fceafc299735536e2dde994258fa9a",
+    "tiles.png": "7466eb68c9dadd02c2d0eec51084b9388d49439a985cc0e78c7261b51ead85ad",
+    "ui-1x.png": "844bf33024913b164c2df2a5e6cffa3608c582799057f11619205e2187c96ca8",
+    "ui.png": "bfa36f275ddc1f0d563d50e3339c1c8d2e33fb292016b3aad0b577374d0e546f",
+    "wilds-trios-1.5x.png": "783fdb9a13cd997eca84282a99226132d46e4ed1a60babaaf5d415cb8ee18bf2",
+    "wilds-trios-1x.png": "98374a9efbdb3d27b2393eac4313a10bb7f1eed81c3a05c95a5ead54fe4de329",
+    "wilds-trios-3x.png": "d95e3f29ee7d1e5260fa3b608cbccaf48be61246410f6b04a5af483535f16786",
+    "world-canyon.png": "5465caf652e5d7e1abc384819f3bb24c3da9f909eb6eaacd4016603316c09b82",
+    "world-coast.png": "36162c389f002bf549ea47f46759c5c4755847e5112ab3da4288752f03891980",
+    "world-continent.png": "07d75d63f11754a198d543dfa6fa91472c55b4803b4166f9cda2a82996e6dfc7",
+    "world-crystal.png": "e5e48e5f6a47d65aac7bad6adc47aebb1fe08e28edfed58c3cb0d7032532ed16",
+    "world-desert.png": "39fdd5125530237f3e01f829df7556fdcf1425f66073138c768136177fcaa811",
+    "world-forest.png": "034457a492c2a9a68707b5b72260e7c58cbe2187306a4805de58f72f403813ae",
+    "world-geyser.png": "92741cb63a79bf5742f8b369237d065eddba017f604581b2c02c71063f6ee2b3",
+    "world-glacier.png": "87c57e2d65fa19ec881a04b51f14ad38970b784af75b8f31e956c641140a9065",
+    "world-highlands.png": "a7bec61b9855f1427b078a23711393b36aeb8784e5c7adeffe77d9552c6a793d",
+    "world-jungle.png": "fde6038148c39a6599eb9d242c11098eb17a4528c7414c7b5abd59026066e12b",
+    "world-markers-1x.png": "ddcbeea52943b08e1d45e4070823360b2b70832cdbd20686b0146680803f1c7e",
+    "world-meadow.png": "466b5af9428ad450bfc236b1e7f4d7c936e40ad48000ba9db72ac15c5f765373",
+    "world-moor.png": "0e3b6e82d20581e2e86f3ba17ffafb8ce31ca28f26f01a45c748ebfd665a1bf4",
+    "world-peaks.png": "8a514e710017913a9dca2150a1590994f638696c54cb363a189395cead982d8e",
+    "world-plots.png": "a1f71665cda74bb7b766f2f90171b96c76dc70bdad394aa3090fc3495a22b7f2",
+    "world-rift.png": "2abb2e7c689ec88a3ddcd446a3156f4d3fddd21633fd76a13e0616a7947028eb",
+    "world-ruins.png": "62f0f90c86e10a51859473ec7bc2ed9de98226279286fab9ab0ae211134bb81a",
+    "world-sky.png": "b0b562e4602b0afae104b2c63427f0bee77441ee65bbb5278b0305d731f49c50",
+    "world-swamp.png": "25674d042ce546abb312ad68eaabff0b6f6a1987cf1e95d6125db847d14b1139",
+    "world-tundra.png": "b6c28e24e1eadc0501bb59d90fa11e68cc03d890d1aa97cb7cd4d847f206ed24",
+    "world-underworld.png": "64a165509b3e4c8195f0c493e2d783dcf35a48854cf6a97dc32cbb45e7df1046",
+    "world-volcano.png": "f68cbacf60cef720084c2c868348f12ae4ebc4db480e5c3f9d39bc3ba5076a0f",
+    "world-world.png": "52316556d7661d3ee5a7fabcf5aa41d48788e9914c6c6bc9e2a33ac0e6a2076e",
+    "world.png": "6904a777779d0a432125bdad8aa9255d74bae1688c393ea7931222c0b1958ba3"
+  }
+}

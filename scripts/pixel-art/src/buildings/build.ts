@@ -220,6 +220,23 @@ for (const scale of [1, 2]) {
   const sheet = collectionsPreview(scale)
   writeFileSync(join(previews, `collections-buildings-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
+// uma-farm F25 part A: the Dorm and the shipping bin beside three farmlands neighbours, on farmlands ground.
+export const FARM_M4_COMPARISON = ['dorm', 'shipping-bin', 'pantry', 'kitchen', 'vegetable-garden'] as const
+const farmGround = [0, 1, 2, 3].map(v => groundTile(TERRAIN.farmlands, v))
+for (const scale of [1, 2]) {
+  const farm = image(FARM_M4_COMPARISON.length * (SIZE * scale + PAD) + PAD, SIZE * scale + 2 * PAD, [0, 0, 0, 255])
+  for (let y = 0; y < farm.h; y++)
+    for (let x = 0; x < farm.w; x++) {
+      const tile = farmGround[(Math.floor(x / (16 * scale)) + 3 * Math.floor(y / (16 * scale))) % 4]!
+      farm.px.set(tile.get(Math.floor(x / scale) % 16, Math.floor(y / scale) % 16), (y * farm.w + x) * 4)
+    }
+  FARM_M4_COMPARISON.forEach((id, i) => {
+    const d = drawn.find(p => p.place.id === id)
+    if (!d) throw new Error(`Missing farm comparison building ${id}`)
+    stamp(farm, d.px, PAD + i * (SIZE * scale + PAD), PAD, scale)
+  })
+  writeFileSync(join(previews, `farm-m4-buildings-${scale}x.png`), encodePng(farm.w, farm.h, farm.px))
+}
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`

@@ -17,16 +17,18 @@ Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`p
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 54 shared Hub places (48×48) on a 288×432 sheet, id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 56 shared Hub places (48×48) on a 288×480 sheet (2.25.0), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
-- `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), five currency marks (16×16),
+- `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), six currency marks (16×16),
   three tier crests (12×12), four Rift front crests (16×16), eleven achievement badges (24×24), five star crests
-  (24×24), eight stat marks (16×16) and two `yard` marks (24×24), on a **120×244** sheet (2.21.0). The index is
+  (24×24), eight stat marks (16×16), two `yard` marks (24×24), five `farm` marks (16×16) and four `season` marks
+  (16×16), on a **120×276** sheet (2.25.0). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
-  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>`, `stat/<stat>` or `yard/<key>`.
+  `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>`, `stat/<stat>`,
+  `yard/<key>`, `farm/<key>` or `season/<season>`.
   Classes: Recruit, Duelist, Acolyte, Caller, Apprentice; Brawler, Arms Spellblade, Tome Spellblade, Paladin, Cleric,
   Arms Summoner, Tome Summoner and Sorcerer. Read positions from the JSON. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
@@ -154,6 +156,29 @@ the connection. Network layouts must never close a 2×2 road block. Tall props s
 Gate, left to right. `racing-tiles-2x.png` shows the terrain alone; `racing-hub-2x.png` composes all four Racing places
 on a 12×22-tile sample, including the reused Scenario Gate and Tier Finale. These are review layouts, not game rules.
 Vitest freezes every published 2.5.0 building/tile frame, metadata and RGBA byte in `buildings/legacy-2.5.0.json`.
+
+## The farm's M4 marks and places (uma-farm F25 part A, 2.25.0)
+
+The first art drawn by Claude under P126 (pixel art is Claude's, character art ChatGPT's). Ten 16px marks append on two
+new rows below A05's, growing the UI sheet to **120×276**; two 48px places append on a new row, growing the buildings
+sheet to **288×480**. Every earlier record, cutout and pixel stays exact, including the empty gaps.
+
+| Frame | Position | What |
+|---|---|---|
+| `currency/gold` | (0,244) | The farm's gold: a stack of coins with one lying beside it, unlike Prize Money's single coin face |
+| `farm/seed-packet` | (16,244) | A crimped paper packet with a printed sprout; drawn at a 32px crop icon's bottom-right (offset 16,16) to turn the crop into its seeds |
+| `farm/star` | (32,244) | A goods' quality star |
+| `farm/heart-bond` | (48,244) | Bond between two Umas: two warm red hearts |
+| `farm/heart-affinity` | (64,244) | Your affinity with one Uma: one magenta heart with a sparkle |
+| `farm/rank` | (80,244) | The Farm Rank: a gold rosette, a cream barn on green, two ribbon tails (unlike the `tier/*` shields) |
+| `season/spring` … `season/winter` | (0…48,260) | A blossom, a sun, a fallen leaf, a snowflake |
+| `dorm` (buildings) | (0,432) | A two-storey bunkhouse, page `farmlands`, `anchorY` 44, `smoke` at (38,3) |
+| `shipping-bin` (buildings) | (48,432) | A lidded wooden bin, propped open, page `farmlands`, `anchorY` 44, no smoke |
+
+`farm` and `season` are new additive groups. The farm reads every frame by key. Review:
+`assets/previews/farm-m4.html`, with `farm-m4-marks-{1x,2x,4x}.png` (the marks on white and navy, the badge over five
+crops, a mock account bar) and `farm-m4-buildings-{1x,2x}.png` (beside the Pantry, Kitchen and Fields). The cast's
+three busts (part B) are ChatGPT's and ship in their own release.
 
 ## Card Ticket and Training Yard (A05, 2.21.0)
 

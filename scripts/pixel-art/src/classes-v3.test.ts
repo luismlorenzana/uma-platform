@@ -34,8 +34,9 @@ describe('H127 Classes v3 emblems', () => {
   })
   it('appends the seven exact keys, positions and 24px painters, with transparent corners', () => {
     const { index, img } = savedAtlas('ui')
-    expect([index.width, index.height]).toEqual([120, 244])
-    expect(Object.keys(index.frames)).toHaveLength(61)
+    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
+    expect([index.width, index.height]).toEqual([120, 276])
+    expect(Object.keys(index.frames)).toHaveLength(71) // F25 part A appends ten farm marks.
     expect(FRAME_SPECS.slice(38, 45).map(f => f.id)).toEqual(NEW.map(k => `class/${k}`))
     NEW.forEach((key, i) => {
       const [x, y] = positions[i]!, spec = FRAME_SPECS.find(f => f.id === `class/${key}`)!

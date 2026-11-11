@@ -7,7 +7,8 @@ import { currencyMark, tierCrest } from './racer.ts'
 import { achievementBadge, frontCrest } from './rift.ts'
 import { starCrest, statMark } from './stars.ts'
 import { cardTicket, yardMark } from './yard.ts'
-import { ACHIEVEMENTS, CLASSES, CURRENCIES, FRAME_SPECS, FRONTS, HYBRIDS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS, type FrameSpec } from './spec.ts'
+import { farmMark, goldCoin, seasonMark } from './farm.ts'
+import { ACHIEVEMENTS, CLASSES, CURRENCIES, FARM_MARKS, FRAME_SPECS, FRONTS, HYBRIDS, SEASONS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS, type FrameSpec } from './spec.ts'
 
 export type UiFrame = FrameSpec & { img: Img }
 export interface FrameIndex { x: number; y: number; w: number; h: number; group: FrameSpec['group']; key: string }
@@ -20,6 +21,7 @@ export function drawUi(spec: FrameSpec): Img {
   else if (spec.group === 'currency') {
     if (spec.key === 'laurel') laurelMark(s)
     else if (spec.key === 'card-ticket') cardTicket(s)
+    else if (spec.key === 'gold') goldCoin(s)
     else cutout = currencyMark(s, spec.key)
   }
   else if (spec.group === 'tier') tierCrest(s, spec.key)
@@ -27,6 +29,8 @@ export function drawUi(spec: FrameSpec): Img {
   else if (spec.group === 'achievement') achievementBadge(s, spec.key)
   else if (spec.group === 'star') starCrest(s, spec.key)
   else if (spec.group === 'yard') yardMark(s, spec.key)
+  else if (spec.group === 'farm') farmMark(s, spec.key)
+  else if (spec.group === 'season') seasonMark(s, spec.key)
   else statMark(s, spec.key)
   const img = new Img(spec.w, spec.h, s.render())
   cutout?.each((x, y) => img.set(x, y, [0, 0, 0, 0]))
@@ -56,7 +60,11 @@ export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<
   // H127 fills two more cells beside the Paladin; the five beginners append in tree order on a new row at y=140.
   // H141 appends the five 24px crests at y=164, then seven 16px marks at y=188 and the eighth at y=204.
   // A05 appends one 16px currency and two 24px Yard pieces on a new row at y=220.
-  const atlas = new Img(120, 244), index: Record<string, FrameIndex> = {}
+  // F25 part A appends the farm's gold and five farm marks on a new row at y=244, and the four seasons at y=260.
+  const atlas = new Img(120, 276), index: Record<string, FrameIndex> = {}
+  const farmCell = (group: string, key: string) => group === 'currency' && key === 'gold' ? [0, 244]
+    : group === 'farm' ? [16 + FARM_MARKS.indexOf(key as typeof FARM_MARKS[number]) * 16, 244]
+    : group === 'season' ? [SEASONS.indexOf(key as typeof SEASONS[number]) * 16, 260] : null
   for (const { id, group, key, w, h, img } of frames) {
     const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
     const paladin = group === 'class' && key === 'paladin'
@@ -70,7 +78,8 @@ export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<
       : group === 'front' ? FRONTS.indexOf(key as typeof FRONTS[number]) * 16
       : (n % 5) * 24
     const y = card || yard ? 220 : star >= 0 ? 164 : stat >= 0 ? 188 + Math.floor(stat / 7) * 16 : beginner >= 0 ? 140 : paladin || hybrid >= 0 ? 116 : group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36
-    atlas.copy(img, x, y); index[id] = { x, y, w, h, group, key }
+    const [fx, fy] = farmCell(group, key) ?? [x, y]
+    atlas.copy(img, fx!, fy!); index[id] = { x: fx!, y: fy!, w, h, group, key }
   }
   return { atlas, index }
 }

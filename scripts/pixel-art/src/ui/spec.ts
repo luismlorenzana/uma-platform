@@ -11,7 +11,13 @@ export const CURRENCIES = [...RACER_CURRENCIES, 'laurel', 'card-ticket'] as cons
 export const YARD_MARKS = ['fatigue', 'rest'] as const
 export type YardMark = (typeof YARD_MARKS)[number]
 export const TIERS = ['1', '2', '3'] as const
-export type Currency = (typeof CURRENCIES)[number]
+// uma-farm F25 part A (P126): the farm's gold, five farm marks and the four seasons, appended after A05.
+export const FARM_CURRENCY = 'gold' as const
+export const FARM_MARKS = ['seed-packet', 'star', 'heart-bond', 'heart-affinity', 'rank'] as const
+export const SEASONS = ['spring', 'summer', 'autumn', 'winter'] as const
+export type FarmMark = (typeof FARM_MARKS)[number]
+export type Season = (typeof SEASONS)[number]
+export type Currency = (typeof CURRENCIES)[number] | typeof FARM_CURRENCY
 export type RacerCurrency = (typeof RACER_CURRENCIES)[number]
 export type Tier = (typeof TIERS)[number]
 // H38: the Rift's four fronts and its eleven achievements (uma-rpg docs/design/rift.md §5, §7).
@@ -34,6 +40,8 @@ export type FrameSpec = { id: string; group: 'class'; key: Class; w: 24; h: 24 }
   | { id: string; group: 'star'; key: StarBody; w: 24; h: 24 }
   | { id: string; group: 'stat'; key: StatMark; w: 16; h: 16 }
   | { id: string; group: 'yard'; key: YardMark; w: 24; h: 24 }
+  | { id: string; group: 'farm'; key: FarmMark; w: 16; h: 16 }
+  | { id: string; group: 'season'; key: Season; w: 16; h: 16 }
 export const FRAME_SPECS: FrameSpec[] = [
   ...CLASSES.map((key): FrameSpec => ({ id: `class/${key}`, group: 'class', key, w: 24, h: 24 })),
   ...STATUSES.map((key): FrameSpec => ({ id: `status/${key}`, group: 'status', key, w: 12, h: 12 })),
@@ -48,4 +56,7 @@ export const FRAME_SPECS: FrameSpec[] = [
   ...STAT_MARKS.map((key): FrameSpec => ({ id: `stat/${key}`, group: 'stat', key, w: 16, h: 16 })),
   { id: 'currency/card-ticket', group: 'currency', key: 'card-ticket', w: 16, h: 16 },
   ...YARD_MARKS.map((key): FrameSpec => ({ id: `yard/${key}`, group: 'yard', key, w: 24, h: 24 })),
+  { id: 'currency/gold', group: 'currency', key: FARM_CURRENCY, w: 16, h: 16 },
+  ...FARM_MARKS.map((key): FrameSpec => ({ id: `farm/${key}`, group: 'farm', key, w: 16, h: 16 })),
+  ...SEASONS.map((key): FrameSpec => ({ id: `season/${key}`, group: 'season', key, w: 16, h: 16 })),
 ]

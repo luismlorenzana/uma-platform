@@ -12,6 +12,7 @@ import { CLASSES } from './spec.ts'
 import { CLASS_LABELS, CLASS_TREE, classesV3Preview } from './classes-v3-preview.ts'
 import { starsPreview } from './stars-preview.ts'
 import { yardPreview } from './yard-preview.ts'
+import { FARM_MARK_IDS, FARM_PREVIEW_CROPS, farmPreview, seededCrop } from './farm-preview.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..')
 const frames = uiFrames(), problems = checkUi(frames)
@@ -34,7 +35,7 @@ for (const [name, scale] of [['ui', 3], ['ui-1x', 1]] as const) {
   writeFileSync(join(previews, `${name}.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 // A02's six marks on the account bar's white panel and its inverse stage background, at exact integer scales.
-const marks = frames.filter(f => (f.group === 'currency' && f.key !== 'laurel' && f.key !== 'card-ticket') || f.group === 'tier')
+const marks = frames.filter(f => (f.group === 'currency' && f.key !== 'laurel' && f.key !== 'card-ticket' && f.key !== 'gold') || f.group === 'tier')
 for (const scale of [1, 2, 4]) {
   const cell = 24 * scale, sheet = new Img(marks.length * (cell + PAD) + PAD, 2 * (cell + PAD) + PAD).fill(BG)
   for (const [row, color] of ['#ffffff', '#101a24'].entries()) {
@@ -47,7 +48,7 @@ for (const scale of [1, 2, 4]) {
   writeFileSync(join(previews, `racer-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 // H31: retain A02's previews; compare the new wreath beside all three racer currencies on light/dark chips.
-const currencies = frames.filter(f => f.group === 'currency' && f.key !== 'card-ticket')
+const currencies = frames.filter(f => f.group === 'currency' && f.key !== 'card-ticket' && f.key !== 'gold')
 for (const scale of [1, 2, 4]) {
   const cell = 24 * scale, sheet = new Img(currencies.length * (cell + PAD) + PAD, 2 * (cell + PAD) + PAD).fill(BG)
   for (const [row, color] of ['#ffffff', '#17202b'].entries()) currencies.forEach((f, i) => {
@@ -91,6 +92,10 @@ for (const scale of [1, 2, 4]) {
   const sheet = yardPreview(scale)
   writeFileSync(join(previews, `racer-yard-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
+for (const scale of [1, 2, 4]) {
+  const sheet = farmPreview(scale)
+  writeFileSync(join(previews, `farm-m4-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
 const itemSheet = new Img(3 * (64 + PAD) + PAD, 64 + PAD * 2).fill(CELL)
 const references = [FAMILIES[0]!.raw[0]!, FAMILIES[1]!.raw[0]!]
 ;[speedTicketItem(), ...references.map(drawIcon)].forEach((px, i) => itemSheet.draw(new Img(32, 32, px).scaled(2), PAD + i * (64 + PAD), PAD))
@@ -103,7 +108,9 @@ const labels: Record<string, string> = { brawler: 'Brawler', mage: 'Mage', spell
   'seal-iron': 'Iron seal', 'seal-arcane': 'Arcane seal', 'seal-duel': 'Duel seal', 'seal-horde': 'Horde seal', 'rift-conquered': 'Rift conquered',
   'iron-will': 'Iron Will', 'arcane-purity': 'Arcane Purity', untouched: 'Untouched', 'swift-convergence': 'Swift Convergence', bestiary: 'Bestiary', crossover: 'Crossover',
   planet: 'Planet', prowess: 'Prowess', vigor: 'Vigor', guard: 'Guard', template: '★ Her moon',
-  hp: 'HP', mp: 'MP', atk: 'ATK', matk: 'M.ATK', def: 'DEF', mdef: 'M.DEF', evasion: 'Evasion', limit: 'Limit start' }
+  hp: 'HP', mp: 'MP', atk: 'ATK', matk: 'M.ATK', def: 'DEF', mdef: 'M.DEF', evasion: 'Evasion', limit: 'Limit start',
+  gold: 'Gold', 'seed-packet': 'Seed packet', star: 'Quality star', 'heart-bond': 'Bond', 'heart-affinity': 'Affinity', rank: 'Farm Rank',
+  spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' }
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
 const classesV3 = `<section id="classes-v3"><h2>Classes v3</h2><p>Tier 0 above Tier 1, physical to magical, on white and dark chips. Each emblem also appears at native size beside its full name.</p>${CLASS_TREE.map((row, tier) => `<h3>Tier ${tier}</h3><div class="examples">${row.map(key => {
   const f = frames.find(f => f.id === `class/${key}`)!
@@ -112,8 +119,19 @@ const classesV3 = `<section id="classes-v3"><h2>Classes v3</h2><p>Tier 0 above T
 const examples = (group: string) => frames.filter(f => f.group === group).map((f) => `<div class="example" role="img" aria-label="${labels[f.key]}${f.group === 'status' ? ', 2 stacks' : ''}"><img src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt=""><span>${f.group === 'status' ? '2' : labels[f.key]}</span></div>`).join('')
 const starCrests = `<section id="star-crests"><h2>Star crests and stat marks (H141)</h2><p>Native 24px crests and 16px marks. Each sheet: crests then stats on white; crests then stats on #17202b; crests on the #101a24 night sky. Columns follow the named rows below.</p><div class="examples">${examples('star')}</div><div class="examples">${examples('stat')}</div>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="star-crests-${scale}x.png" alt="Planet, Prowess, Vigor, Guard, her moon; HP, MP, ATK, M.ATK, DEF, M.DEF, Evasion, Limit start, on white and dark; crests on night sky">`).join('')}</section>`
 const yardMarks = `<section id="racer-yard"><h2>Card Ticket and Training Yard (A05)</h2><p>First two rows: Prize Money, Speed Ticket, Uma Ticket, Card Ticket, Laurels, on white and stage navy. Last three rows: Fatigue, Rest, on stage #101a24, light sunken #e4eaf2 and dark sunken #0b1118. Native 16px currencies and 24px Yard marks; 2× Yard is the game's 48pt size.</p><div class="examples">${examples('yard')}</div>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="racer-yard-marks-${scale}x.png" alt="Five currencies, then Fatigue sweat drop and Rest folded towel on their actual tile colours">`).join('')}</section>`
+const farmM4 = `<section id="farm-m4"><h2>The farm's M4 marks (uma-farm F25 part A)</h2><p>Gold, the seed-packet badge, quality star, bond and affinity hearts, Farm Rank and the four seasons, native 16px. The full review, with the badge over five crops, a mock account bar and the Dorm and shipping bin, is <a href="farm-m4.html">farm-m4.html</a>.</p><div class="examples">${frames.filter(f => (FARM_MARK_IDS as readonly string[]).includes(f.id)).map(f => `<div class="example"><img src="${uri(f.img)}" width="16" height="16" alt=""><span>${labels[f.key]}</span></div>`).join('')}</div></section>`
 const cards = frames.map((f) => `<figure><img src="${uri(f.img)}" width="${f.w * 3}" height="${f.h * 3}" alt="${f.id} at 3×"><img class="native" src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt="${f.id} at 1×"><figcaption>${labels[f.key]}</figcaption></figure>`).join('')
 writeFileSync(join(previews, 'ui.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Class emblems and status badges</title><style>
 :root{color-scheme:dark}body{margin:0;padding:12px;background:#0f141b;color:#e6e9ee;font:14px/1.4 system-ui,sans-serif}h1{font-size:20px}h2{font-size:16px}p,figcaption{color:#a2afbf}img{image-rendering:pixelated;display:block;flex:none}.examples,.cards{display:flex;flex-wrap:wrap;gap:8px}.example{display:flex;align-items:center;gap:6px;background:#18202a;padding:8px;border-radius:4px;min-height:28px}figure{margin:0;padding:10px;background:#18202a;border-radius:5px;display:grid;justify-items:center;align-content:end;gap:8px}figcaption{font-size:11px;text-align:center}.native{margin:auto}
-</style></head><body><h1>UI marks, emblems and badges</h1><p>Original pixel marks at native size; full names remain in accessible labels. Debuffs use red-violet badges, buffs gold-teal.</p><h2>Classes, 1×</h2><div class="examples">${examples('class')}</div>${classesV3}${starCrests}${yardMarks}<h2>Statuses and stacks, 1×</h2><div class="examples">${examples('status')}</div><h2>Currencies, 1×</h2><div class="examples">${examples('currency')}</div><h2>Tiers, 1×</h2><div class="examples">${examples('tier')}</div><h2>Rift fronts, 1×</h2><div class="examples">${examples('front')}</div><h2>Achievements, 1×</h2><div class="examples">${examples('achievement')}</div><h2>All icons, 3× and 1×</h2><div class="cards">${cards}</div><h2>Racer marks on white and dark panels</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="racer-marks-${scale}x.png" alt="Prize Money, Speed Ticket, Uma Ticket, Tier 1, Tier 2, Tier 3">`).join('')}<h2>Rift fronts and achievements on white and dark chips</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="rift-marks-${scale}x.png" alt="Iron, Arcane, Duel and Horde front crests, then the four front seals, Rift conquered, Iron Will, Arcane Purity, Untouched, Swift Convergence, Bestiary and Crossover">`).join('')}<h2>The six class emblems on white and dark chips</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="paladin-emblems-${scale}x.png" alt="Brawler, Mage, Spell Blade, Cleric, Summoner and Paladin">`).join('')}<h2>Speed Ticket, Wheat and Apple, 2×</h2><img src="racer-ticket-items-2x.png" alt="Speed Ticket beside existing Wheat and Apple item icons"></body></html>`)
+</style></head><body><h1>UI marks, emblems and badges</h1><p>Original pixel marks at native size; full names remain in accessible labels. Debuffs use red-violet badges, buffs gold-teal.</p><h2>Classes, 1×</h2><div class="examples">${examples('class')}</div>${classesV3}${starCrests}${yardMarks}${farmM4}<h2>Statuses and stacks, 1×</h2><div class="examples">${examples('status')}</div><h2>Currencies, 1×</h2><div class="examples">${examples('currency')}</div><h2>Tiers, 1×</h2><div class="examples">${examples('tier')}</div><h2>Rift fronts, 1×</h2><div class="examples">${examples('front')}</div><h2>Achievements, 1×</h2><div class="examples">${examples('achievement')}</div><h2>All icons, 3× and 1×</h2><div class="cards">${cards}</div><h2>Racer marks on white and dark panels</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="racer-marks-${scale}x.png" alt="Prize Money, Speed Ticket, Uma Ticket, Tier 1, Tier 2, Tier 3">`).join('')}<h2>Rift fronts and achievements on white and dark chips</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="rift-marks-${scale}x.png" alt="Iron, Arcane, Duel and Horde front crests, then the four front seals, Rift conquered, Iron Will, Arcane Purity, Untouched, Swift Convergence, Bestiary and Crossover">`).join('')}<h2>The six class emblems on white and dark chips</h2>${[1, 2, 4].map(scale => `<h3>${scale}×</h3><img src="paladin-emblems-${scale}x.png" alt="Brawler, Mage, Spell Blade, Cleric, Summoner and Paladin">`).join('')}<h2>Speed Ticket, Wheat and Apple, 2×</h2><img src="racer-ticket-items-2x.png" alt="Speed Ticket beside existing Wheat and Apple item icons"></body></html>`)
+// uma-farm F25's review page: every piece at native size and 2×, on light and dark, with the badge over five crops.
+const farmFrames = FARM_MARK_IDS.map(id => frames.find(f => f.id === id)!)
+writeFileSync(join(previews, 'farm-m4.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Farm M4 art</title><style>
+:root{color-scheme:dark}body{margin:0;padding:16px;background:#0f141b;color:#e6e9ee;font:14px/1.5 system-ui,sans-serif;max-width:1100px}h1{font-size:22px}h2{font-size:16px;margin-top:28px}p,figcaption,li{color:#a2afbf}img{image-rendering:pixelated;display:block}.examples{display:flex;flex-wrap:wrap;gap:8px}.example{display:flex;align-items:center;gap:8px;background:#18202a;padding:8px 10px;border-radius:4px}.light{background:#f4f1ea;color:#28323c}.scroll{overflow-x:auto}
+</style></head><body><h1>Farm M4 art: uma-farm F25, part A</h1><p>Original pixel art drawn from code in <code>scripts/pixel-art</code> (uma-platform P126): ten 16px marks in uma-art's <code>ui</code> sheet and two 48px places on the <code>buildings</code> sheet's farmlands page. Part B, the cast's three busts, adds its section here when ChatGPT draws it.</p>
+<h2>The ten marks at native size</h2><div class="examples">${farmFrames.map(f => `<div class="example"><img src="${uri(f.img)}" width="16" height="16" alt=""><span>${labels[f.key]} · <code>${f.id}</code></span></div>`).join('')}</div><div class="examples" style="margin-top:8px">${farmFrames.map(f => `<div class="example light"><img src="${uri(f.img)}" width="16" height="16" alt=""><span>${labels[f.key]}</span></div>`).join('')}</div>
+<h2>The seed-packet badge over five crops, native</h2><div class="examples">${FARM_PREVIEW_CROPS.map(id => `<div class="example"><img src="${uri(seededCrop(id))}" width="32" height="32" alt=""><span>${id}</span></div>`).join('')}</div>
+${[1, 2, 4].map(scale => `<h2>Marks, badge and account bar, ${scale}×</h2><p>Rows: the ten marks on white, then on the account bar's navy; the badge over wheat, carrot, potato, tomato and corn on white, then navy; a mock account bar with the gold, season and Farm Rank chips.</p><div class="scroll"><img src="farm-m4-marks-${scale}x.png" alt="The farm's ten marks, the seed badge over five crops, and a mock account bar"></div>`).join('')}
+${[1, 2].map(scale => `<h2>The Dorm and the shipping bin, ${scale}×</h2><p>Dorm, shipping bin, then the Pantry, Kitchen and Fields they stand beside, on farmlands ground.</p><div class="scroll"><img src="farm-m4-buildings-${scale}x.png" alt="Dorm, shipping bin, Pantry, Kitchen and Fields on farmlands ground"></div>`).join('')}
+</body></html>`)
 console.log(`Wrote ${frames.length} ui icons (${atlas.w}×${atlas.h}) to ${relative(ROOT, dir)}; ids and native sizes checked`)

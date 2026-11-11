@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 244,
+ "height": 276,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -490,6 +490,86 @@
    "h": 24,
    "group": "yard",
    "key": "rest"
+  },
+  "currency/gold": {
+   "x": 0,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "currency",
+   "key": "gold"
+  },
+  "farm/seed-packet": {
+   "x": 16,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "farm",
+   "key": "seed-packet"
+  },
+  "farm/star": {
+   "x": 32,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "farm",
+   "key": "star"
+  },
+  "farm/heart-bond": {
+   "x": 48,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "farm",
+   "key": "heart-bond"
+  },
+  "farm/heart-affinity": {
+   "x": 64,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "farm",
+   "key": "heart-affinity"
+  },
+  "farm/rank": {
+   "x": 80,
+   "y": 244,
+   "w": 16,
+   "h": 16,
+   "group": "farm",
+   "key": "rank"
+  },
+  "season/spring": {
+   "x": 0,
+   "y": 260,
+   "w": 16,
+   "h": 16,
+   "group": "season",
+   "key": "spring"
+  },
+  "season/summer": {
+   "x": 16,
+   "y": 260,
+   "w": 16,
+   "h": 16,
+   "group": "season",
+   "key": "summer"
+  },
+  "season/autumn": {
+   "x": 32,
+   "y": 260,
+   "w": 16,
+   "h": 16,
+   "group": "season",
+   "key": "autumn"
+  },
+  "season/winter": {
+   "x": 48,
+   "y": 260,
+   "w": 16,
+   "h": 16,
+   "group": "season",
+   "key": "winter"
   }
  }
 }
