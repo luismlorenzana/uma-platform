@@ -2,7 +2,7 @@
 
 > **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
 > and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
-> each, plus F for Umas not used, and 22 sisters ranked as Umas of their own (P131, P133). CA1 is next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> each, plus F for Umas not used, and 22 sisters ranked as Umas of their own (P131, P133). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -10,7 +10,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP40.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP44.
 
 ## The short answer
 
@@ -128,6 +128,10 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP20 | **CA1 moves uma-quest's Album here, laid out by the Ranker** (AP32: the ten batches in order, each Uma and sister in ranking order, then the unranked): **Adult travelers** (each one's standing baseline stills, all twelve battle keys put together as the fight draws them, and her ten faces) and **Every Uma** (272 outfits by name, searchable, each with her portrait, bust, face, glass window, chibis A and B, and her character's face and four dresses). The code is copied from uma-quest at a recorded commit; the art is read at run time, hash-checked and kept on the device |
 | AP21 | **The full-body art is already full size.** The 3D full-body renders (`outfit-portraits` and `character-dresses`) and the chibis come from GameTora and the wiki at 512 px, the size of the originals on this Mac (`scripts/assets/.cache`, 272 stands, 540 dresses, 536 chibis), so master data already holds every input picture. No new store is needed |
 | AP22 | **CA2 adds what the Album doesn't show:** each outfit's chibi sprite set (`outfit-sprites`, played by action and facing, frame by frame); each character's support card art (`support-card-art`, by the card's `characterId`); and, for an adult traveler, her authoring inputs (the master data portrait and chibi, her approved chibi sprite, the shared references) with her source-art release (batch, date, approval, file count and hashes, from its manifest). The tar archives themselves aren't unpacked |
+| AP41 | **Every Uma in the Ranker's order** (P135): T1 to T10, each outfit by her place, then the unranked, then F collapsed; a sister by her own name and profile; Every Uma is the first tab |
+| AP42 | **The order is fresh on every load:** `/api/art/order` reads the Ranker's files in the bucket and master data, through the shared tier model |
+| AP43 | **The Album's code is copied from uma-quest at `6c572e6`;** its key pack is read at `/api/art/content/…` with uma-quest's allowlist |
+| AP44 | **Names and titles as the Ranker shows them,** the Global text first |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 
 ## Later
@@ -144,12 +148,12 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓, your console entries ✓ | **Done** (P130) |
 | RK1 | Uma Ranker: every board online, Playable Umas per outfit on ten tiers, sisters, the bucket store, `ranker:seed`, `ranker:push`, `ranker:pull`, the Studio's boards retired | Claude | L | SH2 ✓ | **Done** (P131) |
 | RK2 | The pass after your ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan | Claude | M | RK1 ✓, your ranking | After your ranking |
-| [CA1](../handoff/tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |
+| CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2 and RK1 are done; CA1 is next; RK2 follows your ranking, CA2 follows CA1.
+**Order:** SH1, SH2, RK1 and CA1 are done; RK2 follows your ranking; CA2 is next.
 
 ## Your steps
 

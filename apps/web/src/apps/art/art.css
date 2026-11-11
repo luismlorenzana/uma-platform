@@ -1,0 +1,17 @@
+/* Character Art's tier colours: the Ranker's ten warm-to-cool hues, best first, and F in grey, as a translucent badge
+   under the kit's ink (readable in light and dark). */
+.tier-T1 { --tier: 8 }
+.tier-T2 { --tier: 24 }
+.tier-T3 { --tier: 40 }
+.tier-T4 { --tier: 58 }
+.tier-T5 { --tier: 90 }
+.tier-T6 { --tier: 140 }
+.tier-T7 { --tier: 175 }
+.tier-T8 { --tier: 200 }
+.tier-T9 { --tier: 225 }
+.tier-T10 { --tier: 255 }
+.tier-F { --tier: 0; --tier-sat: 0% }
+.art-tier { background: hsl(var(--tier, 0) var(--tier-sat, 70%) 55% / 0.24); }
+.art-tier.tier-none { background: var(--color-sunken); }
+.art-section { border-left: 4px solid hsl(var(--tier, 0) var(--tier-sat, 70%) 55% / 0.7); padding-left: 10px; }
+.art-section.tier-unranked { border-left-color: transparent; }
