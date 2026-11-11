@@ -120,7 +120,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP38 | **F on Playable Umas** (P133): Umas not used, after T10, in no batch and not the cast; key `F`; its row starts collapsed |
 | AP39 | **Eleven more sisters** (P133), named by Claude: 110602, 103103, 102602, 104002, 104003, 101602, 100402, 100602, 100603, 104502, 104503. Locked-in defaults stay the main Uma's; Royce and Royce has one outfit, so none; outfits keep their ranks |
 | AP40 | **Landing pages show numbers, not explanations** (P133); the little to know sits behind the (i) |
-| AP51 | **Five more sisters** (P138), named by Claude: 100401, 103101, 101803, 109302, 107801, so every Uma in the ten batches is one card (100 Umas: 76 characters, 24 sisters; 27 sisters in all). Locked-in defaults stay the main Uma's (Maruzensky's 100403, Ines Fujin's 103102); outfits keep their ranks |
+| AP51 | **Five more sisters** (P138, P139), named by Claude: the alternates 100403, 103102, 101803, 109302, 107802, so every Uma in the ten batches is one card (100 Umas: 76 characters, 24 sisters; 27 sisters in all). **The base outfit is always the real Uma** (P139): a sister is an alternate outfit, so an owner's default-outfit lock on that outfit goes with it (Maruzensky's, Ines Fujin's); outfits keep their ranks |
 | AP52 | **`pnpm ranker:plan`** (P138) rebuilds the bucket's plan as the Ranker does, for a change that went around the API (Claude's profile pushes); the Ranker's scripts run on Windows too |
 | AP36 | **RK2, the pass after your ranking:** lock the ten batches as the art queue, revisit the sisters, point the sprite queue (TA2) at the plan. A later re-rank or a bigger change is a manual pass with Claude |
 
