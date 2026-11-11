@@ -157,7 +157,7 @@ P127–P130; [infrastructure](../platform-app/infrastructure.md)). SH1 and SH2 a
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | SH1 | The app, local: `apps/web`, `apps/api`, the home tiles, the master data proxy, `packages/tiers`, the private-content check | Claude | M | — | **Done** (P130) |
-| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, isolation checks, live at https://uma-platform.web.app | Claude | M | SH1 ✓, the owner's go ✓; the owner's two console entries for sign-in | **Done** (P130); sign-in waits on the console entries |
+| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, isolation checks, live at https://uma-platform.web.app | Claude | M | SH1 ✓, the owner's go ✓, the owner's console entries ✓ | **Done** (P130) |
 | [RK1](tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the Studio's boards read only | Claude | L | SH2 ✓ | Ready |
 | RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, the owner's description | Written from the description |
 | [CA1](tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |

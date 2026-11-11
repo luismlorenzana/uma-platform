@@ -1,7 +1,7 @@
 # The Uma Platform app
 
-> **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); sign-in waits on the owner's two
-> console entries. RK1 and CA1 are next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
+> and Google accepts the redirect. RK1 and CA1 are next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -124,7 +124,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | SH1 | The app, local: `apps/web` and `apps/api`, the home tiles, sign-in (off locally), the master data proxy, the private-content check, `packages/tiers` | Claude | M | — | **Done** (P130) |
-| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓ | **Done** (P130); sign-in waits on your two console entries |
+| SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓, your console entries ✓ | **Done** (P130) |
 | [RK1](../handoff/tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the local boards read-only | Claude | L | SH2 ✓ | Ready |
 | RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, your description | Written from your description |
 | [CA1](../handoff/tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |
@@ -139,6 +139,6 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | When | What |
 |---|---|
 | ~~Now~~ Done 2026-11-11 | ~~The go for the cloud~~: "Go, start SH1" |
-| **Now** | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
+| ~~Now~~ Done 2026-11-11 | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
 | Before RK2 | How the new Uma ranking should work |
 | When each lands | A look at the Ranker and at Character Art on your phone |

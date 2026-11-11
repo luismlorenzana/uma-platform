@@ -31,7 +31,7 @@ Never touch the games' pieces: `(default)`, `quest`, `farm`, `rpg-*`, `quest-*`,
 | Images | Artifact Registry `platform`, keeping the last 3 |
 | Deployer | `platform-deploy`: writer on `platform` images, admin of `platform-api`, user of `platform-api-runtime`, Hosting admin (project-wide, IN7; `firebase.json` names the site and `scripts/check-hosting-site.test.mjs` checks it) |
 | Deploy sign-in | Provider `uma-platform` in pool `github-actions`, `main` of `luismlorenzana/uma-platform` only |
-| Sign-in domain | `uma-platform.web.app` in Auth's authorized domains (added by the bootstrap). The OAuth client's redirect URI and JavaScript origin are the owner's two console entries |
+| Sign-in domain | `uma-platform.web.app` in Auth's authorized domains (added by the bootstrap). The OAuth client's redirect URI `https://uma-platform.web.app/__/auth/handler` and JavaScript origin `https://uma-platform.web.app`, added by the owner on 2026-11-11: Google accepts the redirect (its sign-in page opens "to continue to uma-platform.web.app", no `redirect_uri_mismatch`) |
 | Label | `app=platform` |
 | Local | API on 8111, web on 5204 (`.claude/launch.json`: `platform-api`, `platform-web`) |
 
