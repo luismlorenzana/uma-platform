@@ -45,5 +45,8 @@ it.each([{ id: 'kit-forest', count: 37 }, { id: 'kit-town-warrior', count: 32 }]
 it('preserves all previously published uma-art 2.23 PNGs and atlas records', async () => {
   const pins = JSON.parse(await readFile(resolve(kitProject, 'scripts/authored-art/legacy-2.23.json'), 'utf8')) as Record<string, string>
   expect(Object.keys(pins)).toHaveLength(26)
-  for (const [file, hash] of Object.entries(pins)) expect(sha(await readFile(resolve(kitProject, file))), file).toBe(hash)
+  // uma-art 2.25.0 (P132) appends to the ui and buildings sheets; pixel-art's legacy-f25-2.24.0.json freezes their old
+  // records, cutouts and whole old regions, so these two whole-file pins hand over to it.
+  const grown = ['packages/art/ui/atlas.json', 'packages/art/ui/atlas.png', 'packages/art/buildings/atlas.json', 'packages/art/buildings/atlas.png']
+  for (const [file, hash] of Object.entries(pins)) if (!grown.includes(file)) expect(sha(await readFile(resolve(kitProject, file))), file).toBe(hash)
 })

@@ -39,5 +39,8 @@ it('keeps 16 held textures and eight readable bubbles inside their clear cells, 
 })
 it('preserves all published 2.21 family pixels and metadata', async () => {
   const baseline = JSON.parse(await readFile(resolve(project, 'scripts/authored-art/legacy-2.21.json'), 'utf8')) as Record<string, string>
-  for (const [file, digest] of Object.entries(baseline)) expect(createHash('sha256').update(await readFile(resolve(project, file))).digest('hex'), file).toBe(digest)
+  // uma-art 2.25.0 (P132) appends to the ui and buildings sheets; pixel-art's legacy-f25-2.24.0.json freezes their old
+  // records, cutouts and whole old regions, so these two whole-file pins hand over to it.
+  const grown = ['packages/art/ui/atlas.json', 'packages/art/ui/atlas.png', 'packages/art/buildings/atlas.json', 'packages/art/buildings/atlas.png']
+  for (const [file, digest] of Object.entries(baseline)) if (!grown.includes(file)) expect(createHash('sha256').update(await readFile(resolve(project, file))).digest('hex'), file).toBe(digest)
 })
