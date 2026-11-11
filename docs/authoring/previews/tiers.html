@@ -74,10 +74,10 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">uma-platform · tier authoring · P113–P124 · TA1</p>
+  <p class="eyebrow">uma-platform · tier authoring · P113–P125 · TA1</p>
   <h1>One local Studio, eleven boards, and a career for every Uma<span>.</span></h1>
   <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. The Uma boards rank on SSS to F in plain rows, without the playstyle split and with every rank kept; the other boards keep SS to F. Two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
-  <nav><a href="#boards">The boards</a><a href="#playstyles">Playstyles</a><a href="#flow">How leftovers flow</a><a href="#careers">Careers</a><a href="#local">Why local</a><a href="#saved">What's saved</a><a href="#next">What's next</a><a href="#calls">Calls</a><a href="franchises.html">More franchises</a><a href="../tiers.md">Markdown</a></nav>
+  <nav><a href="#boards">The boards</a><a href="#outfits">Default outfits</a><a href="#playstyles">Playstyles</a><a href="#flow">How leftovers flow</a><a href="#careers">Careers</a><a href="#local">Why local</a><a href="#saved">What's saved</a><a href="#next">What's next</a><a href="#calls">Calls</a><a href="franchises.html">More franchises</a><a href="../tiers.md">Markdown</a></nav>
 
   <div class="tiles">
     <div class="tile"><b>11</b><span>tier boards on one scale</span></div>
@@ -131,9 +131,25 @@
     </table></div>
   </section>
 
+  <section class="card" id="outfits">
+    <h2>Her default outfit</h2>
+    <p>103 of the 135 characters have two or three outfits. The owner locks in which one is hers by default, next to her tier (P125). Until then, her default is the rule's <b>lead outfit</b>: her best old tier, then her original outfit, then the lowest id. A pick is kept even when it matches the rule, so it never moves.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Where</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><b>Her card</b></td><td>The outfit strip marks the default <b>★ Default</b>; a line under it names it and says whether it's the owner's pick. Viewing another outfit offers <b>Make it her default</b>; <b>Lock it in</b> keeps the rule's choice. <code>D</code> does the same for the outfit on screen.</td></tr>
+        <tr><td><b>Both Uma boards</b></td><td>The pick saves on her Playable Umas entry (<code>outfit</code>), so Uma NPCs shows the same, and a pick from either board saves there. Undo reverts it.</td></tr>
+        <tr><td><b>The tier list</b></td><td>Her portrait is her default outfit's face.</td></tr>
+        <tr><td><b>Her playstyle</b></td><td>Follows her default outfit, unless her card's playstyle pick says otherwise.</td></tr>
+        <tr><td><b>The filter</b></td><td><b>Any default outfit</b> finds the characters with two or more outfits and no pick yet, or the ones picked.</td></tr>
+        <tr><td><b>The plan</b></td><td><code>defaultOutfit</code> (her pick, else the rule), <code>outfitPicked</code> and <code>lead</code> (the rule's choice). TA2 reads <code>defaultOutfit</code>.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
   <section class="card" id="playstyles">
     <h2>Playstyles: on the card, not the tier list</h2>
-    <p>The owner moved away from the class split (P123, retiring P117's grid). Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. A character's playstyle is still her <b>lead outfit's</b> (her best old tier, then her original outfit, then the lowest id), or the pick on her card when her outfits span two. It shows on her card with the outfit's four grades, the <b>Every playstyle</b> filter narrows the board to one, and the plan keeps it. It never places a portrait.</p>
+    <p>The owner moved away from the class split (P123, retiring P117's grid). Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. A character's playstyle is her <b>default outfit's</b> (the owner's pick, else her lead outfit), or the pick on her card when her outfits span two. It shows on her card with the outfit's four grades, the <b>Every playstyle</b> filter narrows the board to one, and the plan keeps it. It never places a portrait.</p>
     <p><b>Every rank carried over</b> (P124). P123 first cleared Playable Umas for a fresh pass; the owner wanted the ranks kept, so they came back unchanged and in order, and the owner re-ranks from there with SSS on top. A copy stays in <code>tiers/archive/umas.r49.2026-11-10.json</code>.</p>
     <div class="scroll"><table>
       <thead><tr><th>Playstyle</th><th>Calling</th><th>Her best running-style grades</th></tr></thead>
@@ -234,7 +250,7 @@
     <div class="scroll"><table>
       <thead><tr><th>Id</th><th>What</th><th>Where</th><th>Who</th></tr></thead>
       <tbody>
-        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after the NPC ranking</td></tr>
+        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her default outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after the NPC ranking</td></tr>
         <tr><td class="id">TA3</td><td><b>uma-quest's careers.</b> A career is a character's, with at least three bosses from the boss boards; uma-quest revises CM1–CM36 in its repo.</td><td>uma-quest</td><td>uma-quest's session</td></tr>
         <tr><td class="id">TA4</td><td><b>Q39 reads the plan.</b> Boss slots from the seven boss boards, Key and Regular from theirs, never a left-out unit; EN1's subjects grow to eight franchises.</td><td>uma-quest, uma-platform</td><td>ChatGPT</td></tr>
         <tr><td class="id">TA5</td><td>More imports when wanted: male characters, non-playable bosses through the inbox.</td><td>uma-platform</td><td>Claude</td></tr>
@@ -263,12 +279,13 @@
         <tr><td class="id">TS13</td><td>The old rankers are retired: <code>/</code> is the home</td></tr>
         <tr><td class="id">TS14</td><td>Tiers are authoring order, never game rules</td></tr>
         <tr><td class="id">TS15</td><td><s>The Uma boards keep the old playstyle grid</s>: superseded by TS21</td></tr>
-        <tr><td class="id">TS16</td><td>A character's playstyle is her lead outfit's, unless the owner picks another of hers</td></tr>
+        <tr><td class="id">TS16</td><td>A character's playstyle is her lead outfit's, unless the owner picks another of hers. Since TS22, her default outfit's</td></tr>
         <tr><td class="id">TS17</td><td>Honkai: Star Rail and Zenless Zone Zero are boss boards; <a href="franchises.html">the next franchises</a> are ranked</td></tr>
         <tr><td class="id">TS18</td><td><b>Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered</b>: one card a battlesuit or frame, from their wikis; the owner sorts them</td></tr>
         <tr><td class="id">TS19</td><td><b>Any imported unit can be left out of every board</b>, from its card or its board's Left out row; ranking or dragging it brings it back</td></tr>
         <tr><td class="id">TS20</td><td><b>SSS tops the scale on the two Uma boards only</b>: keys 1 to 6 there; every other board keeps SS to F; an SSS Uma's career meets SS bosses</td></tr>
         <tr><td class="id">TS21</td><td><b>No playstyle split on the Uma tier lists</b>: plain tier rows; her playstyle stays on her card, in the filter and in the plan. Every rank carried over</td></tr>
+        <tr><td class="id">TS22</td><td><b>Each Uma with two or more outfits has a default outfit</b>, locked in on her card or with <code>D</code>, saved on Playable Umas for both Uma boards; until picked, the lead-outfit rule</td></tr>
       </tbody>
     </table></div>
   </section>

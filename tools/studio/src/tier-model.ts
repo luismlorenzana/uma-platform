@@ -85,7 +85,7 @@ export const hasTier = (board: BoardId, tier: Tier): boolean => tiersOf(board).s
 
 /**
  * The five playstyles: the old outfit board's aptitude buckets (uma-rpg Classes v3 / CV19), each with its calling. An
- * outfit's comes from her best running-style grades; a character's from her lead outfit unless the owner picks (P117).
+ * outfit's comes from her best running-style grades; a character's from her default outfit unless the owner picks (P117).
  * The Uma boards no longer split their tier lists by playstyle (P123): it's on her card, in the filter and in the plan.
  */
 export const WAYS = [
@@ -123,7 +123,7 @@ export interface UmaCharacter {
   face: string | null
   portrait: string | null
   outfits: UmaOutfit[]
-  /** Her lead outfit: her best tier on the old outfit board, then her original outfit, then the lowest id. */
+  /** Her lead outfit, the rule's default: her best tier on the old outfit board, then her original outfit, then the lowest id. */
   lead: number
 }
 /** Her lead outfit, by the rule above. */
@@ -131,11 +131,24 @@ export function leadOutfit(outfits: readonly UmaOutfit[]): UmaOutfit | undefined
   const rank = (o: UmaOutfit) => (o.before ? TIER_IDS.indexOf(o.before) : TIER_IDS.length)
   return [...outfits].sort((a, b) => rank(a) - rank(b) || Number(b.original) - Number(a.original) || a.id - b.id)[0]
 }
-/** A character's playstyle: the owner's pick on the Playable board when it is one of her outfits' playstyles, else her lead outfit's. */
+/**
+ * Her default outfit (P125): the owner's pick on the Playable board when it is one of hers, else her lead outfit. It's
+ * her face on both Uma boards, the outfit her card opens on, the one her playstyle follows, and the plan's `defaultOutfit`.
+ */
+export function defaultOutfit(uma: UmaCharacter, states: Pick<BoardStates, 'umas'>): UmaOutfit | undefined {
+  const pick = states.umas.entries.find((e) => e.id === uma.id)?.outfit
+  return uma.outfits.find((o) => o.id === pick) ?? uma.outfits.find((o) => o.id === uma.lead) ?? uma.outfits[0]
+}
+/** The owner's default-outfit pick, when it is still one of her outfits. */
+export const outfitPick = (uma: UmaCharacter, states: Pick<BoardStates, 'umas'>): number | null => {
+  const pick = states.umas.entries.find((e) => e.id === uma.id)?.outfit
+  return uma.outfits.some((o) => o.id === pick) ? pick! : null
+}
+/** A character's playstyle: the owner's pick on the Playable board when it is one of her outfits' playstyles, else her default outfit's. */
 export function playstyleOf(uma: UmaCharacter, states: Pick<BoardStates, 'umas'>): Way {
   const pick = states.umas.entries.find((e) => e.id === uma.id)?.way
   if (pick && uma.outfits.some((o) => o.way === pick)) return pick
-  return uma.outfits.find((o) => o.id === uma.lead)?.way ?? uma.outfits[0]?.way ?? 'front'
+  return defaultOutfit(uma, states)?.way ?? 'front'
 }
 export const waysOf = (uma: UmaCharacter): Way[] => WAYS.map((w) => w.id).filter((w) => uma.outfits.some((o) => o.way === w))
 export const FRANCHISES = [
@@ -172,6 +185,8 @@ export interface TierEntry {
   note: string
   /** Playable Umas only: her playstyle, when the owner picks one of her outfits' other playstyles (P117). */
   way?: Way
+  /** Playable Umas only: her default outfit, when the owner picks one (P125); it holds on both Uma boards. */
+  outfit?: number
 }
 export interface BoardState {
   schemaVersion: 1
@@ -202,11 +217,12 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
   const id = value.board as BoardId, seen = new Set<string>()
   const entries = value.entries.map((e: unknown): TierEntry => {
     if (!object(e) || typeof e.id !== 'string' || !idPattern.test(e.id) || seen.has(e.id) || !(e.tier === null || (isTier(e.tier) && hasTier(id, e.tier))) ||
-        typeof e.note !== 'string' || e.note.length > 4000 || (e.way !== undefined && (value.board !== 'umas' || !isWay(e.way)))) {
-      throw new Error('Each entry needs a unique id, a tier of this board (SSS is for the Uma boards only) or null, and a note of at most 4,000 characters; only Playable Umas entries carry a playstyle.')
+        typeof e.note !== 'string' || e.note.length > 4000 || (e.way !== undefined && (value.board !== 'umas' || !isWay(e.way))) ||
+        (e.outfit !== undefined && (value.board !== 'umas' || !Number.isSafeInteger(e.outfit) || Number(e.outfit) <= 0))) {
+      throw new Error('Each entry needs a unique id, a tier of this board (SSS is for the Uma boards only) or null, and a note of at most 4,000 characters; only Playable Umas entries carry a playstyle or a default outfit.')
     }
     seen.add(e.id)
-    return { id: e.id, tier: e.tier, note: e.note, ...(e.way !== undefined ? { way: e.way as Way } : {}) }
+    return { id: e.id, tier: e.tier, note: e.note, ...(e.way !== undefined ? { way: e.way as Way } : {}), ...(e.outfit !== undefined ? { outfit: Number(e.outfit) } : {}) }
   })
   const state: BoardState = { schemaVersion: 1, kind: 'tier-board', board: id, revision: Number(value.revision), updatedAt: value.updatedAt as string | null, entries }
   if (id === 'azurlane-bosses') {
@@ -279,36 +295,45 @@ const bump = (state: BoardState, entries: TierEntry[], members = state.members):
 /** Units left out of every board, on an imported boss board. */
 export const leftOut = (state: BoardState): string[] => state.out ?? []
 
-/** A new tier goes to the end of that tier; the same tier keeps its place. An unranked entry with no note is dropped. */
+/** An Uma's picks that ride along with her entry: playstyle and default outfit. */
+const picks = (e: TierEntry | undefined): Pick<TierEntry, 'way' | 'outfit'> => ({ ...(e?.way ? { way: e.way } : {}), ...(e?.outfit ? { outfit: e.outfit } : {}) })
+/** An entry with nothing to keep: no tier, note or pick. */
+const empty = (e: TierEntry): boolean => e.tier === null && !e.note && !e.way && !e.outfit
+/** A new tier goes to the end of that tier; the same tier keeps its place. An unranked entry with no note or pick is dropped. */
 export function setTier(state: BoardState, id: string, tier: Tier | null): BoardState {
   const current = state.entries.find((e) => e.id === id)
   if ((current?.tier ?? null) === tier) return state
-  const rest = state.entries.filter((e) => e.id !== id), note = current?.note ?? '', way = current?.way
-  if (tier === null && !note && !way) return bump(state, rest)
-  return bump(state, [...rest, { id, tier, note, ...(way ? { way } : {}) }])
+  const rest = state.entries.filter((e) => e.id !== id), next: TierEntry = { id, tier, note: current?.note ?? '', ...picks(current) }
+  return bump(state, empty(next) ? rest : [...rest, next])
 }
 export function setNote(state: BoardState, id: string, note: string): BoardState {
   const current = state.entries.find((e) => e.id === id)
   if ((current?.note ?? '') === note) return state
   if (!current) return note ? bump(state, [...state.entries, { id, tier: null, note }]) : state
-  if (current.tier === null && !note && !current.way) return bump(state, state.entries.filter((e) => e.id !== id))
-  return bump(state, state.entries.map((e) => (e.id === id ? { ...e, note } : e)))
+  const next = { ...current, note }
+  return bump(state, empty(next) ? state.entries.filter((e) => e.id !== id) : state.entries.map((e) => (e.id === id ? next : e)))
 }
-/** Playable Umas: picks her playstyle; her lead outfit's clears the pick. */
+/** Replaces (or adds, or drops when empty) an Uma's entry with `change` applied, keeping its place. */
+function pickOn(state: BoardState, id: string, change: (e: TierEntry) => TierEntry): BoardState {
+  const current = state.entries.find((e) => e.id === id), next = change(current ?? { id, tier: null, note: '' })
+  if (!current) return empty(next) ? state : bump(state, [...state.entries, next])
+  return bump(state, empty(next) ? state.entries.filter((e) => e.id !== id) : state.entries.map((e) => (e.id === id ? next : e)))
+}
+/** Playable Umas: picks her playstyle; her default outfit's clears the pick. */
 export function setWay(state: BoardState, uma: UmaCharacter, way: Way): BoardState {
-  const current = state.entries.find((e) => e.id === uma.id), lead = uma.outfits.find((o) => o.id === uma.lead)?.way
-  const pick = way === lead ? undefined : way
-  if (current?.way === pick) return state
-  const { way: _, ...rest } = current ?? { id: uma.id, tier: null, note: '' }
-  const next: TierEntry = { ...rest, ...(pick ? { way: pick } : {}) }
-  if (!current) return pick ? bump(state, [...state.entries, next]) : state
-  if (next.tier === null && !next.note && !next.way) return bump(state, state.entries.filter((e) => e.id !== uma.id))
-  return bump(state, state.entries.map((e) => (e.id === uma.id ? next : e)))
+  const pick = way === defaultOutfit(uma, { umas: state })?.way ? undefined : way
+  if (state.entries.find((e) => e.id === uma.id)?.way === pick) return state
+  return pickOn(state, uma.id, ({ way: _, ...rest }) => ({ ...rest, ...(pick ? { way: pick } : {}) }))
+}
+/** Playable Umas: locks in her default outfit (P125), kept even when it's the one the rule would choose. */
+export function setOutfit(state: BoardState, uma: UmaCharacter, outfit: number): BoardState {
+  if (!uma.outfits.some((o) => o.id === outfit) || state.entries.find((e) => e.id === uma.id)?.outfit === outfit) return state
+  return pickOn(state, uma.id, (e) => ({ ...e, outfit }))
 }
 /** Puts `id` in `tier` just before `before` (an entry of that tier), or at the tier's end. */
 export function place(state: BoardState, id: string, tier: Tier, before: string | null): BoardState {
   if (before === id) return state
-  const current = state.entries.find((e) => e.id === id), moved: TierEntry = { id, tier, note: current?.note ?? '', ...(current?.way ? { way: current.way } : {}) }
+  const current = state.entries.find((e) => e.id === id), moved: TierEntry = { id, tier, note: current?.note ?? '', ...picks(current) }
   const rest = state.entries.filter((e) => e.id !== id), at = before ? rest.findIndex((e) => e.id === before && e.tier === tier) : -1
   return bump(state, at < 0 ? [...rest, moved] : [...rest.slice(0, at), moved, ...rest.slice(at)])
 }
@@ -368,7 +393,10 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
   const stats = Object.fromEntries(BOARDS.map((b) => [b.id, boardStats(all[b.id], states[b.id])])) as Record<BoardId, BoardStats>
   const describe = (id: string) => {
     const uma = umas.get(id)
-    if (uma) return { name: uma.name, characterId: Number(uma.id), playstyle: playstyleOf(uma, states), lead: uma.lead, outfits: uma.outfits.map((o) => o.id), ways: waysOf(uma) }
+    if (uma) {
+      return { name: uma.name, characterId: Number(uma.id), playstyle: playstyleOf(uma, states), defaultOutfit: defaultOutfit(uma, states)?.id ?? uma.lead,
+        outfitPicked: outfitPick(uma, states) !== null, lead: uma.lead, outfits: uma.outfits.map((o) => o.id), ways: waysOf(uma) }
+    }
     const unit = enemies.get(id)
     return unit ? { name: unit.name, franchise: unit.franchise, category: unit.category } : { name: id }
   }

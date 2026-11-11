@@ -56,6 +56,10 @@ export class TierStore {
     if (requested.entries.some((e) => !known.has(e.id)) || requested.members?.some((m) => !known.has(m)) || requested.out?.some((m) => !known.has(m))) {
       throw new Error('An id in this board is not in the catalog. No changes were saved.')
     }
+    const outfits = new Map(this.catalog.umas.map((u) => [u.id, new Set(u.outfits.map((o) => o.id))]))
+    if (requested.entries.some((e) => e.outfit !== undefined && !outfits.get(e.id)?.has(e.outfit))) {
+      throw new Error('A default outfit in this board is not one of that character’s outfits. No changes were saved.')
+    }
     const write = this.pending.then(async () => {
       const current = await this.read(board)
       if (requested.revision !== current.revision) throw new TierConflict('Another tab changed this board. Reload before saving again.')

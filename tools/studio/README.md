@@ -14,7 +14,9 @@ Pages:
   enemies (`key-enemies`) and Regular enemies (`regular-enemies`). One scale, SS, S,
   A, B, F, with SSS above SS on the two Uma boards (P122, P124): SSS to A are a board's cast; B, F and unranked flow to the board below (Playable → NPCs;
   the boss boards → Key → Regular, which also takes NIKKE). Umas rank per character (P114) in plain tier rows like every
-  board (P123, which retired P117's playstyle grid); a character's playstyle is her lead outfit's unless the card's pick
+  board (P123, which retired P117's playstyle grid); each character with two or more outfits has a default outfit, locked in on her card or with `D` (P125), the same
+  on both Uma boards: her portrait, her card's first outfit and the plan's `defaultOutfit`. Her playstyle is her
+  default outfit's unless the card's pick
   says otherwise, and it shows on her card with its grades and in the playstyle filter; her outfit count is on her
   portrait. Keys `1`–`6` (Uma boards) or `1`–`5` rank, `0` unranks, arrows
   browse, `[` `]` move within a tier; notes, multi-level undo, drag and drop, a filtered bulk B or F, and board

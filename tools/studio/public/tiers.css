@@ -80,6 +80,11 @@ input[type=checkbox]{accent-color:var(--green);width:16px;height:16px}
 .outfit-copy{display:grid;min-width:0}
 .outfit-copy>strong{font-size:11px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .outfit-copy>span{font-size:10px;color:var(--muted)}
+.default-tag{position:absolute;bottom:4px;right:5px;font-size:8px;font-weight:750;padding:1px 4px;border-radius:3px;background:#202b2b;color:#fff}
+.default-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:9px 16px;border-bottom:1px solid var(--line);font-size:11px}
+.default-row .muted{color:var(--muted)}
+.default-row button{min-height:32px;padding:4px 10px;font-size:11px}
+.default-row kbd{margin-left:4px}
 .before{position:absolute;top:4px;right:5px;font-size:8px;font-weight:750;padding:1px 4px;border-radius:3px;background:var(--tier-bg);color:var(--tier-ink)}
 .profile-copy{padding:18px 22px}
 .identity-id{font:10px/1.5 ui-monospace,monospace;color:var(--muted);margin:0 0 4px}

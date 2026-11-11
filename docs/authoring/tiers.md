@@ -5,9 +5,10 @@
 > boards on one scale, a home with a dashboard, and a local import for six new franchises. Honkai Impact 3rd and
 > Punishing: Gray Raven come in unfiltered, and any imported unit can be left out of every board (P120, P121). On
 > 2026-11-10 the two Uma boards gained **SSS** above SS and dropped the playstyle split for plain tier rows, keeping
-> every rank (P122–P124); the other boards keep SS to F. [franchises.md](franchises.md) ranks the franchises to
+> every rank (P122–P124); the other boards keep SS to F. On 2026-11-11 each Uma with two or more outfits got a
+> **default outfit** the owner locks in on her card (P125). [franchises.md](franchises.md) ranks the franchises to
 > add next. This page says what it is, why it stays on this machine, and what it sets up: every playable Uma gets a
-> **career that fights at least three bosses**. Calls TS1–TS21. Visual page: [previews/tiers.html](previews/tiers.html).
+> **career that fights at least three bosses**. Calls TS1–TS22. Visual page: [previews/tiers.html](previews/tiers.html).
 
 ## The short answer
 
@@ -114,6 +115,22 @@ between them. **Every rank carried over on 2026-11-10 (P124).** P123 first clear
 wanted the ranks kept, so they came back unchanged and in order (revision 59), and the owner re-ranks from there with SSS
 on top. A copy of that state stays in `tiers/archive/umas.r49.2026-11-10.json`.
 
+**Her default outfit (P125).** 103 of the 135 characters have two or three outfits. The owner locks in which one is
+hers by default, next to her tier:
+
+| Where | What it does |
+|---|---|
+| Her card | The outfit strip marks the default **★ Default**. Under it, a line names her default outfit and whether it's the owner's pick. Viewing another outfit offers **Make it her default**, and **Lock it in** keeps the rule's choice for good. `D` does the same for the outfit on screen. |
+| Both Uma boards | The pick saves on her **Playable Umas** entry (`outfit`), so it's the same on Uma NPCs, and picking from either board saves it there. Undo reverts it. |
+| The tier list | Her portrait is her default outfit's face, so a pick shows at a glance. |
+| Her playstyle | Follows her default outfit, unless her card's playstyle pick says otherwise. |
+| The filter | **Any default outfit** finds the characters with two or more outfits and no pick yet, or the ones picked. |
+| The plan | Each character has `defaultOutfit` (her pick, else the rule), `outfitPicked` and `lead` (the rule's choice). TA2 reads `defaultOutfit`. |
+
+Until she has a pick, her default is the rule's: her best tier on the old outfit board, then her original outfit, then
+the lowest id (her **lead outfit**). A pick is kept even when it matches the rule, so it never moves. The Studio refuses
+a pick that isn't one of her outfits, and ignores one an outfit later leaves.
+
 **Playstyles no longer split the tier lists (P123, retiring P117's grid).** The owner moved away from the class
 separation. Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. The
 five aptitude buckets, each with its calling, stay as her data:
@@ -126,8 +143,8 @@ five aptitude buckets, each with its calling, stay as her data:
 | Pure Late | Healer | Late alone at the top |
 | Late + End | Summoner | End alone or tied with Late, no Front or Pace |
 
-An outfit's playstyle comes from its grades, as before. A character's comes from her **lead outfit**: her best tier on
-the old board, then her original outfit, then the lowest id. Five characters have outfits in two playstyles; their card
+An outfit's playstyle comes from its grades, as before. A character's comes from her **default outfit** (P125): the
+owner's pick, else her lead outfit. Five characters have outfits in two playstyles; their card
 offers the two, and the pick saves on the Playable board. The card shows the outfit's four grades with the deciding ones
 highlighted, the board's **Every playstyle** filter narrows the list to one, and the plan keeps each character's
 playstyle for the tools that want it. None of it places a portrait: the tier rows hold every playstyle together.
@@ -179,7 +196,7 @@ images in `content/authoring/enemies/inbox/` with a line in `inbox/<franchise>.j
 
 | File (all in the ignored `content/authoring/`) | What it is |
 |---|---|
-| `tiers/<board>.json` | One board: its entries (`id`, `tier`, `note`) in authoring order, and its revision. Azur Lane bosses also has `members`; an imported boss board has `out`, the units left out of every board. |
+| `tiers/<board>.json` | One board: its entries (`id`, `tier`, `note`, and on Playable Umas an Uma's `way` and `outfit` picks) in authoring order, and its revision. Azur Lane bosses also has `members`; an imported boss board has `out`, the units left out of every board. |
 | `tiers/archive/` | Copies of a board kept by hand, such as `umas.r49.2026-11-10.json` (P123, P124). The Studio doesn't read them; **Import board** does. |
 | `tiers/plan.json` | **The plan the later tools read**: every board in authoring order with names, Ways or franchises, where each entry came from, and the career numbers. Rewritten on every save. |
 | `enemies/imports/<franchise>.json` | A local import: its source, filter and units. |
@@ -193,7 +210,7 @@ These are the later decisions this work directs. Each is a packet or a request, 
 
 | Id | What | Where | Who |
 |---|---|---|---|
-| **TA2** | **The sprite queue reads Playable Umas.** Traveler batches follow the character tiers; batches already assigned (1, T1) stay. A recommended outfit pick: her best-ranked outfit first (CM28 already uses it as her look as a boss); the rest follow in tier order. Townsfolk batches follow **Uma NPCs** instead of B-before-F. | uma-platform | Claude, after the owner ranks NPCs |
+| **TA2** | **The sprite queue reads Playable Umas.** Traveler batches follow the character tiers; batches already assigned (1, T1) stay. Her **default outfit** first (P125: the owner's pick, else her best-ranked outfit, which CM28 already uses as her look as a boss); the rest follow in tier order. Townsfolk batches follow **Uma NPCs** instead of B-before-F, each in her default outfit. | uma-platform | Claude, after the owner ranks NPCs |
 | **TA3** | **uma-quest's careers.** The campaign (CM1–CM36) turns on travelers being outfits and on 325 chapter bosses. This direction makes a career a character's, with at least three bosses from the boss boards (TS10). uma-quest revises its calls in its own repo, with this page as the brief. | uma-quest | uma-quest's session |
 | **TA4** | **Q39 reads the plan.** `enemies:candidates` offers Boss slots from the seven boss boards, Key from Key enemies and Regular from Regular enemies, in their authoring order, and never a left-out unit. EN1's subjects grow from NIKKE and Azur Lane to all eight franchises. | uma-quest, uma-platform | ChatGPT (Q39) |
 | TA5 | More imports when the owner wants them: male characters, or non-playable bosses through the inbox. | uma-platform | Claude |
@@ -218,9 +235,10 @@ These are the later decisions this work directs. Each is a packet or a request, 
 | TS13 | The two old rankers are retired: `/` is the home, `/enemies` leads there |
 | TS14 | **Tiers are authoring order, never game rules.** A game reads what was authored and released, not the boards |
 | TS15 | ~~The Uma boards keep the old playstyle grid~~ (P117): superseded by TS21 |
-| TS16 | **A character's playstyle is her lead outfit's** (best old tier, then original, then lowest id), unless the owner picks another of her outfits' playstyles |
+| TS16 | **A character's playstyle is her lead outfit's** (best old tier, then original, then lowest id), unless the owner picks another of her outfits' playstyles. Since TS22, her default outfit's |
 | TS17 | **Honkai: Star Rail and Zenless Zone Zero are boss boards** (P118); [franchises.md](franchises.md) ranks the next (P119) |
 | TS18 | **Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered** (P120): one card a battlesuit or frame, read from their wikis' APIs; the owner sorts them |
 | TS19 | **Any imported unit can be left out of every board** (P121): from its card on any board or its board's Left out row; ranking or dragging it brings it back |
 | TS20 | **SSS tops the scale on the two Uma boards only** (P122, P124): SSS, SS, S, A, B, F, keys 1 to 6; every other board keeps SS to F; an SSS Uma's career meets SS bosses |
 | TS21 | **No playstyle split on the Uma tier lists** (P123): plain tier rows; her playstyle stays on her card, in the filter and in the plan. Every rank carried over (P124) |
+| TS22 | **Each Uma with two or more outfits has a default outfit** (P125), locked in on her card or with `D`, saved on Playable Umas for both Uma boards: her portrait, her card's first outfit, her playstyle and the plan's `defaultOutfit`; until picked, the lead-outfit rule |

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan, tiersOf,
+  BOARDS, bestStyles, boardStats, careerMath, defaultOutfit, emptyBoard, leadOutfit, outfitPick, setOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan, tiersOf,
   type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
 } from './tier-model.js'
 
@@ -166,6 +166,43 @@ describe('careers and the plan', () => {
     const later = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
     expect(later.boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1', franchise: 'pgr' }], unranked: [] })
     expect(later.boards.find((b) => b.id === 'key-enemies')).not.toHaveProperty('leftOut')
+  })
+})
+
+describe('default outfits (P125)', () => {
+  it('locks in her default outfit on Playable, keeps it through every edit, and her playstyle follows it', () => {
+    const states = empty(), runner = catalog.umas[0]!
+    expect(defaultOutfit(runner, states)?.id).toBe(70101)
+    expect(outfitPick(runner, states)).toBeNull()
+    expect(setOutfit(states.umas, runner, 99999)).toBe(states.umas)
+    states.umas = setOutfit(states.umas, runner, 70102)
+    expect(states.umas.entries).toEqual([{ id: '701', tier: null, note: '', outfit: 70102 }])
+    expect(defaultOutfit(runner, states)?.id).toBe(70102)
+    expect(playstyleOf(runner, states)).toBe('late')
+    expect(setOutfit(states.umas, runner, 70102)).toBe(states.umas)
+    // The rule's own choice still locks in, so it never moves.
+    expect(setOutfit(states.umas, runner, 70101).entries).toEqual([{ id: '701', tier: null, note: '', outfit: 70101 }])
+    states.umas = setTier(states.umas, '701', 'SSS')
+    states.umas = place(states.umas, '702', 'SSS', '701')
+    states.umas = setNote(states.umas, '701', 'lead runner')
+    expect(states.umas.entries).toEqual([{ id: '702', tier: 'SSS', note: '' }, { id: '701', tier: 'SSS', note: 'lead runner', outfit: 70102 }])
+    states.umas = setTier(setNote(states.umas, '701', ''), '701', null)
+    expect(states.umas.entries).toContainEqual({ id: '701', tier: null, note: '', outfit: 70102 })
+    // Her playstyle pick is measured against her default: picking the default's playstyle clears it.
+    expect(setWay(states.umas, runner, 'late')).toBe(states.umas)
+    expect(setWay(states.umas, runner, 'front').entries).toContainEqual({ id: '701', tier: null, note: '', outfit: 70102, way: 'front' })
+    const plan = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
+    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.find((e) => e.id === '701')).toMatchObject({ defaultOutfit: 70102, outfitPicked: true, lead: 70101, playstyle: 'late' })
+    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.find((e) => e.id === '704')).toMatchObject({ defaultOutfit: 70401, outfitPicked: false })
+  })
+  it('keeps the pick on Playable Umas only, and ignores one that is no longer hers', () => {
+    expect(parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: 'S', note: '', outfit: 70102 }] }).entries[0]?.outfit).toBe(70102)
+    expect(() => parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '701', tier: 'S', note: '', outfit: 70102 }] })).toThrow(/default outfit/)
+    expect(() => parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: 'S', note: '', outfit: 'Look' }] })).toThrow()
+    const states = empty(), runner = catalog.umas[0]!
+    states.umas.entries = [{ id: '701', tier: 'S', note: '', outfit: 70401 }]
+    expect(defaultOutfit(runner, states)?.id).toBe(70101)
+    expect(outfitPick(runner, states)).toBeNull()
   })
 })
 

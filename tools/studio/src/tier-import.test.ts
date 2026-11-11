@@ -129,6 +129,9 @@ describe('the tier store', () => {
     expect(saved.revision).toBe(umas.revision + 1)
     await expect(store.save('umas', umas)).rejects.toBeInstanceOf(TierConflict)
     await expect(store.save('umas', { ...saved, entries: [{ id: 'nobody', tier: 'A', note: '' }] })).rejects.toThrow(/not in the catalog/)
+    // A default outfit (P125) must be one of that character's own outfits.
+    await expect(store.save('umas', { ...saved, entries: [{ id: '702', tier: 'A', note: '', outfit: 70101 }] })).rejects.toThrow(/default outfit/)
+    expect((await store.save('umas', { ...saved, entries: [{ id: '702', tier: 'A', note: '', outfit: 70201 }] })).entries[0]?.outfit).toBe(70201)
     const plan = JSON.parse(await readFile(join(content, 'authoring/tiers/plan.json'), 'utf8')) as { boards: { id: string; order: { id: string }[] }[] }
     expect(plan.boards.find((b) => b.id === 'umas')?.order.map((e) => e.id)).toEqual(['702'])
   })

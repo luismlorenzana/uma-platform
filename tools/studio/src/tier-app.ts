@@ -1,6 +1,6 @@
 // A tier board (P113): one page for every board, set up from the board id in the URL.
 import {
-  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, importBoardOf, inCast, tiersOf, leftOut, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setOut, setTier, setWay, waysOf,
+  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, defaultOutfit, importBoardOf, outfitPick, setOutfit, inCast, tiersOf, leftOut, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setOut, setTier, setWay, waysOf,
   type Board, type BoardId, type BoardState, type EnemyUnit, type PoolMember, type Pools, type Tier, type UmaCharacter, type Way,
 } from './tier-model.js'
 import { api, boardTitle, categoryLabel, el, esc, franchiseLabel, nav, roleLabel, wayLabel, type TierData } from './tier-ui.js'
@@ -32,6 +32,9 @@ const isOut = (id: string): boolean => !!board.franchise && leftOut(state()).inc
 const tierOf = (id: string): Tier | null => entry(id)?.tier ?? null
 /** A character's playstyle, the same on both Uma boards: it lives on the Playable board (P117). */
 const styleOf = (id: string): Way | null => { const u = umaIndex.get(id); return u && data ? playstyleOf(u, data.states) : null }
+/** Her default outfit (P125), the same on both Uma boards: the owner's pick on Playable, else the lead outfit. */
+const defaultOf = (u: UmaCharacter): UmaCharacter['outfits'][number] => (data ? defaultOutfit(u, data.states) : undefined) ?? u.outfits[0]!
+const picked = (u: UmaCharacter): boolean => !!data && outfitPick(u, data.states) !== null
 
 function recompute(): void {
   all = pools(data!.catalog, data!.states)
@@ -49,6 +52,8 @@ function facetList(): Facet[] {
     list.push({ key: 'way', label: 'Every playstyle', options: WAYS.map((w) => [w.id, `${w.bucket} · ${w.label}`]), test: (m, v) => styleOf(m.id) === v })
     list.push({ key: 'outfits', label: 'Any outfit count', options: [['one', 'One outfit'], ['many', 'Two or more outfits']],
       test: (m, v) => ((umaIndex.get(m.id)?.outfits.length ?? 0) > 1) === (v === 'many') })
+    list.push({ key: 'default', label: 'Any default outfit', options: [['open', 'Two or more outfits, no default picked'], ['picked', 'Default outfit picked']],
+      test: (m, v) => { const u = umaIndex.get(m.id); return !!u && u.outfits.length > 1 && picked(u) === (v === 'picked') } })
   } else {
     const units = pool.map((m) => enemyIndex.get(m.id)).filter((u): u is EnemyUnit => !!u)
     const franchises = present(units.map((u) => u.franchise)), categories = present(units.map((u) => u.category)), roles = present(units.flatMap((u) => (u.before ? [u.before.role] : [])))
@@ -88,7 +93,7 @@ function reviewQueue(): PoolMember[] {
 
 function notice(text: string | null): void { el('notice').textContent = text; el('notice').hidden = text === null }
 function face(id: string): string {
-  const src = umaIndex.get(id)?.face ?? enemyIndex.get(id)?.images.face
+  const u = umaIndex.get(id), src = u ? defaultOf(u).face ?? u.face : enemyIndex.get(id)?.images.face
   return `<span class="fallback" aria-hidden="true">${esc(nameOf(id).charAt(0))}</span>${src ? `<img src="${esc(src)}" alt="" loading="lazy" draggable="false">` : ''}`
 }
 function chip(text: string, cls = ''): string { return `<span class="chip ${cls}">${esc(text)}</span>` }
@@ -97,16 +102,25 @@ function viaChip(m: PoolMember | undefined): string {
 }
 
 function umaCard(u: UmaCharacter): string {
-  const shown = u.outfits.find((o) => o.id === outfit) ?? u.outfits[0]!
+  const preferred = defaultOf(u), shown = u.outfits.find((o) => o.id === outfit) ?? preferred
   const ways = [...new Set(u.outfits.map((o) => wayLabel(o.way)))].join(' · '), tier = tierOf(u.id)
   return `<div class="portrait-stage"><div class="portrait-meta"><span>${esc(u.outfits.length)} outfit${u.outfits.length === 1 ? '' : 's'}</span><span>${esc(ways)}</span></div>` +
     `${shown.portrait ? `<button class="reference-open" data-enlarge="${esc(shown.portrait)}" aria-label="Enlarge"><img src="${esc(shown.portrait)}" alt="${esc(`${u.name}, ${shown.title}`)}" fetchpriority="high"></button>` : '<div class="missing-art">No portrait in the release</div>'}` +
     `<span class="reference-caption">${esc(shown.title.toUpperCase())} · NO. ${esc(shown.id)}</span>${tier ? `<span class="current-rank tier-${tier}">TIER ${tier}</span>` : ''}</div>` +
     `<div class="outfit-strip" role="list" aria-label="Outfits">${u.outfits.map((o) => `<button role="listitem" class="outfit ${o.id === shown.id ? 'active' : ''}" data-outfit="${o.id}" aria-pressed="${o.id === shown.id}">` +
       `<span class="outfit-face">${o.face ? `<img src="${esc(o.face)}" alt="" loading="lazy">` : ''}</span><span class="outfit-copy"><strong>${esc(o.title)}</strong><span>${esc(wayLabel(o.way))}${o.original ? ' · original' : ''}</span></span>` +
-      `${o.before ? `<span class="before tier-${o.before}" title="Its tier on the old outfit board">${o.before}</span>` : ''}</button>`).join('')}</div>` +
+      `${o.before ? `<span class="before tier-${o.before}" title="Its tier on the old outfit board">${o.before}</span>` : ''}${u.outfits.length > 1 && o.id === preferred.id ? '<span class="default-tag">★ Default</span>' : ''}</button>`).join('')}</div>` +
+    defaultRow(u, shown, preferred) +
     `<div class="profile-copy">${styleTag(u)}<p class="identity-id">CHARACTER ${esc(u.id)}</p><h3>${esc(u.name)}</h3>${playstyle(u, shown)}<p class="chips">${viaChip(members.get(u.id))}` +
     `${u.outfits.some((o) => o.before) ? chip(`Old outfit board: best ${bestBefore(u)}`) : chip('Not on the old outfit board')}</p></div>`
+}
+/** Two or more outfits: which is her default (P125), and a button to make the shown one her default instead. */
+function defaultRow(u: UmaCharacter, shown: UmaCharacter['outfits'][number], preferred: UmaCharacter['outfits'][number]): string {
+  if (u.outfits.length < 2) return ''
+  const how = picked(u) ? 'your pick' : 'not picked yet: the old board’s best, then the original'
+  return `<div class="default-row"><span>★ Default outfit: <strong>${esc(preferred.title)}</strong> <span class="muted">(${esc(how)})</span></span>` +
+    (shown.id !== preferred.id ? `<button data-default="${shown.id}" ${busy ? 'disabled' : ''}>Make ${esc(shown.title)} her default <kbd>D</kbd></button>`
+      : picked(u) ? '' : `<button data-default="${shown.id}" ${busy ? 'disabled' : ''}>Lock it in <kbd>D</kbd></button>`) + `</div>`
 }
 function styleTag(u: UmaCharacter): string {
   const style = WAYS.find((w) => w.id === styleOf(u.id))!
@@ -115,10 +129,10 @@ function styleTag(u: UmaCharacter): string {
 /** Her playstyle (the old board's bucket and its calling), the shown outfit's running-style grades, and a pick when her outfits differ. */
 function playstyle(u: UmaCharacter, shown: UmaCharacter['outfits'][number]): string {
   const style = WAYS.find((w) => w.id === styleOf(u.id))!, own = WAYS.find((w) => w.id === shown.way)!, best = bestStyles(shown.strategy), ways = waysOf(u)
-  const lead = u.outfits.find((o) => o.id === u.lead)
+  const lead = defaultOf(u)
   return `<div class="playstyle">` +
     `<div class="aptitudes" aria-label="Running style aptitudes of ${esc(shown.title)}">${STYLES.map((st) => `<span class="aptitude ${best.includes(st) ? 'best' : ''}"><span>${st.charAt(0).toUpperCase() + st.slice(1)}</span><strong>${esc(shown.strategy[st])}</strong></span>`).join('')}</div>` +
-    `<p class="aptitude-caption">${esc(shown.title)}: the highlighted grades make her ${esc(own.bucket)} (${esc(own.label)}).${lead && shown.id !== lead.id ? ` Her playstyle comes from ${esc(lead.title)}, her lead outfit.` : ' Her lead outfit sets her playstyle.'}</p>` +
+    `<p class="aptitude-caption">${esc(shown.title)}: the highlighted grades make her ${esc(own.bucket)} (${esc(own.label)}).${lead && shown.id !== lead.id ? ` Her playstyle comes from ${esc(lead.title)}, her default outfit.` : ' Her default outfit sets her playstyle.'}</p>` +
     (ways.length > 1 ? `<div class="playstyle-pick" role="group" aria-label="Her playstyle"><span>Her outfits span ${ways.length} playstyles:</span>${ways.map((w) => {
       const x = WAYS.find((y) => y.id === w)!
       return `<button data-way="${w}" aria-pressed="${style.id === w}" class="${style.id === w ? 'chosen' : ''}" ${busy ? 'disabled' : ''}>${esc(x.label)}</button>`
@@ -240,6 +254,12 @@ function rank(tier: Tier | null): void {
   // Ranking a left-out unit brings it back first (P121).
   void save(setTier(isOut(id) ? setOut(state(), id, false) : state(), id, tier))
 }
+/** Locks in the shown outfit (or `id`) as her default (P125); it saves on Playable Umas, from either Uma board. */
+function makeDefault(id?: number): void {
+  const u = selected ? umaIndex.get(selected) : undefined
+  if (!u || !data || busy || u.outfits.length < 2) return
+  void save(setOutfit(data.states.umas, u, id ?? (u.outfits.find((o) => o.id === outfit) ?? defaultOf(u)).id))
+}
 function step(direction: 1 | -1): void {
   const rows = reviewQueue()
   if (!rows.length) return
@@ -277,6 +297,7 @@ document.addEventListener('click', (event) => {
     const tier = target.dataset.bulk as Tier, ids = visible().filter((m) => !tierOf(m.id)).map((m) => m.id)
     if (ids.length && confirm(`Rank ${ids.length} unranked portraits as ${tier} on ${board.title}? One undo restores them.`)) void save(ids.reduce((s, id) => setTier(s, id, tier), state()))
   }
+  else if (target.dataset.default) makeDefault(Number(target.dataset.default))
   else if (target.dataset.way && selected) {
     const u = umaIndex.get(selected)
     if (u) void save(setWay(data.states.umas, u, target.dataset.way as Way))
@@ -322,6 +343,7 @@ document.addEventListener('keydown', (event) => {
   else if (event.key === '[') el('earlier').click()
   else if (event.key === ']') el('later').click()
   else if (event.key === 'z' && event.metaKey) el('undo').click()
+  else if ((event.key === 'd' || event.key === 'D') && isUma) makeDefault()
   else return
   event.preventDefault()
 })
@@ -366,6 +388,7 @@ el('lead').textContent = board.blurb
 el('pool-rule').textContent = board.pool
 el('footer-file').textContent = `content/authoring/tiers/${board.id}.json`
 el('last-key').textContent = String(boardTiers.length)
+el('outfit-key').hidden = !isUma
 el('queue-filter').innerHTML = `<option value="unranked">Still to rank</option><option value="all">Everyone</option>${boardTiers.map((t) => `<option value="${t.id}">Tier ${t.id}</option>`).join('')}`
 el('export').addEventListener('click', () => {
   if (!data) return

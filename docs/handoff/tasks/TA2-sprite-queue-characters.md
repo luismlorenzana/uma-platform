@@ -11,7 +11,7 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 
 ## Context (read first)
 
-- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS21), P113–P116, P122–P124 (SSS on the Uma boards, no playstyle split, every rank kept).
+- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS21), P113–P116, P122–P125 (SSS on the Uma boards, no playstyle split, every rank kept, default outfits).
 - [pipeline.md](../../sprites/pipeline.md) §4–§7 (CR25: batches of five, one per Way, in tier order; townsfolk B before F).
 - `scripts/sprites/src/queue.ts` (`queue`, `nextBatch`) and `tools/studio/src/sprite-review.ts`, which read
   `uma-art-roster.json` today; `content/authoring/sprites/batches.json`, the assigned batches.
@@ -20,10 +20,11 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 ## Decisions made
 
 - **Travelers come from Playable Umas' cast,** SSS, then SS, then S, then A, in the board's order. Each character contributes
-  **her best-ranked outfit first** (her best tier on the old outfit board, then the original outfit, then the lowest id).
+  **her default outfit first**: the plan's `defaultOutfit`, the owner's pick on her card (P125), else her best tier on
+  the old outfit board, then the original outfit, then the lowest id.
   Her other outfits follow, after every character's first, in the same order. Each outfit keeps her own Way, so CR25's
   one per Way still holds.
-- **Townsfolk come from Uma NPCs**, SSS to F, in the board's order, one outfit each (the original outfit). This replaces
+- **Townsfolk come from Uma NPCs**, SSS to F, in the board's order, one outfit each (her `defaultOutfit`, P125). This replaces
   CR25's B-before-F rule.
 - **Assigned batches never move.** `batches.json` stays the record. The queue skips their outfits, and a character
   whose outfit is in an assigned batch keeps it there.
