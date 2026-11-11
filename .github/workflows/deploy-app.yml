@@ -1,0 +1,134 @@
+name: Deploy the Uma Platform app
+
+# The Uma Platform app (SH2, P127, AP7), adapted from uma-quest's deploy workflow at 47ca16d. It runs when the app or a
+# package it uses changes, and deploys once the repository variable DEPLOY_ENABLED is "true". Every piece is the
+# platform's own: the platform-api service, the platform images and the uma-platform site (IN7). ci.yml still checks
+# the whole repo on every push.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'packages/kit/**'
+      - 'packages/data/**'
+      - 'packages/server/**'
+      - 'packages/tiers/**'
+      - 'pnpm-lock.yaml'
+      - 'firebase.json'
+      - '.dockerignore'
+      - '.github/workflows/deploy-app.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uma-platform-app-production
+  cancel-in-progress: false
+
+env:
+  GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID || 'uma-rpg' }}
+  GCP_REGION: us-central1
+  CLOUD_RUN_SERVICE: platform-api
+  API_IMAGE: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID || 'uma-rpg' }}/platform/api:${{ github.sha }}
+  RUNTIME_SERVICE_ACCOUNT: platform-api-runtime@${{ vars.GCP_PROJECT_ID || 'uma-rpg' }}.iam.gserviceaccount.com
+  HOSTING_SITE: ${{ vars.HOSTING_SITE || 'uma-platform' }}
+  HOSTING_URL: https://${{ vars.HOSTING_SITE || 'uma-platform' }}.web.app
+  MASTER_BUCKET: ${{ vars.MASTER_BUCKET || 'uma-platform-master-data' }}
+  CONTENT_BUCKET: ${{ vars.CONTENT_BUCKET || 'uma-platform-content' }}
+  QUEST_CONTENT_BUCKET: ${{ vars.QUEST_CONTENT_BUCKET || 'uma-quest-content' }}
+
+jobs:
+  deploy:
+    name: Check, then deploy API and web
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check the app's own rules
+        run: node --test scripts/check-private-content.test.mjs scripts/check-sub-apps.test.mjs scripts/check-hosting-site.test.mjs
+
+      - name: Lint, test and build the app and its packages
+        run: pnpm turbo run lint test build --filter=@uma-platform/web... --filter=@uma-platform/api... --concurrency=1
+
+      - id: auth
+        name: Authenticate to Google Cloud with GitHub OIDC
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SA }}
+
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${GCP_REGION}-docker.pkg.dev" --quiet
+
+      - name: Build API image
+        run: docker build -f apps/api/Dockerfile -t "${API_IMAGE}" .
+
+      - name: Push API image
+        run: docker push "${API_IMAGE}"
+
+      - id: deploy-api
+        name: Deploy API to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          region: ${{ env.GCP_REGION }}
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          image: ${{ env.API_IMAGE }}
+          labels: app=platform
+          # App-level auth (Firebase ID token + owner allowlist) guards every route but /api/health.
+          flags: >-
+            --allow-unauthenticated
+            --service-account=${{ env.RUNTIME_SERVICE_ACCOUNT }}
+            --min-instances=0
+            --max-instances=1
+            --memory=512Mi
+            --cpu=1
+          env_vars: |
+            MASTER_BUCKET=${{ env.MASTER_BUCKET }}
+            CONTENT_BUCKET=${{ env.CONTENT_BUCKET }}
+            QUEST_CONTENT_BUCKET=${{ env.QUEST_CONTENT_BUCKET }}
+            ALLOWED_ORIGIN=${{ env.HOSTING_URL }}
+            ALLOWED_EMAIL=${{ vars.ALLOWED_EMAIL }}
+            BUILD_ID=${{ github.sha }}
+
+      - name: Verify API readiness and auth guard
+        run: |
+          curl --fail --silent --show-error --retry 10 --retry-delay 3 "${{ steps.deploy-api.outputs.url }}/api/health" > /dev/null
+          test "$(curl --silent "${{ steps.deploy-api.outputs.url }}/api/health" | python3 -c 'import json,sys; print(json.load(sys.stdin)["build"])')" = "${GITHUB_SHA}"
+          test "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${{ steps.deploy-api.outputs.url }}/api/master/channels/v1/latest.json")" = "401"
+
+      - name: Deploy web to Firebase Hosting
+        run: pnpm dlx firebase-tools@15.22.4 deploy --only hosting:uma-platform --project="${GCP_PROJECT_ID}" --non-interactive
+
+      - name: Verify hosted application
+        run: |
+          curl --fail --show-error --silent --retry 10 --retry-delay 3 "${HOSTING_URL}/" > /dev/null
+          curl --silent --head "${HOSTING_URL}/" | grep -i '^cache-control: no-cache'
+          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-all-errors "${HOSTING_URL}/api/health" > /dev/null
+          test "$(curl --silent "${HOSTING_URL}/api/health" | python3 -c 'import json,sys; print(json.load(sys.stdin)["build"])')" = "${GITHUB_SHA}"
+          test "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${HOSTING_URL}/api/master/channels/v1/latest.json")" = "401"
+          # A guard against a site mix-up: the games' own sites still answer.
+          curl --fail --silent --show-error https://uma-quest.web.app/api/health > /dev/null

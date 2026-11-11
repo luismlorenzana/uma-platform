@@ -11,9 +11,10 @@
     "import": "node --import tsx src/tier-import.ts"
   },
   "dependencies": {
+    "@luismlorenzana/uma-art": "workspace:*",
     "@luismlorenzana/uma-data": "workspace:*",
     "@uma-platform/sprite-pipeline": "workspace:*",
-    "@luismlorenzana/uma-art": "workspace:*",
+    "@uma-platform/tiers": "workspace:*",
     "sharp": "^0.34.5"
   },
   "devDependencies": {

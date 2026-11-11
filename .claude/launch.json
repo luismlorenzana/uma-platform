@@ -2,15 +2,49 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "platform-api",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@uma-platform/api",
+        "dev"
+      ],
+      "port": 8111
+    },
+    {
+      "name": "platform-web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@uma-platform/web",
+        "dev"
+      ],
+      "port": 5204
+    },
+    {
+      "name": "studio",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "studio"
+      ],
+      "port": 4318
+    },
+    {
       "name": "story-sandbox",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["../uma-quest/tools/story-sandbox/server.mjs"],
+      "runtimeArgs": [
+        "../uma-quest/tools/story-sandbox/server.mjs"
+      ],
       "port": 4320
     },
     {
       "name": "farm-story-sandbox",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["--experimental-strip-types", "--no-warnings", "../uma-farm/tools/story-sandbox/server.mjs"],
+      "runtimeArgs": [
+        "--experimental-strip-types",
+        "--no-warnings",
+        "../uma-farm/tools/story-sandbox/server.mjs"
+      ],
       "port": 4321
     }
   ]

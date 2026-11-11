@@ -1,0 +1,3 @@
+@import 'tailwindcss';
+@import '@luismlorenzana/uma-kit/theme.css';
+@source '../node_modules/@luismlorenzana/uma-kit/dist';

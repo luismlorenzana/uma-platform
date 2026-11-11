@@ -1,0 +1,17 @@
+# The API image (apps/api/Dockerfile) needs only the workspace manifests, the lockfile, the API and uma-server; private
+# content/ (tens of GB), art, docs and every other package stay out of the build context.
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!apps/*/package.json
+!packages/*/package.json
+!scripts/*/package.json
+!tools/*/package.json
+!apps/api
+!packages/server
+apps/api/node_modules
+apps/api/dist
+packages/server/node_modules
+packages/server/dist

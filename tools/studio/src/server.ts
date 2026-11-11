@@ -15,6 +15,7 @@ import { TierStore, TierConflict } from './tier-store.js'
 import { boardOf, type BoardId } from './tier-model.js'
 
 const here = dirname(fileURLToPath(import.meta.url)), tool = resolve(here, '..')
+const tierModelFile = fileURLToPath(import.meta.resolve('@uma-platform/tiers'))
 const content = resolve(process.env.UMA_CONTENT_DIR ?? defaultContent), release = resolve(content, 'release'), root = resolve(content, 'authoring/sprites')
 const port = Number(process.env.UMA_STUDIO_PORT ?? 4318)
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('Invalid Studio port')
@@ -97,7 +98,9 @@ async function main() {
       await serve(response, await inside(content, key)); return
     }
     if (images.has(path)) { await serve(response, await inside(release, path.slice(1))); return }
-    const pages: Record<string, string> = { '/': 'public/home.html', '/tier-model.js': 'dist/tier-model.js', '/tier-app.js': 'dist/tier-app.js', '/home-app.js': 'dist/home-app.js', '/tier-ui.js': 'dist/tier-ui.js', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/sprites/placement.js': 'dist/held-placement.js' }
+    // The pages import './tier-model.js': the tier package's own ESM build, which has no imports (AP15).
+    if (path === '/tier-model.js') { await serve(response, tierModelFile); return }
+    const pages: Record<string, string> = { '/': 'public/home.html', '/tier-app.js': 'dist/tier-app.js', '/home-app.js': 'dist/home-app.js', '/tier-ui.js': 'dist/tier-ui.js', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/sprites/placement.js': 'dist/held-placement.js' }
     if (pages[path]) { await serve(response, resolve(tool, pages[path])); return }
     if (path.startsWith('/tiers/') && boardOf(path.slice(7))) { await serve(response, resolve(tool, 'public/board.html')); return }
     // The two old rankers became tier boards (P113).

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   BOARDS, bestStyles, boardStats, careerMath, defaultOutfit, emptyBoard, leadOutfit, outfitPick, setOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan, tiersOf,
   type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
-} from './tier-model.js'
+} from './index.js'
 
 // Invented records only: no master data, no franchise names, no images.
 const grades = { front: 'A', pace: 'B', late: 'C', end: 'G' }
