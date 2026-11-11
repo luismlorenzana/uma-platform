@@ -122,10 +122,16 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | UA6 | Backup complete: 2.39 GB live authored content, caches removed; 185-file restore byte-identical | Done | — | — | **Done** |
 | M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 done (`7c34dbe2c8de`, P108) |
 | | Q7, Q15, Q16 | uma-quest's art packets ([forest kit](https://github.com/luismlorenzana/uma-platform/blob/main/assets/authored/kit-forest/README.md), [town kit](https://github.com/luismlorenzana/uma-platform/blob/main/assets/authored/kit-town-warrior/README.md), [foes](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md)), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5 ✓, Q8 ✓ | Q7 done (2.23.0, P110); Q15 done (2.24.0, P111); Q16 ready (in uma-quest) |
+| uma-quest's enemies and kits (P126) | Q16 A | [The baseline enemies' records](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-baseline-enemies.md), part A: the enemy-key format and master data, before ChatGPT draws part B | Claude | M | uma-quest's D33 review ✓ | **Ready, next** |
+| | Q39 (+ TA4) | [The enemy pipeline](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q39-enemy-pipeline.md): tools, docs and batch templates | Claude | M | Q16 | Waits on Q16 |
+| | Q16 B, Q34, Q46 | The enemies and adult keys, drawn | ChatGPT | L | Q16 A; Q39 for Q34 | ChatGPT's character queue |
+| | Q32, Q33 | The four town kits and four biome kits (painted) | ChatGPT | L each | Q15 ✓, Q7 ✓ | After ChatGPT's character work (uma-quest D49) |
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
 | M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (P107) | Claude | M | uma-farm asks again | **Parked** (P109: the owner moved parcels to later, uma-farm D22) |
-| | F9 | uma-farm's art packet (the Forge and the Post), drawn here | ChatGPT | M | uma-farm's F7 | Incoming |
+| | F9 | uma-farm's `kit-farm` (painted, M7), drawn here | ChatGPT, after its character work | M | uma-farm's F16 | On hold (uma-farm D20) |
+| uma-farm's art (P126) | F25 A, F29 A | [M4's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F25-art-m4.md) and [M5's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F29-art-m5.md) pixel art: buildings, marks, goods, animal icons, story items, tool tints; drawn in `scripts/pixel-art`, published here | Claude | S–M, M | F25 A: ready; F29 A: after uma-farm's romance spec (F41) | **Ready** (F25 A) |
+| | F25 B, F29 B | The farm cast's seven busts (`cast` atlas) | ChatGPT | M | F25 B first | Ready (F25 B) |
 
 ## Tier authoring (TA)
 
@@ -139,7 +145,7 @@ output is the private `content/authoring/tiers/plan.json`.
 | TA1 | The Studio's home and seven boards, the per-character Uma board, the Genshin Impact and Wuthering Waves imports | Claude | L | — | **Done** (P113–P115) |
 | [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's NPC ranking | Queued |
 | TA3 | uma-quest's careers: a career a character, at least three bosses from the boss boards (P116) | uma-quest's session | M | — | Requested |
-| TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | ChatGPT (Q39) | S | Q39 | With Q39 |
+| TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | Claude (with Q39, P126) | S | Q39 | With Q39 |
 | TA6 | The next boss franchise, one packet each: Arknights: Endfield next ([ranked](../authoring/franchises.md)); Honkai Impact 3rd and Punishing: Gray Raven are built (TA1++) | Claude | M | The owner's pick | Waiting on the pick |
 
 ## Releases while packets run in parallel

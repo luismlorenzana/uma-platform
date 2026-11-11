@@ -9,7 +9,7 @@
 |---|---|---|
 | **One game:** its rules, screens, places, words, balance, economy, save, and which tabs and chips it shows | That game's session: **uma-rpg** or **uma-racer** | "The Forge picker should show icons only" |
 | **Both games:** anything uma-kit draws (see below) | The **uma-platform** session, starting with **"Both apps:"** | "Both apps: dock the bottom bar to the screen's edge" |
-| **Art:** new or redrawn pixel art | The game's session. It writes a ChatGPT packet, and the art ships in uma-art | "Battle tiles for the Hub" |
+| **Art:** new or redrawn pixel art | The game's session. It writes a packet; a uma-platform Claude session draws the pixel art and ChatGPT the character art (P126), and the art ships in uma-art | "Battle tiles for the Hub" |
 | **Master data:** Umas, outfits, skills | The **uma-platform** session | "Import the new outfits" |
 
 **Not sure? Ask in the game you were looking at.** If the change belongs in the kit, that session says so in one line

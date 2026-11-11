@@ -33,6 +33,9 @@ HOW TO WORK
 - The packet's decisions are made; follow them. Where it leaves a choice open, pick the sensible default, record it
   under Decisions in your delivery, and carry on. The owner prefers that to questions.
 - Original-game content (game images, data packs, screenshots of the original game) never goes in git.
+- Who draws what (uma-platform P126): ChatGPT draws character art end to end (Uma sprites and keys, enemies, cast
+  busts), then the painted full-colour kits. Claude draws the code-drawn pixel art (scripts/pixel-art) and builds the
+  art tools. A packet with both has parts; take only the part your packet names.
 - Use your own git worktree per packet, as a sibling folder, so the main checkouts stay free for other sessions:
     git -C ~/workspace/<repo> fetch origin
     git -C ~/workspace/<repo> worktree add ~/workspace/<repo>-<id> -b sib/<id>-<slug> origin/main

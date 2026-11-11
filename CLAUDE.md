@@ -38,6 +38,9 @@ The owner gave every session full autonomy to commit, publish and deploy (2026-1
   `latest`. Sprites publish sprite-only (UA5), and only sets whose `reviews.json` approval matches their current hashes.
   The owner's set approval is the go.
 - **Back up** `content/authoring/` with `pnpm sprites:backup` to `gs://uma-platform-authoring`.
+- **Draw and release the code-drawn pixel art (P126):** a packet's pixel part in `scripts/pixel-art` (`pnpm art:draw`),
+  with its tests and every earlier frame byte-identical; a changeset, `pnpm version-packages`, push; the release workflow
+  publishes uma-art. The art tools (pipelines, exporters, checks, templates) are Claude's too.
 - **Write packets ahead,** work them in order, flag each done and log its P-decision. Merge your own pull requests;
   review ChatGPT's with must-fixes only (a broken rule, original-game content, a failing check, a real bug), and take a
   ChatGPT code packet that blocks a release.
@@ -50,7 +53,8 @@ The owner gave every session full autonomy to commit, publish and deploy (2026-1
 - making anything public: a repo, a bucket, a URL to private data;
 - a master data release that removes or renames anything a live game reads (a schema major).
 
-**Never:** publish uma-art (ChatGPT's, end to end), put Uma art in uma-art or git, change the active gcloud account, or
+**Never:** draw or publish character art or the painted full-colour kits (ChatGPT's, end to end, P126), put Uma art in
+uma-art or git, change the active gcloud account, or
 type credentials into a sign-in page. Scope gcloud with `CLOUDSDK_ACTIVE_CONFIG_NAME=default` and
 `CLOUDSDK_CORE_PROJECT=uma-platform-lm` here (the master and authoring buckets), or `uma-rpg` for the games' project.
 
@@ -70,8 +74,12 @@ type credentials into a sign-in page. Scope gcloud with `CLOUDSDK_ACTIVE_CONFIG_
   `docs/design/tier-rework/class-progression.md` is the bar.
 - **Lean assets:** features first, and the cheapest art that looks fine; no heavy pipelines.
 - **Cloud cost up front:** a free-tier cost table whenever a cloud resource is added.
-- **Art is ChatGPT's end to end:** every art packet goes to ChatGPT, which draws, merges, versions and publishes the
-  uma-art release. The game's packet that first uses the art pins it.
+- **Art is split by kind (P126, the owner, 2026-11-11):** **ChatGPT draws character art end to end** (Uma sprites and
+  keys, townsfolk, enemies, cast busts and any character portrait), then the painted full-colour art that needs image
+  generation (the town and biome kits, after its character work), and publishes those releases. **Claude draws the
+  code-drawn pixel art** (`scripts/pixel-art`: items, UI marks, crests, emblems, 48 px buildings, tiles, animal icons)
+  **and builds the art tools,** and versions and publishes those uma-art releases. A packet with both splits into parts,
+  one per worker. The game's packet that first uses the art pins it.
 
 ## Building and running
 

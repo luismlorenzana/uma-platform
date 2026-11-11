@@ -67,7 +67,7 @@ Each requirement has an id, where it comes from, and the task that checks it.
 | Id | Requirement | From | Checked by |
 |---|---|---|---|
 | N1 | No Uma art in uma-art or git; Uma sprites only in master data's private release | CR19, P6 | UA5, UA10 |
-| N2 | Releases are semver minors; games pin exact versions; uma-art is ChatGPT's to publish; sprites after Claude's first publish are ChatGPT's too | P9, CR29 | every release |
+| N2 | Releases are semver minors; games pin exact versions; uma-art is published by whoever draws the family (P126: ChatGPT its character art and painted kits, Claude its code-drawn pixel art); sprites after Claude's first publish are ChatGPT's too | P9, CR29 | every release |
 | N3 | A sprite publish never changes any other release file; uma-rpg keeps working through it | CR27 | UA5 |
 | N4 | Kit changes follow the change protocol ("Both apps"): a kit release, never a fork in a game | change protocol | KL1 |
 | N5 | `uma-work` and `uma-kit/work` stay as they are for uma-farm; any change is a release both games take | FM5 | — |

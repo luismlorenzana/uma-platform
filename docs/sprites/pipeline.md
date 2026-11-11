@@ -287,9 +287,9 @@ UA8 is delivered in uma-art **2.22.0**: 16 held textures and eight bubbles, with
 | Who | Does |
 |---|---|
 | **You** | Rank the roster; approve keys and sets in the Studio; say yes to the backup bucket. Nothing else |
-| **ChatGPT** | Draws, exports, verifies and publishes sets; draws uma-art props and publishes uma-art (art end to end, 2026-10-29) |
+| **ChatGPT** | Draws, exports, verifies and publishes sets; character art end to end, then the painted props and kits it publishes in uma-art (P126) |
 | **Claude or ChatGPT** | The tools, the Studio and the schema (UA2–UA4) |
-| **Claude** | UA5's first publish and UA6's bucket, both on the owner's machine; uma-quest's side |
+| **Claude** | UA5's first publish and UA6's bucket, both on the owner's machine; uma-quest's side; the code-drawn pixel art and the art tools, which it publishes in uma-art (P126) |
 
 ## 9. Volume and time
 
