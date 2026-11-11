@@ -3,23 +3,24 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f5f3ed"><title>Uma Studio</title>
-  <link rel="stylesheet" href="/tiers.css"><script type="module" src="/home-app.js"></script>
+  <link rel="stylesheet" href="/tiers.css">
 </head>
 <body class="home">
-  <nav id="nav" class="studio-nav" aria-label="Studio"></nav>
-  <header class="topbar"><a href="/" class="brand"><span class="brand-mark" aria-hidden="true">u.</span><span>UMA <span>STUDIO</span></span></a><span class="local">LOCAL AUTHORING · NEVER PUBLISHED</span><div class="file-actions"><a class="button dark" href="/api/tiers/plan" download>Export plan ↗</a></div></header>
+  <header class="topbar"><a href="/" class="brand"><span class="brand-mark" aria-hidden="true">u.</span><span>UMA <span>STUDIO</span></span></a><span class="local">LOCAL AUTHORING · NEVER PUBLISHED</span></header>
   <main>
-    <section class="intro"><div><p class="eyebrow">PRE-PRODUCTION / TIER AUTHORING</p><h1>Who’s in, and who comes first<span>.</span></h1><p class="lead">Eleven boards, one scale. SS, S and A are each board’s cast, with SSS above them on the Uma boards.<br>B, F and unranked flow down to the board below.</p></div>
-      <div class="flow" aria-label="How boards hand their leftovers down"><div class="flow-col"><span class="flow-node">Playable Umas</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node soft">Uma NPCs</span></div><div class="flow-col"><span class="flow-trio"><span class="flow-node">Azur Lane</span><span class="flow-node">Genshin</span><span class="flow-node">WuWa</span><span class="flow-node">HSR</span><span class="flow-node">ZZZ</span><span class="flow-node">HI3</span><span class="flow-node">PGR</span></span><span class="flow-caption">bosses</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node">Key enemies</span><span class="flow-arrow" aria-hidden="true">↓</span><span class="flow-node soft">Regular enemies <em>+ NIKKE</em></span></div></div>
+    <section class="intro"><div><p class="eyebrow">PRE-PRODUCTION / SPRITES</p><h1>The sprite tools<span>.</span></h1><p class="lead">The tier boards moved online as the Uma Ranker, in the Uma Platform app (P131).<br>The sprite pipeline’s tools stay here, on this machine.</p></div></section>
+    <section class="board-section" aria-label="Tools">
+      <div class="tile-group"><div class="group-head"><h3>Tier boards</h3><p>Every board, online: Playable Umas per outfit on ten tiers, Uma NPCs, the boss boards and the enemies. <code>pnpm ranker:pull</code> brings the plan to <code>content/authoring/tiers/plan.json</code>.</p></div>
+        <div class="tiles"><a class="app-tile" href="https://uma-platform.web.app/ranker"><span class="tile-kicker">Uma Platform</span><strong>Uma Ranker</strong><span class="tile-blurb">uma-platform.web.app/ranker, signed in with Google.</span><span class="tile-go" aria-hidden="true">↗</span></a></div></div>
+      <div class="tile-group"><div class="group-head"><h3>Sprite production</h3><p>The Uma sprite pipeline’s tools, unchanged.</p></div>
+        <div class="tiles">
+          <a class="app-tile tool" href="/queue"><span class="tile-kicker">Sprites</span><strong>Sprite queue</strong><span class="tile-blurb">Travelers and townsfolk in batch order; drag to reorder.</span><span class="tile-go" aria-hidden="true">↗</span></a>
+          <a class="app-tile tool" href="/sprites/"><span class="tile-kicker">Sprites</span><strong>Animation desk</strong><span class="tile-blurb">Step frames, faces, held layers and formations.</span><span class="tile-go" aria-hidden="true">↗</span></a>
+          <a class="app-tile tool" href="/field/"><span class="tile-kicker">Sprites</span><strong>Field and scene</strong><span class="tile-blurb">Walks in four facings, emotes and the direction check.</span><span class="tile-go" aria-hidden="true">↗</span></a>
+          <a class="app-tile tool" href="/gates"><span class="tile-kicker">Sprites</span><strong>Gates</strong><span class="tile-blurb">Key and set approvals, bound to file hashes.</span><span class="tile-go" aria-hidden="true">↗</span></a>
+          <a class="app-tile tool" href="/props"><span class="tile-kicker">Sprites</span><strong>Weapons and bubbles</strong><span class="tile-blurb">uma-art’s held textures and emote bubbles.</span><span class="tile-go" aria-hidden="true">↗</span></a>
+        </div></div>
     </section>
-    <div id="notice" role="alert" hidden></div>
-    <section class="board-section" aria-label="Boards and tools"><div class="section-line"><h2><span class="section-number">01</span> Open a board</h2></div><div id="groups"><p class="loading">Counting the boards…</p></div></section>
-    <section class="board-section" aria-label="Dashboard"><div class="section-line"><div><h2><span class="section-number">02</span> The numbers</h2><p class="section-description">Live from the boards. A character counts once, however many outfits she has.</p></div></div>
-      <div id="kpis" class="kpis"></div>
-      <div class="dash-grid"><div class="dash-card"><h3>Every board by tier</h3><div class="table-scroll"><table id="table" class="dash-table"></table></div></div>
-        <div class="dash-card"><h3>Careers</h3><div id="careers"></div></div></div>
-      <div class="dash-card"><h3>Sources</h3><ul class="sources"><li><strong>Umas</strong>: the local master release <code id="release">…</code>, outfits grouped by character.</li><li><strong>Azur Lane and NIKKE</strong>: the private enemy catalog in <code>content/authoring/enemies/</code>.</li></ul><ul id="imports" class="sources"></ul></div>
-    </section>
-    <footer><span>Everything here stays on this machine and in the private authoring backup.</span><span>Plan: <code>content/authoring/tiers/plan.json</code></span></footer>
+    <footer><span>Everything here stays on this machine and in the private authoring backup.</span></footer>
   </main>
 </body></html>

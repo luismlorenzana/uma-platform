@@ -1,5 +1,10 @@
 # Tier authoring: one local Studio, eleven boards, and a career for every Uma
 
+> **Moved online on 2026-11-11 as the Uma Ranker (P131,** [platform-app](../platform-app/README.md) **AP25–AP36).** Playable
+> Umas now ranks every outfit on ten straight tiers, T1 to T10, one art batch each, and outfits that are another Uma (her
+> sister) rank as Umas of their own; the picks live in the profiles; the plan is schema 2. Everything below is the local
+> Studio's design and history: the lettered boards still follow it, and the Studio's own boards are retired.
+
 > **Status: 2026-11-09, the owner's direction (P113–P116), built as TA1; revised the same day (P117–P121) and on
 > 2026-11-10 (P122, P123).** The two local rankers (Umas by outfit, enemies by role) become one app with eleven tier
 > boards on one scale, a home with a dashboard, and a local import for six new franchises. Honkai Impact 3rd and

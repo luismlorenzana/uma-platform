@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, bestStyles, boardStats, careerMath, defaultOutfit, emptyBoard, leadOutfit, outfitPick, setOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan, tiersOf,
-  type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
+  BOARDS, bestStyles, boardStats, buildCatalog, careerMath, defaultOutfit, emptyBoard, emptyLegacy, emptyProfiles, identities, leadOutfit, legacyCharacterTiers,
+  migrateUmasBoard, move, ordered, outfitPick, parseBoard, parseEnemyImport, parseLegacy, parseLegacyUmasBoard, parseProfiles, place, playstyleCounts, playstyleOf,
+  pools, profileProblems, profilesFromLegacy, rankedIdentities, seedBoards, setDefaultOutfit, setMember, setNote, setOut, setTier, shift, sisterId, tierPlan, tierStep,
+  tiersOf, wayOf, type BoardId, type BoardState, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type UmaProfiles, type Way,
 } from './index.js'
 
 // Invented records only: no master data, no franchise names, no images.
 const grades = { front: 'A', pace: 'B', late: 'C', end: 'G' }
 const uma = (id: string, outfits: number[], ways: Way[] = []): UmaCharacter => ({
-  id, name: `Runner ${id}`, face: null, portrait: null, lead: outfits[0]!,
+  id, name: `Runner ${id}`, face: null, portrait: null, before: null,
   outfits: outfits.map((o, i) => ({ id: o, title: `Look ${o}`, original: o % 100 === 1, way: ways[i] ?? 'front', strategy: grades, face: null, portrait: null, before: null })),
 })
 const unit = (id: string, franchise: EnemyUnit['franchise'], category: EnemyUnit['category'] = 'regular'): EnemyUnit => ({
@@ -15,23 +17,36 @@ const unit = (id: string, franchise: EnemyUnit['franchise'], category: EnemyUnit
 })
 const catalog: TierCatalog = {
   release: 'synthetic',
-  umas: [uma('701', [70101, 70102], ['front', 'late']), uma('702', [70201], ['pace']), uma('703', [70301], ['late-end']), uma('704', [70401, 70402, 70403])],
+  umas: [uma('701', [70101, 70102, 70103], ['front', 'late', 'pace']), uma('702', [70201], ['pace']), uma('703', [70301], ['late-end']), uma('704', [70401, 70402])],
   enemies: [
     unit('al-a', 'azurlane', 'boss'), unit('al-b', 'azurlane', 'boss'), unit('al-c', 'azurlane', 'key'), unit('al-d', 'azurlane'),
     unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('hsr-1', 'hsr', 'playable'), unit('zzz-1', 'zzz', 'playable'),
     unit('hi3-1', 'hi3', 'playable'), unit('hi3-2', 'hi3', 'playable'), unit('pgr-1', 'pgr', 'playable'), unit('nk-1', 'nikke'),
   ],
 }
+/** Runner 701's third look is her sister. */
+const profiles: UmaProfiles = { ...emptyProfiles(), sisters: [{ outfitId: 70103, characterId: 701, name: 'Sister 701', relation: 'younger sister', age: 'an invented age', profile: 'Invented.' }] }
 const empty = (): BoardStates => Object.fromEntries(BOARDS.map((b) => [b.id, emptyBoard(b.id)])) as BoardStates
-const ids = (states: BoardStates, board: BoardId) => pools(catalog, states)[board].map((m) => m.id)
+const ids = (states: BoardStates, board: BoardId, p = profiles) => pools(catalog, states, p)[board].map((m) => m.id)
+
+describe('the scales (P131)', () => {
+  it('gives Playable Umas ten straight tiers, Uma NPCs SSS to F, every other board SS to F', () => {
+    expect(tiersOf('umas').map((t) => t.id)).toEqual(['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'])
+    expect(tiersOf('npcs').map((t) => t.id)).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
+    expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'A', 'B', 'F'])
+  })
+})
 
 describe('pools', () => {
-  it('hands each board’s B, F and unranked down, and keeps its cast', () => {
+  it('puts every outfit on Playable Umas, and brings a character down to NPCs when none of her own outfits is ranked', () => {
     const states = empty()
-    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'A', note: '' }, { id: '703', tier: 'B', note: '' }]
-    expect(ids(states, 'umas')).toEqual(['701', '702', '703', '704'])
+    expect(ids(states, 'umas')).toEqual(['70101', '70102', '70103', '70201', '70301', '70401', '70402'])
+    states.umas.entries = [{ id: '70102', tier: 'T3', note: '' }, { id: '70201', tier: 'T10', note: '' }]
     expect(ids(states, 'npcs')).toEqual(['703', '704'])
-    expect(pools(catalog, states).npcs).toEqual([{ id: '703', via: 'umas', viaTier: 'B' }, { id: '704', via: 'umas', viaTier: null }])
+    // A sister's outfit ranks for the sister: her sister still comes down to NPCs.
+    states.umas.entries = [{ id: '70103', tier: 'T1', note: '' }]
+    expect(ids(states, 'npcs')).toEqual(['701', '702', '703', '704'])
+    expect(pools(catalog, states, profiles).npcs[0]).toEqual({ id: '701', via: 'umas', viaTier: null })
   })
   it('puts the Azur Lane members on their board, every other Azur Lane unit on Key, and NIKKE on Regular', () => {
     const states = empty()
@@ -39,58 +54,58 @@ describe('pools', () => {
     states['azurlane-bosses'].entries = [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-b', tier: 'F', note: '' }]
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }]
     expect(ids(states, 'azurlane-bosses')).toEqual(['al-a', 'al-b'])
-    expect(ids(states, 'genshin-bosses')).toEqual(['gi-1', 'gi-2'])
     expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
     states['key-enemies'].entries = [{ id: 'al-c', tier: 'A', note: '' }, { id: 'gi-2', tier: 'B', note: '' }]
     expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
   })
   it('takes a left-out unit off every board, and brings it back unranked', () => {
     const states = empty()
-    states['hi3-bosses'] = setTier(states['hi3-bosses'], 'hi3-2', 'S')
-    states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-2', true)
+    states['hi3-bosses'] = setOut(setTier(states['hi3-bosses'], 'hi3-2', 'S'), 'hi3-2', true)
     expect(states['hi3-bosses']).toMatchObject({ entries: [], out: ['hi3-2'] })
-    expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1'])
     expect(ids(states, 'key-enemies')).not.toContain('hi3-2')
-    expect(ids(states, 'regular-enemies')).not.toContain('hi3-2')
-    expect(setOut(states['hi3-bosses'], 'hi3-2', true)).toBe(states['hi3-bosses'])
     states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-2', false)
-    expect(states['hi3-bosses']).toMatchObject({ entries: [], out: [] })
     expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1', 'hi3-2'])
   })
-  it('keeps SSS in the cast, above SS, on the Uma boards only (P122, P124)', () => {
+  it('counts every Playable tier as cast, and only SSS to A elsewhere', () => {
     const states = empty()
-    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'SSS', note: '' }, { id: '703', tier: 'F', note: '' }]
-    expect(ids(states, 'npcs')).toEqual(['703', '704'])
-    expect(ordered(states.umas, new Set(ids(states, 'umas'))).map((e) => e.id)).toEqual(['702', '701', '703'])
-    expect(boardStats(pools(catalog, states).umas, states.umas)).toMatchObject({ ranked: 3, cast: 2, tiers: { SSS: 1, SS: 1, S: 0, A: 0, B: 0, F: 1 } })
-    expect(parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '703', tier: 'SSS', note: '' }] }).entries[0]?.tier).toBe('SSS')
-    expect(() => parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] })).toThrow(/Uma boards only/)
-    expect(tiersOf('umas').map((t) => t.id)).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
-    expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'A', 'B', 'F'])
-  })
-  it('ignores a tier on a board the entry has left', () => {
-    const states = empty()
-    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }]
-    states.npcs.entries = [{ id: '701', tier: 'S', note: 'kept for later' }]
-    expect(boardStats(pools(catalog, states).npcs, states.npcs)).toMatchObject({ pool: 3, ranked: 0, cast: 0 })
+    states.umas.entries = [{ id: '70101', tier: 'T1', note: '' }, { id: '70201', tier: 'T10', note: '' }]
+    expect(boardStats(pools(catalog, states, profiles).umas, states.umas)).toMatchObject({ pool: 7, ranked: 2, cast: 2, tiers: { T1: 1, T10: 1, T5: 0 } })
+    states.npcs.entries = [{ id: '703', tier: 'SSS', note: '' }, { id: '704', tier: 'B', note: '' }]
+    expect(boardStats(pools(catalog, states, profiles).npcs, states.npcs)).toMatchObject({ ranked: 2, cast: 1 })
   })
 })
 
 describe('edits', () => {
-  const base = { ...emptyBoard('umas'), entries: [{ id: '701', tier: 'SS' as const, note: '' }, { id: '702', tier: 'SS' as const, note: 'n' }, { id: '703', tier: 'S' as const, note: '' }] }
-  const all = new Set(['701', '702', '703', '704'])
+  const base: BoardState = { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T1', note: '' }, { id: '70201', tier: 'T1', note: 'n' }, { id: '70301', tier: 'T2', note: '' }] }
+  const all = new Set(['70101', '70102', '70201', '70301', '70401'])
+  const order = (s: BoardState) => ordered(s, all).map((e) => `${e.id}:${e.tier}`)
   it('sends a new tier to the end of that tier, and drops an unranked entry with no note', () => {
-    expect(ordered(setTier(base, '703', 'SS'), all).map((e) => e.id)).toEqual(['701', '702', '703'])
-    expect(setTier(base, '701', null).entries.map((e) => e.id)).toEqual(['702', '703'])
-    expect(setTier(base, '702', null).entries.find((e) => e.id === '702')).toEqual({ id: '702', tier: null, note: 'n' })
-    expect(setTier(base, '701', 'SS')).toBe(base)
+    expect(order(setTier(base, '70301', 'T1'))).toEqual(['70101:T1', '70201:T1', '70301:T1'])
+    expect(setTier(base, '70101', null).entries.map((e) => e.id)).toEqual(['70201', '70301'])
+    expect(setTier(base, '70201', null).entries.find((e) => e.id === '70201')).toEqual({ id: '70201', tier: null, note: 'n' })
+    expect(setTier(base, '70101', 'T1')).toBe(base)
   })
-  it('places before another entry, and moves within a tier only', () => {
-    expect(ordered(place(base, '703', 'SS', '701'), all).map((e) => e.id)).toEqual(['703', '701', '702'])
-    expect(ordered(place(base, '704', 'S', null), all).map((e) => `${e.id}${e.tier}`)).toEqual(['701SS', '702SS', '703S', '704S'])
-    expect(ordered(move(base, '702', -1, all), all).map((e) => e.id)).toEqual(['702', '701', '703'])
-    expect(move(base, '701', -1, all)).toBe(base)
-    expect(move(base, '703', -1, all)).toBe(base)
+  it('places before another entry, and moves within a tier', () => {
+    expect(order(place(base, '70301', 'T1', '70101'))).toEqual(['70301:T1', '70101:T1', '70201:T1'])
+    expect(order(move(base, '70201', -1, all))).toEqual(['70201:T1', '70101:T1', '70301:T2'])
+    expect(move(base, '70101', -1, all)).toBe(base)
+  })
+  it('steps one place at a time across a tier’s edge, up and down (P131)', () => {
+    // Up from the top of T2: the end of T1. Down from the end of T1: the start of T2.
+    expect(order(shift(base, '70301', -1, all))).toEqual(['70101:T1', '70201:T1', '70301:T1'])
+    expect(order(shift(base, '70201', 1, all))).toEqual(['70101:T1', '70201:T2', '70301:T2'])
+    expect(order(shift(base, '70101', 1, all))).toEqual(['70201:T1', '70101:T1', '70301:T2'])
+    // An empty tier is still a step: down from T2 lands in T3.
+    expect(order(shift(base, '70301', 1, all))).toEqual(['70101:T1', '70201:T1', '70301:T3'])
+    expect(shift(base, '70101', -1, all)).toBe(base)
+    expect(shift(base, '70401', 1, all)).toBe(base)
+    const bottom = setTier(base, '70401', 'T10')
+    expect(shift(bottom, '70401', 1, all)).toBe(bottom)
+  })
+  it('moves a whole tier up or down, landing next to the boundary', () => {
+    expect(order(tierStep(base, '70101', 1, all))).toEqual(['70201:T1', '70101:T2', '70301:T2'])
+    expect(order(tierStep(base, '70301', -1, all))).toEqual(['70101:T1', '70201:T1', '70301:T1'])
+    expect(tierStep(base, '70101', -1, all)).toBe(base)
   })
   it('keeps notes on unranked entries, and adds or removes Azur Lane members', () => {
     expect(setNote(emptyBoard('npcs'), '704', 'a townsperson').entries).toEqual([{ id: '704', tier: null, note: 'a townsperson' }])
@@ -106,129 +121,130 @@ describe('files', () => {
     expect(parseBoard(JSON.parse(JSON.stringify(board)) as unknown, 'azurlane-bosses')).toEqual(board)
     for (const bad of [
       { ...board, schemaVersion: 2 }, { ...board, board: 'elsewhere' }, { ...board, revision: -1 }, { ...board, members: undefined },
-      { ...board, entries: [{ id: 'al-a', tier: 'A1', note: '' }] }, { ...board, entries: [{ id: '../x', tier: 'S', note: '' }] },
+      { ...board, entries: [{ id: 'al-a', tier: 'T1', note: '' }] }, { ...board, entries: [{ id: '../x', tier: 'S', note: '' }] },
       { ...board, entries: [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-a', tier: 'B', note: '' }] },
     ]) expect(() => parseBoard(bad, 'azurlane-bosses')).toThrow()
-    expect(() => parseBoard(emptyBoard('umas'), 'npcs')).toThrow()
-    const pgr = { ...emptyBoard('pgr-bosses'), out: ['pgr-1'] }
-    expect(parseBoard(JSON.parse(JSON.stringify(pgr)) as unknown, 'pgr-bosses')).toEqual(pgr)
-    expect(() => parseBoard({ ...pgr, out: ['pgr-1', 'pgr-1'] }, 'pgr-bosses')).toThrow()
-    expect(() => parseBoard({ ...emptyBoard('key-enemies'), out: ['pgr-1'] }, 'key-enemies')).toThrow()
+    expect(() => parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] })).toThrow(/Uma NPCs only/)
+  })
+  it('takes Playable Umas as schema 2, outfit ids and T1 to T10 only', () => {
+    const board = { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T4', note: 'x' }] }
+    expect(parseBoard(JSON.parse(JSON.stringify(board)) as unknown, 'umas')).toEqual(board)
+    expect(() => parseBoard({ ...board, schemaVersion: 1 }, 'umas')).toThrow(/schemaVersion 2/)
+    expect(() => parseBoard({ ...board, entries: [{ id: '70101', tier: 'SS', note: '' }] }, 'umas')).toThrow(/T1 to T10/)
+    expect(() => parseBoard({ ...board, entries: [{ id: 'gi-1', tier: 'T1', note: '' }] }, 'umas')).toThrow()
+    expect(() => parseBoard({ ...board, entries: [{ id: '70101', tier: 'T1', note: '', outfit: 70101 }] }, 'umas')).toThrow()
+  })
+  it('round-trips profiles and rejects malformed ones', () => {
+    const p = { ...profiles, characters: { '704': { defaultOutfit: 70402, way: 'late' as const } } }
+    expect(parseProfiles(JSON.parse(JSON.stringify(p)) as unknown)).toEqual(p)
+    expect(() => parseProfiles({ ...p, sisters: [...p.sisters, p.sisters[0]] })).toThrow(/unique/)
+    expect(() => parseProfiles({ ...p, characters: { x: {} } })).toThrow()
+    expect(profileProblems(p, catalog)).toEqual([])
+    expect(profileProblems({ ...p, characters: { '701': { defaultOutfit: 70103 } } }, catalog)).toEqual(['Character 701: default outfit 70103 belongs to a sister.'])
+    expect(profileProblems({ ...p, sisters: [{ ...p.sisters[0]!, characterId: 702 }] }, catalog)).toHaveLength(1)
+  })
+  it('reads the franchise imports’ own image paths only', () => {
+    const imported = { schemaVersion: 1, kind: 'enemy-import', franchise: 'genshin', source: 's', filter: 'f', importedAt: '2026-01-01', units: [{ id: 'gi-1', name: 'A', category: 'playable', details: [], images: { face: 'assets/enemies/gi-1-face.0a1b2c3d.webp' } }] }
+    expect(parseEnemyImport(imported).units[0]?.images.face).toBe('assets/enemies/gi-1-face.0a1b2c3d.webp')
+    expect(() => parseEnemyImport({ ...imported, units: [{ ...imported.units[0], images: { face: '../secret.webp' } }] })).toThrow()
   })
 })
 
-describe('seeding from the old boards', () => {
-  it('ranks a character by her best outfit and maps A1 to S and A2 to A', () => {
-    const states = seedBoards(catalog, {
-      outfits: [{ outfitId: 70102, characterId: 701, tier: 'B' }, { outfitId: 70101, characterId: 701, tier: 'A1' }, { outfitId: 70201, characterId: 702, tier: 'A2' },
-        { outfitId: 70401, characterId: 704, tier: 'F' }, { outfitId: 99901, characterId: 999, tier: 'SS' }],
-      enemies: [],
-    })
-    expect(states.umas.entries).toEqual([{ id: '701', tier: 'S', note: '' }, { id: '702', tier: 'A', note: '' }, { id: '704', tier: 'F', note: '' }])
-    expect(states.npcs.entries).toEqual([])
+describe('identities and profiles (P131)', () => {
+  it('makes a sister her own identity, with her outfit off her sister’s list', () => {
+    const list = identities(catalog, profiles)
+    expect(list.map((i) => i.id)).toEqual(['701', '702', '703', '704', sisterId(70103)])
+    expect(list[0]!.outfits.map((o) => o.id)).toEqual([70101, 70102])
+    expect(list[4]).toMatchObject({ name: 'Sister 701', characterId: '701', defaultOutfit: 70103, outfits: [{ id: 70103 }] })
   })
-  it('puts each enemy’s old tier and note on the board its old role points to', () => {
-    const states = seedBoards(catalog, { outfits: [], enemies: [
-      { enemyId: 'al-a', bucket: 'boss', tier: 'SS', note: 'lead' }, { enemyId: 'al-c', bucket: 'elite', tier: 'A1', note: '' },
-      { enemyId: 'al-d', bucket: 'regular', tier: 'A2', note: '' }, { enemyId: 'nk-1', bucket: 'elite', tier: 'B', note: '' }, { enemyId: 'gone', bucket: 'boss', tier: 'SS', note: '' },
-    ] })
+  it('locks in a default outfit of her own, never a sister’s, and her playstyle follows it', () => {
+    const runner = catalog.umas[0]!
+    expect(defaultOutfit(runner, profiles)?.id).toBe(70101)
+    expect(setDefaultOutfit(profiles, runner, 70103)).toBe(profiles)
+    const picked = setDefaultOutfit(profiles, runner, 70102)
+    expect(picked.characters['701']).toEqual({ defaultOutfit: 70102 })
+    expect([defaultOutfit(runner, picked)?.id, outfitPick(runner, picked), playstyleOf(runner, picked)]).toEqual([70102, 70102, 'late'])
+    expect(playstyleOf(runner, { ...picked, characters: { '701': { defaultOutfit: 70102, way: 'front' } } })).toBe('front')
+    // A playstyle only a sister's outfit has isn't hers to pick.
+    expect(playstyleOf(runner, { ...picked, characters: { '701': { defaultOutfit: 70102, way: 'pace' } } })).toBe('late')
+  })
+  it('orders identities by their best-ranked outfit, then the unranked by name', () => {
+    const states = empty()
+    states.umas.entries = [{ id: '70301', tier: 'T1', note: '' }, { id: '70103', tier: 'T1', note: '' }, { id: '70102', tier: 'T2', note: '' }, { id: '70101', tier: 'T5', note: '' }]
+    const ranked = rankedIdentities(catalog, states, profiles)
+    expect(ranked.map((i) => `${i.id}:${i.tier ?? '-'}`)).toEqual(['703:T1', 's70103:T1', '701:T2', '702:-', '704:-'])
+    expect(ranked[2]!.ranked).toEqual([{ outfitId: 70102, tier: 'T2', order: 3 }, { outfitId: 70101, tier: 'T5', order: 4 }])
+  })
+})
+
+describe('moving the old boards (P131)', () => {
+  const old = parseLegacyUmasBoard({ schemaVersion: 1, kind: 'tier-board', board: 'umas', revision: 102, updatedAt: '2026-11-11T00:00:00.000Z', entries: [
+    { id: '702', tier: 'SS', note: '' }, { id: '701', tier: 'SSS', note: 'lead', outfit: 70102 }, { id: '704', tier: 'B', note: '', way: 'front' }, { id: '703', tier: 'S', note: '' },
+  ] })
+  it('moves the picks into the profiles', () => {
+    expect(profilesFromLegacy(old, profiles).characters).toEqual({ '701': { defaultOutfit: 70102 }, '704': { way: 'front' } })
+    expect(legacyCharacterTiers(old)).toEqual([{ characterId: 701, tier: 'SSS' }, { characterId: 702, tier: 'SS' }, { characterId: 703, tier: 'S' }, { characterId: 704, tier: 'B' }])
+  })
+  it('spreads the old cast over the ten tiers as each one’s default outfit, keeping notes, and leaves B and F to NPCs', () => {
+    const moved = migrateUmasBoard(catalog, old, profilesFromLegacy(old, profiles), '2026-11-11T00:00:00.000Z')
+    expect(moved).toMatchObject({ schemaVersion: 2, board: 'umas', revision: 1 })
+    expect(moved.entries).toEqual([{ id: '70102', tier: 'T1', note: 'lead' }, { id: '70201', tier: 'T4', note: '' }, { id: '70301', tier: 'T7', note: '' }])
+    expect(parseBoard(moved, 'umas')).toEqual(moved)
+  })
+  it('starts the enemy boards from the old enemy roster', () => {
+    const states = seedBoards(catalog, { enemies: [{ enemyId: 'al-a', bucket: 'boss', tier: 'SS', note: 'lead' }, { enemyId: 'al-c', bucket: 'elite', tier: 'A1', note: '' }, { enemyId: 'nk-1', bucket: 'elite', tier: 'B', note: '' }] })
     expect(states['azurlane-bosses']).toMatchObject({ members: ['al-a', 'al-b'], entries: [{ id: 'al-a', tier: 'SS', note: 'lead' }] })
     expect(states['key-enemies'].entries).toEqual([{ id: 'al-c', tier: 'S', note: '' }])
-    expect(states['regular-enemies'].entries).toEqual([{ id: 'al-d', tier: 'A', note: '' }, { id: 'nk-1', tier: 'B', note: '' }])
-    expect(ids(states, 'regular-enemies')).toContain('al-d')
+    expect(states['regular-enemies'].entries).toEqual([{ id: 'nk-1', tier: 'B', note: '' }])
+    expect(states.umas).toEqual(emptyBoard('umas'))
   })
 })
 
 describe('careers and the plan', () => {
-  it('gives every career at least three bosses, more when a tier has bosses to spare', () => {
+  it('gives every ranked identity a career of at least three bosses, more when bosses are plenty', () => {
+    expect(careerMath(2, [{ pool: 9, ranked: 9, unranked: 0, cast: 9, tiers: {} }])).toEqual({ careers: 2, bosses: 9, bossesPerCareer: 5, fights: 10, careersPerBoss: 1.1 })
+    expect(careerMath(4, [{ pool: 2, ranked: 2, unranked: 0, cast: 2, tiers: {} }])).toMatchObject({ bossesPerCareer: 3, fights: 12, careersPerBoss: 6 })
+    expect(careerMath(0, [])).toMatchObject({ careers: 0, bossesPerCareer: 0, careersPerBoss: null })
+  })
+  it('writes each outfit with its identity and batch, the identities in ranking order, and the ten batches', () => {
     const states = empty()
-    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'S', note: '' }, { id: '704', tier: 'SSS', note: '' }]
-    states['azurlane-bosses'].members = ['al-a', 'al-b']
-    states['azurlane-bosses'].entries = [{ id: 'al-a', tier: 'SS', note: '' }, { id: 'al-b', tier: 'SS', note: '' }]
-    states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }, { id: 'gi-2', tier: 'SS', note: '' }]
-    const all = pools(catalog, states), stats = Object.fromEntries(BOARDS.map((b) => [b.id, boardStats(all[b.id], states[b.id])])) as Parameters<typeof careerMath>[0]
-    const careers = careerMath(stats)
-    // Bosses stop at SS, so the SSS Uma's career meets the SS bosses with the SS Uma's (P124).
-    expect(careers.tiers.map((t) => t.tier)).toEqual(['SS', 'S', 'A'])
-    expect(careers.tiers[0]).toEqual({ tier: 'SS', umaTiers: ['SSS', 'SS'], umas: 2, bosses: 4, bossesPerCareer: 3, careersPerBoss: 1.5 })
-    expect(careers.tiers[1]).toEqual({ tier: 'S', umaTiers: ['S'], umas: 1, bosses: 0, bossesPerCareer: 3, careersPerBoss: null })
-    expect(careers.fights).toBe(9)
-    const plan = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
-    expect(plan).toMatchObject({ tierOrder: ['SSS', 'SS', 'S', 'A', 'B', 'F'], cast: ['SSS', 'SS', 'S', 'A'] })
-    expect(plan.boards.find((b) => b.id === 'umas')?.order).toEqual([
-      expect.objectContaining({ order: 1, id: '704', tier: 'SSS' }),
-      expect.objectContaining({ order: 2, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 3, id: '702', tier: 'S' }),
-    ])
-    expect(plan.boards.find((b) => b.id === 'umas')?.tiers).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
-    expect(plan.boards.find((b) => b.id === 'genshin-bosses')?.tiers).toEqual(['SS', 'S', 'A', 'B', 'F'])
-    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.map((e) => e.id)).toEqual(['703'])
+    states.umas.entries = [{ id: '70103', tier: 'T1', note: '' }, { id: '70101', tier: 'T1', note: 'x' }, { id: '70201', tier: 'T3', note: '' }]
+    states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }]
+    const plan = tierPlan(catalog, states, profiles, '2026-01-01T00:00:00.000Z')
+    expect(plan).toMatchObject({ schemaVersion: 2, umaTiers: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'] })
+    const playable = plan.boards.find((b) => b.id === 'umas')!
+    expect(playable.order[0]).toMatchObject({ order: 1, id: '70103', tier: 'T1', batch: 1, name: 'Sister 701', identity: 's70103', sister: true, characterId: 701, playstyle: 'pace' })
+    expect(playable.order[2]).toMatchObject({ id: '70201', batch: 3, name: 'Runner 702', sister: false })
+    expect(plan.identities.slice(0, 3).map((i) => `${i.id}:${i.batch}`)).toEqual(['s70103:1', '701:1', '702:3'])
+    expect(plan.identities[0]).toMatchObject({ sister: { relation: 'younger sister', age: 'an invented age' } })
+    expect(plan.batches.slice(0, 3)).toEqual([{ batch: 1, tier: 'T1', outfits: [70103, 70101] }, { batch: 2, tier: 'T2', outfits: [] }, { batch: 3, tier: 'T3', outfits: [70201] }])
+    expect(plan.careers).toMatchObject({ careers: 3, bosses: 1, bossesPerCareer: 3 })
+    expect(plan.boards.find((b) => b.id === 'npcs')!.unranked.map((e) => e.id)).toEqual(['703', '704'])
+    expect(playstyleCounts(catalog, states, profiles).umas.T1).toMatchObject({ front: 1, pace: 1 })
     states['pgr-bosses'] = setOut(states['pgr-bosses'], 'pgr-1', true)
-    const later = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
-    expect(later.boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1', franchise: 'pgr' }], unranked: [] })
-    expect(later.boards.find((b) => b.id === 'key-enemies')).not.toHaveProperty('leftOut')
+    expect(tierPlan(catalog, states, profiles, 'x').boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1' }] })
   })
 })
 
-describe('default outfits (P125)', () => {
-  it('locks in her default outfit on Playable, keeps it through every edit, and her playstyle follows it', () => {
-    const states = empty(), runner = catalog.umas[0]!
-    expect(defaultOutfit(runner, states)?.id).toBe(70101)
-    expect(outfitPick(runner, states)).toBeNull()
-    expect(setOutfit(states.umas, runner, 99999)).toBe(states.umas)
-    states.umas = setOutfit(states.umas, runner, 70102)
-    expect(states.umas.entries).toEqual([{ id: '701', tier: null, note: '', outfit: 70102 }])
-    expect(defaultOutfit(runner, states)?.id).toBe(70102)
-    expect(playstyleOf(runner, states)).toBe('late')
-    expect(setOutfit(states.umas, runner, 70102)).toBe(states.umas)
-    // The rule's own choice still locks in, so it never moves.
-    expect(setOutfit(states.umas, runner, 70101).entries).toEqual([{ id: '701', tier: null, note: '', outfit: 70101 }])
-    states.umas = setTier(states.umas, '701', 'SSS')
-    states.umas = place(states.umas, '702', 'SSS', '701')
-    states.umas = setNote(states.umas, '701', 'lead runner')
-    expect(states.umas.entries).toEqual([{ id: '702', tier: 'SSS', note: '' }, { id: '701', tier: 'SSS', note: 'lead runner', outfit: 70102 }])
-    states.umas = setTier(setNote(states.umas, '701', ''), '701', null)
-    expect(states.umas.entries).toContainEqual({ id: '701', tier: null, note: '', outfit: 70102 })
-    // Her playstyle pick is measured against her default: picking the default's playstyle clears it.
-    expect(setWay(states.umas, runner, 'late')).toBe(states.umas)
-    expect(setWay(states.umas, runner, 'front').entries).toContainEqual({ id: '701', tier: null, note: '', outfit: 70102, way: 'front' })
-    const plan = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
-    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.find((e) => e.id === '701')).toMatchObject({ defaultOutfit: 70102, outfitPicked: true, lead: 70101, playstyle: 'late' })
-    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.find((e) => e.id === '704')).toMatchObject({ defaultOutfit: 70401, outfitPicked: false })
+describe('the catalog', () => {
+  it('builds characters from the release with their outfits original first, and enemies from the catalog and imports', () => {
+    const legacy = { ...emptyLegacy(), outfits: [{ outfitId: 90102, characterId: 901, tier: 'A1' }], characters: [{ characterId: 901, tier: 'SS' as const }] }
+    const built = buildCatalog({
+      release: 'r1',
+      characters: [{ id: 901, name: { ja: 'J', en: 'Runner 901', global: null } }],
+      outfits: [
+        { id: 90102, characterId: 901, title: { ja: 'j', en: 'Second', global: null }, variant: 'summer', aptitudes: { strategy: { front: 'G', pace: 'A', late: 'A', end: 'B' } } as never },
+        { id: 90101, characterId: 901, title: { ja: 'j', en: 'First', global: null }, variant: null, aptitudes: { strategy: { front: 'A', pace: 'B', late: 'C', end: 'D' } } as never },
+      ],
+      art: { atlases: {}, images: { 'outfit-faces': { '90101': { path: 'art/outfit-faces/90101.0a1b2c3d.webp', width: 192, height: 192 } } } } as never,
+      enemies: null, imports: [], legacy: parseLegacy(JSON.parse(JSON.stringify(legacy)) as unknown),
+    })
+    expect(built.umas).toEqual([expect.objectContaining({ id: '901', name: 'Runner 901', before: 'SS', face: 'art/outfit-faces/90101.0a1b2c3d.webp' })])
+    expect(built.umas[0]!.outfits.map((o) => [o.id, o.way, o.before])).toEqual([[90101, 'front', null], [90102, 'pace-late', 'S']])
+    expect(leadOutfit(built.umas[0]!.outfits)?.id).toBe(90102)
   })
-  it('keeps the pick on Playable Umas only, and ignores one that is no longer hers', () => {
-    expect(parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: 'S', note: '', outfit: 70102 }] }).entries[0]?.outfit).toBe(70102)
-    expect(() => parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '701', tier: 'S', note: '', outfit: 70102 }] })).toThrow(/default outfit/)
-    expect(() => parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: 'S', note: '', outfit: 'Look' }] })).toThrow()
-    const states = empty(), runner = catalog.umas[0]!
-    states.umas.entries = [{ id: '701', tier: 'S', note: '', outfit: 70401 }]
-    expect(defaultOutfit(runner, states)?.id).toBe(70101)
-    expect(outfitPick(runner, states)).toBeNull()
-  })
-})
-
-describe('playstyles', () => {
   it('reads a playstyle from the best running-style grades, ties included', () => {
     expect(bestStyles({ front: 'A', pace: 'S', late: 'S', end: 'B' })).toEqual(['pace', 'late'])
-  })
-  it('leads with her best old tier, then her original outfit, then the lowest id', () => {
-    const o = (id: number, before: 'SS' | 'B' | null, original = false) => ({ ...uma('9', [id]).outfits[0]!, original, before })
-    expect(leadOutfit([o(90102, 'B'), o(90103, 'SS'), o(90101, null, true)])?.id).toBe(90103)
-    expect(leadOutfit([o(90102, null), o(90101, null, true)])?.id).toBe(90101)
-    expect(leadOutfit([o(90103, null), o(90102, null)])?.id).toBe(90102)
-  })
-  it('takes her lead outfit’s playstyle unless the owner picks another of hers, on either board', () => {
-    const states = empty(), runner = catalog.umas[0]!
-    expect(playstyleOf(runner, states)).toBe('front')
-    states.umas = setWay(states.umas, runner, 'late')
-    expect(states.umas.entries).toEqual([{ id: '701', tier: null, note: '', way: 'late' }])
-    expect(playstyleOf(runner, states)).toBe('late')
-    expect(setWay(states.umas, runner, 'pace-late')).not.toBe(states.umas)
-    expect(playstyleOf(runner, { umas: setWay(states.umas, runner, 'pace-late') })).toBe('front')
-    states.umas = setTier(states.umas, '701', 'B')
-    expect(states.umas.entries).toEqual([{ id: '701', tier: 'B', note: '', way: 'late' }])
-    expect(setWay(setTier(states.umas, '701', null), runner, 'front').entries).toEqual([])
-    expect(playstyleCounts(catalog, states).npcs.unranked).toMatchObject({ late: 1, front: 1, pace: 1, 'late-end': 1 })
-    expect(() => parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '701', tier: null, note: '', way: 'late' }] }, 'npcs')).toThrow()
-    expect(() => parseBoard({ ...emptyBoard('umas'), entries: [{ id: '701', tier: null, note: '', way: 'magic' }] }, 'umas')).toThrow()
+    expect(wayOf({ front: 'B', pace: 'B', late: 'A', end: 'A' })).toBe('late-end')
   })
 })

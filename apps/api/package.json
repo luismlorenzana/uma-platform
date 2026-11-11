@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.22.0",
+    "@luismlorenzana/uma-data": "workspace:*",
     "@luismlorenzana/uma-server": "workspace:*",
     "@nestjs/common": "^11.2.4",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.2.4",
     "@nestjs/platform-express": "^11.2.4",
+    "@uma-platform/tiers": "workspace:*",
     "firebase-admin": "^13.10.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"

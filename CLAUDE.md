@@ -27,7 +27,8 @@
   release only, never git or uma-art. Props, bubbles, kits and foes are original and go to uma-art.
 - **The Uma Platform app:** [docs/platform-app/README.md](docs/platform-app/README.md) (P127–P129, AP1–AP24): one
   signed-in site in the `uma-rpg` project, with sub-apps behind tiles (Uma Ranker, Uma Character Art, later the games'
-  art and publishing). Live since SH1 and SH2 (P130); RK1 and CA1 next. Claude owns Uma Studio and the app.
+  art and publishing). Live (P130); the Uma Ranker is live (RK1, P131): Playable Umas per outfit on ten art batches, with
+  sisters in the private `ranker/profiles.json`; CA1 next. Claude owns Uma Studio and the app.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
 ## Autonomy: what you do without asking
@@ -88,5 +89,5 @@ type credentials into a sign-in page. Scope gcloud with `CLOUDSDK_ACTIVE_CONFIG_
 
 The commands are in [README.md](README.md) ("Develop", "Make a master data release", "Releasing a package"):
 `NODE_AUTH_TOKEN=$(gh auth token) pnpm install`, `pnpm lint`, `pnpm test`, `pnpm build`, and the `sprites:*` tools.
-The Uma Studio runs locally with `pnpm studio` (http://127.0.0.1:4318): the tier boards ([docs/authoring/tiers.md](docs/authoring/tiers.md))
-and the sprite tools.
+The Uma Studio runs locally with `pnpm studio` (http://127.0.0.1:4318): the sprite tools. The tier boards are the Uma Ranker,
+online (https://uma-platform.web.app/ranker; `pnpm ranker:pull`, `ranker:push`).

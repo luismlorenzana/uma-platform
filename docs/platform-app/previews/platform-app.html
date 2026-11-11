@@ -75,25 +75,26 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">uma-platform · the platform app · P127–P130 · live 2026-11-11</p>
+  <p class="eyebrow">uma-platform · the platform app · P127–P131 · live 2026-11-11</p>
   <h1>One signed-in home for the platform's tools<span>.</span></h1>
   <p class="lead">An Uma Platform website in the <code>uma-rpg</code> project, with Google sign-in and the games' shell. Each sub-app opens from its own tile: first the <b>Uma Ranker</b> (today's Studio boards, moved online), then <b>Uma Character Art</b> (uma-quest's Album, moved here). Live at <a href="https://uma-platform.web.app">uma-platform.web.app</a> since SH1 and SH2; Google sign-in is set up.</p>
   <nav><a href="#apps">Sub-apps</a><a href="#map">How it fits</a><a href="#cloud">Cloud</a><a href="#cost">Cost</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../README.md">Markdown</a></nav>
   <div class="tiles">
     <div class="tile"><b>2</b><span>sub-apps first: Ranker, Character Art</span></div>
-    <div class="tile"><b>11</b><span>boards move online as they are (RK1)</span></div>
+    <div class="tile"><b>10</b><span>tiers on Playable Umas, one art batch each (RK1, live)</span></div>
     <div class="tile"><b>272</b><span>outfits and 10 adult sets in Character Art (CA1)</span></div>
     <div class="tile"><b>1</b><span>new bucket; no database</span></div>
     <div class="tile"><b>~$0.01</b><span>a month, under the $5 alert</span></div>
-    <div class="tile"><b>24</b><span>calls, AP1–AP24</span></div>
+    <div class="tile"><b>11</b><span>sisters, ranked as Umas of their own</span></div>
+    <div class="tile"><b>36</b><span>calls, AP1–AP36</span></div>
   </div>
 
   <section class="card" id="apps">
     <h2>The sub-apps</h2>
     <p>Each sub-app has its own route, its own API routes and its own code folder, and never imports from another one (AP1). A sub-app that isn't built yet has no tile.</p>
     <div class="apps">
-      <div class="app"><h3>Uma Ranker</h3><p>The eleven boards, with every rule from P113–P125, online at <code>/ranker</code>. Taps on a phone, keys on desktop. The bucket becomes the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy for local tools.</p><span class="pill ready">RK1 ready</span> <span class="pill wait">RK2: per outfit, your new ranking</span></div>
-      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>: adult travelers (baseline, keys, faces) and every Uma (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 ready</span> <span class="pill later">CA2 after CA1</span></div>
+      <div class="app"><h3>Uma Ranker</h3><p>Every board online at <code>/ranker</code>. Playable Umas ranks all 272 outfits on ten tiers, T1–T10, one art batch each; one place or a whole tier up and down; sisters rank as Umas of their own. The bucket is the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy.</p><span class="pill ready">RK1 live</span> <span class="pill wait">RK2 after your ranking</span></div>
+      <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>, laid out by the Ranker's ten batches: adult travelers (baseline, keys, faces) and every Uma and sister (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs.</p><span class="pill ready">CA1 ready</span> <span class="pill later">CA2 after CA1</span></div>
       <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
       <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
     </div>
@@ -188,15 +189,15 @@
       <tbody>
         <tr><td class="id"><a href="../../handoff/tasks/SH1-platform-app-shell.md">SH1</a></td><td>The app, local: <code>apps/web</code>, <code>apps/api</code>, the home tiles, the master data proxy, <code>packages/tiers</code>, the private-content check</td><td>Claude</td><td>M</td><td>—</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id"><a href="../../handoff/tasks/SH2-platform-app-cloud.md">SH2</a></td><td>The cloud and the deploy; a placeholder live</td><td>Claude</td><td>M</td><td>SH1 ✓, your go ✓</td><td><span class="pill ready">Done</span></td></tr>
-        <tr><td class="id"><a href="../../handoff/tasks/RK1-ranker-online.md">RK1</a></td><td>Uma Ranker: the boards online, the bucket store, <code>ranker:pull</code> and <code>ranker:push</code></td><td>Claude</td><td>L</td><td>SH2 ✓</td><td><span class="pill ready">Ready</span></td></tr>
-        <tr><td class="id">RK2</td><td>Umas split by outfit, and the new ranking</td><td>Claude</td><td>M</td><td>RK1, your description</td><td><span class="pill wait">Your description</span></td></tr>
-        <tr><td class="id"><a href="../../handoff/tasks/CA1-character-art.md">CA1</a></td><td>Uma Character Art: uma-quest's Album moved here</td><td>Claude</td><td>M</td><td>SH2 ✓</td><td><span class="pill ready">Ready</span></td></tr>
+        <tr><td class="id">RK1</td><td>Uma Ranker: every board online, Playable Umas per outfit on ten tiers, sisters, the bucket store, seed, push and pull</td><td>Claude</td><td>L</td><td>SH2 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">RK2</td><td>The pass after your ranking: lock the ten batches, revisit the sisters, TA2 reads the plan</td><td>Claude</td><td>M</td><td>RK1 ✓, your ranking</td><td><span class="pill wait">Your ranking</span></td></tr>
+        <tr><td class="id"><a href="../../handoff/tasks/CA1-character-art.md">CA1</a></td><td>Uma Character Art: uma-quest's Album moved here, laid out by the Ranker's batches</td><td>Claude</td><td>M</td><td>SH2 ✓</td><td><span class="pill ready">Ready</span></td></tr>
         <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1</td><td><span class="pill later">After CA1</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
     </table></div>
-    <p class="note">SH1 and SH2 are done; RK1 and CA1 can run side by side now; RK2 and CA2 follow. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
+    <p class="note">SH1, SH2 and RK1 are done; CA1 is next; RK2 follows your ranking, CA2 follows CA1. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
   </section>
 
   <section class="card" id="calls">
@@ -227,6 +228,18 @@
         <tr><td class="id">AP21</td><td><b>The full-body art is already full size</b> (512 px, like the originals), so master data holds every input picture</td></tr>
         <tr><td class="id">AP22</td><td><b>CA2 adds</b> chibi sprite sets, support card art, each adult set's inputs and its source-art release record</td></tr>
         <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>
+        <tr><td class="id">AP25</td><td><b>Playable Umas ranks every outfit on ten straight tiers</b>, T1–T10, each an art batch; keys 1–9 and 0</td></tr>
+        <tr><td class="id">AP26</td><td><b>Up and down:</b> one place crosses a tier's edge; a whole-tier step lands next to the boundary</td></tr>
+        <tr><td class="id">AP27</td><td><b>Uma NPCs stays per character</b>; she comes down when none of her own outfits is ranked</td></tr>
+        <tr><td class="id">AP28</td><td><b>Sisters:</b> eleven outfits that are their own Umas, running their sister's career in a fictional age, in the private profiles</td></tr>
+        <tr><td class="id">AP29</td><td><b>The picks move to the profiles:</b> default outfit (D) and playstyle, one per character</td></tr>
+        <tr><td class="id">AP30</td><td><b>The move:</b> the old cast of 60 spread six a tier as each Uma's default outfit; the rest unranked with hints</td></tr>
+        <tr><td class="id">AP31</td><td><b>Careers:</b> every ranked Uma, sisters included, fights at least three bosses, one pool</td></tr>
+        <tr><td class="id">AP32</td><td><b>The plan, schema 2:</b> outfits with their Uma and batch, identities in order, ten batches; Character Art follows it</td></tr>
+        <tr><td class="id">AP33</td><td><b>Store and tools as built:</b> the bucket's <code>ranker/</code> folder; <code>ranker:seed</code>, <code>push</code>, <code>pull</code></td></tr>
+        <tr><td class="id">AP34</td><td><b>The Studio's boards retire</b> to links; the sprite tools and imports stay</td></tr>
+        <tr><td class="id">AP35</td><td><b>The plan is live while you rank;</b> a batch whose art has started is locked</td></tr>
+        <tr><td class="id">AP36</td><td><b>RK2 is the pass after your ranking;</b> later re-ranks are a manual pass with Claude</td></tr>
         <tr><td class="id">AP24</td><td><b>Later:</b> GA1–GA3 (Quest, Farm and Platform Art) and PB1 (Publish), as packets when you ask</td></tr>
       </tbody>
     </table></div>
@@ -237,7 +250,7 @@
     <ol class="steps">
       <li><b>Done:</b> the go for the cloud.</li>
       <li><b>Done:</b> two entries on the OAuth client in <a href="https://console.cloud.google.com/apis/credentials?project=uma-rpg">the console</a>: the redirect URI <code>https://uma-platform.web.app/__/auth/handler</code> and the origin <code>https://uma-platform.web.app</code>.</li>
-      <li><b>Before RK2:</b> how the new Uma ranking should work.</li>
+      <li><b>Now:</b> rank on <a href="https://uma-platform.web.app/ranker">the Ranker</a>: Playable Umas per outfit, T1–T10, and read the sisters on their cards.</li>
       <li><b>When each lands:</b> a look at the Ranker and at Character Art on your phone.</li>
     </ol>
   </section>

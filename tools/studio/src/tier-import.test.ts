@@ -1,17 +1,9 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
 import sharp from 'sharp'
-import { afterAll, describe, expect, it } from 'vitest'
-import { parseEnemyImport } from './tier-catalog.js'
-import { BOARDS, type TierCatalog } from './tier-model.js'
+import { describe, expect, it } from 'vitest'
+import { parseEnemyImport } from '@uma-platform/tiers'
 import { encode, genshinCandidates, hi3Candidates, hsrCandidates, pgrCandidates, pronounGender, slug, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
-import { TierConflict, TierStore } from './tier-store.js'
 
 // Invented records and generated pixels only.
-const look = (id: number) => ({ id, title: `Look ${id}`, original: true, way: 'front' as const, strategy: { front: 'A', pace: 'B', late: 'B', end: 'C' }, face: null, portrait: null, before: null })
-const catalog: TierCatalog = { release: 'synthetic', enemies: [],
-  umas: [{ id: '701', name: 'Runner 701', face: null, portrait: null, lead: 70101, outfits: [look(70101)] }, { id: '702', name: 'Runner 702', face: null, portrait: null, lead: 70201, outfits: [look(70201)] }] }
 const avatar = (id: number, name: string, bodyType: string, release = 1_600_000_000): AmberAvatar =>
   ({ id, rank: 4, name, element: 'Ice', weaponType: 'WEAPON_POLE', region: 'NORTHLAND', bodyType, icon: `UI_AvatarIcon_X${id}`, release })
 
@@ -110,29 +102,5 @@ describe('an import file', () => {
     }
     expect(() => parseEnemyImport({ ...file, units: [{ ...file.units[0], id: 'ww-1' }] })).toThrow()
     expect(() => parseEnemyImport({ ...file, franchise: 'elsewhere' })).toThrow()
-  })
-})
-
-describe('the tier store', () => {
-  const dirs: string[] = []
-  afterAll(async () => { for (const d of dirs) await rm(d, { recursive: true, force: true }) })
-  it('seeds missing boards once, checks revisions, rejects unknown ids and rewrites the plan', async () => {
-    const content = await mkdtemp(join(tmpdir(), 'tier-store-')); dirs.push(content)
-    const store = new TierStore(content, catalog)
-    expect(await store.ensure({ outfits: [{ outfitId: 70101, characterId: 701, tier: 'SS' }], enemies: [] })).toEqual(BOARDS.map((b) => b.id))
-    const umas = await store.read('umas')
-    expect(umas.entries).toEqual([{ id: '701', tier: 'SS', note: '' }])
-    await writeFile(join(content, 'authoring/tiers/npcs.json'), JSON.stringify({ ...(await store.read('npcs')), entries: [{ id: '702', tier: 'S', note: '' }] }))
-    expect(await store.ensure({ outfits: [], enemies: [] })).toEqual([])
-    expect((await store.read('npcs')).entries).toHaveLength(1)
-    const saved = await store.save('umas', { ...umas, entries: [{ id: '702', tier: 'A', note: '' }] })
-    expect(saved.revision).toBe(umas.revision + 1)
-    await expect(store.save('umas', umas)).rejects.toBeInstanceOf(TierConflict)
-    await expect(store.save('umas', { ...saved, entries: [{ id: 'nobody', tier: 'A', note: '' }] })).rejects.toThrow(/not in the catalog/)
-    // A default outfit (P125) must be one of that character's own outfits.
-    await expect(store.save('umas', { ...saved, entries: [{ id: '702', tier: 'A', note: '', outfit: 70101 }] })).rejects.toThrow(/default outfit/)
-    expect((await store.save('umas', { ...saved, entries: [{ id: '702', tier: 'A', note: '', outfit: 70201 }] })).entries[0]?.outfit).toBe(70201)
-    const plan = JSON.parse(await readFile(join(content, 'authoring/tiers/plan.json'), 'utf8')) as { boards: { id: string; order: { id: string }[] }[] }
-    expect(plan.boards.find((b) => b.id === 'umas')?.order.map((e) => e.id)).toEqual(['702'])
   })
 })

@@ -1,7 +1,8 @@
 # The Uma Platform app
 
 > **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
-> and Google accepts the redirect. RK1 and CA1 are next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
+> each, with sisters ranked as Umas of their own. CA1 is next. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -9,7 +10,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP24.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP36.
 
 ## The short answer
 
@@ -25,13 +26,13 @@
 
   | Sub-app | What | Packets |
   |---|---|---|
-  | **Uma Ranker** | The Studio's eleven boards, moved online as they are; then Umas split by outfit again, with the new ranking you describe | RK1, then RK2 |
+  | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live) | RK1 ✓, then RK2, the pass after your ranking |
   | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs | CA1, then CA2 |
   | Uma Quest Art, Uma Farm Art, Uma Platform Art | Each game's and the platform's original assets, drawn from their releases | Later (GA1–GA3) |
   | Publish | Publish from your private authoring | Later (PB1) |
 
 - **Your steps:** the go for the cloud (one word); then two entries in the Google Cloud console for sign-in, the same
-  as uma-quest's; then, for RK2, how the new Uma ranking should work.
+  as uma-quest's (done); then the ranking itself, on the Ranker.
 
 ## What it looks like
 
@@ -102,13 +103,25 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP16 | **The bucket becomes the source of truth.** RK1 uploads the eleven local boards at their current revisions once, then each save writes `ranker/boards/<board>.json` and rewrites `ranker/plan.json`. A rejected precondition returns 409, the same conflict the Studio raises today |
 | AP17 | **Local tools keep their copy.** `pnpm ranker:pull` writes the online boards and plan to `content/authoring/tiers/` (the sprite queue, uma-quest's story sandbox and its `enemies:candidates` read them there), and the authoring backup keeps them. After RK1, the local Studio's board pages show a read-only notice with a link to the Ranker; its sprite tools (desk, field, queue, gates) stay local until the Publish sub-app |
 | AP18 | **Franchise imports stay local, then upload:** `pnpm tiers:import <franchise>` still downloads and cuts the images on this Mac, and `pnpm ranker:push` uploads the new images and lists to `ranker/assets/` and `ranker/imports/`, never overwriting an existing file. Uma art comes from master data |
-| AP19 | **RK2 comes after RK1: Umas split by outfit again, and the new ranking.** Each outfit is ranked on its own; the character view and the plan are derived from her outfits. How the ranking works is your description, so RK2 is written from it |
+| AP19 | **Amended by AP25 (P131):** the outfit split and the new ranking came into RK1 at the owner's word; RK2 is the pass after the ranking (AP36) |
+| AP25 | **Playable Umas ranks every outfit on ten straight tiers, T1 to T10, each an art batch** (P131): schema 2, keys `1`–`9` and `0` for T1–T10, Backspace unranks |
+| AP26 | **Up and down:** one place up or down crosses into the next tier at its edge (`[` `]`, ▲ ▼); a whole-tier step lands next to the boundary (Shift+`[` `]`, ⇈ ⇊) |
+| AP27 | **Uma NPCs stays per character** on SSS to F; a character comes down when none of her own outfits is ranked; a sister has no NPC card |
+| AP28 | **Sisters:** an outfit that is really another Uma, her sister running the same career in a fictional age, written by Claude in the private `ranker/profiles.json` (name, relation, age, profile). Eleven to start: 106802, 106803, 106702, 106703, 101003, 110802, 109402 (the owner's names) and 107702, 107703, 107602, 110502 (Claude's). The main Taiki Shuttle's default is her camping outfit, 101002 |
+| AP29 | **The picks move to the profiles:** her default outfit (P125, `D`) and her playstyle pick (P117), one per character for every board |
+| AP30 | **The move:** the old cast of 60, in its order, became each Uma's default outfit spread evenly, six a tier; everything else starts unranked with its old tiers as hints; the old board is archived; every lettered board moved unchanged |
+| AP31 | **Careers:** every ranked Uma, sisters included, is a career of at least three bosses, counted as one pool |
+| AP32 | **The plan, schema 2:** each outfit with its Uma and batch, `identities` in ranking order, and the ten `batches`. Character Art lays its album out by it |
+| AP33 | **Store and tools as built:** `ranker/boards/`, `profiles.json`, `plan.json`, `legacy.json`, `catalog/enemies.json`, `imports/`, `assets/`; `pnpm ranker:seed`, `ranker:push`, `ranker:pull` |
+| AP34 | **The Studio's boards retire:** its board links open the Ranker; the sprite tools and `pnpm tiers:import` stay |
+| AP35 | **The plan is live while you rank;** a batch whose art has started is locked and never moves |
+| AP36 | **RK2, the pass after your ranking:** lock the ten batches as the art queue, revisit the sisters, point the sprite queue (TA2) at the plan. A later re-rank or a bigger change is a manual pass with Claude |
 
 ## Uma Character Art
 
 | Id | Call |
 |---|---|
-| AP20 | **CA1 moves uma-quest's Album here as it is:** **Adult travelers** (each one's standing baseline stills, all twelve battle keys put together as the fight draws them, and her ten faces) and **Every Uma** (272 outfits by name, searchable, each with her portrait, bust, face, glass window, chibis A and B, and her character's face and four dresses). The code is copied from uma-quest at a recorded commit; the art is read at run time, hash-checked and kept on the device |
+| AP20 | **CA1 moves uma-quest's Album here, laid out by the Ranker** (AP32: the ten batches in order, each Uma and sister in ranking order, then the unranked): **Adult travelers** (each one's standing baseline stills, all twelve battle keys put together as the fight draws them, and her ten faces) and **Every Uma** (272 outfits by name, searchable, each with her portrait, bust, face, glass window, chibis A and B, and her character's face and four dresses). The code is copied from uma-quest at a recorded commit; the art is read at run time, hash-checked and kept on the device |
 | AP21 | **The full-body art is already full size.** The 3D full-body renders (`outfit-portraits` and `character-dresses`) and the chibis come from GameTora and the wiki at 512 px, the size of the originals on this Mac (`scripts/assets/.cache`, 272 stands, 540 dresses, 536 chibis), so master data already holds every input picture. No new store is needed |
 | AP22 | **CA2 adds what the Album doesn't show:** each outfit's chibi sprite set (`outfit-sprites`, played by action and facing, frame by frame); each character's support card art (`support-card-art`, by the card's `characterId`); and, for an adult traveler, her authoring inputs (the master data portrait and chibi, her approved chibi sprite, the shared references) with her source-art release (batch, date, approval, file count and hashes, from its manifest). The tar archives themselves aren't unpacked |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
@@ -125,14 +138,14 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 |---|---|---|---|---|---|
 | SH1 | The app, local: `apps/web` and `apps/api`, the home tiles, sign-in (off locally), the master data proxy, the private-content check, `packages/tiers` | Claude | M | — | **Done** (P130) |
 | SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓, your console entries ✓ | **Done** (P130) |
-| [RK1](../handoff/tasks/RK1-ranker-online.md) | Uma Ranker: the eleven boards online, the bucket store, `ranker:pull` and `ranker:push`, the local boards read-only | Claude | L | SH2 ✓ | Ready |
-| RK2 | Umas split by outfit, and the new ranking | Claude | M | RK1, your description | Written from your description |
+| RK1 | Uma Ranker: every board online, Playable Umas per outfit on ten tiers, sisters, the bucket store, `ranker:seed`, `ranker:push`, `ranker:pull`, the Studio's boards retired | Claude | L | SH2 ✓ | **Done** (P131) |
+| RK2 | The pass after your ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan | Claude | M | RK1 ✓, your ranking | After your ranking |
 | [CA1](../handoff/tasks/CA1-character-art.md) | Uma Character Art: uma-quest's Album moved here | Claude | M | SH2 ✓ | Ready |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 | Written after CA1 |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1 and SH2 are done; RK1 and CA1 can run side by side now; RK2 and CA2 follow.
+**Order:** SH1, SH2 and RK1 are done; CA1 is next; RK2 follows your ranking, CA2 follows CA1.
 
 ## Your steps
 
@@ -140,5 +153,5 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 |---|---|
 | ~~Now~~ Done 2026-11-11 | ~~The go for the cloud~~: "Go, start SH1" |
 | ~~Now~~ Done 2026-11-11 | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
-| Before RK2 | How the new Uma ranking should work |
+| **Now** | **Rank** on [the Ranker](https://uma-platform.web.app/ranker): Playable Umas per outfit, T1–T10, and read the sisters on their cards |
 | When each lands | A look at the Ranker and at Character Art on your phone |

@@ -6,24 +6,11 @@ for isolated verification. The client builds before startup; the server loads pr
 
 Pages:
 
-- **Home** (`/`): a tile for each tier board and sprite tool, then the numbers: each board's cast, every board by
-  tier, the career math (P116) and the sources.
-- **Tier boards** (`/tiers/<board>`, P113): Playable Umas (`umas`), Uma NPCs (`npcs`), Azur Lane, Genshin Impact,
-  Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd and Punishing: Gray Raven bosses
-  (`azurlane-bosses`, `genshin-bosses`, `wuwa-bosses`, `hsr-bosses`, `zzz-bosses`, `hi3-bosses`, `pgr-bosses`), Key
-  enemies (`key-enemies`) and Regular enemies (`regular-enemies`). One scale, SS, S,
-  A, B, F, with SSS above SS on the two Uma boards (P122, P124): SSS to A are a board's cast; B, F and unranked flow to the board below (Playable → NPCs;
-  the boss boards → Key → Regular, which also takes NIKKE). Umas rank per character (P114) in plain tier rows like every
-  board (P123, which retired P117's playstyle grid); each character with two or more outfits has a default outfit, locked in on her card or with `D` (P125), the same
-  on both Uma boards: her portrait, her card's first outfit and the plan's `defaultOutfit`. Her playstyle is her
-  default outfit's unless the card's pick
-  says otherwise, and it shows on her card with its grades and in the playstyle filter; her outfit count is on her
-  portrait. Keys `1`–`6` (Uma boards) or `1`–`5` rank, `0` unranks, arrows
-  browse, `[` `]` move within a tier; notes, multi-level undo, drag and drop, a filtered bulk B or F, and board
-  import and export. An imported unit can be **left out** of every board (P121), from its card or its board's Left
-  out row; ranking it or dragging it to a row brings it back. Each board saves to `content/authoring/tiers/<board>.json`; every save rewrites
-  `content/authoring/tiers/plan.json`, the plan later tools read. A missing board is seeded once from the old rosters.
-  The design: [docs/authoring/tiers.md](../../docs/authoring/tiers.md).
+- **Home** (`/`): the sprite tools, and a link to the Uma Ranker.
+- **Tier boards: moved online (P131).** The boards are the Uma Ranker in the Uma Platform app,
+  https://uma-platform.web.app/ranker ([design](../../docs/platform-app/README.md), AP25–AP36). `/tiers/<board>` opens the
+  same board there, and `/api/tiers` answers 410. `pnpm ranker:pull` brings the live plan to
+  `content/authoring/tiers/plan.json`; `pnpm tiers:import <franchise>` still runs here, then `pnpm ranker:push` uploads it.
 - **Queue** (`/queue`, with `/authoring` retained): travelers and townsfolk, tier/Way/stage filters, next batch,
   drag ordering and accessible up/down buttons. Reset clears that profile's override.
 - **Animation desk** (`/sprites/`): stepping, speeds, holds/repeats/revive, face patches, held layers, anchors,

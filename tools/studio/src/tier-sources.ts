@@ -1,7 +1,7 @@
 // The two public character lists the boss boards import from (P115), and the image cuts. Pure but for sharp, so the
 // tests run it on invented data.
 import sharp from 'sharp'
-import type { Category } from './tier-model.js'
+import type { Category } from '@uma-platform/tiers'
 
 export type Kind = 'face' | 'art' | 'splash'
 /** How each image is cut: a face square, a vertical stage figure, a wide splash. Never upscaled. */

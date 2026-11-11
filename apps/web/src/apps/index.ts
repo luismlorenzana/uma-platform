@@ -1,7 +1,8 @@
 // The sub-apps (AP1): each opens at /<id> from its own folder, src/apps/<id>/, with its API under /api/<id>/…, and
 // imports nothing from another sub-app's folder (checked by scripts/check-sub-apps.test.mjs). Home draws a tile for each
-// one registered here, with the numbers its summary returns (AP4). The Ranker (RK1) and Character Art (CA1) come next.
+// one registered here, with the numbers its summary returns (AP4). Uma Ranker is RK1; Character Art (CA1) comes next.
 import type { ComponentType } from 'react'
+import { request } from '../api/client'
 
 export interface SummaryLine {
   readonly label: string
@@ -33,4 +34,10 @@ export function checkRegistry(apps: readonly SubApp[]): readonly SubApp[] {
   return apps
 }
 
-export const SUB_APPS: readonly SubApp[] = checkRegistry([])
+export const SUB_APPS: readonly SubApp[] = checkRegistry([
+  {
+    id: 'ranker', title: 'Uma Ranker', blurb: 'Every tier board: Umas per outfit on ten batches, the boss boards and the enemies.',
+    load: () => import('./ranker'),
+    summary: () => request<SummaryLine[]>('/api/ranker/summary'),
+  },
+])

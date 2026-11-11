@@ -1,0 +1,22 @@
+/* The Ranker's tier colours: a translucent hue under the kit's ink, so each reads in light and dark alike. Ten tiers run
+   warm to cool, best first; the lettered scale keeps the Studio's order of hues. */
+.tier-T1 { --tier: 8 }
+.tier-T2 { --tier: 24 }
+.tier-T3 { --tier: 40 }
+.tier-T4 { --tier: 58 }
+.tier-T5 { --tier: 90 }
+.tier-T6 { --tier: 140 }
+.tier-T7 { --tier: 175 }
+.tier-T8 { --tier: 200 }
+.tier-T9 { --tier: 225 }
+.tier-T10 { --tier: 255 }
+.tier-SSS { --tier: 45 }
+.tier-SS { --tier: 30 }
+.tier-S { --tier: 100 }
+.tier-A { --tier: 200 }
+.tier-B { --tier: 280 }
+.tier-F { --tier: 0; --tier-sat: 0% }
+.tier-badge { background: hsl(var(--tier, 0) var(--tier-sat, 70%) 55% / 0.24); }
+.tier-row { border-left: 4px solid hsl(var(--tier, 0) var(--tier-sat, 70%) 55% / 0.7); }
+.tier-row.unranked { border-left-color: transparent; }
+.drop-target { outline: 2px dashed var(--color-accent); outline-offset: -2px; }
