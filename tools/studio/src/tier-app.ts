@@ -155,7 +155,7 @@ function render(): void {
   if (selected !== decodeURIComponent(location.hash.slice(1))) history.replaceState(null, '', selected ? `#${encodeURIComponent(selected)}` : location.pathname)
   el('ranked-count').textContent = String(stats.ranked)
   const out = board.franchise ? leftOut(state()).filter((id) => enemyIndex.has(id)).length : 0
-  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (SS, S, A) · ${stats.unranked} still to rank${out ? ` · ${out} left out` : ''}`
+  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (SSS to A) · ${stats.unranked} still to rank${out ? ` · ${out} left out` : ''}`
   const p = el<HTMLProgressElement>('progress'); p.value = stats.ranked; p.max = stats.pool || 1
   el('save-status').textContent = busy ? 'Saving…' : state().updatedAt ? `✓ Saved · revision ${state().revision}` : 'Ready'
   const tier = selected ? tierOf(selected) : null
@@ -193,35 +193,18 @@ function tile(id: string): string {
   const count = u ? `<span class="outfit-count" aria-label="${u.outfits.length} outfits">${u.outfits.length}</span>` : ''
   return `<button class="tile ${id === selected ? 'selected' : ''} ${e ? `franchise-${e.franchise}` : ''}" draggable="${busy ? 'false' : 'true'}" data-select="${esc(id)}" data-id="${esc(id)}" title="${esc(`${nameOf(id)}${tier ? ` · ${tier}` : ''}`)}" aria-label="${esc(nameOf(id))}">${face(id)}${count}</button>`
 }
-/** The old outfit board's grid, per character: tiers down, the five playstyles across (P117). */
-function renderPlaystyleGrid(shown: PoolMember[], list: ReturnType<typeof ordered>, unranked: PoolMember[]): string {
-  const ids = new Set(shown.map((m) => m.id)), byStyle = new Map(shown.map((m) => [m.id, styleOf(m.id)]))
-  const head = `<thead><tr><th scope="col" class="corner">TIER</th>${WAYS.map((w) => {
-    const inWay = shown.filter((m) => byStyle.get(m.id) === w.id), cast = inWay.filter((m) => inCast(tierOf(m.id))).length, ranked = inWay.filter((m) => tierOf(m.id)).length
-    return `<th scope="col" title="${esc(w.rule)}"><span class="column-title">${esc(w.bucket)}</span><span class="column-subtitle">${esc(w.label)} <span>${cast} cast · ${ranked}/${inWay.length}</span></span></th>`
-  }).join('')}</tr></thead>`
-  const row = (tier: Tier | null, label: string, members: string[]) => {
-    const cells = WAYS.map((w) => {
-      const here = members.filter((id) => byStyle.get(id) === w.id)
-      return `<td data-row="${tier ?? 'none'}" data-way="${w.id}"><span class="cell-count">${here.length || '—'}</span><div class="cell-tiles">${here.map((id) => tile(id)).join('')}</div></td>`
-    }).join('')
-    return `<tr class="${tier ? `tier-${tier} ${inCast(tier) ? 'cast' : 'leaves'}` : 'unranked'}"><th scope="row" class="grid-tier" data-row="${tier ?? 'none'}"><span class="tier-badge">${tier ?? '—'}</span><span class="row-copy"><strong>${esc(label)}</strong><span>${members.length}</span></span></th>${cells}</tr>`
-  }
-  const body = TIERS.map((t) => row(t.id, t.label, list.filter((e) => e.tier === t.id && ids.has(e.id)).map((e) => e.id))).join('') + row(null, 'Unranked', unranked.map((m) => m.id))
-  return `<div class="grid-scroll"><table class="playstyle-grid"><caption class="sr-only">${esc(board.title)} by tier and playstyle</caption>${head}<tbody>${body}</tbody></table></div>`
-}
 function renderTierList(shown: PoolMember[]): void {
   const ids = new Set(shown.map((m) => m.id)), poolIds = new Set(pool.map((m) => m.id))
   const list = ordered(state(), poolIds), unranked = shown.filter((m) => !tierOf(m.id))
   el('board-count').textContent = shown.length === pool.length ? `${pool.length} on this board` : `${shown.length} of ${pool.length} shown`
   el('bulk').innerHTML = unranked.length && shown.length < pool.length
     ? `Rank the ${unranked.length} unranked shown as ${(['B', 'F'] as const).map((t) => `<button class="bulk-rank" data-bulk="${t}" ${busy ? 'disabled' : ''}>${t}</button>`).join('')}` : ''
-  if (isUma) { el('tierlist').innerHTML = renderPlaystyleGrid(shown, list, unranked); return }
   const rows = TIERS.map((t) => {
     const inTier = list.filter((e) => e.tier === t.id && ids.has(e.id))
     return `<div class="tier-row tier-${t.id} ${inCast(t.id) ? 'cast' : 'leaves'}" data-row="${t.id}"><div class="row-head"><span class="tier-badge">${t.id}</span><span class="row-copy"><strong>${t.label}</strong><span>${inTier.length}</span></span></div><div class="row-tiles">${inTier.map((e) => tile(e.id)).join('') || '<span class="row-empty">Drop here</span>'}</div></div>`
   })
-  const limit = showAll ? unranked.length : 80
+  // An Uma board shows every unranked character (135 or so); an enemy board shows 80 until asked.
+  const limit = showAll || isUma ? unranked.length : 80
   rows.push(`<div class="tier-row unranked" data-row="none"><div class="row-head"><span class="tier-badge">—</span><span class="row-copy"><strong>Unranked</strong><span>${unranked.length}</span></span></div><div class="row-tiles">${unranked.slice(0, limit).map((m) => tile(m.id)).join('') || '<span class="row-empty">None</span>'}${unranked.length > limit ? `<button class="more" data-more>Show all ${unranked.length}</button>` : ''}</div></div>`)
   if (board.franchise) {
     // Left out of every board (P121): drop a portrait here to leave it out, drag one to a tier to bring it back.
@@ -368,11 +351,7 @@ list.addEventListener('drop', (event) => {
   selected = id
   // The Left out row leaves a unit out of every board; any other row brings a left-out unit back first (P121).
   const from = isOut(id) && row.dataset.row !== 'out' ? setOut(state(), id, false) : state()
-  let next = row.dataset.row === 'out' ? setOut(state(), id, true) : row.dataset.row === 'none' ? setTier(from, id, null) : place(from, id, row.dataset.row as Tier, before)
-  // On the Playable grid, dropping into another playstyle she has an outfit in picks that playstyle too.
-  const u = umaIndex.get(id), way = row.dataset.way as Way | undefined
-  if (board.id === 'umas' && u && way && way !== styleOf(id) && u.outfits.some((o) => o.way === way)) next = setWay(next, u, way)
-  void save(next)
+  void save(row.dataset.row === 'out' ? setOut(state(), id, true) : row.dataset.row === 'none' ? setTier(from, id, null) : place(from, id, row.dataset.row as Tier, before))
 })
 
 // ---- Start ----

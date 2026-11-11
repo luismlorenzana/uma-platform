@@ -11,7 +11,7 @@
     --page: #f5f3ed; --panel: #fffefa; --raised: #f9f8f3; --sunken: #ecebe4;
     --ink: #202b2b; --ink-soft: #5d6766; --ink-faint: #8b9493;
     --accent: #e36642; --accent-wash: #fbe9e1; --info: #426b85; --info-wash: #e2ecf2; --success: #327d66; --success-wash: #e1f0ea;
-    --ss: #ead6bb; --ss-ink: #68451c; --s: #dce7d2; --s-ink: #416136; --a: #d7e5eb; --a-ink: #3d6176; --b: #e6ddeb; --b-ink: #6f507e; --f: #e4e4de; --f-ink: #64675f;
+    --sss: #f0d2c8; --sss-ink: #7a2f1e; --ss: #ead6bb; --ss-ink: #68451c; --s: #dce7d2; --s-ink: #416136; --a: #d7e5eb; --a-ink: #3d6176; --b: #e6ddeb; --b-ink: #6f507e; --f: #e4e4de; --f-ink: #64675f;
     --hairline: rgb(32 43 43 / 0.09); --hairline-strong: rgb(32 43 43 / 0.18); --radius: 12px; color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
@@ -19,7 +19,7 @@
       --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
       --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
       --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
-      --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
+      --sss: #4d2a22; --sss-ink: #f3c2b2; --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
       --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
     }
   }
@@ -27,7 +27,7 @@
     --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
     --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
     --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
-    --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
+    --sss: #4d2a22; --sss-ink: #f3c2b2; --ss: #4a3a24; --ss-ink: #f0d3a6; --s: #2f3d29; --s-ink: #c4dcb2; --a: #263741; --a-ink: #b8d4e2; --b: #392f40; --b-ink: #d9c3e6; --f: #33332f; --f-ink: #cfcfc6;
     --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -57,7 +57,7 @@
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
   .badge { display: inline-grid; place-items: center; min-width: 30px; height: 24px; padding: 0 6px; border-radius: 5px; font-weight: 750; font-size: 12px; }
-  .t-SS { background: var(--ss); color: var(--ss-ink); } .t-S { background: var(--s); color: var(--s-ink); } .t-A { background: var(--a); color: var(--a-ink); }
+  .t-SSS { background: var(--sss); color: var(--sss-ink); } .t-SS { background: var(--ss); color: var(--ss-ink); } .t-S { background: var(--s); color: var(--s-ink); } .t-A { background: var(--a); color: var(--a-ink); }
   .t-B { background: var(--b); color: var(--b-ink); } .t-F { background: var(--f); color: var(--f-ink); } .t-none { background: var(--sunken); color: var(--ink-faint); }
   .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--sunken); color: var(--ink-soft); }
   .pill.cast { background: var(--success-wash); color: var(--success); } .pill.down { background: var(--accent-wash); color: var(--accent); }
@@ -74,28 +74,28 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">uma-platform · tier authoring · P113–P119 · TA1</p>
+  <p class="eyebrow">uma-platform · tier authoring · P113–P123 · TA1</p>
   <h1>One local Studio, eleven boards, and a career for every Uma<span>.</span></h1>
-  <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. The Uma boards keep the old playstyle grid; two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
+  <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. Every board ranks on six tiers, SSS to F, in plain rows: the Uma boards dropped the playstyle split, and Playable Umas starts over. Two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
   <nav><a href="#boards">The boards</a><a href="#playstyles">Playstyles</a><a href="#flow">How leftovers flow</a><a href="#careers">Careers</a><a href="#local">Why local</a><a href="#saved">What's saved</a><a href="#next">What's next</a><a href="#calls">Calls</a><a href="franchises.html">More franchises</a><a href="../tiers.md">Markdown</a></nav>
 
   <div class="tiles">
     <div class="tile"><b>11</b><span>tier boards on one scale</span></div>
-    <div class="tile"><b>65</b><span>playable Umas (133 outfits)</span></div>
-    <div class="tile"><b>70</b><span>Umas for the NPC board</span></div>
-    <div class="tile"><b>52</b><span>Azur Lane bosses in the cast</span></div>
+    <div class="tile"><b>6</b><span>tiers: SSS, SS, S, A, B, F</span></div>
+    <div class="tile"><b>135</b><span>Uma characters to rank again on Playable</span></div>
+    <div class="tile"><b>325</b><span>bosses in the cast across the seven boss boards</span></div>
     <div class="tile"><b>432</b><span>new boss candidates imported (82 + 46 + 59 + 48 + 111 + 86)</span></div>
     <div class="tile"><b>≥ 3</b><span>bosses in every career</span></div>
   </div>
 
   <section class="card" id="boards">
     <h2>The boards</h2>
-    <p>SS, S and A are a board's <b>cast</b>. B, F and unranked <b>leave</b> it and flow to the board below. Order within a tier is the authoring order.</p>
+    <p>SSS, SS, S and A are a board's <b>cast</b>. B, F and unranked <b>leave</b> it and flow to the board below. Order within a tier is the authoring order.</p>
     <div class="scroll"><table>
       <thead><tr><th>Group</th><th>Board</th><th>Who is on it</th><th>Leftovers go to</th></tr></thead>
       <tbody>
         <tr><td>Umas</td><td><b>Playable Umas</b></td><td>Every Uma character with an outfit, ranked once for all her outfits</td><td>Uma NPCs</td></tr>
-        <tr><td></td><td><b>Uma NPCs</b></td><td>Every Uma outside Playable's SS, S and A</td><td>—</td></tr>
+        <tr><td></td><td><b>Uma NPCs</b></td><td>Every Uma outside Playable's cast (SSS to A)</td><td>—</td></tr>
         <tr><td>Bosses</td><td><b>Azur Lane bosses</b></td><td>The 53 units marked Boss on the old board; a card can add or remove one</td><td>Key enemies</td></tr>
         <tr><td></td><td><b>Genshin Impact bosses</b></td><td>82 female characters, imported locally</td><td>Key enemies</td></tr>
         <tr><td></td><td><b>Wuthering Waves bosses</b></td><td>46 female resonators, imported locally</td><td>Key enemies</td></tr>
@@ -120,6 +120,7 @@
     <div class="scroll"><table>
       <thead><tr><th>Tier</th><th>Means</th><th>On a board with one below it</th><th>From the old boards</th></tr></thead>
       <tbody>
+        <tr><td><span class="badge t-SSS">SSS</span></td><td><b>Headliners</b>: the very top, before the first cast</td><td><span class="pill cast">stays</span></td><td>— (new, P122)</td></tr>
         <tr><td><span class="badge t-SS">SS</span></td><td><b>First cast</b>: author first</td><td><span class="pill cast">stays</span></td><td>SS</td></tr>
         <tr><td><span class="badge t-S">S</span></td><td><b>Next wave</b>: right after the first cast</td><td><span class="pill cast">stays</span></td><td>A1</td></tr>
         <tr><td><span class="badge t-A">A</span></td><td><b>Later wave</b>: the last of this cast</td><td><span class="pill cast">stays</span></td><td>A2</td></tr>
@@ -131,16 +132,17 @@
   </section>
 
   <section class="card" id="playstyles">
-    <h2>Playstyles stay as they were</h2>
-    <p>Both Uma boards draw the old outfit board's grid, one character a portrait: tiers down, the five playstyles across, each column with its cast and ranked counts. A character's playstyle is her <b>lead outfit's</b>: her best old tier, then her original outfit, then the lowest id. That keeps the old SS at eight a playstyle. The five characters whose outfits span two playstyles get a pick on their card.</p>
+    <h2>Playstyles: on the card, not the tier list</h2>
+    <p>The owner moved away from the class split (P123, retiring P117's grid). Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. A character's playstyle is still her <b>lead outfit's</b> (her best old tier, then her original outfit, then the lowest id), or the pick on her card when her outfits span two. It shows on her card with the outfit's four grades, the <b>Every playstyle</b> filter narrows the board to one, and the plan keeps it. It never places a portrait.</p>
+    <p><b>Playable Umas starts over</b> on the six-tier scale. The earlier ranks (20 SS, 20 S, 20 A, 33 B, 42 F) are kept in <code>tiers/archive/umas.r49.2026-11-10.json</code>, and <b>Import board</b> brings them back in one undoable step. Uma NPCs keeps its ranks; until Playable is ranked again, every Uma is on it.</p>
     <div class="scroll"><table>
-      <thead><tr><th>Playstyle</th><th>Calling</th><th>Her best running-style grades</th><th class="num">SS</th><th class="num">S</th><th class="num">A</th><th class="num">Cast</th></tr></thead>
+      <thead><tr><th>Playstyle</th><th>Calling</th><th>Her best running-style grades</th></tr></thead>
       <tbody>
-        <tr><td><b>Front / Front + Pace</b></td><td>Warrior</td><td>Front among the best; it wins every tie</td><td class="num">8</td><td class="num">4</td><td class="num">1</td><td class="num"><b>13</b></td></tr>
-        <tr><td><b>Pure Pace</b></td><td>Spellblade</td><td>Pace alone at the top</td><td class="num">8</td><td class="num">5</td><td class="num">1</td><td class="num"><b>14</b></td></tr>
-        <tr><td><b>Pace + Late</b></td><td>Mage</td><td>Pace tied with Late or End, no Front</td><td class="num">8</td><td class="num">3</td><td class="num">3</td><td class="num"><b>14</b></td></tr>
-        <tr><td><b>Pure Late</b></td><td>Healer</td><td>Late alone at the top</td><td class="num">8</td><td class="num">3</td><td class="num">1</td><td class="num"><b>12</b></td></tr>
-        <tr><td><b>Late + End</b></td><td>Summoner</td><td>End alone or tied with Late, no Front or Pace</td><td class="num">8</td><td class="num">4</td><td class="num">0</td><td class="num"><b>12</b></td></tr>
+        <tr><td><b>Front / Front + Pace</b></td><td>Warrior</td><td>Front among the best; it wins every tie</td></tr>
+        <tr><td><b>Pure Pace</b></td><td>Spellblade</td><td>Pace alone at the top</td></tr>
+        <tr><td><b>Pace + Late</b></td><td>Mage</td><td>Pace tied with Late or End, no Front</td></tr>
+        <tr><td><b>Pure Late</b></td><td>Healer</td><td>Late alone at the top</td></tr>
+        <tr><td><b>Late + End</b></td><td>Summoner</td><td>End alone or tied with Late, no Front or Pace</td></tr>
       </tbody>
     </table></div>
   </section>
@@ -182,8 +184,8 @@
       <div class="scroll"><table>
         <thead><tr><th>A career needs</th><th>It comes from</th></tr></thead>
         <tbody>
-          <tr><td>The Uma herself</td><td><b>Playable Umas</b>, SS to A, one career a character</td></tr>
-          <tr><td>At least three bosses</td><td>The seven <b>boss boards</b>, SS to A</td></tr>
+          <tr><td>The Uma herself</td><td><b>Playable Umas</b>, SSS to A, one career a character</td></tr>
+          <tr><td>At least three bosses</td><td>The seven <b>boss boards</b>, SSS to A</td></tr>
           <tr><td>Escorts and group leaders</td><td><b>Key enemies</b></td></tr>
           <tr><td>The random fights</td><td><b>Regular enemies</b></td></tr>
           <tr><td>Rivals, friends and towns</td><td><b>Uma NPCs</b> and other playable Umas</td></tr>
@@ -198,7 +200,7 @@
           <tr><td><b>All</b></td><td class="num"><b>65</b></td><td class="num"><b>52</b></td><td class="num" colspan="2"><b>195 boss fights</b></td></tr>
         </tbody>
       </table>
-      <p class="note">At the first state, before the six new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 today; the 432 imports cover the gap, and S needs them most.</p></div>
+      <p class="note">At the first state, before the six new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 then; the 432 imports cover the gap. Playable Umas starts over on 2026-11-10 (P123), so the home's live panel counts from zero Umas until it's ranked again, SSS first.</p></div>
     </div>
   </section>
 
@@ -219,6 +221,7 @@
       <thead><tr><th>File, in the ignored <code>content/authoring/</code></th><th>What it is</th></tr></thead>
       <tbody>
         <tr><td><code>tiers/&lt;board&gt;.json</code></td><td>One board: entries (<code>id</code>, <code>tier</code>, <code>note</code>) in authoring order, and its revision. Azur Lane bosses also has <code>members</code>; an imported boss board has <code>out</code>, the units left out of every board.</td></tr>
+        <tr><td><code>tiers/archive/</code></td><td>Earlier boards kept before a reset, such as <code>umas.r49.2026-11-10.json</code>. The Studio doesn't read them; <b>Import board</b> does.</td></tr>
         <tr><td><code>tiers/plan.json</code></td><td><b>The plan the later tools read</b>: every board in order, with names, Ways or franchises, where each came from, and the career numbers. Rewritten on every save.</td></tr>
         <tr><td><code>enemies/imports/&lt;franchise&gt;.json</code></td><td>A local import: its source, filter and units, with images in <code>enemies/assets/</code>.</td></tr>
         <tr><td><code>uma-art-roster.json</code>, <code>enemy-art-roster.json</code></td><td>The old boards, frozen. The sprite queue reads the first until TA2; the second is history.</td></tr>
@@ -231,7 +234,7 @@
     <div class="scroll"><table>
       <thead><tr><th>Id</th><th>What</th><th>Where</th><th>Who</th></tr></thead>
       <tbody>
-        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after the NPC ranking</td></tr>
+        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after Playable Umas and the NPCs are ranked</td></tr>
         <tr><td class="id">TA3</td><td><b>uma-quest's careers.</b> A career is a character's, with at least three bosses from the boss boards; uma-quest revises CM1–CM36 in its repo.</td><td>uma-quest</td><td>uma-quest's session</td></tr>
         <tr><td class="id">TA4</td><td><b>Q39 reads the plan.</b> Boss slots from the seven boss boards, Key and Regular from theirs, never a left-out unit; EN1's subjects grow to eight franchises.</td><td>uma-quest, uma-platform</td><td>ChatGPT</td></tr>
         <tr><td class="id">TA5</td><td>More imports when wanted: male characters, non-playable bosses through the inbox.</td><td>uma-platform</td><td>Claude</td></tr>
@@ -246,7 +249,7 @@
       <thead><tr><th>Id</th><th>Call</th></tr></thead>
       <tbody>
         <tr><td class="id">TS1</td><td><b>One local Studio</b> with a home: a tile for each board and sprite tool, then a dashboard</td></tr>
-        <tr><td class="id">TS2</td><td><b>One scale: SS, S, A, B, F.</b> SS to A are the cast; B, F and unranked flow down</td></tr>
+        <tr><td class="id">TS2</td><td><b>One scale: SS, S, A, B, F.</b> SS to A are the cast; B, F and unranked flow down. SSS added on top by TS20</td></tr>
         <tr><td class="id">TS3</td><td>Playable → NPCs; the seven boss boards → Key → Regular (+ NIKKE)</td></tr>
         <tr><td class="id">TS4</td><td><b>Umas per character</b>, each face with her outfit count</td></tr>
         <tr><td class="id">TS5</td><td>The first state keeps every old call: best outfit's tier; A1→S, A2→A; enemies on their old role's board</td></tr>
@@ -259,11 +262,13 @@
         <tr><td class="id">TS12</td><td>Drag and drop, earlier and later, notes, undo, keys, a filtered bulk B or F, board import and export</td></tr>
         <tr><td class="id">TS13</td><td>The old rankers are retired: <code>/</code> is the home</td></tr>
         <tr><td class="id">TS14</td><td>Tiers are authoring order, never game rules</td></tr>
-        <tr><td class="id">TS15</td><td><b>The Uma boards keep the old playstyle grid</b>, the outfit's grades on the card, and the home's playstyle table</td></tr>
+        <tr><td class="id">TS15</td><td><s>The Uma boards keep the old playstyle grid</s>: superseded by TS21</td></tr>
         <tr><td class="id">TS16</td><td>A character's playstyle is her lead outfit's, unless the owner picks another of hers</td></tr>
         <tr><td class="id">TS17</td><td>Honkai: Star Rail and Zenless Zone Zero are boss boards; <a href="franchises.html">the next franchises</a> are ranked</td></tr>
         <tr><td class="id">TS18</td><td><b>Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered</b>: one card a battlesuit or frame, from their wikis; the owner sorts them</td></tr>
         <tr><td class="id">TS19</td><td><b>Any imported unit can be left out of every board</b>, from its card or its board's Left out row; ranking or dragging it brings it back</td></tr>
+        <tr><td class="id">TS20</td><td><b>SSS tops the scale on every board</b>: SSS to A are the cast; keys 1 to 6; an SSS career meets SSS bosses first</td></tr>
+        <tr><td class="id">TS21</td><td><b>No playstyle split on the tier lists</b>: plain tier rows on both Uma boards; her playstyle stays on her card, in the filter and in the plan. Playable Umas starts over, its earlier ranks archived</td></tr>
       </tbody>
     </table></div>
   </section>

@@ -1,6 +1,6 @@
 # TA2 — The sprite queue reads the character boards
 
-**uma-platform's `scripts/sprites` and `tools/studio` · Claude · M · Needs: the owner's first pass on Uma NPCs ·
+**uma-platform's `scripts/sprites` and `tools/studio` · Claude · M · Needs: the owner's new pass on Playable Umas (P123) and on Uma NPCs ·
 Unblocks: traveler batches 2–20 and townsfolk T2 onward in the owner's new order (UA9, UA11)**
 
 ## Why
@@ -11,7 +11,7 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 
 ## Context (read first)
 
-- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS14), P113–P116.
+- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS21), P113–P116, P122 (SSS) and P123 (no playstyle split, Playable starts over).
 - [pipeline.md](../../sprites/pipeline.md) §4–§7 (CR25: batches of five, one per Way, in tier order; townsfolk B before F).
 - `scripts/sprites/src/queue.ts` (`queue`, `nextBatch`) and `tools/studio/src/sprite-review.ts`, which read
   `uma-art-roster.json` today; `content/authoring/sprites/batches.json`, the assigned batches.
@@ -19,11 +19,11 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 
 ## Decisions made
 
-- **Travelers come from Playable Umas' cast,** SS, then S, then A, in the board's order. Each character contributes
+- **Travelers come from Playable Umas' cast,** SSS, then SS, then S, then A, in the board's order. Each character contributes
   **her best-ranked outfit first** (her best tier on the old outfit board, then the original outfit, then the lowest id).
   Her other outfits follow, after every character's first, in the same order. Each outfit keeps her own Way, so CR25's
   one per Way still holds.
-- **Townsfolk come from Uma NPCs**, SS to F, in the board's order, one outfit each (the original outfit). This replaces
+- **Townsfolk come from Uma NPCs**, SSS to F, in the board's order, one outfit each (the original outfit). This replaces
   CR25's B-before-F rule.
 - **Assigned batches never move.** `batches.json` stays the record. The queue skips their outfits, and a character
   whose outfit is in an assigned batch keeps it there.
@@ -34,7 +34,8 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 ## Do
 
 1. `scripts/sprites`: a `rosterFromPlan(plan, catalog)` that produces the `Ranking[]` the queue already takes (outfit,
-   character, tier mapped back to SS/A1/A2 for the queue's order, and Way). Tests on invented plans.
+   character, tier mapped back to the queue's scale, SSS and SS to SS, S to A1, A to A2, keeping the plan's order so SSS
+   comes first, and Way). Tests on invented plans.
 2. `queue.json`'s overrides still apply on top; the Studio's Queue page shows where each row came from (board and tier).
 3. `pnpm sprites:progress` and the Gates page read the same adapter.
 4. Update pipeline.md's CR25 row and the UA9 and UA11 templates' batch tables from the new order.

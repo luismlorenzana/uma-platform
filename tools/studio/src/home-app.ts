@@ -1,5 +1,5 @@
 // The Studio's home (P113): a tile for every tier board and sprite tool, then the numbers across them.
-import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, WAYS, boardStats, careerMath, importBoardOf, inCast, leftOut, parseBoard, playstyleCounts, pools, type BoardId, type BoardStats } from './tier-model.js'
+import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, boardStats, careerMath, importBoardOf, inCast, leftOut, parseBoard, pools, type BoardId, type BoardStats } from './tier-model.js'
 import { api, el, esc, nav, type TierData } from './tier-ui.js'
 
 const SPRITE_TOOLS = [
@@ -15,7 +15,7 @@ const GROUPS = [
   { id: 'enemies', title: 'Enemies', blurb: 'The escorts, the leaders and the crowd.' },
 ] as const
 
-/** A stacked bar, SS to unranked; widths go through the CSSOM, which the page's CSP allows. */
+/** A stacked bar, SSS to unranked; widths go through the CSSOM, which the page's CSP allows. */
 function bar(s: BoardStats): string {
   return `<span class="stack" aria-hidden="true">${TIERS.map((t) => `<span class="seg tier-${t.id}" data-grow="${s.tiers[t.id]}"></span>`).join('')}<span class="seg unranked" data-grow="${s.unranked}"></span></span>`
 }
@@ -30,7 +30,7 @@ function render(data: TierData): void {
     `<div class="tile-group"><div class="group-head"><h3>Sprite production</h3><p>The Uma sprite pipeline’s tools, unchanged.</p></div><div class="tiles">${SPRITE_TOOLS.map((t) => `<a class="app-tile tool" href="${t.href}"><span class="tile-kicker">Sprites</span><strong>${esc(t.title)}</strong><span class="tile-blurb">${esc(t.blurb)}</span><span class="tile-go" aria-hidden="true">↗</span></a>`).join('')}</div></div>`
 
   const outfits = new Map(data.catalog.umas.map((u) => [u.id, u.outfits.length]))
-  const castOutfits = data.states.umas.entries.filter((e) => ['SS', 'S', 'A'].includes(e.tier ?? '') && all.umas.some((m) => m.id === e.id)).reduce((n, e) => n + (outfits.get(e.id) ?? 0), 0)
+  const castOutfits = data.states.umas.entries.filter((e) => inCast(e.tier) && all.umas.some((m) => m.id === e.id)).reduce((n, e) => n + (outfits.get(e.id) ?? 0), 0)
   const bosses = BOSS_BOARDS.reduce((n, b) => n + stats[b].cast, 0)
   el('kpis').innerHTML = [
     ['Playable Umas', stats.umas.cast, `${castOutfits} outfits between them`],
@@ -42,7 +42,7 @@ function render(data: TierData): void {
 
   el('table').innerHTML = `<caption class="sr-only">Every board by tier</caption><thead><tr><th scope="col">Board</th>${TIERS.map((t) => `<th scope="col" class="num tier-${t.id}"><span class="tier-badge small">${t.id}</span></th>`).join('')}<th scope="col" class="num">Unranked</th><th scope="col" class="num">On the board</th><th scope="col">Leftovers go to</th></tr></thead><tbody>${BOARDS.map((b) => {
     const s = stats[b.id]
-    return `<tr><th scope="row"><a href="/tiers/${b.id}">${esc(b.title)}</a></th>${TIERS.map((t) => `<td class="num ${['SS', 'S', 'A'].includes(t.id) ? 'cast' : ''}">${s.tiers[t.id] || '<span class="zero">·</span>'}</td>`).join('')}<td class="num">${s.unranked || '<span class="zero">·</span>'}</td><td class="num total">${s.pool}</td><td class="muted">${b.next ? esc(BOARDS.find((x) => x.id === b.next)!.title) : '—'}</td></tr>`
+    return `<tr><th scope="row"><a href="/tiers/${b.id}">${esc(b.title)}</a></th>${TIERS.map((t) => `<td class="num ${inCast(t.id) ? 'cast' : ''}">${s.tiers[t.id] || '<span class="zero">·</span>'}</td>`).join('')}<td class="num">${s.unranked || '<span class="zero">·</span>'}</td><td class="num total">${s.pool}</td><td class="muted">${b.next ? esc(BOARDS.find((x) => x.id === b.next)!.title) : '—'}</td></tr>`
   }).join('')}</tbody>`
 
   const careers = careerMath(stats)
@@ -56,13 +56,6 @@ function render(data: TierData): void {
     return i ? `<li><strong>${title}</strong>: ${i.units} (${esc(i.filter)})${out ? `, ${out} left out` : ''}, from ${esc(i.source)}, ${esc(i.importedAt.slice(0, 10))}</li>` : `<li><strong>${title}</strong>: not imported yet. Run <code>pnpm tiers:import ${f}</code>, then restart the Studio.</li>`
   }).join('')
 
-  // The old outfit board's grid, per character: Playable Umas by tier and playstyle (P117).
-  const grid = playstyleCounts(data.catalog, data.states, all).umas
-  el('playstyles').innerHTML = `<caption class="sr-only">Playable Umas by tier and playstyle</caption><thead><tr><th scope="col">Tier</th>${WAYS.map((w) => `<th scope="col" class="num" title="${esc(w.rule)}">${esc(w.bucket)}<br><span class="muted">${esc(w.label)}</span></th>`).join('')}<th scope="col" class="num">All</th></tr></thead><tbody>${
-    [...TIERS.map((t) => t.id), 'unranked' as const].map((t) => {
-      const row = grid[t], total = WAYS.reduce((n, w) => n + row[w.id], 0)
-      return `<tr><th scope="row">${t === 'unranked' ? 'Unranked' : `<span class="tier-badge small tier-${t}">${t}</span>`}</th>${WAYS.map((w) => `<td class="num ${t !== 'unranked' && inCast(t) ? 'cast' : ''}">${row[w.id] || '<span class="zero">·</span>'}</td>`).join('')}<td class="num total">${total}</td></tr>`
-    }).join('')}</tbody><tfoot><tr><th scope="row">Cast</th>${WAYS.map((w) => `<td class="num total">${grid.SS[w.id] + grid.S[w.id] + grid.A[w.id]}</td>`).join('')}<td class="num total">${stats.umas.cast}</td></tr></tfoot>`
   el('release').textContent = data.catalog.release
   for (const seg of document.querySelectorAll<HTMLElement>('.seg')) seg.style.flexGrow = seg.dataset.grow ?? '0'
 }

@@ -1,24 +1,25 @@
 # Tier authoring: one local Studio, eleven boards, and a career for every Uma
 
-> **Status: 2026-11-09, the owner's direction (P113–P116), built as TA1; revised the same day (P117–P121).** The two
-> local rankers (Umas by outfit, enemies by role) become one app with eleven tier boards on one scale, a home with a
-> dashboard, and a local import for six new franchises. The Uma boards keep the old board's playstyle grid (P117).
-> Honkai Impact 3rd and Punishing: Gray Raven come in unfiltered, and any imported unit can be left out of every board
-> (P120, P121). [franchises.md](franchises.md) ranks the franchises to add next. This page says what it is, why it
-> stays on this machine, and what it sets up: every playable Uma gets a **career that fights at least three bosses**.
-> Calls TS1–TS19. Visual page: [previews/tiers.html](previews/tiers.html).
+> **Status: 2026-11-09, the owner's direction (P113–P116), built as TA1; revised the same day (P117–P121) and on
+> 2026-11-10 (P122, P123).** The two local rankers (Umas by outfit, enemies by role) become one app with eleven tier
+> boards on one scale, a home with a dashboard, and a local import for six new franchises. Honkai Impact 3rd and
+> Punishing: Gray Raven come in unfiltered, and any imported unit can be left out of every board (P120, P121). On
+> 2026-11-10 the scale gained **SSS** above SS (P122), and the owner moved away from the playstyle split: the Uma boards
+> are plain tier rows now, and Playable Umas starts over (P123). [franchises.md](franchises.md) ranks the franchises to
+> add next. This page says what it is, why it stays on this machine, and what it sets up: every playable Uma gets a
+> **career that fights at least three bosses**. Calls TS1–TS21. Visual page: [previews/tiers.html](previews/tiers.html).
 
 ## The short answer
 
 - **One app, `pnpm studio`** (http://127.0.0.1:4318). The home has a tile for every board and sprite tool, then the
   numbers across all of them.
-- **Eleven boards, one scale: SS, S, A, B, F.** SS, S and A are a board's **cast**. B, F and unranked **leave** it and
-  flow to the board below, so nothing is ever ranked twice by accident and nothing falls through.
+- **Eleven boards, one scale: SSS, SS, S, A, B, F.** SSS, SS, S and A are a board's **cast**. B, F and unranked
+  **leave** it and flow to the board below, so nothing is ever ranked twice by accident and nothing falls through.
 
   | Group | Board | Who is on it | Its leftovers go to |
   |---|---|---|---|
   | Umas | **Playable Umas** | Every Uma character with an outfit, ranked once for all her outfits | Uma NPCs |
-  | | **Uma NPCs** | Every Uma outside Playable's SS, S and A | — |
+  | | **Uma NPCs** | Every Uma outside Playable's cast (SSS to A) | — |
   | Bosses | **Azur Lane bosses** | The Azur Lane units marked Boss on the old board | Key enemies |
   | | **Genshin Impact bosses** | Female characters, imported locally | Key enemies |
   | | **Wuthering Waves bosses** | Female resonators, imported locally | Key enemies |
@@ -29,8 +30,8 @@
   | Enemies | **Key enemies** | Every other Azur Lane unit, plus the boss boards' leftovers | Regular enemies |
   | | **Regular enemies** | Every NIKKE unit, plus Key's leftovers | — |
 
-- **Umas are ranked per character**, not per outfit, **on the old board's playstyle grid**: tiers down, the five
-  playstyles across. Each portrait carries a small count of her outfits.
+- **Umas are ranked per character**, not per outfit, in plain tier rows like every other board (P123). Each portrait
+  carries a small count of her outfits; her playstyle is on her card and in the board's filter, not a column.
 - **Nothing was lost:** every board started from the old ones. SS stays SS, A1 became S, A2 became A, B and F stay.
 - **It all stays local.** The boards and the plan live in the ignored `content/authoring/tiers/`, backed up with the rest
   of `content/authoring/` to the private bucket. Nothing is committed or published.
@@ -59,14 +60,14 @@ and more where there are bosses to spare. The boards are cut to answer exactly t
 
 | A career needs | It comes from |
 |---|---|
-| The Uma herself | **Playable Umas**, SS, S and A: one career per character, whatever outfit she wears |
-| The bosses she fights, at least three | The seven **boss boards**, SS, S and A |
+| The Uma herself | **Playable Umas**, SSS to A: one career per character, whatever outfit she wears |
+| The bosses she fights, at least three | The seven **boss boards**, SSS to A |
 | Who escorts a boss and leads the groups | **Key enemies** |
 | The random fights between bosses | **Regular enemies** |
 | Her rivals, friends and the towns around her | **Uma NPCs** (and other playable Umas) |
 
-**The recommended rule (P116):** a career draws its bosses from **its own tier first**. SS careers meet SS bosses, S
-careers S bosses, and so on, so the first careers to ship need only the first bosses drawn. Every career has at least
+**The recommended rule (P116):** a career draws its bosses from **its own tier first**. SSS careers meet SSS bosses, SS
+careers SS bosses, and so on, so the first careers to ship need only the first bosses drawn. Every career has at least
 three. Where a tier has more bosses than three per Uma, its careers grow to `ceil(bosses ÷ Umas)`, so every boss
 authored gets fought. Where it has fewer, careers share bosses. The home's **Careers** panel computes this live.
 
@@ -82,7 +83,8 @@ At the boards' first state (P113's seed, before the owner ranks the six new boss
 For three bosses a career with no boss repeated, SS needs 120 bosses, S 57 and A 18: **195 in all, against 52 today.**
 The 432 imported units (Genshin Impact 82, Wuthering Waves 46, Honkai: Star Rail 59, Zenless Zone Zero 48, Honkai
 Impact 3rd 111 and Punishing: Gray Raven 86, before any are left out) cover that gap. S needs them most: it has 19
-careers and only six bosses so far. The table updates as the owner ranks.
+careers and only six bosses so far. The table updates as the owner ranks. On 2026-11-10 the owner started Playable
+Umas over on the six-tier scale (P123), so the home's Careers panel counts from zero Umas until the new ranking is in.
 
 ## The boards
 
@@ -90,6 +92,7 @@ careers and only six bosses so far. The table updates as the owner ranks.
 
 | Tier | Means | On a board with a board below it |
 |---|---|---|
+| **SSS** Headliners | The very top: author before the first cast (P122) | Stays |
 | **SS** First cast | Author first | Stays |
 | **S** Next wave | Right after the first cast | Stays |
 | **A** Later wave | The last of this cast | Stays |
@@ -98,16 +101,22 @@ careers and only six bosses so far. The table updates as the owner ranks.
 | *unranked* | Not decided yet | Flows down |
 
 Order within a tier is the authoring order. Drag a portrait onto another to put it just before, or press `[` and `]`.
+Keys `1` to `6` rank SSS to F, and `0` unranks. SSS came on 2026-11-10 (P122): every board has it, so the top bosses
+can sit beside the top Umas; nothing already ranked moved.
 
 ### Per character, not per outfit (P114)
 
 A career is a character's, so the playable board ranks characters. Her card shows every outfit with its Way and its
 tier on the old outfit board, and the tier list shows her face with a count of her outfits. A character took **her best
 outfit's tier** at the start: 135 characters, of which 65 are the playable cast (40 SS, 19 S, 6 A), with 133 outfits
-between them.
+between them. **On 2026-11-10 the owner cleared the board to rank again on the six-tier scale (P123).** The earlier
+ranks (revision 49: 20 SS, 20 S, 20 A, 33 B, 42 F) are kept in `tiers/archive/umas.r49.2026-11-10.json`; the board's
+**Import board** brings them back in one undoable step. The board had no notes or playstyle picks to keep. Uma NPCs keeps
+its ranks; until Playable is ranked again, every Uma is on it.
 
-**Playstyles stay as they were (P117).** The old board's five aptitude buckets, each with its calling, still split the
-Uma boards:
+**Playstyles no longer split the tier lists (P123, retiring P117's grid).** The owner moved away from the class
+separation. Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. The
+five aptitude buckets, each with its calling, stay as her data:
 
 | Playstyle | Calling | Her best running-style grades |
 |---|---|---|
@@ -118,12 +127,10 @@ Uma boards:
 | Late + End | Summoner | End alone or tied with Late, no Front or Pace |
 
 An outfit's playstyle comes from its grades, as before. A character's comes from her **lead outfit**: her best tier on
-the old board, then her original outfit, then the lowest id. That reproduces the old SS exactly: eight a playstyle.
-Five characters have outfits in two playstyles. Their card offers the two, and the pick saves on the Playable board.
-Dropping one into the other column on the grid does the same. Both Uma boards draw the grid: tiers down, playstyles
-across, each column with its cast and ranked counts. The card shows the outfit's four grades with the deciding ones
-highlighted, and the home adds Playable Umas by playstyle. Today's cast: Warrior 13, Spellblade 14, Mage 14, Healer
-12, Summoner 12.
+the old board, then her original outfit, then the lowest id. Five characters have outfits in two playstyles; their card
+offers the two, and the pick saves on the Playable board. The card shows the outfit's four grades with the deciding ones
+highlighted, the board's **Every playstyle** filter narrows the list to one, and the plan keeps each character's
+playstyle for the tools that want it. None of it places a portrait: the tier rows hold every playstyle together.
 
 **The sprite queue doesn't move yet.** The Uma sprite pipeline still reads the old outfit roster
 (`uma-art-roster.json`), now frozen, because batches 1 and T1 are assigned from it and uma-quest's wave 1 plays them. The
@@ -173,6 +180,7 @@ images in `content/authoring/enemies/inbox/` with a line in `inbox/<franchise>.j
 | File (all in the ignored `content/authoring/`) | What it is |
 |---|---|
 | `tiers/<board>.json` | One board: its entries (`id`, `tier`, `note`) in authoring order, and its revision. Azur Lane bosses also has `members`; an imported boss board has `out`, the units left out of every board. |
+| `tiers/archive/` | Earlier boards kept by hand before a reset, such as `umas.r49.2026-11-10.json` (P123). The Studio doesn't read them; **Import board** does. |
 | `tiers/plan.json` | **The plan the later tools read**: every board in authoring order with names, Ways or franchises, where each entry came from, and the career numbers. Rewritten on every save. |
 | `enemies/imports/<franchise>.json` | A local import: its source, filter and units. |
 | `uma-art-roster.json`, `enemy-art-roster.json` | The old boards, **frozen**. The sprite queue still reads the first until TA2; the second is history. |
@@ -185,7 +193,7 @@ These are the later decisions this work directs. Each is a packet or a request, 
 
 | Id | What | Where | Who |
 |---|---|---|---|
-| **TA2** | **The sprite queue reads Playable Umas.** Traveler batches follow the character tiers; batches already assigned (1, T1) stay. A recommended outfit pick: her best-ranked outfit first (CM28 already uses it as her look as a boss); the rest follow in tier order. Townsfolk batches follow **Uma NPCs** instead of B-before-F. | uma-platform | Claude, after the owner ranks NPCs |
+| **TA2** | **The sprite queue reads Playable Umas.** Traveler batches follow the character tiers; batches already assigned (1, T1) stay. A recommended outfit pick: her best-ranked outfit first (CM28 already uses it as her look as a boss); the rest follow in tier order. Townsfolk batches follow **Uma NPCs** instead of B-before-F. | uma-platform | Claude, after the owner ranks Playable Umas again and the NPCs |
 | **TA3** | **uma-quest's careers.** The campaign (CM1–CM36) turns on travelers being outfits and on 325 chapter bosses. This direction makes a career a character's, with at least three bosses from the boss boards (TS10). uma-quest revises its calls in its own repo, with this page as the brief. | uma-quest | uma-quest's session |
 | **TA4** | **Q39 reads the plan.** `enemies:candidates` offers Boss slots from the seven boss boards, Key from Key enemies and Regular from Regular enemies, in their authoring order, and never a left-out unit. EN1's subjects grow from NIKKE and Azur Lane to all eight franchises. | uma-quest, uma-platform | ChatGPT (Q39) |
 | TA5 | More imports when the owner wants them: male characters, or non-playable bosses through the inbox. | uma-platform | Claude |
@@ -196,7 +204,7 @@ These are the later decisions this work directs. Each is a packet or a request, 
 | Id | Call |
 |---|---|
 | TS1 | **One local Studio** (`pnpm studio`, loopback only) with a home: a tile for each of the eleven boards and five sprite tools, then a dashboard: the cast of each board, every board by tier, the career math and the sources |
-| TS2 | **One scale for every board: SS, S, A, B, F.** SS, S and A are the cast; B, F and unranked flow to the board below |
+| TS2 | **One scale for every board: SS, S, A, B, F.** SS, S and A are the cast; B, F and unranked flow to the board below. SSS added on top by TS20 |
 | TS3 | **The boards and their order:** Playable Umas → Uma NPCs; Azur Lane, Genshin Impact, Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd and Punishing: Gray Raven bosses → Key enemies → Regular enemies (+ NIKKE) |
 | TS4 | **Umas are ranked per character**; the tier list shows each face with her outfit count, and her card shows every outfit |
 | TS5 | **The first state keeps every old call:** a character takes her best outfit's tier; SS→SS, A1→S, A2→A, B→B, F→F; enemies keep tier and note on the board their old role points to |
@@ -209,8 +217,10 @@ These are the later decisions this work directs. Each is a packet or a request, 
 | TS12 | Drag and drop, earlier and later, notes, undo, keyboard ranking, a filtered bulk B or F, and board import and export |
 | TS13 | The two old rankers are retired: `/` is the home, `/enemies` leads there |
 | TS14 | **Tiers are authoring order, never game rules.** A game reads what was authored and released, not the boards |
-| TS15 | **The Uma boards keep the old playstyle grid** (P117): tiers down, the five playstyles across, the outfit's grades on the card, and the home's playstyle table |
+| TS15 | ~~The Uma boards keep the old playstyle grid~~ (P117): superseded by TS21 |
 | TS16 | **A character's playstyle is her lead outfit's** (best old tier, then original, then lowest id), unless the owner picks another of her outfits' playstyles |
 | TS17 | **Honkai: Star Rail and Zenless Zone Zero are boss boards** (P118); [franchises.md](franchises.md) ranks the next (P119) |
 | TS18 | **Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered** (P120): one card a battlesuit or frame, read from their wikis' APIs; the owner sorts them |
 | TS19 | **Any imported unit can be left out of every board** (P121): from its card on any board or its board's Left out row; ranking or dragging it brings it back |
+| TS20 | **SSS tops the scale on every board** (P122): SSS, SS, S, A, B, F; SSS to A are the cast; keys 1 to 6; an SSS career meets SSS bosses first |
+| TS21 | **No playstyle split on the tier lists** (P123): both Uma boards are plain tier rows; her playstyle stays on her card, in the filter and in the plan. Playable Umas starts over, its earlier ranks archived |

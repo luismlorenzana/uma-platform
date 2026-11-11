@@ -1,7 +1,8 @@
-// The Studio's tier boards (P113): one five-tier scale for every cast, boards that hand their leftovers down, and the
-// plan the later tools read. Shared by the server and the pages, so nothing here imports Node.
+// The Studio's tier boards (P113): one six-tier scale for every cast (SSS added by P122), boards that hand their
+// leftovers down, and the plan the later tools read. Shared by the server and the pages, so nothing here imports Node.
 
 export const TIERS = [
+  { id: 'SSS', label: 'Headliners', description: 'The very top: author before the first cast.' },
   { id: 'SS', label: 'First cast', description: 'Author first.' },
   { id: 'S', label: 'Next wave', description: 'Right after the first cast.' },
   { id: 'A', label: 'Later wave', description: 'The last of this cast.' },
@@ -11,8 +12,9 @@ export const TIERS = [
 export type Tier = typeof TIERS[number]['id']
 const TIER_IDS: readonly string[] = TIERS.map((t) => t.id)
 export const isTier = (value: unknown): value is Tier => typeof value === 'string' && TIER_IDS.includes(value)
-/** SS, S and A are a board's cast. B, F and unranked leave it and flow to the board below. */
-export const inCast = (tier: Tier | null | undefined): boolean => tier === 'SS' || tier === 'S' || tier === 'A'
+/** SSS, SS, S and A are a board's cast (P122). B, F and unranked leave it and flow to the board below. */
+export const CAST_TIERS: readonly Tier[] = ['SSS', 'SS', 'S', 'A']
+export const inCast = (tier: Tier | null | undefined): boolean => !!tier && CAST_TIERS.includes(tier)
 /** The old boards' five tiers on the new scale (P113): SS stays, A1 is S, A2 is A, B and F stay. */
 export const LEGACY_TIER: Readonly<Record<string, Tier>> = { SS: 'SS', A1: 'S', A2: 'A', B: 'B', F: 'F' }
 
@@ -37,11 +39,11 @@ export interface Board {
 }
 export const BOARDS: readonly Board[] = [
   { id: 'umas', kind: 'uma', group: 'umas', title: 'Playable Umas', short: 'Playable', from: [], next: 'npcs',
-    blurb: 'Who gets a career. SS, S and A are the playable cast, and each career fights at least three bosses.',
+    blurb: 'Who gets a career. SSS, SS, S and A are the playable cast, and each career fights at least three bosses.',
     pool: 'Every Uma character with an outfit, ranked once for all her outfits.' },
   { id: 'npcs', kind: 'uma', group: 'umas', title: 'Uma NPCs', short: 'NPCs', from: ['umas'], next: null,
     blurb: 'The townsfolk, rivals and familiar faces around the cast.',
-    pool: 'Every Uma outside Playable’s SS, S and A.' },
+    pool: 'Every Uma outside Playable’s cast (SSS to A).' },
   { id: 'azurlane-bosses', kind: 'enemy', group: 'bosses', title: 'Azur Lane bosses', short: 'Azur Lane', from: [], next: 'key-enemies',
     blurb: 'The bosses already sorted on the old enemy board, on the new scale.',
     pool: 'The Azur Lane units marked Boss. Add or remove one from its card.' },
@@ -81,6 +83,7 @@ export const importBoardOf = (franchise: string): Board | undefined => BOARDS.fi
 /**
  * The five playstyles: the old outfit board's aptitude buckets (uma-rpg Classes v3 / CV19), each with its calling. An
  * outfit's comes from her best running-style grades; a character's from her lead outfit unless the owner picks (P117).
+ * The Uma boards no longer split their tier lists by playstyle (P123): it's on her card, in the filter and in the plan.
  */
 export const WAYS = [
   { id: 'front', label: 'Warrior', bucket: 'Front / Front + Pace', short: 'Front', rule: 'Front among the best styles wins every tie.' },
@@ -260,12 +263,12 @@ export function boardStats(pool: readonly PoolMember[], state: BoardState): Boar
   const tiers = tierMap(state), counts = Object.fromEntries(TIERS.map((t) => [t.id, 0])) as Record<Tier, number>
   let ranked = 0
   for (const m of pool) { const t = tiers.get(m.id); if (t) { counts[t]++; ranked++ } }
-  return { pool: pool.length, ranked, unranked: pool.length - ranked, cast: counts.SS + counts.S + counts.A, tiers: counts }
+  return { pool: pool.length, ranked, unranked: pool.length - ranked, cast: CAST_TIERS.reduce((n, t) => n + counts[t], 0), tiers: counts }
 }
 
 // ---- Edits, all pure ----
 
-/** The ranked entries in the pool, SS first, array order within a tier. */
+/** The ranked entries in the pool, SSS first, array order within a tier. */
 export function ordered(state: BoardState, pool: ReadonlySet<string>): TierEntry[] {
   return TIERS.flatMap((t) => state.entries.filter((e) => e.tier === t.id && pool.has(e.id)))
 }
@@ -344,7 +347,7 @@ export interface CareerTier { tier: Tier; umas: number; bosses: number; bossesPe
  * with more than three bosses an Uma lengthens its careers so every boss is met; one with fewer shares its bosses.
  */
 export function careerMath(stats: Record<BoardId, BoardStats>): { tiers: CareerTier[]; umas: number; bosses: number; fights: number } {
-  const tiers = (['SS', 'S', 'A'] as const).map((tier): CareerTier => {
+  const tiers = CAST_TIERS.map((tier): CareerTier => {
     const umas = stats.umas.tiers[tier], bosses = BOSS_BOARDS.reduce((n, b) => n + stats[b].tiers[tier], 0)
     const bossesPerCareer = umas ? Math.max(MIN_CAREER_BOSSES, Math.ceil(bosses / umas)) : 0
     return { tier, umas, bosses, bossesPerCareer, careersPerBoss: bosses ? Math.round((umas * bossesPerCareer / bosses) * 10) / 10 : null }
@@ -365,7 +368,7 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
     return unit ? { name: unit.name, franchise: unit.franchise, category: unit.category } : { name: id }
   }
   return {
-    schemaVersion: 1, kind: 'tier-plan', generatedAt, release: catalog.release, tierOrder: TIERS.map((t) => t.id), cast: ['SS', 'S', 'A'],
+    schemaVersion: 1, kind: 'tier-plan', generatedAt, release: catalog.release, tierOrder: TIERS.map((t) => t.id), cast: [...CAST_TIERS],
     boards: BOARDS.map((b) => {
       const pool = all[b.id], ids = new Set(pool.map((m) => m.id)), via = new Map(pool.map((m) => [m.id, m]))
       const notes = new Map(states[b.id].entries.map((e) => [e.id, e.note]))
@@ -382,7 +385,7 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
   }
 }
 
-/** Playable Umas and Uma NPCs, each tier by playstyle (the old outfit board's grid, P117). */
+/** Playable Umas and Uma NPCs, each tier by playstyle: counts for the plan; the boards no longer show this grid (P123). */
 export function playstyleCounts(catalog: TierCatalog, states: BoardStates, all = pools(catalog, states)) {
   const umas = new Map(catalog.umas.map((u) => [u.id, u]))
   return Object.fromEntries((['umas', 'npcs'] as const).map((board) => {

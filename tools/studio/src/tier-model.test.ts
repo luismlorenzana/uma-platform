@@ -57,6 +57,14 @@ describe('pools', () => {
     expect(states['hi3-bosses']).toMatchObject({ entries: [], out: [] })
     expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1', 'hi3-2'])
   })
+  it('keeps SSS in the cast, above SS, on every board (P122)', () => {
+    const states = empty()
+    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'SSS', note: '' }, { id: '703', tier: 'F', note: '' }]
+    expect(ids(states, 'npcs')).toEqual(['703', '704'])
+    expect(ordered(states.umas, new Set(ids(states, 'umas'))).map((e) => e.id)).toEqual(['702', '701', '703'])
+    expect(boardStats(pools(catalog, states).umas, states.umas)).toMatchObject({ ranked: 3, cast: 2, tiers: { SSS: 1, SS: 1, S: 0, A: 0, B: 0, F: 1 } })
+    expect(parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] }).entries[0]?.tier).toBe('SSS')
+  })
   it('ignores a tier on a board the entry has left', () => {
     const states = empty()
     states.umas.entries = [{ id: '701', tier: 'SS', note: '' }]
@@ -137,10 +145,13 @@ describe('careers and the plan', () => {
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }, { id: 'gi-2', tier: 'SS', note: '' }]
     const all = pools(catalog, states), stats = Object.fromEntries(BOARDS.map((b) => [b.id, boardStats(all[b.id], states[b.id])])) as Parameters<typeof careerMath>[0]
     const careers = careerMath(stats)
-    expect(careers.tiers[0]).toEqual({ tier: 'SS', umas: 1, bosses: 4, bossesPerCareer: 4, careersPerBoss: 1 })
-    expect(careers.tiers[1]).toEqual({ tier: 'S', umas: 1, bosses: 0, bossesPerCareer: 3, careersPerBoss: null })
+    expect(careers.tiers.map((t) => t.tier)).toEqual(['SSS', 'SS', 'S', 'A'])
+    expect(careers.tiers[0]).toEqual({ tier: 'SSS', umas: 0, bosses: 0, bossesPerCareer: 0, careersPerBoss: null })
+    expect(careers.tiers[1]).toEqual({ tier: 'SS', umas: 1, bosses: 4, bossesPerCareer: 4, careersPerBoss: 1 })
+    expect(careers.tiers[2]).toEqual({ tier: 'S', umas: 1, bosses: 0, bossesPerCareer: 3, careersPerBoss: null })
     expect(careers.fights).toBe(7)
     const plan = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
+    expect(plan).toMatchObject({ tierOrder: ['SSS', 'SS', 'S', 'A', 'B', 'F'], cast: ['SSS', 'SS', 'S', 'A'] })
     expect(plan.boards.find((b) => b.id === 'umas')?.order).toEqual([
       expect.objectContaining({ order: 1, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 2, id: '702', tier: 'S' }),
     ])

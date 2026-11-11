@@ -137,7 +137,7 @@ output is the private `content/authoring/tiers/plan.json`.
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | TA1 | The Studio's home and seven boards, the per-character Uma board, the Genshin Impact and Wuthering Waves imports | Claude | L | — | **Done** (P113–P115) |
-| [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's NPC ranking | Queued |
+| [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's new Playable ranking (P123) and NPC ranking | Queued |
 | TA3 | uma-quest's careers: a career a character, at least three bosses from the boss boards (P116) | uma-quest's session | M | — | Requested |
 | TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | ChatGPT (Q39) | S | Q39 | With Q39 |
 | TA6 | The next boss franchise, one packet each: Arknights: Endfield next ([ranked](../authoring/franchises.md)); Honkai Impact 3rd and Punishing: Gray Raven are built (TA1++) | Claude | M | The owner's pick | Waiting on the pick |
