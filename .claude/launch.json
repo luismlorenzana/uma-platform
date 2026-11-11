@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["../uma-quest/tools/story-sandbox/server.mjs"],
       "port": 4320
+    },
+    {
+      "name": "farm-story-sandbox",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--experimental-strip-types", "--no-warnings", "../uma-farm/tools/story-sandbox/server.mjs"],
+      "port": 4321
     }
   ]
 }
