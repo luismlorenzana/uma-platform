@@ -478,6 +478,30 @@
    "h": 48,
    "page": "farmlands",
    "anchorY": 44
+  },
+  "farmhouse": {
+   "x": 96,
+   "y": 432,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44,
+   "smoke": {
+    "x": 35,
+    "y": 2
+   }
+  },
+  "homestead-house": {
+   "x": 144,
+   "y": 432,
+   "w": 48,
+   "h": 48,
+   "page": "farmlands",
+   "anchorY": 44,
+   "smoke": {
+    "x": 31,
+    "y": 7
+   }
   }
  }
 }

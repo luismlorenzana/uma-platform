@@ -52,8 +52,8 @@ describe('H38 append-only Rift art', () => {
 
   it('appends the Rift as place 41 at (240, 288) on the Battle page, drawn the same every time', () => {
     const { index, img } = savedAtlas('buildings')
-    // F25 part A (P126) appends the Dorm and the shipping bin: one row below, the buildings sheet now 288×480.
-    expect(Object.keys(index.frames)).toHaveLength(56)
+    // F25 part A (P126) appends the Dorm and the shipping bin on a new row (288×480); F55 adds two places to that row.
+    expect(Object.keys(index.frames)).toHaveLength(58)
     expect(PLACES.indexOf(RIFT)).toBe(41)
     expect(PLACES.slice(0, 42).at(-1)).toBe(RIFT) // H113 follows the published 42-frame block.
     expect(RIFT).toMatchObject({ id: 'rift', name: 'The Rift', page: 'battle', at: { x: .5, y: .72 } })
@@ -87,9 +87,9 @@ describe('H38 append-only Rift art', () => {
 
   it('appends four 16px front crests at y=52 and eleven 24px achievements from y=68, at the end of the spec', () => {
     const { index, img } = savedAtlas('ui')
-    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
-    expect([index.width, index.height]).toEqual([120, 276])
-    expect(Object.keys(index.frames)).toHaveLength(71) // H54/H127 append classes; H141 star/stat marks; F25 ten farm marks.
+    // F25 part A (P126) appends ten farm marks and F55 sixteen romance marks: the UI sheet now 120×380 with 87 frames.
+    expect([index.width, index.height]).toEqual([120, 380])
+    expect(Object.keys(index.frames)).toHaveLength(87) // H54/H127 append classes; H141 star/stat marks; F25 ten farm marks; F55 sixteen.
     expect(FRONTS).toEqual(['iron', 'arcane', 'duel', 'horde'])
     expect(ACHIEVEMENTS).toEqual(['seal-iron', 'seal-arcane', 'seal-duel', 'seal-horde', 'rift-conquered',
       'iron-will', 'arcane-purity', 'untouched', 'swift-convergence', 'bestiary', 'crossover'])

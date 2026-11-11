@@ -17,6 +17,13 @@ export const FARM_MARKS = ['seed-packet', 'star', 'heart-bond', 'heart-affinity'
 export const SEASONS = ['spring', 'summer', 'autumn', 'winter'] as const
 export type FarmMark = (typeof FARM_MARKS)[number]
 export type Season = (typeof SEASONS)[number]
+// uma-farm F55 (P126): the romance core's marks, appended after F25's.
+export const HOMESTEAD_MARKS = ['farmhouse', 'house'] as const
+export const HEARTS_MARKS = ['friendship', 'romance', 'spouse', 'banked', 'ready', 'evening', 'invitation'] as const
+export const PLAY_MARKS = ['cast', 'pick', 'rhythm', 'walk', 'choose'] as const
+export type HomesteadMark = (typeof HOMESTEAD_MARKS)[number]
+export type HeartsMark = (typeof HEARTS_MARKS)[number] | 'memory-frame'
+export type PlayMark = (typeof PLAY_MARKS)[number]
 export type Currency = (typeof CURRENCIES)[number] | typeof FARM_CURRENCY
 export type RacerCurrency = (typeof RACER_CURRENCIES)[number]
 export type Tier = (typeof TIERS)[number]
@@ -42,6 +49,11 @@ export type FrameSpec = { id: string; group: 'class'; key: Class; w: 24; h: 24 }
   | { id: string; group: 'yard'; key: YardMark; w: 24; h: 24 }
   | { id: string; group: 'farm'; key: FarmMark; w: 16; h: 16 }
   | { id: string; group: 'season'; key: Season; w: 16; h: 16 }
+  | { id: string; group: 'homestead'; key: HomesteadMark; w: 24; h: 24 }
+  | { id: string; group: 'farm'; key: 'ring-bench'; w: 24; h: 24 }
+  | { id: string; group: 'hearts'; key: (typeof HEARTS_MARKS)[number]; w: 16; h: 16 }
+  | { id: string; group: 'hearts'; key: 'memory-frame'; w: 48; h: 48 }
+  | { id: string; group: 'play'; key: PlayMark; w: 16; h: 16 }
 export const FRAME_SPECS: FrameSpec[] = [
   ...CLASSES.map((key): FrameSpec => ({ id: `class/${key}`, group: 'class', key, w: 24, h: 24 })),
   ...STATUSES.map((key): FrameSpec => ({ id: `status/${key}`, group: 'status', key, w: 12, h: 12 })),
@@ -59,4 +71,9 @@ export const FRAME_SPECS: FrameSpec[] = [
   { id: 'currency/gold', group: 'currency', key: FARM_CURRENCY, w: 16, h: 16 },
   ...FARM_MARKS.map((key): FrameSpec => ({ id: `farm/${key}`, group: 'farm', key, w: 16, h: 16 })),
   ...SEASONS.map((key): FrameSpec => ({ id: `season/${key}`, group: 'season', key, w: 16, h: 16 })),
+  ...HOMESTEAD_MARKS.map((key): FrameSpec => ({ id: `homestead/${key}`, group: 'homestead', key, w: 24, h: 24 })),
+  { id: 'farm/ring-bench', group: 'farm', key: 'ring-bench', w: 24, h: 24 },
+  ...HEARTS_MARKS.map((key): FrameSpec => ({ id: `hearts/${key}`, group: 'hearts', key, w: 16, h: 16 })),
+  { id: 'hearts/memory-frame', group: 'hearts', key: 'memory-frame', w: 48, h: 48 },
+  ...PLAY_MARKS.map((key): FrameSpec => ({ id: `play/${key}`, group: 'play', key, w: 16, h: 16 })),
 ]

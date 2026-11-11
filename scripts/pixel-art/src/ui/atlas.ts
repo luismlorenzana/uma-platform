@@ -8,7 +8,8 @@ import { achievementBadge, frontCrest } from './rift.ts'
 import { starCrest, statMark } from './stars.ts'
 import { cardTicket, yardMark } from './yard.ts'
 import { farmMark, goldCoin, seasonMark } from './farm.ts'
-import { ACHIEVEMENTS, CLASSES, CURRENCIES, FARM_MARKS, FRAME_SPECS, FRONTS, HYBRIDS, SEASONS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS, type FrameSpec } from './spec.ts'
+import { heartsMark, homesteadSmall, playIcon, ringBench } from './romance.ts'
+import { ACHIEVEMENTS, CLASSES, CURRENCIES, FARM_MARKS, FRAME_SPECS, FRONTS, HEARTS_MARKS, HOMESTEAD_MARKS, HYBRIDS, PLAY_MARKS, SEASONS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS, type FrameSpec } from './spec.ts'
 
 export type UiFrame = FrameSpec & { img: Img }
 export interface FrameIndex { x: number; y: number; w: number; h: number; group: FrameSpec['group']; key: string }
@@ -29,7 +30,10 @@ export function drawUi(spec: FrameSpec): Img {
   else if (spec.group === 'achievement') achievementBadge(s, spec.key)
   else if (spec.group === 'star') starCrest(s, spec.key)
   else if (spec.group === 'yard') yardMark(s, spec.key)
-  else if (spec.group === 'farm') farmMark(s, spec.key)
+  else if (spec.group === 'farm') { if (spec.key === 'ring-bench') ringBench(s); else farmMark(s, spec.key) }
+  else if (spec.group === 'homestead') homesteadSmall(s, spec.key)
+  else if (spec.group === 'hearts') heartsMark(s, spec.key)
+  else if (spec.group === 'play') playIcon(s, spec.key)
   else if (spec.group === 'season') seasonMark(s, spec.key)
   else statMark(s, spec.key)
   const img = new Img(spec.w, spec.h, s.render())
@@ -61,10 +65,17 @@ export function packUi(frames: readonly UiFrame[]): { atlas: Img; index: Record<
   // H141 appends the five 24px crests at y=164, then seven 16px marks at y=188 and the eighth at y=204.
   // A05 appends one 16px currency and two 24px Yard pieces on a new row at y=220.
   // F25 part A appends the farm's gold and five farm marks on a new row at y=244, and the four seasons at y=260.
-  const atlas = new Img(120, 276), index: Record<string, FrameIndex> = {}
+  // F55 appends the romance core's: the two small houses and the ring bench (24px) at y=276, the seven Hearts marks at
+  // y=300, the five plays at y=316, and the 48px Memory frame at y=332.
+  const atlas = new Img(120, 380), index: Record<string, FrameIndex> = {}
   const farmCell = (group: string, key: string) => group === 'currency' && key === 'gold' ? [0, 244]
+    : group === 'farm' && key === 'ring-bench' ? [48, 276]
     : group === 'farm' ? [16 + FARM_MARKS.indexOf(key as typeof FARM_MARKS[number]) * 16, 244]
-    : group === 'season' ? [SEASONS.indexOf(key as typeof SEASONS[number]) * 16, 260] : null
+    : group === 'season' ? [SEASONS.indexOf(key as typeof SEASONS[number]) * 16, 260]
+    : group === 'homestead' ? [HOMESTEAD_MARKS.indexOf(key as typeof HOMESTEAD_MARKS[number]) * 24, 276]
+    : group === 'hearts' && key === 'memory-frame' ? [0, 332]
+    : group === 'hearts' ? [HEARTS_MARKS.indexOf(key as typeof HEARTS_MARKS[number]) * 16, 300]
+    : group === 'play' ? [PLAY_MARKS.indexOf(key as typeof PLAY_MARKS[number]) * 16, 316] : null
   for (const { id, group, key, w, h, img } of frames) {
     const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
     const paladin = group === 'class' && key === 'paladin'

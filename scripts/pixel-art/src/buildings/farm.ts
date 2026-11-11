@@ -1,6 +1,6 @@
 // uma-farm F25 part A (P126): the farm's Dorm and shipping bin, two 48px farmlands places appended after H156's three.
 // Old painters and game layouts stay untouched; the farm reads both frames by key.
-import { BASE, M, col, chimney, crate, dome, door, fill, hline, plinth, rect, roofSide, slab, vline, wall, window } from './kit.ts'
+import { BASE, M, col, chimney, crate, dome, door, fill, hline, plinth, rect, roofGable, roofHip, roofSide, slab, vline, wall, window } from './kit.ts'
 import type { Place } from './types.ts'
 
 /** A long two-storey bunkhouse: green shingles with two dormers, cream clapboard, a porch, a chimney. */
@@ -92,3 +92,64 @@ const SHIPPING_BIN: Place = {
 }
 
 export const FARM_M4: Place[] = [DORM, SHIPPING_BIN]
+
+// uma-farm F55 (P126): the homestead, the Farmhouse and the house all six lots share (RM41). Neither carries a name.
+
+/** The Farmhouse: two storeys under a terracotta hip roof, cream plaster upstairs, honey boards below, a porch, a chimney. */
+const FARMHOUSE: Place = {
+  id: 'farmhouse', name: 'Farmhouse', page: 'farmlands', at: { x: .5, y: .38 },
+  paint(s) {
+    s.shadow = { cx: 24, cy: BASE + .5, rx: 21, ry: 3.2, alpha: 72 }
+    const roof = col(s, '#b85a3c'), plaster = col(s, '#f0e2c0', { lift: .2 }), boards = col(s, '#c99a5e')
+    const stone = col(s, '#9c9484'), beam = col(s, '#6e4a30'), glass = col(s, '#3a4c6a')
+    const smoke = chimney(s, stone, 33, 3, 11)
+    roofHip(s, roof, 3, 44, 9, 18, { inset: 8, tex: 'tile', back: 2, seed: 'farmhouse-roof' })
+    // Upstairs: plaster with three lit windows; downstairs: boards with a door and two windows.
+    wall(s, plaster, 5, 42, 19, 28, 'plaster', 'farmhouse-up')
+    wall(s, boards, 5, 42, 29, BASE, 'boards', 'farmhouse-down')
+    hline(s, beam, 5, 42, 28, 2)
+    for (const x of [5, 42]) vline(s, beam, x, 19, BASE, x === 5 ? 3 : 2)
+    for (const x of [10, 22, 34]) window(s, beam, glass, x, 21, 4, 4, { lit: true, mullion: true, sill: true })
+    for (const x of [9, 35]) window(s, beam, glass, x, 33, 4, 4, { lit: true, sill: true })
+    plinth(s, stone, 5, 42, 41, BASE)
+    // The porch: a plank lean-to over the door on two posts, a step, flower boxes under the lower windows.
+    roofSide(s, roof, 15, 32, 29, 31, { back: 1, tex: 'plank', seed: 'farmhouse-porch' })
+    for (const x of [16, 31]) vline(s, beam, x, 32, BASE - 1, x === 16 ? 4 : 2)
+    door(s, beam, 21, BASE - 1, 6, 9, { frame: plaster })
+    slab(s, M.rect(19, BASE - 1, 28, BASE), stone)
+    hline(s, stone, 19, 28, BASE - 1, 5)
+    const bloom = col(s, '#e8607e', { lift: .36 }), leaf = col(s, '#5aa346', { lift: .3 })
+    for (const x of [8, 34]) {
+      rect(s, beam, x, 38, x + 6, 39, 3)
+      for (let k = 0; k < 7; k++) s.paint(x + k, 37, k % 2 ? bloom : leaf, k % 2 ? 4 : 3)
+    }
+    return { smoke }
+  },
+}
+
+/** A house: one cottage for all six lots, a slate-blue front gable, plank walls, one door, one window, a chimney. */
+const HOMESTEAD_HOUSE: Place = {
+  id: 'homestead-house', name: 'House', page: 'farmlands', at: { x: .5, y: .62 },
+  paint(s) {
+    s.shadow = { cx: 24, cy: BASE + .5, rx: 16, ry: 2.8, alpha: 72 }
+    const roof = col(s, '#6f7f9c'), walls = col(s, '#d8b884'), stone = col(s, '#9c9484')
+    const beam = col(s, '#7a4e30'), glass = col(s, '#3a4c6a'), trim = col(s, '#f2e6c8', { lift: .3 })
+    const smoke = chimney(s, stone, 29, 8, 16)
+    const gable = roofGable(s, roof, 9, 38, 24, 15, 6, { tex: 'slate', trim, wallTop: 27, seed: 'homestead-roof' })
+    wall(s, walls, 11, 36, 25, BASE, 'boards', 'homestead-wall')
+    fill(s, gable.subtract(M.rect(0, 0, 10, 47)).subtract(M.rect(37, 0, 47, 47)), walls, 4)
+    plinth(s, stone, 11, 36, 41, BASE)
+    // A round loft window in the gable, a shuttered window and the door below.
+    for (const [x, y] of [[23, 17], [24, 17], [23, 18], [24, 18]] as const) s.paint(x, y, glass, x === 23 && y === 17 ? 4 : 3)
+    window(s, beam, glass, 14, 30, 5, 5, { lit: true, mullion: true, shutters: beam, sill: true })
+    door(s, beam, 26, BASE, 6, 11, { arch: true, frame: trim })
+    // A short fence and a flower pot: a lived-in lot.
+    const pot = col(s, '#b4643e'), bloom = col(s, '#f2c23a', { lift: .4 })
+    rect(s, pot, 39, 39, 41, BASE, 3); s.paint(39, 38, bloom, 4); s.paint(40, 37, bloom, 5); s.paint(41, 38, bloom, 3)
+    for (const x of [4, 7]) vline(s, beam, x, 37, BASE, 3)
+    hline(s, beam, 3, 9, 38, 4); hline(s, beam, 3, 9, 41, 3)
+    return { smoke }
+  },
+}
+
+export const FARM_ROMANCE: Place[] = [FARMHOUSE, HOMESTEAD_HOUSE]

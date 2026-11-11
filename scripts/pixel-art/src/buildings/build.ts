@@ -237,6 +237,29 @@ for (const scale of [1, 2]) {
   })
   writeFileSync(join(previews, `farm-m4-buildings-${scale}x.png`), encodePng(farm.w, farm.h, farm.px))
 }
+// uma-farm F55: the homestead in a mock map row: the Farmhouse, a house, a house dimmed as a locked lot, then the Dorm
+// and the shipping bin, on farmlands ground.
+export const FARM_ROMANCE_ROW = ['farmhouse', 'homestead-house', 'homestead-house', 'dorm', 'shipping-bin'] as const
+/** A locked lot: the house frame darkened and greyed, as the farm draws an unbuilt lot. */
+export const dimmed = (px: Uint8Array): Uint8Array => px.map((v, i) => {
+  if (i % 4 === 3) return v
+  const k = i - (i % 4), grey = (px[k]! + px[k + 1]! + px[k + 2]!) / 3
+  return Math.round((v * .35 + grey * .65) * .45)
+})
+for (const scale of [1, 2]) {
+  const row = image(FARM_ROMANCE_ROW.length * (SIZE * scale + PAD) + PAD, SIZE * scale + 2 * PAD, [0, 0, 0, 255])
+  for (let y = 0; y < row.h; y++)
+    for (let x = 0; x < row.w; x++) {
+      const tile = farmGround[(Math.floor(x / (16 * scale)) + 3 * Math.floor(y / (16 * scale))) % 4]!
+      row.px.set(tile.get(Math.floor(x / scale) % 16, Math.floor(y / scale) % 16), (y * row.w + x) * 4)
+    }
+  FARM_ROMANCE_ROW.forEach((id, i) => {
+    const d = drawn.find(p => p.place.id === id)
+    if (!d) throw new Error(`Missing homestead row building ${id}`)
+    stamp(row, i === 2 ? dimmed(d.px) : d.px, PAD + i * (SIZE * scale + PAD), PAD, scale)
+  })
+  writeFileSync(join(previews, `farm-romance-buildings-${scale}x.png`), encodePng(row.w, row.h, row.px))
+}
 
 // The HTML preview: named cards at 3× and 1×, then the mock pages at 2× with DOM labels as the game shows them.
 const atlasUri = `data:image/png;base64,${atlasPng.toString('base64')}`

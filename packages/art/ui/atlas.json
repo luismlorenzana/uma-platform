@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
  "width": 120,
- "height": 276,
+ "height": 380,
  "frames": {
   "class/brawler": {
    "x": 0,
@@ -570,6 +570,134 @@
    "h": 16,
    "group": "season",
    "key": "winter"
+  },
+  "homestead/farmhouse": {
+   "x": 0,
+   "y": 276,
+   "w": 24,
+   "h": 24,
+   "group": "homestead",
+   "key": "farmhouse"
+  },
+  "homestead/house": {
+   "x": 24,
+   "y": 276,
+   "w": 24,
+   "h": 24,
+   "group": "homestead",
+   "key": "house"
+  },
+  "farm/ring-bench": {
+   "x": 48,
+   "y": 276,
+   "w": 24,
+   "h": 24,
+   "group": "farm",
+   "key": "ring-bench"
+  },
+  "hearts/friendship": {
+   "x": 0,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "friendship"
+  },
+  "hearts/romance": {
+   "x": 16,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "romance"
+  },
+  "hearts/spouse": {
+   "x": 32,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "spouse"
+  },
+  "hearts/banked": {
+   "x": 48,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "banked"
+  },
+  "hearts/ready": {
+   "x": 64,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "ready"
+  },
+  "hearts/evening": {
+   "x": 80,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "evening"
+  },
+  "hearts/invitation": {
+   "x": 96,
+   "y": 300,
+   "w": 16,
+   "h": 16,
+   "group": "hearts",
+   "key": "invitation"
+  },
+  "hearts/memory-frame": {
+   "x": 0,
+   "y": 332,
+   "w": 48,
+   "h": 48,
+   "group": "hearts",
+   "key": "memory-frame"
+  },
+  "play/cast": {
+   "x": 0,
+   "y": 316,
+   "w": 16,
+   "h": 16,
+   "group": "play",
+   "key": "cast"
+  },
+  "play/pick": {
+   "x": 16,
+   "y": 316,
+   "w": 16,
+   "h": 16,
+   "group": "play",
+   "key": "pick"
+  },
+  "play/rhythm": {
+   "x": 32,
+   "y": 316,
+   "w": 16,
+   "h": 16,
+   "group": "play",
+   "key": "rhythm"
+  },
+  "play/walk": {
+   "x": 48,
+   "y": 316,
+   "w": 16,
+   "h": 16,
+   "group": "play",
+   "key": "walk"
+  },
+  "play/choose": {
+   "x": 64,
+   "y": 316,
+   "w": 16,
+   "h": 16,
+   "group": "play",
+   "key": "choose"
   }
  }
 }

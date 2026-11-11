@@ -104,6 +104,22 @@ supplies the ungraded item, appended after all material families. Do not give ut
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
 
+## The romance core's marks and places (uma-farm F55, 2.26.0)
+
+`ui/romance.ts` paints sixteen native marks: the homestead's two houses at 24px (drawn natively, not reduced from the
+48px frames), the ring bench (an anvil on a stump with a ring), the three stage hearts (one outline, so only the colour
+changes stage), banked, ready (a gold notice dot, unlike F25's affinity sparkle), evening, invitation, the 48px Memory
+frame and the five plays' icons. The Memory frame's border runs to the frame's edge on purpose: it's a 12px nine-slice
+whose straight runs are identical row by row, and `romance-preview.ts`'s `nineSlice` stretches it. `buildings/farm.ts`
+adds the Farmhouse (terracotta hip roof) and the homestead house (slate-blue gable) in the Dorm's row's free cells.
+
+`testing/legacy-f55-2.25.0.json` freezes the 71 UI and 56 building records with their cutouts, the whole old UI region,
+the whole buildings sheet with the two new cells blanked, the 24 other atlas files and 106 of 108 previews. Older guards
+advance to 87 UI frames and 58 places. `farm-romance.test.ts` adds 9 checks: the appends, determinism, clear borders (the
+frame excepted), one outline for the three stage hearts, every play and Hearts status pair apart by more than 25% in
+silhouette, and the nine-slice. `ui/build.ts` writes `farm-romance-marks-{1x,2x,4x}.png` and `farm-romance.html`;
+`buildings/build.ts` writes `farm-romance-buildings-{1x,2x}.png` with one house dimmed as a locked lot.
+
 ## The farm's M4 marks and places (uma-farm F25 part A, 2.25.0)
 
 The first packet drawn by Claude under P126. `ui/farm.ts` paints ten native 16px marks: the farm's gold (a coin stack

@@ -9,7 +9,7 @@ const poly = (s: Sprite, points: readonly Point[]) => Mask.polygon(points, s.w, 
 const dome = (s: Sprite, mask: Mask, color: number, relief = .45) => shadeDome(s, mask, color, { bias: .1, relief, contact: false })
 
 /** A heart whose notch sits at (cx, top + 2), `r` lobes wide; points down to (cx, top + 2.4r + 1). */
-function heartMask(s: Sprite, cx: number, top: number, r: number): Mask {
+export function heartMask(s: Sprite, cx: number, top: number, r: number): Mask {
   const lobe = r * .55
   return Mask.from((px, py) => {
     const inLobe = Math.hypot(px - (cx - lobe), py - (top + lobe)) <= lobe + .15 || Math.hypot(px - (cx + lobe), py - (top + lobe)) <= lobe + .15

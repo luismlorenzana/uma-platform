@@ -54,14 +54,14 @@ describe('F25 part A: the farm\'s M4 marks and places (P126)', () => {
 
   it('appends the ten marks on two new rows and the two places on a new row, nothing else', () => {
     const ui = savedAtlas('ui').index, buildings = savedAtlas('buildings').index
-    expect([ui.width, ui.height, Object.keys(ui.frames).length]).toEqual([120, 276, 71])
-    expect(FRAME_SPECS.slice(61).map((f) => f.id)).toEqual([...FARM_MARK_IDS])
+    expect([ui.width, ui.height, Object.keys(ui.frames).length]).toEqual([120, 380, 87])
+    expect(FRAME_SPECS.slice(61, 71).map((f) => f.id)).toEqual([...FARM_MARK_IDS]) // F55 appends sixteen after them.
     expect(FARM_MARK_IDS.map((id) => ui.frames[id])).toEqual([
       { x: 0, y: 244, w: 16, h: 16, group: 'currency', key: 'gold' },
       ...FARM_MARKS.map((key, i) => ({ x: 16 + i * 16, y: 244, w: 16, h: 16, group: 'farm', key })),
       ...SEASONS.map((key, i) => ({ x: i * 16, y: 260, w: 16, h: 16, group: 'season', key })),
     ])
-    expect([buildings.width, buildings.height, Object.keys(buildings.frames).length]).toEqual([288, 480, 56])
+    expect([buildings.width, buildings.height, Object.keys(buildings.frames).length]).toEqual([288, 480, 58])
     expect(buildings.frames.dorm).toEqual({ x: 0, y: 432, w: 48, h: 48, page: 'farmlands', anchorY: 44, smoke: { x: 38, y: 3 } })
     expect(buildings.frames['shipping-bin']).toEqual({ x: 48, y: 432, w: 48, h: 48, page: 'farmlands', anchorY: 44 })
   })

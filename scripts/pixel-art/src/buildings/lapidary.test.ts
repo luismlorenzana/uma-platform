@@ -10,8 +10,8 @@ describe('H29 appended Lapidary', () => {
   it('preserves all forty published 2.7.0 frames, metadata and individual RGBA cutouts', () => {
     const { index, img } = savedAtlas('buildings')
     // H38 appends the Rift; H113 eight workshops; H135 the Sanctum; H156 three collections places.
-    // F25 part A (P126) appends the Dorm and the shipping bin: one row below, the buildings sheet now 288×480.
-    expect(Object.keys(index.frames)).toHaveLength(56)
+    // F25 part A (P126) appends the Dorm and the shipping bin on a new row (288×480); F55 adds two places to that row.
+    expect(Object.keys(index.frames)).toHaveLength(58)
     expect(Object.keys(baseline.frames)).toHaveLength(40)
     for (const [id, old] of Object.entries(baseline.frames)) {
       const { rgba, ...frame } = old

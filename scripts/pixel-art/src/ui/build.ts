@@ -13,6 +13,7 @@ import { CLASS_LABELS, CLASS_TREE, classesV3Preview } from './classes-v3-preview
 import { starsPreview } from './stars-preview.ts'
 import { yardPreview } from './yard-preview.ts'
 import { FARM_MARK_IDS, FARM_PREVIEW_CROPS, farmPreview, seededCrop } from './farm-preview.ts'
+import { ROMANCE_MARK_IDS, romancePreview } from './romance-preview.ts'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', '..')
 const frames = uiFrames(), problems = checkUi(frames)
@@ -96,6 +97,10 @@ for (const scale of [1, 2, 4]) {
   const sheet = farmPreview(scale)
   writeFileSync(join(previews, `farm-m4-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
+for (const scale of [1, 2, 4]) {
+  const sheet = romancePreview(scale)
+  writeFileSync(join(previews, `farm-romance-marks-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
 const itemSheet = new Img(3 * (64 + PAD) + PAD, 64 + PAD * 2).fill(CELL)
 const references = [FAMILIES[0]!.raw[0]!, FAMILIES[1]!.raw[0]!]
 ;[speedTicketItem(), ...references.map(drawIcon)].forEach((px, i) => itemSheet.draw(new Img(32, 32, px).scaled(2), PAD + i * (64 + PAD), PAD))
@@ -110,7 +115,10 @@ const labels: Record<string, string> = { brawler: 'Brawler', mage: 'Mage', spell
   planet: 'Planet', prowess: 'Prowess', vigor: 'Vigor', guard: 'Guard', template: '★ Her moon',
   hp: 'HP', mp: 'MP', atk: 'ATK', matk: 'M.ATK', def: 'DEF', mdef: 'M.DEF', evasion: 'Evasion', limit: 'Limit start',
   gold: 'Gold', 'seed-packet': 'Seed packet', star: 'Quality star', 'heart-bond': 'Bond', 'heart-affinity': 'Affinity', rank: 'Farm Rank',
-  spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' }
+  spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter',
+  farmhouse: 'Farmhouse', house: 'House', 'ring-bench': 'Ring bench', friendship: 'Friendship', romance: 'Romance', spouse: 'Spouse',
+  banked: 'Banked', ready: 'Ready', evening: 'Evening', invitation: 'Invitation', 'memory-frame': 'Memory frame',
+  cast: 'Cast', pick: 'Pick', rhythm: 'Rhythm', walk: 'Walk', choose: 'Choose' }
 const uri = (img: Img) => `data:image/png;base64,${encodePng(img.w, img.h, img.px).toString('base64')}`
 const classesV3 = `<section id="classes-v3"><h2>Classes v3</h2><p>Tier 0 above Tier 1, physical to magical, on white and dark chips. Each emblem also appears at native size beside its full name.</p>${CLASS_TREE.map((row, tier) => `<h3>Tier ${tier}</h3><div class="examples">${row.map(key => {
   const f = frames.find(f => f.id === `class/${key}`)!
@@ -133,5 +141,14 @@ writeFileSync(join(previews, 'farm-m4.html'), `<!doctype html><html lang="en"><h
 <h2>The seed-packet badge over five crops, native</h2><div class="examples">${FARM_PREVIEW_CROPS.map(id => `<div class="example"><img src="${uri(seededCrop(id))}" width="32" height="32" alt=""><span>${id}</span></div>`).join('')}</div>
 ${[1, 2, 4].map(scale => `<h2>Marks, badge and account bar, ${scale}×</h2><p>Rows: the ten marks on white, then on the account bar's navy; the badge over wheat, carrot, potato, tomato and corn on white, then navy; a mock account bar with the gold, season and Farm Rank chips.</p><div class="scroll"><img src="farm-m4-marks-${scale}x.png" alt="The farm's ten marks, the seed badge over five crops, and a mock account bar"></div>`).join('')}
 ${[1, 2].map(scale => `<h2>The Dorm and the shipping bin, ${scale}×</h2><p>Dorm, shipping bin, then the Pantry, Kitchen and Fields they stand beside, on farmlands ground.</p><div class="scroll"><img src="farm-m4-buildings-${scale}x.png" alt="Dorm, shipping bin, Pantry, Kitchen and Fields on farmlands ground"></div>`).join('')}
+</body></html>`)
+// uma-farm F55's review page: the romance core's sixteen marks and its two places.
+const romanceFrames = ROMANCE_MARK_IDS.map(id => frames.find(f => f.id === id)!)
+writeFileSync(join(previews, 'farm-romance.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Farm romance art</title><style>
+:root{color-scheme:dark}body{margin:0;padding:16px;background:#0f141b;color:#e6e9ee;font:14px/1.5 system-ui,sans-serif;max-width:1200px}h1{font-size:22px}h2{font-size:16px;margin-top:28px}p{color:#a2afbf}img{image-rendering:pixelated;display:block}.examples{display:flex;flex-wrap:wrap;gap:8px}.example{display:flex;align-items:center;gap:8px;background:#18202a;padding:8px 10px;border-radius:4px}.light{background:#f4f1ea;color:#28323c}.scroll{overflow-x:auto}
+</style></head><body><h1>Romance core art: uma-farm F55</h1><p>Original pixel art drawn from code in <code>scripts/pixel-art</code> (uma-platform P126): sixteen marks in uma-art's <code>ui</code> sheet (new groups <code>homestead</code>, <code>hearts</code> and <code>play</code>, and <code>farm/ring-bench</code>) and two 48px places on the <code>buildings</code> sheet's farmlands page. Nothing here depicts the farmer or an Uma (RS2, RM61).</p>
+<h2>The marks at native size</h2><div class="examples">${romanceFrames.map(f => `<div class="example"><img src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt=""><span>${labels[f.key]} · <code>${f.id}</code></span></div>`).join('')}</div><div class="examples" style="margin-top:8px">${romanceFrames.map(f => `<div class="example light"><img src="${uri(f.img)}" width="${f.w}" height="${f.h}" alt=""><span>${labels[f.key]}</span></div>`).join('')}</div>
+${[1, 2, 4].map(scale => `<h2>Marks, Hearts rows, picker and Memory frame, ${scale}×</h2><p>Rows: fifteen marks on white, then navy; three mock Hearts rows (friendship, romance, spouse, each a heart, a five-segment bar, a status mark and an invitation); the five plays as a picker, Rhythm pressed; the Memory frame over a sample tile at 48px, then stretched to 96×64 as a 12px nine-slice.</p><div class="scroll"><img src="farm-romance-marks-${scale}x.png" alt="The romance core's marks, Hearts rows, plays picker and Memory frame"></div>`).join('')}
+${[1, 2].map(scale => `<h2>The homestead in a map row, ${scale}×</h2><p>The Farmhouse, a house, a house dimmed as a locked lot, then the Dorm and the shipping bin, on farmlands ground.</p><div class="scroll"><img src="farm-romance-buildings-${scale}x.png" alt="Farmhouse, a house, a locked lot, the Dorm and the shipping bin"></div>`).join('')}
 </body></html>`)
 console.log(`Wrote ${frames.length} ui icons (${atlas.w}×${atlas.h}) to ${relative(ROOT, dir)}; ids and native sizes checked`)

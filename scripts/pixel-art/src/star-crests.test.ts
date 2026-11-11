@@ -37,8 +37,8 @@ describe('H141 star crests and stat marks', () => {
 
   it('retains the thirteen named star/stat frames in their original native cells', () => {
     const { index, img } = savedAtlas('ui')
-    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
-    expect([img.w, img.h, Object.keys(index.frames).length]).toEqual([120, 276, 71])
+    // F25 part A (P126) appends ten farm marks and F55 sixteen romance marks: the UI sheet now 120×380 with 87 frames.
+    expect([img.w, img.h, Object.keys(index.frames).length]).toEqual([120, 380, 87])
     expect(STAR_BODIES).toEqual(['planet', 'prowess', 'vigor', 'guard', 'template'])
     expect(STAT_MARKS).toEqual(['hp', 'mp', 'atk', 'matk', 'def', 'mdef', 'evasion', 'limit'])
     expect(FRAME_SPECS.slice(45, 58).map(f => f.id)).toEqual([...STAR_BODIES.map(key => `star/${key}`), ...STAT_MARKS.map(key => `stat/${key}`)])

@@ -2,7 +2,7 @@
 // across in this order.
 import { FARMLANDS } from './farmlands.ts'
 import { COLLECTIONS } from './collections.ts'
-import { FARM_M4 } from './farm.ts'
+import { FARM_M4, FARM_ROMANCE } from './farm.ts'
 import { LEARNING } from './learning.ts'
 import { LAPIDARY } from './lapidary.ts'
 import { RACER } from './racer.ts'
@@ -14,4 +14,4 @@ import type { Place } from './types.ts'
 import { WILDS } from './wilds.ts'
 
 // Always append: published frames must never move when a new game adds places.
-export const PLACES: Place[] = [...FARMLANDS, ...WILDS, ...LEARNING, ...TOWN, ...RACER, LAPIDARY, RIFT, ...TRIOS, HEALER_SANCTUM, ...COLLECTIONS, ...FARM_M4]
+export const PLACES: Place[] = [...FARMLANDS, ...WILDS, ...LEARNING, ...TOWN, ...RACER, LAPIDARY, RIFT, ...TRIOS, HEALER_SANCTUM, ...COLLECTIONS, ...FARM_M4, ...FARM_ROMANCE]

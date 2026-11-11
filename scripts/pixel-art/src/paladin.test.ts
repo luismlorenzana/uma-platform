@@ -23,7 +23,7 @@ describe('H54 append-only Paladin emblem', () => {
 
   it("keeps the Knight's Bastion, which uma-rpg's Paladin Bastion draws, unchanged", () => {
     const { img, index } = savedAtlas('buildings'), at = PLACES.findIndex(p => p.id === 'knights-bastion')
-    expect(Object.keys(index.frames)).toHaveLength(56) // H113, H135, H156 and F25 append buildings.
+    expect(Object.keys(index.frames)).toHaveLength(58) // H113, H135, H156, F25 and F55 append buildings.
     expect(PLACES[at]).toMatchObject({ id: 'knights-bastion', page: 'learning' })
     for (const [id, frame] of Object.entries(baseline.buildings.frames)) expect(index.frames[id], id).toEqual(frame)
     for (const [id, rgba] of Object.entries(baseline.buildings.cutouts)) {
@@ -39,7 +39,7 @@ describe('H54 append-only Paladin emblem', () => {
     expect(at).toBe(37)
     expect(FRAME_SPECS.slice(0, at).map(s => s.id)).toEqual(Object.keys(baseline.ui.frames))
     expect(FRAME_SPECS[at]).toEqual({ id: 'class/paladin', group: 'class', key: 'paladin', w: 24, h: 24 })
-    expect(Object.keys(index.frames)).toHaveLength(71) // H141 appends thirteen star/stat marks, F25 ten farm marks.
+    expect(Object.keys(index.frames)).toHaveLength(87) // H141 appends thirteen star/stat marks, F25 ten farm marks, F55 sixteen.
     expect(index.frames['class/paladin']).toEqual(PALADIN)
   })
 

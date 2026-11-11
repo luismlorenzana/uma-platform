@@ -39,13 +39,13 @@ describe('H113 Wilds trios', () => {
 
   it('appends eight native square frames in exact order with only the four chimney anchors', () => {
     const { index, img } = savedAtlas('buildings')
-    // F25 part A (P126) appends the Dorm and the shipping bin: one row below, the buildings sheet now 288×480.
+    // F25 part A (P126) appends the Dorm and the shipping bin on a new row (288×480); F55 adds two places to that row.
     expect([index.width, index.height]).toEqual([288, 480])
-    expect(Object.keys(index.frames)).toHaveLength(56) // F25 part A appends two places.
+    expect(Object.keys(index.frames)).toHaveLength(58) // F25 part A and F55 append two places each.
     expect(Object.keys(index.frames).slice(42, 50)).toEqual(IDS)
     expect(PLACES.slice(42, 50).map(p => p.id)).toEqual(IDS)
     expect(TRIOS.map(p => p.id)).toEqual(IDS)
-    expect(new Set(PLACES.map(p => p.id)).size).toBe(56) // F25 part A appends two places.
+    expect(new Set(PLACES.map(p => p.id)).size).toBe(58) // F25 part A and F55 append two places each.
     for (const [i, place] of TRIOS.entries()) {
       const { px, extras } = paint(place), smoke = extras?.smoke
       expect(index.frames[place.id]).toEqual({ x: (i % 6) * SIZE, y: 336 + Math.floor(i / 6) * SIZE, w: SIZE, h: SIZE, page: 'wilds', anchorY: GROUND, ...(smoke ? { smoke } : {}) })

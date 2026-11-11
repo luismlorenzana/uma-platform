@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { encodePng } from '../png.ts'
 import { Img } from '../tiles/image.ts'
 import { checkUi, drawUi, packUi, uiFrames, type UiFrame } from './atlas.ts'
-import { ACHIEVEMENTS, CLASSES, FARM_MARKS, FRAME_SPECS, FRONTS, HYBRIDS, RACER_CURRENCIES, SEASONS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS } from './spec.ts'
+import { ACHIEVEMENTS, CLASSES, FARM_MARKS, FRAME_SPECS, FRONTS, HEARTS_MARKS, HOMESTEAD_MARKS, HYBRIDS, PLAY_MARKS, RACER_CURRENCIES, SEASONS, STAR_BODIES, STAT_MARKS, STATUSES, TIER0, TIERS } from './spec.ts'
 import { GLYPHS } from './statuses.ts'
 import { hash, savedAtlas } from '../testing/atlas.ts'
 import baseline from './legacy-2.6.0.json'
@@ -20,9 +20,10 @@ describe('shared UI atlas (H11, A02)', () => {
     expect(frames.map((f) => f.id)).toEqual([...CLASSES.map((c) => `class/${c}`), ...STATUSES.map((s) => `status/${s}`), ...RACER_CURRENCIES.map(c => `currency/${c}`), ...TIERS.map(t => `tier/${t}`), 'currency/laurel',
       ...FRONTS.map(f => `front/${f}`), ...ACHIEVEMENTS.map(a => `achievement/${a}`), 'class/paladin', ...[...HYBRIDS, ...TIER0].map(c => `class/${c}`),
       ...STAR_BODIES.map(key => `star/${key}`), ...STAT_MARKS.map(key => `stat/${key}`), 'currency/card-ticket', 'yard/fatigue', 'yard/rest',
-      'currency/gold', ...FARM_MARKS.map(key => `farm/${key}`), ...SEASONS.map(key => `season/${key}`)])
+      'currency/gold', ...FARM_MARKS.map(key => `farm/${key}`), ...SEASONS.map(key => `season/${key}`),
+      ...HOMESTEAD_MARKS.map(key => `homestead/${key}`), 'farm/ring-bench', ...HEARTS_MARKS.map(key => `hearts/${key}`), 'hearts/memory-frame', ...PLAY_MARKS.map(key => `play/${key}`)])
     expect(checkUi(frames)).toEqual([])
-    expect(frames.filter((f) => f.w === 24 && f.h === 24)).toHaveLength(31)
+    expect(frames.filter((f) => f.w === 24 && f.h === 24)).toHaveLength(34) // F55 adds two small houses and the ring bench.
     expect(frames.filter((f) => f.group === 'status' && f.w === 12 && f.h === 12)).toHaveLength(10)
     expect(frames.filter((f) => f.group === 'currency' && f.w === 16 && f.h === 16)).toHaveLength(6) // F25 part A adds the farm's gold.
     expect(frames.filter((f) => f.group === 'tier' && f.w === 12 && f.h === 12)).toHaveLength(3)
@@ -39,7 +40,7 @@ describe('shared UI atlas (H11, A02)', () => {
   })
 
   it('renders sixty-one distinct icons and transparent corners', () => {
-    expect(new Set(frames.map((f) => bytes(f.img).toString('base64'))).size).toBe(71) // F25 part A adds ten.
+    expect(new Set(frames.map((f) => bytes(f.img).toString('base64'))).size).toBe(87) // F25 part A adds ten, F55 sixteen.
     for (const { img } of frames) {
       expect([[0, 0], [img.w - 1, 0], [0, img.h - 1], [img.w - 1, img.h - 1]]
         .map(([x, y]) => img.get(x!, y!)[3])).toEqual([0, 0, 0, 0])
@@ -56,14 +57,15 @@ describe('shared UI atlas (H11, A02)', () => {
 
   it('packs native pixels without overlap and matches the checked-in index and PNG', () => {
     const { atlas, index } = packUi(frames), occupied = new Set<string>()
-    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
-    expect([atlas.w, atlas.h]).toEqual([120, 276])
+    // F25 part A (P126) appends ten farm marks and F55 sixteen romance marks: the UI sheet now 120×380 with 87 frames.
+    expect([atlas.w, atlas.h]).toEqual([120, 380])
     for (const { id, img, group, key } of frames) {
       const f = index[id]!
       const n = ACHIEVEMENTS.indexOf(key as typeof ACHIEVEMENTS[number])
       // H127 adds the two hybrids beside the Paladin and five beginners on a new row.
-      // F25 part A: the farm's gold and five farm marks at y=244, the four seasons at y=260.
-      expect(f.y).toBe(id === 'currency/gold' || group === 'farm' ? 244 : group === 'season' ? 260 : group === 'yard' || id === 'currency/card-ticket' ? 220 : group === 'star' ? 164 : group === 'stat' ? key === 'limit' ? 204 : 188 : (TIER0 as readonly string[]).includes(key) ? 140 : id === 'class/paladin' || (HYBRIDS as readonly string[]).includes(key) ? 116 : group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36)
+      // F25 part A: the farm's gold and five farm marks at y=244, the four seasons at y=260. F55: the small houses and
+      // ring bench at y=276, the Hearts marks at y=300, the plays at y=316, the Memory frame at y=332.
+      expect(f.y).toBe(group === 'homestead' || id === 'farm/ring-bench' ? 276 : id === 'hearts/memory-frame' ? 332 : group === 'hearts' ? 300 : group === 'play' ? 316 : id === 'currency/gold' || group === 'farm' ? 244 : group === 'season' ? 260 : group === 'yard' || id === 'currency/card-ticket' ? 220 : group === 'star' ? 164 : group === 'stat' ? key === 'limit' ? 204 : 188 : (TIER0 as readonly string[]).includes(key) ? 140 : id === 'class/paladin' || (HYBRIDS as readonly string[]).includes(key) ? 116 : group === 'class' ? 0 : group === 'status' ? 24 : group === 'front' ? 52 : group === 'achievement' ? 68 + Math.floor(n / 5) * 24 : 36)
       expect(bytes(atlas.crop(f.x, f.y, f.w, f.h)).equals(bytes(img))).toBe(true)
       for (let y = f.y; y < f.y + f.h; y++) for (let x = f.x; x < f.x + f.w; x++) {
         const key = `${x},${y}`
@@ -72,7 +74,7 @@ describe('shared UI atlas (H11, A02)', () => {
       }
     }
     const root = new URL('../../../../packages/art/ui/', import.meta.url)
-    expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: 120, height: 276, frames: index }) // F25 part A grows the sheet.
+    expect(JSON.parse(readFileSync(new URL('atlas.json', root), 'utf8'))).toEqual({ schemaVersion: 1, width: 120, height: 380, frames: index }) // F25 part A and F55 grow the sheet.
     // Different Node/zlib builds may compress identical pixels differently. Compare the saved artwork, not deflate.
     expect(bytes(savedAtlas('ui').img).equals(bytes(atlas))).toBe(true)
   })

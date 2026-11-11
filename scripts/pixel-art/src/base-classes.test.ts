@@ -21,8 +21,8 @@ function coloredPixels(s: Sprite, color: string, [left, top, right, bottom]: rea
 describe('H138 base classes, the five family emblems', () => {
   it('redraws exactly the five authorised cells and freezes all metadata and every other pixel from 2.17.0', () => {
     const { index, img } = savedAtlas('ui'), changed: string[] = []
-    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
-    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 276, 71])
+    // F25 part A (P126) appends ten farm marks and F55 sixteen romance marks: the UI sheet now 120×380 with 87 frames.
+    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 380, 87])
     // H141 appends below the 2.18.0 sheet; the original prefix and H138's exact redraw still hold.
     expect(Object.keys(index.frames).slice(0, 45)).toEqual(Object.keys(baseline.ui.frames))
     for (const [id, { rgba, ...record }] of Object.entries(baseline.ui.frames)) {

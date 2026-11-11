@@ -17,18 +17,19 @@ Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`p
   accent mark.
 - `gems/atlas.png` / `.json`: 100 Star Gems (32×32), a dedicated 320×320 sheet, keyed by uma-rpg gem id.
   Frames: `{ x, y, w, h, name, kind, grade, effects }`.
-- `buildings/atlas.png` / `.json`: 56 shared Hub places (48×48) on a 288×480 sheet (2.25.0), id = place id. Frames: `{ x, y, w, h, page,
+- `buildings/atlas.png` / `.json`: 58 shared Hub places (48×48) on a 288×480 sheet (2.26.0), id = place id. Frames: `{ x, y, w, h, page,
   anchorY, smoke? }`: `anchorY` is the ground line, `smoke` a chimney top.
 - `tiles/atlas.png` / `.json`: Hub terrain on a 16 px grid per page: `<page>/ground-0…3`, `<page>/path-<mask>` and
   `wilds/water-<mask>` (mask bits N 1, E 2, S 4, W 8), and props `<page>/<prop>` (16×16, tall ones 16×32). Frames:
   `{ x, y, w, h, page, kind }`.
 - `ui/atlas.png` / `.json`: thirteen class emblems (24×24), ten status badges (12×12), six currency marks (16×16),
   three tier crests (12×12), four Rift front crests (16×16), eleven achievement badges (24×24), five star crests
-  (24×24), eight stat marks (16×16), two `yard` marks (24×24), five `farm` marks (16×16) and four `season` marks
-  (16×16), on a **120×276** sheet (2.25.0). The index is
+  (24×24), eight stat marks (16×16), two `yard` marks (24×24), six `farm` marks (five 16×16, the 24×24 ring bench),
+  four `season` marks (16×16), two `homestead` houses (24×24), eight `hearts` marks (seven 16×16, the 48×48 Memory
+  frame) and five `play` icons (16×16), on a **120×380** sheet (2.26.0). The index is
   `{ schemaVersion: 1, width, height, frames }`, with `{ x, y, w, h, group, key }` by `class/<class>`,
   `status/<key>`, `currency/<key>`, `tier/<1…3>`, `front/<front>`, `achievement/<key>`, `star/<body>`, `stat/<stat>`,
-  `yard/<key>`, `farm/<key>` or `season/<season>`.
+  `yard/<key>`, `farm/<key>`, `season/<season>`, `homestead/<key>`, `hearts/<key>` or `play/<key>`.
   Classes: Recruit, Duelist, Acolyte, Caller, Apprentice; Brawler, Arms Spellblade, Tome Spellblade, Paladin, Cleric,
   Arms Summoner, Tome Summoner and Sorcerer. Read positions from the JSON. Debuffs: Armor Break, Mind Break, Enfeeble, Shatter and Hex;
   buffs: Brave, Faith, Aegis, Breaker and Clarity. Each has a distinct glyph; debuffs also have red-violet badges,
@@ -156,6 +157,27 @@ the connection. Network layouts must never close a 2×2 road block. Tall props s
 Gate, left to right. `racing-tiles-2x.png` shows the terrain alone; `racing-hub-2x.png` composes all four Racing places
 on a 12×22-tile sample, including the reused Scenario Gate and Tier Finale. These are review layouts, not game rules.
 Vitest freezes every published 2.5.0 building/tile frame, metadata and RGBA byte in `buildings/legacy-2.5.0.json`.
+
+## The romance core's marks and places (uma-farm F55, 2.26.0)
+
+Sixteen marks append on four new rows below F25's, growing the UI sheet to **120×380**; the Farmhouse and the house take
+two free cells in the Dorm's row, so the buildings sheet stays **288×480**. Every earlier record, cutout and pixel is
+unchanged. Nothing here depicts the farmer or an Uma (uma-farm RS2, RM61).
+
+| Frame | Position | What |
+|---|---|---|
+| `homestead/farmhouse`, `homestead/house` | (0,276), (24,276) | The two homestead buildings, drawn natively at 24px for lists |
+| `farm/ring-bench` | (48,276) | 24×24: a small anvil on a stump, a gold ring on its face |
+| `hearts/friendship`, `hearts/romance`, `hearts/spouse` | (0…32,300) | One heart outline in coral, rose and gold (the spouse's with a pale band): only the colour tells the stage |
+| `hearts/banked`, `hearts/ready`, `hearts/evening`, `hearts/invitation` | (48…96,300) | A heart beside a gold stack; a heart with a gold notice dot; a crescent moon with a small heart; an envelope sealed with a heart |
+| `play/cast`, `pick`, `rhythm`, `walk`, `choose` | (0…64,316) | A rod and float; a basket with a star; a drum and sticks; a fork in a path with a signpost; three boxes, the middle one ringed |
+| `hearts/memory-frame` | (0,332) | 48×48, transparent inside; its border is a **12px nine-slice** (the runs between the corners repeat), a small heart in each corner |
+| `farmhouse` (buildings) | (96,432) | Two storeys under a terracotta hip roof, a porch and flower boxes, `smoke` at (35,2) |
+| `homestead-house` (buildings) | (144,432) | One slate-blue cottage for all six lots, `smoke` at (31,7); a locked lot is this frame dimmed |
+
+`homestead`, `hearts` and `play` are new additive groups. Review: `assets/previews/farm-romance.html`, with
+`farm-romance-marks-{1x,2x,4x}.png` (the marks on white and navy, three mock Hearts rows, a mock plays picker, the frame
+native and stretched) and `farm-romance-buildings-{1x,2x}.png` (a map row with one lot dimmed).
 
 ## The farm's M4 marks and places (uma-farm F25 part A, 2.25.0)
 

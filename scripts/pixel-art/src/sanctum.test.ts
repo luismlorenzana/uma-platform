@@ -35,9 +35,9 @@ describe('H135 appended Healer Sanctum', () => {
   })
   it('appends a native 48px Learning temple at (96,384), ground line 44, with no smoke or edge pixels', () => {
     const { index, img } = savedAtlas('buildings'), a = paint()
-    // F25 part A (P126) appends the Dorm and the shipping bin: one row below, the buildings sheet now 288×480.
+    // F25 part A (P126) appends the Dorm and the shipping bin on a new row (288×480); F55 adds two places to that row.
     expect([index.width, index.height]).toEqual([288, 480])
-    expect(Object.keys(index.frames)).toHaveLength(56) // H156 and F25 part A append after it.
+    expect(Object.keys(index.frames)).toHaveLength(58) // H156, F25 part A and F55 append after it.
     expect(PLACES[50]).toBe(HEALER_SANCTUM)
     expect(PLACES.slice(0, 51).at(-1)).toBe(HEALER_SANCTUM)
     expect(HEALER_SANCTUM.at).toEqual({ x: .5, y: .3 })

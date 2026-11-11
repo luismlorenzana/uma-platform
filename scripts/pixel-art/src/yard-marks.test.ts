@@ -46,8 +46,8 @@ describe('A05 Card Ticket and Training Yard marks', () => {
 
   it('appends exactly the requested native cells without overlapping earlier frames', () => {
     const { index } = savedAtlas('ui')
-    // F25 part A (P126) appends ten farm marks: two rows below, the UI sheet now 120×276 with 71 frames.
-    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 276, 71])
+    // F25 part A (P126) appends ten farm marks and F55 sixteen romance marks: the UI sheet now 120×380 with 87 frames.
+    expect([index.width, index.height, Object.keys(index.frames).length]).toEqual([120, 380, 87])
     expect(FRAME_SPECS.slice(58, 61).map(f => f.id)).toEqual(ids) // F25 part A appends ten after them.
     expect(YARD_MARKS).toEqual(['fatigue', 'rest'])
     expect(ids.map(id => index.frames[id])).toEqual([
