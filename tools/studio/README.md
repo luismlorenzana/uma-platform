@@ -11,12 +11,12 @@ Pages:
 - **Tier boards** (`/tiers/<board>`, P113): Playable Umas (`umas`), Uma NPCs (`npcs`), Azur Lane, Genshin Impact,
   Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd and Punishing: Gray Raven bosses
   (`azurlane-bosses`, `genshin-bosses`, `wuwa-bosses`, `hsr-bosses`, `zzz-bosses`, `hi3-bosses`, `pgr-bosses`), Key
-  enemies (`key-enemies`) and Regular enemies (`regular-enemies`). One scale, SSS, SS,
-  S, A, B, F (SSS since P122): SSS to A are a board's cast; B, F and unranked flow to the board below (Playable → NPCs;
+  enemies (`key-enemies`) and Regular enemies (`regular-enemies`). One scale, SS, S,
+  A, B, F, with SSS above SS on the two Uma boards (P122, P124): SSS to A are a board's cast; B, F and unranked flow to the board below (Playable → NPCs;
   the boss boards → Key → Regular, which also takes NIKKE). Umas rank per character (P114) in plain tier rows like every
   board (P123, which retired P117's playstyle grid); a character's playstyle is her lead outfit's unless the card's pick
   says otherwise, and it shows on her card with its grades and in the playstyle filter; her outfit count is on her
-  portrait. Keys `1`–`6` rank, `0` unranks, arrows
+  portrait. Keys `1`–`6` (Uma boards) or `1`–`5` rank, `0` unranks, arrows
   browse, `[` `]` move within a tier; notes, multi-level undo, drag and drop, a filtered bulk B or F, and board
   import and export. An imported unit can be **left out** of every board (P121), from its card or its board's Left
   out row; ranking it or dragging it to a row brings it back. Each board saves to `content/authoring/tiers/<board>.json`; every save rewrites

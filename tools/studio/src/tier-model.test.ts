@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan,
+  BOARDS, bestStyles, boardStats, careerMath, emptyBoard, leadOutfit, move, ordered, parseBoard, place, playstyleCounts, playstyleOf, pools, seedBoards, setMember, setNote, setOut, setTier, setWay, tierPlan, tiersOf,
   type BoardId, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type Way,
 } from './tier-model.js'
 
@@ -57,13 +57,16 @@ describe('pools', () => {
     expect(states['hi3-bosses']).toMatchObject({ entries: [], out: [] })
     expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1', 'hi3-2'])
   })
-  it('keeps SSS in the cast, above SS, on every board (P122)', () => {
+  it('keeps SSS in the cast, above SS, on the Uma boards only (P122, P124)', () => {
     const states = empty()
     states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'SSS', note: '' }, { id: '703', tier: 'F', note: '' }]
     expect(ids(states, 'npcs')).toEqual(['703', '704'])
     expect(ordered(states.umas, new Set(ids(states, 'umas'))).map((e) => e.id)).toEqual(['702', '701', '703'])
     expect(boardStats(pools(catalog, states).umas, states.umas)).toMatchObject({ ranked: 3, cast: 2, tiers: { SSS: 1, SS: 1, S: 0, A: 0, B: 0, F: 1 } })
-    expect(parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] }).entries[0]?.tier).toBe('SSS')
+    expect(parseBoard({ ...emptyBoard('npcs'), entries: [{ id: '703', tier: 'SSS', note: '' }] }).entries[0]?.tier).toBe('SSS')
+    expect(() => parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] })).toThrow(/Uma boards only/)
+    expect(tiersOf('umas').map((t) => t.id)).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
+    expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'A', 'B', 'F'])
   })
   it('ignores a tier on a board the entry has left', () => {
     const states = empty()
@@ -139,23 +142,26 @@ describe('seeding from the old boards', () => {
 describe('careers and the plan', () => {
   it('gives every career at least three bosses, more when a tier has bosses to spare', () => {
     const states = empty()
-    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'S', note: '' }]
+    states.umas.entries = [{ id: '701', tier: 'SS', note: '' }, { id: '702', tier: 'S', note: '' }, { id: '704', tier: 'SSS', note: '' }]
     states['azurlane-bosses'].members = ['al-a', 'al-b']
     states['azurlane-bosses'].entries = [{ id: 'al-a', tier: 'SS', note: '' }, { id: 'al-b', tier: 'SS', note: '' }]
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }, { id: 'gi-2', tier: 'SS', note: '' }]
     const all = pools(catalog, states), stats = Object.fromEntries(BOARDS.map((b) => [b.id, boardStats(all[b.id], states[b.id])])) as Parameters<typeof careerMath>[0]
     const careers = careerMath(stats)
-    expect(careers.tiers.map((t) => t.tier)).toEqual(['SSS', 'SS', 'S', 'A'])
-    expect(careers.tiers[0]).toEqual({ tier: 'SSS', umas: 0, bosses: 0, bossesPerCareer: 0, careersPerBoss: null })
-    expect(careers.tiers[1]).toEqual({ tier: 'SS', umas: 1, bosses: 4, bossesPerCareer: 4, careersPerBoss: 1 })
-    expect(careers.tiers[2]).toEqual({ tier: 'S', umas: 1, bosses: 0, bossesPerCareer: 3, careersPerBoss: null })
-    expect(careers.fights).toBe(7)
+    // Bosses stop at SS, so the SSS Uma's career meets the SS bosses with the SS Uma's (P124).
+    expect(careers.tiers.map((t) => t.tier)).toEqual(['SS', 'S', 'A'])
+    expect(careers.tiers[0]).toEqual({ tier: 'SS', umaTiers: ['SSS', 'SS'], umas: 2, bosses: 4, bossesPerCareer: 3, careersPerBoss: 1.5 })
+    expect(careers.tiers[1]).toEqual({ tier: 'S', umaTiers: ['S'], umas: 1, bosses: 0, bossesPerCareer: 3, careersPerBoss: null })
+    expect(careers.fights).toBe(9)
     const plan = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
     expect(plan).toMatchObject({ tierOrder: ['SSS', 'SS', 'S', 'A', 'B', 'F'], cast: ['SSS', 'SS', 'S', 'A'] })
     expect(plan.boards.find((b) => b.id === 'umas')?.order).toEqual([
-      expect.objectContaining({ order: 1, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 2, id: '702', tier: 'S' }),
+      expect.objectContaining({ order: 1, id: '704', tier: 'SSS' }),
+      expect.objectContaining({ order: 2, id: '701', tier: 'SS', name: 'Runner 701', outfits: [70101, 70102] }), expect.objectContaining({ order: 3, id: '702', tier: 'S' }),
     ])
-    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.map((e) => e.id)).toEqual(['703', '704'])
+    expect(plan.boards.find((b) => b.id === 'umas')?.tiers).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
+    expect(plan.boards.find((b) => b.id === 'genshin-bosses')?.tiers).toEqual(['SS', 'S', 'A', 'B', 'F'])
+    expect(plan.boards.find((b) => b.id === 'npcs')?.unranked.map((e) => e.id)).toEqual(['703'])
     states['pgr-bosses'] = setOut(states['pgr-bosses'], 'pgr-1', true)
     const later = tierPlan(catalog, states, '2026-01-01T00:00:00.000Z')
     expect(later.boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1', franchise: 'pgr' }], unranked: [] })

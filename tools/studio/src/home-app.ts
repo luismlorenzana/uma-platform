@@ -1,5 +1,5 @@
 // The Studio's home (P113): a tile for every tier board and sprite tool, then the numbers across them.
-import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, boardStats, careerMath, importBoardOf, inCast, leftOut, parseBoard, pools, type BoardId, type BoardStats } from './tier-model.js'
+import { BOARDS, BOSS_BOARDS, FRANCHISES, MIN_CAREER_BOSSES, TIERS, boardStats, careerMath, hasTier, importBoardOf, inCast, leftOut, parseBoard, pools, type BoardId, type BoardStats } from './tier-model.js'
 import { api, el, esc, nav, type TierData } from './tier-ui.js'
 
 const SPRITE_TOOLS = [
@@ -42,12 +42,12 @@ function render(data: TierData): void {
 
   el('table').innerHTML = `<caption class="sr-only">Every board by tier</caption><thead><tr><th scope="col">Board</th>${TIERS.map((t) => `<th scope="col" class="num tier-${t.id}"><span class="tier-badge small">${t.id}</span></th>`).join('')}<th scope="col" class="num">Unranked</th><th scope="col" class="num">On the board</th><th scope="col">Leftovers go to</th></tr></thead><tbody>${BOARDS.map((b) => {
     const s = stats[b.id]
-    return `<tr><th scope="row"><a href="/tiers/${b.id}">${esc(b.title)}</a></th>${TIERS.map((t) => `<td class="num ${inCast(t.id) ? 'cast' : ''}">${s.tiers[t.id] || '<span class="zero">·</span>'}</td>`).join('')}<td class="num">${s.unranked || '<span class="zero">·</span>'}</td><td class="num total">${s.pool}</td><td class="muted">${b.next ? esc(BOARDS.find((x) => x.id === b.next)!.title) : '—'}</td></tr>`
+    return `<tr><th scope="row"><a href="/tiers/${b.id}">${esc(b.title)}</a></th>${TIERS.map((t) => `<td class="num ${inCast(t.id) ? 'cast' : ''}">${hasTier(b.id, t.id) ? s.tiers[t.id] || '<span class="zero">·</span>' : ''}</td>`).join('')}<td class="num">${s.unranked || '<span class="zero">·</span>'}</td><td class="num total">${s.pool}</td><td class="muted">${b.next ? esc(BOARDS.find((x) => x.id === b.next)!.title) : '—'}</td></tr>`
   }).join('')}</tbody>`
 
   const careers = careerMath(stats)
-  el('careers').innerHTML = `<p class="career-lead">Every playable Uma’s career fights at least <strong>${MIN_CAREER_BOSSES} bosses</strong>, drawn from her own tier’s bosses first. A tier with more bosses than that lengthens its careers; one with fewer shares its bosses between careers.</p>` +
-    `<table class="career-table"><thead><tr><th scope="col">Tier</th><th scope="col" class="num">Playable Umas</th><th scope="col" class="num">Bosses</th><th scope="col" class="num">Bosses a career</th><th scope="col" class="num">Careers a boss</th></tr></thead><tbody>${careers.tiers.map((t) => `<tr><th scope="row"><span class="tier-badge small tier-${t.tier}">${t.tier}</span></th><td class="num">${t.umas}</td><td class="num">${t.bosses}</td><td class="num strong">${t.umas ? t.bossesPerCareer : '—'}</td><td class="num">${t.careersPerBoss ?? '—'}</td></tr>`).join('')}</tbody>` +
+  el('careers').innerHTML = `<p class="career-lead">Every playable Uma’s career fights at least <strong>${MIN_CAREER_BOSSES} bosses</strong>, drawn from her own tier’s bosses first; bosses stop at SS, so SSS careers meet SS bosses. A tier with more bosses than that lengthens its careers; one with fewer shares its bosses between careers.</p>` +
+    `<table class="career-table"><thead><tr><th scope="col">Tier</th><th scope="col" class="num">Playable Umas</th><th scope="col" class="num">Bosses</th><th scope="col" class="num">Bosses a career</th><th scope="col" class="num">Careers a boss</th></tr></thead><tbody>${careers.tiers.map((t) => `<tr><th scope="row">${t.umaTiers.map((u) => `<span class="tier-badge small tier-${u}">${u}</span>`).join(' ')}</th><td class="num">${t.umas}</td><td class="num">${t.bosses}</td><td class="num strong">${t.umas ? t.bossesPerCareer : '—'}</td><td class="num">${t.careersPerBoss ?? '—'}</td></tr>`).join('')}</tbody>` +
     `<tfoot><tr><th scope="row">All</th><td class="num">${careers.umas}</td><td class="num">${careers.bosses}</td><td class="num" colspan="2">${careers.fights} boss fights in all</td></tr></tfoot></table>`
 
   el('imports').innerHTML = BOARDS.flatMap((b) => (b.franchise ? [b.franchise] : [])).map((f) => {

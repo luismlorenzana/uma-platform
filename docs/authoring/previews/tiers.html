@@ -74,15 +74,15 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">uma-platform · tier authoring · P113–P123 · TA1</p>
+  <p class="eyebrow">uma-platform · tier authoring · P113–P124 · TA1</p>
   <h1>One local Studio, eleven boards, and a career for every Uma<span>.</span></h1>
-  <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. Every board ranks on six tiers, SSS to F, in plain rows: the Uma boards dropped the playstyle split, and Playable Umas starts over. Two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
+  <p class="lead">The two old rankers became one app with eleven tier boards on one scale, a home with a dashboard, and a local import for six new franchises. The Uma boards rank on SSS to F in plain rows, without the playstyle split and with every rank kept; the other boards keep SS to F. Two imports come unfiltered, and any imported unit can be left out of every board. Every playable Uma gets a career that fights at least three bosses.</p>
   <nav><a href="#boards">The boards</a><a href="#playstyles">Playstyles</a><a href="#flow">How leftovers flow</a><a href="#careers">Careers</a><a href="#local">Why local</a><a href="#saved">What's saved</a><a href="#next">What's next</a><a href="#calls">Calls</a><a href="franchises.html">More franchises</a><a href="../tiers.md">Markdown</a></nav>
 
   <div class="tiles">
     <div class="tile"><b>11</b><span>tier boards on one scale</span></div>
-    <div class="tile"><b>6</b><span>tiers: SSS, SS, S, A, B, F</span></div>
-    <div class="tile"><b>135</b><span>Uma characters to rank again on Playable</span></div>
+    <div class="tile"><b>SSS</b><span>above SS on the two Uma boards</span></div>
+    <div class="tile"><b>135</b><span>Uma characters on Playable, every rank kept</span></div>
     <div class="tile"><b>325</b><span>bosses in the cast across the seven boss boards</span></div>
     <div class="tile"><b>432</b><span>new boss candidates imported (82 + 46 + 59 + 48 + 111 + 86)</span></div>
     <div class="tile"><b>≥ 3</b><span>bosses in every career</span></div>
@@ -90,7 +90,7 @@
 
   <section class="card" id="boards">
     <h2>The boards</h2>
-    <p>SSS, SS, S and A are a board's <b>cast</b>. B, F and unranked <b>leave</b> it and flow to the board below. Order within a tier is the authoring order.</p>
+    <p>SS, S and A are a board's <b>cast</b>, with SSS above them on the two Uma boards. B, F and unranked <b>leave</b> it and flow to the board below. Order within a tier is the authoring order.</p>
     <div class="scroll"><table>
       <thead><tr><th>Group</th><th>Board</th><th>Who is on it</th><th>Leftovers go to</th></tr></thead>
       <tbody>
@@ -120,7 +120,7 @@
     <div class="scroll"><table>
       <thead><tr><th>Tier</th><th>Means</th><th>On a board with one below it</th><th>From the old boards</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge t-SSS">SSS</span></td><td><b>Headliners</b>: the very top, before the first cast</td><td><span class="pill cast">stays</span></td><td>— (new, P122)</td></tr>
+        <tr><td><span class="badge t-SSS">SSS</span></td><td><b>Headliners</b>: the very top, before the first cast</td><td><span class="pill cast">stays</span></td><td>— (new; Uma boards only)</td></tr>
         <tr><td><span class="badge t-SS">SS</span></td><td><b>First cast</b>: author first</td><td><span class="pill cast">stays</span></td><td>SS</td></tr>
         <tr><td><span class="badge t-S">S</span></td><td><b>Next wave</b>: right after the first cast</td><td><span class="pill cast">stays</span></td><td>A1</td></tr>
         <tr><td><span class="badge t-A">A</span></td><td><b>Later wave</b>: the last of this cast</td><td><span class="pill cast">stays</span></td><td>A2</td></tr>
@@ -134,7 +134,7 @@
   <section class="card" id="playstyles">
     <h2>Playstyles: on the card, not the tier list</h2>
     <p>The owner moved away from the class split (P123, retiring P117's grid). Both Uma boards are plain tier rows now, like every other board, and the home's playstyle table is gone. A character's playstyle is still her <b>lead outfit's</b> (her best old tier, then her original outfit, then the lowest id), or the pick on her card when her outfits span two. It shows on her card with the outfit's four grades, the <b>Every playstyle</b> filter narrows the board to one, and the plan keeps it. It never places a portrait.</p>
-    <p><b>Playable Umas starts over</b> on the six-tier scale. The earlier ranks (20 SS, 20 S, 20 A, 33 B, 42 F) are kept in <code>tiers/archive/umas.r49.2026-11-10.json</code>, and <b>Import board</b> brings them back in one undoable step. Uma NPCs keeps its ranks; until Playable is ranked again, every Uma is on it.</p>
+    <p><b>Every rank carried over</b> (P124). P123 first cleared Playable Umas for a fresh pass; the owner wanted the ranks kept, so they came back unchanged and in order, and the owner re-ranks from there with SSS on top. A copy stays in <code>tiers/archive/umas.r49.2026-11-10.json</code>.</p>
     <div class="scroll"><table>
       <thead><tr><th>Playstyle</th><th>Calling</th><th>Her best running-style grades</th></tr></thead>
       <tbody>
@@ -185,7 +185,7 @@
         <thead><tr><th>A career needs</th><th>It comes from</th></tr></thead>
         <tbody>
           <tr><td>The Uma herself</td><td><b>Playable Umas</b>, SSS to A, one career a character</td></tr>
-          <tr><td>At least three bosses</td><td>The seven <b>boss boards</b>, SSS to A</td></tr>
+          <tr><td>At least three bosses</td><td>The seven <b>boss boards</b>, SS to A</td></tr>
           <tr><td>Escorts and group leaders</td><td><b>Key enemies</b></td></tr>
           <tr><td>The random fights</td><td><b>Regular enemies</b></td></tr>
           <tr><td>Rivals, friends and towns</td><td><b>Uma NPCs</b> and other playable Umas</td></tr>
@@ -200,7 +200,7 @@
           <tr><td><b>All</b></td><td class="num"><b>65</b></td><td class="num"><b>52</b></td><td class="num" colspan="2"><b>195 boss fights</b></td></tr>
         </tbody>
       </table>
-      <p class="note">At the first state, before the six new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 then; the 432 imports cover the gap. Playable Umas starts over on 2026-11-10 (P123), so the home's live panel counts from zero Umas until it's ranked again, SSS first.</p></div>
+      <p class="note">At the first state, before the six new boss boards are ranked. With no boss repeated, three a career takes 195 bosses (SS 120, S 57, A 18) against 52 then; the 432 imports cover the gap. Bosses have no SSS, so SSS careers meet SS bosses; the home's live panel counts them with SS.</p></div>
     </div>
   </section>
 
@@ -221,7 +221,7 @@
       <thead><tr><th>File, in the ignored <code>content/authoring/</code></th><th>What it is</th></tr></thead>
       <tbody>
         <tr><td><code>tiers/&lt;board&gt;.json</code></td><td>One board: entries (<code>id</code>, <code>tier</code>, <code>note</code>) in authoring order, and its revision. Azur Lane bosses also has <code>members</code>; an imported boss board has <code>out</code>, the units left out of every board.</td></tr>
-        <tr><td><code>tiers/archive/</code></td><td>Earlier boards kept before a reset, such as <code>umas.r49.2026-11-10.json</code>. The Studio doesn't read them; <b>Import board</b> does.</td></tr>
+        <tr><td><code>tiers/archive/</code></td><td>Copies of a board kept by hand, such as <code>umas.r49.2026-11-10.json</code>. The Studio doesn't read them; <b>Import board</b> does.</td></tr>
         <tr><td><code>tiers/plan.json</code></td><td><b>The plan the later tools read</b>: every board in order, with names, Ways or franchises, where each came from, and the career numbers. Rewritten on every save.</td></tr>
         <tr><td><code>enemies/imports/&lt;franchise&gt;.json</code></td><td>A local import: its source, filter and units, with images in <code>enemies/assets/</code>.</td></tr>
         <tr><td><code>uma-art-roster.json</code>, <code>enemy-art-roster.json</code></td><td>The old boards, frozen. The sprite queue reads the first until TA2; the second is history.</td></tr>
@@ -234,7 +234,7 @@
     <div class="scroll"><table>
       <thead><tr><th>Id</th><th>What</th><th>Where</th><th>Who</th></tr></thead>
       <tbody>
-        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after Playable Umas and the NPCs are ranked</td></tr>
+        <tr><td class="id">TA2</td><td><b>The sprite queue reads Playable Umas.</b> Traveler batches follow character tiers (assigned batches stay); her best-ranked outfit first. Townsfolk follow Uma NPCs.</td><td>uma-platform</td><td>Claude, after the NPC ranking</td></tr>
         <tr><td class="id">TA3</td><td><b>uma-quest's careers.</b> A career is a character's, with at least three bosses from the boss boards; uma-quest revises CM1–CM36 in its repo.</td><td>uma-quest</td><td>uma-quest's session</td></tr>
         <tr><td class="id">TA4</td><td><b>Q39 reads the plan.</b> Boss slots from the seven boss boards, Key and Regular from theirs, never a left-out unit; EN1's subjects grow to eight franchises.</td><td>uma-quest, uma-platform</td><td>ChatGPT</td></tr>
         <tr><td class="id">TA5</td><td>More imports when wanted: male characters, non-playable bosses through the inbox.</td><td>uma-platform</td><td>Claude</td></tr>
@@ -249,7 +249,7 @@
       <thead><tr><th>Id</th><th>Call</th></tr></thead>
       <tbody>
         <tr><td class="id">TS1</td><td><b>One local Studio</b> with a home: a tile for each board and sprite tool, then a dashboard</td></tr>
-        <tr><td class="id">TS2</td><td><b>One scale: SS, S, A, B, F.</b> SS to A are the cast; B, F and unranked flow down. SSS added on top by TS20</td></tr>
+        <tr><td class="id">TS2</td><td><b>One scale: SS, S, A, B, F.</b> SS to A are the cast; B, F and unranked flow down. SSS added on top of the Uma boards by TS20</td></tr>
         <tr><td class="id">TS3</td><td>Playable → NPCs; the seven boss boards → Key → Regular (+ NIKKE)</td></tr>
         <tr><td class="id">TS4</td><td><b>Umas per character</b>, each face with her outfit count</td></tr>
         <tr><td class="id">TS5</td><td>The first state keeps every old call: best outfit's tier; A1→S, A2→A; enemies on their old role's board</td></tr>
@@ -267,8 +267,8 @@
         <tr><td class="id">TS17</td><td>Honkai: Star Rail and Zenless Zone Zero are boss boards; <a href="franchises.html">the next franchises</a> are ranked</td></tr>
         <tr><td class="id">TS18</td><td><b>Honkai Impact 3rd and Punishing: Gray Raven are boss boards, unfiltered</b>: one card a battlesuit or frame, from their wikis; the owner sorts them</td></tr>
         <tr><td class="id">TS19</td><td><b>Any imported unit can be left out of every board</b>, from its card or its board's Left out row; ranking or dragging it brings it back</td></tr>
-        <tr><td class="id">TS20</td><td><b>SSS tops the scale on every board</b>: SSS to A are the cast; keys 1 to 6; an SSS career meets SSS bosses first</td></tr>
-        <tr><td class="id">TS21</td><td><b>No playstyle split on the tier lists</b>: plain tier rows on both Uma boards; her playstyle stays on her card, in the filter and in the plan. Playable Umas starts over, its earlier ranks archived</td></tr>
+        <tr><td class="id">TS20</td><td><b>SSS tops the scale on the two Uma boards only</b>: keys 1 to 6 there; every other board keeps SS to F; an SSS Uma's career meets SS bosses</td></tr>
+        <tr><td class="id">TS21</td><td><b>No playstyle split on the Uma tier lists</b>: plain tier rows; her playstyle stays on her card, in the filter and in the plan. Every rank carried over</td></tr>
       </tbody>
     </table></div>
   </section>

@@ -1,12 +1,14 @@
 // A tier board (P113): one page for every board, set up from the board id in the URL.
 import {
-  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, importBoardOf, inCast, leftOut, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setOut, setTier, setWay, waysOf,
+  BOARDS, STYLES, TIERS, WAYS, bestStyles, boardOf, boardStats, importBoardOf, inCast, tiersOf, leftOut, move, ordered, parseBoard, place, playstyleOf, pools, setMember, setNote, setOut, setTier, setWay, waysOf,
   type Board, type BoardId, type BoardState, type EnemyUnit, type PoolMember, type Pools, type Tier, type UmaCharacter, type Way,
 } from './tier-model.js'
 import { api, boardTitle, categoryLabel, el, esc, franchiseLabel, nav, roleLabel, wayLabel, type TierData } from './tier-ui.js'
 
 const board: Board = boardOf(location.pathname.split('/')[2] ?? '') ?? BOARDS[0]!
 const isUma = board.kind === 'uma'
+/** This board's tiers: SSS only on the Uma boards (P124). */
+const boardTiers = tiersOf(board.id)
 let data: TierData | null = null
 let all: Pools | null = null
 let pool: PoolMember[] = []
@@ -155,11 +157,11 @@ function render(): void {
   if (selected !== decodeURIComponent(location.hash.slice(1))) history.replaceState(null, '', selected ? `#${encodeURIComponent(selected)}` : location.pathname)
   el('ranked-count').textContent = String(stats.ranked)
   const out = board.franchise ? leftOut(state()).filter((id) => enemyIndex.has(id)).length : 0
-  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (SSS to A) · ${stats.unranked} still to rank${out ? ` · ${out} left out` : ''}`
+  el('progress-copy').textContent = `of ${stats.pool} · ${stats.cast} in the cast (${boardTiers.filter((t) => inCast(t.id)).map((t) => t.id).join(', ')}) · ${stats.unranked} still to rank${out ? ` · ${out} left out` : ''}`
   const p = el<HTMLProgressElement>('progress'); p.value = stats.ranked; p.max = stats.pool || 1
   el('save-status').textContent = busy ? 'Saving…' : state().updatedAt ? `✓ Saved · revision ${state().revision}` : 'Ready'
   const tier = selected ? tierOf(selected) : null
-  el('tier-buttons').innerHTML = TIERS.map((t, i) => {
+  el('tier-buttons').innerHTML = boardTiers.map((t, i) => {
     const leaves = !inCast(t.id) && board.next ? `Leaves this cast → ${boardTitle(board.next)}` : t.description
     return `<button data-tier="${t.id}" class="tier-choice tier-${t.id} ${tier === t.id ? 'chosen' : ''}" aria-pressed="${tier === t.id}" ${busy || !selected ? 'disabled' : ''}><span class="tier-badge">${t.id}</span><span class="tier-copy"><strong>${t.label}</strong><span>${esc(leaves)}</span></span><kbd>${i + 1}</kbd></button>`
   }).join('')
@@ -199,7 +201,7 @@ function renderTierList(shown: PoolMember[]): void {
   el('board-count').textContent = shown.length === pool.length ? `${pool.length} on this board` : `${shown.length} of ${pool.length} shown`
   el('bulk').innerHTML = unranked.length && shown.length < pool.length
     ? `Rank the ${unranked.length} unranked shown as ${(['B', 'F'] as const).map((t) => `<button class="bulk-rank" data-bulk="${t}" ${busy ? 'disabled' : ''}>${t}</button>`).join('')}` : ''
-  const rows = TIERS.map((t) => {
+  const rows = boardTiers.map((t) => {
     const inTier = list.filter((e) => e.tier === t.id && ids.has(e.id))
     return `<div class="tier-row tier-${t.id} ${inCast(t.id) ? 'cast' : 'leaves'}" data-row="${t.id}"><div class="row-head"><span class="tier-badge">${t.id}</span><span class="row-copy"><strong>${t.label}</strong><span>${inTier.length}</span></span></div><div class="row-tiles">${inTier.map((e) => tile(e.id)).join('') || '<span class="row-empty">Drop here</span>'}</div></div>`
   })
@@ -312,7 +314,7 @@ document.addEventListener('keydown', (event) => {
     if (t.id === 'note' && event.key === 'Enter' && (event.metaKey || event.ctrlKey)) el('save-note').click()
     return
   }
-  const tier = TIERS[Number(event.key) - 1]
+  const tier = boardTiers[Number(event.key) - 1]
   if (tier) rank(tier.id)
   else if (event.key === '0') rank(null)
   else if (event.key === 'ArrowLeft') step(-1)
@@ -363,7 +365,8 @@ el('title').innerHTML = `${esc(board.title)}<span>.</span>`
 el('lead').textContent = board.blurb
 el('pool-rule').textContent = board.pool
 el('footer-file').textContent = `content/authoring/tiers/${board.id}.json`
-el('queue-filter').innerHTML = `<option value="unranked">Still to rank</option><option value="all">Everyone</option>${TIERS.map((t) => `<option value="${t.id}">Tier ${t.id}</option>`).join('')}`
+el('last-key').textContent = String(boardTiers.length)
+el('queue-filter').innerHTML = `<option value="unranked">Still to rank</option><option value="all">Everyone</option>${boardTiers.map((t) => `<option value="${t.id}">Tier ${t.id}</option>`).join('')}`
 el('export').addEventListener('click', () => {
   if (!data) return
   const blob = new Blob([JSON.stringify(state(), null, 2) + '\n'], { type: 'application/json' }), a = document.createElement('a')

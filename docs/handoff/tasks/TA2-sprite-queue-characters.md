@@ -1,6 +1,6 @@
 # TA2 — The sprite queue reads the character boards
 
-**uma-platform's `scripts/sprites` and `tools/studio` · Claude · M · Needs: the owner's new pass on Playable Umas (P123) and on Uma NPCs ·
+**uma-platform's `scripts/sprites` and `tools/studio` · Claude · M · Needs: the owner's first pass on Uma NPCs ·
 Unblocks: traveler batches 2–20 and townsfolk T2 onward in the owner's new order (UA9, UA11)**
 
 ## Why
@@ -11,7 +11,7 @@ roster the owner no longer edits. This packet points the queue at the boards wit
 
 ## Context (read first)
 
-- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS21), P113–P116, P122 (SSS) and P123 (no playstyle split, Playable starts over).
+- [authoring/tiers.md](../../authoring/tiers.md) (TS1–TS21), P113–P116, P122–P124 (SSS on the Uma boards, no playstyle split, every rank kept).
 - [pipeline.md](../../sprites/pipeline.md) §4–§7 (CR25: batches of five, one per Way, in tier order; townsfolk B before F).
 - `scripts/sprites/src/queue.ts` (`queue`, `nextBatch`) and `tools/studio/src/sprite-review.ts`, which read
   `uma-art-roster.json` today; `content/authoring/sprites/batches.json`, the assigned batches.

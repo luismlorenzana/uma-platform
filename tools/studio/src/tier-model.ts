@@ -1,5 +1,5 @@
-// The Studio's tier boards (P113): one six-tier scale for every cast (SSS added by P122), boards that hand their
-// leftovers down, and the plan the later tools read. Shared by the server and the pages, so nothing here imports Node.
+// The Studio's tier boards (P113): one scale for every cast, SS, S, A, B, F, with SSS on top on the Uma boards only
+// (P122, P124), boards that hand their leftovers down, and the plan the later tools read. Shared by the server and the pages, so nothing here imports Node.
 
 export const TIERS = [
   { id: 'SSS', label: 'Headliners', description: 'The very top: author before the first cast.' },
@@ -12,7 +12,7 @@ export const TIERS = [
 export type Tier = typeof TIERS[number]['id']
 const TIER_IDS: readonly string[] = TIERS.map((t) => t.id)
 export const isTier = (value: unknown): value is Tier => typeof value === 'string' && TIER_IDS.includes(value)
-/** SSS, SS, S and A are a board's cast (P122). B, F and unranked leave it and flow to the board below. */
+/** SSS (Uma boards only), SS, S and A are a board's cast. B, F and unranked leave it and flow to the board below. */
 export const CAST_TIERS: readonly Tier[] = ['SSS', 'SS', 'S', 'A']
 export const inCast = (tier: Tier | null | undefined): boolean => !!tier && CAST_TIERS.includes(tier)
 /** The old boards' five tiers on the new scale (P113): SS stays, A1 is S, A2 is A, B and F stay. */
@@ -77,6 +77,9 @@ export const boardOf = (id: string): Board | undefined => BOARDS.find((b) => b.i
 export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses']
 /** The imported boss boards, whose units can be left out of every board (P121). */
 export const importBoardOf = (franchise: string): Board | undefined => BOARDS.find((b) => b.franchise === franchise)
+/** A board's tiers: SSS is for the Uma boards alone (P124); every other board keeps SS, S, A, B, F. */
+export const tiersOf = (board: BoardId): readonly (typeof TIERS)[number][] => (boardOf(board)?.kind === 'uma' ? TIERS : TIERS.filter((t) => t.id !== 'SSS'))
+export const hasTier = (board: BoardId, tier: Tier): boolean => tiersOf(board).some((t) => t.id === tier)
 
 // ---- The catalog the boards rank ----
 
@@ -198,9 +201,9 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
       !Array.isArray(value.entries) || value.entries.length > 20_000) throw new Error(`Expected a tier board JSON file${board ? ` for ${board}` : ''} (schemaVersion 1).`)
   const id = value.board as BoardId, seen = new Set<string>()
   const entries = value.entries.map((e: unknown): TierEntry => {
-    if (!object(e) || typeof e.id !== 'string' || !idPattern.test(e.id) || seen.has(e.id) || !(e.tier === null || isTier(e.tier)) ||
+    if (!object(e) || typeof e.id !== 'string' || !idPattern.test(e.id) || seen.has(e.id) || !(e.tier === null || (isTier(e.tier) && hasTier(id, e.tier))) ||
         typeof e.note !== 'string' || e.note.length > 4000 || (e.way !== undefined && (value.board !== 'umas' || !isWay(e.way)))) {
-      throw new Error('Each entry needs a unique id, a tier (or null) and a note of at most 4,000 characters; only Playable Umas entries carry a playstyle.')
+      throw new Error('Each entry needs a unique id, a tier of this board (SSS is for the Uma boards only) or null, and a note of at most 4,000 characters; only Playable Umas entries carry a playstyle.')
     }
     seen.add(e.id)
     return { id: e.id, tier: e.tier, note: e.note, ...(e.way !== undefined ? { way: e.way as Way } : {}) }
@@ -341,16 +344,18 @@ export function setOut(state: BoardState, id: string, out: boolean): BoardState 
 // ---- Careers: how many bosses each playable Uma meets ----
 
 export const MIN_CAREER_BOSSES = 3
-export interface CareerTier { tier: Tier; umas: number; bosses: number; bossesPerCareer: number; careersPerBoss: number | null }
+export interface CareerTier { tier: Tier; umaTiers: Tier[]; umas: number; bosses: number; bossesPerCareer: number; careersPerBoss: number | null }
 /**
  * Each playable Uma's career fights at least three bosses, drawn from the bosses of her own tier first (P116). A tier
  * with more than three bosses an Uma lengthens its careers so every boss is met; one with fewer shares its bosses.
+ * Bosses have no SSS (P124), so an SSS Uma's career meets the top bosses, SS, with the SS Umas.
  */
 export function careerMath(stats: Record<BoardId, BoardStats>): { tiers: CareerTier[]; umas: number; bosses: number; fights: number } {
-  const tiers = CAST_TIERS.map((tier): CareerTier => {
-    const umas = stats.umas.tiers[tier], bosses = BOSS_BOARDS.reduce((n, b) => n + stats[b].tiers[tier], 0)
+  const tiers = (['SS', 'S', 'A'] as const).map((tier): CareerTier => {
+    const umaTiers: Tier[] = tier === 'SS' ? ['SSS', 'SS'] : [tier]
+    const umas = umaTiers.reduce((n, t) => n + stats.umas.tiers[t], 0), bosses = BOSS_BOARDS.reduce((n, b) => n + stats[b].tiers[tier], 0)
     const bossesPerCareer = umas ? Math.max(MIN_CAREER_BOSSES, Math.ceil(bosses / umas)) : 0
-    return { tier, umas, bosses, bossesPerCareer, careersPerBoss: bosses ? Math.round((umas * bossesPerCareer / bosses) * 10) / 10 : null }
+    return { tier, umaTiers, umas, bosses, bossesPerCareer, careersPerBoss: bosses ? Math.round((umas * bossesPerCareer / bosses) * 10) / 10 : null }
   })
   return { tiers, umas: tiers.reduce((n, t) => n + t.umas, 0), bosses: tiers.reduce((n, t) => n + t.bosses, 0), fights: tiers.reduce((n, t) => n + t.umas * t.bossesPerCareer, 0) }
 }
@@ -375,7 +380,7 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, generatedAt:
       const order = ordered(states[b.id], ids).map((e, i) => ({ order: i + 1, id: e.id, tier: e.tier, note: e.note, via: via.get(e.id)?.via ?? null, ...describe(e.id) }))
       const ranked = new Set(order.map((e) => e.id))
       return {
-        id: b.id, title: b.title, pool: b.pool, next: b.next, revision: states[b.id].revision, updatedAt: states[b.id].updatedAt, stats: stats[b.id],
+        id: b.id, title: b.title, pool: b.pool, next: b.next, tiers: tiersOf(b.id).map((t) => t.id), revision: states[b.id].revision, updatedAt: states[b.id].updatedAt, stats: stats[b.id],
         order, unranked: pool.filter((m) => !ranked.has(m.id)).map((m) => ({ id: m.id, note: notes.get(m.id) ?? '', via: m.via, ...describe(m.id) })),
         ...(b.franchise ? { leftOut: leftOut(states[b.id]).filter((id) => enemies.has(id)).map((id) => ({ id, ...describe(id) })) } : {}),
       }
