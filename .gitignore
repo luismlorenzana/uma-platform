@@ -14,6 +14,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
+# The app's public Firebase web config (SH2), committed as the games commit theirs: the API's guard is the security.
+!apps/web/.env.production
 
 # ORIGINAL-GAME CONTENT — never commit (docs/architecture.md §2.2)
 /content
