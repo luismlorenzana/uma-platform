@@ -11,7 +11,7 @@ import { toStage, type StageLayout } from '../../src/stage/turn.js'
 import { TurnedStage } from '../../src/stage/TurnedStage.js'
 import { standInSet } from '../../src/sprites/standInSet.js'
 import { SAMPLE_FARM } from '../../src/world/farmSample.js'
-import { standInKit } from '../../src/world/kits.js'
+import { standInFarmKit } from '../../src/world/standInFarm.js'
 
 /** The seasons as light (KF10): the farm's own values are uma-farm's; these only show the stage taking them. */
 const GRADES: Record<string, StageGrade> = {
@@ -54,7 +54,7 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     const s = new BandStage(canvas.current!, { saver: false })
     stage.current = s
     s.setGrade(GRADES.Spring!)
-    s.setWorld(SAMPLE_FARM, standInKit('farm'))
+    s.setWorld(SAMPLE_FARM, standInFarmKit())
     // The walker: a standee (no set), and two stand-in sprite sets at work under the cap.
     s.addFigure({ id: 'walker', tile: { x: 4, z: 24 }, set: null, face: plainFace('#6a4ad0', '#ffd27a'), facing: 'back' })
     s.addFigure({ id: 'worker-1', tile: { x: 1, z: 22 }, set: 'stand-in-0', loadSet: async () => standInSet(0), face: null })

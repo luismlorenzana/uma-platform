@@ -5,9 +5,9 @@ import type { FarmDesign } from '../formats/index.js'
 import { doorFrame, farmGeometry, farmProblems, roofShape } from './farm.js'
 import { SAMPLE_FARM } from './farmSample.js'
 import type { Face } from './geometry.js'
-import { standInKitAtlas } from './standInKit.js'
+import { standInFarmAtlas } from './standInFarm.js'
 
-const kit = standInKitAtlas('farm')
+const kit = standInFarmAtlas()
 const world = farmGeometry(SAMPLE_FARM, kit)
 const isFront = (f: Face) => f.corners.every((c) => c.z === f.corners[0]!.z)
 const facesAt = (fz: number, x0: number, x1: number) => world.faces.filter((f) => isFront(f) && f.corners[0]!.z === fz && f.corners[0]!.x >= x0 && f.corners[1]!.x <= x1)

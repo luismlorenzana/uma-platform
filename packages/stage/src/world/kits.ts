@@ -15,7 +15,8 @@ export function checkedKit(kit: KitAtlas, name: string, extra: readonly string[]
   return kit
 }
 
-const pixel = <T extends Texture>(page: T): T => {
+/** A kit page as the stage draws it: nearest filtering, no mipmaps, sRGB. */
+export const pixelTexture = <T extends Texture>(page: T): T => {
   page.magFilter = NearestFilter
   page.minFilter = NearestFilter
   page.generateMipmaps = false
@@ -23,11 +24,11 @@ const pixel = <T extends Texture>(page: T): T => {
   return page
 }
 
-/** A kind's stand-in, drawn in code (Q5): the town until Q15, the forest while its art loads or if it can't, and the farm's
- * until uma-farm's F9 (ST2). */
-export function standInKit(kind: KitKind): LoadedKit {
+/** A kind's stand-in, drawn in code (Q5): the town until Q15, and the forest while its art loads or if it can't (the
+ * farm's: `standInFarmKit`). */
+export function standInKit(kind: 'biome' | 'town'): LoadedKit {
   const kit = standInKitAtlas(kind)
-  return { kit, page: pixel(new CanvasTexture(drawStandInKit(kit))) }
+  return { kit, page: pixelTexture(new CanvasTexture(drawStandInKit(kit))) }
 }
 
 const loaded = new Map<KitKind, LoadedKit>()
@@ -38,7 +39,7 @@ export function loadKitPage(kind: KitKind, kit: KitAtlas, url: string): Promise<
   let page = pending.get(kind)
   if (!page) {
     page = new TextureLoader().loadAsync(url).then((texture) => {
-      const made = { kit, page: pixel(texture) }
+      const made = { kit, page: pixelTexture(texture) }
       loaded.set(kind, made)
       return made
     })

@@ -147,7 +147,7 @@ export class StageEngine {
   }
 
   /** A kind's kit: the one given by `setKit` (Q37: the forest's art), else the stand-in drawn once (Q5). */
-  private kitFor(kind: KitKind): LoadedKit {
+  private kitFor(kind: 'biome' | 'town'): LoadedKit {
     const cached = this.kits.get(kind)
     if (cached) return cached
     const made = standInKit(kind)

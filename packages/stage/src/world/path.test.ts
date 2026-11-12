@@ -4,9 +4,9 @@ import { farmGrid, gridOf } from '../formats/index.js'
 import { farmGeometry } from './farm.js'
 import { SAMPLE_FARM } from './farmSample.js'
 import { farmStepCost, findPath, pathPoints } from './path.js'
-import { standInKitAtlas } from './standInKit.js'
+import { standInFarmAtlas } from './standInFarm.js'
 
-const world = farmGeometry(SAMPLE_FARM, standInKitAtlas('farm'))
+const world = farmGeometry(SAMPLE_FARM, standInFarmAtlas())
 const gate = { x: 4, z: 24 }
 
 describe('walkers (F57 ask 9)', () => {

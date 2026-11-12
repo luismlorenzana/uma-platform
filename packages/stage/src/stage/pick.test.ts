@@ -2,11 +2,11 @@
 import { describe, expect, it } from 'vitest'
 import { farmGeometry } from '../world/farm.js'
 import { SAMPLE_FARM } from '../world/farmSample.js'
-import { standInKitAtlas } from '../world/standInKit.js'
+import { standInFarmAtlas } from '../world/standInFarm.js'
 import { cardQuad, farmTargets, pickAt, project, rayAt, tileQuad, type PickTarget, type View } from './pick.js'
 import { stageLayout, toStage } from './turn.js'
 
-const kit = standInKitAtlas('farm')
+const kit = standInFarmAtlas()
 const world = farmGeometry(SAMPLE_FARM, kit)
 const targets = farmTargets(SAMPLE_FARM.markers, world, kit)
 /** A portrait phone at 3×, looking at the sample's middle. */

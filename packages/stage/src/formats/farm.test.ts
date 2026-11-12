@@ -2,11 +2,12 @@
 // farm design.
 import { describe, expect, it } from 'vitest'
 import { SAMPLE_FARM } from '../world/farmSample.js'
+import { standInFarmAtlas } from '../world/standInFarm.js'
 import { standInKitAtlas } from '../world/standInKit.js'
 import { farmGrid, farmReach, parseFarmDesign, type FarmDesign } from './farm.js'
 import { familyVariants, FARM_WAVE_1, FARM_WAVE_2, KIT_REQUIRED, kitMissing, kitVariants, parseKitAtlas, type KitAtlas } from './kit.js'
 
-const farmKit = (): KitAtlas => standInKitAtlas('farm')
+const farmKit = (): KitAtlas => standInFarmAtlas()
 const sample = (): FarmDesign => structuredClone(SAMPLE_FARM)
 
 describe('the farm kit kind (F57 ask 5, KF1, KF12)', () => {
