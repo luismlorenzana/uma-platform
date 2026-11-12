@@ -11,7 +11,11 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP50.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52.
+>
+> **Planned (P141): Uma Story,** the third sub-app: one Story App for uma-quest's and uma-farm's stories, with three
+> books (Cast, Quest, Farm) on one shared cast. Its page is [story.md](story.md) (AP53–AP72, packets US1–US4,
+> [visual page](previews/story.html)).
 
 ## The short answer
 
@@ -29,6 +33,7 @@
   |---|---|---|
   | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live) | RK1 ✓, then RK2, the pass after your ranking |
   | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs | CA1, then CA2 |
+  | **Uma Story** | uma-quest's and uma-farm's Story Sandboxes, moved here as three books on one cast: Cast, Quest, Farm ([story.md](story.md)) | US1–US4, on your go |
   | Uma Quest Art, Uma Farm Art, Uma Platform Art | Each game's and the platform's original assets, drawn from their releases | Later (GA1–GA3) |
   | Publish | Publish from your private authoring | Later (PB1) |
 
@@ -161,9 +166,10 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
+| US1–US4 | Uma Story: the shell and the store, the Cast book, the Quest book, the Farm book ([story.md](story.md)) | Claude | L each | Your go | Written (P141) |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask.
+**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; US1 on your go; GA1–GA3 and PB1 when you ask.
 
 ## Your steps
 
@@ -172,4 +178,5 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | ~~Now~~ Done 2026-11-11 | ~~The go for the cloud~~: "Go, start SH1" |
 | ~~Now~~ Done 2026-11-11 | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
 | **Now** | **Rank** on [the Ranker](https://uma-platform.web.app/ranker): Playable Umas per outfit, T1–T10, and read the sisters on their cards |
+| **Now** | **The go for Uma Story's US1** ([story.md](story.md)), or a no, and the two Story Sandboxes stay |
 | When each lands | A look at the Ranker and at Character Art on your phone |

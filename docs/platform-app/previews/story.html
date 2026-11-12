@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uma Story</title>
+<!-- docs/platform-app/story.md on one page: the two Story Sandboxes side by side, the shared cast, Uma Story's three books, the three stages and the packets. No character art, names or story text. -->
+<style>
+  :root {
+    --page: #f5f3ed; --panel: #fffefa; --raised: #f9f8f3; --sunken: #ecebe4;
+    --ink: #202b2b; --ink-soft: #5d6766; --ink-faint: #8b9493;
+    --accent: #e36642; --accent-wash: #fbe9e1; --info: #426b85; --info-wash: #e2ecf2; --success: #327d66; --success-wash: #e1f0ea;
+    --warn: #9a6a14; --warn-wash: #f6ecd8; --quest: #5a4a8f; --quest-wash: #ebe7f5; --farm: #3f7a3a; --farm-wash: #e4f0e0;
+    --hairline: rgb(32 43 43 / 0.09); --hairline-strong: rgb(32 43 43 / 0.18); --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+      --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+      --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+      --warn: #e0b05a; --warn-wash: #2e2414; --quest: #a99be0; --quest-wash: #221d36; --farm: #86c47f; --farm-wash: #17281a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #141a1b; --panel: #1c2324; --raised: #222b2c; --sunken: #101516;
+    --ink: #ecefea; --ink-soft: #aab3b0; --ink-faint: #727c7a;
+    --accent: #ef8462; --accent-wash: #33201a; --info: #7aa4c0; --info-wash: #18242c; --success: #5bb393; --success-wash: #14261f;
+    --warn: #e0b05a; --warn-wash: #2e2414; --quest: #a99be0; --quest-wash: #221d36; --farm: #86c47f; --farm-wash: #17281a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 16px 56px; }
+  .eyebrow { font-size: 10px; letter-spacing: .16em; font-weight: 750; color: var(--ink-faint); text-transform: uppercase; margin: 0 0 10px; }
+  h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -.045em; line-height: 1.08; margin: 0 0 12px; font-weight: 650; }
+  h1 span { color: var(--accent); }
+  h2 { font-size: 20px; letter-spacing: -.02em; margin: 0 0 6px; font-weight: 650; }
+  h3 { font-size: 14px; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  .lead { font-size: 16px; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 22px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  section.card { background: var(--panel); border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font-size: 28px; letter-spacing: -.04em; line-height: 1.1; color: var(--ink); font-weight: 650; }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 9px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  thead th { color: var(--ink-faint); font-weight: 600; font-size: 11px; letter-spacing: .04em; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  th.quest { color: var(--quest); } th.farm { color: var(--farm); }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--sunken); color: var(--ink-soft); white-space: nowrap; }
+  .pill.ready { background: var(--success-wash); color: var(--success); }
+  .pill.wait { background: var(--warn-wash); color: var(--warn); }
+  .pill.quest { background: var(--quest-wash); color: var(--quest); }
+  .pill.farm { background: var(--farm-wash); color: var(--farm); }
+  .pill.cast { background: var(--accent-wash); color: var(--accent); }
+  .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10px; }
+  .app { background: var(--raised); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--hairline); }
+  .app h3 { margin: 0 0 4px; font-size: 15px; color: var(--ink); }
+  .app p { margin: 4px 0 8px; font-size: 13px; }
+  .app ul { margin: 6px 0 8px; padding-left: 18px; font-size: 13px; }
+  .app.cast { border-top: 3px solid var(--accent); } .app.quest { border-top: 3px solid var(--quest); } .app.farm { border-top: 3px solid var(--farm); }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .steps li { counter-increment: s; background: var(--raised); border-radius: 10px; padding: 12px 14px; margin: 0; font-size: 13px; }
+  .steps li::before { content: counter(s); display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 11px; margin-right: 6px; }
+  .steps b { color: var(--ink); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .two > div { background: var(--raised); border-radius: 10px; padding: 12px 16px; border: 1px solid var(--hairline); }
+  .two h3 { margin-top: 0; }
+  .two ul { margin: 0; padding-left: 18px; }
+  .bar { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin: 8px 0 4px; font: 700 11px system-ui; }
+  .bar span { display: grid; place-items: center; color: var(--ink); }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">uma-platform · the platform app · Uma Story · P141 · planned 2026-11-12</p>
+  <h1>One Story App, two books, one cast<span>.</span></h1>
+  <p class="lead">uma-quest and uma-farm each have a local Story Sandbox. The games are going different ways, but both sandboxes stand on the same 20 Umas, the same faces and the same real careers. <b>Uma Story</b> puts the tool in one place, at <code>uma-platform.web.app/story</code>, with a book for each game on one shared cast. Each game's story is still written in its own session.</p>
+  <nav><a href="#intake">The intake</a><a href="#shared">What's shared</a><a href="#app">Uma Story</a><a href="#stages">Three stages</a><a href="#cast">The cast book</a><a href="#publish">Publishing</a><a href="#mirror">The mirror</a><a href="#who">Who writes what</a><a href="#cost">Cost</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../story.md">Markdown</a></nav>
+  <div class="tiles">
+    <div class="tile"><b>2</b><span>sandboxes today, built as siblings</span></div>
+    <div class="tile"><b>20 = 20</b><span>the same 20 characters in both casts</span></div>
+    <div class="tile"><b>100</b><span>Umas in the Ranker's ten tiers: 76 characters, 24 sisters</span></div>
+    <div class="tile"><b>3</b><span>books: Cast, Quest, Farm</span></div>
+    <div class="tile"><b>4 of 6</b><span>of uma-quest's planned tasks mirror to the farm</span></div>
+    <div class="tile"><b>$0</b><span>a month; no new bucket, no new access</span></div>
+    <div class="tile"><b>20</b><span>calls, AP53–AP72</span></div>
+  </div>
+
+  <section class="card" id="intake">
+    <h2>The intake: the two sandboxes side by side</h2>
+    <p>Read on 2026-11-12 from both repos at <code>main</code> and the private folders on the Windows PC.</p>
+    <div class="scroll"><table>
+      <thead><tr><th></th><th class="quest">Uma Quest Story Sandbox</th><th class="farm">Uma Farm Story Sandbox</th></tr></thead>
+      <tbody>
+        <tr><td><b>The game's direction</b></td><td>A campaign in a medieval world: a hero, five bosses, five chapters, tournaments under the real races' names</td><td>A romance simulation: you're the farmer, and every Uma has a 27-rung route to a wedding</td></tr>
+        <tr><td><b>Where</b></td><td><code>uma-quest/tools/story-sandbox/</code>, <code>pnpm stories</code>, 127.0.0.1:4320</td><td><code>uma-farm/tools/story-sandbox/</code>, <code>pnpm stories</code>, 127.0.0.1:4321</td></tr>
+        <tr><td><b>Code</b></td><td>About 2,270 lines of plain modules</td><td>About 2,430 lines, the same build, written as a sibling</td></tr>
+        <tr><td><b>A story is</b></td><td>A <b>bundle</b>: one hero and five bosses</td><td>A <b>route</b>: 27 events, with her bible, pair conversations and the household's scenes</td></tr>
+        <tr><td><b>Cast today</b></td><td>20 heroes and 100 bosses (the Studio's SS export). Planned: the Ranker's 100 Umas</td><td>20 Umas from the same export: the same 20 characters</td></tr>
+        <tr><td><b>Faces and art</b></td><td>A private downloaded pack, 141 MB</td><td>A copy of uma-quest's pack</td></tr>
+        <tr><td><b>The world</b></td><td>The world pack: 26 towns, 50 dungeons, 48 tourneys</td><td>A world bible of about 1,850 words, and the town's original cast in git</td></tr>
+        <tr><td><b>Relationships</b></td><td>Ties, links, and 25 crossings from real races</td><td>31 ties among the 20, from the same real careers</td></tr>
+        <tr><td><b>Layers</b></td><td>Placeholder (planned), skeleton, outline, bible, scripted</td><td>Skeleton, bible, pilot, waves</td></tr>
+        <tr><td><b>Written so far</b></td><td>All 20 at bible depth, 28 scenes, about 66,000 words</td><td>Layer 1: the world, 20 arrivals, 31 ties</td></tr>
+        <tr><td><b>Script steps</b></td><td>15 kinds</td><td>9 kinds</td></tr>
+        <tr><td><b>Checks</b></td><td>In the sandbox</td><td>In the game's own code: strict in the sandbox, partial in the game</td></tr>
+        <tr><td><b>Your verdicts</b></td><td>Per story; none saved yet</td><td>Per file and event; none saved yet</td></tr>
+        <tr><td><b>Backup</b></td><td>None until today; now in the private authoring bucket</td><td>In the private authoring bucket since 2026-11-10</td></tr>
+        <tr><td><b>How it reaches the game</b></td><td>Later: scenes into the game's chapter files</td><td>F56: a hashed release in <code>gs://uma-farm-content</code>; the bucket has your yes</td></tr>
+        <tr><td><b>Planned next</b></td><td>Q57–Q60, then Q54 and Q55</td><td>Your read of layer 1, then layer 2</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="shared">
+    <h2>What they share, and what they don't</h2>
+    <p>The farm's 20 Umas against the Ranker's ten tiers. All 20 are ranked; the whole of T1 is in the farm.</p>
+    <div class="bar" role="img" aria-label="The farm's 20 Umas by Ranker tier: ten in T1, six in T2, one each in T3, T4, T8 and T9">
+      <span style="flex: 10; background: var(--farm-wash); color: var(--farm)">T1 · 10</span>
+      <span style="flex: 6; background: var(--success-wash); color: var(--success)">T2 · 6</span>
+      <span style="flex: 1; background: var(--info-wash); color: var(--info)">T3</span>
+      <span style="flex: 1; background: var(--warn-wash); color: var(--warn)">T4</span>
+      <span style="flex: 1; background: var(--accent-wash); color: var(--accent)">T8</span>
+      <span style="flex: 1; background: var(--sunken); color: var(--ink-soft)">T9</span>
+    </div>
+    <p class="note">Four Umas of T2 aren't in the farm. Seven of the Ranker's 24 sisters are sisters of farm Umas; none is in the farm's cast.</p>
+    <div class="two" style="margin-top: 12px">
+      <div><h3>Shared today, twice</h3><ul>
+        <li>The cast: the same 20 characters from one export</li>
+        <li>The faces and art: one pack, copied</li>
+        <li>Who each Uma is: her canon personality and her real career</li>
+        <li>The real relationships behind the crossings and the ties</li>
+        <li>The review loop: layers read one at a time, verdicts saved for the next session</li>
+        <li>The tool: two sibling local pages with one design</li>
+      </ul></div>
+      <div><h3>Different, and staying so</h3><ul>
+        <li>The world: a medieval campaign and a countryside farm</li>
+        <li>What a story is: a bundle and a route</li>
+        <li>The script format and its checks</li>
+        <li>How the story reaches the game</li>
+        <li>Each game's own tags: a class and a story type; a calling, a favourite line and gifts</li>
+        <li>Who writes it: one session a game</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="card" id="app">
+    <h2>Uma Story</h2>
+    <p>The platform app's third sub-app: one tile, three books. A book imports the shell and the Cast book, never the other game's book (AP53).</p>
+    <div class="apps">
+      <div class="app cast"><h3>Cast</h3><p>Shared. The Ranker's 100 Umas by batch, with pictures from master data.</p><ul><li>Her personality and career card</li><li>Eras and circles</li><li>The real relationships</li><li>Counts</li></ul><span class="pill cast">US1, US2</span></div>
+      <div class="app quest"><h3>Quest</h3><p>uma-quest's sandbox, moved here.</p><ul><li>Stories by batch, each with her road and her five bosses</li><li>The world pack and the circuit</li><li>Tags and counts</li><li>The scene player</li></ul><span class="pill quest">US3</span></div>
+      <div class="app farm"><h3>Farm</h3><p>uma-farm's sandbox, moved here.</p><ul><li>Each Uma's bible and her 27-rung route</li><li>Ties, pairs, the household</li><li>Counts</li><li>Release: what the game would ship today</li></ul><span class="pill farm">US4</span></div>
+    </div>
+  </section>
+
+  <section class="card" id="stages">
+    <h2>Three stages, the same for every book</h2>
+    <p>Three sessions write; one app shows; each game publishes its own story (AP54, AP55).</p>
+    <svg viewBox="0 0 1100 470" role="img" aria-label="Three sessions write private drafts, push them to the platform's bucket for review in Uma Story, and each game publishes from its own repo to its own bucket">
+      <text x="20" y="24" style="fill: var(--ink-faint); font-size: 11px; font-weight: 700; letter-spacing: .08em">DRAFT · private, on the writer's machine</text>
+      <rect x="20" y="36" width="330" height="76" rx="12" style="fill: var(--accent-wash)"/>
+      <text x="36" y="62" style="fill: var(--accent); font-weight: 700; font-size: 14px">The cast session · uma-platform</text>
+      <text x="36" y="82" style="fill: var(--ink-soft); font-size: 12px">content/authoring/story/cast/</text>
+      <text x="36" y="100" style="fill: var(--ink-soft); font-size: 12px">people, eras, circles, real relationships</text>
+      <rect x="385" y="36" width="330" height="76" rx="12" style="fill: var(--quest-wash)"/>
+      <text x="401" y="62" style="fill: var(--quest); font-weight: 700; font-size: 14px">uma-quest's story session</text>
+      <text x="401" y="82" style="fill: var(--ink-soft); font-size: 12px">uma-quest/content/stories/</text>
+      <text x="401" y="100" style="fill: var(--ink-soft); font-size: 12px">bundles, the world pack, tags</text>
+      <rect x="750" y="36" width="330" height="76" rx="12" style="fill: var(--farm-wash)"/>
+      <text x="766" y="62" style="fill: var(--farm); font-weight: 700; font-size: 14px">uma-farm's story session</text>
+      <text x="766" y="82" style="fill: var(--ink-soft); font-size: 12px">uma-farm/content/story/</text>
+      <text x="766" y="100" style="fill: var(--ink-soft); font-size: 12px">world, cast, ties, bibles, routes, pairs</text>
+      <line x1="185" y1="112" x2="185" y2="176" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <line x1="550" y1="112" x2="550" y2="176" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <line x1="915" y1="112" x2="915" y2="176" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <text x="560" y="150" style="fill: var(--ink-soft); font-size: 12px"><tspan style="font-weight: 700; fill: var(--ink)">pnpm story:push</tspan> · the book's own check runs first</text>
+      <text x="20" y="170" style="fill: var(--ink-faint); font-size: 11px; font-weight: 700; letter-spacing: .08em">REVIEW</text>
+      <rect x="20" y="176" width="1060" height="58" rx="12" style="fill: var(--info-wash)"/>
+      <text x="36" y="202" style="fill: var(--info); font-weight: 700; font-size: 14px">gs://uma-platform-content/story/ · cast/ · quest/ · farm/</text>
+      <text x="36" y="222" style="fill: var(--ink-soft); font-size: 12px">private and versioned: every push is also the backup · the drafts, each book's check report, your verdicts</text>
+      <line x1="550" y1="234" x2="550" y2="262" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <rect x="20" y="262" width="1060" height="64" rx="12" style="fill: var(--raised); stroke: var(--hairline-strong)"/>
+      <text x="36" y="288" style="fill: var(--ink); font-weight: 650; font-size: 15px">uma-platform.web.app/story · Cast │ Quest │ Farm</text>
+      <text x="36" y="310" style="fill: var(--ink-soft); font-size: 12px">you read each layer and save a verdict: liked, rework, question · <tspan style="font-weight: 700; fill: var(--ink)">pnpm story:pull</tspan> takes the verdicts back to the writer</text>
+      <text x="20" y="364" style="fill: var(--ink-faint); font-size: 11px; font-weight: 700; letter-spacing: .08em">PUBLISH · each game's own release, from its own repo</text>
+      <rect x="385" y="376" width="330" height="76" rx="12" style="fill: var(--quest-wash); stroke: var(--hairline-strong); stroke-dasharray: 4 4"/>
+      <text x="401" y="402" style="fill: var(--quest); font-weight: 700; font-size: 14px">uma-quest's release · later</text>
+      <text x="401" y="422" style="fill: var(--ink-soft); font-size: 12px">gs://uma-quest-content → uma-quest</text>
+      <text x="401" y="440" style="fill: var(--ink-soft); font-size: 12px">F56's shape is the model</text>
+      <rect x="750" y="376" width="330" height="76" rx="12" style="fill: var(--farm-wash)"/>
+      <text x="766" y="402" style="fill: var(--farm); font-weight: 700; font-size: 14px">pnpm story:publish · F56</text>
+      <text x="766" y="422" style="fill: var(--ink-soft); font-size: 12px">gs://uma-farm-content → uma-farm</text>
+      <text x="766" y="440" style="fill: var(--ink-soft); font-size: 12px">leaves a receipt for the Farm book</text>
+      <line x1="550" y1="326" x2="550" y2="376" style="stroke: var(--ink-faint); stroke-width: 1.5; stroke-dasharray: 4 4"/>
+      <line x1="915" y1="326" x2="915" y2="376" style="stroke: var(--ink-faint); stroke-width: 1.5"/>
+      <text x="36" y="402" style="fill: var(--ink-soft); font-size: 12px">A game never reads the review copy.</text>
+      <text x="36" y="422" style="fill: var(--ink-soft); font-size: 12px">The Cast book isn't published:</text>
+      <text x="36" y="440" style="fill: var(--ink-soft); font-size: 12px">the games' writers read it.</text>
+    </svg>
+  </section>
+
+  <section class="card" id="cast">
+    <h2>The cast book</h2>
+    <p>What's true of an Uma in any world, written once. Each game points at it and tells it in its own world (AP65, AP66).</p>
+    <div class="scroll"><table>
+      <thead><tr><th>In the cast book, once</th><th class="quest">uma-quest tells it as</th><th class="farm">uma-farm tells it as</th></tr></thead>
+      <tbody>
+        <tr><td><b>Who's in the cast:</b> the Ranker's 100, by batch</td><td>All 100, one story each</td><td>Its 20; the other 80 "not in the farm yet"</td></tr>
+        <tr><td><b>Her personality</b> (43, each mapped to a face)</td><td>Her battle face; her voice</td><td>Her voice and her emotes</td></tr>
+        <tr><td><b>Her career card:</b> classic year, era, field, her races</td><td>Her tourneys under the real names; chapters 1 and 2</td><td>Her past, told as memories</td></tr>
+        <tr><td><b>Eras and circles</b></td><td>Who shares her road; dual and party stories</td><td>Who arrives with whom; who shares a house</td></tr>
+        <tr><td><b>A real relationship,</b> with its fact and source</td><td>A crossing or a story relationship, <code>from</code> it</td><td>A tie with a strength and a line, <code>from</code> it</td></tr>
+        <tr><td>—</td><td>Her class and her story type (its own tags)</td><td>Her calling, favourite line, season, festival and loved gift (its own tags)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="publish">
+    <h2>Publishing: how the farm's story reaches the game</h2>
+    <p>Settled in uma-farm's F56 and the notes F40 gained while the romance core was built.</p>
+    <ol class="steps">
+      <li><b>Release.</b> <code>pnpm story:release</code> validates the drafts and refuses a pack where any cast Uma lacks her bible or her arrival scene. Routes may be partial.</li>
+      <li><b>Hash.</b> An index, <code>story.json</code>, and each file named by its hash. The index lists which events are scripted.</li>
+      <li><b>Publish.</b> <code>pnpm story:publish</code> uploads to <code>gs://uma-farm-content</code>. The bucket has your yes.</li>
+      <li><b>Serve.</b> farm-api, behind the owner guard; the web checks each hash and keeps it on the device.</li>
+      <li><b>Go live.</b> The romance turns on with save v4 and the wipe. Later waves are new pack versions, with no code change.</li>
+    </ol>
+    <div class="two" style="margin-top: 12px">
+      <div><h3>The go-live needs 20 bibles and 20 arrival scenes</h3><p>Not the three pilot routes. So the arrival scenes are written with layer 2, ahead of the pilot.</p></div>
+      <div><h3>F56 waits for the pack "on this Mac"</h3><p>The drafts are on the Windows PC. The review copy closes the gap: <code>pnpm story:pull farm --drafts</code> on whichever machine publishes (AP68).</p></div>
+    </div>
+  </section>
+
+  <section class="card" id="mirror">
+    <h2>The mirror: uma-quest's planned tasks, and the farm's</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>uma-quest planned</th><th>Shared part, to uma-platform</th><th class="quest">uma-quest keeps</th><th class="farm">The farm's mirror</th></tr></thead>
+      <tbody>
+        <tr><td><b>Q57</b>, the cast: the Ranker's 100, a new pack, 80 placeholders, stories by batch</td><td>The cast from the Ranker, pictures from master data, the batch view <span class="pill cast">US1, US3</span></td><td>The placeholder layer in its checks, and 80 placeholder bundles</td><td><span class="pill farm">F58</span> The farm's cast on the Ranker</td></tr>
+        <tr><td><b>Q58</b>, tags: a class, a personality, a story type</td><td>The personalities <span class="pill cast">US2</span></td><td>The class, which gives her Way, and the story type</td><td><span class="pill farm">F59</span> The tag sheet: a favourite line, a season, a festival, a loved gift, beside her calling</td></tr>
+        <tr><td><b>Q59</b>, relationships: eras, circles, 250–300 relationships</td><td>Eras, circles and the real relationships <span class="pill cast">US2</span></td><td>Its story relationships and crossings, pointing at the cast book's</td><td><span class="pill farm">F59</span> The ties, pointing at the cast book's</td></tr>
+        <tr><td><b>Q60</b>, counts, then your read</td><td>The cast's counts <span class="pill cast">US2</span></td><td>Classes, Ways and story types counted in its report</td><td><span class="pill farm">F60</span> The farm's counts, your read, the balance</td></tr>
+        <tr><td><b>Q54</b>, the tournament rewrite</td><td>—</td><td>All of it</td><td>None. The farm's like for like is F40's pilot</td></tr>
+        <tr><td><b>Q55</b>, the world pack into the game</td><td>—</td><td>All of it</td><td>None. The farm's world reaches the game inside the story pack</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Sized for 20 Umas, the farm's three packets are small. Tags come before the bibles, so the favourite lines and the gifts are balanced on one screen first (AP70). The callings are balanced already: four Umas each.</p>
+  </section>
+
+  <section class="card" id="who">
+    <h2>Who writes what</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Session</th><th>Repo</th><th>Writes</th><th>Reads</th></tr></thead>
+      <tbody>
+        <tr><td><b>Uma Story</b></td><td>uma-platform</td><td>The app, <code>story:push</code> and <code>story:pull</code></td><td>—</td></tr>
+        <tr><td><b>The cast session</b></td><td>uma-platform</td><td>The Cast book: people and real relationships</td><td>The Ranker, public racing records, both games' written ties</td></tr>
+        <tr><td><b>uma-quest's story session</b></td><td>uma-quest</td><td>Bundles, the world pack, its tags and story relationships</td><td>The Cast book, your verdicts</td></tr>
+        <tr><td><b>uma-farm's story session</b></td><td>uma-farm</td><td>The world, the cast file, tags, ties, bibles, routes, pairs, the household</td><td>The Cast book, your verdicts</td></tr>
+        <tr><td><b>Each game's main session</b></td><td>its own</td><td>The game's code, and its release</td><td>The pulled drafts</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="cost">
+    <h2>What it costs</h2>
+    <p>Nothing new is created and no access changes: the runtime account is already object admin on its own bucket.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Piece</th><th>Size</th><th>Free tier</th><th>Cost a month</th></tr></thead>
+      <tbody>
+        <tr><td><code>story/</code> in <code>gs://uma-platform-content</code></td><td>Under 1 MB of text today; under 50 MB with every old version</td><td>5 GB-months, shared</td><td><b>$0</b></td></tr>
+        <tr><td>Writes</td><td>A few hundred objects a push</td><td>5,000 Class A</td><td><b>$0</b></td></tr>
+        <tr><td>Reads</td><td>A few thousand a month</td><td>50,000 Class B</td><td><b>$0</b></td></tr>
+        <tr><td><code>platform-api</code></td><td>A few thousand more requests</td><td>2 million requests</td><td><b>$0</b></td></tr>
+        <tr><td>New buckets, accounts, grants</td><td>None</td><td>—</td><td><b>$0</b></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="packets">
+    <h2>The packets</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Id</th><th>What</th><th>Who</th><th>Size</th><th>Needs</th><th>State</th></tr></thead>
+      <tbody>
+        <tr><td class="id">US1</td><td>The shell: the tile, the three books' homes, the store, <code>story:push</code> and <code>story:pull</code>, verdicts, the cast by batch, a plain reader for every pushed file</td><td>Claude</td><td>L</td><td>Your go</td><td><span class="pill wait">Written</span></td></tr>
+        <tr><td class="id">US2</td><td>The Cast book: 100 people, eras, circles, the real relationships, its pages and counts</td><td>Claude, the cast session</td><td>L</td><td>US1</td><td><span class="pill">Written</span></td></tr>
+        <tr><td class="id">US3</td><td>The Quest book: uma-quest's sandbox pages moved here; its sandbox retires</td><td>Claude</td><td>L</td><td>US1</td><td><span class="pill">Written</span></td></tr>
+        <tr><td class="id">US4</td><td>The Farm book: uma-farm's sandbox pages moved here, with the release's state; its sandbox retires</td><td>Claude</td><td>L</td><td>US1</td><td><span class="pill">Written</span></td></tr>
+        <tr><td class="id">F58</td><td>uma-farm: the farm's cast on the Ranker; the order, the opening three and the pilot re-checked</td><td>uma-farm's story session</td><td>S</td><td>—</td><td><span class="pill ready">Written, can start</span></td></tr>
+        <tr><td class="id">F59</td><td>uma-farm: the tag sheet, and the ties pointing at the cast book</td><td>uma-farm's story session</td><td>M</td><td>F58; US2 for the pointers</td><td><span class="pill">Written</span></td></tr>
+        <tr><td class="id">F60</td><td>uma-farm: the counts, your read, the balance</td><td>uma-farm's story session, then you</td><td>S</td><td>F59</td><td><span class="pill">Written</span></td></tr>
+        <tr><td class="id">Q57–Q60</td><td>uma-quest: re-cut. Their private content stays; their sandbox pages move to US1–US3; the shared half of Q58 and Q59 to US2</td><td>uma-quest's story session</td><td>—</td><td>Your go there</td><td><span class="pill">Amended</span></td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Order:</b> US1 first. Then US4 and US2 side by side in two sessions. US3 last: uma-quest's sandbox has the most pages and keeps working meanwhile. F58 needs nothing and can start today.</p>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Id</th><th>Call</th></tr></thead>
+      <tbody>
+        <tr><td class="id">AP53</td><td><b>Uma Story is one sub-app with three books:</b> Cast, Quest and Farm, at <code>/story</code>. A book never imports the other game's book</td></tr>
+        <tr><td class="id">AP54</td><td><b>Three books, three sessions.</b> Each session writes only its own book's files; the app is where they meet</td></tr>
+        <tr><td class="id">AP55</td><td><b>Three stages for every book:</b> draft, review, publish. A game never reads the review copy</td></tr>
+        <tr><td class="id">AP56</td><td><b>The review copies live in the bucket the app already has,</b> private and versioned. Every push is also the backup</td></tr>
+        <tr><td class="id">AP57</td><td><b>Checks run where the format lives.</b> The push runs the book's own check and uploads its report; the app shows it and re-implements no game's rules</td></tr>
+        <tr><td class="id">AP58</td><td><b>Your verdicts are the app's:</b> liked, rework or question, and a note, per item; <code>story:pull</code> brings them to the writer</td></tr>
+        <tr><td class="id">AP59</td><td><b>One set of layer words:</b> placeholder, skeleton, bible, scripted, published. Every book opens on the cast by batch</td></tr>
+        <tr><td class="id">AP60</td><td><b>One stage, two readers; the formats stay apart.</b> A shared script format is dropped as a goal</td></tr>
+        <tr><td class="id">AP61</td><td><b>Reading before a push:</b> run locally, the API reads the drafts folders in place</td></tr>
+        <tr><td class="id">AP62</td><td><b>The local sandboxes retire when their book is live.</b> Until then both keep working, and nothing waits on the app</td></tr>
+        <tr><td class="id">AP63</td><td><b>The cast is the Ranker's:</b> 100 Umas in ten batches, read fresh. A game's cast is a slice of it</td></tr>
+        <tr><td class="id">AP64</td><td><b>Pictures come from master data,</b> and the bosses' from the Ranker's assets. The two downloaded packs retire</td></tr>
+        <tr><td class="id">AP65</td><td><b>The cast book holds what's true of an Uma in any world:</b> her personality, her career card, eras, circles and the real relationships</td></tr>
+        <tr><td class="id">AP66</td><td><b>A game's relationships point at the cast book's</b> (<code>from</code>), or say <code>source: story</code>. A real fact is checked once</td></tr>
+        <tr><td class="id">AP67</td><td><b>The Farm book shows the release without new access:</b> the publish leaves a receipt in the platform's bucket</td></tr>
+        <tr><td class="id">AP68</td><td><b>The bucket is the bridge between machines:</b> <code>story:pull farm --drafts</code> on whichever machine publishes</td></tr>
+        <tr><td class="id">AP69</td><td><b>Counts are a page in every book,</b> read from the book's own report</td></tr>
+        <tr><td class="id">AP70</td><td><b>The farm mirrors four of the six,</b> as three small packets. Tags come before the bibles</td></tr>
+        <tr><td class="id">AP71</td><td><b>The farm's 20 stand, and their order is the Ranker's.</b> A cast past 20 is the romance spec's call; the sisters wait</td></tr>
+        <tr><td class="id">AP72</td><td><b>Nothing new in the cloud.</b> A direct read of the farm's bucket, if ever wanted, is asked for first</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="steps">
+    <h2>Your steps</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>When</th><th>What</th></tr></thead>
+      <tbody>
+        <tr><td><b>Now</b></td><td><b>The go for US1,</b> or a no, and the two sandboxes stay as they are</td></tr>
+        <tr><td>After F58</td><td>Read the farm's layer 1 in its sandbox (it still works): the world, the arrivals and the opening three</td></tr>
+        <tr><td>When you like</td><td>The go for uma-quest's Q57, as before</td></tr>
+        <tr><td>When each book lands</td><td>A look at it on your phone</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main>
+</body>
+</html>

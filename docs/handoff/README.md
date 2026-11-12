@@ -149,11 +149,12 @@ output is the private `content/authoring/tiers/plan.json`.
 | TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | Claude (with Q39, P126) | S | Q39 | With Q39 |
 | TA6 | The next boss franchise, one packet each: Arknights: Endfield next ([ranked](../authoring/franchises.md)); Honkai Impact 3rd and Punishing: Gray Raven are built (TA1++) | Claude | M | The owner's pick | Waiting on the pick |
 
-## The Uma Platform app (SH, RK, CA)
+## The Uma Platform app (SH, RK, CA, US)
 
 One signed-in site, `uma-platform.web.app`, in the `uma-rpg` project, with sub-apps behind tiles
 ([platform-app/README.md](../platform-app/README.md), AP1–AP24, [page](../platform-app/previews/platform-app.html),
-P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows the owner's ranking; GA1–GA3 and PB1 when the owner asks.
+P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows the owner's ranking; GA1–GA3 and PB1 when the owner asks. **Uma Story**
+is planned as the third sub-app: [its own section](#uma-story-us) below.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
@@ -167,6 +168,23 @@ P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓ | **Done** (P137) |
 | — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 ✓ | Written as its [Q56](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q56-album-moves-to-the-platform.md) (`fa47214`) |
 | GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
+
+## Uma Story (US)
+
+One Story App for uma-quest's and uma-farm's stories, as the platform app's third sub-app: three books (Cast, Quest,
+Farm) on one shared cast, with each game's story still written in its own session
+([platform-app/story.md](../platform-app/story.md), AP53–AP72, [page](../platform-app/previews/story.html), P141).
+The two local Story Sandboxes move here and retire; drafts are pushed to the app's private bucket for reading, and
+each game publishes its own release. **US1 starts on the owner's go,** and is checked back before US2 and US4.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| [US1](tasks/US1-uma-story-shell.md) | The shell: the tile, the three books' homes, the store, `pnpm story:push` and `story:pull`, verdicts, the cast by batch from the Ranker, a plain reader for every pushed file | Claude | L | The owner's go | **Written**, waiting for the go |
+| [US2](tasks/US2-cast-book.md) | The Cast book (private content, then pages): 100 people with a personality and a career card, eras, circles, the real relationships, counts. Takes the shared half of uma-quest's Q58 and Q59 | Claude, the cast session | L | US1 | Written |
+| [US3](tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here, with the Tags and Counts pages its Q58 and Q60 planned; its sandbox retires | Claude | L | US1 | Written |
+| [US4](tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with Counts and the release's state; its sandbox retires | Claude | L | US1 | Written |
+| — | uma-farm: the story's mirrored packets, [F58](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F58-cast-on-the-ranker.md) (the cast on the Ranker), [F59](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F59-tags-and-ties.md) (tags and ties), [F60](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F60-story-counts.md) (counts and the owner's read) | uma-farm's story session | S, M, S | F58 needs nothing | Written there (its D64) |
+| — | uma-quest: Q57–Q60 amended: their private content stays, the shared half goes to US2, the sandbox's new pages to US1–US3 | uma-quest's story session | — | The owner's go there | Amended there (its D52) |
 
 ## The shared HD-2D stage (ST), uma-farm's F57
 
