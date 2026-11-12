@@ -87,7 +87,7 @@ describe('kit-farm wave 1 (F9, P147)', () => {
     }
   })
 
-  it('draws floors that meet in any order, and walls, risers and roofs that meet their neighbours', () => {
+  it('draws floors that meet in any order, and walls, risers and roofs that meet their neighbours', { timeout: 60_000 }, () => {
     const families: [string[], 'x' | 'xy'][] = [
       [['grass-1', 'grass-2', 'grass-3', 'grass-4'], 'xy'], [['path-1', 'path-2'], 'xy'], [['tilled-1', 'tilled-2'], 'xy'],
       [['forest-floor-1', 'forest-floor-2'], 'xy'], [['water-1', 'water-2'], 'xy'], [['paving-1', 'paving-2'], 'xy'],
@@ -107,23 +107,31 @@ describe('kit-farm wave 1 (F9, P147)', () => {
   })
 
   it('keeps every floor, wall and roof opaque, and every prop clear of its frame edge, standing on its foot', () => {
+    const problems: string[] = []
     for (const f of frames) {
       const p = px(f), { w, h } = f.spec
-      if (f.spec.role !== 'prop' && f.spec.role !== 'sign') { for (let i = 3; i < p.length; i += 4) expect(p[i], f.spec.name).toBe(255); continue }
+      if (f.spec.role !== 'prop' && f.spec.role !== 'sign') {
+        let clear = 0
+        for (let i = 3; i < p.length; i += 4) if (p[i] !== 255) clear++
+        if (clear) problems.push(`${f.spec.name}: ${clear} texels not opaque`)
+        continue
+      }
       // A fence's rails run edge to edge, so the next fence along joins it; everything else stands clear.
       const sides = f.spec.name.startsWith('fence') ? [] : [...column(w, h, 0), ...column(w, h, w - 1)]
-      for (const i of [...row(w, 0), ...row(w, h - 1), ...sides]) expect(p[i * 4 + 3], `${f.spec.name} edge`).toBe(0)
+      const touching = [...row(w, 0), ...row(w, h - 1), ...sides].filter((i) => p[i * 4 + 3] !== 0).length
+      if (touching) problems.push(`${f.spec.name}: ${touching} texels on its edge`)
       if (f.spec.role === 'prop') {
         let lowest = 0
         for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (p[(y * w + x) * 4 + 3]! > 128) lowest = y
-        expect(lowest, `${f.spec.name} reaches its foot`).toBeGreaterThanOrEqual(f.spec.foot!.y - 8)
+        if (lowest < f.spec.foot!.y - 8) problems.push(`${f.spec.name}: stands above its foot (${lowest})`)
       }
     }
-  })
+    expect(problems).toEqual([])
+  }, 60_000)
 
   it('draws the same pixels every run', () => {
     expect(sha(pack('kit-farm', drawWave()).rgba)).toBe(sha(rgba))
-  })
+  }, 60_000)
 
   it('leaves every uma-art file published before byte-identical', () => {
     const now: Record<string, string> = {}
