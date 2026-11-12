@@ -27,13 +27,13 @@ Never touch the games' pieces: `(default)`, `quest`, `farm`, `rpg-*`, `quest-*`,
 | Firebase web app | Uma Platform web (`1:727687479415:web:8db09dffb68ef21b684672`); its public config is in `apps/web/.env.production`, auth domain `uma-platform.web.app` |
 | API | Cloud Run `platform-api`, `us-central1`, min 0, max 1, 512 MiB, 1 CPU, public at the edge, owner guard on every route but `/api/health`; `https://platform-api-727687479415.us-central1.run.app`, reached through the site's `/api/**` rewrite |
 | Runtime account | `platform-api-runtime`: object admin on `gs://uma-platform-content`; reader of `gs://uma-platform-master-data`; reader of `gs://uma-quest-content` under the condition `resource.name.startsWith("projects/_/buckets/uma-quest-content/objects/traveler-keys/")` (AP11). No project role, so no database |
-| Bucket | `gs://uma-platform-content`, `us-central1`, uniform access, public access prevented (enforced), versioned, `app=platform`: the Ranker's boards, plan and franchise art from RK1 |
+| Bucket | `gs://uma-platform-content`, `us-central1`, uniform access, public access prevented (enforced), versioned, `app=platform`: the Ranker's boards, plan and franchise art from RK1 (`ranker/`); each story book's review copy from US1 (`story/cast/`, `story/quest/`, `story/farm/`: text drafts, the book's check report, the owner's verdicts; P149) |
 | Images | Artifact Registry `platform`, keeping the last 3 |
 | Deployer | `platform-deploy`: writer on `platform` images, admin of `platform-api`, user of `platform-api-runtime`, Hosting admin (project-wide, IN7; `firebase.json` names the site and `scripts/check-hosting-site.test.mjs` checks it) |
 | Deploy sign-in | Provider `uma-platform` in pool `github-actions`, `main` of `luismlorenzana/uma-platform` only |
 | Sign-in domain | `uma-platform.web.app` in Auth's authorized domains (added by the bootstrap). The OAuth client's redirect URI `https://uma-platform.web.app/__/auth/handler` and JavaScript origin `https://uma-platform.web.app`, added by the owner on 2026-11-11: Google accepts the redirect (its sign-in page opens "to continue to uma-platform.web.app", no `redirect_uri_mismatch`) |
 | Label | `app=platform` |
-| Local | API on 8111, web on 5204 (`.claude/launch.json`: `platform-api`, `platform-web`) |
+| Local | API on 8111, web on 5204 (`.claude/launch.json`: `platform-api`, `platform-web`). Uma Story then reads the writers' drafts folders in place: `STORY_QUEST_DIR` (default `../uma-quest/content/stories`), `STORY_FARM_DIR` (`../uma-farm/content/story`), `STORY_CAST_DIR` (`content/authoring/story/cast`) |
 
 **Repository variables:** `GCP_PROJECT_ID=uma-rpg`, `WIF_PROVIDER`, `DEPLOY_SA`, `ALLOWED_EMAIL` (uma-rpg's),
 `MASTER_BUCKET`, `HOSTING_SITE=uma-platform`, `CONTENT_BUCKET=uma-platform-content`,

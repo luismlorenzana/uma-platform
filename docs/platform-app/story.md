@@ -1,6 +1,7 @@
 # Uma Story: one app, two books, one cast
 
-> **Status: 2026-11-12, planned (P141); nothing is built.** The owner asked for an intake of the two Story Sandboxes
+> **Status: 2026-11-12: US1 is live (P149) at https://uma-platform.web.app/story:** the tile, the cast by batch, and both
+> games' drafts in a plain reader with your verdicts ([as built](#as-built-us1-p149)). US2–US4 are written. The owner asked for an intake of the two Story Sandboxes
 > (uma-quest's and uma-farm's), a pass between them, uma-quest's planned story tasks mirrored for the farm where they
 > fit, and whether it's time for one Story App with two sub-apps while each game's story is still written in its own
 > Claude session. This page is the intake, the answer (yes), the calls **AP53–AP72** and the packets **US1–US4**, with
@@ -173,12 +174,52 @@ Nothing new is created and no access changes: the runtime account is already obj
 |---|---|
 | AP72 | **Nothing new in the cloud:** text only in the existing bucket, pictures from what's already there. If the Farm book ever reads `gs://uma-farm-content` directly, that grant is asked for first, in one line |
 
+## The check report
+
+A book's own check writes `checks.json` at the root of its drafts folder (AP57). `pnpm story:push` refuses a push while
+the report is older than a draft, and the app shows it. The shape, parsed strictly by the app
+(`apps/api/src/apps/story/story.model.ts`):
+
+```ts
+interface Report {
+  schemaVersion: 1
+  book: 'cast' | 'quest' | 'farm'
+  checkedAt: string                                 // an ISO date
+  files: Record<string, string>                     // every draft the check read: its path and its sha256
+  findings: { level: 'error' | 'todo' | 'note'; file: string; where: string; message: string }[]
+  layers: Record<string, Layer>                     // an Uma's id, or an item's own id, and its layer
+  counts: Record<string, Record<string, string[]>>  // a group, its labels, and the ids behind each
+}
+type Layer = 'placeholder' | 'skeleton' | 'outline' | 'bible' | 'scripted' | 'published'
+```
+
+- **A draft** is a `.json` or `.md` file on a lowercase path, outside `packs/`, `pack/`, `export/` and `images/`.
+- **Four names at a book's root are the app's own:** `index.json` (what the last push holds), `checks.json`,
+  `reviews.json` (your verdicts) and `published.json` (AP67).
+- **`reviews.json`** is `{ schemaVersion: 1, items: { <item>: { status, note, updatedAt } } }`, the shape both sandboxes
+  already write. An item is a draft's path, `path#part`, or an id.
+- **A book may keep a `cast.json`** listing its Umas (`umas: [{ characterId }]`). The Cast page reads only the ids.
+
+## As built (US1, P149)
+
+| What | As built |
+|---|---|
+| The pages | `/story` (the three books' numbers); `/story/cast` (100 Umas in ten batches, a filter for each book, her sheet); `/story/quest` and `/story/farm` (Files: the drafts by folder, JSON as a tree, markdown as text, your verdict on each); `/story/cast/files` |
+| The API | `GET /api/story`, `/api/story/summary`, `/api/story/cast`, `/api/story/<book>/index`, `/api/story/<book>/file?path=…`, and `PUT /api/story/<book>/reviews`, its only write |
+| A verdict | Saved one item at a time. The server merges it into the book's file, so two devices never overwrite each other. This replaces the packet's whole-file save |
+| The push | Text that changed only, then `index.json` last. Nothing is deleted in the bucket. A check report older than a draft refuses the push |
+| The pull | Verdicts are kept in step both ways, three-way, so one you clear stays cleared. `--drafts` rebuilds a book on another machine and keeps any local file that differs |
+| Run locally | The API reads the three drafts folders in place (AP61). Its dev command runs on Windows as well as the Mac |
+| Shared code | The blob store moved out of the Ranker's folder to `apps/api/src/store/`. `check-sub-apps` also checks that a book never imports the other game's |
+| Pictures | Faces from master data, by each Uma's default outfit on the Ranker |
+| The first push | Quest 43 drafts, Farm 3 drafts, about 1 MB. The farm's were pulled back into an empty folder and matched by hash |
+
 ## The packets
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [US1](../handoff/tasks/US1-uma-story-shell.md) | The shell: the tile, the three books' homes, the store, `story:push` and `story:pull`, verdicts, the cast by batch, and a plain reader for every pushed file | Claude | L | Your go | **Written** |
-| [US2](../handoff/tasks/US2-cast-book.md) | The Cast book: 100 people, eras, circles, the real relationships, its pages and counts | Claude, the cast session | L | US1 | Written |
+| US1 | The shell: the tile, the three books' homes, the store, `story:push` and `story:pull`, verdicts, the cast by batch, and a plain reader for every pushed file | Claude | L | Your go ✓ | **Done** (P149), live |
+| [US2](../handoff/tasks/US2-cast-book.md) | The Cast book: 100 people, eras, circles, the real relationships, its pages and counts | Claude, the cast session | L | US1 ✓ | Written |
 | [US3](../handoff/tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here; its sandbox retires | Claude | L | US1 | Written |
 | [US4](../handoff/tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with the release's state; its sandbox retires | Claude | L | US1 | Written |
 | uma-farm [F58](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F58-cast-on-the-ranker.md) | The farm's cast on the Ranker: its revision recorded, the order, the opening three and the pilot re-checked | uma-farm's story session | S | — | Written |
@@ -186,7 +227,7 @@ Nothing new is created and no access changes: the runtime account is already obj
 | uma-farm [F60](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F60-story-counts.md) | The farm's counts, your read, the balance | uma-farm's story session, then you | S | F59 | Written |
 | uma-quest Q57–Q60 | Re-cut: their private content stays, their sandbox pages move to US1–US3, the shared half of Q58 and Q59 to US2 | uma-quest's story session | — | Your go there | Amended |
 
-**Order:** US1 first. Then US4 and US2 can run side by side in two sessions: the farm's book is the smaller one and its
+**Order:** US1 is done. After your check of it, US4 and US2 can run side by side in two sessions: the farm's book is the smaller one and its
 release is the nearest, and both games' next packets read the cast book. US3 last: uma-quest's sandbox has the most
 pages and keeps working meanwhile. The farm's F58 needs nothing and can start today.
 
@@ -194,7 +235,7 @@ pages and keeps working meanwhile. The farm's F58 needs nothing and can start to
 
 | When | What |
 |---|---|
-| **Now** | **The go for US1,** or a no, and the two sandboxes stay as they are |
+| **Now** | **Open [Uma Story](https://uma-platform.web.app/story) on your phone:** the cast, then a draft in each book, and a verdict if you like. Then the go for US4 and US2 |
 | After F58 | Read the farm's layer 1 in its sandbox (it still works): the world, the arrivals and the opening three |
 | When you like | The go for uma-quest's Q57, as before |
 | When each book lands | A look at it on your phone |

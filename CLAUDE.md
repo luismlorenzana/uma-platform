@@ -30,10 +30,13 @@
   art and publishing). Live (P130); the Uma Ranker is live (RK1, P131): Playable Umas per outfit on ten art batches, with
   sisters in the private `ranker/profiles.json`; Uma Character Art is live, laid out by the Ranker (CA1, CA2, P135, P136); RK2
   after the owner's ranking. Claude owns Uma Studio and the app.
-- **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App
-  planned as the app's third sub-app, with three books (Cast, Quest, Farm) on one shared cast. Each game's story is
+- **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
+  the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
+  one shared cast. Each game's story is
   written in its own session and repo, private; drafts are pushed here for reading, and each game publishes its own
-  release. This repo's sessions write the app and the Cast book, never a game's story. US1 waits for the owner's go.
+  release. This repo's sessions write the app and the Cast book, never a game's story. `pnpm story:push <book>`
+  sends a book's drafts and `pnpm story:pull <book>` brings the owner's verdicts. US4 and US2 wait for the owner's check
+  of US1.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
 ## Autonomy: what you do without asking

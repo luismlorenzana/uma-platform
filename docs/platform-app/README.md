@@ -13,9 +13,9 @@
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
 > [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52.
 >
-> **Planned (P141): Uma Story,** the third sub-app: one Story App for uma-quest's and uma-farm's stories, with three
-> books (Cast, Quest, Farm) on one shared cast. Its page is [story.md](story.md) (AP53–AP72, packets US1–US4,
-> [visual page](previews/story.html)).
+> **Uma Story is live (US1, P149)** at https://uma-platform.web.app/story: the third sub-app, one Story App for
+> uma-quest's and uma-farm's stories, with three books (Cast, Quest, Farm) on one shared cast. Its page is
+> [story.md](story.md) (AP53–AP72, [visual page](previews/story.html)); US2–US4 fill the books.
 
 ## The short answer
 
@@ -33,7 +33,7 @@
   |---|---|---|
   | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live) | RK1 ✓, then RK2, the pass after your ranking |
   | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs | CA1, then CA2 |
-  | **Uma Story** | uma-quest's and uma-farm's Story Sandboxes, moved here as three books on one cast: Cast, Quest, Farm ([story.md](story.md)) | US1–US4, on your go |
+  | **Uma Story** | uma-quest's and uma-farm's Story Sandboxes, moved here as three books on one cast: Cast, Quest, Farm ([story.md](story.md)) | US1 ✓ (live), then US2–US4 |
   | Uma Quest Art, Uma Farm Art, Uma Platform Art | Each game's and the platform's original assets, drawn from their releases | Later (GA1–GA3) |
   | Publish | Publish from your private authoring | Later (PB1) |
 
@@ -166,10 +166,11 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
-| US1–US4 | Uma Story: the shell and the store, the Cast book, the Quest book, the Farm book ([story.md](story.md)) | Claude | L each | Your go | Written (P141) |
+| US1 | Uma Story's shell: the tile, the cast by batch, a plain reader for both games' drafts, your verdicts, `story:push` and `story:pull` ([story.md](story.md)) | Claude | L | Your go ✓ | **Done** (P149) |
+| US2–US4 | The Cast book, the Quest book, the Farm book ([story.md](story.md)) | Claude | L each | US1 ✓, your check of it | Written (P141) |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; US1 on your go; GA1–GA3 and PB1 when you ask.
+**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; US1 is done, and US4 and US2 follow your check of it; GA1–GA3 and PB1 when you ask.
 
 ## Your steps
 
@@ -178,5 +179,5 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | ~~Now~~ Done 2026-11-11 | ~~The go for the cloud~~: "Go, start SH1" |
 | ~~Now~~ Done 2026-11-11 | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
 | **Now** | **Rank** on [the Ranker](https://uma-platform.web.app/ranker): Playable Umas per outfit, T1–T10, and read the sisters on their cards |
-| **Now** | **The go for Uma Story's US1** ([story.md](story.md)), or a no, and the two Story Sandboxes stay |
+| **Now** | **Open [Uma Story](https://uma-platform.web.app/story)** on your phone: the cast, a draft in each book, a verdict if you like |
 | When each lands | A look at the Ranker and at Character Art on your phone |
