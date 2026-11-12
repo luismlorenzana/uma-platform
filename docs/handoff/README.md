@@ -195,8 +195,8 @@ ST2 only after ST1 is checked.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [ST1](tasks/ST1-uma-stage-move.md) | `uma-stage` 0.1.0, the move: the stage, world builder, sprite player and formats into `packages/stage`; uma-quest moves onto it unchanged; P90/P14 amended | Claude | L | The owner's go ✓ | **In progress** (P142): built and checked in uma-quest; release next |
-| [ST2](tasks/ST2-uma-stage-farm.md) | `uma-stage` 0.2.0, the farm's openings, opt-in: portrait layout, `farm` kits and designs, the band camera, taps, walkers, standees, the sprite-set cap, the seasons' grade | Claude | L | ST1 checked, the owner's go | Written |
+| ST1 | `uma-stage` 0.1.0, the move: the stage, world builder, sprite player and formats into `packages/stage`; uma-quest moves onto it unchanged; P90/P14 amended | Claude | L | The owner's go ✓ | **Done** (P142): `uma-stage` 0.1.0; uma-quest on it unchanged (its D53); below |
+| [ST2](tasks/ST2-uma-stage-farm.md) | `uma-stage` 0.2.0, the farm's openings, opt-in: portrait layout, `farm` kits and designs, the band camera, taps, walkers, standees, the sprite-set cap, the seasons' grade | Claude | L | ST1 checked, the owner's go | Written; waits for the owner's check of ST1 |
 
 ## Releases while packets run in parallel
 
@@ -213,6 +213,7 @@ Several packets release uma-kit; three create packages (`uma-work`, `uma-server`
 
 | Id | What | Commit |
 |---|---|---|
+| ST1 | **`@luismlorenzana/uma-stage` 0.1.0, uma-quest's HD-2D stage as a shared package** (uma-farm's F57, release 1; P142): the engine, world builder, sprite player and stand-ins, with the kit and design formats also under a pure `./formats` (ESM and CommonJS). uma-quest plays on it unchanged (its D53): main JS 138.16 KB gzip (138.14), the test room the same at phone width. Amends P90 and P14 | `925a9b6`, `1a0779f` ([published](https://github.com/luismlorenzana/uma-platform/actions/runs/43243833891)); uma-quest `c005d8d` ([deploy](https://github.com/luismlorenzana/uma-quest/actions/runs/43245850629)) |
 | CA3 | **Full body:** each outfit's full-body 3D render, head to toe, joins master data as `outfit-renders` (768×1024, transparent, lossless; uma-data 1.5.0; release 60cdac99d8ae, 272 renders, every other file carried byte for byte by the new families-only release) and leads each outfit's page in Character Art. [Design](../platform-app/README.md) AP49, AP50; [master-data.md](../master-data.md) | `834b88e`, `3e1c273` (P137) |
 | CA2 | **Character Art's second pass:** a chibi sprite player for every outfit with a master data sprite set (every action, own timings, play, pause, steps); her character's support cards with their art; each adult set's source-art record from the master bucket (release, approval, revision, personality, files, archive; never unpacked). [Design](../platform-app/README.md) AP45–AP48 | `c515216` (P136) |
 | CA1 | **Uma Character Art, live** at https://uma-platform.web.app/art: uma-quest's Album (copied at `6c572e6`) in the kit's frame, Every Uma laid out by the Ranker (T1–T10 by place, the unranked, F collapsed; sisters by name with their profiles), the adult travelers' keys from uma-quest's pack read only, the order fresh from the bucket on every load. [Design](../platform-app/README.md) AP41–AP44 | `cea0b60` (P135) |
