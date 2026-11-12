@@ -14,14 +14,15 @@ order of work is in [roadmap.md](roadmap.md).
 | `uma-puzzle` | Game | Puzzle battles (design to come) |
 | `uma-quest` | Game | An HD-2D travelers RPG in three.js: stories, towns, dungeons, one climb to Lv 50 ([plan](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/plan.md), P88, P90) |
 | `uma-farm` | App | The farm: gather, process, make, and the Forge, sending one-way parcels to the games ([plan](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/plan.md), P88, P89) |
+| `uma-cyberpunk` | Game | A sci-fi tactics RPG on HD-2D grid maps, with guest heroines from the franchise boards ([concept](https://github.com/luismlorenzana/uma-cyberpunk/blob/main/docs/design/concept.md), P144) |
 
 All are under `github.com/luismlorenzana`. uma-platform, uma-racer and uma-rpg are public, with no original-game content
-in git; uma-quest and uma-farm are private until the owner's word; uma-puzzle is private. Everything is personal and never
+in git; uma-quest, uma-farm and uma-cyberpunk are private until the owner's word; uma-puzzle is private. Everything is personal and never
 distributed (P1).
 
 **Each game stands alone** (P2, P3): its own save format, game rules, game-only content, docs, decisions and release
 cycle, and its own GCP/Firebase project, except that uma-quest and uma-farm share uma-rpg's project with every piece
-of their own (P88). Games never import from each other and never read each other's saves. The one shared economy is
+of their own (P88), and uma-cyberpunk joins them from its CY2 (P144). Games never import from each other and never read each other's saves. The one shared economy is
 uma-farm's one-way parcels, capped by each receiving game (P89).
 New games start with fresh saves; nothing carries over from uma-racer (P4).
 

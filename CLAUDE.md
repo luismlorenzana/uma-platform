@@ -2,7 +2,7 @@
 
 - `AGENTS.md` holds the shared rules. `docs/architecture.md` and `docs/roadmap.md` are the cross-game plan that every
   Uma repo follows.
-- Claude drives the roadmap across all the repos (uma-platform, uma-racer, uma-rpg, uma-puzzle, uma-quest, uma-farm). Keep the roadmap's
+- Claude drives the roadmap across all the repos (uma-platform, uma-racer, uma-rpg, uma-puzzle, uma-quest, uma-farm, uma-cyberpunk). Keep the roadmap's
   status current when a phase starts or ends.
 - The owner prefers **no open questions**: when a sensible default exists, decide with a recommendation and log it in
   `docs/decisions.md`.
@@ -53,7 +53,7 @@ The owner gave every session full autonomy to commit, publish and deploy (2026-1
 - **Write packets ahead,** work them in order, flag each done and log its P-decision. Merge your own pull requests;
   review ChatGPT's with must-fixes only (a broken rule, original-game content, a failing check, a real bug), and take a
   ChatGPT code packet that blocks a release.
-- **Read and change sibling repos** (`~/workspace/uma-rpg`, `uma-racer`, `uma-quest`, `uma-farm`) for a step a packet or a
+- **Read and change sibling repos** (`~/workspace/uma-rpg`, `uma-racer`, `uma-quest`, `uma-farm`, `uma-cyberpunk`) for a step a packet or a
   "Both apps" request names, following that repo's CLAUDE.md. Keep `docs/roadmap.md` current when a phase moves.
 
 **Ask in one line, then do it yourself:**
