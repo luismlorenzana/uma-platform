@@ -168,6 +168,18 @@ P127–P131; [infrastructure](../platform-app/infrastructure.md)). SH1, SH2, RK1
 | — | uma-quest: `/album` becomes a link to Character Art, its Album code goes | uma-quest's session | S | CA1 ✓ | Written as its [Q56](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q56-album-moves-to-the-platform.md) (`fa47214`) |
 | GA1–GA3, PB1 | Quest, Farm and Platform Art; Publish from private authoring | Claude | — | The owner's ask | Later |
 
+## The shared HD-2D stage (ST), uma-farm's F57
+
+uma-farm's "Both apps" request [F57](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F57-uma-stage.md)
+(its D63): uma-quest's three.js stage becomes `@luismlorenzana/uma-stage`, so the farm's M7 runs on it without a fork
+(P11, P140). **One piece at a time, each checked back with the owner** (uma-farm D61): ST1 starts on the owner's go, and
+ST2 only after ST1 is checked.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| [ST1](tasks/ST1-uma-stage-move.md) | `uma-stage` 0.1.0, the move: the stage, world builder, sprite player, recorder and formats into `packages/stage`; uma-quest moves onto it unchanged; P90/P14 amended | Claude | L | The owner's go | **Written**, waiting for the go |
+| [ST2](tasks/ST2-uma-stage-farm.md) | `uma-stage` 0.2.0, the farm's openings, opt-in: portrait layout, `farm` kits and designs, the band camera, taps, walkers, standees, the sprite-set cap, the seasons' grade | Claude | L | ST1 checked, the owner's go | Written |
+
 ## Releases while packets run in parallel
 
 Several packets release uma-kit; three create packages (`uma-work`, `uma-server`).
