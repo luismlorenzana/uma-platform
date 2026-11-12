@@ -33,7 +33,6 @@
     "./fx/atlas.json": "./fx/atlas.json",
     "./ui/atlas.png": "./ui/atlas.png",
     "./ui/atlas.json": "./ui/atlas.json",
-    "./package.json": "./package.json",
     "./held/atlas.png": "./held/atlas.png",
     "./held/atlas.json": "./held/atlas.json",
     "./emote/atlas.png": "./emote/atlas.png",
@@ -41,7 +40,10 @@
     "./kit-forest/atlas.png": "./kit-forest/atlas.png",
     "./kit-forest/atlas.json": "./kit-forest/atlas.json",
     "./kit-town-warrior/atlas.png": "./kit-town-warrior/atlas.png",
-    "./kit-town-warrior/atlas.json": "./kit-town-warrior/atlas.json"
+    "./kit-town-warrior/atlas.json": "./kit-town-warrior/atlas.json",
+    "./kit-farm/atlas.png": "./kit-farm/atlas.png",
+    "./kit-farm/atlas.json": "./kit-farm/atlas.json",
+    "./package.json": "./package.json"
   },
   "files": [
     "items",
@@ -57,6 +59,7 @@
     "held",
     "emote",
     "kit-forest",
-    "kit-town-warrior"
+    "kit-town-warrior",
+    "kit-farm"
   ]
 }

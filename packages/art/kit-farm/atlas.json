@@ -1,0 +1,999 @@
+{
+  "formatVersion": 1,
+  "id": "kit-farm",
+  "kind": "farm",
+  "tile": 128,
+  "pages": [
+    {
+      "file": "atlas.png",
+      "width": 2048,
+      "height": 2048
+    }
+  ],
+  "frames": {
+    "grass-1": {
+      "page": 0,
+      "x": 1300,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 4
+    },
+    "grass-2": {
+      "page": 0,
+      "x": 1430,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 3
+    },
+    "grass-3": {
+      "page": 0,
+      "x": 1560,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "grass-4": {
+      "page": 0,
+      "x": 1690,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "path-1": {
+      "page": 0,
+      "x": 1820,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 3
+    },
+    "path-2": {
+      "page": 0,
+      "x": 0,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "tilled-1": {
+      "page": 0,
+      "x": 0,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "tilled-2": {
+      "page": 0,
+      "x": 130,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "forest-floor-1": {
+      "page": 0,
+      "x": 1040,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "forest-floor-2": {
+      "page": 0,
+      "x": 1170,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "water-1": {
+      "page": 0,
+      "x": 260,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "water-2": {
+      "page": 0,
+      "x": 390,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "paving-1": {
+      "page": 0,
+      "x": 130,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "paving-2": {
+      "page": 0,
+      "x": 260,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "riser-grass-1": {
+      "page": 0,
+      "x": 650,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "riser",
+      "weight": 3
+    },
+    "riser-grass-2": {
+      "page": 0,
+      "x": 780,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "riser",
+      "weight": 1
+    },
+    "riser-bank": {
+      "page": 0,
+      "x": 520,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "riser"
+    },
+    "building-wall-plank-1": {
+      "page": 0,
+      "x": 1874,
+      "y": 644,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall",
+      "set": "plank"
+    },
+    "building-wall-plank-2": {
+      "page": 0,
+      "x": 0,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall",
+      "set": "plank"
+    },
+    "window-plank-1": {
+      "page": 0,
+      "x": 780,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "window",
+      "set": "plank"
+    },
+    "window-plank-2": {
+      "page": 0,
+      "x": 910,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "window",
+      "set": "plank"
+    },
+    "door-plank": {
+      "page": 0,
+      "x": 1804,
+      "y": 0,
+      "w": 128,
+      "h": 256,
+      "role": "door",
+      "set": "plank"
+    },
+    "door-wide-plank": {
+      "page": 0,
+      "x": 1546,
+      "y": 0,
+      "w": 256,
+      "h": 256,
+      "role": "door",
+      "set": "plank"
+    },
+    "building-wall-plaster-1": {
+      "page": 0,
+      "x": 130,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall",
+      "set": "plaster"
+    },
+    "building-wall-plaster-2": {
+      "page": 0,
+      "x": 260,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall",
+      "set": "plaster"
+    },
+    "window-plaster-1": {
+      "page": 0,
+      "x": 1040,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "window",
+      "set": "plaster"
+    },
+    "window-plaster-2": {
+      "page": 0,
+      "x": 1170,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "window",
+      "set": "plaster"
+    },
+    "door-plaster": {
+      "page": 0,
+      "x": 0,
+      "y": 386,
+      "w": 128,
+      "h": 256,
+      "role": "door",
+      "set": "plaster"
+    },
+    "door-shop": {
+      "page": 0,
+      "x": 130,
+      "y": 386,
+      "w": 128,
+      "h": 256,
+      "role": "door",
+      "set": "plaster"
+    },
+    "roof-red-1": {
+      "page": 0,
+      "x": 910,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "red"
+    },
+    "roof-red-2": {
+      "page": 0,
+      "x": 1040,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "red"
+    },
+    "roof-thatch-1": {
+      "page": 0,
+      "x": 1690,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "thatch"
+    },
+    "roof-thatch-2": {
+      "page": 0,
+      "x": 1820,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "thatch"
+    },
+    "roof-shingle-1": {
+      "page": 0,
+      "x": 1170,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "shingle"
+    },
+    "roof-shingle-2": {
+      "page": 0,
+      "x": 1300,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "shingle"
+    },
+    "roof-slate-1": {
+      "page": 0,
+      "x": 1430,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "slate"
+    },
+    "roof-slate-2": {
+      "page": 0,
+      "x": 1560,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "roof",
+      "set": "slate"
+    },
+    "tree-1": {
+      "page": 0,
+      "x": 772,
+      "y": 0,
+      "w": 256,
+      "h": 384,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 378
+      },
+      "blocks": true
+    },
+    "tree-2": {
+      "page": 0,
+      "x": 1030,
+      "y": 0,
+      "w": 256,
+      "h": 384,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 378
+      },
+      "blocks": true
+    },
+    "tree-3": {
+      "page": 0,
+      "x": 1288,
+      "y": 0,
+      "w": 256,
+      "h": 384,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 378
+      },
+      "blocks": true
+    },
+    "stump": {
+      "page": 0,
+      "x": 130,
+      "y": 1196,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": true
+    },
+    "mushroom-patch": {
+      "page": 0,
+      "x": 1008,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "herb-patch": {
+      "page": 0,
+      "x": 878,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "scarecrow": {
+      "page": 0,
+      "x": 260,
+      "y": 386,
+      "w": 128,
+      "h": 256,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 250
+      },
+      "blocks": true
+    },
+    "dock": {
+      "page": 0,
+      "x": 710,
+      "y": 644,
+      "w": 256,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "reeds": {
+      "page": 0,
+      "x": 390,
+      "y": 936,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "mill-sails": {
+      "page": 0,
+      "x": 386,
+      "y": 0,
+      "w": 384,
+      "h": 384,
+      "role": "sign",
+      "foot": {
+        "x": 192,
+        "y": 192
+      }
+    },
+    "chimney": {
+      "page": 0,
+      "x": 1686,
+      "y": 386,
+      "w": 64,
+      "h": 192,
+      "role": "sign",
+      "foot": {
+        "x": 32,
+        "y": 186
+      }
+    },
+    "smoker": {
+      "page": 0,
+      "x": 1556,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": true
+    },
+    "log-pile": {
+      "page": 0,
+      "x": 968,
+      "y": 644,
+      "w": 256,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "saw-bench": {
+      "page": 0,
+      "x": 1226,
+      "y": 644,
+      "w": 192,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 96,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "bin": {
+      "page": 0,
+      "x": 1744,
+      "y": 644,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "crates": {
+      "page": 0,
+      "x": 0,
+      "y": 644,
+      "w": 192,
+      "h": 160,
+      "role": "prop",
+      "foot": {
+        "x": 96,
+        "y": 154
+      },
+      "blocks": true
+    },
+    "barrel": {
+      "page": 0,
+      "x": 1300,
+      "y": 1066,
+      "w": 96,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 48,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "sack": {
+      "page": 0,
+      "x": 260,
+      "y": 1196,
+      "w": 96,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 48,
+        "y": 90
+      },
+      "blocks": true
+    },
+    "gate-arch": {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "w": 384,
+      "h": 384,
+      "role": "prop",
+      "foot": {
+        "x": 192,
+        "y": 378
+      },
+      "blocks": false
+    },
+    "fence-1": {
+      "page": 0,
+      "x": 650,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "fence-2": {
+      "page": 0,
+      "x": 780,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "fence-broken": {
+      "page": 0,
+      "x": 910,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "stall-awning": {
+      "page": 0,
+      "x": 648,
+      "y": 386,
+      "w": 256,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "porch": {
+      "page": 0,
+      "x": 390,
+      "y": 386,
+      "w": 256,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 128,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "flower-box": {
+      "page": 0,
+      "x": 488,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "sign",
+      "foot": {
+        "x": 64,
+        "y": 30
+      }
+    },
+    "lot-stakes": {
+      "page": 0,
+      "x": 324,
+      "y": 644,
+      "w": 384,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 192,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "weeds-1": {
+      "page": 0,
+      "x": 520,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "weeds-2": {
+      "page": 0,
+      "x": 650,
+      "y": 1066,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "brambles": {
+      "page": 0,
+      "x": 1818,
+      "y": 386,
+      "w": 192,
+      "h": 160,
+      "role": "prop",
+      "foot": {
+        "x": 96,
+        "y": 154
+      },
+      "blocks": true
+    },
+    "flowers-1": {
+      "page": 0,
+      "x": 618,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "flowers-2": {
+      "page": 0,
+      "x": 748,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "bush-1": {
+      "page": 0,
+      "x": 1420,
+      "y": 644,
+      "w": 160,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 80,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "bush-2": {
+      "page": 0,
+      "x": 1582,
+      "y": 644,
+      "w": 160,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 80,
+        "y": 122
+      },
+      "blocks": true
+    },
+    "rock-small": {
+      "page": 0,
+      "x": 1138,
+      "y": 1196,
+      "w": 96,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 48,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "lantern": {
+      "page": 0,
+      "x": 1752,
+      "y": 386,
+      "w": 64,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 32,
+        "y": 186
+      },
+      "blocks": true,
+      "light": {
+        "color": "#ffc46b",
+        "radius": 4,
+        "flicker": true
+      }
+    },
+    "crop-sprout": {
+      "page": 0,
+      "x": 358,
+      "y": 1196,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 58
+      },
+      "blocks": false
+    },
+    "crop-growing": {
+      "page": 0,
+      "x": 1528,
+      "y": 1066,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    },
+    "crop-withered": {
+      "page": 0,
+      "x": 0,
+      "y": 1196,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    },
+    "crop-root": {
+      "page": 0,
+      "x": 1918,
+      "y": 1066,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    },
+    "crop-leafy": {
+      "page": 0,
+      "x": 1788,
+      "y": 1066,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    },
+    "crop-herb": {
+      "page": 0,
+      "x": 1658,
+      "y": 1066,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    },
+    "crop-grain": {
+      "page": 0,
+      "x": 194,
+      "y": 644,
+      "w": 128,
+      "h": 160,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 154
+      },
+      "blocks": false
+    },
+    "crop-rice": {
+      "page": 0,
+      "x": 390,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "crop-staked-red": {
+      "page": 0,
+      "x": 1296,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "crop-staked-green": {
+      "page": 0,
+      "x": 1036,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "crop-staked-purple": {
+      "page": 0,
+      "x": 1166,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "crop-corn": {
+      "page": 0,
+      "x": 906,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "crop-sunflower": {
+      "page": 0,
+      "x": 1426,
+      "y": 386,
+      "w": 128,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 186
+      },
+      "blocks": false
+    },
+    "crop-spear": {
+      "page": 0,
+      "x": 520,
+      "y": 806,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 122
+      },
+      "blocks": false
+    },
+    "crop-gourd": {
+      "page": 0,
+      "x": 1398,
+      "y": 1066,
+      "w": 128,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 90
+      },
+      "blocks": false
+    }
+  }
+}

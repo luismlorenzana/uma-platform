@@ -607,3 +607,22 @@ there is no animation runtime in this package. H10's game integration follows pu
 has 1×/2×/4× speed buttons and a reduced-motion final-pose toggle, and honours the OS preference as well. The build
 checks every id, size, kind/frame, readable pose and unclipped outline; Vitest pins byte repeatability and every
 checked-in index/frame. All art is drawn from code, with no third-party source images.
+
+## Farm kit, wave 1 (uma-farm F9)
+
+`kit-farm/atlas.png` and `kit-farm/atlas.json` export 87 original full-colour frames for uma-farm's HD-2D farm
+(`formatVersion: 1`, `kind: "farm"`, 128 texels a tile), the first kit drawn by deterministic code (P147;
+`scripts/kit-art`, `pnpm art:kit-farm`). One 2048 page holds wave 1 of [kit-farm.md](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/kit-farm.md) §6:
+
+| Group | Frames |
+|---|---|
+| Floors | `grass-1`–`4`, `path-1`–`2`, `tilled-1`–`2`, `forest-floor-1`–`2`, `water-1`–`2`, `paving-1`–`2`, weighted, meeting in any order |
+| Risers | `riser-grass-1`–`2`, `riser-bank` (top 16 texels the lip) |
+| Buildings, by `set` | `plank`: `building-wall-plank-1`–`2`, `window-plank-1`–`2`, `door-plank`, `door-wide-plank` (256 × 256); `plaster`: `building-wall-plaster-1`–`2`, `window-plaster-1`–`2`, `door-plaster`, `door-shop`; roofs `red`, `thatch`, `shingle`, `slate` (`roof-<set>-1`–`2`) |
+| Props | 35, with `foot`, `blocks` and the lantern's `light`; `mill-sails`, `chimney` and `flower-box` are mounted pieces (role `sign`, fixed at their foot) |
+| Crops | `crop-sprout`, `crop-growing`, `crop-withered` and twelve ripe families |
+
+Tiling pieces have their edge texels copied one texel into the 2-texel gap round them, so a scaled, mipmapped kit
+shows no seams; cut-outs keep a clear gap. Every earlier uma-art file is byte-identical. The code, its tests and the
+[review](../../assets/authored/kit-farm/review/index.html) live outside the package; only the atlas files ship. Wave 2's
+30 frames come in a later minor, every wave-1 frame unchanged.

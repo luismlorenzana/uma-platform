@@ -1,0 +1,22 @@
+{
+  "name": "@uma-platform/kit-art",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Original full-colour HD-2D kits drawn by deterministic code (P147): the code is the master \u2192 packages/art/kit-*/.",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "draw": "tsx src/export.ts",
+    "review": "tsx src/review.ts",
+    "review:band": "vite review-band --port 4332 --strictPort"
+  },
+  "devDependencies": {
+    "@luismlorenzana/uma-stage": "workspace:*",
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.6",
+    "vitest": "^3.2.7"
+  }
+}

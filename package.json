@@ -44,6 +44,7 @@
     "art:props": "pnpm --filter @uma-platform/authored-art run draw",
     "art:kits": "pnpm --filter @uma-platform/authored-art run kits",
     "art:kits:previews": "pnpm --filter @uma-platform/authored-art run kit-previews",
+    "art:kit-farm": "pnpm --filter @uma-platform/kit-art run draw",
     "app:icons": "pnpm --filter @uma-platform/web icons"
   },
   "devDependencies": {
