@@ -25,18 +25,21 @@ before. The farm's openings are ST2.
 
 ## Decisions made
 
-1. **`@luismlorenzana/uma-stage`** in `packages/stage`, built like uma-kit (ESM, types, subpath exports where useful).
-   **three.js is a dependency pinned exact (0.187.0)**; React, `@luismlorenzana/uma-kit` and
-   `@luismlorenzana/uma-data` are peer dependencies. The game imports the stage lazily, so its main bundle doesn't grow.
+1. **`@luismlorenzana/uma-stage`** in `packages/stage`, built like uma-kit (ESM, types). **Two entry points** (P142): the
+   root holds everything, and `./formats` holds only the kit and design formats, pure and built as ESM and CommonJS, so
+   uma-quest's rules and its CommonJS API re-export them without three.js. **three.js (0.187.0, exact), React,
+   `@luismlorenzana/uma-kit` and `@luismlorenzana/uma-data` are optional peers**, installed by a game that draws the
+   stage and by no server. The game imports the stage lazily, so its main bundle doesn't grow.
 2. **What moves:** the stage, camera, frames and timing, input, turn, `TurnedStage`, the field controls and
    `useFieldInput`; the world builder, geometry, walking, effects (lights, fog, post-processing), and the kit loader;
-   the sprite player, loader, cache, facing, tint, trail, blink and actor; the stand-in kit and set; the measurement
-   recorder and battery saver; the formats `parseKitAtlas`, `KIT_REQUIRED`, `kitMissing`, `kitVariants`, `pickVariant`,
+   the sprite player, loader, cache, facing, tint, trail, blink and actor; the stand-in kit and set; frame stats
+   (`FpsRecorder`) and the battery saver; the formats `parseKitAtlas`, `KIT_REQUIRED`, `kitMissing`, `kitVariants`, `pickVariant`,
    `parseRoomDesign`, `parseTownDesign`, `gridOf`, `townGrid`, `canStep`, `WALL_LEVELS` and their types. Their tests
    move with them.
 3. **What stays in uma-quest (its content and rules):** batch 1's sets, key sets, keys and fixtures; the dungeon
-   generator and `FOREST_ROOMS`; the measurement upload queue (it posts to uma-quest's API); the test room (it reads
-   uma-quest's fight waves, router and build id); which kits it loads (`kit-forest`, `kit-town-warrior`).
+   generator and `FOREST_ROOMS`; the measurement recorder and upload queue (they write and post uma-quest's own
+   measurement schema, which its API parses; P142); the test room (it reads uma-quest's fight waves, router and build
+   id); which kits it loads (`kit-forest`, `kit-town-warrior`).
 4. **Seams, the smallest that keep the move a move:**
    - **The engine takes a built world** (a room, town or dungeon floor already generated) instead of calling
      `generateDungeon` itself; uma-quest generates its floors and hands them over.

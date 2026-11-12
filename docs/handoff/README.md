@@ -195,7 +195,7 @@ ST2 only after ST1 is checked.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| [ST1](tasks/ST1-uma-stage-move.md) | `uma-stage` 0.1.0, the move: the stage, world builder, sprite player, recorder and formats into `packages/stage`; uma-quest moves onto it unchanged; P90/P14 amended | Claude | L | The owner's go | **Written**, waiting for the go |
+| [ST1](tasks/ST1-uma-stage-move.md) | `uma-stage` 0.1.0, the move: the stage, world builder, sprite player and formats into `packages/stage`; uma-quest moves onto it unchanged; P90/P14 amended | Claude | L | The owner's go ✓ | **In progress** (P142): built and checked in uma-quest; release next |
 | [ST2](tasks/ST2-uma-stage-farm.md) | `uma-stage` 0.2.0, the farm's openings, opt-in: portrait layout, `farm` kits and designs, the band camera, taps, walkers, standees, the sprite-set cap, the seasons' grade | Claude | L | ST1 checked, the owner's go | Written |
 
 ## Releases while packets run in parallel
