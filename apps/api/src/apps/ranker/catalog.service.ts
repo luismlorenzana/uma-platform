@@ -7,7 +7,7 @@ import {
   buildCatalog, emptyLegacy, enemyImagePaths, IMPORTED, parseEnemyCatalog, parseEnemyImport, parseLegacy,
   type EnemyImport, type TierCatalog,
 } from '@uma-platform/tiers'
-import type { BlobStore } from './blob-store'
+import type { BlobStore } from '../../store/blob-store'
 
 export interface LoadedCatalog {
   catalog: TierCatalog

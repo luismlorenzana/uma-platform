@@ -1,6 +1,7 @@
-// Where the Ranker's files live (AP9, AP10): `gs://uma-platform-content/ranker/` in production, a local folder in dev
-// (`content/authoring/ranker`, the same layout). Every write names the generation it read, so two saves can never
-// overwrite each other: the bucket's own `ifGenerationMatch`, or a content hash under one in-process queue locally.
+// Where a sub-app's files live (AP9, AP10): a folder of `gs://uma-platform-content` in production (`ranker/`,
+// `story/<book>/`), a local folder with the same layout in dev. Every write names the generation it read, so two saves
+// can never overwrite each other: the bucket's own `ifGenerationMatch`, or a content hash under one in-process queue
+// locally. Shared by the sub-apps, so it lives outside src/apps/ (AP1).
 import { createHash } from 'node:crypto'
 import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
 import { dirname, join, relative, resolve, sep } from 'node:path'
@@ -17,7 +18,7 @@ export interface BlobStore {
   read(path: string): Promise<StoredBlob | null>
   /** Writes when the file is still at `ifGeneration` (ABSENT: not there yet). The new generation, or null on a lost race. */
   write(path: string, bytes: Uint8Array, ifGeneration: string): Promise<string | null>
-  /** Every file path under a folder, relative to the store. */
+  /** Every file path under a folder, relative to the store; '' lists the whole store. */
   list(prefix: string): Promise<string[]>
 }
 
@@ -62,7 +63,7 @@ export class DirectoryBlobStore implements BlobStore {
     return work
   }
   async list(prefix: string): Promise<string[]> {
-    const base = this.full(prefix.replace(/\/+$/, '')), out: string[] = []
+    const folder = prefix.replace(/\/+$/, ''), base = folder === '' ? this.root : this.full(folder), out: string[] = []
     const walk = async (dir: string): Promise<void> => {
       const entries = await readdir(dir, { withFileTypes: true }).catch((error: NodeJS.ErrnoException) => { if (error.code === 'ENOENT') return []; throw error })
       for (const entry of entries) {
@@ -86,7 +87,8 @@ interface GcsBucket {
   file(path: string, options?: { generation?: string | number }): GcsFile
   getFiles(options: { prefix: string }): Promise<[{ name: string }[]]>
 }
-const contentTypeOf = (path: string) => (path.endsWith('.json') ? 'application/json' : path.endsWith('.webp') ? 'image/webp' : 'application/octet-stream')
+const contentTypeOf = (path: string) =>
+  path.endsWith('.json') ? 'application/json' : path.endsWith('.md') ? 'text/markdown; charset=utf-8' : path.endsWith('.webp') ? 'image/webp' : 'application/octet-stream'
 
 /** The app's private bucket, under a prefix, read and written with the runtime account. */
 export class BucketBlobStore implements BlobStore {
@@ -121,14 +123,16 @@ export class BucketBlobStore implements BlobStore {
     }
   }
   async list(prefix: string): Promise<string[]> {
-    const [files] = await (await this.open()).getFiles({ prefix: this.prefix + safe(prefix.replace(/\/+$/, '')) + '/' })
+    const folder = prefix.replace(/\/+$/, '')
+    const [files] = await (await this.open()).getFiles({ prefix: folder === '' ? this.prefix : `${this.prefix}${safe(folder)}/` })
     return files.map((f) => f.name.slice(this.prefix.length)).sort()
   }
 }
 
-/** The bucket when one is named, else the folder. */
-export function blobStore(options: { bucket?: string; dir?: string }): BlobStore {
-  if (options.bucket) return new BucketBlobStore(options.bucket, 'ranker/')
+/** The bucket's folder (`prefix`, ending in a slash) when a bucket is named, else the local folder. */
+export function blobStore(options: { bucket?: string; prefix: string; dir?: string }): BlobStore {
+  if (!/^([a-z0-9][a-z0-9-]*\/)+$/.test(options.prefix)) throw new Error(`A store's prefix is a folder path ending in a slash: ${options.prefix}`)
+  if (options.bucket) return new BucketBlobStore(options.bucket, options.prefix)
   if (options.dir) return new DirectoryBlobStore(options.dir)
-  throw new Error('The Ranker needs CONTENT_BUCKET or a local RANKER_DIR')
+  throw new Error(`The store ${options.prefix} needs CONTENT_BUCKET or a local folder`)
 }

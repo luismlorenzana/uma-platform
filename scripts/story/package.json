@@ -1,0 +1,19 @@
+{
+  "name": "@uma-platform/story-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Moves a book's drafts and verdicts between a writer's machine and Uma Story's review copy in the app's bucket (US1, AP55-AP58): push the drafts, pull the owner's verdicts.",
+  "type": "module",
+  "scripts": {
+    "push": "node --import tsx src/push.ts",
+    "pull": "node --import tsx src/pull.ts",
+    "lint": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

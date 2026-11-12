@@ -3,14 +3,14 @@
 import { resolve } from 'node:path'
 import { DirectoryReleaseSource, fileSource, PrivatePackModule, type FileSource } from '@luismlorenzana/uma-server/content'
 import { Module } from '@nestjs/common'
-import { blobStore, type BlobStore } from './blob-store'
+import { blobStore, type BlobStore } from '../../store/blob-store'
 import { CatalogService, releaseSource } from './catalog.service'
 import { RANKER_CATALOG, RANKER_STORE, RankerController } from './ranker.controller'
 import { RankerStore } from './ranker.store'
 
 /** The bucket in production; `content/authoring/ranker` in dev (RANKER_DIR). */
 export const rankerBlobs = (): BlobStore =>
-  blobStore({ bucket: process.env.CONTENT_BUCKET, dir: resolve(process.cwd(), process.env.RANKER_DIR ?? '../../content/authoring/ranker') })
+  blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'ranker/', dir: resolve(process.cwd(), process.env.RANKER_DIR ?? '../../content/authoring/ranker') })
 const blobs = rankerBlobs()
 const assets: FileSource = { read: async (path) => (await blobs.read(path))?.bytes ?? null }
 const release = (): FileSource =>

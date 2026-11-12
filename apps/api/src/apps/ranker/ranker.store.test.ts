@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { emptyBoard, emptyProfiles, type TierCatalog, type UmaCharacter } from '@uma-platform/tiers'
 import { afterAll, describe, expect, it } from 'vitest'
-import { ABSENT, DirectoryBlobStore } from './blob-store'
+import { ABSENT, DirectoryBlobStore } from '../../store/blob-store'
 import { RankerConflict, RankerInvalid, RankerStore } from './ranker.store'
 
 // Invented records only.

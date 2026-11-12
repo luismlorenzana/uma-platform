@@ -6,7 +6,7 @@
   "scripts": {
     "build": "nest build",
     "start": "node dist/main.js",
-    "dev": "AUTH_MODE=disabled PORT=8111 nest start --watch",
+    "dev": "node dev.mjs",
     "lint": "tsc --noEmit",
     "test": "vitest run"
   },

@@ -39,6 +39,8 @@
     "ranker:push": "pnpm --filter @uma-platform/ranker-scripts run push",
     "ranker:pull": "pnpm --filter @uma-platform/ranker-scripts run pull",
     "ranker:plan": "pnpm --filter @uma-platform/ranker-scripts run plan",
+    "story:push": "pnpm --filter @uma-platform/story-scripts run push",
+    "story:pull": "pnpm --filter @uma-platform/story-scripts run pull",
     "art:props": "pnpm --filter @uma-platform/authored-art run draw",
     "art:kits": "pnpm --filter @uma-platform/authored-art run kits",
     "art:kits:previews": "pnpm --filter @uma-platform/authored-art run kit-previews",

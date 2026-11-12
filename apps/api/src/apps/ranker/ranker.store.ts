@@ -5,7 +5,7 @@ import {
   BOARDS, emptyBoard, emptyProfiles, outfitIndex, parseBoard, parseProfiles, profileProblems, tierPlan,
   type BoardId, type BoardState, type BoardStates, type TierCatalog, type UmaProfiles,
 } from '@uma-platform/tiers'
-import { ABSENT, type BlobStore } from './blob-store'
+import { ABSENT, type BlobStore } from '../../store/blob-store'
 
 export class RankerConflict extends Error {
   constructor(readonly current: unknown) { super('This changed since it was loaded. Reload it before saving.') }

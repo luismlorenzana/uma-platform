@@ -1,0 +1,25 @@
+/* Uma Story's few own styles: the Ranker's ten warm-to-cool tier hues as a translucent badge under the kit's ink
+   (readable in light and dark), and the marks for a verdict and a finding. */
+.story-t-T1 { --tier: 8 }
+.story-t-T2 { --tier: 24 }
+.story-t-T3 { --tier: 40 }
+.story-t-T4 { --tier: 58 }
+.story-t-T5 { --tier: 90 }
+.story-t-T6 { --tier: 140 }
+.story-t-T7 { --tier: 175 }
+.story-t-T8 { --tier: 200 }
+.story-t-T9 { --tier: 225 }
+.story-t-T10 { --tier: 255 }
+.story-tier { background: hsl(var(--tier, 0) 70% 55% / 0.24); }
+.story-batch { border-left: 4px solid hsl(var(--tier, 0) 70% 55% / 0.7); padding-left: 10px; }
+
+.story-mark { display: inline-block; width: 8px; height: 8px; border-radius: 999px; flex: none; background: var(--color-hairline-strong); }
+.story-mark.liked { background: hsl(150 55% 42%); }
+.story-mark.rework { background: hsl(18 80% 55%); }
+.story-mark.question { background: hsl(210 60% 52%); }
+.story-mark.note { background: var(--color-ink-faint); }
+
+.story-json details > summary { cursor: pointer; list-style: none; }
+.story-json details > summary::-webkit-details-marker { display: none; }
+.story-json details > summary::before { content: '▸'; display: inline-block; width: 1em; color: var(--color-ink-faint); }
+.story-json details[open] > summary::before { content: '▾'; }
