@@ -176,16 +176,17 @@ Farm) on one shared cast, with each game's story still written in its own sessio
 ([platform-app/story.md](../platform-app/story.md), AP53–AP72, [page](../platform-app/previews/story.html), P141).
 The two local Story Sandboxes move here and retire; drafts are pushed to the app's private bucket for reading, and
 each game publishes its own release. **US1 is live** (P149) at https://uma-platform.web.app/story, with both games' drafts
-pushed; US4 and US2 wait for the owner's check of it.
+pushed. **Then local first (P150):** the owner authors and reviews in the two local Story Sandboxes, so **US2, US3 and US4
+are parked**, the sandboxes don't retire, and the story work is in the games (uma-farm's F58–F60, uma-quest's Q57–Q60).
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | US1 | The shell: the tile, the three books' homes, the store, `pnpm story:push` and `story:pull`, verdicts, the cast by batch from the Ranker, a plain reader for every pushed file | Claude | L | The owner's go ✓ | **Done** (P149), below |
-| [US2](tasks/US2-cast-book.md) | The Cast book (private content, then pages): 100 people with a personality and a career card, eras, circles, the real relationships, counts. Takes the shared half of uma-quest's Q58 and Q59 | Claude, the cast session | L | US1 ✓, the owner's check | Written |
-| [US3](tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here, with the Tags and Counts pages its Q58 and Q60 planned; its sandbox retires | Claude | L | US1 | Written |
-| [US4](tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with Counts and the release's state; its sandbox retires | Claude | L | US1 | Written |
+| [US2](tasks/US2-cast-book.md) | The Cast book (private content, then pages): 100 people with a personality and a career card, eras, circles, the real relationships, counts. Takes the shared half of uma-quest's Q58 and Q59 | Claude, the cast session | L | US1 ✓ | **Parked** (P150): uma-quest's Q58 and Q59 write this content, locally |
+| [US3](tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here, with the Tags and Counts pages its Q58 and Q60 planned; its sandbox retires | Claude | L | US1 ✓ | **Parked** (P150) |
+| [US4](tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with Counts and the release's state; its sandbox retires | Claude | L | US1 ✓ | **Parked** (P150) |
 | — | uma-farm: the story's mirrored packets, [F58](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F58-cast-on-the-ranker.md) (the cast on the Ranker), [F59](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F59-tags-and-ties.md) (tags and ties), [F60](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F60-story-counts.md) (counts and the owner's read) | uma-farm's story session | S, M, S | F58 needs nothing | Written there (its D64) |
-| — | uma-quest: Q57–Q60 amended: their private content stays, the shared half goes to US2, the sandbox's new pages to US1–US3 | uma-quest's story session | — | The owner's go there | Amended there (its D52) |
+| — | uma-quest: Q57–Q60 stand as the owner directed them, every page in its sandbox; Q59's relationships carry an `id` for the farm | uma-quest's story session | — | The owner's go there | As written (its D58 withdraws D52's amendments) |
 
 ## The shared HD-2D stage (ST), uma-farm's F57
 

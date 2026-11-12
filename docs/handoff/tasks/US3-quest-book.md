@@ -1,5 +1,9 @@
 # US3 — The Quest book: uma-quest's Story Sandbox, moved here
 
+> **Parked 2026-11-12 (P150, local first).** The owner authors and reviews stories in the games' local Story
+> Sandboxes: uma-quest's sandbox stays the owner's review tool and builds its own new pages. Don't take this packet unless the owner asks to
+> read stories away from the Windows PC. Its text below is as first written (P141).
+
 **uma-platform `apps/*/story/quest`, then uma-quest · Claude · L · Needs: US1 · Unblocks: uma-quest's sandbox retiring**
 
 > Written 2026-11-12 (P141) from [story.md](../../platform-app/story.md), calls AP57, AP59, AP60, AP62 and AP69.

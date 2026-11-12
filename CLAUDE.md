@@ -34,9 +34,9 @@
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is
   written in its own session and repo, private; drafts are pushed here for reading, and each game publishes its own
-  release. This repo's sessions write the app and the Cast book, never a game's story. `pnpm story:push <book>`
-  sends a book's drafts and `pnpm story:pull <book>` brings the owner's verdicts. US4 and US2 wait for the owner's check
-  of US1.
+  release. This repo's sessions never write a game's story. **Local first (P150):** the owner authors and
+  reviews in the games' local Story Sandboxes, so the site is parked after US1 and US2–US4 are not being built; don't
+  move a sandbox's pages here unless the owner asks. `pnpm story:push <book>` is an optional backup of a book's text.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
 ## Autonomy: what you do without asking

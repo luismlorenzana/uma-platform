@@ -1,5 +1,9 @@
 # US2 — The Cast book: who the 100 Umas are, and how they're tied
 
+> **Parked 2026-11-12 (P150, local first).** The owner authors and reviews stories in the games' local Story
+> Sandboxes: uma-quest's Q58 and Q59 write this content locally, in its own private folder, and uma-farm's story session reads it there. Don't take this packet unless the owner asks to
+> read stories away from the Windows PC. Its text below is as first written (P141).
+
 **uma-platform · Claude, the cast session · L (private content, then pages) · Needs: US1 · Unblocks: uma-quest's Q58
 and Q59, uma-farm's F59**
 

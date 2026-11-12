@@ -1,6 +1,8 @@
 # Uma Story: one app, two books, one cast
 
-> **Status: 2026-11-12: US1 is live (P149) at https://uma-platform.web.app/story:** the tile, the cast by batch, and both
+> **Status: 2026-11-12: local first (P150).** The owner authors and reviews stories in the two local Story Sandboxes,
+> so this site is **parked after US1**: US2–US4 are not being built, and the sandboxes don't retire. See
+> [Local first](#local-first-p150). **US1 is live (P149) at https://uma-platform.web.app/story:** the tile, the cast by batch, and both
 > games' drafts in a plain reader with your verdicts ([as built](#as-built-us1-p149)). US2–US4 are written. The owner asked for an intake of the two Story Sandboxes
 > (uma-quest's and uma-farm's), a pass between them, uma-quest's planned story tasks mirrored for the farm where they
 > fit, and whether it's time for one Story App with two sub-apps while each game's story is still written in its own
@@ -30,6 +32,38 @@
   counts. The tournament rewrite and the world pack don't.
 - **No new cloud resource and no access change.** The drafts go in the bucket the Ranker already uses; **$0 a month.**
 - **Found on the way:** uma-quest's 20 story bibles had no backup. They're in the private authoring bucket since today.
+
+## Local first (P150)
+
+> **The owner, 2026-11-12, after US1 went live:** "I do all the story validation in the local apps that both the Farm
+> session and the Quest session built out already", and "I want to focus on local authoring and local review first for
+> sure". **This section is the plan of record. Where the sections below differ, this one wins.**
+
+| What | Now |
+|---|---|
+| **Where stories are written and reviewed** | In each game's local Story Sandbox, as before. Neither retires: AP62 is withdrawn |
+| **The site** (`/story`, US1) | Stays as built and costs nothing. It's for reading a draft away from the Windows PC. Nothing waits on it |
+| **US2, US3, US4** | **Parked.** The sandboxes' pages are not rebuilt here, and there is no Cast book or cast session |
+| **`pnpm story:push <book>`** | Optional: a backup of the text drafts, and what the site shows |
+| **`pnpm story:pull <book> --drafts`** | Optional: takes the farm's drafts to the Mac for its publish (F56) |
+| **Verdicts** | Saved by each sandbox in its own `reviews.json`, as before. A session doesn't need to pull anything to work |
+| **The check report** (`checks.json`) | Not asked of either game now. The shape below stays for a later day |
+
+**What the two games share, as local files on the Windows PC:**
+
+| Shared | Where it is | Who writes it | Who reads it |
+|---|---|---|---|
+| The cast list: the Ranker's 100 Umas by batch | `content/authoring/tiers/plan.json` here (`pnpm ranker:pull`) | The Ranker | Both sandboxes' sessions |
+| The pictures | uma-quest's pack, `content/stories/packs/` | uma-quest's Q57 | The farm's sandbox copies it (`pnpm stories:import-pack`), as today |
+| Each Uma's personality | uma-quest's `content/stories/tags.json` | uma-quest's Q58 | The farm's story session, in place |
+| Eras, circles and the real relationships, each with an `id` | uma-quest's `content/stories/relationships.json` | uma-quest's Q59 | The farm's story session, in place; its ties point at them (`from`) |
+
+So uma-quest's Q57–Q60 stand as the owner directed them (its D50), every page built in its sandbox, and the farm's
+F58–F60 read and count in the Farm Story Sandbox. The notes that moved pages here are withdrawn in both repos
+(uma-quest D58, uma-farm D72).
+
+**To come back to this plan:** the day you want to read and judge stories from your phone or the Mac, US3 and US4 are
+written and waiting.
 
 ## The intake: the two sandboxes side by side
 
@@ -95,7 +129,7 @@
 | AP59 | **One set of layer words:** placeholder, skeleton, bible, scripted, published. Each book maps its own layers onto them (uma-quest's outline sits between skeleton and bible). Every book opens on the cast by batch, each Uma showing her layer, so an unwritten story is a full placeholder, not a gap |
 | AP60 | **One stage, two readers; the formats stay apart.** The shell's player (portraits, the text box, choices, the log, auto) plays a plain list of steps. Each book turns its own steps into that list: uma-quest's 15 kinds, the farm's 9, with its plays as cards. RS18's "a later shared format" is dropped: the games are going different ways |
 | AP61 | **Reading before a push:** run locally, the platform API reads the drafts folders in place (`STORY_QUEST_DIR`, `STORY_FARM_DIR`, `STORY_CAST_DIR`) and writes verdicts there, so "edit a file, come back to the page" still works |
-| AP62 | **The local sandboxes retire when their book is live,** as the Studio's boards did (AP34) and the Album (AP23). Each game keeps its check as `pnpm story:check`; `pnpm stories` opens the local app. Until then both sandboxes keep working, and nothing waits on the app |
+| AP62 | **Withdrawn (P150): the local sandboxes stay,** as the owner's authoring and review tools. As first written: the local sandboxes retire when their book is live, as the Studio's boards did (AP34) and the Album (AP23). Each game keeps its check as `pnpm story:check`; `pnpm stories` opens the local app. Until then both sandboxes keep working, and nothing waits on the app |
 
 ## The cast book
 
@@ -219,23 +253,22 @@ type Layer = 'placeholder' | 'skeleton' | 'outline' | 'bible' | 'scripted' | 'pu
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | US1 | The shell: the tile, the three books' homes, the store, `story:push` and `story:pull`, verdicts, the cast by batch, and a plain reader for every pushed file | Claude | L | Your go ✓ | **Done** (P149), live |
-| [US2](../handoff/tasks/US2-cast-book.md) | The Cast book: 100 people, eras, circles, the real relationships, its pages and counts | Claude, the cast session | L | US1 ✓ | Written |
-| [US3](../handoff/tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here; its sandbox retires | Claude | L | US1 | Written |
-| [US4](../handoff/tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with the release's state; its sandbox retires | Claude | L | US1 | Written |
+| [US2](../handoff/tasks/US2-cast-book.md) | The Cast book: 100 people, eras, circles, the real relationships, its pages and counts | Claude, the cast session | L | US1 ✓ | **Parked** (P150): uma-quest's Q58 and Q59 write this content, locally |
+| [US3](../handoff/tasks/US3-quest-book.md) | The Quest book: uma-quest's sandbox pages moved here; its sandbox retires | Claude | L | US1 ✓ | **Parked** (P150) |
+| [US4](../handoff/tasks/US4-farm-book.md) | The Farm book: uma-farm's sandbox pages moved here, with the release's state; its sandbox retires | Claude | L | US1 ✓ | **Parked** (P150) |
 | uma-farm [F58](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F58-cast-on-the-ranker.md) | The farm's cast on the Ranker: its revision recorded, the order, the opening three and the pilot re-checked | uma-farm's story session | S | — | Written |
-| uma-farm [F59](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F59-tags-and-ties.md) | The farm's tag sheet, and its ties pointing at the cast book | uma-farm's story session | M | F58; US2 for the pointers | Written |
+| uma-farm [F59](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F59-tags-and-ties.md) | The farm's tag sheet, and its ties pointing at uma-quest's real relationships | uma-farm's story session | M | F58; uma-quest's Q59 for the pointers | Written |
 | uma-farm [F60](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F60-story-counts.md) | The farm's counts, your read, the balance | uma-farm's story session, then you | S | F59 | Written |
-| uma-quest Q57–Q60 | Re-cut: their private content stays, their sandbox pages move to US1–US3, the shared half of Q58 and Q59 to US2 | uma-quest's story session | — | Your go there | Amended |
+| uma-quest Q57–Q60 | As the owner directed them (its D50), every page in its sandbox; Q59's relationships carry an `id` for the farm (its D58) | uma-quest's story session | — | Your go there | As written |
 
-**Order:** US1 is done. After your check of it, US4 and US2 can run side by side in two sessions: the farm's book is the smaller one and its
-release is the nearest, and both games' next packets read the cast book. US3 last: uma-quest's sandbox has the most
-pages and keeps working meanwhile. The farm's F58 needs nothing and can start today.
+**Order (P150, local first):** US1 is done and the site stops there. The work is in the games: the farm's F58 needs
+nothing and can start today, then F59 and F60; uma-quest's Q57–Q60 on your go there.
 
 ## Your steps
 
 | When | What |
 |---|---|
-| **Now** | **Open [Uma Story](https://uma-platform.web.app/story) on your phone:** the cast, then a draft in each book, and a verdict if you like. Then the go for US4 and US2 |
-| After F58 | Read the farm's layer 1 in its sandbox (it still works): the world, the arrivals and the opening three |
+| **Now** | Nothing here. The next steps are in the two story sessions: "Take F58" for the farm, "Take Q57" for uma-quest |
+| After F58 | Read the farm's layer 1 in its sandbox: the world, the arrivals and the opening three |
 | When you like | The go for uma-quest's Q57, as before |
-| When each book lands | A look at it on your phone |
+| If you ever want it | [Uma Story](https://uma-platform.web.app/story) on your phone shows the pushed drafts; say so and US3 and US4 resume |

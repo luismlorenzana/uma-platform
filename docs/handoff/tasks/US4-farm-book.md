@@ -1,5 +1,9 @@
 # US4 — The Farm book: uma-farm's Story Sandbox, moved here, with the release's state
 
+> **Parked 2026-11-12 (P150, local first).** The owner authors and reviews stories in the games' local Story
+> Sandboxes: the Farm Story Sandbox stays the owner's review tool and builds its own Counts page (uma-farm F60). Don't take this packet unless the owner asks to
+> read stories away from the Windows PC. Its text below is as first written (P141).
+
 **uma-platform `apps/*/story/farm`, then uma-farm · Claude · L · Needs: US1 · Unblocks: uma-farm's sandbox retiring,
 and F56's pack reaching the machine that publishes**
 
