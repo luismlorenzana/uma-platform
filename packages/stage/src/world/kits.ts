@@ -2,15 +2,15 @@
 // once as a texture, nearest filtering, no mipmaps, at one texel a device pixel like the sprites. Until a page loads, or
 // if it can't, a kind's stand-in drawn in code stands in. Which kits a game uses is its own content (uma-platform ST1).
 import { CanvasTexture, NearestFilter, SRGBColorSpace, TextureLoader, type Texture } from 'three'
-import { kitMissing, type KitAtlas } from '../formats/index.js'
+import { kitMissing, type KitAtlas, type KitKind } from '../formats/index.js'
 import { drawStandInKit, standInKitAtlas } from './standInKit.js'
 
-export type KitKind = 'biome' | 'town'
 export interface LoadedKit { kit: KitAtlas; page: Texture }
 
-/** A kit's atlas, checked: a kit missing any role the builder needs is refused here, never drawn half. */
-export function checkedKit(kit: KitAtlas, name: string): KitAtlas {
-  const missing = kitMissing(kit)
+/** A kit's atlas, checked: a kit missing any role the builder needs is refused here, never drawn half. `extra` names more
+ * frames it must hold (a farm's wave 2, `FARM_WAVE_2`, once the farm draws a wave-2 place). */
+export function checkedKit(kit: KitAtlas, name: string, extra: readonly string[] = []): KitAtlas {
+  const missing = kitMissing(kit, extra)
   if (missing.length) throw new Error(`${name} is missing ${missing.join(', ')}`)
   return kit
 }
@@ -23,7 +23,8 @@ const pixel = <T extends Texture>(page: T): T => {
   return page
 }
 
-/** A kind's stand-in, drawn in code (Q5): the town until Q15, and the forest while its art loads or if it can't. */
+/** A kind's stand-in, drawn in code (Q5): the town until Q15, the forest while its art loads or if it can't, and the farm's
+ * until uma-farm's F9 (ST2). */
 export function standInKit(kind: KitKind): LoadedKit {
   const kit = standInKitAtlas(kind)
   return { kit, page: pixel(new CanvasTexture(drawStandInKit(kit))) }

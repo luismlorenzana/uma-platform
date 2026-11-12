@@ -1,14 +1,15 @@
-// The turned stage (NG6, HD3; Q4): the scene always draws landscape. When the viewport is taller than wide (iOS keeps a
-// Home Screen app upright with the rotation lock on), the stage is turned 90° clockwise, so the phone turned to its left
-// (notch on the left) shows it upright (D10). When iOS has rotated the page itself, the stage isn't turned. Pure: the
-// layout, the CSS transform, the touch map and the turned safe areas, all tested.
+// The turned stage (NG6, HD3; Q4): uma-quest's scene always draws landscape. When the viewport is taller than wide (iOS
+// keeps a Home Screen app upright with the rotation lock on), the stage is turned 90° clockwise, so the phone turned to its
+// left (notch on the left) shows it upright (D10). When iOS has rotated the page itself, the stage isn't turned. A portrait
+// game (uma-farm, FR3; ST2) asks for the `portrait` layout: never turned, the viewport as it is. Pure: the layout, the CSS
+// transform, the touch map and the turned safe areas, all tested.
 
 export interface Insets { top: number; right: number; bottom: number; left: number }
 export interface Point { x: number; y: number }
 
 export interface StageLayout {
   turned: boolean
-  /** The stage's own size in CSS px: always landscape (width ≥ height). */
+  /** The stage's own size in CSS px: landscape (width ≥ height) unless the layout is portrait. */
   width: number
   height: number
   /** The safe areas on the stage's own edges. */
@@ -20,9 +21,12 @@ export interface StageLayout {
 
 export const NO_INSETS: Insets = { top: 0, right: 0, bottom: 0, left: 0 }
 
+/** The two layouts, as uma-kit's `KitStage` names them: landscape (turned on an upright phone) or portrait (never turned). */
+export type StageLayoutKind = 'landscape' | 'portrait'
+
 /** The stage for a viewport and its safe areas (`env(safe-area-inset-*)`, read on the viewport's edges). */
-export function stageLayout(viewportWidth: number, viewportHeight: number, viewportInsets: Insets = NO_INSETS): StageLayout {
-  const turned = viewportHeight > viewportWidth
+export function stageLayout(viewportWidth: number, viewportHeight: number, viewportInsets: Insets = NO_INSETS, layout: StageLayoutKind = 'landscape'): StageLayout {
+  const turned = layout === 'landscape' && viewportHeight > viewportWidth
   if (!turned) return { turned, width: viewportWidth, height: viewportHeight, insets: { ...viewportInsets }, viewportWidth, viewportHeight }
   // Turned clockwise: the stage's top lies along the viewport's right edge, its right along the bottom, its bottom along
   // the left and its left along the top (where the notch is).

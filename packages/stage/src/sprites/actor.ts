@@ -19,8 +19,8 @@ export interface HeldFrame { x: number; y: number; w: number; h: number; grip: {
 export interface HeldArt extends HeldFrame { texture: Texture; pageWidth: number; pageHeight: number; during?: Record<string, HeldFrame> }
 
 let shadowTexture: CanvasTexture | null = null
-/** A soft round shadow, shared by every actor. */
-function softShadow(): CanvasTexture {
+/** A soft round shadow, shared by every actor and standee. */
+export function softShadow(): CanvasTexture {
   if (shadowTexture) return shadowTexture
   const c = document.createElement('canvas')
   c.width = c.height = 64

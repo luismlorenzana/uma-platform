@@ -1,9 +1,17 @@
-// A kit atlas (Q5, D15; the kit spec, docs/design/kits.md): the 2D art a biome or a town is built from. ChatGPT draws it as
+// A kit atlas (Q5, D15; the kit spec, docs/design/kits.md): the 2D art a biome, a town or a farm is built from. ChatGPT draws it as
 // a uma-art family (Q7, Q15); code builds the 3D from its frames (DN28). Pure: the types, the parser and the list of what a
 // kit must hold.
 
 /** A kit's texels a tile: the sprites' density (format.md §2), so a wall facing the camera shows one texel a device pixel. */
 export const KIT_TILE = 128
+
+/** What a kit builds: a dungeon's biome, a town, or a farm (uma-platform ST2, uma-farm KF1). */
+export type KitKind = 'biome' | 'town' | 'farm'
+export const KIT_KINDS: readonly KitKind[] = ['biome', 'town', 'farm']
+/** The roles a `set` may sit on. */
+export const SET_ROLES: readonly KitRole[] = ['building-wall', 'window', 'door', 'roof']
+/** A door's widths: one column, or two (a farm's double doors, 256 × 256). */
+export const DOOR_WIDTHS: readonly number[] = [128, 256]
 
 export type KitRole =
   | 'floor' | 'wall' | 'wall-top' | 'riser' | 'stairs' | 'void' | 'prop'
@@ -28,11 +36,14 @@ export interface KitFrame {
   blocks?: boolean
   /** Props: a live light it casts (a lantern, a torch). */
   light?: KitLight
+  /** Building walls, windows, doors and roofs: the set it belongs to (a farm's `plank`, `plaster`; `red`, `thatch`), which a
+   * design picks a building's material by (uma-platform ST2, uma-farm KF3). Variants within a set go by the position hash. */
+  set?: string
 }
 export interface KitAtlas {
   formatVersion: 1
   id: string
-  kind: 'biome' | 'town'
+  kind: KitKind
   tile: typeof KIT_TILE
   pages: { file: string; width: number; height: number }[]
   frames: Record<string, KitFrame>
@@ -45,11 +56,35 @@ export const KIT_SIZES: Partial<Record<KitRole, { w: number; h: number }>> = {
   'battle-ground': { w: 1024, h: 256 }, 'battle-back': { w: 2048, h: 512 },
 }
 
+const range = (name: string, n: number): string[] => Array.from({ length: n }, (_, i) => `${name}-${i + 1}`)
+/** A farm kit's wave 1 (uma-farm KF12): 87 frames, everything M4 and the romance core open. */
+export const FARM_WAVE_1: readonly string[] = [
+  ...range('grass', 4), ...range('path', 2), ...range('tilled', 2), ...range('forest-floor', 2), ...range('water', 2), ...range('paving', 2),
+  ...range('riser-grass', 2), 'riser-bank',
+  ...range('building-wall-plank', 2), ...range('window-plank', 2), 'door-plank', 'door-wide-plank',
+  ...range('building-wall-plaster', 2), ...range('window-plaster', 2), 'door-plaster', 'door-shop',
+  ...range('roof-red', 2), ...range('roof-thatch', 2), ...range('roof-shingle', 2), ...range('roof-slate', 2),
+  ...range('tree', 3), 'stump', 'mushroom-patch', 'herb-patch', 'scarecrow', 'dock', 'reeds',
+  'mill-sails', 'chimney', 'smoker', 'log-pile', 'saw-bench',
+  'bin', 'crates', 'barrel', 'sack', 'gate-arch', 'fence-1', 'fence-2', 'fence-broken', 'stall-awning',
+  'porch', 'flower-box', 'lot-stakes',
+  'weeds-1', 'weeds-2', 'brambles', 'flowers-1', 'flowers-2', 'bush-1', 'bush-2', 'rock-small', 'lantern',
+  'crop-sprout', 'crop-growing', 'crop-withered', 'crop-root', 'crop-leafy', 'crop-herb', 'crop-grain', 'crop-rice',
+  'crop-staked-red', 'crop-staked-green', 'crop-staked-purple', 'crop-corn', 'crop-sunflower', 'crop-spear', 'crop-gourd',
+]
+/** A farm kit's wave 2 (uma-farm KF12): 30 frames, checked once the farm draws a wave-2 place (`kitMissing`'s `extra`). */
+export const FARM_WAVE_2: readonly string[] = [
+  ...range('building-wall-stone', 2), ...range('window-stone', 2), 'door-stone', 'wall-rock', 'wall-top-rock', ...range('quarry', 2), 'riser-quarry',
+  'paddock', 'mine-mouth', 'ore-cart', ...range('quarry-rock', 2), 'stone-stack', 'furnace', 'grindstone', 'anvil', 'forge-chimney', 'ring-bench',
+  'trough', 'hay-bale', 'awning', 'cafe-table', 'herb-box', 'bunting', 'flagpole', 'signpost', 'notice-board',
+]
+
 /** The names a kit must hold, by kind (the kit spec's lists). A role marked `*` needs at least one frame of that role. */
-export const KIT_REQUIRED: Readonly<Record<KitAtlas['kind'], readonly string[]>> = {
+export const KIT_REQUIRED: Readonly<Record<KitKind, readonly string[]>> = {
   biome: ['floor*', 'wall*', 'wall-top', 'riser*', 'stairs', 'chest-closed', 'chest-open', 'spring', 'waystone', 'stairs-down', 'stairs-up',
     'battle-ground', 'battle-back', 'battle-mid*'],
   town: ['floor*', 'wall*', 'wall-top', 'riser*', 'stairs', 'building-wall*', 'door', 'window*', 'roof*', 'sign-inn', 'sign-shop'],
+  farm: ['floor*', 'riser*', 'building-wall*', 'window*', 'door*', 'roof*', ...FARM_WAVE_1],
 }
 
 export class KitParseError extends Error {
@@ -69,16 +104,16 @@ const int = (v: unknown, path: string, min: number, max: number): number => {
   return v
 }
 
-/** What a kit lacks against the spec's list for its kind: empty when it's complete. */
-export function kitMissing(kit: Pick<KitAtlas, 'kind' | 'frames'>): string[] {
+/** What a kit lacks against the spec's list for its kind, plus any `extra` names (a farm's wave 2): empty when complete. */
+export function kitMissing(kit: Pick<KitAtlas, 'kind' | 'frames'>, extra: readonly string[] = []): string[] {
   const names = Object.keys(kit.frames), roles = new Set(Object.values(kit.frames).map((f) => f.role))
-  return KIT_REQUIRED[kit.kind].filter((need) => (need.endsWith('*') ? !roles.has(need.slice(0, -1) as KitRole) : !names.includes(need)))
+  return [...KIT_REQUIRED[kit.kind], ...extra].filter((need) => (need.endsWith('*') ? !roles.has(need.slice(0, -1) as KitRole) : !names.includes(need)))
 }
 
 export function parseKitAtlas(value: unknown): KitAtlas {
   const o = obj(value, 'kit')
   if (o.formatVersion !== 1) throw new KitParseError('kit.formatVersion', 'expected 1')
-  if (o.kind !== 'biome' && o.kind !== 'town') throw new KitParseError('kit.kind', "expected 'biome' or 'town'")
+  if (!KIT_KINDS.includes(o.kind as KitKind)) throw new KitParseError('kit.kind', `expected one of ${KIT_KINDS.join(', ')}`)
   if (o.tile !== KIT_TILE) throw new KitParseError('kit.tile', `expected ${KIT_TILE}`)
   if (typeof o.id !== 'string' || !/^kit-[a-z0-9-]+$/.test(o.id)) throw new KitParseError('kit.id', 'expected kit-<name>')
   if (!Array.isArray(o.pages) || o.pages.length < 1 || o.pages.length > 8) throw new KitParseError('kit.pages', 'expected 1–8 pages')
@@ -98,7 +133,8 @@ export function parseKitAtlas(value: unknown): KitAtlas {
     const x = int(q.x, `${p}.x`, 0, 4095), y = int(q.y, `${p}.y`, 0, 4095), w = int(q.w, `${p}.w`, 1, 2048), h = int(q.h, `${p}.h`, 1, 2048)
     if (x + w > pages[page]!.width || y + h > pages[page]!.height) throw new KitParseError(p, 'leaves its page')
     const size = KIT_SIZES[role]
-    if (size && (w !== size.w || h !== size.h)) throw new KitParseError(p, `a ${role} is ${size.w} × ${size.h}`)
+    if (role === 'door' && size) { if (!DOOR_WIDTHS.includes(w) || h !== size.h) throw new KitParseError(p, `a door is ${DOOR_WIDTHS.join(' or ')} × ${size.h}`) }
+    else if (size && (w !== size.w || h !== size.h)) throw new KitParseError(p, `a ${role} is ${size.w} × ${size.h}`)
     if (!size && (w > 1024 || h > 1024)) throw new KitParseError(p, 'at most 1024 × 1024')
     const frame: KitFrame = { page, x, y, w, h, role }
     if (q.weight !== undefined) frame.weight = int(q.weight, `${p}.weight`, 1, 100)
@@ -115,17 +151,29 @@ export function parseKitAtlas(value: unknown): KitAtlas {
       if (typeof l.color !== 'string' || !/^#[0-9a-f]{6}$/i.test(l.color)) throw new KitParseError(`${p}.light.color`, 'expected #rrggbb')
       frame.light = { color: l.color, radius: int(l.radius, `${p}.light.radius`, 1, 12), ...(l.flicker === true ? { flicker: true } : {}) }
     }
+    if (q.set !== undefined) {
+      if (!SET_ROLES.includes(role)) throw new KitParseError(`${p}.set`, `only ${SET_ROLES.join(', ')} frames belong to a set`)
+      if (typeof q.set !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(q.set)) throw new KitParseError(`${p}.set`, 'expected a kebab-case set')
+      frame.set = q.set
+    }
     frames[name] = frame
   }
-  const kit: KitAtlas = { formatVersion: 1, id: o.id, kind: o.kind, tile: KIT_TILE, pages, frames }
+  const kit: KitAtlas = { formatVersion: 1, id: o.id, kind: o.kind as KitKind, tile: KIT_TILE, pages, frames }
   const missing = kitMissing(kit)
   if (missing.length) throw new KitParseError('kit.frames', `missing ${missing.join(', ')}`)
   return kit
 }
 
-/** A role's frames and their weights, in name order, for deterministic picks. */
-export function kitVariants(kit: Pick<KitAtlas, 'frames'>, role: KitRole): { name: string; weight: number }[] {
-  return Object.entries(kit.frames).filter(([, f]) => f.role === role).sort(([a], [b]) => a.localeCompare(b))
+/** A role's frames and their weights, in name order, for deterministic picks; with `set`, only that set's (ST2). */
+export function kitVariants(kit: Pick<KitAtlas, 'frames'>, role: KitRole, set?: string): { name: string; weight: number }[] {
+  return Object.entries(kit.frames).filter(([, f]) => f.role === role && (set === undefined || f.set === set)).sort(([a], [b]) => a.localeCompare(b))
+    .map(([name, f]) => ({ name, weight: f.weight ?? 1 }))
+}
+
+/** A family's frames by name (`grass-1`, `grass-2` … for `grass`), for a farm's ground; in name order, with weights. */
+export function familyVariants(kit: Pick<KitAtlas, 'frames'>, family: string): { name: string; weight: number }[] {
+  const re = new RegExp(`^${family}-\\d+$`)
+  return Object.entries(kit.frames).filter(([name]) => re.test(name)).sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }))
     .map(([name, f]) => ({ name, weight: f.weight ?? 1 }))
 }
 

@@ -2,6 +2,10 @@
 // reads. A design is a grid of tiles, one character a tile, with heights in levels (a level is one tile high; walls are two
 // levels tall). Pure: the types, strict parsers and the reachability check.
 
+import { DesignParseError, id, int, list, object, oneOf, rows } from './parse.js'
+
+export { DesignParseError } from './parse.js'
+
 export type CellKind = 'wall' | 'floor' | 'void' | 'stairs-n' | 'stairs-e' | 'stairs-s' | 'stairs-w'
 export type Side = 'n' | 'e' | 's' | 'w'
 export interface Tile { x: number; z: number }
@@ -62,13 +66,6 @@ export interface TownDesign {
   markers: { kind: MarkerKind; x: number; z: number }[]
   /** Kit props by frame name (a well, a stall, a lantern), each standing on a walkable tile. */
   props?: { name: string; x: number; z: number }[]
-}
-
-export class DesignParseError extends Error {
-  constructor(readonly path: string, message: string) {
-    super(`${path}: ${message}`)
-    this.name = 'DesignParseError'
-  }
 }
 
 // --- The grid ----------------------------------------------------------------------------------------------------------
@@ -151,46 +148,11 @@ export function socketTile(g: Pick<Grid, 'w' | 'd'>, socket: { side: Side; at: n
 
 // --- Parsing -----------------------------------------------------------------------------------------------------------
 
-type Obj = Record<string, unknown>
-function object(value: unknown, path: string, keys: readonly string[], optional: readonly string[] = []): Obj {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new DesignParseError(path, 'expected an object')
-  const extra = Object.keys(value).filter((k) => !keys.includes(k) && !optional.includes(k))
-  if (extra.length) throw new DesignParseError(path, `unknown keys ${extra.join(', ')}`)
-  const missing = keys.filter((k) => !(k in value))
-  if (missing.length) throw new DesignParseError(path, `missing ${missing.join(', ')}`)
-  return value as Obj
-}
-const int = (v: unknown, path: string, min: number, max: number): number => {
-  if (typeof v !== 'number' || !Number.isInteger(v) || v < min || v > max) throw new DesignParseError(path, `expected an integer ${min}–${max}`)
-  return v
-}
-const id = (v: unknown, path: string): string => {
-  if (typeof v !== 'string' || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(v) || v.length > 48) throw new DesignParseError(path, 'expected a kebab-case id')
-  return v
-}
-function list<T>(v: unknown, path: string, max: number, item: (x: unknown, p: string) => T): T[] {
-  if (!Array.isArray(v) || v.length > max) throw new DesignParseError(path, `expected a list of at most ${max}`)
-  return v.map((x, i) => item(x, `${path}[${i}]`))
-}
-function oneOf<T extends string>(v: unknown, path: string, all: readonly T[]): T {
-  if (typeof v !== 'string' || !all.includes(v as T)) throw new DesignParseError(path, `expected one of ${all.join(', ')}`)
-  return v as T
-}
-function rows(v: unknown, path: string, max: { w: number; d: number }, chars: RegExp): string[] {
-  const r = list(v, path, max.d, (x, p) => {
-    if (typeof x !== 'string' || !chars.test(x)) throw new DesignParseError(p, `expected a row of ${chars}`)
-    return x
-  })
-  if (r.length < ROOM_MIN) throw new DesignParseError(path, `expected at least ${ROOM_MIN} rows`)
-  const w = r[0]!.length
-  if (w < ROOM_MIN || w > max.w || r.some((x) => x.length !== w)) throw new DesignParseError(path, `expected rows of one length, ${ROOM_MIN}–${max.w}`)
-  return r
-}
-function tile(v: unknown, path: string, g: Grid): Tile {
+export function tile(v: unknown, path: string, g: Pick<Grid, 'w' | 'd'>): Tile {
   const o = object(v, path, ['x', 'z'])
   return { x: int(o.x, `${path}.x`, 0, g.w - 1), z: int(o.z, `${path}.z`, 0, g.d - 1) }
 }
-function heightsOf(v: unknown, path: string, cells: string[]): string[] | undefined {
+export function heightsOf(v: unknown, path: string, cells: string[]): string[] | undefined {
   if (v === undefined) return undefined
   const h = rows(v, path, { w: cells[0]!.length, d: cells.length }, new RegExp(`^[0-${MAX_LEVEL}]+$`))
   if (h.length !== cells.length || h[0]!.length !== cells[0]!.length) throw new DesignParseError(path, 'expected the shape of cells')

@@ -11,6 +11,14 @@ describe('the turned stage (NG6, HD3)', () => {
     expect(stageLayout(500, 500).turned).toBe(false)
   })
 
+  it('never turns the portrait layout (ST2, FR3): the viewport as it is', () => {
+    const portrait = stageLayout(393, 852, { top: 59, right: 0, bottom: 34, left: 0 }, 'portrait')
+    expect(portrait).toMatchObject({ turned: false, width: 393, height: 852, insets: { top: 59, right: 0, bottom: 34, left: 0 } })
+    expect(stageTransform(portrait)).toBe('none')
+    expect(toStage(portrait, 120, 600)).toEqual({ x: 120, y: 600 })
+    expect(stageLayout(852, 393, undefined, 'portrait').turned).toBe(false)
+  })
+
   it('turns 90° clockwise about the top left, then moves into the viewport', () => {
     expect(stageTransform(UPRIGHT)).toBe('translate(393px, 0px) rotate(90deg)')
     expect(stageTransform(stageLayout(852, 393))).toBe('none')

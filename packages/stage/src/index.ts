@@ -1,12 +1,17 @@
-// @luismlorenzana/uma-stage (uma-platform ST1, P140): uma-quest's HD-2D stage, shared. A three.js world built from 2D kits
-// (the formats), pixel sprites from master data, lights, fog and post effects, on uma-kit's turned landscape stage. A game
-// hands in its own content: its kits, its designs and floors, its sprite sets. Load it lazily: three.js is large.
+// @luismlorenzana/uma-stage (uma-platform ST1, P140; ST2): uma-quest's HD-2D stage, shared. A three.js world built from 2D
+// kits (the formats), pixel sprites from master data, lights, fog and post effects, on uma-kit's turned landscape stage or
+// a portrait one; and the band stage a portrait farm drives (ST2). A game hands in its own content: its kits, its designs
+// and floors, its sprite sets. Load it lazily: three.js is large.
 export * from './formats/index.js'
+export * from './stage/band.js'
+export * from './stage/bandStage.js'
 export * from './stage/camera.js'
 export * from './stage/controls.js'
 export * from './stage/engine.js'
 export * from './stage/frames.js'
+export * from './stage/grade.js'
 export * from './stage/input.js'
+export * from './stage/pick.js'
 export * from './stage/standIn.js'
 export * from './stage/timing.js'
 export * from './stage/turn.js'
@@ -15,16 +20,21 @@ export * from './stage/useFieldInput.js'
 export * from './world/build.js'
 export * from './world/designs.js'
 export * from './world/effects.js'
+export * from './world/farm.js'
+export * from './world/farmSample.js'
 export * from './world/geometry.js'
 export * from './world/kits.js'
+export * from './world/path.js'
 export * from './world/standInKit.js'
 export * from './world/walk.js'
 export * from './sprites/actor.js'
 export * from './sprites/blink.js'
+export * from './sprites/cap.js'
 export * from './sprites/cache.js'
 export * from './sprites/facing.js'
 export * from './sprites/loader.js'
 export * from './sprites/player.js'
+export * from './sprites/standee.js'
 export * from './sprites/standInSet.js'
 export * from './sprites/tint.js'
 export * from './sprites/trail.js'
