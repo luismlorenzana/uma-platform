@@ -7,8 +7,9 @@ import type { FarmWorld, Quad } from '../world/farm.js'
 import type { Vec3 } from '../world/geometry.js'
 import { CAMERA_PITCH, cameraOffset, spriteStretch, TEXELS_PER_UNIT } from './camera.js'
 
-/** The camera as a tap sees it: the point it looks at, and the stage's CSS size and pixel ratio. */
-export interface View { look: Vec3; width: number; height: number; ratio: number }
+/** The camera as a tap sees it: the point it looks at, the stage's CSS size and pixel ratio, and its scale (fit-to-width,
+ * ST3; 1 is one texel a device pixel). */
+export interface View { look: Vec3; width: number; height: number; ratio: number; scale?: number }
 
 export type PickRef =
   | { kind: 'figure'; id: string }
@@ -33,15 +34,15 @@ const device = (view: View) => ({ w: Math.round(view.width * view.ratio), h: Mat
 
 /** A stage point's ray: where it leaves the camera's plane, and its direction (the camera's forward). */
 export function rayAt(view: View, x: number, y: number): { origin: Vec3; dir: Vec3 } {
-  const { w, h } = device(view)
-  const right = (x * view.ratio - w / 2) / TEXELS_PER_UNIT, up = (h / 2 - y * view.ratio) / TEXELS_PER_UNIT
+  const { w, h } = device(view), k = TEXELS_PER_UNIT * (view.scale ?? 1)
+  const right = (x * view.ratio - w / 2) / k, up = (h / 2 - y * view.ratio) / k
   return { origin: add(add(eye(view), RIGHT, right), UP, up), dir: FORWARD }
 }
 
 /** A world point on the stage, in CSS px, and its depth along the view. */
 export function project(view: View, p: Vec3): { x: number; y: number; depth: number } {
-  const { w, h } = device(view), rel = sub(p, eye(view))
-  return { x: (dot(rel, RIGHT) * TEXELS_PER_UNIT + w / 2) / view.ratio, y: (h / 2 - dot(rel, UP) * TEXELS_PER_UNIT) / view.ratio, depth: dot(rel, FORWARD) }
+  const { w, h } = device(view), rel = sub(p, eye(view)), k = TEXELS_PER_UNIT * (view.scale ?? 1)
+  return { x: (dot(rel, RIGHT) * k + w / 2) / view.ratio, y: (h / 2 - dot(rel, UP) * k) / view.ratio, depth: dot(rel, FORWARD) }
 }
 
 function hitTriangle(o: Vec3, d: Vec3, a: Vec3, b: Vec3, c: Vec3): number | null {

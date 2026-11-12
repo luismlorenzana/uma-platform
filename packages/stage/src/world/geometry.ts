@@ -5,8 +5,9 @@ import { gridOf, kitVariants, pickVariant, townGrid, WALL_LEVELS, type Grid, typ
 
 export interface Vec3 { x: number; y: number; z: number }
 /** One textured quad: corners bottom-left, bottom-right, top-right, top-left as seen from its front, and the part of the
- * kit frame it shows (u0, v0 bottom-left to u1, v1 top-right, in 0–1 of the frame). `repeat` tiles the frame. */
-export interface Face { frame: string; corners: [Vec3, Vec3, Vec3, Vec3]; uv: [number, number, number, number]; repeat?: [number, number] }
+ * kit frame it shows (u0, v0 bottom-left to u1, v1 top-right, in 0–1 of the frame). `repeat` tiles the frame. A farm
+ * building's faces name their `owner` (ST3's fade). */
+export interface Face { frame: string; corners: [Vec3, Vec3, Vec3, Vec3]; uv: [number, number, number, number]; repeat?: [number, number]; owner?: string }
 /** An upright card standing at `foot` (a tile's middle, at its level). A building's mounted piece names its `owner`. */
 export interface Prop { frame: string; foot: Vec3; blocks: boolean; owner?: string }
 export interface LightSource { at: Vec3; color: string; radius: number; flicker: boolean }

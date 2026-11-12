@@ -1,6 +1,7 @@
 // ST2's review page (uma-stage 0.2.0): a portrait stand-in farm band on the band stage, built from the stand-in `farm`
 // kit, as uma-farm's F57 asks to see it: a building from sets, a mounted piece, a two-column door, a tap that picks a slot,
-// a standee walking a path, and a second season's grade. Built into docs/stage/previews/farm-band.html by
+// a standee walking a path, and a second season's grade. ST3 (0.3.0) adds fit-to-width (all 9 tiles on a 2× phone) and
+// the occluder fade (a roof in front of a figure or a slot fades). Built into docs/stage/previews/farm-band.html by
 // `pnpm --filter @luismlorenzana/uma-stage review`. No Uma art: the sprites are the stand-ins, the faces plain drawings.
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -49,9 +50,11 @@ function FarmBand({ layout }: { layout: StageLayout }) {
   const [tapped, setTapped] = useState('Tap a slot: the standee walks there.')
   const [season, setSeason] = useState('Spring')
   const [done, setDone] = useState({ tap: false, walk: false, grade: false })
+  const [fadeSlots, setFadeSlots] = useState(true)
+  const [open, setOpen] = useState(true)
 
   useEffect(() => {
-    const s = new BandStage(canvas.current!, { saver: false })
+    const s = new BandStage(canvas.current!, { saver: false, fit: 'width', fade: true })
     stage.current = s
     s.setGrade(GRADES.Spring!)
     s.setWorld(SAMPLE_FARM, standInFarmKit())
@@ -60,6 +63,8 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     s.addFigure({ id: 'worker-1', tile: { x: 1, z: 22 }, set: 'stand-in-0', loadSet: async () => standInSet(0), face: null })
     s.addFigure({ id: 'worker-2', tile: { x: 4, z: 18 }, set: 'stand-in-1', loadSet: async () => standInSet(1), face: null })
     s.addFigure({ id: 'helper', tile: { x: 7, z: 18 }, set: null, face: plainFace('#c0503a', '#9fd8b0') })
+    // Behind the Sawmill's roof: it fades so she shows through (ST3).
+    s.addFigure({ id: 'miller', tile: { x: 4, z: 2 }, set: 'stand-in-2', loadSet: async () => standInSet(2), face: null })
     s.scrollTo(SAMPLE_FARM.cells.length, true)
     s.start()
     let raf = 0
@@ -96,6 +101,7 @@ function FarmBand({ layout }: { layout: StageLayout }) {
   const checks: [string, boolean][] = [
     ['A building from sets', true], ['A mounted piece (sails, chimneys, boxes)', true], ['A two-column door (Barn, Warehouse)', true],
     ['A tap that picks a slot', done.tap], ['A standee walking a path', done.walk], ["A second season's grade", done.grade],
+    ['All 9 tiles across (fit-to-width)', true], ['A roof fades over a figure behind it', true],
   ]
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
@@ -104,11 +110,14 @@ function FarmBand({ layout }: { layout: StageLayout }) {
       <div ref={bubble} className="bubble" style={{ left: 0, top: 0 }}>Walker</div>
       <div className="bar" style={{ top: 'calc(var(--inset-top) + 8px)' }}>
         <div className="chip" style={{ width: '100%' }}>{tapped}</div>
-        <ul className="chip checks">{checks.map(([label, ok]) => <li key={label} className={ok ? 'done' : ''}>{label}</li>)}</ul>
+        <button onClick={() => setOpen(!open)}>{open ? 'Hide checks' : `Checks ${checks.filter(([, ok]) => ok).length}/${checks.length}`}</button>
+        {open && <ul className="chip checks" style={{ width: '100%' }}>{checks.map(([label, ok]) => <li key={label} className={ok ? 'done' : ''}>{label}</li>)}</ul>}
       </div>
       <div className="bar" style={{ bottom: 'calc(var(--inset-bottom) + 10px)' }}>
         {Object.keys(GRADES).map((name) => <button key={name} aria-pressed={season === name} onClick={() => pick(name)}>{name}</button>)}
         <button onClick={() => void stage.current?.walkTo('walker', { x: 4, z: 24 }, { run: true })}>Run to the gate</button>
+        <button aria-pressed={fadeSlots} onClick={() => { const on = !fadeSlots; setFadeSlots(on); stage.current?.setFadeMarkers(on ? ['slot', 'gate', 'lot'] : []) }}>
+          {fadeSlots ? 'Fade for slots and figures' : 'Fade for figures only'}</button>
       </div>
     </div>
   )

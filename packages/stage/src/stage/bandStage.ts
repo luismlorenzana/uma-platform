@@ -2,14 +2,17 @@
 // It draws a farm design from a `farm` kit, pans up and down on the band camera, answers taps with what's under them,
 // moves figures (sprites, or standees for outfits with no set) along the paths by grid path-finding, keeps at most 8
 // sprite sets live, and takes a live grade per scene. three.js, loaded on demand with the stage; one engine alive at once.
-import { Color, DirectionalLight, Group, HemisphereLight, Mesh, MeshBasicMaterial, OrthographicCamera, PointLight, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three'
-import type { FarmDesign, Tile } from '../formats/index.js'
+import {
+  Color, DirectionalLight, Group, HemisphereLight, LinearMipmapLinearFilter, Mesh, MeshBasicMaterial, MeshLambertMaterial, NearestFilter, OrthographicCamera,
+  PointLight, Scene, SRGBColorSpace, Vector3, WebGLRenderer, type Texture,
+} from 'three'
+import type { FarmDesign, FarmMarker, FarmMarkerKind, Tile } from '../formats/index.js'
 import { SpriteActor, type ActorSource } from '../sprites/actor.js'
 import { LIVE_SETS, liveSets } from '../sprites/cap.js'
 import { facingOf, type Facing } from '../sprites/facing.js'
 import { Standee, STANDEE } from '../sprites/standee.js'
 import { rgb, tintAt, type TintLight } from '../sprites/tint.js'
-import { buildWorld } from '../world/build.js'
+import { buildWorld, buildWorldParts } from '../world/build.js'
 import { Effects } from '../world/effects.js'
 import { farmGeometry, farmProblems, type FarmWorld } from '../world/farm.js'
 import type { LoadedKit } from '../world/kits.js'
@@ -17,6 +20,9 @@ import { farmStepCost, findPath, pathPoints } from '../world/path.js'
 import { DASH_SPEED, WALK_SPEED, type Spot } from '../world/walk.js'
 import { BandCamera, TapPan, tilesPerDevicePixel, viewDepthOf } from './band.js'
 import { CAMERA_PITCH, cameraOffset, deviceSize, frustum, snapToGrid, spriteStretch, TEXELS_PER_UNIT } from './camera.js'
+import {
+  coveringOccluders, FADE_DEFAULTS, farmOccluders, figureTarget, fitScale, markerTarget, propPart, stepFade, type FadeOptions, type FadeTarget, type Occluder,
+} from './fade.js'
 import { FpsRecorder, FramePacer, SAVER_FPS } from './frames.js'
 import { DAY_GRADE, mixGrade, type StageGrade } from './grade.js'
 import { cardQuad, farmTargets, pickAt, project, type PickHit, type PickTarget, type View } from './pick.js'
@@ -39,6 +45,10 @@ export interface BandStageOptions {
   cap?: number
   /** A band's depth in tiles: 4. */
   band?: number
+  /** ST3: `'width'` scales the camera down so the design's width fills a narrower canvas (a 2× phone); never up. */
+  fit?: 'none' | 'width'
+  /** ST3: buildings and blocking props fade while they cover a figure, a marker of the named kinds or a bubble's anchor. */
+  fade?: FadeOptions | boolean
   onFirstFrame?: () => void
 }
 export interface BandDebug {
@@ -50,6 +60,10 @@ export interface BandDebug {
   drawCalls: number
   saver: boolean
   device: { width: number; height: number; ratio: number }
+  /** The camera's scale (1: one texel a device pixel). */
+  scale: number
+  /** The parts faded now, by id. */
+  faded: string[]
   fps: number
 }
 
@@ -95,7 +109,13 @@ export class BandStage {
   private saver: boolean
   private device = { width: 1, height: 1, ratio: 1 }
   private css = { width: 1, height: 1 }
-  private world: { design: FarmDesign; built: FarmWorld; group: Group; targets: PickTarget[]; lookY: number } | null = null
+  private world: { design: FarmDesign; built: FarmWorld; group: Group; targets: PickTarget[]; lookY: number; page: Texture; occluders: Occluder[];
+    markers: FadeTarget[]; parts: Map<string, { group: Group; alpha: number; order: number }> } | null = null
+  private scale = 1
+  private readonly fit: 'none' | 'width'
+  private readonly occlusion: Required<FadeOptions> | null
+  private fadeMarkers: (m: FarmMarker) => boolean = () => false
+  private readonly reducedMotion: MediaQueryList | null
   private readonly figures = new Map<string, Live>()
   private liveSet = new Set<string>()
   private readonly sets = new Map<string, Promise<ActorSource | null>>()
@@ -112,6 +132,11 @@ export class BandStage {
   constructor(canvas: HTMLCanvasElement, options: BandStageOptions) {
     this.saver = options.saver
     this.cap = options.cap ?? LIVE_SETS
+    this.fit = options.fit ?? 'none'
+    this.occlusion = options.fade ? { ...FADE_DEFAULTS, ...(options.fade === true ? {} : options.fade) } : null
+    const kinds = this.occlusion?.markers ?? []
+    this.fadeMarkers = (m) => kinds.includes(m.kind)
+    this.reducedMotion = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null
     this.band = new BandCamera({ band: options.band })
     this.pacer = new FramePacer(options.saver ? SAVER_FPS : null)
     this.firstFrame = options.onFirstFrame ?? null
@@ -134,14 +159,25 @@ export class BandStage {
     if (problems.length) throw new Error(`the farm ${design.id} can't be built: ${problems.join('; ')}`)
     this.dropWorld()
     const built = farmGeometry(design, kit.kit)
-    const group = buildWorld(built, kit.kit, [kit.page])
+    // With the fade, each building (with its mounted pieces) and each blocking prop is a part of its own.
+    const fade = this.occlusion
+    const split = fade ? buildWorldParts(built, kit.kit, [kit.page], (item) => (item.kind === 'face' ? item.face.owner ?? null
+      : item.prop.owner ?? (item.prop.blocks ? propPart(item.index) : null))) : null
+    const group = split?.shared ?? buildWorld(built, kit.kit, [kit.page])
     this.scene.add(group)
+    const occluders = fade ? farmOccluders(built, kit.kit) : []
+    const parts = new Map<string, { group: Group; alpha: number; order: number }>()
+    for (const [id, part] of split?.parts ?? []) {
+      this.scene.add(part)
+      parts.set(id, { group: part, alpha: 1, order: Math.round((occluders.find((o) => o.id === id)?.z ?? 0) * 100) })
+    }
+    const markers = fade ? this.markerTargets(design, built) : []
     // The camera looks at the farm's usual ground level, so it doesn't bob over the pond.
     const counts = new Map<number, number>()
     for (let z = 0; z < built.d; z++) for (let x = 0; x < built.w; x++) { const l = built.grid.level(x, z); counts.set(l, (counts.get(l) ?? 0) + 1) }
     const lookY = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? 0
-    this.world = { design, built, group, targets: farmTargets(design.markers, built, kit.kit), lookY }
-    this.band.setView(built.d, viewDepthOf(this.device.height))
+    this.world = { design, built, group, targets: farmTargets(design.markers, built, kit.kit), lookY, page: kit.page, occluders, markers, parts }
+    this.applyScale()
     this.band.goTo(this.band.range.min, true)
     for (const f of this.figures.values()) { this.stopWalk(f, false); this.placeAt(f, { x: Math.floor(f.x), z: Math.floor(f.z) }) }
     this.capDirty = true
@@ -150,9 +186,38 @@ export class BandStage {
 
   private dropWorld(): void {
     if (!this.world) return
-    this.scene.remove(this.world.group)
-    this.world.group.traverse((o) => { const m = o as Mesh; m.geometry?.dispose(); (m.material as MeshBasicMaterial | undefined)?.dispose?.() })
+    for (const g of [this.world.group, ...[...this.world.parts.values()].map((p) => p.group)]) {
+      this.scene.remove(g)
+      g.traverse((o) => { const m = o as Mesh; m.geometry?.dispose(); (m.material as MeshBasicMaterial | undefined)?.dispose?.() })
+    }
     this.world = null
+  }
+
+  private markerTargets(design: FarmDesign, built: FarmWorld): FadeTarget[] {
+    return design.markers.filter((m) => this.fadeMarkers(m)).map((m) => markerTarget(m, built.grid.level(m.x, m.z)))
+  }
+
+  /** Which markers the fade keeps in view from now on: some kinds, or any test (only the slots of the sheet that's open). */
+  setFadeMarkers(which: readonly FarmMarkerKind[] | ((m: FarmMarker) => boolean)): void {
+    this.fadeMarkers = typeof which === 'function' ? which : (m) => which.includes(m.kind)
+    if (this.world && this.occlusion) this.world.markers = this.markerTargets(this.world.design, this.world.built)
+  }
+
+  /** Fit-to-width (ST3): the camera's scale for the canvas and the design, its frustum, the band's view, and the kit's
+   * mipmaps (on only while scaled, so one texel a pixel stays crisp). */
+  private applyScale(): void {
+    const w = this.world?.built.w ?? 0
+    this.scale = this.fit === 'width' && w > 0 ? fitScale(this.device.width, w) : 1
+    Object.assign(this.camera, frustum(this.device.width / this.scale, this.device.height / this.scale))
+    this.camera.updateProjectionMatrix()
+    if (!this.world) return
+    this.band.setView(this.world.built.d, viewDepthOf(this.device.height / this.scale))
+    const page = this.world.page, mip = this.scale < 1
+    if (page.generateMipmaps !== mip) {
+      page.generateMipmaps = mip
+      page.minFilter = mip ? LinearMipmapLinearFilter : NearestFilter
+      page.needsUpdate = true
+    }
   }
 
   resize(cssWidth: number, cssHeight: number, dpr: number): void {
@@ -162,17 +227,18 @@ export class BandStage {
     this.css = { width: cssWidth, height: cssHeight }
     this.renderer.setPixelRatio(this.device.ratio)
     this.renderer.setSize(cssWidth, cssHeight, false)
-    Object.assign(this.camera, frustum(this.device.width, this.device.height))
-    this.camera.updateProjectionMatrix()
+    this.applyScale()
     this.effects?.setSize(cssWidth, cssHeight, this.device.ratio)
-    if (this.world) this.band.setView(this.world.built.d, viewDepthOf(this.device.height))
     this.capDirty = true
   }
 
   // --- The camera and taps -----------------------------------------------------------------------------------------------
 
   /** The camera as a tap sees it: the point it looks at, and the stage's size. */
-  get view(): View { return { look: { x: (this.world?.built.w ?? 0) / 2, y: this.world?.lookY ?? 0, z: this.band.centre }, width: this.css.width, height: this.css.height, ratio: this.device.ratio } }
+  get view(): View {
+    return { look: { x: (this.world?.built.w ?? 0) / 2, y: this.world?.lookY ?? 0, z: this.band.centre }, width: this.css.width, height: this.css.height,
+      ratio: this.device.ratio, scale: this.scale }
+  }
   /** The band camera (its range, stops and whether it's at rest). */
   get bandCamera(): BandCamera { return this.band }
 
@@ -183,13 +249,13 @@ export class BandStage {
   pointerDown(x: number, y: number, t = performance.now()): void { this.gesture.down(x, y, t) }
   pointerMove(x: number, y: number, t = performance.now()): void {
     const dy = this.gesture.move(x, y, t)
-    if (dy !== null) this.band.drag(-dy * this.device.ratio * tilesPerDevicePixel())
+    if (dy !== null) this.band.drag((-dy * this.device.ratio * tilesPerDevicePixel()) / this.scale)
   }
   /** The finger lifts: a tap answers with what's under it (nearest first); a pan glides to a band and answers null. */
   pointerUp(x: number, y: number, t = performance.now()): PickHit[] | null {
     const end = this.gesture.up(x, y, t)
     if (end.kind === 'tap') return this.pick(x, y)
-    if (end.kind === 'fling') { this.band.release(-end.velocity * this.device.ratio * tilesPerDevicePixel()); this.capDirty = true }
+    if (end.kind === 'fling') { this.band.release((-end.velocity * this.device.ratio * tilesPerDevicePixel()) / this.scale); this.capDirty = true }
     return null
   }
   pointerCancel(): void { this.gesture.cancel(); this.band.release(0) }
@@ -287,7 +353,7 @@ export class BandStage {
 
   /** The cap (FR13): the sets of figures in view, nearest the camera's centre first, at most `cap` live. */
   private weighCap(): void {
-    const top = this.band.top, depth = viewDepthOf(this.device.height)
+    const top = this.band.top, depth = viewDepthOf(this.device.height / this.scale)
     const inView = [...this.figures.values()].filter((f) => f.z >= top - 2 && f.z <= top + depth + 1)
       .map((f) => ({ id: f.spec.id, set: f.spec.set, x: f.x, z: f.z }))
     const next = liveSets(inView, { x: (this.world?.built.w ?? 0) / 2, z: this.band.centre }, this.cap, this.liveSet)
@@ -389,22 +455,54 @@ export class BandStage {
     }
     this.capClock += dt
     if (this.capDirty || (anyMoving && this.capClock >= CAP_EVERY)) { this.capClock = 0; this.capDirty = false; this.weighCap() }
+    this.stepFades(dt)
+  }
+
+  /** The fade (ST3): each part covering a target eases toward the fade's opacity, the rest back to full. */
+  private stepFades(dt: number): void {
+    const fade = this.occlusion, world = this.world
+    if (!fade || !world || !world.parts.size) return
+    const targets = [...world.markers, ...[...this.figures.values()].map((f) => {
+      const y = this.groundAt(f.x, f.z), head = y + (f.actor ? FIGURE_HEAD : STANDEE_HEAD)
+      return figureTarget({ x: f.x, y, z: f.z }, FIGURE_HIT.w, FIGURE_HIT.h, { x: f.x, y: head, z: f.z })
+    })]
+    const covering = coveringOccluders(world.occluders, targets)
+    const instant = this.reducedMotion?.matches ?? false
+    for (const [id, part] of world.parts) {
+      const goal = covering.has(id) ? fade.opacity : 1
+      if (part.alpha === goal) continue
+      part.alpha = stepFade(part.alpha, goal, dt, { opacity: fade.opacity, ms: fade.ms, instant })
+      const faded = part.alpha < 1
+      part.group.traverse((o) => {
+        const mesh = o as Mesh
+        if (!mesh.isMesh) return
+        const m = mesh.material as MeshLambertMaterial
+        m.opacity = part.alpha
+        m.transparent = faded
+        m.depthWrite = !faded
+        // The kit's cut-out edge, scaled with the fade so a faded texel isn't cut away.
+        m.alphaTest = 0.5 * part.alpha
+        // Drawn after what stands behind it, before what stands in front.
+        mesh.renderOrder = faded ? part.order : 0
+      })
+    }
   }
 
   private draw(now: number): void {
     const look = this.view.look, o = cameraOffset()
     const eye = new Vector3(look.x, look.y + o.y, look.z + o.z)
-    const snapped = RIGHT.clone().multiplyScalar(snapToGrid(eye.dot(RIGHT), 0)).add(UP.clone().multiplyScalar(snapToGrid(eye.dot(UP), 0)))
+    const per = TEXELS_PER_UNIT * this.scale
+    const snapped = RIGHT.clone().multiplyScalar(snapToGrid(eye.dot(RIGHT), 0, per)).add(UP.clone().multiplyScalar(snapToGrid(eye.dot(UP), 0, per)))
       .add(FORWARD.clone().multiplyScalar(eye.dot(FORWARD)))
     this.camera.position.copy(snapped)
     this.camera.quaternion.setFromAxisAngle(RIGHT, -CAMERA_PITCH)
     this.camera.updateMatrixWorld()
     this.placeLights(look)
-    const f = frustum(this.device.width, this.device.height), lights = this.tintLights(), base = rgb(this.grade.tint)
+    const f = frustum(this.device.width / this.scale, this.device.height / this.scale), lights = this.tintLights(), base = rgb(this.grade.tint)
     for (const fig of this.figures.values()) {
       const ground = new Vector3(fig.x, this.groundAt(fig.x, fig.z), fig.z), rel = ground.clone().sub(snapped)
-      const placed = snapped.clone().add(RIGHT.clone().multiplyScalar(snapToGrid(rel.dot(RIGHT), f.left)))
-        .add(UP.clone().multiplyScalar(snapToGrid(rel.dot(UP), f.bottom))).add(FORWARD.clone().multiplyScalar(rel.dot(FORWARD)))
+      const placed = snapped.clone().add(RIGHT.clone().multiplyScalar(snapToGrid(rel.dot(RIGHT), f.left, per)))
+        .add(UP.clone().multiplyScalar(snapToGrid(rel.dot(UP), f.bottom, per))).add(FORWARD.clone().multiplyScalar(rel.dot(FORWARD)))
       const tint = tintAt(ground, base, lights), order = Math.round(fig.z * 100)
       ;(fig.actor ?? fig.standee).stand(placed.x, placed.y, placed.z, order, tint)
     }
@@ -443,6 +541,7 @@ export class BandStage {
       centre: this.band.centre, settled: this.band.settled,
       figures: [...this.figures.values()].map((f) => ({ id: f.spec.id, x: f.x, z: f.z, sprite: !!f.actor, moving: f.moving })),
       liveSets: [...this.liveSet], grade: this.grade, drawCalls: this.renderer.info.render.calls, saver: this.saver, device: { ...this.device },
+      scale: this.scale, faded: [...(this.world?.parts ?? [])].filter(([, p]) => p.alpha < 1).map(([id]) => id),
       fps: this.recent.length,
     }
   }

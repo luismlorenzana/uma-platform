@@ -123,6 +123,12 @@ function ground(g: FarmGrid, kit: KitAtlas, faces: Face[]): void {
 }
 
 function building(g: FarmGrid, kit: KitAtlas, b: FarmBuilding, out: FarmWorld): void {
+  const first = out.faces.length
+  buildingFaces(g, kit, b, out)
+  for (let i = first; i < out.faces.length; i++) out.faces[i]!.owner = b.id
+}
+
+function buildingFaces(g: FarmGrid, kit: KitAtlas, b: FarmBuilding, out: FarmWorld): void {
   const base = g.level(b.x, b.z), height = base + b.storeys * WALL_LEVELS, fz = b.z + b.d
   const walls = kitVariants(kit, 'building-wall', b.walls), windows = kitVariants(kit, 'window', b.walls), roofs = kitVariants(kit, 'roof', b.roof)
   const door = doorFrame(kit, b), span = b.door?.wide ? 2 : 1

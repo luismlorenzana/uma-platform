@@ -69,15 +69,52 @@ export function buildWorld(geo: WorldGeometry, kit: KitAtlas, pages: readonly Te
     const frame = kit.frames[f.frame]
     if (frame) face(ground[frame.page]!, kit, frame, f)
   }
-  const stretch = spriteStretch()
   for (const p of geo.props) {
     const f = kit.frames[p.frame]
-    if (!f) continue
-    const foot = snapFoot(p.foot), fx = (f.foot?.x ?? f.w / 2) / kit.tile, fy = (f.h - (f.foot?.y ?? f.h)) / kit.tile
-    const x0 = foot.x - fx, x1 = x0 + f.w / kit.tile, y0 = foot.y - fy * stretch, y1 = y0 + (f.h / kit.tile) * stretch
-    quad(props[f.page]!, kit, f, [{ x: x0, y: y0, z: foot.z }, { x: x1, y: y0, z: foot.z }, { x: x1, y: y1, z: foot.z }, { x: x0, y: y1, z: foot.z }], [0, 0, 1, 1])
+    if (f) propCard(props[f.page]!, kit, f, p.foot)
   }
   const group = new Group()
   for (const [i, map] of pages.entries()) for (const m of [mesh(ground[i]!, map), mesh(props[i]!, map)]) if (m) group.add(m)
   return group
+}
+
+/** A prop's card, placed like `buildWorld` places it (its foot snapped, stretched like the sprites). */
+function propCard(out: Buffers, kit: KitAtlas, f: KitFrame, at: Vec3): void {
+  const stretch = spriteStretch()
+  const foot = snapFoot(at), fx = (f.foot?.x ?? f.w / 2) / kit.tile, fy = (f.h - (f.foot?.y ?? f.h)) / kit.tile
+  const x0 = foot.x - fx, x1 = x0 + f.w / kit.tile, y0 = foot.y - fy * stretch, y1 = y0 + (f.h / kit.tile) * stretch
+  quad(out, kit, f, [{ x: x0, y: y0, z: foot.z }, { x: x1, y: y0, z: foot.z }, { x: x1, y: y1, z: foot.z }, { x: x0, y: y1, z: foot.z }], [0, 0, 1, 1])
+}
+
+/**
+ * The world as `buildWorld` makes it, but with what `partOf` names kept apart: a group a part (a farm building with its
+ * mounted pieces, a blocking prop), each mesh with its own material, so one can fade on its own (ST3); everything else
+ * merged into `shared` as before. Faces and props are drawn the same, so a world built either way looks the same.
+ */
+export function buildWorldParts(geo: WorldGeometry, kit: KitAtlas, pages: readonly Texture[],
+  partOf: (item: { kind: 'face'; face: Face } | { kind: 'prop'; prop: WorldGeometry['props'][number]; index: number }) => string | null,
+): { shared: Group; parts: Map<string, Group> } {
+  const buffers = new Map<string | null, { ground: Buffers[]; props: Buffers[] }>()
+  const bucket = (key: string | null) => {
+    let b = buffers.get(key)
+    if (!b) { b = { ground: kit.pages.map(empty), props: kit.pages.map(empty) }; buffers.set(key, b) }
+    return b
+  }
+  bucket(null)
+  for (const f of geo.faces) {
+    const frame = kit.frames[f.frame]
+    if (frame) face(bucket(partOf({ kind: 'face', face: f })).ground[frame.page]!, kit, frame, f)
+  }
+  geo.props.forEach((p, index) => {
+    const f = kit.frames[p.frame]
+    if (f) propCard(bucket(partOf({ kind: 'prop', prop: p, index })).props[f.page]!, kit, f, p.foot)
+  })
+  const groupOf = (b: { ground: Buffers[]; props: Buffers[] }) => {
+    const group = new Group()
+    for (const [i, map] of pages.entries()) for (const m of [mesh(b.ground[i]!, map), mesh(b.props[i]!, map)]) if (m) group.add(m)
+    return group
+  }
+  const parts = new Map<string, Group>()
+  for (const [key, b] of buffers) if (key !== null) parts.set(key, groupOf(b))
+  return { shared: groupOf(buffers.get(null)!), parts }
 }

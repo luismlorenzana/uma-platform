@@ -1,6 +1,6 @@
 # @luismlorenzana/uma-stage
 
-The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145): a three.js world built from 2D kits, pixel sprites
+The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145; ST3, P146): a three.js world built from 2D kits, pixel sprites
 from master data, lights, fog and post effects, on uma-kit's turned landscape stage or a portrait one. It began as
 uma-quest's engine (its P90) and is shared now that uma-farm is its second user (P11). Private; personal use only.
 
@@ -22,7 +22,7 @@ bundle doesn't grow. Constants and small helpers (`BUTTON_SIZE`, `markStageReque
 | Part | Exports |
 |---|---|
 | **Formats** | `parseKitAtlas`, `KIT_REQUIRED`, `kitMissing`, `kitVariants`, `familyVariants`, `pickVariant` (kinds `biome`, `town` and `farm`; `FARM_WAVE_1`, `FARM_WAVE_2`); `parseRoomDesign`, `parseTownDesign`, `parseFarmDesign`, `gridOf`, `townGrid`, `farmGrid`, `farmReach`, `canStep`, `reachable`, `socketTile`, `WALL_LEVELS`, and their types |
-| **The stage** | `StageEngine` (uma-quest: rooms, towns, dungeon floors, the party, townsfolk, foes, scenes, paths, the follow camera); `BandStage` (a farm the game drives: the band camera, taps, walkers, standees, the set cap, the grade); `TurnedStage` (landscape or portrait), `useFieldInput`, the field controls (`ToggleRow`, `CycleRow`, `initialSaver`, `capture`, `standalone`), the camera (orthographic, pitched 35°, pixel-snapped), `BandCamera` and `TapPan`, picking (`pickAt`, `project`, `farmTargets`), the grade (`StageGrade`, `DAY_GRADE`, `mixGrade`), frames and timing (`FramePacer`, `FpsRecorder`, battery saver), input (stick, keys), the turn |
+| **The stage** | `StageEngine` (uma-quest: rooms, towns, dungeon floors, the party, townsfolk, foes, scenes, paths, the follow camera); `BandStage` (a farm the game drives: the band camera, taps, walkers, standees, the set cap, the grade, the fade, fit-to-width); the fade's pure half (`farmOccluders`, `coveringOccluders`, `stepFade`, `fitScale`); `TurnedStage` (landscape or portrait), `useFieldInput`, the field controls (`ToggleRow`, `CycleRow`, `initialSaver`, `capture`, `standalone`), the camera (orthographic, pitched 35°, pixel-snapped), `BandCamera` and `TapPan`, picking (`pickAt`, `project`, `farmTargets`), the grade (`StageGrade`, `DAY_GRADE`, `mixGrade`), frames and timing (`FramePacer`, `FpsRecorder`, battery saver), input (stick, keys), the turn |
 | **The world** | `roomGeometry`, `townGeometry`, `farmGeometry` and `farmProblems`, `buildWorld`, `walkWorld` and walking, `findPath` and `farmStepCost`, `Effects` (tilt-shift, bloom), the kit loader (`checkedKit`, `loadKitPage`, `loadedKit`, `standInKit`, `pixelTexture`), the stand-in kits (`standInKitAtlas` for the forest and town; `standInFarmKit` and `standInFarmAtlas` for the farm, a module of its own so uma-quest never carries it), the test room's designs, `SAMPLE_FARM` |
 | **Sprites** | `SpriteActor`, `Standee`, `liveSets` (`LIVE_SETS`), `AtlasPlayer`, `loadSpriteSet` and `decodeImage`, `SetCache`, `Blinker`, facing and field poses, `Trail`, `tintAt`, `standInSet` |
 
@@ -54,6 +54,18 @@ Each is opt-in: a game that uses none of them runs exactly as on 0.1.0. They ans
 | **Standees** | A figure whose `set` is null, or not live yet, is a `Standee`: her face on a card on a base, lit, shadowed, gliding with a bob |
 | **The set cap** | At most `cap` (8) live sprite sets, for the figures in view nearest the camera's centre first; a live set stays while its figure is in view. `loadSet` is the game's cached loader |
 | **The grade** | `setGrade(grade, ms)`: the sky and key light, the sprites' tint, the background and the lamps, blended over `ms` |
+
+### ST3 (0.3.0): the fade and fit-to-width
+
+Both are `BandStage` options, off unless asked (uma-farm F11's request, D68; P146 here):
+
+| Option | What it does |
+|---|---|
+| `fade: true` or `{ opacity, markers, ms }` | A building (with its mounted pieces) or a blocking prop fades to `opacity` (0.35) while it covers a target, easing over `ms` (150; at once with reduced motion). Targets are every figure with her bubble's anchor, and the markers of the named kinds (`slot`, `gate`, `lot`; the middle of their tile). `setFadeMarkers(kinds or test)` changes which markers count at any time, say only the slots of the sheet that's open. Each part is its own mesh while the fade is on (`buildWorldParts`) |
+| `fit: 'width'` | When the canvas is narrower than the design at one texel a pixel (a 2× phone), the camera scales down so the design's width fills it (`fitScale`); never up. The kit's page is mipmapped only while scaled; taps, `headOf` and `project` follow the scale |
+
+With KF2's layout and the default marker kinds, most buildings cover some slot behind them, so most stand faded at
+rest; the review page's toggle shows both ways.
 
 **A finding for the farm's layout:** the camera is uma-quest's, pitched 35°, so whatever stands tall hides the ground
 behind it. A one-storey building's roof (its ridge 3 levels up) hides about four tiles behind it, a two-storey one about
