@@ -14,6 +14,8 @@ import legacy from './testing/legacy-2.26.0.json'
 import { inflateSync } from 'node:zlib'
 
 const ART = fileURLToPath(new URL('../../../packages/art/', import.meta.url))
+/** Kits published after 2.26.0: kit-farm and the code-drawn kits since. */
+const LATER = new Set(['kit-farm', 'kit-town-spellblade', 'kit-town-mage', 'kit-town-summoner', 'kit-town-healer', 'kit-meadow', 'kit-ruins', 'kit-marsh', 'kit-coast'])
 const sha = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
 const frames = drawWave()
 const { atlas, rgba } = pack('kit-farm', frames)
@@ -138,7 +140,7 @@ describe('kit-farm wave 1 (F9, P147)', () => {
     const walk = (d: string) => {
       for (const f of readdirSync(d).sort()) {
         const p = join(d, f)
-        if (statSync(p).isDirectory()) { if (f !== 'kit-farm' && f !== 'node_modules') walk(p) }
+        if (statSync(p).isDirectory()) { if (!LATER.has(f) && f !== 'node_modules') walk(p) }
         else if (/\.(png|json)$/.test(f) && f !== 'package.json') now[relative(ART, p)] = sha(readFileSync(p))
       }
     }

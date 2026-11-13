@@ -367,6 +367,12 @@ importers:
       '@types/node':
         specifier: ^22.20.5
         version: 22.20.5
+      '@types/three':
+        specifier: 0.187.0
+        version: 0.187.0
+      three:
+        specifier: 0.187.0
+        version: 0.187.0
       tsx:
         specifier: ^4.20.6
         version: 4.23.15

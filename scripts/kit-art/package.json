@@ -9,11 +9,15 @@
     "test": "vitest run",
     "draw": "tsx src/export.ts",
     "review": "tsx src/review.ts",
-    "review:band": "vite review-band --port 4332 --strictPort"
+    "review:band": "vite review-band --port 4332 --strictPort",
+    "review:kits": "tsx src/review-kits.ts",
+    "review:scenes": "vite review-kits --port 4333 --strictPort"
   },
   "devDependencies": {
     "@luismlorenzana/uma-stage": "workspace:*",
     "@types/node": "^22.20.5",
+    "@types/three": "0.187.0",
+    "three": "0.187.0",
     "tsx": "^4.20.6",
     "typescript": "~5.9.3",
     "vite": "^7.3.6",

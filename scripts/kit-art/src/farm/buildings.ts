@@ -11,9 +11,9 @@ const T = 128
 
 // --- Plank -----------------------------------------------------------------------------------------------------------------
 
-const WOOD = { base: hex('#a5733f'), light: hex('#c08b52'), dark: hex('#7b522c'), gap: hex('#3e2918'), sill: hex('#6c4527'), grey: hex('#9a8a72') }
+export const WOOD = { base: hex('#a5733f'), light: hex('#c08b52'), dark: hex('#7b522c'), gap: hex('#3e2918'), sill: hex('#6c4527'), grey: hex('#9a8a72') }
 /** Eight boards a module, 16 texels each; each its own tone, grain running up, lit on its left edge, a dark gap between. */
-const boardTexel = (x: number, y: number, seed: number): RGB => {
+export const boardTexel = (x: number, y: number, seed: number): RGB => {
   const board = Math.floor(x / 16), u = x % 16, tone = hash(board, 0, seed)
   const grain = fbm(x, y, { cells: 2, tile: T, octaves: 3, seed: seed + board, sx: 16, sy: 1 })
   let c = mix(WOOD.dark, WOOD.light, 0.35 + tone * 0.3)
@@ -26,7 +26,7 @@ function boards(c: Canvas, seed: number, h = T): void {
   c.paint((x, y) => [...boardTexel(x, y % T, seed + Math.floor(y / T) * 0), 1] as RGBA, 'over', rect(0, 0, c.w, h))
 }
 /** A knot: a dark ring in a board. */
-function knot(c: Canvas, x: number, y: number, r: number): void {
+export function knot(c: Canvas, x: number, y: number, r: number): void {
   c.fill(circle(x, y, r + 1), [...WOOD.gap, 0.35], 'atop')
   c.fill(circle(x, y, r), [...shade(WOOD.dark, -0.15), 1], 'atop')
   c.fill(circle(x - r * 0.3, y - r * 0.3, r * 0.4), [...WOOD.base, 0.6], 'atop')
@@ -52,7 +52,7 @@ export function wallPlank(variant: number): Canvas {
 }
 
 /** A window: a timber frame, four panes of sky, a mullion cross, a sill; `inset` paints the wall around it first. */
-function windowFrame(c: Canvas, x: number, y: number, w: number, h: number, frame: RGB, sillColor: RGB, panes: [number, number] = [2, 2]): void {
+export function windowFrame(c: Canvas, x: number, y: number, w: number, h: number, frame: RGB, sillColor: RGB, panes: [number, number] = [2, 2]): void {
   c.fill(rect(x - 3, y - 3, w + 6, h + 6, 2), [0, 0, 0, 0.25])
   c.fill(rect(x, y, w, h, 2), (px, py) => [...shade(frame, (px < x + 3 || py < y + 3) ? 0.18 : 0), 1] as RGBA)
   const gx = x + 5, gy = y + 5, gw = w - 10, gh = h - 10
@@ -67,7 +67,7 @@ function windowFrame(c: Canvas, x: number, y: number, w: number, h: number, fram
   c.fill(rect(x - 6, y + h + 7, w + 12, 3), [0, 0, 0, 0.22], 'atop')
 }
 /** Plank shutters either side of a window, Z-braced. */
-function shutters(c: Canvas, x: number, y: number, w: number, h: number, colour: RGB): void {
+export function shutters(c: Canvas, x: number, y: number, w: number, h: number, colour: RGB): void {
   for (const sx of [x - 20, x + w + 2]) {
     c.fill(rect(sx, y, 18, h, 1.5), (px, py) => [...shade(colour, ((px - sx) % 6 < 1 ? -0.25 : 0) + (px - sx < 2 ? 0.15 : 0) + (fbm(px, py, { cells: 2, tile: T, sx: 16, seed: 5 }) - 0.5) * 0.2), 1] as RGBA)
     c.fill(rect(sx, y + 6, 18, 3), [...shade(colour, -0.2), 1])
@@ -85,12 +85,12 @@ export function windowPlank(variant: number): Canvas {
 }
 
 /** Iron: a dark strap with rivets, lit on its upper edge. */
-function strap(c: Canvas, x: number, y: number, w: number): void {
+export function strap(c: Canvas, x: number, y: number, w: number): void {
   c.fill(rect(x, y, w, 6, 2), (px, py) => [...shade(hex('#2f2f33'), py < y + 2 ? 0.25 : 0), 1] as RGBA)
   for (let i = 0; i < 3; i++) c.fill(circle(x + 5 + i * (w - 10) / 2, y + 3, 1.2), [...hex('#8a8a90'), 1])
 }
 /** A door leaf of vertical planks, Z-braced, within (x, y, w, h). */
-function plankLeaf(c: Canvas, x: number, y: number, w: number, h: number, colour: RGB, seed: number, brace: 'z' | 'x' = 'z'): void {
+export function plankLeaf(c: Canvas, x: number, y: number, w: number, h: number, colour: RGB, seed: number, brace: 'z' | 'x' = 'z'): void {
   c.fill(rect(x, y, w, h), (px, py) => {
     const u = (px - x) % 14, g = fbm(px, py, { cells: 2, tile: T, sx: 14, seed })
     return [...shade(colour, (g - 0.5) * 0.28 + (u < 1.5 ? 0.12 : u > 12.5 ? -0.3 : 0)), 1] as RGBA
@@ -105,7 +105,7 @@ function plankLeaf(c: Canvas, x: number, y: number, w: number, h: number, colour
   }
 }
 /** A doorway's frame: posts and a lintel round (x, y, w, h), the threshold at the foot. */
-function doorway(c: Canvas, x: number, y: number, w: number, h: number, timber: RGB): void {
+export function doorway(c: Canvas, x: number, y: number, w: number, h: number, timber: RGB): void {
   c.fill(rect(x - 9, y - 11, w + 18, h + 11), [0, 0, 0, 0.25])
   for (const px of [x - 8, x + w]) c.fill(rect(px, y - 10, 8, h + 10), (qx, qy) => [...shade(timber, qx < px + 2 ? 0.18 : qx > px + 6 ? -0.2 : 0), 1] as RGBA)
   c.fill(rect(x - 10, y - 12, w + 20, 10, 1), (qx, qy) => [...shade(timber, qy < y - 10 ? 0.22 : qy > y - 5 ? -0.15 : 0), 1] as RGBA)
@@ -139,8 +139,8 @@ export function doorWidePlank(): Canvas {
 
 // --- Plaster ---------------------------------------------------------------------------------------------------------------
 
-const PLASTER = { base: hex('#f0e4c8'), shade: hex('#d8c6a2'), grime: hex('#b5a07c'), timber: hex('#6f4a2b'), stone: hex('#a79e8d'), mortar: hex('#7f776a') }
-const plasterTexel = (x: number, y: number): RGB => {
+export const PLASTER = { base: hex('#f0e4c8'), shade: hex('#d8c6a2'), grime: hex('#b5a07c'), timber: hex('#6f4a2b'), stone: hex('#a79e8d'), mortar: hex('#7f776a') }
+export const plasterTexel = (x: number, y: number): RGB => {
   const m = fbm(x, y, { cells: 4, tile: T, octaves: 4, seed: 61 }), fine = fbm(x, y, { cells: 32, tile: T, octaves: 2, seed: 62 })
   let c = mix(PLASTER.shade, PLASTER.base, 0.55 + m * 0.45)
   c = shade(c, (fine - 0.5) * 0.06)
@@ -149,7 +149,7 @@ const plasterTexel = (x: number, y: number): RGB => {
   return mix(c, PLASTER.grime, smooth(0.62, 0.8, streak) * 0.18 + smooth(80, 128, y) * 0.12)
 }
 /** Timber half-posts on both edges (a whole post where two modules meet), lit on the left. */
-function posts(c: Canvas, h = c.h): void {
+export function posts(c: Canvas, h = c.h): void {
   // The post where two modules meet: its lit left half ends this module, its shaded right half starts the next.
   const post = (px: number, py: number): RGBA => {
     const u = (px - (c.w - 6) + c.w) % c.w
@@ -160,7 +160,7 @@ function posts(c: Canvas, h = c.h): void {
   c.fill(rect(6, 0, 3, h), [0, 0, 0, 0.12], 'atop')
 }
 /** The stone footing at a storey's foot. */
-function footing(c: Canvas, y: number, h = 18): void {
+export function footing(c: Canvas, y: number, h = 18): void {
   c.fill(rect(0, y, c.w, h), (px, py) => {
     const W = T / 6, row = Math.floor((py - y) / 9), shifted = (px + (row % 2) * (W / 2)) % c.w, sx = shifted % W, sy = (py - y) % 9
     const id = Math.floor(shifted / W) * 7 + row, tone = hash(id, 0, 65)
@@ -170,7 +170,7 @@ function footing(c: Canvas, y: number, h = 18): void {
   })
   c.fill(rect(0, y - 2, c.w, 2), [0, 0, 0, 0.15], 'atop')
 }
-function plaster(c: Canvas, h = c.h): void { c.paint((x, y) => [...plasterTexel(x % T, y % T), 1] as RGBA, 'over', rect(0, 0, c.w, h)) }
+export function plaster(c: Canvas, h = c.h): void { c.paint((x, y) => [...plasterTexel(x % T, y % T), 1] as RGBA, 'over', rect(0, 0, c.w, h)) }
 
 export function wallPlaster(variant: number): Canvas {
   const c = new Canvas(T, T)
@@ -242,14 +242,14 @@ export function doorShop(): Canvas {
 
 /** Rows of 32 texels, four pieces a row, every other row shifted half a piece; a piece's colour is its own, except
  * pieces cut by the tile's edge, which keep the family's, so every variant meets. */
-function piece(x: number, y: number, seed: number, familySeed: number): { u: number; v: number; id: number; tone: number; row: number } {
+export function piece(x: number, y: number, seed: number, familySeed: number): { u: number; v: number; id: number; tone: number; row: number } {
   const row = Math.floor(y / 32), shift = (row % 2) * 16, col = Math.floor((x + shift) / 32), u = (x + shift) % 32, v = y % 32
   const start = col * 32 - shift, cut = start < 0 || start + 32 > T
   const id = row * 5 + (col % 4)
   return { u, v, id, row, tone: hash(id, 0, cut ? familySeed : seed) }
 }
 /** The piece in the row above hangs over this row's top: how far it reaches at this column. */
-const overhang = (x: number, y: number, depth: number, shape: (u: number) => number) => {
+export const overhang = (x: number, y: number, depth: number, shape: (u: number) => number) => {
   const above = Math.floor(y / 32) - 1, shift = ((above % 2) + 2) % 2 * 16, u = (x + shift) % 32
   return depth * shape(u)
 }

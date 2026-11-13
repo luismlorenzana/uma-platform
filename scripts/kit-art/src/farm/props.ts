@@ -6,17 +6,17 @@ import { bark, contact, foliage, form, fruit, grassClump, leaf, stem, wood, type
 import { fbm, hash, stream } from '../noise.js'
 import { Canvas, capsule, circle, ellipse, fading, intersect, linear, poly, rect, rough, subtract, union } from '../paint.js'
 
-const GREEN = { dark: hex('#2f5a2c'), mid: hex('#4f8a3c'), light: hex('#8cc25a') }
-const TIMBER = hex('#8a5a32'), TIMBER_DARK = hex('#5e3d22'), IRON = hex('#3a3a40'), STRAW = hex('#d9b860')
+export const GREEN = { dark: hex('#2f5a2c'), mid: hex('#4f8a3c'), light: hex('#8cc25a') }
+export const TIMBER = hex('#8a5a32'), TIMBER_DARK = hex('#5e3d22'), IRON = hex('#3a3a40'), STRAW = hex('#d9b860')
 
 // --- Trees -----------------------------------------------------------------------------------------------------------------
 
-function trunk(c: Canvas, x: number, foot: number, top: number, w: number, colour: RGB, seed: number): void {
+export function trunk(c: Canvas, x: number, foot: number, top: number, w: number, colour: RGB, seed: number): void {
   const flare = poly([[x - w * 1.25, foot], [x - w * 0.55, foot - 22], [x - w * 0.5, top], [x + w * 0.5, top], [x + w * 0.55, foot - 22], [x + w * 1.25, foot]])
   bark(c, rough(flare, 1.5, 20, seed), colour, seed)
   contact(c, x, foot - 1, w * 1.2)
 }
-function clumps(seed: number, cx: number, cy: number, rx: number, ry: number, n: number, r0: number, r1: number): Clump[] {
+export function clumps(seed: number, cx: number, cy: number, rx: number, ry: number, n: number, r0: number, r1: number): Clump[] {
   const r = stream(seed), out: Clump[] = [{ x: cx, y: cy, r: Math.min(rx, ry) * 0.75 }]
   for (let i = 0; i < n; i++) {
     const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.82
@@ -232,7 +232,7 @@ function sawBench(): Canvas {
 // --- The yard --------------------------------------------------------------------------------------------------------------
 
 /** A wooden box seen from the front and a little above: a lit top, slatted front. */
-function box(c: Canvas, x: number, y: number, w: number, h: number, top: number, colour: RGB, seed: number, lid = false): void {
+export function box(c: Canvas, x: number, y: number, w: number, h: number, top: number, colour: RGB, seed: number, lid = false): void {
   c.fill(poly([[x, y + top], [x + 8, y], [x + w + 8, y], [x + w, y + top]]), (px, py) => [...shade(colour, 0.22 + (fbm(px, py, { cells: 4, sx: 1, sy: 6, seed }) - 0.5) * 0.2), 1] as RGBA)
   c.fill(poly([[x + w, y + top], [x + w + 8, y], [x + w + 8, y + h - top], [x + w, y + h]]), [...shade(colour, -0.32), 1])
   c.fill(rect(x, y + top, w, h - top), (px, py) => {
@@ -477,7 +477,7 @@ function lantern(): Canvas {
   c.fill(rect(16, 70, 32, 4, 1), [...IRON, 1])
   return c
 }
-function radial(cx: number, cy: number, r: number, inner: RGB, outer: RGB) {
+export function radial(cx: number, cy: number, r: number, inner: RGB, outer: RGB) {
   return (x: number, y: number): RGBA => { const t = Math.min(1, Math.hypot(x - cx, y - cy) / r); return [...mix(inner, outer, t), 1] as RGBA }
 }
 

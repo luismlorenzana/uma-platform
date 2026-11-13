@@ -1,7 +1,8 @@
 // kit-farm's wave 1 (uma-farm kit-farm.md §4, §6, KF3, KF8, KF12): every frame's name, role, size, set, foot, blocking
 // and light, as uma-stage 0.2.1's parser reads them. The names are the farm's API (KF14). Pure.
 
-export type Role = 'floor' | 'riser' | 'building-wall' | 'window' | 'door' | 'roof' | 'prop' | 'sign'
+export type Role = 'floor' | 'riser' | 'building-wall' | 'window' | 'door' | 'roof' | 'prop' | 'sign' | 'wall' | 'wall-top' | 'stairs' | 'void'
+  | 'battle-ground' | 'battle-back' | 'battle-mid'
 export interface FrameSpec {
   name: string
   role: Role

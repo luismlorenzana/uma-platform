@@ -5,7 +5,7 @@ import type { DrawnFrame } from './farm/index.js'
 export const PAGE = 2048
 /** Opaque, tiling pieces: their edge texels are copied one texel into the gap round them, so a kit the stage scales
  * down (fit-to-width, mipmapped) never samples the clear gap at a tile's edge and shows a seam. Cut-outs keep a clear gap. */
-const EXTRUDED: ReadonlySet<string> = new Set(['floor', 'riser', 'building-wall', 'window', 'door', 'roof'])
+const EXTRUDED: ReadonlySet<string> = new Set(['floor', 'riser', 'building-wall', 'window', 'door', 'roof', 'wall', 'wall-top', 'stairs', 'void', 'battle-ground', 'battle-back'])
 function extrude(rgba: Uint8Array, x: number, y: number, w: number, h: number): void {
   const copy = (sx: number, sy: number, dx: number, dy: number) => {
     if (dx < 0 || dy < 0 || dx >= PAGE || dy >= PAGE) return
@@ -18,10 +18,11 @@ export interface AtlasFrame {
   page: number; x: number; y: number; w: number; h: number; role: string
   set?: string; weight?: number; foot?: { x: number; y: number }; blocks?: boolean; light?: { color: string; radius: number; flicker?: boolean }
 }
-export interface Atlas { formatVersion: 1; id: string; kind: 'farm'; tile: 128; pages: { file: string; width: number; height: number }[]; frames: Record<string, AtlasFrame> }
+export type KitKind = 'farm' | 'town' | 'biome'
+export interface Atlas { formatVersion: 1; id: string; kind: KitKind; tile: 128; pages: { file: string; width: number; height: number }[]; frames: Record<string, AtlasFrame> }
 
 /** Packs the frames and copies their pixels onto the page. Frames keep the wave's name order in the JSON. */
-export function pack(id: string, frames: readonly DrawnFrame[]): { atlas: Atlas; rgba: Uint8Array } {
+export function pack(id: string, frames: readonly DrawnFrame[], kind: KitKind = 'farm'): { atlas: Atlas; rgba: Uint8Array } {
   const order = [...frames].sort((a, b) => b.spec.h - a.spec.h || b.spec.w - a.spec.w || a.spec.name.localeCompare(b.spec.name))
   const at = new Map<string, { x: number; y: number }>()
   let x = 0, y = 0, row = 0
@@ -38,5 +39,5 @@ export function pack(id: string, frames: readonly DrawnFrame[]): { atlas: Atlas;
     out[s.name] = { page: 0, x: p.x, y: p.y, w: s.w, h: s.h, role: s.role, ...(s.set ? { set: s.set } : {}), ...(s.weight ? { weight: s.weight } : {}),
       ...(s.foot ? { foot: s.foot } : {}), ...(s.blocks !== undefined ? { blocks: s.blocks } : {}), ...(s.light ? { light: s.light } : {}) }
   }
-  return { atlas: { formatVersion: 1, id, kind: 'farm', tile: 128, pages: [{ file: 'atlas.png', width: PAGE, height: PAGE }], frames: out }, rgba }
+  return { atlas: { formatVersion: 1, id, kind, tile: 128, pages: [{ file: 'atlas.png', width: PAGE, height: PAGE }], frames: out }, rgba }
 }

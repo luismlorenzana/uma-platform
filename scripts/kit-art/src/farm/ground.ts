@@ -8,14 +8,14 @@ import { Canvas, capsule, circle, ellipse, fading, fillTiled, rect, type Paint, 
 
 const T = 128
 /** Distance (texels) from a texel's middle to the tile's nearest edge. */
-const edgeDist = (x: number, y: number) => Math.min(x, T - x, y, T - y)
+export const edgeDist = (x: number, y: number) => Math.min(x, T - x, y, T - y)
 /** 0 on the edge band, 1 well inside: where a variant may differ. */
-const inside = (x: number, y: number) => smooth(10, 30, edgeDist(x, y))
-const seedOf = (family: string) => [...family].reduce((s, c) => (s * 31 + c.charCodeAt(0)) | 0, 7)
+export const inside = (x: number, y: number) => smooth(10, 30, edgeDist(x, y))
+export const seedOf = (family: string) => [...family].reduce((s, c) => (s * 31 + c.charCodeAt(0)) | 0, 7)
 
 /** Where decorations go: on the shared edge band (drawn across the edges, the same on every variant), or inside (a
  * variant's own, kept clear of the edges). */
-function scatter(n: number, seed: number, zone: 'edge' | 'inner', reach: number, each: (x: number, y: number, r: () => number) => void): void {
+export function scatter(n: number, seed: number, zone: 'edge' | 'inner', reach: number, each: (x: number, y: number, r: () => number) => void): void {
   const r = stream(seed)
   for (let tries = 0, placed = 0; placed < n && tries < n * 40; tries++) {
     const x = r() * T, y = r() * T, d = edgeDist(x, y)
@@ -25,13 +25,13 @@ function scatter(n: number, seed: number, zone: 'edge' | 'inner', reach: number,
   }
 }
 /** Fills a shape on a floor; an edge decoration also at its wrapped places, so it crosses into the next tile. */
-function fillAt(c: Canvas, s: Shape, paint: Paint, zone: 'edge' | 'inner', opacity = 1): void {
+export function fillAt(c: Canvas, s: Shape, paint: Paint, zone: 'edge' | 'inner', opacity = 1): void {
   if (zone === 'edge') fillTiled(c, s, paint, T, 'xy', 'over', opacity)
   else c.fill(s, paint, 'over', opacity)
 }
 
 /** A floor: a tiling texture (shared at the edges, the variant's inside), then decorations on both zones. */
-function floor(texel: (x: number, y: number, seed: number) => RGB, family: string, variant: number,
+export function floor(texel: (x: number, y: number, seed: number) => RGB, family: string, variant: number,
   decorate: (c: Canvas, zone: 'edge' | 'inner', seed: number) => void): Canvas {
   const c = new Canvas(T, T), shared = seedOf(family), own = shared + variant * 101
   c.paint((x, y) => { const a = texel(x, y, shared), k = variant === 1 ? 0 : inside(x, y); return [...(k ? mix(a, texel(x, y, own), k) : a), 1] as RGBA })
@@ -42,8 +42,8 @@ function floor(texel: (x: number, y: number, seed: number) => RGB, family: strin
 
 // --- Grass ---------------------------------------------------------------------------------------------------------------
 
-const GRASS = { base: hex('#6fa64a'), light: hex('#8fc45c'), dark: hex('#4c8636'), tip: hex('#b2d672'), deep: hex('#3d7030') }
-const grassTexel = (x: number, y: number, seed: number): RGB => {
+export const GRASS = { base: hex('#6fa64a'), light: hex('#8fc45c'), dark: hex('#4c8636'), tip: hex('#b2d672'), deep: hex('#3d7030') }
+export const grassTexel = (x: number, y: number, seed: number): RGB => {
   const big = fbm(x, y, { cells: 3, tile: T, octaves: 3, seed }), fine = fbm(x, y, { cells: 16, tile: T, octaves: 2, seed: seed + 5 })
   const warm = fbm(x, y, { cells: 2, tile: T, octaves: 2, seed: seed + 9 })
   const mid = fbm(x, y, { cells: 8, tile: T, octaves: 2, seed: seed + 3 })
@@ -53,7 +53,7 @@ const grassTexel = (x: number, y: number, seed: number): RGB => {
   return mix(c, hex('#9cb64a'), smooth(0.6, 0.85, warm) * 0.25)
 }
 /** A tuft of blades: dark at the root, light at the tip, leaning a little. */
-function tuft(c: Canvas, x: number, y: number, r: () => number, zone: 'edge' | 'inner', size = 1): void {
+export function tuft(c: Canvas, x: number, y: number, r: () => number, zone: 'edge' | 'inner', size = 1): void {
   const blades = 3 + Math.floor(r() * 4)
   for (let i = 0; i < blades; i++) {
     const bx = x + (r() - 0.5) * 7 * size, len = (5 + r() * 7) * size, lean = (r() - 0.5) * 6 * size
@@ -75,13 +75,13 @@ export function grass(variant: number): Canvas {
 
 // --- Path ----------------------------------------------------------------------------------------------------------------
 
-const DIRT = { base: hex('#c9a56f'), light: hex('#dcbd8a'), dark: hex('#a8834f'), stone: hex('#b9ab94'), stoneDark: hex('#8c7e69') }
-const pathTexel = (x: number, y: number, seed: number): RGB => {
+export const DIRT = { base: hex('#c9a56f'), light: hex('#dcbd8a'), dark: hex('#a8834f'), stone: hex('#b9ab94'), stoneDark: hex('#8c7e69') }
+export const pathTexel = (x: number, y: number, seed: number): RGB => {
   const big = fbm(x, y, { cells: 3, tile: T, octaves: 3, seed }), fine = fbm(x, y, { cells: 32, tile: T, octaves: 2, seed: seed + 3 })
   return shade(mix(DIRT.dark, DIRT.light, smooth(0.2, 0.8, big)), (fine - 0.5) * 0.12)
 }
 /** A pebble: a rounded stone lit on its upper left, a dark rim below. */
-function pebble(c: Canvas, x: number, y: number, rx: number, ry: number, zone: 'edge' | 'inner', base = DIRT.stone): void {
+export function pebble(c: Canvas, x: number, y: number, rx: number, ry: number, zone: 'edge' | 'inner', base = DIRT.stone): void {
   fillAt(c, ellipse(x + 0.6, y + 0.8, rx + 0.4, ry + 0.4), [...DIRT.dark, 0.7], zone)
   fillAt(c, ellipse(x, y, rx, ry), (px, py) => [...mix(shade(base, 0.25), shade(base, -0.18), smooth(-ry, ry, (px - x) * 0.5 + (py - y))), 1] as RGBA, zone)
 }
@@ -145,8 +145,8 @@ export function forestFloor(variant: number): Canvas {
 
 // --- Water ---------------------------------------------------------------------------------------------------------------
 
-const WATER = { deep: hex('#3a86b0'), mid: hex('#4f9dc6'), light: hex('#86c8e6'), sparkle: hex('#e6f6ff') }
-const waterTexel = (x: number, y: number, seed: number): RGB => {
+export const WATER = { deep: hex('#3a86b0'), mid: hex('#4f9dc6'), light: hex('#86c8e6'), sparkle: hex('#e6f6ff') }
+export const waterTexel = (x: number, y: number, seed: number): RGB => {
   const big = fbm(x, y, { cells: 2, tile: T, octaves: 3, seed, sy: 2 }), ripple = fbm(x, y, { cells: 4, tile: T, octaves: 3, seed: seed + 4, sy: 4 })
   let c = mix(WATER.deep, WATER.mid, smooth(0.3, 0.7, big))
   // Light bands where the ripples crest.
@@ -165,7 +165,7 @@ export function water(variant: number): Canvas {
 
 // --- Paving --------------------------------------------------------------------------------------------------------------
 
-const STONE = { a: hex('#bdb6a6'), b: hex('#aaa393'), c: hex('#c9c2b0'), mortar: hex('#7e776a'), dark: hex('#6a6458') }
+export const STONE = { a: hex('#bdb6a6'), b: hex('#aaa393'), c: hex('#c9c2b0'), mortar: hex('#7e776a'), dark: hex('#6a6458') }
 /** Setts in running bond: rows of four 32-texel stones, every other row shifted by half a stone (repeats every tile). */
 function sett(x: number, y: number): { id: number; u: number; v: number } {
   const row = Math.floor(y / 32), shift = row % 2 ? 16 : 0, col = Math.floor((x + shift) / 32) % 4
@@ -198,9 +198,9 @@ export function paving(variant: number): Canvas {
 
 // --- Risers --------------------------------------------------------------------------------------------------------------
 
-const EARTH = { top: hex('#8a6440'), mid: hex('#74512f'), low: hex('#5c3e24'), band: hex('#9a7550'), root: hex('#4a3420') }
+export const EARTH = { top: hex('#8a6440'), mid: hex('#74512f'), low: hex('#5c3e24'), band: hex('#9a7550'), root: hex('#4a3420') }
 /** The grassy lip: the floor's edge hanging over the drop, blades poking down over the earth. */
-function grassLip(c: Canvas, seed: number): void {
+export function grassLip(c: Canvas, seed: number): void {
   c.fill(rect(0, 0, T, 13), (x, y) => [...shade(grassTexel(x, y, seedOf('grass')), -smooth(4, 13, y) * 0.18), 1] as RGBA)
   const r = stream(seed)
   for (let i = 0; i < 46; i++) {
@@ -208,7 +208,7 @@ function grassLip(c: Canvas, seed: number): void {
     fillTiled(c, capsule(x, 10, x + lean, 10 + len, 1.4, 0.4), (px, py) => [...mix(GRASS.base, GRASS.deep, smooth(10, 10 + len, py)), 1] as RGBA, T, 'x')
   }
 }
-const earthTexel = (seed: number) => (x: number, y: number): RGB => {
+export const earthTexel = (seed: number) => (x: number, y: number): RGB => {
   const strata = fbm(x, y, { cells: 2, tile: T, octaves: 3, seed, sy: 6 }), fine = fbm(x, y, { cells: 24, tile: T, octaves: 2, seed: seed + 1 })
   let c = mix(EARTH.top, EARTH.low, smooth(0, T, y))
   c = mix(c, EARTH.band, smooth(0.6, 0.72, strata) * 0.5)

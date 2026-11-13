@@ -1,0 +1,348 @@
+{
+  "formatVersion": 1,
+  "id": "kit-town-summoner",
+  "kind": "town",
+  "tile": 128,
+  "pages": [
+    {
+      "file": "atlas.png",
+      "width": 2048,
+      "height": 2048
+    }
+  ],
+  "frames": {
+    "floor-1": {
+      "page": 0,
+      "x": 1168,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 4
+    },
+    "floor-2": {
+      "page": 0,
+      "x": 1298,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "floor-3": {
+      "page": 0,
+      "x": 1428,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "floor-4": {
+      "page": 0,
+      "x": 1558,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "wall-1": {
+      "page": 0,
+      "x": 1290,
+      "y": 0,
+      "w": 128,
+      "h": 256,
+      "role": "wall"
+    },
+    "wall-2": {
+      "page": 0,
+      "x": 1420,
+      "y": 0,
+      "w": 128,
+      "h": 256,
+      "role": "wall"
+    },
+    "wall-top": {
+      "page": 0,
+      "x": 390,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "wall-top"
+    },
+    "riser-1": {
+      "page": 0,
+      "x": 1688,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "riser"
+    },
+    "riser-2": {
+      "page": 0,
+      "x": 1818,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "riser"
+    },
+    "stairs": {
+      "page": 0,
+      "x": 260,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "stairs"
+    },
+    "building-wall-1": {
+      "page": 0,
+      "x": 648,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall"
+    },
+    "building-wall-2": {
+      "page": 0,
+      "x": 778,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall"
+    },
+    "building-wall-3": {
+      "page": 0,
+      "x": 908,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "building-wall"
+    },
+    "window-1": {
+      "page": 0,
+      "x": 520,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "window"
+    },
+    "window-2": {
+      "page": 0,
+      "x": 650,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "window"
+    },
+    "door": {
+      "page": 0,
+      "x": 1160,
+      "y": 0,
+      "w": 128,
+      "h": 256,
+      "role": "door"
+    },
+    "roof-1": {
+      "page": 0,
+      "x": 0,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "roof"
+    },
+    "roof-2": {
+      "page": 0,
+      "x": 130,
+      "y": 500,
+      "w": 128,
+      "h": 128,
+      "role": "roof"
+    },
+    "sign-inn": {
+      "page": 0,
+      "x": 780,
+      "y": 500,
+      "w": 128,
+      "h": 112,
+      "role": "sign",
+      "foot": {
+        "x": 64,
+        "y": 100
+      }
+    },
+    "sign-shop": {
+      "page": 0,
+      "x": 910,
+      "y": 500,
+      "w": 128,
+      "h": 112,
+      "role": "sign",
+      "foot": {
+        "x": 64,
+        "y": 100
+      }
+    },
+    "tree-1": {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "w": 352,
+      "h": 352,
+      "role": "prop",
+      "foot": {
+        "x": 172,
+        "y": 340
+      },
+      "blocks": true
+    },
+    "well": {
+      "page": 0,
+      "x": 354,
+      "y": 0,
+      "w": 224,
+      "h": 272,
+      "role": "prop",
+      "foot": {
+        "x": 107,
+        "y": 260
+      },
+      "blocks": true
+    },
+    "stall-1": {
+      "page": 0,
+      "x": 580,
+      "y": 0,
+      "w": 288,
+      "h": 256,
+      "role": "prop",
+      "foot": {
+        "x": 134,
+        "y": 244
+      },
+      "blocks": true
+    },
+    "stall-2": {
+      "page": 0,
+      "x": 870,
+      "y": 0,
+      "w": 288,
+      "h": 256,
+      "role": "prop",
+      "foot": {
+        "x": 139,
+        "y": 244
+      },
+      "blocks": true
+    },
+    "fence": {
+      "page": 0,
+      "x": 0,
+      "y": 354,
+      "w": 160,
+      "h": 144,
+      "role": "prop",
+      "foot": {
+        "x": 80,
+        "y": 132
+      },
+      "blocks": true
+    },
+    "barrel": {
+      "page": 0,
+      "x": 162,
+      "y": 354,
+      "w": 112,
+      "h": 144,
+      "role": "prop",
+      "foot": {
+        "x": 56,
+        "y": 132
+      },
+      "blocks": true
+    },
+    "crate": {
+      "page": 0,
+      "x": 1038,
+      "y": 354,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 55,
+        "y": 116
+      },
+      "blocks": true
+    },
+    "bench": {
+      "page": 0,
+      "x": 276,
+      "y": 354,
+      "w": 192,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 95,
+        "y": 116
+      },
+      "blocks": true
+    },
+    "flower-box": {
+      "page": 0,
+      "x": 470,
+      "y": 354,
+      "w": 176,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 88,
+        "y": 116
+      },
+      "blocks": true
+    },
+    "noticeboard": {
+      "page": 0,
+      "x": 1762,
+      "y": 0,
+      "w": 160,
+      "h": 224,
+      "role": "prop",
+      "foot": {
+        "x": 80,
+        "y": 212
+      },
+      "blocks": true
+    },
+    "banner": {
+      "page": 0,
+      "x": 1550,
+      "y": 0,
+      "w": 112,
+      "h": 256,
+      "role": "prop",
+      "foot": {
+        "x": 56,
+        "y": 244
+      },
+      "blocks": true
+    },
+    "lantern": {
+      "page": 0,
+      "x": 1664,
+      "y": 0,
+      "w": 96,
+      "h": 256,
+      "role": "prop",
+      "foot": {
+        "x": 49,
+        "y": 244
+      },
+      "blocks": true,
+      "light": {
+        "color": "#ffb347",
+        "radius": 4,
+        "flicker": true
+      }
+    }
+  }
+}

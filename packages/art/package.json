@@ -43,6 +43,22 @@
     "./kit-town-warrior/atlas.json": "./kit-town-warrior/atlas.json",
     "./kit-farm/atlas.png": "./kit-farm/atlas.png",
     "./kit-farm/atlas.json": "./kit-farm/atlas.json",
+    "./kit-town-spellblade/atlas.png": "./kit-town-spellblade/atlas.png",
+    "./kit-town-spellblade/atlas.json": "./kit-town-spellblade/atlas.json",
+    "./kit-town-mage/atlas.png": "./kit-town-mage/atlas.png",
+    "./kit-town-mage/atlas.json": "./kit-town-mage/atlas.json",
+    "./kit-town-summoner/atlas.png": "./kit-town-summoner/atlas.png",
+    "./kit-town-summoner/atlas.json": "./kit-town-summoner/atlas.json",
+    "./kit-town-healer/atlas.png": "./kit-town-healer/atlas.png",
+    "./kit-town-healer/atlas.json": "./kit-town-healer/atlas.json",
+    "./kit-meadow/atlas.png": "./kit-meadow/atlas.png",
+    "./kit-meadow/atlas.json": "./kit-meadow/atlas.json",
+    "./kit-ruins/atlas.png": "./kit-ruins/atlas.png",
+    "./kit-ruins/atlas.json": "./kit-ruins/atlas.json",
+    "./kit-marsh/atlas.png": "./kit-marsh/atlas.png",
+    "./kit-marsh/atlas.json": "./kit-marsh/atlas.json",
+    "./kit-coast/atlas.png": "./kit-coast/atlas.png",
+    "./kit-coast/atlas.json": "./kit-coast/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -60,6 +76,14 @@
     "emote",
     "kit-forest",
     "kit-town-warrior",
-    "kit-farm"
+    "kit-farm",
+    "kit-town-spellblade",
+    "kit-town-mage",
+    "kit-town-summoner",
+    "kit-town-healer",
+    "kit-meadow",
+    "kit-ruins",
+    "kit-marsh",
+    "kit-coast"
   ]
 }

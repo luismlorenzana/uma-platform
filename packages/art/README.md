@@ -626,3 +626,38 @@ Tiling pieces have their edge texels copied one texel into the 2-texel gap round
 shows no seams; cut-outs keep a clear gap. Every earlier uma-art file is byte-identical. The code, its tests and the
 [review](../../assets/authored/kit-farm/review/index.html) live outside the package; only the atlas files ship. Wave 2's
 30 frames come in a later minor, every wave-1 frame unchanged.
+
+## Four region town kits (uma-quest Q32)
+
+`kit-town-spellblade`, `kit-town-mage`, `kit-town-summoner` and `kit-town-healer` (`kind: "town"`, one 2048 page each,
+0.5–0.6 MB) are drawn by code (P147, P151; `scripts/kit-art`, `pnpm art:code-kits`). Each holds **the Warrior town kit's
+32 frames by name, role, size, `foot` and `blocks`**, so a town design written for `kit-town-warrior` takes any of them:
+four floors (weights 4:2:2:1), two terrace walls, a wall top, two risers, stairs, three building walls, two windows, a
+door, two roof variants, the `sign-inn` and `sign-shop` pictograms, and the twelve props. Only the lantern's light is the
+region's (Mage's is a cool `#cfe6ff` without flicker; Summoner's amber `#ffb347`; Healer's `#ffd58a`).
+
+| Kit | Look |
+|---|---|
+| Spellblade | Limestone flags and terraces, white plaster with stone quoins, slate-blue roofs, blue and silver cloth, a trimmed tree, a roofed well, a hedge |
+| Mage | Sandstone courses and ashlar, arched teal windows, teal glazed tiles with violet ones among them, violet and gold cloth, cypresses, a fountain, a balustrade |
+| Summoner | Boardwalk streets, log terraces, dark board walls, reed thatch, moss green and amber cloth, a willow, a rain barrel on its post, a rope fence |
+| Healer | Sandy flagstones, whitewash with sea-blue trim and a blue base band, terracotta roofs with blue glazed tiles, pale gold cloth, a palm, a domed well, a low wall |
+
+## Four band-1 biome kits (uma-quest Q33)
+
+`kit-meadow`, `kit-ruins`, `kit-marsh` and `kit-coast` (`kind: "biome"`, one 2048 page each, 0.8–1.1 MB), drawn by
+code. Each holds the forest kit's roles at its sizes and feet: `floor-1`–`4`, `wall-1`–`3`, `wall-top`, `riser-1`–`2`,
+`stairs`, `void`; `chest-closed`, `chest-open`, `spring` (light), `waystone` (light), `stairs-down`, `stairs-up`,
+`lantern` (light); `battle-ground`, `battle-back`, `battle-mid-1`–`3`; and its five decorations:
+
+| Kit | Walls | `void` | Decorations |
+|---|---|---|---|
+| meadow | hedge rows, a drystone wall | a stream | `flowers`, `grass`, `bush-1`, `rock-1`, `fence` |
+| ruins | broken masonry, fallen drums | a dark collapsed drop | `pillar-broken`, `rubble`, `urn`, `bookcase`, `grass` |
+| marsh | reed beds, twisted roots | murky water | `reeds`, `stump`, `lily`, `log`, `mushrooms` |
+| coast | rock shelves, a wreck's timbers | a tide pool over sand | `rock-1`, `rock-2`, `shell`, `driftwood`, `seaweed` |
+
+Floors meet in any variant order; wall, riser and roof variants meet their neighbours; the fight strips repeat left to
+right; tiling pieces are extruded one texel into their gaps. Every earlier uma-art file is byte-identical. The
+[review](../../assets/authored/code-kits.html) shows each kit in uma-quest's own test town or room (uma-stage's
+`StageEngine`), its sample building or fight, the painted Warrior or forest kit beside it, and every frame.

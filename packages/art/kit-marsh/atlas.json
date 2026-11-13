@@ -1,0 +1,336 @@
+{
+  "formatVersion": 1,
+  "id": "kit-marsh",
+  "kind": "biome",
+  "tile": 128,
+  "pages": [
+    {
+      "file": "atlas.png",
+      "width": 2048,
+      "height": 2048
+    }
+  ],
+  "frames": {
+    "floor-1": {
+      "page": 0,
+      "x": 1296,
+      "y": 868,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 4
+    },
+    "floor-2": {
+      "page": 0,
+      "x": 1426,
+      "y": 868,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "floor-3": {
+      "page": 0,
+      "x": 1556,
+      "y": 868,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 2
+    },
+    "floor-4": {
+      "page": 0,
+      "x": 1686,
+      "y": 868,
+      "w": 128,
+      "h": 128,
+      "role": "floor",
+      "weight": 1
+    },
+    "wall-1": {
+      "page": 0,
+      "x": 1348,
+      "y": 514,
+      "w": 128,
+      "h": 256,
+      "role": "wall"
+    },
+    "wall-2": {
+      "page": 0,
+      "x": 1478,
+      "y": 514,
+      "w": 128,
+      "h": 256,
+      "role": "wall"
+    },
+    "wall-3": {
+      "page": 0,
+      "x": 1608,
+      "y": 514,
+      "w": 128,
+      "h": 256,
+      "role": "wall"
+    },
+    "wall-top": {
+      "page": 0,
+      "x": 520,
+      "y": 1094,
+      "w": 128,
+      "h": 128,
+      "role": "wall-top"
+    },
+    "riser-1": {
+      "page": 0,
+      "x": 1816,
+      "y": 868,
+      "w": 128,
+      "h": 128,
+      "role": "riser"
+    },
+    "riser-2": {
+      "page": 0,
+      "x": 0,
+      "y": 1094,
+      "w": 128,
+      "h": 128,
+      "role": "riser"
+    },
+    "stairs": {
+      "page": 0,
+      "x": 130,
+      "y": 1094,
+      "w": 128,
+      "h": 128,
+      "role": "stairs"
+    },
+    "void": {
+      "page": 0,
+      "x": 390,
+      "y": 1094,
+      "w": 128,
+      "h": 128,
+      "role": "void"
+    },
+    "chest-closed": {
+      "page": 0,
+      "x": 876,
+      "y": 1094,
+      "w": 128,
+      "h": 112,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 100
+      },
+      "blocks": true
+    },
+    "chest-open": {
+      "page": 0,
+      "x": 1166,
+      "y": 868,
+      "w": 128,
+      "h": 144,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 132
+      },
+      "blocks": true
+    },
+    "spring": {
+      "page": 0,
+      "x": 972,
+      "y": 868,
+      "w": 192,
+      "h": 144,
+      "role": "prop",
+      "foot": {
+        "x": 91,
+        "y": 132
+      },
+      "blocks": false,
+      "light": {
+        "color": "#81ceff",
+        "radius": 3
+      }
+    },
+    "waystone": {
+      "page": 0,
+      "x": 0,
+      "y": 868,
+      "w": 112,
+      "h": 224,
+      "role": "prop",
+      "foot": {
+        "x": 54,
+        "y": 212
+      },
+      "blocks": true,
+      "light": {
+        "color": "#b7e0c5",
+        "radius": 3
+      }
+    },
+    "stairs-down": {
+      "page": 0,
+      "x": 648,
+      "y": 868,
+      "w": 192,
+      "h": 160,
+      "role": "prop",
+      "foot": {
+        "x": 95,
+        "y": 148
+      },
+      "blocks": false
+    },
+    "stairs-up": {
+      "page": 0,
+      "x": 196,
+      "y": 868,
+      "w": 192,
+      "h": 192,
+      "role": "prop",
+      "foot": {
+        "x": 93,
+        "y": 180
+      },
+      "blocks": false
+    },
+    "lantern": {
+      "page": 0,
+      "x": 114,
+      "y": 868,
+      "w": 80,
+      "h": 224,
+      "role": "prop",
+      "foot": {
+        "x": 27,
+        "y": 212
+      },
+      "blocks": true,
+      "light": {
+        "color": "#ffc46b",
+        "radius": 4,
+        "flicker": true
+      }
+    },
+    "battle-ground": {
+      "page": 0,
+      "x": 322,
+      "y": 514,
+      "w": 1024,
+      "h": 256,
+      "role": "battle-ground"
+    },
+    "battle-back": {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "w": 2048,
+      "h": 512,
+      "role": "battle-back"
+    },
+    "battle-mid-1": {
+      "page": 0,
+      "x": 0,
+      "y": 514,
+      "w": 320,
+      "h": 352,
+      "role": "battle-mid",
+      "foot": {
+        "x": 151,
+        "y": 340
+      }
+    },
+    "battle-mid-2": {
+      "page": 0,
+      "x": 390,
+      "y": 868,
+      "w": 256,
+      "h": 160,
+      "role": "battle-mid",
+      "foot": {
+        "x": 137,
+        "y": 148
+      }
+    },
+    "battle-mid-3": {
+      "page": 0,
+      "x": 1738,
+      "y": 514,
+      "w": 288,
+      "h": 224,
+      "role": "battle-mid",
+      "foot": {
+        "x": 44,
+        "y": 212
+      }
+    },
+    "reeds": {
+      "page": 0,
+      "x": 842,
+      "y": 868,
+      "w": 128,
+      "h": 160,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 148
+      },
+      "blocks": false
+    },
+    "stump": {
+      "page": 0,
+      "x": 260,
+      "y": 1094,
+      "w": 128,
+      "h": 128,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 116
+      },
+      "blocks": true
+    },
+    "lily": {
+      "page": 0,
+      "x": 1104,
+      "y": 1094,
+      "w": 128,
+      "h": 64,
+      "role": "prop",
+      "foot": {
+        "x": 64,
+        "y": 52
+      },
+      "blocks": false
+    },
+    "log": {
+      "page": 0,
+      "x": 650,
+      "y": 1094,
+      "w": 224,
+      "h": 112,
+      "role": "prop",
+      "foot": {
+        "x": 112,
+        "y": 100
+      },
+      "blocks": true
+    },
+    "mushrooms": {
+      "page": 0,
+      "x": 1006,
+      "y": 1094,
+      "w": 96,
+      "h": 96,
+      "role": "prop",
+      "foot": {
+        "x": 48,
+        "y": 84
+      },
+      "blocks": false
+    }
+  }
+}

@@ -17,9 +17,9 @@ export const DRAWERS: Readonly<Record<string, () => Canvas>> = { ...GROUND_DRAWE
 
 export interface DrawnFrame { spec: FrameSpec; canvas: Canvas }
 /** Draws every frame of a wave, refusing one whose drawing doesn't match its spec's size. */
-export function drawWave(specs: readonly FrameSpec[] = WAVE_1): DrawnFrame[] {
+export function drawWave(specs: readonly FrameSpec[] = WAVE_1, drawers: Readonly<Record<string, () => Canvas>> = DRAWERS): DrawnFrame[] {
   return specs.map((spec) => {
-    const draw = DRAWERS[spec.name]
+    const draw = drawers[spec.name]
     if (!draw) throw new Error(`no drawing for ${spec.name}`)
     const canvas = draw()
     if (canvas.w !== spec.w || canvas.h !== spec.h) throw new Error(`${spec.name} is ${canvas.w} × ${canvas.h}, not ${spec.w} × ${spec.h}`)
