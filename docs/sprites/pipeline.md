@@ -386,7 +386,7 @@ than files copied out of `content/`. UA7 adds the facings Q6 walks in.
 | CR22 | Revisions are immutable folders; a fix or new actions make a new revision that keeps approved frames byte for byte, so the owner reviews only what's new |
 | CR23 | The tools are generic code in git (`scripts/sprites`, `tools/studio`, prompt templates without names); per-character prompts, configs and identity notes stay in `content/` |
 | CR24 | Batches of five, one per Way, in tier order then roster order, never two outfits of one character; 20 batches; batch N is uma-quest's wave N |
-| CR25 | Townsfolk: one set for each of the 70 characters without a selected outfit, in her best-ranked outfit (B before F). **Amended by P93:** drawn ahead in batches of ten (T1–T8), one after each traveler batch |
+| CR25 | Townsfolk: one set for each of the 70 characters without a selected outfit, in her best-ranked outfit (B before F). **Amended by P93:** drawn ahead in batches of ten (T1–T8), one after each traveler batch. **Amended by P153:** cast from the Ranker's Uma NPCs board (60 since P131), in its order, each in her default outfit: T1–T7 (UA11's table) |
 | CR26 | The release family `outfit-sprites` in uma-data 1.4.0 (format.md §13) |
 | CR27 | A sprite publish carries every other file of the latest release byte for byte |
 | CR28 | Games load a set only while that Uma is on screen, through their own content proxy, cached; they draw the revision `latest` holds |

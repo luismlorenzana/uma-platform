@@ -101,13 +101,14 @@ and bubbles are uma-art.
 |---|---|---|---|---|---|
 | UA5 | `sprites:pack`, the sprite-only publish, the encoding, batch 1's first release | Claude | M | UA2, UA4; the owner's set approval | Done (release `4757517816a0`, P100) |
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile (130 frames since P105); the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | **Ready after the slice** |
-| [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T8 (P93) | ChatGPT | M | UA10 ✓, UA2 ✓ | After the slice and the next traveler batch |
+| [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T7, in the Uma NPCs order (P93, P153) | ChatGPT | M | UA10 ✓, UA2 ✓ | The template; T4 onward after the next traveler batch |
+| [UA13](tasks/UA13-townsfolk-t2.md), [UA14](tasks/UA14-townsfolk-t3.md) | Art: townsfolk T2 and T3, ten each, for uma-quest's Q23 towns (P153) | ChatGPT | M each | UA10 ✓, UA2 ✓ | **Ready, after Q16 B** |
 
 **Order:** UA1–UA8, UA10 and UA12 are complete. UA5 first published batch 1 in `4757517816a0` (P100). After the owner’s feedback, P105 added independent left field cycles, and release `7c34dbe2c8de` now holds all five at 130 frames plus T1’s three townsfolk at 45 frames (P108).
 
 **For uma-quest:** Q6’s existing loader receives the new traveler revisions through `latest`; its D17 already plays `walk-left` and `run-left` and stands left on the left turnaround. No pin is needed. Q12 can cast townsfolk outfits 101401, 100103 and 109701. Every non-sprite master-data file is unchanged.
 
-UA9 and UA11 follow the playable slice; townsfolk batches follow traveler batches (P93). Later art packets cover the rival add-on, familiars at the new scale and the bestiary’s full foe format (CR34).
+UA9 and UA11 follow the playable slice; townsfolk batches follow traveler batches (P93), except T2 and T3 (UA13, UA14), which go ahead for uma-quest's Q23 towns (P153). Later art packets cover the rival add-on, familiars at the new scale and the bestiary’s full foe format (CR34).
 
 ## The new apps: what uma-quest and uma-farm need (NA)
 
@@ -122,12 +123,13 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | UA6 | Backup complete: 2.39 GB live authored content, caches removed; 185-file restore byte-identical | Done | — | — | **Done** |
 | M2, uma-quest's slice | UA8, UA10 | Weapons and bubbles; three townsfolk (above) | ChatGPT | M, S | — | UA8 done (2.22.0); UA10 done (`7c34dbe2c8de`, P108) |
 | | Q7, Q15, Q16 | uma-quest's art packets ([forest kit](https://github.com/luismlorenzana/uma-platform/blob/main/assets/authored/kit-forest/README.md), [town kit](https://github.com/luismlorenzana/uma-platform/blob/main/assets/authored/kit-town-warrior/README.md), [foes](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md)), written there, drawn here, released in uma-art | ChatGPT | M each | uma-quest's Q5 ✓, Q8 ✓ | Q7 done (2.23.0, P110); Q15 done (2.24.0, P111); Q16 ready (in uma-quest) |
-| uma-quest's enemies and kits (P126) | Q16 A | [The baseline enemies' records](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-baseline-enemies.md), part A: the enemy-key format and master data, before ChatGPT draws part B | Claude | M | uma-quest's D33 review ✓ | **Ready, next** |
+| uma-quest's enemies and kits (P126) | Q16 A | [The baseline enemies' records](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-baseline-enemies.md), part A: the enemy-key format and master data, before ChatGPT draws part B | Claude | M | uma-quest's D33 review ✓ | **Done** (P152): [enemy-keys.md](../sprites/enemy-keys.md), uma-data 1.6.0, `enemies:pack`, `--enemies-only`, a dry run read back ([#85](https://github.com/luismlorenzana/uma-platform/pull/85)) |
 | | Q39 (+ TA4) | [The enemy pipeline](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q39-enemy-pipeline.md): tools, docs and batch templates | Claude | M | Q16 | Waits on Q16 |
-| | Q16 B, Q34, Q46 | The enemies and adult keys, drawn | ChatGPT | L | Q16 A; Q39 for Q34 | ChatGPT's character queue |
+| | Q16 B, Q34, Q46 | The enemies and adult keys, drawn | ChatGPT | L | Q16 A ✓; Q39 for Q34 | ChatGPT's character queue: Q16 B first |
+| | [UA13](tasks/UA13-townsfolk-t2.md), [UA14](tasks/UA14-townsfolk-t3.md) | Townsfolk T2 and T3: twenty Uma NPCs for band 1's five towns (uma-quest's Q23), in the Uma NPCs order (P153) | ChatGPT | M each | UA10 ✓, UA2 ✓ | **ChatGPT's next character packets after Q16 B** |
 | | Q32, Q33 | The four town kits and four biome kits (painted) | ChatGPT | L each | Q15 ✓, Q7 ✓ | After ChatGPT's character work (uma-quest D49) |
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
-| | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T2 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
+| | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T4 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
 | M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (P107) | Claude | M | uma-farm asks again | **Parked** (P109: the owner moved parcels to later, uma-farm D22) |
 | | F9 | uma-farm's `kit-farm` (painted, M7), drawn here | ChatGPT, after its character work | M | uma-farm's F16 | On hold (uma-farm D20) |
 | uma-farm's art (P126) | F25 A, F29 A | [M4's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F25-art-m4.md) and [M5's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F29-art-m5.md) pixel art: buildings, marks, goods, animal icons, story items, tool tints; drawn in `scripts/pixel-art`, published here | Claude | S–M, M | F29 A: after uma-farm's romance spec (F41) | **F25 A done** (uma-art 2.25.0, `f0d119f`, `83ee2b6`, `77e9001`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43068430302), P132; uma-farm D49); F29 A waits |
@@ -144,7 +146,7 @@ output is the private `content/authoring/tiers/plan.json`.
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
 | TA1 | The Studio's home and seven boards, the per-character Uma board, the Genshin Impact and Wuthering Waves imports | Claude | L | — | **Done** (P113–P115) |
-| [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's NPC ranking | Queued |
+| [TA2](tasks/TA2-sprite-queue-characters.md) | The sprite queue reads Playable Umas and Uma NPCs instead of the frozen outfit roster | Claude | M | The owner's NPC ranking ✓ | Queued; its townsfolk order is applied by hand in UA11's table until then (P153) |
 | TA3 | uma-quest's careers: a career a character, at least three bosses from the boss boards (P116) | uma-quest's session | M | — | Requested |
 | TA4 | Q39's `enemies:candidates` reads the plan's boss, Key and Regular boards | Claude (with Q39, P126) | S | Q39 | With Q39 |
 | TA6 | The next boss franchise, one packet each: Arknights: Endfield next ([ranked](../authoring/franchises.md)); Honkai Impact 3rd and Punishing: Gray Raven are built (TA1++) | Claude | M | The owner's pick | Waiting on the pick |

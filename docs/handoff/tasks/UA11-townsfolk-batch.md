@@ -1,13 +1,14 @@
-# UA11 — Art: a townsfolk batch of ten (the template for T2–T8)
+# UA11 — Art: a townsfolk batch of ten (the template for T2–T7)
 
 **uma-platform's private `content/authoring/sprites/` and the master-data release · ChatGPT · M · Needs: UA10's set gate
 and UA2 (and UA5, to publish) · Unblocks: uma-quest's towns (CM12, CM22)**
 
 ## Why
 
-uma-quest's towns are peopled by the 70 characters with no selected outfit: the townsfolk (CM12). They never fight or
-explore, so their profile is about a third of a traveler's. They stand, walk in four facings and emote when they speak:
-45 frames, with no fight, run or `weary` frames ([format.md](../../sprites/format.md) §7.5).
+uma-quest's towns are peopled by the Umas with no outfit on Playable Umas: the townsfolk (CM12), the Ranker's Uma
+NPCs (60 since P131). They never fight or explore, so their profile is about a third of a traveler's. They stand, walk
+in four facings and emote when they speak: 45 frames, with no fight, run or `weary` frames
+([format.md](../../sprites/format.md) §7.5).
 
 P93 draws them **ahead, in batches of ten**, so a town can cast from a ready pool instead of waiting on art. UA10's
 pilot is batch T1; this packet draws the next.
@@ -25,21 +26,24 @@ nothing else unless a measured number says to.
 
 ## Decisions made
 
-- **The batches (P93):** ten each, in CR25's order: tier B before F, then roster order. At roster revision 335 they
-  are:
+- **The batches (P93, ordered by P153):** ten each, in the order of the Ranker's **Uma NPCs** board (TA2's rule):
+  its tiers SSS to F, then its unranked, each Uma in her default outfit, skipping an Uma already drawn. Uma NPCs is
+  every Uma none of whose outfits is on Playable Umas, so it's 60 since the Playable Umas reset (P123, P131), not
+  P93's 70. At the plan of 2026-11-12 they are:
 
-  | Batch | Outfits | Tier |
-  |---|---|---|
-  | T1 (UA10) | 103301, 112001, 109801 | B |
-  | **T2 (this packet)** | 103801, 111201, 111901, 104001, 109901, 106301, 110401, 113201, 102401, 110301 | B |
-  | T3 | 108001, 107301, 104701, 110701, 107901, 111301, 107801, 101501, 100201, 106401 | B |
-  | T4 | 101103, 109501, 110901, 109201, 104503 (B); 101901, 103201, 105301, 105401, 102301 (F) | B, F |
-  | T5 | 108901, 101401, 112701, 113101, 105201, 102801, 101201, 103401, 103901, 105501 | F |
-  | T6 | 105601, 106201, 105801, 102701, 104901, 106001, 105101, 109601, 103001, 104201 | F |
-  | T7 | 104301, 110201, 100101, 113501, 109701, 104401, 108301, 102101, 100301, 104801 | F |
-  | T8 | 106601, 109101, 100801, 103501, 110001, 107201, 102901 | F |
+  | Batch | Outfits | Uma NPCs tiers | Packet |
+  |---|---|---|---|
+  | T1 | 100103, 101401, 109701 | SS | UA10, published (`7c34dbe2c8de`) |
+  | T2 | 113501, 106301, 106001, 104701, 102301, 103301, 108001, 110201, 107201, 102401 | SS, S, A | [UA13](UA13-townsfolk-t2.md) |
+  | T3 | 110701, 104401, 103401, 101201, 103901, 113201, 105501, 105601, 106201, 105801 | A, F | [UA14](UA14-townsfolk-t3.md) |
+  | T4 | 102701, 104901, 105101, 109601, 103001, 104201, 104301, 108301, 102101, 100301 | F | |
+  | T5 | 104801, 107301, 106601, 109101, 100801, 103501, 110001, 102901, 101901, 105301 | F | |
+  | T6 | 105401, 108901, 109801, 100903, 112701, 100503, 113101, 101103, 105201, 102801 | F | |
+  | T7 | 112001, 110401, 108501, 103703, 106102, 105902, 104103 | F, unranked | |
 
-  If the roster changes, `sprites:progress` recomputes the order. Approved sets stay approved.
+  If the owner re-ranks Uma NPCs, or an Uma moves between the two Uma boards, the batches not yet started follow the
+  board. The Studio's queue still reads the frozen outfit roster until TA2, so a batch packet's list is the one to
+  draw. Approved sets stay approved: T1's 100103 stays her set although her default outfit is 100101.
 - **Profile `townsfolk`, 45 frames:**
   - the key, a battle-facing still;
   - `turnaround`;
@@ -73,7 +77,7 @@ nothing else unless a measured number says to.
 
 - Ten more townsfolk sets are published, with every applicable check passing. The client's `spriteSet` returns each
   one.
-- `progress.json` counts townsfolk on their own, out of 70.
+- `progress.json` counts townsfolk on their own, out of 60.
 - The README records calls, rejections and minutes per set, compared with pipeline.md §9's ~3 minutes of waits.
 
 ## Deliver
