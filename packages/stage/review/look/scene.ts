@@ -5,7 +5,7 @@
 import {
   AdditiveBlending, BufferAttribute, BufferGeometry, CanvasTexture, Color, ConeGeometry, CylinderGeometry, DoubleSide, Group, Mesh, MeshDepthMaterial,
   MeshStandardMaterial, NearestFilter, PlaneGeometry, PointLight, Points, PointsMaterial, RGBADepthPacking, RepeatWrapping, SRGBColorSpace, Vector3,
-  BoxGeometry, type Camera, type Object3D, type Scene,
+  BoxGeometry, InstancedMesh, Matrix4, type Camera, type Object3D, type Scene,
 } from 'three'
 import { piece, privateUrl } from './kit.js'
 import { pixelSprite, silhouetteNormals } from './pixel.js'
@@ -22,7 +22,9 @@ function pixelGround(palette: string[], n = 64, seed = 7, blades = true): Canvas
   const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 2 ** 32 }
   // Value noise at two scales, tileable, mapped to the palette's steps.
   const grid = (k: number) => Array.from({ length: k * k }, rnd)
-  const g1 = grid(8), g2 = grid(16)
+  // Clumps about 8 and 4 texels across, whatever the texture's size.
+  const k1 = Math.max(8, Math.round(n / 8)), k2 = Math.max(16, Math.round(n / 4))
+  const g1 = grid(k1), g2 = grid(k2)
   const sample = (gr: number[], k: number, x: number, y: number) => {
     const fx = (x / n) * k, fy = (y / n) * k, x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0
     const at = (i: number, j: number) => gr[((j % k) + k) % k * k + ((i % k) + k) % k]!
@@ -30,7 +32,7 @@ function pixelGround(palette: string[], n = 64, seed = 7, blades = true): Canvas
     return (at(x0, y0) * (1 - sm(tx)) + at(x0 + 1, y0) * sm(tx)) * (1 - sm(ty)) + (at(x0, y0 + 1) * (1 - sm(tx)) + at(x0 + 1, y0 + 1) * sm(tx)) * sm(ty)
   }
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-    const v = 0.65 * sample(g1, 8, x, y) + 0.35 * sample(g2, 16, x, y) + (rnd() - 0.5) * 0.18
+    const v = 0.65 * sample(g1, k1, x, y) + 0.35 * sample(g2, k2, x, y) + (rnd() - 0.5) * 0.18
     g.fillStyle = palette[Math.max(0, Math.min(palette.length - 1, Math.floor(v * palette.length)))]!
     g.fillRect(x, y, 1, 1)
   }
@@ -47,6 +49,84 @@ function pixelGround(palette: string[], n = 64, seed = 7, blades = true): Canvas
   t.generateMipmaps = false
   t.colorSpace = SRGBColorSpace
   return t
+}
+
+/** Lays lusher and drier patches across the ground in its shader: two octaves of world-space noise, stepped on the texel
+ * grid so the pixel look holds. (Turning tiles was tried and dropped: it broke the texture's continuity into a grid.) */
+function breakTiling(mat: MeshStandardMaterial): void {
+  mat.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
+      #ifdef USE_MAP
+        vec4 sampledDiffuseColor = texture2D(map, vMapUv);
+        // World-space patches, stepped on the texel grid: vMapUv spans 48 m a unit.
+        vec2 p = floor(vMapUv * 1024.0) / 1024.0 * 24.0;
+        float n = 0.0, amp = 0.6, freq = 0.11;
+        for (int i = 0; i < 2; i++) {
+          vec2 q = p * freq, c0 = floor(q), t = fract(q);
+          t = t * t * (3.0 - 2.0 * t);
+          float a = fract(sin(dot(c0, vec2(12.9898, 78.233))) * 43758.5453);
+          float b = fract(sin(dot(c0 + vec2(1.0, 0.0), vec2(12.9898, 78.233))) * 43758.5453);
+          float c = fract(sin(dot(c0 + vec2(0.0, 1.0), vec2(12.9898, 78.233))) * 43758.5453);
+          float d = fract(sin(dot(c0 + vec2(1.0, 1.0), vec2(12.9898, 78.233))) * 43758.5453);
+          n += amp * mix(mix(a, b, t.x), mix(c, d, t.x), t.y);
+          amp *= 0.6; freq *= 2.9;
+        }
+        n = floor(n * 6.0) / 6.0;
+        vec3 lush = vec3(0.82, 0.95, 0.74), dry = vec3(1.12, 1.04, 0.78);
+        sampledDiffuseColor.rgb *= mix(lush, dry, smoothstep(0.25, 0.85, n));
+        diffuseColor *= sampledDiffuseColor;
+      #endif`)
+  }
+}
+
+/** Grass tufts, clover and small flowers scattered over the grass as crossed pixel cards (the nature kit's role in the
+ * references): they break the ground's tiling and give it depth. Kept off the paving and the buildings. */
+function scatter(): Group {
+  const g = new Group()
+  const card = (draw: (c: CanvasRenderingContext2D) => void) => {
+    const c = document.createElement('canvas'); c.width = 16; c.height = 16
+    draw(c.getContext('2d')!)
+    const t = new CanvasTexture(c); t.magFilter = t.minFilter = NearestFilter; t.generateMipmaps = false; t.colorSpace = SRGBColorSpace
+    return t
+  }
+  const blades = (c: CanvasRenderingContext2D, cols: string[]) => {
+    for (let i = 0; i < 9; i++) {
+      const x = 2 + ((i * 5) % 12), hgt = 6 + ((i * 7) % 8)
+      for (let y = 0; y < hgt; y++) { c.fillStyle = cols[Math.min(cols.length - 1, Math.floor((y / hgt) * cols.length))]!; c.fillRect(x + (y > hgt / 2 && i % 2 ? 1 : 0), 15 - y, 1, 1) }
+    }
+  }
+  const kinds = [
+    card((c) => blades(c, ['#2e3a17', '#4c5d24', '#70822f', '#9ca64a'])),
+    card((c) => blades(c, ['#3b4a1e', '#5d6f2b', '#86953a', '#b5b85a'])),
+    card((c) => { for (let i = 0; i < 6; i++) { const x = 2 + (i * 5) % 11, y = 8 + (i * 3) % 6; c.fillStyle = '#4c5d24'; c.fillRect(x, y, 3, 2); c.fillStyle = '#70822f'; c.fillRect(x + 1, y - 1, 2, 1) } }),
+    card((c) => { blades(c, ['#3b4a1e', '#5d6f2b', '#86953a']); for (const [x, y, col] of [[4, 6, '#f2d14b'], [9, 4, '#ffffff'], [12, 7, '#e86a8a']] as const) { c.fillStyle = col; c.fillRect(x, y, 2, 2) } }),
+  ]
+  const cross = new BufferGeometry()
+  const q = 0.32
+  cross.setAttribute('position', new BufferAttribute(new Float32Array([-q, 0, 0, q, 0, 0, q, 2 * q, 0, -q, 2 * q, 0, 0, 0, -q, 0, 0, q, 0, 2 * q, q, 0, 2 * q, -q]), 3))
+  cross.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1]), 2))
+  cross.setIndex([0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7])
+  // Normals up: the cards take the ground's light, not the dark of a card seen edge-on to the sun.
+  cross.setAttribute('normal', new BufferAttribute(new Float32Array(Array.from({ length: 8 }, () => [0, 1, 0]).flat()), 3))
+  let seed = 11
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 2 ** 32 }
+  const blocked = (x: number, z: number) => (Math.abs(x) < 8.2 && Math.abs(z) < 6.2) || (Math.abs(x) < 2.2 && z > 0 && z < 20) || (Math.abs(x) < 6.4 && z < -7.4 && z > -17)
+  for (const [k, tex] of kinds.entries()) {
+    const count = k === 3 ? 220 : 420
+    const mesh = new InstancedMesh(cross, new MeshStandardMaterial({ map: tex, alphaTest: 0.5, side: DoubleSide, roughness: 1 }), count)
+    const m = new Matrix4(), rot = new Matrix4(), sc = new Matrix4()
+    let n = 0
+    while (n < count) {
+      const x = (rnd() - 0.5) * 60, z = (rnd() - 0.5) * 50
+      if (blocked(x, z)) continue
+      const s = 0.7 + rnd() * 0.7
+      m.makeTranslation(x, 0, z).multiply(rot.makeRotationY(rnd() * Math.PI)).multiply(sc.makeScale(s, s * (0.8 + rnd() * 0.5), s))
+      mesh.setMatrixAt(n++, m)
+    }
+    mesh.receiveShadow = true
+    g.add(mesh)
+  }
+  return g
 }
 
 /** A house on the kit's 2 m grid, its front facing +z before `turn`: walls per storey, corners, a tiled roof and its gables. */
@@ -223,9 +303,12 @@ function dressing(): Mesh[] {
   return out
 }
 
-/** One of our Uma sprite sets, from the private local release, as a lit, shadow-casting standee facing the camera. */
-export interface Figure { mesh: Mesh; source: HTMLCanvasElement }
-async function figure(outfitId: number, x: number, z: number, pixelTexels: number | null): Promise<Mesh | null> {
+/** One of our Uma sprite sets, from the private local release, as a lit, shadow-casting standee that plays its idle loop.
+ * Upright like uma-stage's sprites, and stretched by 1/cos of the camera's pitch to it each frame (uma-stage's
+ * `spriteStretch`), so the camera looking down doesn't squash it. Its frames are pixel-passed at `pixelTexels` tall. */
+interface SpriteFrameTex { map: CanvasTexture; normal: CanvasTexture; ms: number }
+const FIGURE_HEIGHT = 1.9
+async function figure(outfitId: number, x: number, z: number, pixelTexels: number | null, action = 'idle'): Promise<Mesh | null> {
   const json = (path: string) => fetch(privateUrl(`content/release/${path}`)).then((r) => r.json())
   const manifest = await json('manifest.json')
   const art = await json(manifest.art)
@@ -233,29 +316,47 @@ async function figure(outfitId: number, x: number, z: number, pixelTexels: numbe
   if (!setPath) return null
   const set = await json(setPath)
   const img = new Image()
-  img.src = privateUrl(`content/release/${set.pages[0].path}`)
-  await img.decode()
-  const turn = set.actions.turnaround?.frames.find((f: { view?: string }) => f.view === 'front') ?? set.actions.idle.frames[0]
-  const cell = document.createElement('canvas')
-  cell.width = cell.height = set.cell
-  cell.getContext('2d')!.drawImage(img, turn.x, turn.y, turn.w, turn.h, turn.dx, turn.dy, turn.w, turn.h)
-  const art2 = pixelTexels ? pixelSprite(cell, Math.round(set.cell * (pixelTexels / 210)), 20) : cell
-  const tex = new CanvasTexture(art2)
-  tex.colorSpace = SRGBColorSpace
-  tex.magFilter = NearestFilter
-  tex.minFilter = NearestFilter
-  tex.generateMipmaps = false
-  const normals = new CanvasTexture(silhouetteNormals(art2, pixelTexels ? 2 : 6))
-  normals.magFilter = normals.minFilter = NearestFilter
-  const size = set.cell * (1.7 / 210)
-  const mat = new MeshStandardMaterial({ map: tex, normalMap: normals, alphaTest: 0.5, roughness: 0.9, side: DoubleSide,
-    // A staged key on the characters (Octopath's spotlight): their own colour lifts them off the ground.
-    emissive: new Color('#ffffff'), emissiveMap: tex, emissiveIntensity: 0.22 })
-  const mesh = new Mesh(new PlaneGeometry(size, size), mat)
-  mesh.customDepthMaterial = new MeshDepthMaterial({ depthPacking: RGBADepthPacking, map: tex, alphaTest: 0.5 })
+  // The load event, not decode(): a hidden page may defer decode() indefinitely; drawImage decodes on use.
+  await new Promise<void>((resolve, reject) => { img.onload = () => resolve(); img.onerror = () => reject(new Error(`sprite page ${outfitId}`)); img.src = privateUrl(`content/release/${set.pages[0].path}`) })
+  const tall = set.actions[action] ? action : 'idle'
+  const frames: SpriteFrameTex[] = (set.actions[tall].frames as { x: number; y: number; w: number; h: number; dx: number; dy: number; ms: number | null }[]).map((f) => {
+    const cell = document.createElement('canvas')
+    cell.width = cell.height = set.cell
+    cell.getContext('2d')!.drawImage(img, f.x, f.y, f.w, f.h, f.dx, f.dy, f.w, f.h)
+    const art2 = pixelTexels ? pixelSprite(cell, Math.round(set.cell * (pixelTexels / 210)), 24) : cell
+    const map = new CanvasTexture(art2)
+    map.colorSpace = SRGBColorSpace
+    map.magFilter = map.minFilter = NearestFilter
+    map.generateMipmaps = false
+    const normal = new CanvasTexture(silhouetteNormals(art2, pixelTexels ? 2 : 6))
+    normal.magFilter = normal.minFilter = NearestFilter
+    return { map, normal, ms: f.ms ?? 200 }
+  })
+  const size = set.cell * (FIGURE_HEIGHT / 210)
+  const first = frames[0]!
+  const mat = new MeshStandardMaterial({ map: first.map, normalMap: first.normal, alphaTest: 0.5, roughness: 0.85, side: DoubleSide,
+    // A staged key on the characters (Octopath's spotlight): a little of their own colour lifts them off the ground.
+    emissive: new Color('#ffffff'), emissiveMap: first.map, emissiveIntensity: 0.14 })
+  // Pivot at the feet, so the stretch grows her upward from the ground.
+  const geo = new PlaneGeometry(size, size)
+  geo.translate(0, size / 2 - size * ((set.cell - set.foot.y) / set.cell), 0)
+  const mesh = new Mesh(geo, mat)
+  const depth = new MeshDepthMaterial({ depthPacking: RGBADepthPacking, map: first.map, alphaTest: 0.5 })
+  mesh.customDepthMaterial = depth
   mesh.castShadow = true
-  mesh.position.set(x, size / 2 - size * ((set.cell - set.foot.y) / set.cell), z)
-  mesh.userData.billboard = true
+  mesh.position.set(x, 0, z)
+  mesh.userData = { billboard: true, frames, frame: 0, clock: Math.random() * 400, depth }
+  // A soft contact shadow under the feet: grounds her where the sun's shadow falls away from her.
+  const blob = document.createElement('canvas')
+  blob.width = blob.height = 32
+  const bg = blob.getContext('2d')!, rg = bg.createRadialGradient(16, 16, 2, 16, 16, 16)
+  rg.addColorStop(0, 'rgba(0,0,0,0.55)'); rg.addColorStop(1, 'rgba(0,0,0,0)')
+  bg.fillStyle = rg; bg.fillRect(0, 0, 32, 32)
+  const contact = new Mesh(new PlaneGeometry(0.9, 0.5), new MeshStandardMaterial({ map: new CanvasTexture(blob), transparent: true, depthWrite: false, color: '#000000', roughness: 1 }))
+  contact.rotation.x = -Math.PI / 2
+  contact.position.y = 0.03
+  contact.userData.contact = true
+  mesh.add(contact)
   return mesh
 }
 
@@ -280,9 +381,13 @@ export async function buildTown(scene: Scene, opts: { spritePixels: number | nul
   scene.add(root)
   const lights: PointLight[] = []
   // The ground: grass, then the paved square on the 2 m grid.
-  const grassTex = pixelGround(['#2f4a1c', '#3d5c22', '#4e7228', '#628a30', '#7aa23c', '#93b84c'])
-  grassTex.repeat.set(36, 36)
-  const ground = new Mesh(new PlaneGeometry(72, 72), new MeshStandardMaterial({ map: grassTex, roughness: 1 }))
+  // Olive greens from the references (ref-01, ref-04), not the saturated greens of a tile set.
+  // One large texture, not a 64-texel tile: it repeats only every 48 m, beyond the view (the owner: "copy-pasted").
+  const grassTex = pixelGround(['#2e3a17', '#3b4a1e', '#4c5d24', '#5d6f2b', '#70822f', '#86953a', '#9ca64a'], 1024)
+  grassTex.repeat.set(72 / 48, 72 / 48)
+  const grassMat = new MeshStandardMaterial({ map: grassTex, roughness: 1 })
+  breakTiling(grassMat)
+  const ground = new Mesh(new PlaneGeometry(72, 72), grassMat)
   ground.rotation.x = -Math.PI / 2
   ground.receiveShadow = true
   root.add(ground)
@@ -333,6 +438,7 @@ export async function buildTown(scene: Scene, opts: { spritePixels: number | nul
     [112901, 5.4, 3.8], [113401, -3.2, 3.6]]
   const figures = (await Promise.all(cast.map(([id, x, z]) => figure(id, x, z, opts.spritePixels)))).filter((m): m is Mesh => !!m)
   root.add(...figures)
+  root.add(scatter())
   const dust = drift()
   root.add(dust)
   return { root, flames, lights, bunting: lines, drift: dust, figures, ground }
@@ -340,7 +446,23 @@ export async function buildTown(scene: Scene, opts: { spritePixels: number | nul
 
 /** Per frame: figures face the camera, flames flicker, bunting flutters, petals drift. */
 export function animate(town: Town, camera: Camera, t: number, dt: number): void {
-  for (const f of town.figures) f.rotation.y = Math.atan2(camera.position.x - f.position.x, camera.position.z - f.position.z)
+  for (const f of town.figures) {
+    const dx = camera.position.x - f.position.x, dz = camera.position.z - f.position.z
+    f.rotation.y = Math.atan2(dx, dz)
+    // The camera's pitch to her: an upright card is foreshortened by cos(pitch), so she's stretched back by 1/cos.
+    const pitch = Math.atan2(camera.position.y - f.position.y - 1, Math.hypot(dx, dz))
+    f.scale.y = 1 / Math.max(0.5, Math.cos(pitch))
+    const u = f.userData as { frames: { map: CanvasTexture; normal: CanvasTexture; ms: number }[]; frame: number; clock: number; depth: MeshDepthMaterial }
+    u.clock += dt * 1000
+    const cur = u.frames[u.frame]!
+    if (u.clock >= cur.ms) {
+      u.clock -= cur.ms
+      u.frame = (u.frame + 1) % u.frames.length
+      const next = u.frames[u.frame]!, m = f.material as MeshStandardMaterial
+      m.map = next.map; m.emissiveMap = next.map; m.normalMap = next.normal
+      u.depth.map = next.map
+    }
+  }
   town.lights.forEach((l, i) => { l.intensity = 18 * (0.85 + 0.15 * Math.sin(t * 13 + i * 5) * Math.sin(t * 7.3 + i)) })
   for (const f of town.flames) f.scale.y = 1 + 0.12 * Math.sin(t * 17 + f.id)
   for (const line of town.bunting) for (const m of line.children) m.rotation.x = 0.25 * Math.sin(t * 2.2 + (m.userData.flutter as number) * 0.9)

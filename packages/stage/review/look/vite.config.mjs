@@ -13,6 +13,8 @@ const captures = resolve(repo, 'content/authoring/look/captures')
 const capture = {
   name: 'look-capture',
   configureServer(server) {
+    // Local files only, read fresh: the browser pane's cache has failed writing the kit's large maps.
+    server.middlewares.use((req, res, next) => { if (req.url?.startsWith('/@fs/')) res.setHeader('Cache-Control', 'no-store'); next() })
     server.middlewares.use('/__capture', (req, res) => {
       const name = new URL(req.url ?? '', 'http://x').searchParams.get('name') ?? 'frame'
       if (!/^[a-z0-9-]{1,60}$/.test(name)) { res.statusCode = 400; res.end('bad name'); return }

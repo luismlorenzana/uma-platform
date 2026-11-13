@@ -1,6 +1,6 @@
 // LK1's look slice (P157–P159): the town square by day, rendered with the look path's layers, each switchable, the look
 // measures on the live frame against the owner's references, and a reference beside it. Local only: `pnpm --filter
-// @luismlorenzana/uma-stage look`, then http://127.0.0.1:4410 (add `?sprites=smooth` for our sets as they are).
+// @luismlorenzana/uma-stage look`, then http://127.0.0.1:4410 (`?sprites=pixel` for the pixel pass, `?camera=tactics` or `high`).
 import {
   ACESFilmicToneMapping, CanvasTexture, Color, DirectionalLight, FogExp2, HemisphereLight, PCFShadowMap, PerspectiveCamera, Scene, SRGBColorSpace, Timer, Vector3,
   WebGLRenderer,
@@ -37,12 +37,29 @@ const camera = new PerspectiveCamera(22, 1, 1, 400)
 // Framed as ref-01: the hall's gable in the middle, the tree line and a strip of sky above, the square below.
 const target = new Vector3(0, 2.4, -5.5)
 const view = { elevation: 36, azimuth: 0, distance: 49 }
+/** The camera families (the owner's question): Octopath's front view for exploring, Triangle Strategy's diagonal 3/4 view
+ * for a tactics board, and the high view this slice started from. One look path; each game picks its family. */
+export const CAMERAS = {
+  front: { label: 'Octopath: front', target: [0, 1.4, -2.5], elevation: 27, azimuth: 0, distance: 38, fov: 24 },
+  tactics: { label: 'Triangle Strategy: 3/4', target: [0, 1, -2], elevation: 40, azimuth: 45, distance: 50, fov: 20 },
+  high: { label: 'High (milestone 1)', target: [0, 2.4, -5.5], elevation: 36, azimuth: 0, distance: 49, fov: 22 },
+} as const
+let cameraName: keyof typeof CAMERAS = (params.get('camera') as keyof typeof CAMERAS) in CAMERAS ? (params.get('camera') as keyof typeof CAMERAS) : 'front'
 const placeCamera = () => {
   const e = (view.elevation * Math.PI) / 180, a = (view.azimuth * Math.PI) / 180
   camera.position.set(target.x + view.distance * Math.cos(e) * Math.sin(a), target.y + view.distance * Math.sin(e), target.z + view.distance * Math.cos(e) * Math.cos(a))
   camera.lookAt(target)
 }
-placeCamera()
+function useCamera(name: keyof typeof CAMERAS): void {
+  const c = CAMERAS[name]
+  cameraName = name
+  target.set(c.target[0], c.target[1], c.target[2])
+  Object.assign(view, { elevation: c.elevation, azimuth: c.azimuth, distance: c.distance })
+  camera.fov = c.fov
+  camera.updateProjectionMatrix()
+  placeCamera()
+  look.focus = c.distance
+}
 const controls = new OrbitControls(camera, canvas)
 controls.target.copy(target)
 controls.enabled = false
@@ -63,6 +80,7 @@ scene.add(sun, sun.target, hemi)
 const post = new Post(renderer, scene, camera)
 const pixel: PixelSettings = { ...PIXEL_DEFAULTS }
 const look: PostSettings = { ...POST_DEFAULTS }
+useCamera(cameraName)
 const life = { fog: true, petals: true, shadows: true, renderScale: Math.min(1.5, devicePixelRatio) }
 let town: Town | null = null
 
@@ -111,7 +129,8 @@ toggle('Kit textures on the pixel grid', () => pixel.on, (v) => { pixel.on = v }
 slider('Texels per texture', 32, 512, 16, () => pixel.texels, (v) => { pixel.texels = v })
 slider('Colour steps', 6, 64, 1, () => pixel.levels, (v) => { pixel.levels = v })
 toggle('Kit normal maps', () => pixel.normals, (v) => { pixel.normals = v })
-const spriteMode = params.get('sprites') === 'smooth' ? 'smooth' : 'pixel'
+// Our sets as they are by default: the pixel pass at 48 texels mangled their faces (the owner's review, 2026-11-13).
+const spriteMode = params.get('sprites') === 'pixel' ? 'pixel' : 'smooth'
 button(spriteMode === 'pixel' ? 'Sprites: pixel pass (switch to ours)' : 'Sprites: ours (switch to pixel pass)', () => {
   params.set('sprites', spriteMode === 'pixel' ? 'smooth' : 'pixel'); location.search = params.toString()
 })
@@ -135,6 +154,8 @@ slider('Vignette', 0, 1, 0.01, () => look.vignette, (v) => { look.vignette = v }
 slider('Saturation', 0.5, 1.6, 0.01, () => look.saturation, (v) => { look.saturation = v })
 slider('Contrast', 0.7, 1.5, 0.01, () => look.contrast, (v) => { look.contrast = v })
 slider('Warm light, cool shadow', 0, 1.5, 0.05, () => look.split, (v) => { look.split = v })
+section('Camera family')
+for (const name of Object.keys(CAMERAS) as (keyof typeof CAMERAS)[]) button(CAMERAS[name].label, () => { useCamera(name); apply() })
 section('Life and camera')
 toggle('Haze', () => life.fog, (v) => { life.fog = v })
 toggle('Petals', () => life.petals, (v) => { life.petals = v })
@@ -190,10 +211,12 @@ async function main(): Promise<void> {
     const measures = await fetch(privateUrl('content/authoring/look/measures.json')).then((r) => r.json())
     refRanges = Object.fromEntries((measures.table as { name: string }[]).map((t) => [t.name, (measures.refs as { measures: LookMeasures }[]).map((r) => ROWS.find((x) => x[2] === t.name)?.[1](r.measures) ?? NaN).filter((v) => !Number.isNaN(v))]))
   } catch { /* the references are optional: the slice still renders */ }
-  town = await buildTown(scene, { spritePixels: spriteMode === 'pixel' ? 56 : null })
+  town = await buildTown(scene, { spritePixels: spriteMode === 'pixel' ? 48 : null })
   apply()
   status.textContent = `Town square, ${spriteMode === 'pixel' ? 'sprites in the pixel pass' : 'our sprites as they are'}`
-  ;(window as unknown as { __look: unknown }).__look = { renderer, scene, camera, post, town, pixel, look, life, view, placeCamera, apply, measure: () => { post.render() } }
+  ;(window as unknown as { __look: unknown }).__look = { renderer, scene, camera, post, town, pixel, look, life, view, placeCamera, apply, useCamera,
+    // A capture renders without the loop: run one frame's update first, so figures face this camera.
+    frame: (dt = 0.016) => { if (town) animate(town, camera, performance.now() / 1000, dt) }, measure: () => { post.render() } }
   const timer = new Timer()
   const frame = (now: number) => {
     requestAnimationFrame(frame)
