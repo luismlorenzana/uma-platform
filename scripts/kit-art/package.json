@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Original full-colour HD-2D kits drawn by deterministic code (P147): the code is the master \u2192 packages/art/kit-*/.",
+  "description": "Original full-colour HD-2D kits drawn by deterministic code (P147): the code is the master → packages/art/kit-*/.",
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "vitest run",
