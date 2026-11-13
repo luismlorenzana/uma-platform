@@ -114,7 +114,7 @@ UA9 and UA11 follow the playable slice; townsfolk batches follow traveler batche
 
 The brief is [new-apps/README.md](../new-apps/README.md) (NA1–NA11, [page](../new-apps/previews/new-apps.html)): what
 uma-quest's [first slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md) and
-uma-farm's [first playable farm](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)
+uma-farm's [first playable farm](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/first-playable.md)
 need from here, in order. A uma-platform session writes the missing packets from it.
 
 | Milestone | Id | What | Who | Size | Needs | State |
@@ -131,8 +131,8 @@ need from here, in order. A uma-platform session writes the missing packets from
 | M3, the next stretch | KL1 | uma-kit's landscape layout, an opt-in kit minor ([request](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/kl1-request.md)) | Claude | M | uma-quest's Q4 ✓ | **Released** (uma-kit 0.18.0, P103); recorded in uma-quest's D15: its first Phase 5 menu packet pins it, KitStage inside its TurnedStage |
 | | UA3, UA9, UA11 | The Studio in git; batch 2 (wave 2); townsfolk T4 onward (above) | Either, ChatGPT | M, L, M | — | After the slice |
 | M4, uma-farm's parcels | [PO1](tasks/PO1-uma-post.md) | `uma-post` 0.1.0: the parcel format, accept lists and caps (P107) | Claude | M | uma-farm asks again | **Parked** (P109: the owner moved parcels to later, uma-farm D22) |
-| | F9 | uma-farm's `kit-farm`, drawn in code (P147) | Claude | M | uma-farm's F16 | Wave 1 **done** (uma-art 2.27.0, P148); the owner's look review open; wave 2 on uma-farm's request |
-| uma-farm's art (P126) | F25 A, F29 A | [M4's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F25-art-m4.md) and [M5's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F29-art-m5.md) pixel art: buildings, marks, goods, animal icons, story items, tool tints; drawn in `scripts/pixel-art`, published here | Claude | S–M, M | F29 A: after uma-farm's romance spec (F41) | **F25 A done** (uma-art 2.25.0, `f0d119f`, `83ee2b6`, `77e9001`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43068430302), P132; uma-farm D49); F29 A waits |
+| | F9 | uma-farm's `kit-farm`, drawn in code (P147) | Claude | M | uma-farm's F16 | Wave 1 **done** (uma-art 2.27.0, P148); the owner's look review open; wave 2 on uma-farm's request, **on the one 2048 page** (the farm's loader reads page 0 only; wave 2's 30 frames fit below wave 1, to row 2002) |
+| uma-farm's art (P126) | F25 A, F29 A | [M4's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F25-art-m4.md) and [M5's](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/handoff/tasks/F29-art-m5.md) pixel art: buildings, marks, goods, animal icons, story items, tool tints; drawn in `scripts/pixel-art`, published here | Claude | S–M, M | F29 A: after uma-farm's romance spec (F41) | **F25 A done** (uma-art 2.25.0, `f0d119f`, `83ee2b6`, `77e9001`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43068430302), P132; uma-farm D49); F29 A waits |
 | | F25 B, F29 B | The farm cast's seven busts (`cast` atlas) | ChatGPT | M | F25 B first | Ready (F25 B) |
 | | F55 | [The romance core's pixel art](https://github.com/luismlorenzana/uma-farm/pull/14): the homestead, the ring bench, the Hearts marks and Memory frame, the five plays | Claude | S | uma-farm's F41 read ✓ | **Done** (uma-art 2.26.0, `fe20fec`, `dffe494`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43077021067), P134; uma-farm [PR #14](https://github.com/luismlorenzana/uma-farm/pull/14), D50) |
 

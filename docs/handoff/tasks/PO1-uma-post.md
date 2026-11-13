@@ -17,8 +17,8 @@ agree on one format and one check, and each game sets its own accept list and da
 ## Context (read first)
 
 - [decisions.md](../../decisions.md) P89 (one-way parcels; no server writes into a save) and P107 (this packet's order).
-- uma-farm's design spec: [§5, "Accept lists and caps" (FS22–FS27)](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/spec.md#5-accept-lists-and-caps-fs22fs27)
-  and [§7, the queue (FS32)](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/spec.md#7-the-queue-fs32).
+- uma-farm's design spec: [§5, "Accept lists and caps" (FS22–FS27)](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/spec.md#5-accept-lists-and-caps-fs22fs27)
+  and [§7, the queue (FS32)](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/spec.md#7-the-queue-fs32).
   §5.5 is the package's shape, as drafted.
 - uma-quest's list, final: its [design spec part 5](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/spec/05-accept-list.md) (Q17, D26, SP57–SP61).
 - `packages/work` (`@luismlorenzana/uma-work`): the package to copy for layout, ESM and CJS builds, `publishConfig`

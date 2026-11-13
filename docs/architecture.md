@@ -13,7 +13,7 @@ order of work is in [roadmap.md](roadmap.md).
 | `uma-rpg` | Game | Party battles and chapter maps, its own farm, loop and goals |
 | `uma-puzzle` | Game | Puzzle battles (design to come) |
 | `uma-quest` | Game | An HD-2D travelers RPG in three.js: stories, towns, dungeons, one climb to Lv 50 ([plan](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/plan.md), P88, P90) |
-| `uma-farm` | App | The farm: gather, process, make, and the Forge, sending one-way parcels to the games ([plan](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/plan.md), P88, P89) |
+| `uma-farm` | App | The farm: gather, process, make, and the Forge, sending one-way parcels to the games ([plan](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/plan.md), P88, P89) |
 | `uma-cyberpunk` | Game | A sci-fi tactics RPG on HD-2D grid maps, with guest heroines from the franchise boards ([concept](https://github.com/luismlorenzana/uma-cyberpunk/blob/main/docs/design/concept.md), P144) |
 
 All are under `github.com/luismlorenzana`. uma-platform, uma-racer and uma-rpg are public, with no original-game content

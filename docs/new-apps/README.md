@@ -1,7 +1,7 @@
 # uma-platform: what the new apps need
 
 > **Status: 2026-11-08 (P97).** The requirements and the planned tasks uma-platform owes the two new apps: uma-quest's
-> [first slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md) and uma-farm's [first playable farm](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md).
+> [first slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md) and uma-farm's [first playable farm](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/first-playable.md).
 > **This doc is the brief a uma-platform session turns into packets**, keeping the ids here. Visual page:
 > [previews/new-apps.html](previews/new-apps.html).
 >
@@ -354,7 +354,7 @@ M4  (parked, P109)  uma-farm asks again ──► PO1 (uma-quest's final list, Q
 ## For the session that writes the packets
 
 - **Read first:** this doc, the two apps' docs ([first-slice](https://github.com/luismlorenzana/uma-quest/blob/main/docs/design/first-slice.md),
-  [first-playable](https://github.com/luismlorenzana/uma-farm/blob/main/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
+  [first-playable](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/design/first-playable.md)), [decisions.md](../decisions.md), the [handoff](../handoff/README.md),
   and the [change protocol](../change-protocol.md).
 - **Every packet is written.** KL1 was released in uma-kit 0.18.0 (P103). PO1 was written ahead from uma-farm's draft spec
   (P107) and is parked until uma-farm asks again (P109). UA9–UA12 have packets; UA3 and UA6 are complete (P99), and UA5 (P100).
