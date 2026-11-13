@@ -46,6 +46,15 @@
         "../uma-farm/tools/story-sandbox/server.mjs"
       ],
       "port": 4321
+    },
+    {
+      "name": "cyber-story-sandbox",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "../uma-cyberpunk/node_modules/tsx/dist/cli.mjs",
+        "../uma-cyberpunk/tools/story-sandbox/server.ts"
+      ],
+      "port": 4322
     }
   ]
 }
