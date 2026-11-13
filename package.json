@@ -34,6 +34,8 @@
     "sprites:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run pack",
     "sprites:backup": "node scripts/sprites/backup.mjs",
     "look:measure": "pnpm --filter @uma-platform/look run measure",
+    "look:pack": "pnpm --filter @uma-platform/look run pack",
+    "look:upload": "pnpm --filter @uma-platform/look run upload",
     "enemies:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run enemies-pack",
     "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start",
     "tiers:import": "pnpm --filter @uma-platform/studio run import",

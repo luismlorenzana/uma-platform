@@ -28,12 +28,19 @@
         "default": "./dist/cjs/formats/index.js"
       }
     },
+    "./look": {
+      "types": "./dist/esm/look/index.d.ts",
+      "default": "./dist/esm/look/index.js"
+    },
     "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
       "formats": [
         "./dist/cjs/formats/index.d.ts"
+      ],
+      "look": [
+        "./dist/esm/look/index.d.ts"
       ]
     }
   },

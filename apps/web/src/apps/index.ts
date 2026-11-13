@@ -1,6 +1,6 @@
 // The sub-apps (AP1): each opens at /<id> from its own folder, src/apps/<id>/, with its API under /api/<id>/…, and
 // imports nothing from another sub-app's folder (checked by scripts/check-sub-apps.test.mjs). Home draws a tile for each
-// one registered here, with the numbers its summary returns (AP4). Uma Ranker is RK1, Uma Character Art CA1, Uma Story US1.
+// one registered here, with the numbers its summary returns (AP4). Uma Ranker is RK1, Uma Character Art CA1, Uma Story US1, Look LK1.
 import type { ComponentType } from 'react'
 import { request } from '../api/client'
 
@@ -49,5 +49,10 @@ export const SUB_APPS: readonly SubApp[] = checkRegistry([
     id: 'story', title: 'Uma Story', blurb: 'Both games’ stories on one cast: read each draft and leave a verdict.',
     load: () => import('./story'),
     summary: () => request<SummaryLine[]>('/api/story/summary'),
+  },
+  {
+    id: 'look', title: 'Look', blurb: 'The HD-2D look slice on this device: the town square by day, the tavern at night, and the phone test.',
+    load: () => import('./look'),
+    summary: () => request<SummaryLine[]>('/api/look/summary'),
   },
 ])

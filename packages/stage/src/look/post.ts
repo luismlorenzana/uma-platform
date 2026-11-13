@@ -19,13 +19,16 @@ const GradeShader = {
     warm: { value: [1.0, 0.86, 0.66] },
     cool: { value: [0.62, 0.74, 0.96] },
     vignette: { value: 0.42 },
+    aberration: { value: 0.003 },
   },
   vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
   fragmentShader: `
-    uniform sampler2D tDiffuse; uniform float saturation, contrast, split, vignette; uniform vec3 warm, cool; varying vec2 vUv;
+    uniform sampler2D tDiffuse; uniform float saturation, contrast, split, vignette, aberration; uniform vec3 warm, cool; varying vec2 vUv;
     void main() {
       vec4 c = texture2D(tDiffuse, vUv);
-      vec3 col = c.rgb;
+      // A touch of chromatic aberration toward the edges (layer 6): red out, blue in, by the distance from the middle.
+      vec2 off = (vUv - 0.5) * aberration;
+      vec3 col = vec3(texture2D(tDiffuse, vUv + off).r, c.g, texture2D(tDiffuse, vUv - off).b);
       float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
       col = mix(vec3(l), col, saturation);
       col = (col - 0.5) * contrast + 0.5;
@@ -38,10 +41,10 @@ const GradeShader = {
     }`,
 }
 
-export interface PostSettings { ao: boolean; dof: boolean; focus: number; aperture: number; maxblur: number; bloom: boolean; bloomStrength: number; bloomRadius: number; bloomThreshold: number; grade: boolean; vignette: number; saturation: number; contrast: number; split: number }
+export interface PostSettings { ao: boolean; dof: boolean; focus: number; aperture: number; maxblur: number; bloom: boolean; bloomStrength: number; bloomRadius: number; bloomThreshold: number; grade: boolean; vignette: number; saturation: number; contrast: number; split: number; aberration: number }
 // Tuned against the references with the look measures (LK1, 2026-11-13): 7 of 9 in range, focus band and warm-over-cool high.
 export const POST_DEFAULTS: PostSettings = { ao: true, dof: true, focus: 48, aperture: 0.0008, maxblur: 0.005, bloom: true, bloomStrength: 0.5, bloomRadius: 0.55, bloomThreshold: 0.78,
-  grade: true, vignette: 0.42, saturation: 1.14, contrast: 1.3, split: 0.2 }
+  grade: true, vignette: 0.42, saturation: 1.14, contrast: 1.3, split: 0.2, aberration: 0.003 }
 
 export class Post {
   readonly composer: EffectComposer
@@ -72,7 +75,7 @@ export class Post {
     this.bloom.strength = s.bloomStrength; this.bloom.radius = s.bloomRadius; this.bloom.threshold = s.bloomThreshold
     this.grade.enabled = s.grade
     const g = this.grade.uniforms as Record<string, { value: number }>
-    g.vignette!.value = s.vignette; g.saturation!.value = s.saturation; g.contrast!.value = s.contrast; g.split!.value = s.split
+    g.vignette!.value = s.vignette; g.saturation!.value = s.saturation; g.contrast!.value = s.contrast; g.split!.value = s.split; g.aberration!.value = s.aberration
   }
   setSize(w: number, h: number, ratio: number): void {
     this.composer.setPixelRatio(ratio)

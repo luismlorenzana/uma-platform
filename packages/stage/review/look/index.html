@@ -16,6 +16,11 @@
   #measures td { padding: 2px 3px; border-bottom: 1px solid #ffffff12; }
   #measures .below, #measures .above { color: #f08a80; } #measures .within { color: #7fd48a; }
   #ref { position: absolute; left: 8px; bottom: 8px; width: 34%; border-radius: 8px; display: none; box-shadow: 0 2px 12px #0008; }
+  /* The interface at full density over the scaled 3D frame (layer 8): a parchment box, a speech tail, a name tab. */
+  #dialogue { display: none; position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%); width: min(62%, 760px); padding: 18px 26px 20px; background: linear-gradient(#f4ead2, #e6d6b0); color: #3a2a18;
+    border: 3px solid #6b4a26; border-radius: 6px; box-shadow: inset 0 0 0 2px #f9f1dc, 0 4px 18px #0007; font: 600 18px/1.45 Georgia, 'Times New Roman', serif; }
+  #dialogue b { position: absolute; top: -17px; left: 18px; padding: 3px 14px; background: #6b4a26; color: #f4ead2; border-radius: 4px; font-size: 14px; letter-spacing: .03em; }
+  #dialogue::after { content: ''; position: absolute; top: -13px; left: 46%; border: 10px solid transparent; border-bottom-color: #6b4a26; }
   #status { position: absolute; left: 10px; top: 8px; font-size: 12px; color: #a6b3c2; }
 </style>
 </head>
@@ -23,6 +28,7 @@
 <canvas id="c"></canvas>
 <div id="status">Loading…</div>
 <img id="ref" alt="reference">
+<div id="dialogue"><b>Market crier</b>Fresh pears from the hill farms, and the first cherries of the season!</div>
 <div id="panel"></div>
 <script type="module" src="./main.ts"></script>
 </body>
