@@ -18,6 +18,10 @@ export const SET_NAMES = [
   'objectives',
 ] as const
 export type SetName = (typeof SET_NAMES)[number]
+/** Sets a release may carry, added after 1.0 (a client ignores set names it doesn't know): `enemies` since 1.6.0. */
+export const OPTIONAL_SET_NAMES = ['enemies'] as const
+export type OptionalSetName = (typeof OPTIONAL_SET_NAMES)[number]
+export type AnySetName = SetName | OptionalSetName
 
 export interface ReleaseFile {
   /** Path under `files/`, e.g. `data/outfits.0123456789abcdef.json`. The name carries a prefix of its hash. */
@@ -36,8 +40,8 @@ export interface ReleaseManifest {
   createdAt: string
   /** Source dataset versions, e.g. `{ "gametora/skills": "…" }`. */
   sources: Record<string, string>
-  /** Where each set's file is. A client ignores set names it doesn't know. */
-  sets: Record<SetName, string>
+  /** Where each set's file is. A client ignores set names it doesn't know; the optional sets may be absent. */
+  sets: Record<SetName, string> & Partial<Record<OptionalSetName, string>>
   /** Where the art index is; null when the release has no art yet. */
   art: string | null
   files: ReleaseFile[]
@@ -55,7 +59,7 @@ export interface ReleaseChannel {
 
 /** A file inside a set or art index: one record list. */
 export interface SetFile<T> {
-  set: SetName
+  set: AnySetName
   items: T[]
 }
 
@@ -101,8 +105,9 @@ export const parseReleaseManifest: Parser<ReleaseManifest> = (value, path) => {
     return paths.has(target) ? target : fail(at, 'a path listed in files')
   }
   const rawSets = f('sets', object)
-  const sets = {} as Record<SetName, string>
+  const sets = {} as ReleaseManifest['sets']
   for (const name of SET_NAMES) sets[name] = inFiles(rawSets[name], `${path}.sets.${name}`)
+  for (const name of OPTIONAL_SET_NAMES) if (rawSets[name] !== undefined) sets[name] = inFiles(rawSets[name], `${path}.sets.${name}`)
   const manifest: ReleaseManifest = {
     schemaMajor: f('schemaMajor', literal(SCHEMA_MAJOR)),
     schemaVersion: f('schemaVersion', (entry, at) =>
@@ -139,7 +144,7 @@ export const parseReleaseChannel: Parser<ReleaseChannel> = (value, path) => {
 /** Parses a set file, checking that it holds the expected set and that ids are unique. */
 export function parseSetFile<T extends { id: number }>(
   value: unknown,
-  name: SetName,
+  name: AnySetName,
   parseItem: Parser<T>,
   path: string = name,
 ): SetFile<T> {

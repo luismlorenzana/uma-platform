@@ -10,6 +10,7 @@ pnpm sprites:repeat [<outfitId>] [--revision N]
 pnpm sprites:progress
 pnpm sprites:pack [--measure] [--encoding lossless|lossy]
 pnpm sprites:backup
+pnpm enemies:pack [--fixture] [--release-dir <dir>]
 ```
 
 `sprites:pack` (UA5, P100) writes master data's `outfit-sprites` family into `content/release/`: every outfit whose
@@ -18,6 +19,14 @@ and face patches are trimmed to every visible pixel (the opaque `bounds` stay as
 shared, and everything is shelf-packed on WebP pages of at most 4096 px with 2 px padding: lossy q90 with alpha
 quality 100 by default (format.md §13). `--measure` prints both encodings' sizes and writes nothing. Publishing is
 pipeline.md §7, "Publishing a batch".
+
+`enemies:pack` (uma-quest Q16 part A, P152) writes master data's `enemies` set and `enemy-keys` family into
+`content/release/` ([enemy-keys.md](../../docs/sprites/enemy-keys.md)): every unit on the enemy boards of
+`content/authoring/tiers/plan.json`, by an id from the private ledger `content/authoring/tiers/enemy-ids.json` (new
+units take the next id, which it records), and every enemy whose current revision's set review in
+`content/authoring/enemies/keys/reviews.json` is approved against its present files, checked (canvas, clear border,
+a boss's layers re-compositing) and encoded as lossless WebP. `--fixture` adds the code-drawn test boss, 799999, for a
+dry run; pack again without it afterwards. It prints counts and ids, never a name.
 
 Export always writes outside the immutable revision. Repeat exports into a fresh temporary directory, compares every
 runtime byte against the revision and removes the temporary directory. A mismatch exits nonzero.

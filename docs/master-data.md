@@ -10,7 +10,8 @@ Every set in a master data release, field by field, with its GameTora source. Th
 - [Principles](#principles)
 - [Shared shapes](#shared-shapes)
 - [Characters](#characters) · [Outfits](#outfits) · [Support cards](#support-cards) · [Skills](#skills) ·
-  [Scenarios](#scenarios) · [Races](#races) · [Tracks and courses](#tracks-and-courses) · [Objectives](#objectives)
+  [Scenarios](#scenarios) · [Races](#races) · [Tracks and courses](#tracks-and-courses) · [Objectives](#objectives) ·
+  [Enemies](#enemies) (optional)
 - [Art](#art)
 - [Releases](#releases) · [Release client](#release-client) · [Schema changes](#schema-changes)
 - [Not imported](#not-imported)
@@ -279,6 +280,24 @@ Set `objectives`, from GameTora `ura-objectives`. One record per character's obj
 `ObjectiveRace`: `familyId` (`id`, a `Race.familyId`; debut races have no `races` record), `name`, `grade`, `group`,
 `terrain`, `distance`, `trackId`, `iconId`, `fansGained`, `fansNeeded`, `nar` (a local race), `unreleasedIn`.
 
+## Enemies
+
+**An optional set, since uma-data 1.6.0** (uma-quest Q16 part A, P152): every unit on the owner's enemy boards, the
+foes of uma-quest's fights. Not from GameTora: `pnpm enemies:pack` generates it from the private tier plan
+(`content/authoring/tiers/plan.json`, the Ranker's enemy boards) and a private id ledger. The format, the tiers and
+the tools are [sprites/enemy-keys.md](sprites/enemy-keys.md).
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | integer | 700001–799999: numeric, opaque and stable (the ledger `content/authoring/tiers/enemy-ids.json`); never reused |
+| `franchise` | string | The boards' code: `azurlane`, `nikke`, `genshin`, `wuwa`, `hsr`, `zzz`, `hi3`, `pgr` (lowercase, 2–16 characters) |
+| `tier` | `regular` \| `key` \| `boss` | The board group that cast her when the set was generated (boss boards, else Key enemies, else Regular enemies) |
+| `name` | string | Her name, as the boards give it; names never leave the private release |
+
+The manifest lists it as `sets.enemies` (`OPTIONAL_SET_NAMES`); a release without it parses as before, and uma-data
+before 1.6.0 ignores it. `client.enemies(manifest)` returns the items, or null when the release has none. Every unit on
+the boards is in it, whatever her rank, so an id never depends on a ranking. uma-rpg's frozen enemy roster is its own.
+
 ## Art
 
 The art index is one JSON file per release (`manifest.art`), parsed by `parseArtIndex`:
@@ -343,6 +362,22 @@ The client also checks the requested outfit id and that every page is listed in 
 Set JSON lives at `art/outfit-sprites/<outfitId>.<hash16>.json` inside the release directory (bucket prefix `files/`).
 Pages use `atlases/outfit-sprites-<outfitId>-<n>.<hash16>.webp`. No derived character art is committed.
 Tests use `syntheticSpriteSet()` and `buildMemoryRelease(undefined, { sprites, extraFiles })` only.
+
+### Enemy keys
+
+Since uma-data 1.6.0, the art index may include `enemyKeys: { <enemyId>: <releasePath> }`: each published enemy's
+manifest in the `enemy-keys` family ([sprites/enemy-keys.md](sprites/enemy-keys.md) §9). Older parsers ignore it.
+`artPaths` includes the manifest paths. `client.enemyKey(manifest, art, enemyId)` returns a validated `EnemyKey`, or
+null for an enemy without published art; it checks the id and that every image is listed in the manifest.
+
+An `EnemyKey` holds `enemyId`, `revision`, `tier`, `canvas`, `display` (`figure`, a boss's `envelope`) and `poses`:
+each `{ path, width, height, anchors, layers? }`, anchors `foot` or `hover`, `hit`, `face`, `cast?`, `muzzle?`, and a
+boss's battle layers `{ path, width, height, name, pivot }`. The parser holds each tier to its poses and canvas
+(`ENEMY_POSES`, `ENEMY_CANVAS`), anchors and pivots to the canvas, and layers to a boss's battle pose, 3–5 of them.
+
+Files live at `art/enemy-keys/<enemyId>.<hash16>.json` and `art/enemy-keys/<enemyId>-<pose>[-<layer>].<hash16>.webp`
+(lossless). Tests use `syntheticEnemies()`, `syntheticEnemyKey(tier)` and
+`buildMemoryRelease(undefined, { enemies, enemyKeys })` only.
 
 ## Releases
 

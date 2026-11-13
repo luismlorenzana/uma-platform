@@ -10,6 +10,7 @@ import { parseScenario, type Scenario } from './sets/scenarios.js'
 import { parseSkill, type Skill } from './sets/skills.js'
 import { parseSupportCard, type SupportCard } from './sets/support-cards.js'
 import { parseCourse, parseTrack, type Course, type Track } from './sets/tracks.js'
+import { parseEnemy, type Enemy } from './sets/enemies.js'
 
 /** The record type in each set. */
 export interface SetItems {
@@ -34,6 +35,16 @@ export const SET_PARSERS: { [N in SetName]: Parser<SetItems[N]> } = {
   tracks: parseTrack,
   courses: parseCourse,
   objectives: parseCareerObjectives,
+}
+
+/** The records of each optional set (OPTIONAL_SET_NAMES). */
+export interface OptionalSetItems {
+  enemies: Enemy
+}
+export const OPTIONAL_SET_PARSERS: { [N in keyof OptionalSetItems]: Parser<OptionalSetItems[N]> } = { enemies: parseEnemy }
+/** Parses one optional set's file by name and returns its records. */
+export function parseOptionalSet<N extends keyof OptionalSetItems>(name: N, value: unknown): OptionalSetItems[N][] {
+  return parseSetFile(value, name, OPTIONAL_SET_PARSERS[name] as Parser<OptionalSetItems[N]>).items
 }
 
 /** Parses one set file by name and returns its records. */

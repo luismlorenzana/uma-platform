@@ -35,9 +35,12 @@ pnpm release:publish                # upload and move `latest`
 pnpm release:publish -- --rollback <version>  # point the channel back at a published release
 pnpm release:publish -- --sprites-only --channel candidate   # latest plus the packed sprite sets (UA5)
 pnpm release:publish -- --add-families=outfit-renders --channel candidate   # latest plus a new image family (P137)
+pnpm release:publish -- --enemies-only        # latest plus the enemies set and enemy keys, to candidate (Q16, P152)
+pnpm release:publish -- --enemies-only --local <dir> --channel dry-run   # the same into a local folder; uploads nothing
 pnpm release:publish -- --promote <version>   # point a channel (latest by default) at a published release
 pnpm release:check -- --channel candidate --against latest   # read a channel back like a game
 pnpm release:check -- --channel candidate --against latest --added-families=outfit-renders
+pnpm release:check -- --local <dir> --channel dry-run --against latest   # read a local folder first, then the bucket
 ```
 
 **Sprite-only releases** (`--sprites-only`, P100) build on the published `latest`, not on the local release: every
@@ -53,8 +56,19 @@ carried byte for byte, and the art index gains only the named image families, re
 moves and a refresh of a published family never rides along. Check it with `--added-families=<family,…>`, which lets
 the art index differ by those families and its `sprites` map only.
 
+**Enemies-only releases** (`--enemies-only`, uma-quest Q16 part A, P152) also build on the published `latest`: every
+file is carried byte for byte except the art index, which gains (or extends) the `enemyKeys` map, and the manifest's
+sets gain or replace `enemies` only, both read from what `pnpm enemies:pack` wrote into `content/release/`. Earlier
+enemy keys stay unless a newer revision replaces them. They go to the `candidate` channel unless `--channel` says
+otherwise. The format and the steps are [enemy-keys.md](../../docs/sprites/enemy-keys.md) §9–§10.
+
+**`--local <dir>`** (publish and check) puts a folder in the bucket's layout over the real bucket: a publish writes its
+files, manifest and channel there and uploads nothing, and a check reads the folder first, then the bucket. It's how a
+dry run is read back like a game without publishing (Q16 part A).
+
 `release:check` loads a channel with the release client (every set and the art index, hash-checked), confirms the
-bucket holds every file at its size, loads every sprite set with `spriteSet`, decodes and hash-checks each page, and
+bucket holds every file at its size, loads every sprite set with `spriteSet`, decodes and hash-checks each page, counts the `enemies` by tier, loads each
+enemy key with `enemyKey` and checks her images (canvas, clear border, a boss's layers re-compositing), and
 with `--against` confirms the other channel's files are carried byte for byte. It ends with `Check passed`.
 
 Options: `--bucket` (or `UMA_RELEASE_BUCKET`), `--project` (or `UMA_GCP_PROJECT`), `--channel` (default `latest`),

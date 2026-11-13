@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enemy Keys Format</title>
+<!-- The enemy-key format (docs/sprites/enemy-keys.md, EK1–EK15) on one page: the tiers and poses, the canvases and
+     anchors, a boss's layers, the checks, the enemies roster and its id ledger, the release family and the tools.
+     Self-contained, uma-kit's tokens, light and dark. No enemy names and no character art: shapes and ids only. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  pre { background: var(--sunken); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--ink); margin: 8px 0; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 8px; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); }
+  .step b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
+  .step code { display: block; margin-top: 6px; color: var(--ink); white-space: normal; word-break: break-word; }
+  .step.dry { background: var(--violet-wash); }
+  svg text { font: 12px system-ui, sans-serif; fill: var(--ink-soft); }
+  svg text.t { font-weight: 700; fill: var(--ink); }
+  svg text.m { font: 11px ui-monospace, Menlo, monospace; }
+  .cv { fill: var(--raised); stroke: var(--hairline-strong); stroke-width: 1; }
+  .bd { fill: none; stroke: var(--danger); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+  .mx { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 5 4; }
+  .cape { fill: var(--violet); opacity: .55; }
+  .body { fill: var(--ink-faint); }
+  .headc { fill: var(--accent); opacity: .85; }
+  .arm { stroke: var(--info); stroke-width: 6; stroke-linecap: round; fill: none; }
+  .staff { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+  .a-foot { fill: var(--success); } .a-hit { fill: var(--danger); } .a-face { fill: var(--info); } .a-cast { fill: var(--violet); }
+  .ground { stroke: var(--success); stroke-width: 1.5; stroke-dasharray: 2 3; }
+  .box { fill: var(--panel); stroke: var(--hairline-strong); }
+  .box.b { fill: var(--accent-wash); } .box.k { fill: var(--info-wash); } .box.r { fill: var(--success-wash); } .box.v { fill: var(--violet-wash); }
+  .flow { stroke: var(--ink-faint); stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  .arrowhead { fill: var(--ink-faint); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Enemy keys: the format</h1>
+  <p>How an enemy is drawn, checked and published, for any game: uma-quest's three tiers (its enemy art review, EN1–EN13)
+    written down as one contract. The doc is <a href="../enemy-keys.md">enemy-keys.md</a> (EK1–EK15), beside the Umas'
+    <a href="../format.md">format.md</a> and <a href="../pipeline.md">pipeline.md</a>; the decision is P152 (uma-quest
+    Q16 part A). Enemies appear by id only, and this page shows no character art: the figure below is the code-drawn
+    test boss.</p>
+  <nav>
+    <a href="#tiers">Tiers and poses</a>
+    <a href="#canvas">Canvas and anchors</a>
+    <a href="#layers">A boss's layers</a>
+    <a href="#checks">Checks</a>
+    <a href="#roster">The roster</a>
+    <a href="#release">The release</a>
+    <a href="#publish">Publishing</a>
+    <a href="#calls">The calls</a>
+  </nav>
+
+  <div class="tiles">
+    <div class="tile"><b>3 tiers</b><span>Regular, Key and Boss: 1, 2 and 4 required poses</span></div>
+    <div class="tile"><b>1006</b><span>units on the enemy boards: 325 boss, 105 key, 576 regular</span></div>
+    <div class="tile"><b>700001+</b><span>stable ids from a private ledger, never reused</span></div>
+    <div class="tile"><b>3–5 layers</b><span>a boss's battle pose, re-compositing to it exactly</span></div>
+    <div class="tile"><b>1.6.0</b><span>uma-data minor: the <code>enemies</code> set and <code>enemy-keys</code>; older clients skip both</span></div>
+    <div class="tile"><b>0 uploads</b><span>in the dry run: a local folder over the read-only bucket</span></div>
+  </div>
+
+  <section class="card" id="tiers">
+    <h2>Tiers and poses</h2>
+    <p>A key pose is one still, not an animation. The game times every motion in code from the fight's cues: a
+      breathe-bob, a lunge, a recoil, a sink.</p>
+    <div class="scroll"><table>
+      <tr><th>Tier</th><th>Required</th><th>Optional</th><th>Canvas</th><th>Figure</th><th>In a fight</th></tr>
+      <tr><td><span class="pill done">regular</span></td><td><code>battle</code></td><td><code>break</code></td><td>512 × 768</td><td class="num">112 px</td><td>A random fight's foe, up to three on the field; her place in the pool sets her role</td></tr>
+      <tr><td><span class="pill claude">key</span></td><td><code>battle</code> <code>action</code></td><td><code>break</code></td><td>640 × 768</td><td class="num">≈140 px</td><td>Escorts a boss, leads a regular group; a sub-boss or a captain</td></tr>
+      <tr><td><span class="pill art">boss</span></td><td><code>battle</code> <code>attack</code> <code>skill</code> <code>break</code></td><td><code>phase</code></td><td>768 × 768, ≤ 1024²</td><td class="num">≈180 px, envelope ≤ 300</td><td>A dungeon's resident, her two Keys staggered before her</td></tr>
+    </table></div>
+    <p class="note">Figures are heights at uma-quest's 844 × 390 reference stage (EN3). A pose name outside its tier's
+      list is an error.</p>
+  </section>
+
+  <section class="card" id="canvas">
+    <h2>Canvas and anchors</h2>
+    <div class="scroll">
+    <svg viewBox="0 0 720 350" role="img" aria-label="The three canvases to scale, with the clear border and the anchors">
+    <rect class="cv" x="30" y="108.0" width="128.0" height="192.0" rx="2"/>
+    <rect class="bd" x="32" y="110.0" width="124.0" height="188.0"/>
+    <rect class="cape" x="68.6" y="166.6" width="29.0" height="126.9" rx="6.5"/>
+    <rect class="body" x="77.6" y="165.6" width="20.0" height="124.4" rx="4.5"/>
+    <circle class="headc" cx="88.6" cy="157.1" r="7.5"/>
+    <line class="arm" x1="90.1" y1="202.9" x2="105.1" y2="207.9" style="stroke-width:6.5"/>
+    <line class="staff" x1="103.6" y1="222.9" x2="106.6" y2="185.4"/>
+    <circle class="a-foot" cx="87.6" cy="290.0" r="3.5"/>
+    <circle class="a-hit" cx="87.6" cy="202.9" r="3.5"/>
+    <circle class="a-face" cx="88.6" cy="157.1" r="3.5"/>
+    <circle class="a-cast" cx="106.6" cy="185.4" r="3.5"/>
+    <text class="t" x="30" y="320">Regular · 512 × 768</text>
+    <text x="30" y="336">figure 112 px</text>
+    <rect class="cv" x="215" y="108.0" width="160.0" height="192.0" rx="2"/>
+    <rect class="bd" x="217" y="110.0" width="156.0" height="188.0"/>
+    <rect class="cape" x="268.0" y="166.6" width="29.0" height="126.9" rx="6.5"/>
+    <rect class="body" x="277.0" y="165.6" width="20.0" height="124.4" rx="4.5"/>
+    <circle class="headc" cx="288.0" cy="157.1" r="7.5"/>
+    <line class="arm" x1="289.5" y1="202.9" x2="304.5" y2="207.9" style="stroke-width:6.5"/>
+    <line class="staff" x1="303.0" y1="222.9" x2="306.0" y2="185.4"/>
+    <circle class="a-foot" cx="287.0" cy="290.0" r="3.5"/>
+    <circle class="a-hit" cx="287.0" cy="202.9" r="3.5"/>
+    <circle class="a-face" cx="288.0" cy="157.1" r="3.5"/>
+    <circle class="a-cast" cx="306.0" cy="185.4" r="3.5"/>
+    <text class="t" x="215" y="320">Key · 640 × 768</text>
+    <text x="215" y="336">figure ≈140 px</text>
+    <rect class="mx" x="430" y="44" width="256" height="256"/>
+    <text class="m" x="682" y="58" text-anchor="end">up to 1024 × 1024</text>
+    <rect class="cv" x="430" y="108.0" width="192.0" height="192.0" rx="2"/>
+    <rect class="bd" x="432" y="110.0" width="188.0" height="188.0"/>
+    <rect class="cape" x="497.4" y="166.6" width="29.0" height="126.9" rx="6.5"/>
+    <rect class="body" x="506.4" y="165.6" width="20.0" height="124.4" rx="4.5"/>
+    <circle class="headc" cx="517.4" cy="157.1" r="7.5"/>
+    <line class="arm" x1="518.9" y1="202.9" x2="533.9" y2="207.9" style="stroke-width:6.5"/>
+    <line class="staff" x1="532.4" y1="222.9" x2="535.4" y2="185.4"/>
+    <circle class="a-foot" cx="516.4" cy="290.0" r="3.5"/>
+    <circle class="a-hit" cx="516.4" cy="202.9" r="3.5"/>
+    <circle class="a-face" cx="517.4" cy="157.1" r="3.5"/>
+    <circle class="a-cast" cx="535.4" cy="185.4" r="3.5"/>
+    <text class="t" x="430" y="320">Boss · 768 × 768</text>
+    <text x="430" y="336">figure ≈180 px · envelope ≤300</text>
+    <text x="30" y="24">Drawn to scale (¼). Dashed red: the 8 px clear border. The figure faces right; the dots are its anchors.</text>
+  </svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--success)"></i><code>foot</code> (or <code>hover</code>): where she stands</span>
+      <span><i style="background:var(--danger)"></i><code>hit</code>: where hits land</span>
+      <span><i style="background:var(--info)"></i><code>face</code>: bubbles, status, the camera</span>
+      <span><i style="background:var(--violet)"></i><code>cast</code> or <code>muzzle</code>: where an attack leaves her</span>
+    </div>
+    <div class="two" style="margin-top:12px">
+      <div>
+        <h3>The rules</h3>
+        <ul>
+          <li>Every pose of an enemy is on her tier's canvas; a boss may widen hers up to 1024 × 1024, all poses with it.</li>
+          <li>A clear border of at least 8 px: no alpha within 8 px of an edge.</li>
+          <li>Facing right, drawn that way, never mirrored.</li>
+          <li>No effects baked in: the game draws glows, flashes and bursts at her anchors.</li>
+          <li>Masters are PNG; the release is lossless WebP.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Anchors, per pose</h3>
+        <ul>
+          <li><code>foot</code> or <code>hover</code>, never both: a floating figure hovers.</li>
+          <li><code>hit</code> and <code>face</code> always.</li>
+          <li><code>cast</code> or <code>muzzle</code> where she attacks from.</li>
+          <li>Every anchor on the canvas, in canvas pixels from the top left.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="layers">
+    <h2>A boss's layers</h2>
+    <div class="scroll">
+    <svg viewBox="0 0 900 280" role="img" aria-label="A boss battle pose split into rear, body and front layers that composite back to the pose">
+    <rect class="cv" x="20.0" y="40" width="192" height="192" rx="2"/>
+    <rect class="cape" x="87.4" y="98.6" width="29.0" height="126.9" rx="6.5"/>
+    <text class="t" x="20.0" y="252">1. rear</text>
+    <text x="20.0" y="268">the cape, at the back</text>
+    <rect class="cv" x="220.0" y="40" width="192" height="192" rx="2"/>
+    <rect class="body" x="296.4" y="97.6" width="20.0" height="124.4" rx="4.5"/>
+    <circle class="headc" cx="307.4" cy="89.1" r="7.5"/>
+    <text class="t" x="220.0" y="252">2. body</text>
+    <text x="220.0" y="268">body and head</text>
+    <rect class="cv" x="420.0" y="40" width="192" height="192" rx="2"/>
+    <line class="arm" x1="508.9" y1="134.9" x2="523.9" y2="139.9" style="stroke-width:6.5"/>
+    <line class="staff" x1="522.4" y1="154.9" x2="525.4" y2="117.4"/>
+    <text class="t" x="420.0" y="252">3. front</text>
+    <text x="420.0" y="268">arm and staff</text>
+    <text class="t" x="652.0" y="140" style="font-size:20px">=</text>
+    <rect class="cv" x="680.0" y="40" width="192" height="192" rx="2"/>
+    <rect class="cape" x="747.4" y="98.6" width="29.0" height="126.9" rx="6.5"/>
+    <rect class="body" x="756.4" y="97.6" width="20.0" height="124.4" rx="4.5"/>
+    <circle class="headc" cx="767.4" cy="89.1" r="7.5"/>
+    <line class="arm" x1="768.9" y1="134.9" x2="783.9" y2="139.9" style="stroke-width:6.5"/>
+    <line class="staff" x1="782.4" y1="154.9" x2="785.4" y2="117.4"/>
+    <circle class="a-foot" cx="766.4" cy="222.0" r="3.5"/>
+    <circle class="a-hit" cx="766.4" cy="134.9" r="3.5"/>
+    <circle class="a-face" cx="767.4" cy="89.1" r="3.5"/>
+    <circle class="a-cast" cx="785.4" cy="117.4" r="3.5"/>
+    <text class="t" x="680.0" y="252">battle</text>
+    <text x="680.0" y="268">source-over, back to front</text>
+    <text x="20" y="22">The test boss (799999), drawn in code: three layers, each the full canvas, re-compositing to her battle pose.</text>
+  </svg>
+    </div>
+    <table style="margin-top:8px">
+      <tr><th>Layer</th><th>Holds</th></tr>
+      <tr><td class="id">rear</td><td>Behind the whole figure: a cape's far side, wings, a rear weapon or rigging</td></tr>
+      <tr><td class="id">behind</td><td>Behind her body, in front of <code>rear</code>: a far arm, hair behind the shoulders</td></tr>
+      <tr><td class="id">body</td><td>Her body, head and costume</td></tr>
+      <tr><td class="id">front</td><td>Across her body: a near arm, a weapon held across, a cape's near side</td></tr>
+      <tr><td class="id">over</td><td>One more if needed: what overlaps everything (a shield, a sleeve, a ribbon)</td></tr>
+    </table>
+    <p>3–5 of them, back to front, each the full canvas, each with a <code>pivot</code> it sways about. Only a boss's
+      battle pose has layers; her other poses swap in whole.</p>
+  </section>
+
+  <section class="card" id="checks">
+    <h2>Checks</h2>
+    <p>One module, <code>scripts/data/src/enemy-images.ts</code>, used by the pack on the masters and by
+      <code>release:check</code> on the released WebPs. <b>"Re-composite exactly"</b> means to 8-bit rounding: alpha
+      within 1 level, colour weighted by alpha within 1.5 levels of 255. A layer moved by one pixel fails it.</p>
+    <div class="scroll"><table>
+      <tr><th>#</th><th>Check</th><th>enemies:pack</th><th>release:check</th><th>Part B's script</th></tr>
+      <tr><td class="id">1</td><td>Every pose and layer at the canvas size</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td class="id">2</td><td>A clear 8 px border</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td class="id">3</td><td>The tier's poses, anchors on the canvas, layers only on a boss's battle pose (3–5, unique names, pivots on the canvas)</td><td>✓ parser</td><td>✓ parser</td><td>✓</td></tr>
+      <tr><td class="id">4</td><td>A boss's layers re-composite to her battle pose</td><td>✓</td><td>✓ decoded</td><td>✓</td></tr>
+      <tr><td class="id">5</td><td>The lossless WebP decodes to the master's pixels</td><td>✓</td><td></td><td></td></tr>
+      <tr><td class="id">6</td><td>Alpha bounds against the display targets; anchors inside the figure</td><td></td><td></td><td>✓</td></tr>
+      <tr><td class="id">7</td><td>Every image a WebP, listed in the manifest, hash checked</td><td></td><td>✓ client</td><td></td></tr>
+    </table></div>
+  </section>
+
+  <section class="card" id="roster">
+    <h2>The roster: the <code>enemies</code> set</h2>
+    <div class="scroll">
+    <svg viewBox="0 0 720 230" role="img" aria-label="The enemy boards cascade from the boss boards to Key enemies to Regular enemies">
+      <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="arrowhead" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+      <rect class="box b" x="20" y="20" width="190" height="130" rx="10"/>
+      <text class="t" x="34" y="44">Seven boss boards</text>
+      <text class="m" x="34" y="64">azurlane · genshin · wuwa</text>
+      <text class="m" x="34" y="82">hsr · zzz · hi3 · pgr</text>
+      <text x="34" y="108">cast: SS, S, A</text>
+      <text class="t" x="34" y="134">→ 325 boss</text>
+      <rect class="box k" x="265" y="20" width="190" height="130" rx="10"/>
+      <text class="t" x="279" y="44">Key enemies</text>
+      <text x="279" y="64">every other Azur Lane unit,</text>
+      <text x="279" y="82">plus the boss boards' rest</text>
+      <text x="279" y="108">cast: SS, S, A</text>
+      <text class="t" x="279" y="134">→ 105 key</text>
+      <rect class="box r" x="510" y="20" width="190" height="130" rx="10"/>
+      <text class="t" x="524" y="44">Regular enemies</text>
+      <text x="524" y="64">every NIKKE unit,</text>
+      <text x="524" y="82">plus Key enemies' rest</text>
+      <text x="524" y="108">everyone else</text>
+      <text class="t" x="524" y="134">→ 576 regular</text>
+      <path class="flow" d="M210 85 L262 85"/>
+      <path class="flow" d="M455 85 L507 85"/>
+      <text class="m" x="236" y="172" text-anchor="middle">B, F, unranked</text>
+      <text class="m" x="481" y="172" text-anchor="middle">B, F, unranked</text>
+      <text x="20" y="200">A unit's tier is the board group that casts her: 1006 units from 8 franchises,</text>
+      <text x="20" y="218">ids 700001–701006, numbered in this board order the first time.</text>
+    </svg>
+    </div>
+    <div class="two">
+      <div>
+        <h3>Ids</h3>
+        <ul>
+          <li>Numeric, opaque and stable, from 700001 to 799999, clear of outfit, card and character ids.</li>
+          <li>The private ledger <code>content/authoring/tiers/enemy-ids.json</code> keeps them: a unit keeps hers when she moves boards or ranks.</li>
+          <li>A new unit takes <code>next</code>, which only counts up, so an id is never reused; a unit who leaves the boards keeps her ledger entry.</li>
+          <li>799999 is the code-drawn test enemy's, at the top of the range the ledger never reaches.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>An item</h3>
+<pre>{ "id": 700001,
+  "franchise": "azurlane",
+  "tier": "boss",
+  "name": "…" }</pre>
+        <p class="note">Names live only in master data's private release. A game keeps ids in git and reads names at run time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="release">
+    <h2>The release</h2>
+    <div class="two">
+      <div>
+<pre>files/data/enemies.&lt;hash16&gt;.json              manifest.sets.enemies
+files/art/enemy-keys/&lt;id&gt;.&lt;hash16&gt;.json        one manifest an enemy
+files/art/enemy-keys/&lt;id&gt;-battle.&lt;hash16&gt;.webp
+files/art/enemy-keys/&lt;id&gt;-battle-rear.&lt;hash16&gt;.webp
+files/data/art.&lt;hash16&gt;.json                  enemyKeys: { &lt;id&gt;: &lt;manifest&gt; }</pre>
+      </div>
+      <div>
+<pre>const { manifest, art } = await client.load()
+const enemies = await client.enemies(manifest)      // or null
+const key = await client.enemyKey(manifest, art!, 700123)
+const img = await client.file(manifest, key!.poses.battle!.path)</pre>
+      </div>
+    </div>
+    <p>Both are additive in uma-data 1.6.0: <code>enemies</code> is an optional set and <code>enemyKeys</code> an optional
+      index key. The dry run's release parses in every uma-data the games have installed (1.1.0–1.4.0), and each skips
+      both. <code>data:import</code>, <code>assets:import</code> and <code>sprites:pack</code> keep them as they are.</p>
+  </section>
+
+  <section class="card" id="publish">
+    <h2>Publishing</h2>
+    <p>The owner's set review approves an enemy; that approval is the go. <code>--enemies-only</code> goes to the
+      candidate channel by default.</p>
+    <div class="steps">
+      <div class="step"><b>1. Pack</b>the roster and every approved key into the local release<code>pnpm enemies:pack</code></div>
+      <div class="step"><b>2. Plan</b><code>latest</code> plus the set, the keys and a new art index<code>pnpm release:publish -- --enemies-only --dry-run</code></div>
+      <div class="step"><b>3. Candidate</b><code>latest</code> doesn't move<code>pnpm release:publish -- --enemies-only</code></div>
+      <div class="step"><b>4. Read back</b>like a game, against latest<code>pnpm release:check -- --channel candidate --against latest</code></div>
+      <div class="step"><b>5. Promote</b>then read latest back<code>pnpm release:publish -- --promote &lt;version&gt;</code></div>
+    </div>
+    <h3>The dry run (Q16 part A, 2026-11-12)</h3>
+    <div class="steps">
+      <div class="step dry"><b>Pack with the test boss</b>1006 units, 799999's 7 images, 16 KB<code>pnpm enemies:pack -- --fixture</code></div>
+      <div class="step dry"><b>Publish into a folder</b><code>069b6dafef9a</code> on <code>60cdac99d8ae</code>: 3456 carried, 10 added<code>--enemies-only --local &lt;dir&gt; --channel dry-run</code></div>
+      <div class="step dry"><b>Read it back</b>1007 enemies, the boss's layers re-composited exactly, Check passed<code>release:check -- --local &lt;dir&gt; --channel dry-run --against latest</code></div>
+      <div class="step dry"><b>Repack</b>the roster only; the bucket gained nothing<code>pnpm enemies:pack</code></div>
+    </div>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <table>
+      <tr><th>Id</th><th>Call</th></tr>
+      <tr><td class="id">EK1</td><td>Three tiers and their poses: Regular <code>battle</code> (+<code>break</code>), Key <code>battle</code>, <code>action</code> (+<code>break</code>), Boss <code>battle</code>, <code>attack</code>, <code>skill</code>, <code>break</code> (+<code>phase</code>); nothing else</td></tr>
+      <tr><td class="id">EK2</td><td>One canvas per tier, shared by all of an enemy's poses: 512 × 768, 640 × 768, 768 × 768 (a boss up to 1024 × 1024); a clear 8 px border</td></tr>
+      <tr><td class="id">EK3</td><td>Facing right, never mirrored; effects never baked in; full colour, clean antialiasing</td></tr>
+      <tr><td class="id">EK4</td><td>A boss's battle pose in 3–5 layers (<code>rear</code>, <code>behind</code>, <code>body</code>, <code>front</code>, <code>over</code>), each with a pivot, re-compositing to the pose to 8-bit rounding</td></tr>
+      <tr><td class="id">EK5</td><td>Anchors per pose: <code>foot</code> or <code>hover</code>, <code>hit</code>, <code>face</code>, and <code>cast</code> or <code>muzzle</code>; all on the canvas</td></tr>
+      <tr><td class="id">EK6</td><td>Display targets in each key: figure 112 / ≈140 / ≈180, a boss's envelope up to 300, at 844 × 390</td></tr>
+      <tr><td class="id">EK7</td><td>Masters are PNG in <code>content/authoring/enemies/keys/</code>; the release is lossless WebP, checked to decode to the master's pixels</td></tr>
+      <tr><td class="id">EK8</td><td>Two owner reviews per revision (key, set) with file hashes; the set approval is the go</td></tr>
+      <tr><td class="id">EK9</td><td>The <code>enemies</code> set: every unit on the enemy boards, stable ids from 700001 in a private ledger, never reused</td></tr>
+      <tr><td class="id">EK10</td><td>A unit's tier is the board group that casts her, cascading boss → Key → Regular; a key's own tier is the one it was drawn to</td></tr>
+      <tr><td class="id">EK11</td><td>The <code>enemy-keys</code> family: one manifest an enemy and her images under <code>art/enemy-keys/</code>, in the art index's <code>enemyKeys</code> map</td></tr>
+      <tr><td class="id">EK12</td><td>Both additive in uma-data 1.6.0; older clients skip them</td></tr>
+      <tr><td class="id">EK13</td><td><code>enemies:pack</code>; <code>release:publish -- --enemies-only</code> (candidate by default) carries every other file byte for byte; <code>--promote</code>; <code>release:check</code> reads them back</td></tr>
+      <tr><td class="id">EK14</td><td>A dry run publishes into a local folder over the read-only bucket (<code>--local</code>), with the code-drawn test boss 799999 (<code>--fixture</code>)</td></tr>
+      <tr><td class="id">EK15</td><td>No enemy name, image or ranking in git; a test keeps the boards' names out of the tools, uma-data and these docs</td></tr>
+    </table>
+  </section>
+</main>
+</body>
+</html>

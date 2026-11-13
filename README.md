@@ -78,6 +78,16 @@ pnpm release:check -- --channel candidate --against latest           # read it b
 pnpm release:publish -- --promote <version>                          # then move latest
 ```
 
+**Enemies** (the `enemies` roster and the `enemy-keys` family, uma-quest Q16, P152) publish the same way, on top of
+`latest`, once the owner approves an enemy's set review ([enemy-keys.md](docs/sprites/enemy-keys.md) §10):
+
+```bash
+pnpm enemies:pack                                                    # the boards' roster and approved keys → content/release/
+pnpm release:publish -- --enemies-only                               # to candidate; every other file carried byte for byte
+pnpm release:check -- --channel candidate --against latest
+pnpm release:publish -- --promote <version>
+```
+
 **A new art family** (an additive one, like `outfit-renders`, P137) publishes the same way, on top of `latest`:
 
 ```bash

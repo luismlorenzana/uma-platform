@@ -59,7 +59,8 @@ export async function readLocalManifest(releaseDir: string = DEFAULT_RELEASE_DIR
 
 export interface ManifestParts {
   sources: Record<string, string>
-  sets: Record<SetName, string>
+  /** The master sets, and any optional set (`enemies`) the release carries. */
+  sets: ReleaseManifest['sets']
   art: string | null
   files: readonly ReleaseFile[]
 }

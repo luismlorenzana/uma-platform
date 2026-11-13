@@ -1,7 +1,7 @@
 // Writes the master sets into the local release, ported from uma-racer's content-pack writer. Each set is one
 // deterministic JSON file `{ set, items }` with items sorted by id; art files and the art index are preserved.
 
-import { parseSet, SET_NAMES, type ReleaseFile, type ReleaseManifest, type SetItems, type SetName } from '@luismlorenzana/uma-data'
+import { OPTIONAL_SET_NAMES, parseSet, SET_NAMES, type ReleaseFile, type ReleaseManifest, type SetItems, type SetName } from '@luismlorenzana/uma-data'
 import { DEFAULT_RELEASE_DIR, readLocalManifest, removeUnlisted, writeLocalManifest, writeReleaseFile } from './release-dir'
 
 export type MasterSets = { [N in SetName]: readonly SetItems[N][] }
@@ -23,11 +23,13 @@ export function serializeSet<N extends SetName>(name: N, items: readonly SetItem
 export async function writeDataSets(options: WriteDataSetsOptions): Promise<ReleaseManifest> {
   const releaseDir = options.releaseDir ?? DEFAULT_RELEASE_DIR
   const previous = await readLocalManifest(releaseDir)
-  const previousSetPaths = new Set(previous ? Object.values(previous.sets) : [])
-  // Art files and the art index belong to `pnpm assets:import`; keep them as they are.
+  const previousSetPaths = new Set(previous ? SET_NAMES.map((name) => previous.sets[name]) : [])
+  // Art files and the art index belong to `pnpm assets:import`, and the optional sets (`enemies`) to their own tools;
+  // keep them as they are.
   const files: ReleaseFile[] = previous?.files.filter((file) => !previousSetPaths.has(file.path)) ?? []
 
-  const sets = {} as Record<SetName, string>
+  const sets = {} as ReleaseManifest['sets']
+  for (const name of OPTIONAL_SET_NAMES) if (previous?.sets[name]) sets[name] = previous.sets[name]
   for (const name of SET_NAMES) {
     const json = serializeSet(name, options.sets[name] as readonly SetItems[typeof name][])
     // Every set passes the published parser before it's written, so a normalizer bug can't reach a release.
