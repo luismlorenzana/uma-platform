@@ -5,6 +5,9 @@
 > art stand today, and proposes a way to reach the quality of Octopath Traveler: a measured look-development slice
 > first (LK1), with the owner's eye as the gate. Visual page: [previews/hd2d-quality.html](previews/hd2d-quality.html).
 > Calls are LR1–LR14; the packets are LK0–LK4 in [the handoff](../handoff/README.md#the-look-lk).
+>
+> **2026-11-13, LK0's references are in (P158):** 12 frames, private, turned into [the look bible](bible.md) with the
+> look measures' target ranges. The hero scene defaults to a town square by day with a tavern interior at night.
 
 ## The short answer
 

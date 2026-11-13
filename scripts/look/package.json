@@ -1,0 +1,21 @@
+{
+  "name": "@uma-platform/look",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The look measures (P157, LR12): numbers that flag flat, evenly lit, uniformly sharp frames against the private references.",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "measure": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

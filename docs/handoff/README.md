@@ -215,7 +215,7 @@ measured look slice first, with the owner's eye against references as the gate.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| LK0 | The target: 15–30 reference frames in `content/authoring/look/` (own captures or press material), the hero scene (recommended: a town square by day with one interior), a yes or no on buying asset packs | The owner | ~1 h | — | **Waiting on the owner** |
+| LK0 | The target: 15–30 reference frames in `content/authoring/look/` (own captures or press material), the hero scene (recommended: a town square by day with one interior), a yes or no on buying asset packs | The owner | ~1 h | — | **References in** (12, P158: [the look bible](../look/bible.md)); hero scene defaulted to a town square by day with a tavern interior; **asset packs: the owner's yes or no** |
 | [LK1](tasks/LK1-look-slice.md) | The look slice: one hero scene to the target in an opt-in uma-stage look path, the target still in Blender first, measured on the iPhone, judged beside the references | Claude, art sourced or painted | L | LK0, the owner's go | Written ahead |
 | LK2 | The pipeline from the slice: kit format v2 (2D, 2.5D, 3D; texel density; glTF pieces), the importer, sprite normal maps, the look measures, a look-tuning page | Claude | M | LK1's bar | After LK1 |
 | LK3 | Roll-out, each game opt-in by the change protocol: uma-quest's towns and dungeons, uma-farm's band, uma-cyberpunk's board | Each game's session; uma-stage minors here | M each | LK2 | After LK2 |

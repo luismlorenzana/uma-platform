@@ -108,6 +108,7 @@
     <a href="#gpu">The phone's budget</a>
     <a href="#quality">Judging quality</a>
     <a href="#assets">Assets</a>
+    <a href="#bible">The target (your references)</a>
     <a href="#approach">The approach</a>
     <a href="#calls">The calls</a>
   </nav>
@@ -206,6 +207,38 @@
       <tr><td><b>Code-drawn shapes</b> (P147 today)</td><td><span class="pill big">No</span></td><td>Ours</td><td>Free</td><td>Interface marks and icons only</td></tr>
     </table></div>
     <p class="note">Licensed sources stay private and reach the games only as built kits in master data's private release (LR10). The import path: glTF and textures, cleaned in Blender, into kit format v2 (2D, 2.5D or 3D; texel density).</p>
+  </section>
+
+  <section class="card" id="bible">
+    <h2>The target, from your 12 references (look bible v0)</h2>
+    <p>The owner's references (towns and a market by day, a port, a battle, a graded castle, night streets and
+      interiors) are private: they're in the local <code>content/authoring/look/board.html</code>, beside our captures.
+      Here, what they teach and what they measure. The full text is <a href="../bible.md">bible.md</a> (P158).</p>
+    <div class="answers">
+      <div class="answer"><b>Camera</b><p>Perspective, high, narrow view; a blurred foreground occluder, a sharp middle, a soft background; characters about a tenth of the frame.</p></div>
+      <div class="answer"><b>One pixel scale</b><p>Sprites and textures share one chunky grid, about 3–5 screen pixels a texel; characters about 30 texels tall.</p></div>
+      <div class="answer"><b>Volume</b><p>Buildings in 3D with roofs and trims; trees, bushes and flowers as 2.5D clusters; edging between ground materials.</p></div>
+      <div class="answer"><b>Light, day</b><p>A warm key, shadows from everything, darker creases, cool shadows and warm highlights, shafts and haze far away.</p></div>
+      <div class="answer"><b>Light, night</b><p>A dark base, warm pools from lamps and fire with glows, a cool ambient, shafts through windows, glints on wet stone.</p></div>
+      <div class="answer"><b>Colour and focus</b><p>Saturated focal props, a strong vignette, a per-scene grade; about 40% of every frame soft, the middle twice as sharp.</p></div>
+      <div class="answer"><b>Life</b><p>Dense set dressing; petals, embers, dust; flicker; sparkling water. The frame is never still.</p></div>
+      <div class="answer"><b>A finding: characters</b><p>Ours stand about 210 texels tall, painted smooth; the references' are about 30-texel pixel art. LK1 shows our sets beside a pixel pass of them for the owner to choose.</p></div>
+    </div>
+    <h3>Measured (LR12), at 640 px wide</h3>
+    <div class="scroll"><table>
+      <tr><th>Measure</th><th class="num">References (min – median – max)</th><th class="num">Forest kit</th><th class="num">Warrior town</th><th class="num">Mage town (code)</th><th class="num">Farm (phone)</th></tr>
+      <tr><td><b>Contrast</b> (lightness p5–p95)</td><td class="num">58 – <b>76</b> – 99</td><td class="num"><span class="pill big">33</span></td><td class="num"><span class="pill big">37</span></td><td class="num">74</td><td class="num"><span class="pill big">58</span></td></tr>
+      <tr><td><b>Palette</b> (4-bit colours for 90%)</td><td class="num">82 – <b>214</b> – 431</td><td class="num"><span class="pill big">45</span></td><td class="num"><span class="pill big">38</span></td><td class="num"><span class="pill big">29</span></td><td class="num">86</td></tr>
+      <tr><td><b>Warm light over cool shadow</b></td><td class="num">−4 – <b>10</b> – 24</td><td class="num"><span class="pill mid">32</span></td><td class="num">19</td><td class="num">23</td><td class="num"><span class="pill big">−19</span></td></tr>
+      <tr><td>Mean lightness</td><td class="num">23 – <b>33</b> – 58</td><td class="num">31</td><td class="num">32</td><td class="num">54</td><td class="num">50</td></tr>
+      <tr><td>Chroma, mean</td><td class="num">10 – <b>23</b> – 37</td><td class="num">22</td><td class="num">16</td><td class="num">19</td><td class="num">26</td></tr>
+      <tr><td>Blurred share</td><td class="num">0.08 – <b>0.43</b> – 0.82</td><td class="num">0.27</td><td class="num">0.51</td><td class="num">0.34</td><td class="num">0.61</td></tr>
+      <tr><td>Focus band (middle over outer)</td><td class="num">0.8 – <b>2.0</b> – 3.4</td><td class="num">1.3</td><td class="num">1.6</td><td class="num"><span class="pill mid">6.6</span></td><td class="num"><span class="pill mid">7.3</span></td></tr>
+      <tr><td>Vignette (edge over middle)</td><td class="num">0.37 – <b>0.66</b> – 1.22</td><td class="num">0.54</td><td class="num">0.50</td><td class="num">0.83</td><td class="num">1.20</td></tr>
+    </table></div>
+    <p class="note">Red: outside the references' range. Our review captures carry padding and blank bands a game frame
+      wouldn't, so their shadow, vignette and focus numbers are rough; contrast and palette are the robust signals: our
+      frames have half the references' contrast and a fifth of their colours. LK1's acceptance ranges come from here.</p>
   </section>
 
   <section class="card" id="approach">
