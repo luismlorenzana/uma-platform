@@ -9,7 +9,7 @@ const here = dirname(fileURLToPath(import.meta.url))
 const docs = resolve(here, '../../../docs/stage/previews')
 await mkdir(docs, { recursive: true })
 
-for (const page of ['farm-band']) {
+for (const page of ['farm-band', 'effects']) {
   const outDir = resolve(here, '.cache', page)
   await rm(outDir, { recursive: true, force: true })
   await build({

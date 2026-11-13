@@ -71,7 +71,8 @@ export interface BandWorldOptions {
 export interface BandDebug {
   centre: number
   settled: boolean
-  figures: { id: string; x: number; z: number; sprite: boolean; moving: boolean }[]
+  /** ST6 adds `action`, what her sprite plays (null for a standee), and `emote`, the one-off playing (or null). */
+  figures: { id: string; x: number; z: number; sprite: boolean; moving: boolean; action: string | null; emote: string | null }[]
   liveSets: string[]
   grade: StageGrade
   drawCalls: number
@@ -104,6 +105,8 @@ interface Live {
   actor: SpriteActor | null
   path: Spot[]
   done: ((arrived: boolean) => void) | null
+  /** A one-off action playing (ST6): its name, how long it's played, one pass of a looping one, and who's waiting. */
+  emote: { name: string; ms: number; cycle: number; done: (played: boolean) => void } | null
 }
 
 const RIGHT = new Vector3(1, 0, 0)
@@ -208,6 +211,8 @@ export class BandStage {
     for (const f of this.figures.values()) {
       const here = { x: Math.floor(f.x), z: Math.floor(f.z) }
       if (options.keepWalks && f.path.length && pathStands(built.grid, here, f.path.map((p) => ({ x: Math.floor(p.x), z: Math.floor(p.z) })))) continue
+      // A one-off (ST6) carries on through a rebuild that keeps walks while her tile still stands; any other is cut.
+      if (!(options.keepWalks && f.emote && pathStands(built.grid, here, []))) this.endEmote(f, false)
       this.stopWalk(f, false)
       this.placeAt(f, here)
     }
@@ -327,7 +332,8 @@ export class BandStage {
     this.removeFigure(spec.id)
     const standee = new Standee(spec.face)
     this.scene.add(standee.group, standee.shadowMesh)
-    const f: Live = { spec, x: spec.tile.x + 0.5, z: spec.tile.z + 0.5, facing: spec.facing ?? 'front', moving: false, running: false, standee, actor: null, path: [], done: null }
+    const f: Live = { spec, x: spec.tile.x + 0.5, z: spec.tile.z + 0.5, facing: spec.facing ?? 'front', moving: false, running: false, standee, actor: null, path: [], done: null,
+      emote: null }
     this.figures.set(spec.id, f)
     this.capDirty = true
     this.settle.wake()
@@ -337,6 +343,7 @@ export class BandStage {
     const f = this.figures.get(id)
     if (!f) return
     this.stopWalk(f, false)
+    this.endEmote(f, false)
     this.scene.remove(f.standee.group, f.standee.shadowMesh)
     f.standee.dispose()
     this.dropActor(f)
@@ -350,6 +357,7 @@ export class BandStage {
     const f = this.figures.get(id)
     if (!f) return
     this.stopWalk(f, false)
+    this.endEmote(f, false)
     this.placeAt(f, tile)
     if (facing) f.facing = facing
     this.capDirty = true
@@ -363,6 +371,7 @@ export class BandStage {
     const f = this.figures.get(id)
     if (!f || !this.world) return Promise.resolve(false)
     this.stopWalk(f, false)
+    this.endEmote(f, false)
     const grid = this.world.built.grid
     const tiles = findPath(grid, { x: Math.floor(f.x), z: Math.floor(f.z) }, tile, farmStepCost(grid))
     if (!tiles) return Promise.resolve(false)
@@ -380,6 +389,34 @@ export class BandStage {
     done?.(arrived)
   }
 
+  /**
+   * Plays one action once on a figure (ST6): a `nod`, an emote. Only a sprite figure standing still can: it resolves false,
+   * with nothing played, for a standee or a set not live yet, an action her set lacks, a figure walking, or an unknown id.
+   * It resolves true when the action ends (one pass of a looping one), and she goes back to her stance and facing. A walk,
+   * `placeFigure`, `removeFigure`, a new set, or a rebuild that doesn't keep her cuts it short (false). A new one replaces
+   * one playing. When and what to play is the game's, and so is reduced motion.
+   */
+  emote(id: string, name: string): Promise<boolean> {
+    const f = this.figures.get(id)
+    if (!f || !f.actor || f.moving || f.path.length || !f.actor.hasAction(name)) return Promise.resolve(false)
+    this.endEmote(f, false)
+    const frames = f.actor.current.set.actions[name]!
+    const cycle = frames.loop ? Math.max(1, frames.frames.reduce((sum, fr) => sum + (fr.ms ?? 0), 0)) : Infinity
+    f.actor.setManual(true, f.facing)
+    f.actor.act(name)
+    this.settle.wake()
+    return new Promise((resolve) => { f.emote = { name, ms: 0, cycle, done: resolve } })
+  }
+
+  private endEmote(f: Live, played: boolean): void {
+    const emote = f.emote
+    if (!emote) return
+    f.emote = null
+    f.actor?.setManual(false)
+    this.settle.wake()
+    emote.done(played)
+  }
+
   /** Swaps a figure's set key (a new batch published hers), weighing the cap again. */
   setFigureSet(id: string, set: string | null, loadSet?: BandFigure['loadSet']): void {
     const f = this.figures.get(id)
@@ -392,6 +429,8 @@ export class BandStage {
 
   private dropActor(f: Live): void {
     if (!f.actor) return
+    // Her sprite goes (a new set, the cap): a one-off on it ends unplayed.
+    this.endEmote(f, false)
     this.scene.remove(f.actor.group, f.actor.shadowMesh)
     f.actor.dispose()
     f.actor = null
@@ -507,6 +546,16 @@ export class BandStage {
       const ms = dt * 1000
       f.standee.update(ms, f.facing, f.moving, f.running)
       f.actor?.update(ms, f.facing, f.moving, f.running && f.moving)
+      if (f.emote && f.actor) {
+        const playing = f.actor.playing
+        if (playing.held) f.actor.releaseHold()
+        f.emote.ms += ms
+        if (playing.done || f.emote.ms >= f.emote.cycle) {
+          this.endEmote(f, true)
+          // Back to her stance in this same frame, so the frame the stage rests on shows it.
+          f.actor.update(0, f.facing, f.moving, f.running && f.moving)
+        } else anyMoving = true
+      }
     }
     this.capClock += dt
     if (this.capDirty || (anyMoving && this.capClock >= CAP_EVERY)) { this.capClock = 0; this.capDirty = false; this.weighCap() }
@@ -608,7 +657,8 @@ export class BandStage {
   get debug(): BandDebug {
     return {
       centre: this.band.centre, settled: this.band.settled,
-      figures: [...this.figures.values()].map((f) => ({ id: f.spec.id, x: f.x, z: f.z, sprite: !!f.actor, moving: f.moving })),
+      figures: [...this.figures.values()].map((f) => ({ id: f.spec.id, x: f.x, z: f.z, sprite: !!f.actor, moving: f.moving,
+        action: f.actor?.action ?? null, emote: f.emote?.name ?? null })),
       liveSets: [...this.liveSet], grade: this.grade, drawCalls: this.renderer.info.render.calls, saver: this.saver, device: { ...this.device },
       scale: this.scale, faded: [...(this.world?.parts ?? [])].filter(([, p]) => p.alpha < 1).map(([id]) => id),
       fps: this.recent.length,

@@ -4,6 +4,7 @@
 import { Texture } from 'three'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { FarmDesign } from '../formats/index.js'
+import { standInSet } from '../sprites/standInSet.js'
 import { SAMPLE_FARM } from '../world/farmSample.js'
 import { standInFarmAtlas } from '../world/standInFarmAtlas.js'
 import { BandStage, type BandStageOptions } from './bandStage.js'
@@ -220,5 +221,113 @@ describe('4. coming to rest', () => {
     s.stop({ draw: true })
     expect(renders.length).toBe(before + 1)
     expect(frames.length).toBe(0)
+  })
+})
+
+describe('6. a one-off action on a figure (ST6)', () => {
+  /** A stand-in set with a three-frame `nod`, 100 ms a frame. */
+  const withNod = () => {
+    const src = standInSet(0), idle = src.set.actions.idle!.frames[0]!
+    src.set.actions.nod = { loop: false, events: {}, frames: [0, 4, 0].map((dy) => ({ ...idle, ms: 100, dy })) }
+    return src
+  }
+  const settle = () => new Promise((r) => setTimeout(r, 0))
+  /** A stage with a live sprite figure 'a' standing near the top, and a standee 'b'. */
+  async function live(options: Partial<BandStageOptions> = {}) {
+    const s = stage(options)
+    s.addFigure({ id: 'a', tile: { x: 4, z: 3 }, set: 'nod-set', loadSet: async () => withNod(), face: null })
+    s.addFigure(figure('b', 5, 3))
+    s.step(); await settle(); s.step()
+    expect(s.debug.figures.find((f) => f.id === 'a')!.sprite).toBe(true)
+    return s
+  }
+  const fig = (s: BandStage, id = 'a') => s.debug.figures.find((f) => f.id === id)!
+  /** Runs frames until the promise settles (or 5 s of frames). */
+  async function until(s: BandStage, p: Promise<boolean>): Promise<boolean | null> {
+    let out: boolean | null = null
+    void p.then((r) => { out = r })
+    for (let i = 0; i < 150 && out === null; i++) { s.step(1 / 30); await Promise.resolve() }
+    return out
+  }
+
+  it('plays the action once, then she goes back to her stance and facing', async () => {
+    const s = await live()
+    const stance = fig(s).action
+    const played = s.emote('a', 'nod')
+    s.step(1 / 30)
+    expect(fig(s)).toMatchObject({ action: 'nod', emote: 'nod' })
+    expect(s.atRest).toBe(false)
+    expect(await until(s, played)).toBe(true)
+    expect(fig(s)).toMatchObject({ action: stance, emote: null })
+  })
+
+  it('plays one pass of a looping action', async () => {
+    const s = await live()
+    const p = s.emote('a', 'idle')
+    let frames = 0, out: boolean | null = null
+    void p.then((r) => { out = r })
+    while (out === null && frames < 200) { s.step(1 / 30); frames++; await Promise.resolve() }
+    expect(out).toBe(true)
+    // Four 220 ms frames: one pass is about 27 frames at 30 fps.
+    expect(frames).toBeGreaterThanOrEqual(26)
+    expect(frames).toBeLessThan(32)
+  })
+
+  it('plays nothing (false) for a standee, a set not live yet, an action she lacks, a walking figure or an unknown id', async () => {
+    const s = await live()
+    expect(await s.emote('b', 'nod')).toBe(false)
+    expect(await s.emote('nobody', 'nod')).toBe(false)
+    expect(await s.emote('a', 'dance')).toBe(false)
+    void s.walkTo('a', { x: 4, z: 7 })
+    s.step()
+    expect(await s.emote('a', 'nod')).toBe(false)
+    const fresh = stage()
+    fresh.addFigure({ id: 'c', tile: { x: 4, z: 3 }, set: 'nod-set', loadSet: async () => withNod(), face: null })
+    expect(await fresh.emote('c', 'nod')).toBe(false)
+  })
+
+  it('is cut short (false) by a walk, a placing, a removal, a new set, a rebuild, or another emote', async () => {
+    const cuts: [string, (s: BandStage) => void][] = [
+      ['walkTo', (s) => void s.walkTo('a', { x: 4, z: 7 })],
+      ['placeFigure', (s) => s.placeFigure('a', { x: 4, z: 3 })],
+      ['removeFigure', (s) => s.removeFigure('a')],
+      ['setFigureSet', (s) => s.setFigureSet('a', 'another-set')],
+      ['setWorld', (s) => s.setWorld(SAMPLE_FARM, kit())],
+      ['emote', (s) => void s.emote('a', 'nod')],
+    ]
+    for (const [name, cut] of cuts) {
+      const s = await live()
+      let out: boolean | null = null
+      void s.emote('a', 'nod').then((r) => { out = r })
+      s.step(1 / 30)
+      cut(s)
+      await Promise.resolve()
+      expect([name, out]).toEqual([name, false])
+    }
+  })
+
+  it('carries on through a rebuild that keeps walks while her tile stands', async () => {
+    const s = await live()
+    const p = s.emote('a', 'nod')
+    s.step(1 / 30)
+    s.setWorld(flooded(0, 23), kit(), { keepWalks: true })
+    expect(fig(s).emote).toBe('nod')
+    expect(await until(s, p)).toBe(true)
+  })
+
+  it('counts as motion: the stage comes to rest only after it, on a frame showing her stance', async () => {
+    let settled = 0, actionAtRest: string | null = null, held: BandStage | null = null
+    const s = await live({ onSettled: () => { settled++; actionAtRest = held ? fig(held).action : null } })
+    held = s
+    run(s, 5)
+    const before = settled, stance = fig(s).action
+    const p = s.emote('a', 'nod')
+    s.step(1 / 30)
+    expect(settled).toBe(before)
+    expect(await until(s, p)).toBe(true)
+    s.step(1 / 30)
+    expect(settled).toBe(before + 1)
+    expect(actionAtRest).toBe(stance)
+    expect(s.atRest).toBe(true)
   })
 })

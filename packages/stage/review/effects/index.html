@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>uma-stage effects</title>
+    <style>
+      html, body { margin: 0; background: #10141c; color: #f4efe4; font: 13px/1.35 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+      .bar { position: absolute; left: 8px; right: 8px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; pointer-events: none; }
+      .bar > * { pointer-events: auto; }
+      .chip { background: rgba(16, 20, 28, 0.78); border-radius: 10px; padding: 6px 9px; }
+      button { font: inherit; color: #10141c; background: #f4efe4; border: 0; border-radius: 9px; padding: 6px 10px; }
+      button[aria-pressed='true'] { background: #f2b84b; }
+      .bubble { position: absolute; transform: translate(-50%, -100%); background: #fff; color: #10141c; border-radius: 8px; padding: 2px 7px;
+        font-weight: 600; pointer-events: none; white-space: nowrap; }
+      .checks { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
+      .checks li::before { content: '○ '; }
+      .checks li.done::before { content: '● '; color: #7fd48a; }
+      .panel { position: absolute; right: 8px; bottom: 8px; width: min(340px, calc(100% - 16px)); background: rgba(16, 20, 28, 0.86); border-radius: 12px; padding: 10px 12px; display: grid; gap: 6px; }
+      .panel label { display: grid; grid-template-columns: 92px 1fr 44px; align-items: center; gap: 6px; }
+      .panel input[type=range] { width: 100%; }
+      table { border-collapse: collapse; width: 100%; font-size: 12px; }
+      td, th { padding: 2px 4px; text-align: left; }
+      .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

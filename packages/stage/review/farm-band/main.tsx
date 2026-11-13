@@ -3,7 +3,8 @@
 // a standee walking a path, and a second season's grade. ST3 (0.3.0) adds fit-to-width (all 9 tiles on a 2× phone) and
 // the occluder fade (a roof in front of a figure or a slot fades). ST4 (0.4.0) adds a figure that doesn't count for the
 // fade (the idler behind the second house leaves its roof whole), a rebuild that keeps the camera and a walk, and the stage
-// saying when it's at rest. Built into docs/stage/previews/farm-band.html by
+// saying when it's at rest. ST6 (0.5.0) has the two workers nod now and then (`emote`), every 4–7 s seeded by their ids,
+// none with reduced motion, as uma-farm's F12 plays it; the stage rests between nods. Built into docs/stage/previews/farm-band.html by
 // `pnpm --filter @luismlorenzana/uma-stage review`. No Uma art: the sprites are the stand-ins, the faces plain drawings.
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -16,6 +17,18 @@ import { standInSet } from '../../src/sprites/standInSet.js'
 import type { FarmDesign } from '../../src/formats/index.js'
 import { SAMPLE_FARM } from '../../src/world/farmSample.js'
 import { standInFarmKit } from '../../src/world/standInFarm.js'
+
+/** A stand-in set with a `nod` (ST6): its one pose dipping four texels and back, 120 ms a frame. */
+function nodding(index: number) {
+  const src = standInSet(index), pose = src.set.actions.idle!.frames[0]!
+  src.set.actions.nod = { loop: false, events: {}, frames: [0, 3, 6, 6, 3, 0].map((dy) => ({ ...pose, ms: 120, dy })) }
+  return src
+}
+/** The next wait before a worker's nod, 4–7 s, from a seed of her id: the workers never move in step. */
+function nodWaits(id: string): () => number {
+  let seed = [...id].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16_777_619), 2_166_136_261) >>> 0
+  return () => { seed = (Math.imul(seed, 1_664_525) + 1_013_904_223) >>> 0; return 4000 + (seed / 2 ** 32) * 3000 }
+}
 
 /** The sample farm with its first crop grown or not: what a rebuild changes (ST4). */
 const grown = (on: boolean): FarmDesign => ({ ...SAMPLE_FARM,
@@ -60,19 +73,24 @@ function FarmBand({ layout }: { layout: StageLayout }) {
   const [fadeSlots, setFadeSlots] = useState(true)
   const [idlerCounts, setIdlerCounts] = useState(false)
   const [rests, setRests] = useState(0)
+  const [nods, setNods] = useState({ played: 0, restedAfter: 0 })
+  const lastNodRests = useRef(-1)
   const [open, setOpen] = useState(true)
   const kit = useRef(standInFarmKit())
   const crop = useRef(false)
 
   useEffect(() => {
-    const s = new BandStage(canvas.current!, { saver: false, fit: 'width', fade: true, onSettled: () => setRests((n) => n + 1) })
+    const s = new BandStage(canvas.current!, { saver: false, fit: 'width', fade: true, onSettled: () => {
+      setRests((n) => n + 1)
+      setNods((n) => (n.played > lastNodRests.current ? (lastNodRests.current = n.played, { ...n, restedAfter: n.restedAfter + 1 }) : n))
+    } })
     stage.current = s
     s.setGrade(GRADES.Spring!)
     s.setWorld(grown(crop.current), kit.current)
     // The walker: a standee (no set), and two stand-in sprite sets at work under the cap.
     s.addFigure({ id: 'walker', tile: { x: 4, z: 24 }, set: null, face: plainFace('#6a4ad0', '#ffd27a'), facing: 'back' })
-    s.addFigure({ id: 'worker-1', tile: { x: 1, z: 22 }, set: 'stand-in-0', loadSet: async () => standInSet(0), face: null })
-    s.addFigure({ id: 'worker-2', tile: { x: 4, z: 18 }, set: 'stand-in-1', loadSet: async () => standInSet(1), face: null })
+    s.addFigure({ id: 'worker-1', tile: { x: 1, z: 22 }, set: 'stand-in-0', loadSet: async () => nodding(0), face: null })
+    s.addFigure({ id: 'worker-2', tile: { x: 4, z: 18 }, set: 'stand-in-1', loadSet: async () => nodding(1), face: null })
     s.addFigure({ id: 'helper', tile: { x: 7, z: 18 }, set: null, face: plainFace('#c0503a', '#9fd8b0') })
     // Behind the Sawmill's roof: it fades so she shows through (ST3).
     s.addFigure({ id: 'miller', tile: { x: 4, z: 2 }, set: 'stand-in-2', loadSet: async () => standInSet(2), face: null })
@@ -89,7 +107,18 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     }
     follow()
     ;(window as unknown as { __band: BandStage }).__band = s
-    return () => { cancelAnimationFrame(raf); s.dispose(); stage.current = null }
+    // ST6: each worker nods every 4–7 s (seeded by her id), none with reduced motion; the game owns the timing.
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    const timers: number[] = []
+    if (!reduced) for (const id of ['worker-1', 'worker-2']) {
+      const wait = nodWaits(id)
+      const next = () => { timers.push(window.setTimeout(() => {
+        void s.emote(id, 'nod').then((played) => { if (played) setNods((n) => ({ ...n, played: n.played + 1 })) })
+        next()
+      }, wait())) }
+      next()
+    }
+    return () => { cancelAnimationFrame(raf); for (const t of timers) clearTimeout(t); s.dispose(); stage.current = null }
   }, [])
 
   useEffect(() => { stage.current?.resize(layout.width, layout.height, window.devicePixelRatio) }, [layout.width, layout.height])
@@ -127,6 +156,7 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     ['All 9 tiles across (fit-to-width)', true], ['A roof fades over a figure behind it', true],
     ["A roof stays whole over a figure who doesn't count (ST4)", !idlerCounts], ['A rebuild keeps the camera and a walk (ST4)', done.kept],
     [`The stage says when it's at rest (ST4): ${rests}`, rests > 0],
+    [`Workers nod now and then (ST6): ${nods.played}`, nods.played > 0], [`…and the stage rests between nods (ST6): ${nods.restedAfter}`, nods.restedAfter > 0],
   ]
   return (
     <div style={{ position: 'absolute', inset: 0 }}>

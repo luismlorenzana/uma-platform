@@ -1,6 +1,6 @@
 # @luismlorenzana/uma-stage
 
-The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145; ST3, P146; ST4, P154): a three.js world built from 2D kits, pixel sprites
+The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145; ST3, P146; ST4, P154; ST5, ST6, P156): a three.js world built from 2D kits, pixel sprites
 from master data, lights, fog and post effects, on uma-kit's turned landscape stage or a portrait one. It began as
 uma-quest's engine (its P90) and is shared now that uma-farm is its second user (P11). Private; personal use only.
 
@@ -94,10 +94,39 @@ compiles an opaque material's shader to write alpha 1 whatever its opacity. The 
 when it starts or stops fading (`needsUpdate`, once a toggle; three.js caches both programs). The sample only showed
 0.3.0's fade because its miller stood behind the Sawmill from the first frame.
 
+### ST5 and ST6 (0.5.0): a tunable post layer and a one-off action
+
+**ST5, uma-cyberpunk's CY7 request (its D11):** `Effects` takes options and changes live. A game that passes nothing
+draws as before: the same passes and uniforms (uma-quest's `StageEngine` and uma-farm's `BandStage` pass nothing).
+
+| Call | What it does |
+|---|---|
+| `new Effects(renderer, scene, camera, { bloom?: { strength, radius, threshold }, tiltShift?: { strength, focus } \| false })` | Each value falls back to `BLOOM` (0.35, 0.4, 0.86) and `TILT_SHIFT` (1.6, 0.5); `tiltShift: false` skips its two passes |
+| `effects.set({ … })` | Changes only the values given, live (a cut-in's flash, a menu dimming the board); `tiltShift: {}` brings it back with its last values |
+| `effects.settings` | The values in use |
+
+The bloom keeps texels whose linear luminance (0.299 R + 0.587 G + 0.114 B) passes `threshold`: at 0.86 only near-white
+glows; saturated cyan (`#2ee6ff`, 0.587) needs 0.58 or less, a warm lamp (`#ffb84d`) 0.58, magenta (`#ff3dc8`) 0.39. The
+battery saver still turns the whole layer off. Review page: [effects.html](../../docs/stage/previews/effects.html).
+
+**ST6, uma-farm F12's request (its D77):** `BandStage.emote(id, name): Promise<boolean>` plays one action once on a
+figure (one pass of a looping one) and puts her back to her stance and facing; it resolves true when it ends.
+
+| Case | Result |
+|---|---|
+| A standee, or a set not live yet; an action her set lacks; a figure walking; an unknown id | `false` at once, nothing played |
+| `walkTo`, `placeFigure`, `removeFigure`, a new set (or the cap dropping hers), another `emote` | Cut short: `false` |
+| `setWorld` | Cut short, unless it keeps walks and her tile still stands |
+| While it plays | It's motion: `onSettled` and `atRest` wait for it, and the stage rests on a frame showing her stance |
+
+When to play and what is the game's (the farm's seeded 4–7 s nod), and so is reduced motion. `debug.figures` now shows
+each figure's `action` and `emote`.
+
 **The review page:** [docs/stage/previews/farm-band.html](../../docs/stage/previews/farm-band.html), a portrait stand-in
 farm band (`SAMPLE_FARM` on the stand-in `farm` kit) at phone width, built by `pnpm --filter @luismlorenzana/uma-stage review`.
 ST4 adds an idler behind the second house who doesn't count (its roof stays whole; a toggle counts her), a rebuild
-button that grows a crop mid-walk (the camera and the walk stay), and a count of the times the stage came to rest.
+button that grows a crop mid-walk (the camera and the walk stay), and a count of the times the stage came to rest. ST6
+has the two workers nod every 4–7 s, seeded by their ids, and counts the rests between nods.
 
 ## What a game hands in
 
