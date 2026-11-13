@@ -206,6 +206,25 @@ ST2 only after ST1 is checked.
 | ST5 | `uma-stage` minor, uma-cyberpunk's first request (its CY7, D11): `Effects` options for bloom (strength, radius, threshold) and tilt-shift (strength, focus, or off), with a setter; today's constants stay the defaults, byte for byte | Claude | S | uma-cyberpunk's request ✓ | **Done** (P156): `uma-stage` 0.5.0 with ST6; below |
 | ST6 | `uma-stage` minor, uma-farm F12's request (its D77, sent as "ST5"): `BandStage.emote(id, name): Promise<boolean>` plays one action once on a live sprite figure, then back to her stance; `false` with nothing played for a standee, a set not live, an unknown action, a walking figure or an unknown id; cut short (`false`) by `walkTo`, `placeFigure`, `removeFigure`, `setFigureSet` or a `setWorld` that drops her; a playing emote counts as motion for `onSettled`, `atRest` and the saver's pacer; the farm keeps the timing and the reduced-motion rule. Done when each case has a test, the farm-band sample nods now and then and settles between, uma-quest is unchanged | Claude | S | The owner's go there ✓ | **Done** (P156): `uma-stage` 0.5.0 with ST5; below |
 
+## The look (LK)
+
+The owner, 2026-11-13: the gameplay and the engine are liked, the look reads as 1999. The research is
+[look/hd2d-quality.md](../look/hd2d-quality.md) ([page](../look/previews/hd2d-quality.html), LR1–LR14, P157): the gap is
+art direction, volume, staged light, shadows, focus and per-scene post, not the phone or texture resolution; the way is a
+measured look slice first, with the owner's eye against references as the gate.
+
+| Id | What | Who | Size | Needs | State |
+|---|---|---|---|---|---|
+| LK0 | The target: 15–30 reference frames in `content/authoring/look/` (own captures or press material), the hero scene (recommended: a town square by day with one interior), a yes or no on buying asset packs | The owner | ~1 h | — | **Waiting on the owner** |
+| [LK1](tasks/LK1-look-slice.md) | The look slice: one hero scene to the target in an opt-in uma-stage look path, the target still in Blender first, measured on the iPhone, judged beside the references | Claude, art sourced or painted | L | LK0, the owner's go | Written ahead |
+| LK2 | The pipeline from the slice: kit format v2 (2D, 2.5D, 3D; texel density; glTF pieces), the importer, sprite normal maps, the look measures, a look-tuning page | Claude | M | LK1's bar | After LK1 |
+| LK3 | Roll-out, each game opt-in by the change protocol: uma-quest's towns and dungeons, uma-farm's band, uma-cyberpunk's board | Each game's session; uma-stage minors here | M each | LK2 | After LK2 |
+| LK4 | Only if LK1 can't hold its budgets on the phone: the same slice in Godot 4 or Unity, side by side | Claude | M | LK1's measurements | Only if needed |
+
+**Proposed, for the owner (LR9):** environment art stops being drawn in code (P147's kits); environments come from
+licensed packs, CC0 shapes re-textured, AI-painted textures and Claude-scripted Blender volume, with Claude on the tools,
+shaders and pipeline. Code-drawn art stays for interface marks and icons.
+
 ## Releases while packets run in parallel
 
 Several packets release uma-kit; three create packages (`uma-work`, `uma-server`).

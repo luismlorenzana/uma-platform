@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HD-2D Quality Research</title>
+<!-- The look research (docs/look/hd2d-quality.md, LR1-LR14, P157) on one page: what HD-2D is per its developers, our
+     audit, the GPU budget, textures, quality control, assets, the approach (LK0-LK4) and the calls. Self-contained,
+     uma-kit's tokens, light and dark. No copyrighted game frames: our own captures only. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .answer { background: var(--raised); border-radius: 10px; padding: 12px 14px; }
+  .answer b { display: block; color: var(--ink); margin-bottom: 4px; }
+  .answer p { margin: 0; font-size: 13px; }
+  figure { margin: 0; }
+  figure img { width: 100%; border-radius: 10px; display: block; background: var(--sunken); }
+  figcaption { font-size: 12px; color: var(--ink-faint); margin-top: 6px; }
+  .pill.big { background: color-mix(in srgb, var(--danger) 16%, var(--panel)); color: var(--danger); }
+  .pill.mid { background: var(--accent-wash); color: var(--accent); }
+  .pill.ok { background: var(--success-wash); color: var(--success); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); border-top: 3px solid var(--hairline-strong); }
+  .step b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 3px; }
+  .step.next { border-top-color: var(--info); }
+  .step.maybe { border-top-style: dashed; }
+  .chart { position: relative; }
+  .chart svg text { font: 12px system-ui, sans-serif; fill: var(--ink-soft); }
+  .chart svg text.v { font-weight: 700; fill: var(--ink); }
+  .chart .bar { fill: var(--info); }
+  .chart .bar:hover { fill: color-mix(in srgb, var(--info) 80%, var(--ink)); }
+  .chart .axis { stroke: var(--hairline-strong); }
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--page); font: 500 12px system-ui; padding: 5px 8px; border-radius: 6px; opacity: 0; transition: opacity .1s; white-space: nowrap; }
+  details summary { cursor: pointer; font-size: 12px; color: var(--info); margin-top: 8px; }
+  ol li, ul li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>The look: what AAA HD-2D takes, and how we get there</h1>
+  <p>The owner likes the gameplay and the engine; the look reads as 1999. This page answers the owner's questions with
+    sources, audits the stage and its art, and proposes the way to Octopath Traveler's quality. The doc is
+    <a href="../hd2d-quality.md">hd2d-quality.md</a> (calls LR1–LR14, decision P157); the packets are LK0–LK4 in
+    <a href="../../handoff/README.md#the-look-lk">the handoff</a>. No game's copyrighted frames appear here: only our own captures.</p>
+  <nav>
+    <a href="#answers">The short answers</a>
+    <a href="#hd2d">What HD-2D is</a>
+    <a href="#audit">Where we are</a>
+    <a href="#gpu">The phone's budget</a>
+    <a href="#quality">Judging quality</a>
+    <a href="#assets">Assets</a>
+    <a href="#approach">The approach</a>
+    <a href="#calls">The calls</a>
+  </nav>
+
+  <div class="tiles">
+    <div class="tile"><b>5.4×</b><span>an iPhone 15 Pro's GPU against the Switch Octopath ran on (docked)</span></div>
+    <div class="tile"><b>720p · 30 fps</b><span>Octopath on Switch; about 576p handheld</span></div>
+    <div class="tile"><b>Not resolution</b><span>art direction, volume, staged light, shadows and focus make the look</span></div>
+    <div class="tile"><b>LK1</b><span>next: one hero scene to the target, measured on the phone</span></div>
+    <div class="tile"><b>0</b><span>new cloud resources; asset packs only if the owner says yes</span></div>
+  </div>
+
+  <section class="card" id="answers">
+    <h2>The short answers</h2>
+    <div class="answers">
+      <div class="answer"><b>Our potential and limit, against Octopath?</b><p>The hardware isn't the limit. The limits are the art we feed the stage, its lighting and camera model, and how we judge quality.</p></div>
+      <div class="answer"><b>Tied by mobile and JavaScript?</b><p>Not for the look. Shaders run on the GPU through Metal either way; a diorama is light on draw calls. Real limits: memory, heat, a young WebGPU on iOS, no engine editor. All workable.</p></div>
+      <div class="answer"><b>Do textures need very high resolution?</b><p>No. Octopath's sprites are small and it renders at 720p or less. We draw more pixels than it does and look worse. Consistent pixel density and rendering layers matter.</p></div>
+      <div class="answer"><b>How do we truly approach it?</b><p>As Square Enix did: target with references, prototype one scene until it's right, measure on the phone, then build the pipeline. LK1 is that slice.</p></div>
+      <div class="answer"><b>"Claude can't tell the quality."</b><p>True. My checks are technical, and I passed kits a trained eye would reject. The owner's eye against references becomes the gate; my checks only flag flat images.</p></div>
+      <div class="answer"><b>A reference and quality assets to import?</b><p>Yes: a private reference library for every review, and a glTF import pipeline for licensed packs, CC0 models and painted textures. Licensed sources stay private.</p></div>
+    </div>
+  </section>
+
+  <section class="card" id="hd2d">
+    <h2>What HD-2D is, from the people who made it</h2>
+    <p>Octopath Traveler (2018, Unreal Engine 4), in its developers' talks: CEDEC+KYUSHU 2018, Unreal Fest East 2018,
+      Square Enix's 2023 HD-2D video and the Octopath II interviews.</p>
+    <div class="scroll"><table>
+      <tr><th>Layer</th><th>What Octopath does</th><th>Ours today</th><th>Gap</th></tr>
+      <tr><td><b>Camera</b></td><td>Perspective 3D scenes, a diorama seen from slightly above; the camera sways a little in battle, locks at big moments</td><td>Orthographic, pitched 35°, one texel a device pixel</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Volume</b></td><td>By size: smaller than a character is a 2D sprite, character-sized is 2.5D (3D with no back: trees, rocks), larger is full 3D</td><td>Every frame a quad: floors, upright walls, cards</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Sprites</b></td><td>Pixel sprites under a fixed, staged spotlight (realistic light made them look like paper); about 350 images a character</td><td>Unlit, with a colour tint and a soft round shadow</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>World light</b></td><td>Restrained on painted pixels; 3D light on 2.5D objects; ambient light so shadows aren't black; dramatic per scene</td><td>Lambert under a hemisphere, one sun, four lamps; no shadows</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Focus</b></td><td>The focal area crisp, the rest blurred on purpose by depth, so the frame reads as more detailed</td><td>A screen-space blur, not by depth</td><td><span class="pill mid">Medium</span></td></tr>
+      <tr><td><b>Post</b></td><td>Per-scene grading, bloom, bokeh depth of field, lens flare, ambient cubemap, vignette, a little chromatic aberration</td><td>Bloom at 0.86 (only white glows); no tone mapping or grading; off under the saver</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Atmosphere</b></td><td>Particles, light shafts, water, motion everywhere</td><td>Linear fog; lamp flicker</td><td><span class="pill mid">Medium</span></td></tr>
+      <tr><td><b>Art</b></td><td>One art direction, one pixel density, late-SNES detail</td><td>Painted top-down kits, code-drawn kits, smooth 256 px characters: three styles</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Process</b></td><td>The look prototyped in Maya first, then matched in engine; tuned per scene by artists</td><td>Kits approved one by one, no references</td><td><span class="pill big">Big</span></td></tr>
+      <tr><td><b>Resolution</b></td><td>720p docked, about 576p handheld, 30 fps</td><td>Native 3× phone density (more pixels than Octopath)</td><td><span class="pill ok">Not the gap</span></td></tr>
+    </table></div>
+  </section>
+
+  <section class="card" id="audit">
+    <h2>Where we are, in our own captures</h2>
+    <div class="two">
+      <figure><img src="../../../assets/authored/kit-forest/review/room-1x.png" alt="The forest kit's review room: a painted top-down tile map, evenly lit"><figcaption>The painted forest kit: good painting, but even light, no shadows and no depth read as a mobile tile map.</figcaption></figure>
+      <figure><img src="../../../assets/authored/kit-town-mage/review/town-1x.png" alt="The code-drawn Mage town kit with stand-in figures"><figcaption>A code-drawn town kit (P147) with stand-in figures: the "1999" look the owner means.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="card" id="gpu">
+    <h2>The phone's budget</h2>
+    <p>Peak 32-bit GPU throughput, in TFLOPS (third-party databases, theoretical). Octopath ran at 720p and 30 fps on the Switch's docked figure.</p>
+    <div class="chart" id="gpuchart"></div>
+    <details><summary>Show as a table</summary>
+      <table id="gputable"><tr><th>Device</th><th class="num">TFLOPS</th><th>Note</th></tr></table>
+    </details>
+    <div class="two" style="margin-top:12px">
+      <div><h3>Not limits</h3><ul>
+        <li><b>GPU power:</b> at native 3× density an iPhone 15 Pro has about 1.6× Octopath's budget per pixel; rendering the 3D scene at 2× and upscaling gives several times that.</li>
+        <li><b>JavaScript:</b> it costs CPU per draw call, and a diorama is a few hundred.</li>
+        <li><b>The API:</b> three.js r187 (pinned) has cascaded sun shadows, clustered lights, and bloom, depth of field and ambient occlusion passes, on WebGL 2 too.</li>
+      </ul></div>
+      <div><h3>Real limits, and the answer</h3><ul>
+        <li><b>Memory:</b> Safari kills heavy pages, with no published cap: a budget of about 400 MB a scene.</li>
+        <li><b>Heat:</b> 30 fps exploring, a saver tier.</li>
+        <li><b>WebGPU on iOS 26</b> is young: WebGL 2 now, WebGPU when steady.</li>
+        <li><b>No editor:</b> a small look-tuning page instead (LK2).</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="card" id="quality">
+    <h2>Judging quality: the honest part</h2>
+    <p>My checks catch seams, edges, sizes and repeats. They say nothing about beauty, and I called kits done because they
+      passed them. I compare two images well; I can't hold an absolute bar without a target. The fix:</p>
+    <ol>
+      <li><b>A private reference library</b> of the target games' frames, tagged by scene type (LR11).</li>
+      <li><b>Every look review side by side</b>, our frame beside two or three references at phone scale; the owner decides.</li>
+      <li><b>Look measures</b> on every capture against the references' ranges: luminance spread, saturation spread, share in shadow, share blurred, texel density of sprites against the world, palette size, focus-band sharpness. They flag flat images; they don't judge taste (LR12).</li>
+      <li><b>Nothing visual ships unapproved</b> (LR13).</li>
+      <li><b>The target as a still first</b>, a Blender render of the hero scene, as Octopath prototyped in Maya (LR14).</li>
+    </ol>
+  </section>
+
+  <section class="card" id="assets">
+    <h2>Importing high-quality assets</h2>
+    <div class="scroll"><table>
+      <tr><th>Source</th><th>Fits HD-2D?</th><th>Licence</th><th>Cost</th><th>Use it for</th></tr>
+      <tr><td><b>Licensed packs</b> (itch.io, Unity Asset Store)</td><td><span class="pill ok">Some</span></td><td>Unity's standard licence allows other engines when built into the game, not redistributed</td><td>$5–$60</td><td>Environment pieces at quality, quickly</td></tr>
+      <tr><td><b>CC0 models</b> (Kenney, Quaternius)</td><td><span class="pill mid">Shapes</span></td><td>CC0</td><td>Free</td><td>Houses, props and rocks to re-texture</td></tr>
+      <tr><td><b>CC0 textures, HDRIs</b> (Poly Haven)</td><td><span class="pill big">Photoreal</span></td><td>CC0</td><td>Free</td><td>Light probes and reference</td></tr>
+      <tr><td><b>AI-painted textures</b> (ChatGPT, Draw Things)</td><td><span class="pill ok">With a style guide</span></td><td>Ours</td><td>Free</td><td>Textures, trims and decals at volume</td></tr>
+      <tr><td><b>Blender, scripted by Claude</b></td><td><span class="pill ok">Yes</span></td><td>Ours</td><td>Free</td><td>Building volume on the kit's grid</td></tr>
+      <tr><td><b>Code-drawn shapes</b> (P147 today)</td><td><span class="pill big">No</span></td><td>Ours</td><td>Free</td><td>Interface marks and icons only</td></tr>
+    </table></div>
+    <p class="note">Licensed sources stay private and reach the games only as built kits in master data's private release (LR10). The import path: glTF and textures, cleaned in Blender, into kit format v2 (2D, 2.5D or 3D; texel density).</p>
+  </section>
+
+  <section class="card" id="approach">
+    <h2>The approach</h2>
+    <div class="steps">
+      <div class="step"><b>LK0 · the target</b>The owner: 15–30 reference frames, the hero scene (a town square by day, with one interior), and a yes or no on asset packs. About an hour.</div>
+      <div class="step next"><b>LK1 · the look slice</b>One hero scene in an opt-in uma-stage look path: perspective camera, the volume rule, staged and normal-mapped sprites, silhouette shadows, ambient occlusion, depth of field by depth, HDR bloom, tone mapping and grading, fog, light shafts, particles, wind, water. Measured on the iPhone for ten minutes.</div>
+      <div class="step"><b>LK2 · the pipeline</b>Kit format v2, the glTF importer, sprite normal maps, the look measures, a look-tuning page.</div>
+      <div class="step"><b>LK3 · roll-out</b>Each game opt-in by the change protocol: uma-quest, then uma-farm, then uma-cyberpunk.</div>
+      <div class="step maybe"><b>LK4 · only if LK1 fails</b>The same slice in Godot 4 or Unity, side by side.</div>
+    </div>
+    <div class="two" style="margin-top:12px">
+      <div><h3>Device tiers (LR7)</h3><table>
+        <tr><th>Tier</th><th>What it draws</th></tr>
+        <tr><td><b>High</b></td><td>Everything; 30 fps exploring, 60 in battle where it holds (iPhone 13 and later)</td></tr>
+        <tr><td><b>Medium</b></td><td>Half-resolution depth of field and ambient occlusion; no light shafts</td></tr>
+        <tr><td><b>Saver</b></td><td>No post layer, baked shadows, as today</td></tr>
+      </table></div>
+      <div><h3>Budgets (LR6) and cost</h3><table>
+        <tr><th>Item</th><th>Target</th></tr>
+        <tr><td>Frame rate</td><td>30 fps sustained over ten minutes</td></tr>
+        <tr><td>GPU memory</td><td>About 400 MB a scene</td></tr>
+        <tr><td>First load</td><td>Under about 15 MB a scene, cached after</td></tr>
+        <tr><td>Asset packs</td><td>$5–$60 each, if the owner says yes</td></tr>
+        <tr><td>Cloud</td><td>Existing private buckets; no new resource</td></tr>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <table id="callstable"></table>
+  </section>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+const GPU = [
+  { device: 'Switch, handheld', t: 0.157, note: 'Octopath at about 576p, 30 fps' },
+  { device: 'Switch, docked', t: 0.393, note: 'Octopath at 720p, 30 fps' },
+  { device: 'iPhone 15 Pro (A17 Pro)', t: 2.147, note: 'Our phone class; 3.3× the pixels of 720p at native density' },
+]
+function drawChart() {
+  const el = document.getElementById('gpuchart'), w = Math.max(320, el.clientWidth), rowH = 34, left = 170, right = 70
+  const max = 2.5, x = (v) => left + (v / max) * (w - left - right)
+  let svg = `<svg viewBox="0 0 ${w} ${GPU.length * rowH + 28}" role="img" aria-label="GPU throughput: Switch handheld 0.16, docked 0.39, iPhone 15 Pro 2.15 TFLOPS">`
+  for (const tick of [0, 0.5, 1, 1.5, 2, 2.5]) svg += `<line class="axis" x1="${x(tick)}" x2="${x(tick)}" y1="0" y2="${GPU.length * rowH}" stroke-dasharray="${tick ? '2 4' : ''}"/><text x="${x(tick)}" y="${GPU.length * rowH + 18}" text-anchor="middle">${tick}</text>`
+  GPU.forEach((d, i) => {
+    const y = i * rowH + 8, h = 18, bw = Math.max(4, x(d.t) - left)
+    svg += `<text x="${left - 10}" y="${y + 13}" text-anchor="end">${d.device}</text>`
+    svg += `<path class="bar" data-i="${i}" d="M${left},${y} h${bw - 4} a4,4 0 0 1 4,4 v${h - 8} a4,4 0 0 1 -4,4 h${-(bw - 4)} z"/>`
+    svg += `<text class="v" x="${left + bw + 6}" y="${y + 13}">${d.t.toFixed(2)}</text>`
+  })
+  el.innerHTML = svg + '</svg>'
+  const tip = document.getElementById('tip')
+  el.querySelectorAll('.bar').forEach((b) => {
+    b.addEventListener('mousemove', (e) => { const d = GPU[b.dataset.i]; tip.textContent = `${d.device}: ${d.t.toFixed(2)} TFLOPS · ${d.note}`; tip.style.left = e.pageX + 12 + 'px'; tip.style.top = e.pageY - 28 + 'px'; tip.style.opacity = 1 })
+    b.addEventListener('mouseleave', () => { tip.style.opacity = 0 })
+  })
+  const t = document.getElementById('gputable')
+  t.innerHTML = '<tr><th>Device</th><th class="num">TFLOPS</th><th>Note</th></tr>' + GPU.map((d) => `<tr><td>${d.device}</td><td class="num">${d.t.toFixed(3)}</td><td>${d.note}</td></tr>`).join('')
+}
+const CALLS = [
+  ['LR1', 'HD-2D quality comes from art direction, the 2D/2.5D/3D rule, staged light, shadows, focus and per-scene post, not texture resolution or polygons'],
+  ['LR2', "The phone's GPU isn't the limit: an iPhone 15 Pro has about five times the GPU of Octopath's Switch"],
+  ['LR3', 'Stay on the web stack (three.js r187, WebGL 2, WebGPU later); a native engine only if LK1 fails on the phone'],
+  ['LR4', 'No high-resolution textures: one consistent pixel scale across sprites and environment'],
+  ['LR5', 'Render the 3D scene at a lower internal resolution and upscale; the interface stays sharp (retires CR3 for the look path)'],
+  ['LR6', 'Budgets: 30 fps over ten minutes, about 400 MB of GPU memory and a first load under about 15 MB a scene'],
+  ['LR7', 'Three device tiers: High, Medium, Saver'],
+  ['LR8', "The look path is new and opt-in in uma-stage; today's stage keeps working until each game moves"],
+  ['LR9', 'Assets from licensed packs, CC0 models, AI-painted textures and Claude-scripted Blender volume; code-drawn shapes only for interface marks (proposes amending P147)'],
+  ['LR10', "Licensed sources stay private and reach games only through master data's private release; CC0 and our own art may go to uma-art"],
+  ['LR11', 'A private reference library of target frames, tagged by scene type, in every look review'],
+  ['LR12', "Look measures on every capture against the references' ranges: they flag flat images, they don't judge taste"],
+  ['LR13', "Nothing visual reaches a game without the owner's look approval against the references"],
+  ['LR14', 'Prototype the target as a still first (a Blender render), then match it in the engine'],
+]
+document.getElementById('callstable').innerHTML = '<tr><th>Id</th><th>Call</th></tr>' + CALLS.map(([id, c]) => `<tr><td class="id">${id}</td><td>${c}</td></tr>`).join('')
+drawChart()
+addEventListener('resize', drawChart)
+</script>
+</body>
+</html>
