@@ -3,7 +3,7 @@
 // the game names, a bubble's anchor) fades while it covers it. Coverage is read on the camera's own plane (x across, u
 // up), where the camera's pan only shifts everything alike, so it needs no camera. And a farm wider than a 2× phone
 // scales down to fit its width. Pure.
-import type { FarmMarker, FarmMarkerKind, KitAtlas } from '../formats/index.js'
+import type { FarmMarker, FarmMarkerKind, KitAtlas, Tile } from '../formats/index.js'
 import type { FarmWorld, Quad } from '../world/farm.js'
 import type { Vec3 } from '../world/geometry.js'
 import { CAMERA_PITCH, TEXELS_PER_UNIT } from './camera.js'
@@ -25,6 +25,17 @@ export interface FadeOptions {
   ms?: number
 }
 export const FADE_DEFAULTS: Required<FadeOptions> = { opacity: 0.35, markers: ['slot', 'gate', 'lot'], ms: 150 }
+
+/** A figure as the fade's figure test sees her (ST4): her id, the tile she's on and whether she's walking. */
+export interface FadeFigure { id: string; tile: Tile; moving: boolean }
+/** Which figures count for the fade (ST4): these ids, or any test. Every figure counts until a game says otherwise. */
+export type FadeFigures = readonly string[] | ((figure: FadeFigure) => boolean)
+/** The test a `FadeFigures` stands for. */
+export function figureFilter(which: FadeFigures): (figure: FadeFigure) => boolean {
+  if (typeof which === 'function') return which
+  const ids = new Set(which)
+  return (figure) => ids.has(figure.id)
+}
 
 const SIN = Math.sin(CAMERA_PITCH), COS = Math.cos(CAMERA_PITCH)
 /** A point's height on the camera's plane. */

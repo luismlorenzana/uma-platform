@@ -1,7 +1,9 @@
 // ST2's review page (uma-stage 0.2.0): a portrait stand-in farm band on the band stage, built from the stand-in `farm`
 // kit, as uma-farm's F57 asks to see it: a building from sets, a mounted piece, a two-column door, a tap that picks a slot,
 // a standee walking a path, and a second season's grade. ST3 (0.3.0) adds fit-to-width (all 9 tiles on a 2× phone) and
-// the occluder fade (a roof in front of a figure or a slot fades). Built into docs/stage/previews/farm-band.html by
+// the occluder fade (a roof in front of a figure or a slot fades). ST4 (0.4.0) adds a figure that doesn't count for the
+// fade (the idler behind the second house leaves its roof whole), a rebuild that keeps the camera and a walk, and the stage
+// saying when it's at rest. Built into docs/stage/previews/farm-band.html by
 // `pnpm --filter @luismlorenzana/uma-stage review`. No Uma art: the sprites are the stand-ins, the faces plain drawings.
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -11,8 +13,13 @@ import type { PickHit } from '../../src/stage/pick.js'
 import { toStage, type StageLayout } from '../../src/stage/turn.js'
 import { TurnedStage } from '../../src/stage/TurnedStage.js'
 import { standInSet } from '../../src/sprites/standInSet.js'
+import type { FarmDesign } from '../../src/formats/index.js'
 import { SAMPLE_FARM } from '../../src/world/farmSample.js'
 import { standInFarmKit } from '../../src/world/standInFarm.js'
+
+/** The sample farm with its first crop grown or not: what a rebuild changes (ST4). */
+const grown = (on: boolean): FarmDesign => ({ ...SAMPLE_FARM,
+  props: (SAMPLE_FARM.props ?? []).map((p) => (p.x === 0 && p.z === 0 ? { ...p, name: on ? 'crop-growing' : 'crop-sprout' } : p)) })
 
 /** The seasons as light (KF10): the farm's own values are uma-farm's; these only show the stage taking them. */
 const GRADES: Record<string, StageGrade> = {
@@ -49,15 +56,19 @@ function FarmBand({ layout }: { layout: StageLayout }) {
   const bubble = useRef<HTMLDivElement>(null)
   const [tapped, setTapped] = useState('Tap a slot: the standee walks there.')
   const [season, setSeason] = useState('Spring')
-  const [done, setDone] = useState({ tap: false, walk: false, grade: false })
+  const [done, setDone] = useState({ tap: false, walk: false, grade: false, kept: false })
   const [fadeSlots, setFadeSlots] = useState(true)
+  const [idlerCounts, setIdlerCounts] = useState(false)
+  const [rests, setRests] = useState(0)
   const [open, setOpen] = useState(true)
+  const kit = useRef(standInFarmKit())
+  const crop = useRef(false)
 
   useEffect(() => {
-    const s = new BandStage(canvas.current!, { saver: false, fit: 'width', fade: true })
+    const s = new BandStage(canvas.current!, { saver: false, fit: 'width', fade: true, onSettled: () => setRests((n) => n + 1) })
     stage.current = s
     s.setGrade(GRADES.Spring!)
-    s.setWorld(SAMPLE_FARM, standInFarmKit())
+    s.setWorld(grown(crop.current), kit.current)
     // The walker: a standee (no set), and two stand-in sprite sets at work under the cap.
     s.addFigure({ id: 'walker', tile: { x: 4, z: 24 }, set: null, face: plainFace('#6a4ad0', '#ffd27a'), facing: 'back' })
     s.addFigure({ id: 'worker-1', tile: { x: 1, z: 22 }, set: 'stand-in-0', loadSet: async () => standInSet(0), face: null })
@@ -65,6 +76,9 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     s.addFigure({ id: 'helper', tile: { x: 7, z: 18 }, set: null, face: plainFace('#c0503a', '#9fd8b0') })
     // Behind the Sawmill's roof: it fades so she shows through (ST3).
     s.addFigure({ id: 'miller', tile: { x: 4, z: 2 }, set: 'stand-in-2', loadSet: async () => standInSet(2), face: null })
+    // Behind the second house, but she doesn't count for the fade (ST4): its roof stays whole.
+    s.addFigure({ id: 'idler', tile: { x: 7, z: 15 }, set: null, face: plainFace('#3a8a5a', '#f2e6d0') })
+    s.setFadeFigures((f) => f.id !== 'idler')
     s.scrollTo(SAMPLE_FARM.cells.length, true)
     s.start()
     let raf = 0
@@ -93,6 +107,15 @@ function FarmBand({ layout }: { layout: StageLayout }) {
       void s.walkTo('walker', { x: to.x, z: to.z }).then((arrived) => { if (arrived) setDone((d) => ({ ...d, walk: true })) })
     }
   }
+  /** A rebuild mid-walk (a crop grows): the camera and the walk stay (ST4). */
+  const rebuild = () => {
+    const s = stage.current
+    if (!s) return
+    const walking = s.debug.figures.find((f) => f.id === 'walker')?.moving ?? false
+    crop.current = !crop.current
+    s.setWorld(grown(crop.current), kit.current, { keepCamera: true, keepWalks: true })
+    if (walking && s.debug.figures.find((f) => f.id === 'walker')?.moving) setDone((d) => ({ ...d, kept: true }))
+  }
   const pick = (name: string) => {
     setSeason(name)
     stage.current?.setGrade(GRADES[name]!, 900)
@@ -102,6 +125,8 @@ function FarmBand({ layout }: { layout: StageLayout }) {
     ['A building from sets', true], ['A mounted piece (sails, chimneys, boxes)', true], ['A two-column door (Barn, Warehouse)', true],
     ['A tap that picks a slot', done.tap], ['A standee walking a path', done.walk], ["A second season's grade", done.grade],
     ['All 9 tiles across (fit-to-width)', true], ['A roof fades over a figure behind it', true],
+    ["A roof stays whole over a figure who doesn't count (ST4)", !idlerCounts], ['A rebuild keeps the camera and a walk (ST4)', done.kept],
+    [`The stage says when it's at rest (ST4): ${rests}`, rests > 0],
   ]
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
@@ -118,6 +143,9 @@ function FarmBand({ layout }: { layout: StageLayout }) {
         <button onClick={() => void stage.current?.walkTo('walker', { x: 4, z: 24 }, { run: true })}>Run to the gate</button>
         <button aria-pressed={fadeSlots} onClick={() => { const on = !fadeSlots; setFadeSlots(on); stage.current?.setFadeMarkers(on ? ['slot', 'gate', 'lot'] : []) }}>
           {fadeSlots ? 'Fade for slots and figures' : 'Fade for figures only'}</button>
+        <button aria-pressed={idlerCounts} onClick={() => { const on = !idlerCounts; setIdlerCounts(on); stage.current?.setFadeFigures(on ? () => true : (f) => f.id !== 'idler') }}>
+          {idlerCounts ? 'The idler counts' : "The idler doesn't count"}</button>
+        <button onClick={rebuild}>Rebuild (a crop grows)</button>
       </div>
     </div>
   )

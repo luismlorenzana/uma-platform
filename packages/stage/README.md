@@ -1,6 +1,6 @@
 # @luismlorenzana/uma-stage
 
-The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145; ST3, P146): a three.js world built from 2D kits, pixel sprites
+The Uma games' HD-2D stage (uma-platform ST1, P140, P142; ST2, P145; ST3, P146; ST4, P154): a three.js world built from 2D kits, pixel sprites
 from master data, lights, fog and post effects, on uma-kit's turned landscape stage or a portrait one. It began as
 uma-quest's engine (its P90) and is shared now that uma-farm is its second user (P11). Private; personal use only.
 
@@ -9,10 +9,11 @@ uma-quest's engine (its P90) and is shared now that uma-farm is its second user 
 | Import | What | Needs |
 |---|---|---|
 | `@luismlorenzana/uma-stage` | Everything: the stage, the world builder, the sprite player, and the formats | three.js, React, uma-kit, uma-data (peers) |
-| `@luismlorenzana/uma-stage/formats` | Only the kit and design formats: pure, no three.js or DOM, **ESM and CommonJS** | Nothing |
+| `@luismlorenzana/uma-stage/formats` | Only the kit and design formats, and (ST4) `farmProblems`, `standInFarmAtlas` and `SAMPLE_FARM`: pure, no three.js or DOM, **ESM and CommonJS** | Nothing |
 
 A game's rules and its API import `formats` (uma-quest's `@quest/domain` re-exports it), so a server never installs or
-loads three.js. The peers are optional for that reason; a game that draws the stage installs them.
+loads three.js. A farm's domain checks its designs there too: `farmProblems(design, standInFarmAtlas())` is what
+`BandStage.setWorld` refuses on, and a test proves the entry reaches no three.js, React or DOM. The peers are optional for that reason; a game that draws the stage installs them.
 
 **Load the stage lazily.** three.js is large: import the screens that use the engine through `lazy()`, so the main
 bundle doesn't grow. Constants and small helpers (`BUTTON_SIZE`, `markStageRequested`) tree-shake on their own.
@@ -75,8 +76,28 @@ front), but it isn't seen. The sample shows it. And on a 2× phone (an iPhone SE
 9-tile farm (1,152 px) is wider than the screen: the view shows its middle six tiles or so, and the band camera doesn't
 pan sideways (FR6).
 
+### ST4 (0.4.0): four more options and a three-free check
+
+uma-farm F12's stage request (its D71; P154 here). Each is opt-in, so a game that uses none runs as on 0.3.0:
+
+| Option | What it does |
+|---|---|
+| `setFadeFigures(ids or test)` | Which figures count for the fade, beside `setFadeMarkers`: these ids, or any test of `{ id, tile, moving }`. Every figure counts until it's called; a figure that doesn't count leaves the roof in front of her whole (the farm: only a Ready Uma counts, so nothing is faded at rest) |
+| `setWorld(design, kit, { keepCamera })` | The camera stays where it is through a rebuild, held inside the new farm's range, instead of going back to the top |
+| `setWorld(design, kit, { keepWalks })` | A walking figure keeps her walk through a rebuild when the tile she's on and every step left on her path still stand (`pathStands`). Any other walk stops (it resolves false) and she's placed on her tile, so the game can walk her again from there |
+| `onSettled` (a `BandStage` option), `atRest` | Called once each time the stage comes to rest (the camera, every walk, every fade and the grade still), after a frame of that rest is drawn: the saver's pacing never skips it. A change made at rest (a figure placed, a rebuild, a set going live) settles again once drawn. Idle loops (breathing, blinks) don't count as motion |
+| `stop({ draw: true })` | Draws the stage as it is now, then stops: a paced loop never stops on an undrawn frame |
+| `farmProblems`, `standInFarmAtlas`, `SAMPLE_FARM` from `formats` | A farm's domain tests its designs without three.js (the atlas's layout is its own module, `standInFarmAtlas.ts`; the drawing stays in `standInFarm.ts`) |
+
+**A fix in the fade (0.3.0's):** a building or prop drawn opaque on its first frame never visibly faded, because three.js
+compiles an opaque material's shader to write alpha 1 whatever its opacity. The fade now recompiles a part's materials
+when it starts or stops fading (`needsUpdate`, once a toggle; three.js caches both programs). The sample only showed
+0.3.0's fade because its miller stood behind the Sawmill from the first frame.
+
 **The review page:** [docs/stage/previews/farm-band.html](../../docs/stage/previews/farm-band.html), a portrait stand-in
 farm band (`SAMPLE_FARM` on the stand-in `farm` kit) at phone width, built by `pnpm --filter @luismlorenzana/uma-stage review`.
+ST4 adds an idler behind the second house who doesn't count (its roof stays whole; a toggle counts her), a rebuild
+button that grows a crop mid-walk (the camera and the walk stay), and a count of the times the stage came to rest.
 
 ## What a game hands in
 

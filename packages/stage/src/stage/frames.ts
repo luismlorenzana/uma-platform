@@ -18,6 +18,22 @@ export class FramePacer {
   }
 }
 
+/**
+ * When a stage comes to rest (ST4): fed each frame whether anything still moves (the camera, a walk, a fade, the grade),
+ * it answers true once, on the first still frame after motion. A new stage counts as moving, so its first still frame
+ * answers too. Idle loops (a sprite breathing, a blink) aren't motion: they never stop.
+ */
+export class SettleWatch {
+  private busy = true
+  update(busy: boolean): boolean {
+    const settled = this.busy && !busy
+    this.busy = busy
+    return settled
+  }
+  /** Something started moving again (a walk issued, a scroll): the next still frame settles. */
+  wake(): void { this.busy = true }
+}
+
 export interface FpsStats { mean: number; low1: number; min: number; frames: number; series: number[] }
 
 const round1 = (n: number): number => Math.round(n * 10) / 10

@@ -2,7 +2,7 @@
 // farm design.
 import { describe, expect, it } from 'vitest'
 import { SAMPLE_FARM } from '../world/farmSample.js'
-import { standInFarmAtlas } from '../world/standInFarm.js'
+import { standInFarmAtlas } from '../world/standInFarmAtlas.js'
 import { standInKitAtlas } from '../world/standInKit.js'
 import { farmGrid, farmReach, parseFarmDesign, type FarmDesign } from './farm.js'
 import { familyVariants, FARM_WAVE_1, FARM_WAVE_2, KIT_REQUIRED, kitMissing, kitVariants, parseKitAtlas, type KitAtlas } from './kit.js'

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { FpsRecorder, FramePacer } from './frames.js'
+import { FpsRecorder, FramePacer, SettleWatch } from './frames.js'
 
 describe('battery saver pacing (DN27)', () => {
   it('draws every frame without a cap', () => {
@@ -43,4 +43,14 @@ describe('the frame-rate numbers (R17)', () => {
     expect(r.activeMs).toBe(32)
   })
   it('reports zeros with no frames', () => expect(new FpsRecorder().stats()).toEqual({ mean: 0, low1: 0, min: 0, frames: 0, series: [] }))
+})
+
+describe('ST4: coming to rest', () => {
+  it('answers once, on the first still frame after motion, and again after a wake', () => {
+    const w = new SettleWatch()
+    expect([false, false].map((b) => w.update(b))).toEqual([true, false])
+    expect([true, true, false, false].map((b) => w.update(b))).toEqual([false, false, true, false])
+    w.wake()
+    expect([false, false].map((b) => w.update(b))).toEqual([true, false])
+  })
 })

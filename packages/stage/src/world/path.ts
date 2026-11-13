@@ -38,5 +38,21 @@ export function findPath(g: Grid, from: Tile, to: Tile, cost: (x: number, z: num
   return null
 }
 
+/**
+ * Whether a walk still stands on a grid (ST4, after a rebuild): the tile she's on is walkable and every step of what's
+ * left of her path is still allowed. `rest` may start with her own tile.
+ */
+export function pathStands(g: Grid, from: Tile, rest: readonly Tile[]): boolean {
+  if (!g.walkable(from.x, from.z)) return false
+  let at = from
+  for (const t of rest) {
+    if (t.x === at.x && t.z === at.z) continue
+    const side = SIDES.find((s) => at.x + STEP[s].x === t.x && at.z + STEP[s].z === t.z)
+    if (!side || !canStep(g, at, side)) return false
+    at = t
+  }
+  return true
+}
+
 /** A path's tiles as the points a walker heads for: each tile's middle. */
 export const pathPoints = (tiles: readonly Tile[]): { x: number; z: number }[] => tiles.map((t) => ({ x: t.x + 0.5, z: t.z + 0.5 }))

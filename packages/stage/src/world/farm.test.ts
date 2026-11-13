@@ -5,7 +5,7 @@ import type { FarmDesign } from '../formats/index.js'
 import { doorFrame, farmGeometry, farmProblems, roofShape } from './farm.js'
 import { SAMPLE_FARM } from './farmSample.js'
 import type { Face } from './geometry.js'
-import { standInFarmAtlas } from './standInFarm.js'
+import { standInFarmAtlas } from './standInFarmAtlas.js'
 
 const kit = standInFarmAtlas()
 const world = farmGeometry(SAMPLE_FARM, kit)

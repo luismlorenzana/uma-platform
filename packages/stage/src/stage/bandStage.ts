@@ -16,14 +16,15 @@ import { buildWorld, buildWorldParts } from '../world/build.js'
 import { Effects } from '../world/effects.js'
 import { farmGeometry, farmProblems, type FarmWorld } from '../world/farm.js'
 import type { LoadedKit } from '../world/kits.js'
-import { farmStepCost, findPath, pathPoints } from '../world/path.js'
+import { farmStepCost, findPath, pathPoints, pathStands } from '../world/path.js'
 import { DASH_SPEED, WALK_SPEED, type Spot } from '../world/walk.js'
 import { BandCamera, TapPan, tilesPerDevicePixel, viewDepthOf } from './band.js'
 import { CAMERA_PITCH, cameraOffset, deviceSize, frustum, snapToGrid, spriteStretch, TEXELS_PER_UNIT } from './camera.js'
 import {
-  coveringOccluders, FADE_DEFAULTS, farmOccluders, figureTarget, fitScale, markerTarget, propPart, stepFade, type FadeOptions, type FadeTarget, type Occluder,
+  coveringOccluders, FADE_DEFAULTS, farmOccluders, figureFilter, figureTarget, fitScale, markerTarget, propPart, stepFade, type FadeFigure, type FadeFigures,
+  type FadeOptions, type FadeTarget, type Occluder,
 } from './fade.js'
-import { FpsRecorder, FramePacer, SAVER_FPS } from './frames.js'
+import { FpsRecorder, FramePacer, SAVER_FPS, SettleWatch } from './frames.js'
 import { DAY_GRADE, mixGrade, type StageGrade } from './grade.js'
 import { cardQuad, farmTargets, pickAt, project, type PickHit, type PickTarget, type View } from './pick.js'
 
@@ -50,6 +51,22 @@ export interface BandStageOptions {
   /** ST3: buildings and blocking props fade while they cover a figure, a marker of the named kinds or a bubble's anchor. */
   fade?: FadeOptions | boolean
   onFirstFrame?: () => void
+  /**
+   * ST4: called once each time the stage comes to rest (the camera, every walk, every fade and the grade still), after a
+   * frame of that rest is drawn: the saver's pacing never skips it. A change made at rest (a figure placed, a rebuild, a
+   * set going live) counts as motion, so it settles again once drawn. Idle loops (breathing, blinks) don't count.
+   */
+  onSettled?: () => void
+}
+/** How `setWorld` treats what's already on the stage (ST4). Without them, the camera goes back to the top and every walk stops. */
+export interface BandWorldOptions {
+  /** Keep the camera where it is (held inside the new farm's range), as a rebuild of the same farm should. */
+  keepCamera?: boolean
+  /**
+   * A walking figure keeps her walk when the tile she's on and every step left on her path still stand in the new farm.
+   * Any other walk stops (it resolves false) and she's placed on her tile, as before.
+   */
+  keepWalks?: boolean
 }
 export interface BandDebug {
   centre: number
@@ -115,6 +132,11 @@ export class BandStage {
   private readonly fit: 'none' | 'width'
   private readonly occlusion: Required<FadeOptions> | null
   private fadeMarkers: (m: FarmMarker) => boolean = () => false
+  private fadeFigures: (f: FadeFigure) => boolean = () => true
+  private readonly settle = new SettleWatch()
+  private readonly onSettled: (() => void) | null
+  private settling = false
+  private resting = false
   private readonly reducedMotion: MediaQueryList | null
   private readonly figures = new Map<string, Live>()
   private liveSet = new Set<string>()
@@ -140,6 +162,7 @@ export class BandStage {
     this.band = new BandCamera({ band: options.band })
     this.pacer = new FramePacer(options.saver ? SAVER_FPS : null)
     this.firstFrame = options.onFirstFrame ?? null
+    this.onSettled = options.onSettled ?? null
     this.renderer = new WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'default' })
     this.renderer.outputColorSpace = SRGBColorSpace
     this.renderer.info.autoReset = false
@@ -153,8 +176,11 @@ export class BandStage {
 
   // --- The world ---------------------------------------------------------------------------------------------------------
 
-  /** Builds a farm from its design and kit (refused, with what's wrong, when the kit can't build it). Figures stay. */
-  setWorld(design: FarmDesign, kit: LoadedKit): FarmWorld {
+  /**
+   * Builds a farm from its design and kit (refused, with what's wrong, when the kit can't build it). Figures stay, on their
+   * tiles; `options` (ST4) keeps the camera and the walks that still stand.
+   */
+  setWorld(design: FarmDesign, kit: LoadedKit, options: BandWorldOptions = {}): FarmWorld {
     const problems = farmProblems(design, kit.kit)
     if (problems.length) throw new Error(`the farm ${design.id} can't be built: ${problems.join('; ')}`)
     this.dropWorld()
@@ -178,9 +204,15 @@ export class BandStage {
     const lookY = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? 0
     this.world = { design, built, group, targets: farmTargets(design.markers, built, kit.kit), lookY, page: kit.page, occluders, markers, parts }
     this.applyScale()
-    this.band.goTo(this.band.range.min, true)
-    for (const f of this.figures.values()) { this.stopWalk(f, false); this.placeAt(f, { x: Math.floor(f.x), z: Math.floor(f.z) }) }
+    if (!options.keepCamera) this.band.goTo(this.band.range.min, true)
+    for (const f of this.figures.values()) {
+      const here = { x: Math.floor(f.x), z: Math.floor(f.z) }
+      if (options.keepWalks && f.path.length && pathStands(built.grid, here, f.path.map((p) => ({ x: Math.floor(p.x), z: Math.floor(p.z) })))) continue
+      this.stopWalk(f, false)
+      this.placeAt(f, here)
+    }
     this.capDirty = true
+    this.settle.wake()
     return built
   }
 
@@ -201,6 +233,16 @@ export class BandStage {
   setFadeMarkers(which: readonly FarmMarkerKind[] | ((m: FarmMarker) => boolean)): void {
     this.fadeMarkers = typeof which === 'function' ? which : (m) => which.includes(m.kind)
     if (this.world && this.occlusion) this.world.markers = this.markerTargets(this.world.design, this.world.built)
+    this.settle.wake()
+  }
+
+  /**
+   * Which figures the fade keeps in view from now on (ST4): these ids, or any test (`(f) => ready.has(f.id)`). Every figure
+   * counts until this is called, so a figure that doesn't count leaves the roof in front of her whole.
+   */
+  setFadeFigures(which: FadeFigures): void {
+    this.fadeFigures = figureFilter(which)
+    this.settle.wake()
   }
 
   /** Fit-to-width (ST3): the camera's scale for the canvas and the design, its frustum, the band's view, and the kit's
@@ -243,13 +285,13 @@ export class BandStage {
   get bandCamera(): BandCamera { return this.band }
 
   /** Moves the camera to show ground row `z` at the middle, settling on a band. */
-  scrollTo(z: number, instant = false): void { this.band.goTo(z, instant); this.capDirty = true }
+  scrollTo(z: number, instant = false): void { this.band.goTo(z, instant); this.capDirty = true; this.settle.wake() }
 
   /** A finger down, in stage CSS px (on the turned layout, `toStage` first). */
   pointerDown(x: number, y: number, t = performance.now()): void { this.gesture.down(x, y, t) }
   pointerMove(x: number, y: number, t = performance.now()): void {
     const dy = this.gesture.move(x, y, t)
-    if (dy !== null) this.band.drag((-dy * this.device.ratio * tilesPerDevicePixel()) / this.scale)
+    if (dy !== null) { this.band.drag((-dy * this.device.ratio * tilesPerDevicePixel()) / this.scale); this.settle.wake() }
   }
   /** The finger lifts: a tap answers with what's under it (nearest first); a pan glides to a band and answers null. */
   pointerUp(x: number, y: number, t = performance.now()): PickHit[] | null {
@@ -288,6 +330,7 @@ export class BandStage {
     const f: Live = { spec, x: spec.tile.x + 0.5, z: spec.tile.z + 0.5, facing: spec.facing ?? 'front', moving: false, running: false, standee, actor: null, path: [], done: null }
     this.figures.set(spec.id, f)
     this.capDirty = true
+    this.settle.wake()
   }
 
   removeFigure(id: string): void {
@@ -299,6 +342,7 @@ export class BandStage {
     this.dropActor(f)
     this.figures.delete(id)
     this.capDirty = true
+    this.settle.wake()
   }
 
   /** Puts a figure on a tile at once (the farm's counts never wait on a walk, FR14). */
@@ -309,6 +353,7 @@ export class BandStage {
     this.placeAt(f, tile)
     if (facing) f.facing = facing
     this.capDirty = true
+    this.settle.wake()
   }
 
   private placeAt(f: Live, tile: Tile): void { f.x = tile.x + 0.5; f.z = tile.z + 0.5; f.moving = false }
@@ -323,6 +368,7 @@ export class BandStage {
     if (!tiles) return Promise.resolve(false)
     f.path = pathPoints(tiles)
     f.running = options.run ?? false
+    this.settle.wake()
     return new Promise((resolve) => { f.done = resolve })
   }
 
@@ -341,6 +387,7 @@ export class BandStage {
     f.spec = { ...f.spec, set, ...(loadSet ? { loadSet } : {}) }
     this.dropActor(f)
     this.capDirty = true
+    this.settle.wake()
   }
 
   private dropActor(f: Live): void {
@@ -371,6 +418,7 @@ export class BandStage {
         f.actor = new SpriteActor(source)
         this.scene.add(f.actor.group, f.actor.shadowMesh)
         f.standee.group.visible = f.standee.shadowMesh.visible = false
+        this.settle.wake()
       })
     }
   }
@@ -379,6 +427,7 @@ export class BandStage {
 
   /** The scene's light and colour (a season, the night), at once or over `ms`. */
   setGrade(grade: StageGrade, ms = 0): void {
+    this.settle.wake()
     if (ms <= 0) { this.fade = null; this.grade = grade; this.applyGrade(grade); return }
     this.fade = { from: this.grade, to: grade, t: 0, ms }
   }
@@ -414,7 +463,8 @@ export class BandStage {
       const dt = Math.max(0, Math.min(0.1, (now - this.last) / 1000))
       this.last = now
       this.update(dt)
-      if (this.pacer.shouldDraw(now)) this.draw(now)
+      // The pacer may skip a frame, but never the one the stage comes to rest on when the game listens for it (ST4).
+      if (this.pacer.shouldDraw(now) || this.settling) this.draw(now)
     }
     this.raf = requestAnimationFrame(tick)
   }
@@ -422,11 +472,16 @@ export class BandStage {
   /** Runs one frame by hand (a hidden preview pane runs no animation frames). */
   step(dt = 1 / 30): void { this.update(dt); this.draw(performance.now()) }
 
-  stop(): void {
+  /** Stops the loop. `{ draw: true }` (ST4) first draws the stage as it is now, so a paced loop never stops on an undrawn frame. */
+  stop(options: { draw?: boolean } = {}): void {
     if (this.raf) cancelAnimationFrame(this.raf)
     this.raf = 0
+    if (options.draw) this.step(0)
     this.recorder.pause()
   }
+
+  /** Whether nothing moved on the last frame (ST4): the camera, every walk, every fade and the grade still. */
+  get atRest(): boolean { return this.resting }
 
   private update(dt: number): void {
     this.clock += dt
@@ -455,30 +510,41 @@ export class BandStage {
     }
     this.capClock += dt
     if (this.capDirty || (anyMoving && this.capClock >= CAP_EVERY)) { this.capClock = 0; this.capDirty = false; this.weighCap() }
-    this.stepFades(dt)
+    const fading = this.stepFades(dt)
+    const busy = !this.band.settled || anyMoving || this.fade !== null || fading
+    this.resting = !busy
+    if (this.settle.update(busy) && this.onSettled) this.settling = true
   }
 
-  /** The fade (ST3): each part covering a target eases toward the fade's opacity, the rest back to full. */
-  private stepFades(dt: number): void {
+  /** A figure as the fade's figure test sees her (ST4). */
+  private fadeFigure(f: Live): FadeFigure { return { id: f.spec.id, tile: { x: Math.floor(f.x), z: Math.floor(f.z) }, moving: f.moving } }
+
+  /** The fade (ST3): each part covering a target eases toward the fade's opacity, the rest back to full. True while any eases. */
+  private stepFades(dt: number): boolean {
     const fade = this.occlusion, world = this.world
-    if (!fade || !world || !world.parts.size) return
-    const targets = [...world.markers, ...[...this.figures.values()].map((f) => {
+    if (!fade || !world || !world.parts.size) return false
+    const counted = [...this.figures.values()].filter((f) => this.fadeFigures(this.fadeFigure(f)))
+    const targets = [...world.markers, ...counted.map((f) => {
       const y = this.groundAt(f.x, f.z), head = y + (f.actor ? FIGURE_HEAD : STANDEE_HEAD)
       return figureTarget({ x: f.x, y, z: f.z }, FIGURE_HIT.w, FIGURE_HIT.h, { x: f.x, y: head, z: f.z })
     })]
     const covering = coveringOccluders(world.occluders, targets)
     const instant = this.reducedMotion?.matches ?? false
+    let easing = false
     for (const [id, part] of world.parts) {
       const goal = covering.has(id) ? fade.opacity : 1
       if (part.alpha === goal) continue
       part.alpha = stepFade(part.alpha, goal, dt, { opacity: fade.opacity, ms: fade.ms, instant })
+      if (part.alpha !== goal) easing = true
       const faded = part.alpha < 1
       part.group.traverse((o) => {
         const mesh = o as Mesh
         if (!mesh.isMesh) return
         const m = mesh.material as MeshLambertMaterial
         m.opacity = part.alpha
-        m.transparent = faded
+        // A material first drawn opaque has a shader that writes alpha 1 whatever its opacity: switching it to transparent
+        // needs a new program (ST4's fix: before it, a part opaque on its first frame never visibly faded).
+        if (m.transparent !== faded) { m.transparent = faded; m.needsUpdate = true }
         m.depthWrite = !faded
         // The kit's cut-out edge, scaled with the fade so a faded texel isn't cut away.
         m.alphaTest = 0.5 * part.alpha
@@ -486,6 +552,8 @@ export class BandStage {
         mesh.renderOrder = faded ? part.order : 0
       })
     }
+    // A part that reached its goal this frame is drawn at it now, so this frame may already be the still one.
+    return easing
   }
 
   private draw(now: number): void {
@@ -514,6 +582,7 @@ export class BandStage {
     this.recent.push(now)
     while (this.recent.length > 0 && now - this.recent[0]! > 1000) this.recent.shift()
     if (this.firstFrame) { this.firstFrame(); this.firstFrame = null }
+    if (this.settling) { this.settling = false; this.onSettled?.() }
   }
 
   private tintLights(): TintLight[] {

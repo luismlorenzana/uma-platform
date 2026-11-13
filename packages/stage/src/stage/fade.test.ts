@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { buildWorld, buildWorldParts } from '../world/build.js'
 import { farmGeometry } from '../world/farm.js'
 import { SAMPLE_FARM } from '../world/farmSample.js'
-import { standInFarmAtlas } from '../world/standInFarm.js'
-import { boxOf, coveringOccluders, FADE_DEFAULTS, farmOccluders, figureTarget, fitScale, markerTarget, propPart, stepFade, upOf } from './fade.js'
+import { standInFarmAtlas } from '../world/standInFarmAtlas.js'
+import { boxOf, coveringOccluders, FADE_DEFAULTS, farmOccluders, figureFilter, figureTarget, fitScale, markerTarget, propPart, stepFade, upOf } from './fade.js'
 import { project, type View } from './pick.js'
 
 const kit = standInFarmAtlas()
@@ -88,5 +88,24 @@ describe('fit-to-width (ST3)', () => {
     expect(project(view, { x: 9, y: 1, z: 10 }).x).toBeCloseTo(375)
     const unscaled = project({ ...view, scale: 1 }, { x: 0, y: 1, z: 10 }).x
     expect(unscaled).toBeLessThan(-50)
+  })
+})
+
+describe("ST4: which figures count for the fade", () => {
+  const her = { id: 'ready-1', tile: { x: 4, z: 2 }, moving: false }
+  it('takes ids, or any test of her id, tile and walking', () => {
+    expect(figureFilter(['ready-1'])(her)).toBe(true)
+    expect(figureFilter(['ready-2'])(her)).toBe(false)
+    expect(figureFilter([])(her)).toBe(false)
+    expect(figureFilter((f) => f.tile.z < 4 && !f.moving)(her)).toBe(true)
+    expect(figureFilter((f) => f.moving)(her)).toBe(false)
+  })
+  it("leaves a roof whole when the figure behind it doesn't count", () => {
+    const occluders = farmOccluders(world, kit)
+    const behind = figureTarget({ x: 4.5, y: 1, z: 2.5 }, 112, 200, { x: 4.5, y: 3.15, z: 2.5 })
+    const figures = [{ ...her, target: behind }]
+    const covering = (count: (f: typeof her) => boolean) => coveringOccluders(occluders, figures.filter(count).map((f) => f.target))
+    expect(covering(figureFilter(['ready-1']))).toContain('sawmill')
+    expect(covering(figureFilter(['someone-else'])).size).toBe(0)
   })
 })

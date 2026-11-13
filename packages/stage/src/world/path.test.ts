@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { farmGrid, gridOf } from '../formats/index.js'
 import { farmGeometry } from './farm.js'
 import { SAMPLE_FARM } from './farmSample.js'
-import { farmStepCost, findPath, pathPoints } from './path.js'
-import { standInFarmAtlas } from './standInFarm.js'
+import { farmStepCost, findPath, pathPoints, pathStands } from './path.js'
+import { standInFarmAtlas } from './standInFarmAtlas.js'
 
 const world = farmGeometry(SAMPLE_FARM, standInFarmAtlas())
 const gate = { x: 4, z: 24 }
@@ -47,5 +47,24 @@ describe('walkers (F57 ask 9)', () => {
   it("is deterministic: the same way every time", () => {
     const g = farmGrid(SAMPLE_FARM, world.blocked)
     expect(findPath(g, gate, { x: 4, z: 2 }, farmStepCost(g))).toEqual(findPath(g, gate, { x: 4, z: 2 }, farmStepCost(g)))
+  })
+})
+
+describe('ST4: whether a walk still stands after a rebuild', () => {
+  const along = findPath(world.grid, { x: 0, z: 23 }, { x: 8, z: 23 }, farmStepCost(world.grid))!
+  /** The same farm with one cell turned to water. */
+  const flooded = (x: number, z: number) => {
+    const at = (rows: readonly string[], c: string) => rows.map((r, i) => (i === z ? r.slice(0, x) + c + r.slice(x + 1) : r))
+    return farmGeometry({ ...SAMPLE_FARM, cells: at(SAMPLE_FARM.cells, 'w'), heights: at(SAMPLE_FARM.heights!, '0') }, standInFarmAtlas()).grid
+  }
+  it('stands on the same farm, and on one changed off her path, from any point along it', () => {
+    expect(pathStands(world.grid, along[0]!, along)).toBe(true)
+    expect(pathStands(flooded(5, 10), along[3]!, along.slice(3))).toBe(true)
+    expect(pathStands(world.grid, along[3]!, along.slice(4))).toBe(true)
+  })
+  it("doesn't when a tile ahead, or her own, is gone, or the rest doesn't join up", () => {
+    expect(pathStands(flooded(6, 23), along[2]!, along.slice(2))).toBe(false)
+    expect(pathStands(flooded(2, 23), along[2]!, along.slice(3))).toBe(false)
+    expect(pathStands(world.grid, along[0]!, along.slice(3))).toBe(false)
   })
 })
