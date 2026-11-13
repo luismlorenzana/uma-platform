@@ -1,4 +1,6 @@
 import type { SpriteSet } from './sprites.js'
+import { enemyKeyPaths, type EnemyKey } from './enemy-keys.js'
+import type { Enemy } from './sets/enemies.js'
 // Test helpers for games and this repo: small synthetic master records (invented names and values in the right
 // shape, never copied from real data) and an in-memory release. Imported as `@luismlorenzana/uma-data/testing`.
 
@@ -271,6 +273,29 @@ function skill(id: number, rarity: number, name: string, extra: Partial<MasterDa
   }
 }
 
+/** Three synthetic enemies, one a tier (invented names; ids from 700001). */
+export function syntheticEnemies(): Enemy[] {
+  return [
+    { id: 700001, franchise: 'testa', tier: 'regular', name: 'Sample Skirmisher' },
+    { id: 700002, franchise: 'testa', tier: 'key', name: 'Sample Captain' },
+    { id: 700003, franchise: 'testb', tier: 'boss', name: 'Sample Warden' },
+  ]
+}
+/** A synthetic enemy key for a tier: its canvas, its poses with anchors, a boss's three layers (paths are fake). */
+export function syntheticEnemyKey(tier: Enemy['tier'], enemyId = tier === 'regular' ? 700001 : tier === 'key' ? 700002 : 700003): EnemyKey {
+  const canvas = tier === 'regular' ? { width: 512, height: 768 } : tier === 'key' ? { width: 640, height: 768 } : { width: 768, height: 768 }
+  const poses = tier === 'regular' ? ['battle'] : tier === 'key' ? ['battle', 'action'] : ['battle', 'attack', 'skill', 'break']
+  const at = (pose: string) => ({ path: `art/enemy-keys/${enemyId}-${pose}.0000000000000000.webp`, ...canvas })
+  const anchors = { foot: { x: canvas.width / 2, y: canvas.height - 24 }, hit: { x: canvas.width / 2, y: canvas.height / 2 }, face: { x: canvas.width / 2, y: 140 } }
+  return {
+    enemyId, revision: 1, tier, canvas, display: tier === 'boss' ? { figure: 180, envelope: 260 } : { figure: tier === 'key' ? 140 : 112 },
+    poses: Object.fromEntries(poses.map((pose) => [pose, {
+      ...at(pose), anchors: pose === 'battle' ? anchors : { ...anchors, cast: { x: canvas.width - 80, y: 300 } },
+      ...(tier === 'boss' && pose === 'battle' ? { layers: ['rear', 'body', 'front'].map((name) => ({ ...at(`battle-${name}`), name, pivot: { x: canvas.width / 2, y: 400 } })) } : {}),
+    }])),
+  }
+}
+
 /** A synthetic art index pointing at the given file paths (all must be in the release). */
 export function syntheticArtIndex(pagePath: string, imagePath: string): ArtIndex {
   return {
@@ -308,11 +333,11 @@ async function addFile(files: ReleaseFile[], objects: Map<string, Uint8Array>, p
  */
 export async function buildMemoryRelease(
   data: MasterData = syntheticMasterData(),
-  options: { art?: ArtIndex; sprites?: SpriteSet[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
+  options: { art?: ArtIndex; sprites?: SpriteSet[]; enemies?: Enemy[]; enemyKeys?: EnemyKey[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
 ): Promise<MemoryRelease> {
   const objects = new Map<string, Uint8Array>()
   const files: ReleaseFile[] = []
-  const sets = {} as Record<SetName, string>
+  const sets = {} as ReleaseManifest['sets']
   for (const name of SET_NAMES) {
     const items = [...data[MASTER_DATA_KEYS[name]]].sort((left, right) => left.id - right.id)
     const bytes = encoder.encode(JSON.stringify({ set: name, items }))
@@ -320,8 +345,23 @@ export async function buildMemoryRelease(
     sets[name] = `data/${name}.${hash.slice(0, 16)}.json`
     await addFile(files, objects, sets[name], bytes)
   }
+  if (options.enemies) {
+    const bytes = encoder.encode(JSON.stringify({ set: 'enemies', items: [...options.enemies].sort((a, b) => a.id - b.id) }))
+    sets.enemies = `data/enemies.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+    await addFile(files, objects, sets.enemies, bytes)
+  }
   for (const [path, bytes] of Object.entries(options.extraFiles ?? {})) await addFile(files, objects, path, bytes)
-  const artIndex = options.art ? structuredClone(options.art) : options.sprites ? { atlases: {}, images: {} } as ArtIndex : undefined
+  const artIndex = options.art ? structuredClone(options.art) : options.sprites || options.enemyKeys ? { atlases: {}, images: {} } as ArtIndex : undefined
+  if (artIndex && options.enemyKeys) {
+    artIndex.enemyKeys = { ...artIndex.enemyKeys }
+    for (const key of options.enemyKeys) {
+      for (const path of enemyKeyPaths(key)) if (!files.some((f) => f.path === path)) await addFile(files, objects, path, encoder.encode(`webp:${path}`))
+      const bytes = encoder.encode(JSON.stringify(key))
+      const path = `art/enemy-keys/${key.enemyId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      await addFile(files, objects, path, bytes)
+      artIndex.enemyKeys[String(key.enemyId)] = path
+    }
+  }
   if (artIndex && options.sprites) {
     artIndex.sprites = { ...artIndex.sprites }
     for (const sprite of options.sprites) {

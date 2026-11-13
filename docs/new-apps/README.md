@@ -104,7 +104,7 @@ Props, bubbles, townsfolk and the slice's art, published, so uma-quest's fights 
 | [UA10](#ua10) | **Three townsfolk**: The townsfolk profile on 101401, 100103 and 109701 (owner-selected batch T1, P104). | ChatGPT | S | UA2 ✓, your set gate ✓ | Done (`7c34dbe2c8de`, P108) |
 | Q7 | **The forest kit** *(uma-quest)*: 37 original frames, approved; [native/2× review](../../assets/authored/kit-forest/review/index.html). | ChatGPT | M | uma-quest's Q5 ✓ | Done (2.23.0, P110) |
 | Q15 | **The Warrior town kit** *(uma-quest)*: 32 original frames, approved; [native/2× review](../../assets/authored/kit-town-warrior/review/index.html). | ChatGPT | M | uma-quest's Q5 ✓ | Done (2.24.0, P111) |
-| [Q16](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-slice-foes.md) | **The slice's foes** *(uma-quest)*: Five foe bodies and the foe family's contract, the same way. | ChatGPT | M | uma-quest's Q8 ✓, Q5 ✓ | Ready |
+| [Q16](https://github.com/luismlorenzana/uma-quest/blob/main/docs/handoff/tasks/Q16-baseline-enemies.md) | **The baseline enemies** *(uma-quest, rewritten by its D34)*: the forest's cast in the owner's three tiers, end to end. **Part A done here (P152):** the format ([enemy-keys.md](../sprites/enemy-keys.md)), the `enemies` set and `enemy-keys` family in uma-data 1.6.0, `enemies:pack` and `--enemies-only`, a dry run. Part B (the cast) is ChatGPT's; part C is uma-quest's | uma-platform, ChatGPT, uma-quest | L | uma-quest's D33 review ✓ | Part A done; B ready |
 
 **Exit:**
 

@@ -1,13 +1,18 @@
 // CLI for `pnpm release:check` (UA5): reads a published channel back the way a game will and checks it.
-//   pnpm release:check -- --channel candidate --against latest [--added-families=outfit-renders]
+//   pnpm release:check -- --channel candidate --against latest [--added-families=outfit-renders] [--local <dir>]
 // It loads the channel with the release client (every set and the art index, hash-checked), confirms the bucket holds
-// every file at its size, loads each sprite set with `spriteSet` and decodes each of its pages, and with `--against`
-// confirms every file of the other channel's release is carried byte for byte.
+// every file at its size, loads each sprite set with `spriteSet` and decodes each of its pages, reads the `enemies` set
+// and each enemy key with `enemyKey` and checks her images (enemy-keys.md §6), and with `--against` confirms every file
+// of the other channel's release is carried byte for byte. `--local <dir>` reads a release written there by
+// `release:publish -- --local <dir>` first, then the bucket (Q16 part A's dry run).
 
-import { createReleaseClient, parseArtIndex, ReleaseSourceError, type ReleaseSource } from '@luismlorenzana/uma-data'
+import { BOSS_LAYERS, createReleaseClient, ENEMY_BORDER, enemyKeyPaths, parseArtIndex, ReleaseSourceError, type ReleaseSource } from '@luismlorenzana/uma-data'
+import { resolve } from 'node:path'
 import sharp from 'sharp'
+import { clearBorder, decodeRgba, recomposites } from './enemy-images'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
-import { checkCarried } from './sprites-only'
+import { LocalOverlayStorage } from './local-storage'
+import { changedSets, checkCarried } from './sprites-only'
 
 function argument(name: string): string | null {
   const inline = process.argv.find((arg) => arg.startsWith(`${name}=`))
@@ -37,7 +42,10 @@ async function main(): Promise<void> {
   const against = argument('--against')
   // A families-only release (P137) may add these image families to the art index, and nothing else.
   const addedFamilies = (argument('--added-families') ?? '').split(',').filter(Boolean)
-  const storage = new GcloudStorageClient(bucket, project)
+  const localDir = argument('--local')
+  const bucketStorage = new GcloudStorageClient(bucket, project)
+  const storage = localDir ? new LocalOverlayStorage(resolve(localDir), bucketStorage) : bucketStorage
+  if (localDir) console.log(`Reading ${resolve(localDir)} first, then gs://${bucket}`)
   const source: ReleaseSource = {
     async read(path) {
       const bytes = await storage.read(path)
@@ -80,22 +88,67 @@ async function main(): Promise<void> {
   }
   if (sprites.length > 0) console.log(`Sprite pages: ${pages} decoded, ${(pageBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 
+  // The enemies set and the enemy-keys family (Q16 part A), read like a game reads them. Counts only: no names.
+  const enemies = await client.enemies(manifest)
+  if (enemies) {
+    const count = (tier: string) => enemies.filter((enemy) => enemy.tier === tier).length
+    console.log(`Enemies: ${enemies.length} (${count('boss')} boss, ${count('key')} key, ${count('regular')} regular) ` +
+      `from ${new Set(enemies.map((enemy) => enemy.franchise)).size} franchises`)
+  }
+  const keyIds = Object.keys(art?.enemyKeys ?? {}).map(Number).sort((a, b) => a - b)
+  const roster = new Set((enemies ?? []).map((enemy) => enemy.id))
+  let images = 0
+  let imageBytes = 0
+  for (const enemyId of keyIds) {
+    const key = (await client.enemyKey(manifest, art!, enemyId))!
+    if (!roster.has(enemyId)) console.log(`  enemy key ${enemyId} has no entry in the enemies set`)
+    const decoded = new Map<string, Awaited<ReturnType<typeof decodeRgba>>>()
+    for (const path of enemyKeyPaths(key)) {
+      const bytes = await client.file(manifest, path)
+      const meta = await sharp(bytes).metadata()
+      if (meta.format !== 'webp') failures.push(`${path} isn't a WebP`)
+      const rgba = await decodeRgba(bytes)
+      if (rgba.width !== key.canvas.width || rgba.height !== key.canvas.height) failures.push(`${path} doesn't decode at ${key.canvas.width}x${key.canvas.height}`)
+      else if (!clearBorder(rgba, ENEMY_BORDER)) failures.push(`${path} reaches into its ${ENEMY_BORDER} px border`)
+      decoded.set(path, rgba)
+      images += 1
+      imageBytes += bytes.byteLength
+    }
+    const battle = key.poses.battle!
+    let layered = ''
+    if (battle.layers) {
+      const fit = recomposites(battle.layers.map((layer) => decoded.get(layer.path)!), decoded.get(battle.path)!)
+      if (!fit.ok) failures.push(`${enemyId}: the battle pose's layers don't re-composite to it (alpha off by ${fit.alpha}, colour by ${fit.color.toFixed(1)} at ${fit.at?.x},${fit.at?.y})`)
+      layered = `; battle in ${battle.layers.length} layers (${battle.layers.map((layer) => layer.name).join(', ')}), ${fit.ok ? 're-composited exactly' : 'NOT re-compositing'}`
+      if (battle.layers.length < BOSS_LAYERS.min) failures.push(`${enemyId}: fewer than ${BOSS_LAYERS.min} layers`)
+    }
+    console.log(`Enemy key ${enemyId} r${key.revision} ${key.tier}: ${Object.keys(key.poses).join(', ')} on ${key.canvas.width}x${key.canvas.height}, ` +
+      `figure ${key.display.figure}${key.display.envelope ? `, envelope ${key.display.envelope}` : ''}${layered}`)
+  }
+  if (keyIds.length > 0) console.log(`Enemy images: ${images} decoded, ${(imageBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
+
   if (against) {
     const base = await createReleaseClient({ source, channel: against }).manifest()
     if (base.version === manifest.version) console.log(`${against} is the same release`)
     else {
-      const { carried } = checkCarried(base, manifest)
-      const allowed = ['`sprites`', ...addedFamilies.map((family) => `\`${family}\``)].join(' and ')
-      console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; the art index may change only by ${allowed}`)
+      const sets = changedSets(base, manifest)
+      const { carried } = checkCarried(base, manifest, sets)
+      const allowed = ['`sprites`', '`enemyKeys`', ...addedFamilies.map((family) => `\`${family}\``)].join(', ')
+      console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; ` +
+        `the sets ${sets.length ? `change only by ${sets.join(', ')}` : 'unchanged'}; the art index may change only by ${allowed}`)
       if (base.art && manifest.art) {
         const read = async (path: string) => JSON.parse(new TextDecoder().decode(await client.file(path === base.art ? base : manifest, path))) as Record<string, unknown>
         const [before, after] = await Promise.all([read(base.art), read(manifest.art)])
         parseArtIndex(after, manifest.art)
-        const strip = ({ sprites: _sprites, images, ...rest }: Record<string, unknown>) => {
+        const strip = ({ sprites: _sprites, enemyKeys: _enemyKeys, images, ...rest }: Record<string, unknown>) => {
           const kept = Object.fromEntries(Object.entries((images ?? {}) as Record<string, unknown>).filter(([family]) => !addedFamilies.includes(family)))
           return JSON.stringify({ ...rest, images: kept })
         }
-        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites map${addedFamilies.length ? ' and the added families' : ''}`)
+        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites and enemyKeys maps${addedFamilies.length ? ' and the added families' : ''}`)
+        const keysBefore = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).length, keysAfter = Object.keys((after.enemyKeys ?? {}) as Record<string, string>).length
+        if (keysBefore !== keysAfter || sets.includes('enemies')) console.log(`Enemy keys: ${keysBefore} → ${keysAfter}`)
+        const dropped = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).filter((id) => !(id in ((after.enemyKeys ?? {}) as Record<string, string>)))
+        if (dropped.length > 0) failures.push(`${dropped.length} enemy key(s) of ${against} are gone, e.g. ${dropped[0]}`)
         const beforeImages = (before.images ?? {}) as Record<string, unknown>, afterImages = (after.images ?? {}) as Record<string, Record<string, unknown>>
         for (const family of addedFamilies) {
           if (family in beforeImages) failures.push(`${family} was already in ${against}`)

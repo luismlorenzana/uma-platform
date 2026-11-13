@@ -67,7 +67,8 @@ Phase 0 replaces them with neutral master types instead of moving them as they a
 ```text
 GameTora + owner overrides ── pnpm data:import ──▶ normalized packs     ─┐
 image sources ─────────────── pnpm assets:import ▶ WebP art + atlases   ─┼─ pnpm release:publish ─▶ private bucket
-approved sprite revisions ─── pnpm sprites:pack ─▶ outfit-sprites (P91) ─┘
+approved sprite revisions ─── pnpm sprites:pack ─▶ outfit-sprites (P91) ─┤
+enemy boards + approved keys ─ pnpm enemies:pack ▶ enemies, enemy-keys  ─┘
 ```
 
 - **Original-game content never goes in git or on a public host** (P6). Packs, images and caches live only in the

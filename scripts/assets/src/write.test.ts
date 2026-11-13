@@ -86,19 +86,23 @@ describe('writeArt', () => {
     expect(after.manifest.sets).toEqual(before.manifest.sets)
   })
 
-  it("keeps the sprite family's map, which sprites:pack owns", async () => {
+  it("keeps the sprite and enemy-key maps, which sprites:pack and enemies:pack own, and the enemies set", async () => {
     const dir = await releaseWithData()
     await writeArt({ releaseDir: dir, images: [portraits(1)] })
     const { manifest } = await artIndex(dir)
     const sprite = { path: 'art/outfit-sprites/900101.3333333333333333.json', bytes: 2, sha256: 'a'.repeat(64) }
-    const indexJson = JSON.stringify({ ...(await artIndex(dir)).index, sprites: { 900101: sprite.path } })
+    const enemyKey = { path: 'art/enemy-keys/799999.4444444444444444.json', bytes: 2, sha256: 'b'.repeat(64) }
+    const enemies = { path: 'data/enemies.5555555555555555.json', bytes: 2, sha256: 'c'.repeat(64) }
+    const indexJson = JSON.stringify({ ...(await artIndex(dir)).index, sprites: { 900101: sprite.path }, enemyKeys: { 799999: enemyKey.path } })
     const indexFile = await writeReleaseFile(dir, 'data', 'art', 'json', indexJson)
-    await writeLocalManifest(dir, { sources: manifest.sources, sets: manifest.sets, art: indexFile.path,
-      files: [...manifest.files.filter((f) => f.path !== manifest.art), sprite, indexFile] })
+    await writeLocalManifest(dir, { sources: manifest.sources, sets: { ...manifest.sets, enemies: enemies.path }, art: indexFile.path,
+      files: [...manifest.files.filter((f) => f.path !== manifest.art), sprite, enemyKey, enemies, indexFile] })
     await writeArt({ releaseDir: dir, images: [portraits(2)] })
     const after = await artIndex(dir)
     expect(after.index.sprites).toEqual({ 900101: sprite.path })
-    expect(after.manifest.files.map((f) => f.path)).toContain(sprite.path)
+    expect(after.index.enemyKeys).toEqual({ 799999: enemyKey.path })
+    expect(after.manifest.sets.enemies).toBe(enemies.path)
+    expect(after.manifest.files.map((f) => f.path)).toEqual(expect.arrayContaining([sprite.path, enemyKey.path, enemies.path]))
   })
 
   it('needs the data sets first', async () => {

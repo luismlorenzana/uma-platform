@@ -29,3 +29,19 @@ it.skipIf(!existsSync(resolve(content, 'release/manifest.json')))('keeps local m
   }
   expect(failures).toEqual([])
 })
+const dictionary = new Set(existsSync('/usr/share/dict/words') ? readFileSync('/usr/share/dict/words', 'utf8').toLowerCase().split('\n') : [])
+it.skipIf(!existsSync(resolve(content, 'authoring/tiers/plan.json')))('keeps the enemy boards\' names out of the enemy tools, uma-data and the sprite docs (Q16)', () => {
+  const plan = JSON.parse(readFileSync(resolve(content, 'authoring/tiers/plan.json'), 'utf8')) as { boards: { id: string; order: { name: string }[]; unranked?: { name: string }[] }[] }
+  const names = [...new Set(plan.boards.filter(b => /-bosses$|^key-enemies$|^regular-enemies$/.test(b.id))
+    .flatMap(b => [...b.order, ...(b.unranked ?? [])].map(u => u.name.toLowerCase())).filter(n => n.length > 3))]
+    // A name that is one dictionary word ("label", "seed") can't be told from prose, so it's left out.
+    .filter(n => !dictionary.has(n))
+  const tracked = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: repo, encoding: 'utf8' }).split('\n')
+    .filter(f => /^(scripts\/sprites|scripts\/data|packages\/data|docs\/sprites)\//.test(f) && !/\.(png|webp)$/i.test(f) && existsSync(resolve(repo, f)))
+  const failures: string[] = []
+  for (const file of tracked) {
+    const text = readFileSync(resolve(repo, file), 'utf8').toLowerCase()
+    if (names.some(name => new RegExp(`(?<![a-z0-9])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![a-z0-9])`, 'u').test(text))) failures.push(file)
+  }
+  expect(failures).toEqual([])
+})

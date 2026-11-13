@@ -3,6 +3,7 @@
 // the same index with a `sprites` map. A GameTora refresh in the local release never rides along.
 
 import {
+  OPTIONAL_SET_NAMES,
   parseArtIndex,
   parseReleaseManifest,
   parseSpriteSet,
@@ -10,6 +11,7 @@ import {
   releaseVersion,
   verifyReleaseVersion,
   SCHEMA_MAJOR,
+  type OptionalSetName,
   type ReleaseFile,
   type ReleaseManifest,
   type SpriteSet,
@@ -118,6 +120,8 @@ export async function composeOnBase(options: {
   localPaths: Map<string, string>
   stagingDir: string
   now: () => Date
+  /** The sets of the new release, when an optional set changes (the enemies-only release); `base.sets` otherwise. */
+  sets?: ReleaseManifest['sets']
 }): Promise<{ manifest: ReleaseManifest; manifestPath: string }> {
   const { base } = options
   const indexJson = JSON.stringify(options.nextIndex)
@@ -142,21 +146,29 @@ export async function composeOnBase(options: {
     version: await releaseVersion(sorted.map((file) => file.sha256)),
     createdAt: options.now().toISOString(),
     sources: base.sources,
-    sets: base.sets,
+    sets: options.sets ?? base.sets,
     art: indexFile.path,
     files: sorted,
   }
   const manifestJson = JSON.stringify(manifest)
   parseReleaseManifest(JSON.parse(manifestJson) as unknown, MANIFEST_FILE)
   await verifyReleaseVersion(manifest)
-  checkCarried(base, manifest)
+  checkCarried(base, manifest, changedSets(base, manifest))
   const manifestPath = resolve(options.stagingDir, MANIFEST_FILE)
   await writeFile(manifestPath, manifestJson, 'utf8')
   return { manifest, manifestPath }
 }
 
-/** Every file of `base` but its art index is in `next` with the same bytes and hash; the sets are the same files. */
-export function checkCarried(base: ReleaseManifest, next: ReleaseManifest): { carried: number } {
+/** The optional sets `next` adds or replaces over `base`. A master set never changes in a release on latest. */
+export function changedSets(base: ReleaseManifest, next: ReleaseManifest): OptionalSetName[] {
+  return OPTIONAL_SET_NAMES.filter((name) => next.sets[name] !== undefined && next.sets[name] !== base.sets[name])
+}
+
+/**
+ * Every file of `base` but its art index is in `next` with the same bytes and hash, and the sets are the same files,
+ * except the optional sets named in `allowed` (the enemies-only release's `enemies`), which may be added or replaced.
+ */
+export function checkCarried(base: ReleaseManifest, next: ReleaseManifest, allowed: readonly OptionalSetName[] = []): { carried: number } {
   const nextFiles = new Map(next.files.map((file) => [file.path, file]))
   let carried = 0
   for (const file of base.files) {
@@ -165,7 +177,9 @@ export function checkCarried(base: ReleaseManifest, next: ReleaseManifest): { ca
     if (!same || same.sha256 !== file.sha256 || same.bytes !== file.bytes) throw new Error(`${file.path} isn't carried byte for byte`)
     carried += 1
   }
-  if (JSON.stringify(base.sets) !== JSON.stringify(next.sets)) throw new Error('The master sets changed in a release on latest')
+  const kept = (sets: ReleaseManifest['sets']) => JSON.stringify(Object.entries(sets).filter(([name]) => !(allowed as readonly string[]).includes(name)).sort(([a], [b]) => a.localeCompare(b)))
+  if (kept(base.sets) !== kept(next.sets)) throw new Error('The master sets changed in a release on latest')
+  for (const name of allowed) if (!next.sets[name]) throw new Error(`The ${name} set was removed in a release on latest`)
   return { carried }
 }
 

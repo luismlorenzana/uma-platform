@@ -94,6 +94,8 @@ export async function writeArt(options: WriteArtOptions): Promise<ReleaseManifes
   for (const family of IMAGE_FAMILIES) if (index.images[family]) ordered.images[family] = index.images[family]
   // The sprite family is written by `pnpm sprites:pack`; an art import keeps it as it is.
   if (index.sprites) ordered.sprites = index.sprites
+  // So is the enemy-keys family, written by `pnpm enemies:pack`.
+  if (index.enemyKeys) ordered.enemyKeys = index.enemyKeys
   const indexFile = await writeReleaseFile(releaseDir, 'data', 'art', 'json', JSON.stringify(ordered))
   files.push(indexFile)
 

@@ -200,6 +200,7 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
 | `pnpm release:publish -- --sprites-only` | The published `latest` plus the packed sets, every other file carried byte for byte; `--promote <version>` moves a channel | UA5 |
 | `pnpm release:check` | Reads a channel back like a game: every set, every sprite set and page, and the carry against another channel | UA5 |
 | `pnpm sprites:backup` | Copies `content/authoring/` to the backup bucket, never deleting | UA6 |
+| `pnpm enemies:pack`, `release:publish -- --enemies-only` | The enemies' counterparts: the `enemies` roster and the `enemy-keys` family, on top of `latest` ([enemy-keys.md](enemy-keys.md)) | uma-quest Q16 |
 
 UA2's four commands are implemented in `scripts/sprites/` ([usage](../../scripts/sprites/README.md)). Existing sealed revisions use reconstructed export sidecars under `export-configs/<id>/rN.json`; fresh reports go under `reports/<id>/rN/`, preserving the original receipts. New revisions use config schema version 2 in place. Exports always target a separate directory. Check 13 compares the first standing contact with its facing still and requires a constant scale for the whole cycle.
 
@@ -394,4 +395,4 @@ than files copied out of `content/`. UA7 adds the facings Q6 walks in.
 | CR31 | uma-quest's wave 1 is batch 1, Q3 shrinks to the HD-2D research, and Q6 loads from master data (uma-quest D5) |
 | CR32 | A private, versioned backup bucket for `content/authoring/` that never deletes (UA6, on the owner's yes) |
 | CR33 | Batch 1 becomes the full traveler profile (UA7) before batch 2, so batch 2 onwards is drawn to the whole profile at once |
-| CR34 | The rival add-on, familiars and the foe format are written when their uma-quest step nears, not now |
+| CR34 | The rival add-on, familiars and the foe format are written when their uma-quest step nears, not now. **The foe format is now [enemy-keys.md](enemy-keys.md)** (uma-quest Q16 part A, P152) |

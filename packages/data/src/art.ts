@@ -72,6 +72,8 @@ export interface ArtIndex {
   images: Partial<Record<ImageFamily, Record<string, ArtImage>>>
   /** Outfit id to a verified outfit-sprites JSON file. Absent in older releases. */
   sprites?: Record<string, string>
+  /** Enemy id to her `enemy-keys` manifest (docs/sprites/enemy-keys.md). Absent before 1.6.0 and until one is published. */
+  enemyKeys?: Record<string, string>
 }
 
 const parseFrame: Parser<AtlasFrame> = (value, path) => {
@@ -128,8 +130,9 @@ export const parseArtIndex: Parser<ArtIndex> = (value, path) => {
       images[family] = recordOf(parseArtImage)(rawImages[family], `${path}.images.${family}`)
     }
   }
-  const sprites = object(value, path).sprites
-  return { atlases, images, ...(sprites === undefined ? {} : { sprites: recordOf(releasePath)(sprites, `${path}.sprites`) }) }
+  const { sprites, enemyKeys } = object(value, path)
+  return { atlases, images, ...(sprites === undefined ? {} : { sprites: recordOf(releasePath)(sprites, `${path}.sprites`) }),
+    ...(enemyKeys === undefined ? {} : { enemyKeys: recordOf(releasePath)(enemyKeys, `${path}.enemyKeys`) }) }
 }
 
 /** Every release file path the index points at. */
@@ -138,5 +141,6 @@ export function artPaths(index: ArtIndex): string[] {
   for (const atlas of Object.values(index.atlases)) paths.push(...atlas.pages.map((page) => page.path))
   for (const family of Object.values(index.images)) paths.push(...Object.values(family).map((image) => image.path))
   paths.push(...Object.values(index.sprites ?? {}))
+  paths.push(...Object.values(index.enemyKeys ?? {}))
   return paths
 }

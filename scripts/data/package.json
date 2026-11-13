@@ -10,7 +10,10 @@
     "./gametora": "./src/gametora.ts",
     "./sets": "./src/sets.ts",
     "./gcloud-storage": "./src/gcloud-storage.ts",
-    "./sprites-only": "./src/sprites-only.ts"
+    "./sprites-only": "./src/sprites-only.ts",
+    "./enemy-images": "./src/enemy-images.ts",
+    "./enemy-release": "./src/enemy-release.ts",
+    "./enemy-fixture": "./src/enemy-fixture.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",

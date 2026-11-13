@@ -13,7 +13,8 @@
     "verify": "tsx src/cli.ts verify",
     "repeat": "tsx src/cli.ts repeat",
     "progress": "tsx src/cli.ts progress",
-    "pack": "tsx src/cli.ts pack"
+    "pack": "tsx src/cli.ts pack",
+    "enemies-pack": "tsx src/enemies-cli.ts"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",

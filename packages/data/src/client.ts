@@ -3,8 +3,10 @@
 // through the API's logged-in endpoint.
 
 import { parseSpriteSet, type SpriteSet } from './sprites.js'
+import { enemyKeyPaths, parseEnemyKey, type EnemyKey } from './enemy-keys.js'
+import type { Enemy } from './sets/enemies.js'
 import { parseArtIndex, type ArtIndex } from './art.js'
-import { MASTER_DATA_KEYS, parseSet, type MasterData, type SetItems } from './master.js'
+import { MASTER_DATA_KEYS, parseOptionalSet, parseSet, type MasterData, type SetItems } from './master.js'
 import { MasterDataError } from './parse.js'
 import {
   parseReleaseChannel,
@@ -90,6 +92,10 @@ export interface ReleaseClient {
   file(manifest: ReleaseManifest, path: string): Promise<Uint8Array>
   /** A sprite set by outfit id, or null when this release has none. */
   spriteSet(manifest: ReleaseManifest, art: ArtIndex, outfitId: number): Promise<SpriteSet | null>
+  /** The `enemies` set, or null when this release has none (before 1.6.0). */
+  enemies(manifest: ReleaseManifest): Promise<Enemy[] | null>
+  /** An enemy's key poses by enemy id, or null when this release has none for her. */
+  enemyKey(manifest: ReleaseManifest, art: ArtIndex, enemyId: number): Promise<EnemyKey | null>
   /** Every set and the art index of one release (the channel's when no version is given). */
   load(version?: string): Promise<MasterRelease>
 }
@@ -158,7 +164,7 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
         if (!listed.has(page.path)) throw new MasterDataError(release.art, `${page.path} to be in the manifest`)
       }
     }
-    for (const path of Object.values(index.sprites ?? {})) {
+    for (const path of [...Object.values(index.sprites ?? {}), ...Object.values(index.enemyKeys ?? {})]) {
       if (!listed.has(path)) throw new MasterDataError(release.art, `${path} to be in the manifest`)
     }
     return index
@@ -174,11 +180,26 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return set
   }
 
+  async function enemies(release: ReleaseManifest): Promise<Enemy[] | null> {
+    const path = release.sets.enemies
+    return path ? parseOptionalSet('enemies', json(await file(release, path), path)) : null
+  }
+
+  async function enemyKey(release: ReleaseManifest, index: ArtIndex, enemyId: number): Promise<EnemyKey | null> {
+    const path = index.enemyKeys?.[String(enemyId)]
+    if (!path) return null
+    const key = parseEnemyKey(json(await file(release, path), path), path)
+    if (key.enemyId !== enemyId) throw new MasterDataError(`${path}.enemyId`, String(enemyId))
+    const listed = new Set(release.files.map((entry) => entry.path))
+    for (const image of enemyKeyPaths(key)) if (!listed.has(image)) throw new MasterDataError(path, `${image} to be in the manifest`)
+    return key
+  }
+
   async function load(version?: string): Promise<MasterRelease> {
     const release = await manifest(version)
     const entries = await Promise.all(SET_NAMES.map(async (name) => [MASTER_DATA_KEYS[name], await set(release, name)] as const))
     return { manifest: release, data: Object.fromEntries(entries) as unknown as MasterData, art: await art(release) }
   }
 
-  return { channel, manifest, set, art, spriteSet, file, load }
+  return { channel, manifest, set, art, spriteSet, enemies, enemyKey, file, load }
 }
