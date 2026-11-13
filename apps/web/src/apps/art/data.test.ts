@@ -1,6 +1,6 @@
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { describe, expect, it } from 'vitest'
-import { picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry } from './data'
+import { lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
 
 // Invented records only (copied from uma-quest's album/data.test.ts at 6c572e6, then extended).
 const img = (path: string) => ({ path, width: 10, height: 10 })
@@ -47,5 +47,25 @@ describe('Character Art (CA1)', () => {
   it('counts a sister as her own Uma, and two outfits of one Uma once', () => {
     const sister = { relation: 'twin', age: 'an invented age', profile: 'Invented.' }
     expect(umaCount([entry(900101), entry(900102), entry(900103, { sister })])).toBe(2)
+  })
+})
+
+describe('the universe looks (CA4)', () => {
+  // Invented looks of invented riders; never a picture.
+  const look = (id: string, character: string, characterId: number | null): UniverseLook => ({
+    id, character, characterId, outfit: id, title: id, path: `universes/u/images/${id}.0123456789abcdef.png`, bytes: 10, sha256: '0'.repeat(64), width: 64, height: 96, approvedOn: null, publishedAt: null,
+  })
+  const universe = (id: string, looks: UniverseLook[]): Universe => ({ id, title: id, style: null, revision: 1, publishedAt: null, looks })
+  const sky = universe('sky-city', [look('a-street', 'Rider One', 9001), look('b-street', 'Rider Two', 9002), look('a-pilot', 'Rider One', 9001), look('c-street', 'Stranger', null)])
+  const road = universe('old-road', [look('b-villager', 'Rider Two', 9002)])
+
+  it('finds a character’s looks in every universe that has one of hers, in the index’s order', () => {
+    expect(looksOf([sky, road], 9001).map((g) => [g.universe.id, g.looks.map((l) => l.id)])).toEqual([['sky-city', ['a-street', 'a-pilot']]])
+    expect(looksOf([sky, road], 9002).map((g) => g.universe.id)).toEqual(['sky-city', 'old-road'])
+    expect(looksOf([sky, road], 9003)).toEqual([])
+  })
+  it('counts each character’s looks across the universes for her tiles, leaving out a look no character matches', () => {
+    expect([...lookCounts([sky, road])]).toEqual([[9001, 2], [9002, 2]])
+    expect(lookCounts([]).size).toBe(0)
   })
 })

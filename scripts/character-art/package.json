@@ -1,0 +1,20 @@
+{
+  "name": "@uma-platform/character-art-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Publishes the owner-approved universe looks from private authoring to Uma Character Art's folder in the app's bucket, and flags each look as published in the local galleries (CA4, AP73-AP82).",
+  "type": "module",
+  "scripts": {
+    "push": "node --import tsx src/push.ts",
+    "status": "node --import tsx src/status.ts",
+    "gallery": "node --import tsx src/gallery.ts",
+    "lint": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

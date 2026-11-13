@@ -30,6 +30,14 @@
       "port": 4318
     },
     {
+      "name": "art-gallery",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "art:gallery"
+      ],
+      "port": 4323
+    },
+    {
       "name": "story-sandbox",
       "runtimeExecutable": "node",
       "runtimeArgs": [

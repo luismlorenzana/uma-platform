@@ -1,9 +1,11 @@
 import { buildMemoryRelease, syntheticMasterData } from '@luismlorenzana/uma-data/testing'
-import type { FileSource } from '@luismlorenzana/uma-server/content'
+import { safePackPath, type FileSource } from '@luismlorenzana/uma-server/content'
 import { emptyBoard, emptyProfiles } from '@uma-platform/tiers'
 import { describe, expect, it } from 'vitest'
+import { KEY_PACK_ALLOW } from './art.module'
 import { ArtService } from './art.service'
 import { sourceReleases } from './art.sources'
+import { UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 // Invented records only: uma-data's synthetic release, with a second, invented outfit for character 9001.
 const data = () => { const d = syntheticMasterData(); d.outfits = [...d.outfits, { ...d.outfits[0]!, id: 900102, variant: 'summer' }]; return d }
@@ -42,5 +44,68 @@ describe('the adult sets’ source-art records (CA2)', () => {
       batch: 'batch-1', version: 'v1', publishedAt: '2026-01-02', approvedAt: null, ownerWord: null, archive: { bytes: 99, sha256: 'ab' }, files: 3, bytes: 22,
       shared: { files: 1, bytes: 7 }, outfits: { '900101': { revision: 'set-r1', personality: 'calm', ownerWord: 'Approve it', recordedAt: '2026-01-01', files: 2, bytes: 15 } },
     }])
+  })
+})
+
+describe('the universe looks (CA4)', () => {
+  // The app's `art/` folder as a map; invented looks of an invented rider, never a picture.
+  const store = (objects: ReadonlyMap<string, Uint8Array>) => ({
+    read: async (path: string) => { const bytes = objects.get(path); return bytes ? { bytes, generation: '1' } : null },
+    list: async (prefix: string) => [...objects.keys()].filter((p) => p.startsWith(`${prefix}/`)).sort(),
+  })
+  const HASH = 'ab'.repeat(32), OTHER = 'cd'.repeat(32)
+  const look = (id: string, sha256: string, extra: Record<string, unknown> = {}) => ({
+    id, character: 'Rider One', outfit: id.replace('rider-one-', ''), title: 'A look', path: `images/${id}.${sha256.slice(0, 16)}.png`, bytes: 1200, sha256, width: 64, height: 96,
+    approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z', ...extra,
+  })
+  const index = (universe: string, looks: unknown[], extra: Record<string, unknown> = {}) =>
+    json({ schemaVersion: 1, kind: 'universe-art', universe, title: 'Sky City', style: 'Invented Style', revision: 2, publishedAt: '2026-01-03T10:00:00.000Z', looks, ...extra })
+  const nobody = () => null
+
+  it('lists each published universe by name with its looks in the index’s order, each at her pack path', async () => {
+    const objects = new Map<string, Uint8Array>([
+      ['universes/sky-city/index.json', index('sky-city', [look('rider-one-street', HASH), look('rider-one-pilot', OTHER)])],
+      ['universes/old-road/index.json', index('old-road', [look('rider-one-villager', HASH)], { title: 'Old Road', style: null, revision: null })],
+      [`universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`, json('not an index')],
+    ])
+    const all = await universes(store(objects), (name) => (name === 'Rider One' ? 9001 : null))
+    expect(all.map((u) => [u.id, u.title, u.style, u.revision, u.looks.length])).toEqual([['old-road', 'Old Road', null, null, 1], ['sky-city', 'Sky City', 'Invented Style', 2, 2]])
+    expect(all[1]!.looks[0]).toEqual({
+      id: 'rider-one-street', character: 'Rider One', characterId: 9001, outfit: 'street', title: 'A look', path: `universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`,
+      bytes: 1200, sha256: HASH, width: 64, height: 96, approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z',
+    })
+    expect(all[1]!.looks.map((l) => l.id)).toEqual(['rider-one-street', 'rider-one-pilot'])
+  })
+
+  it('drops a look whose entry isn’t a hash-named PNG of its own, another universe’s index, and a damaged file', async () => {
+    const objects = new Map<string, Uint8Array>([
+      ['universes/sky-city/index.json', index('sky-city', [
+        look('rider-one-street', HASH), look('rider-one-wrong-hash', HASH, { path: `images/rider-one-wrong-hash.${OTHER.slice(0, 16)}.png` }), look('rider-one-outside', HASH, { path: '../../ranker/profiles.json' }),
+        look('rider-one-no-size', HASH, { width: 0 }), look('Rider One', HASH), 'words', null,
+      ])],
+      ['universes/copied/index.json', index('sky-city', [look('rider-one-street', HASH)])],
+      ['universes/broken/index.json', new TextEncoder().encode('{ not json')],
+      ['universes/empty/index.json', index('empty', [])],
+      ['universes/Not-A-Name/index.json', index('Not-A-Name', [look('rider-one-street', HASH)])],
+    ])
+    const all = await universes(store(objects), nobody)
+    expect(all.map((u) => [u.id, u.looks.map((l) => l.id)])).toEqual([['sky-city', ['rider-one-street']]])
+    expect(all[0]!.looks[0]!.characterId).toBeNull()
+    expect(await universes(store(new Map()), nobody)).toEqual([])
+  })
+
+  it('finds her character by any of her master data names, however the author wrote it', async () => {
+    const d = data(); d.characters[0]!.name = { ...d.characters[0]!.name, en: 'Rider One', global: 'Rider One (Global)' }
+    const release = await buildMemoryRelease(d)
+    const byName = await new ArtService(files(release.objects), files(new Map())).characterByName()
+    expect([byName('Rider One'), byName('rider-one'), byName('RIDER ONE (global)'), byName('Rider Two'), byName('')]).toEqual([9001, 9001, 9001, null, null])
+  })
+
+  it('serves only a look’s hash-named PNG beside the key pack’s files', () => {
+    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW]
+    expect(safePackPath(`universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`, allow)).toEqual({ path: `universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`, immutable: true })
+    for (const path of ['universes/sky-city/index.json', 'universes/sky-city/images/rider-one-street.png', `universes/sky-city/prompts/street.${HASH.slice(0, 16)}.txt`, `universes/../ranker/x.${HASH.slice(0, 16)}.png`, 'ranker/profiles.json'])
+      expect(safePackPath(path, allow)).toBeNull()
+    expect(safePackPath('traveler-keys/index.json', allow)).toEqual({ path: 'traveler-keys/index.json', immutable: false })
   })
 })

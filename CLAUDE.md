@@ -30,6 +30,12 @@
   art and publishing). Live (P130); the Uma Ranker is live (RK1, P131): Playable Umas per outfit on ten art batches, with
   sisters in the private `ranker/profiles.json`; Uma Character Art is live, laid out by the Ranker (CA1, CA2, P135, P136); RK2
   after the owner's ranking. Claude owns Uma Studio and the app.
+- **Universe looks (CA4, P162, AP73–AP82):** ChatGPT's owner-approved pictures of an Uma in another world live in
+  `content/authoring/character-universes/<universe>/approved/` (private, local). `pnpm art:push <universe>` publishes the
+  approved ones to the app's bucket (`art/universes/`), where Character Art shows them **on her own page**, never in a tab
+  of their own; it also flags each look as published (`approved/publication.json`), which the local galleries show
+  (`pnpm art:gallery`, http://127.0.0.1:4323; `pnpm art:status` refreshes the flags). ChatGPT pushes after an approval;
+  Claude pushes only on the owner's word.
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

@@ -3,7 +3,9 @@
 > **Status: 2026-11-11 (P127–P130): live at https://uma-platform.web.app** (SH1, SH2); the owner's two sign-in entries are in
 > and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
 > each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
-> records (CA2, P136). Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> records (CA2, P136). **An Uma's page also shows her universe looks (CA4, P162):** the approved pictures of her in another
+> world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 30 looks are live, 15
+> each on Kitasan Black's and Almond Eye's pages. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -11,7 +13,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP82 for the universe looks.
 >
 > **Uma Story is live (US1, P149)** at https://uma-platform.web.app/story: the third sub-app, one Story App for
 > uma-quest's and uma-farm's stories, with three books (Cast, Quest, Farm) on one shared cast. Its page is
@@ -33,7 +35,7 @@
   | Sub-app | What | Packets |
   |---|---|---|
   | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live) | RK1 ✓, then RK2, the pass after your ranking |
-  | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs | CA1, then CA2 |
+  | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs; then her approved looks in other universes, on her own page | CA1–CA3 ✓, CA4 ✓ |
   | **Uma Story** | uma-quest's and uma-farm's Story Sandboxes, moved here as three books on one cast: Cast, Quest, Farm ([story.md](story.md)) | US1 ✓ (live); US2–US4 parked, local first (P150) |
   | Uma Quest Art, Uma Farm Art, Uma Platform Art | Each game's and the platform's original assets, drawn from their releases | Later (GA1–GA3) |
   | Publish | Publish from your private authoring | Later (PB1) |
@@ -62,6 +64,7 @@ uma-platform.web.app   (Google sign-in, owner only)
  ranker/boards/*.json        traveler-keys/ (read only)     files/, manifests/, channels/
  ranker/plan.json                                           source-art/ (read only)
  ranker/assets/ (enemy art)
+ art/universes/<universe>/   (CA4: index.json, images/<look>.<hash>.png)
 ```
 
 ## The app
@@ -96,7 +99,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Hosting site | ~2 MB of app | 10 GB stored, 360 MB a day transferred | $0 |
 | `platform-api` (owner only, min 0) | a few thousand requests | 2M requests, 180,000 vCPU-s, 360,000 GiB-s | $0 |
 | Image repository, last 3 images | ~0.15 GB | 0.5 GB, shared with the games' three repositories (0.37 GB today) | ≤$0.01 |
-| `gs://uma-platform-content` | ~0.2 GB (boards, 169 MB of franchise art) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
+| `gs://uma-platform-content` | ~0.25 GB (boards, 169 MB of franchise art, 50 MB of universe looks since CA4) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
 | Bucket operations | a few thousand reads, a few hundred writes | 50,000 Class B, 5,000 Class A | $0 |
 | Pictures to your phone | first visit ~0.3 GB, then cached on the device | 1 GB from Cloud Run in North America | $0 |
 | **Total** | | | **$0 to about $0.01**, under the project's $5 budget alert |
@@ -147,6 +150,16 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP48 | **The inputs:** her master data portrait and chibis, her approved chibi sprite, and the shared references (counted, inside the archive) |
 | AP49 | **Full body** (CA3, P137): GameTora's full-body 3D render, head to toe, joins master data as `outfit-renders` (uma-data 1.5.0): 768×1024, transparent, lossless, every outfit. It's the first picture on an outfit's page. The still only: the idle animation stays out (your call) |
 | AP50 | **No game reads it:** older uma-data parsers skip an unknown family, so the games stay pinned where they are; uma-quest's adult travelers take it as an authoring input |
+| AP73 | **CA4 puts an Uma's universe looks on her own page** (P162): a "Universes" section under her full-body render, universe by universe (its style, count, revision and publish date), each look a card that opens full size. Never on a sister's page, and her tiles count her looks. There is no separate tab (the owner: "visible on a per-uma basis, on the same menu that shows the full uma input data") |
+| AP74 | **The looks live in the app's own bucket,** `gs://uma-platform-content/art/universes/<universe>/`: an `index.json` and `images/<look>.<16 hex>.png`, the approved PNG byte for byte, so the published hash is the approved hash. Not master data (it stays neutral), not uma-art, not git |
+| AP75 | **`pnpm art:push <universe>… \| --all [--dry-run]`** reads `content/authoring/character-universes/<universe>/approved/manifest.json` and sends only a look whose entry says the owner approved it and whose PNG still has the approved hash and size. It reads each upload back (size and MD5) before the index, which goes last under a generation check. Nothing is ever deleted: a look that leaves the approved set leaves the index, and its file stays |
+| AP76 | **The API:** `GET /api/art/universes` reads every index on each request, so a push shows on the next load; the PNGs come through the art pack route (`/api/art/content/universes/…`), hash-named files only, owner only, checked against their hash and kept on the device |
+| AP77 | **A look finds her Uma by name:** the manifest says "Kitasan Black"; the API matches it against master data's names (Global, English, Japanese), so the authoring files carry no game ids, and a name nobody has is simply shown on no page |
+| AP78 | **The published flag is a record beside the manifest,** `approved/publication.json`, written by each push and by `pnpm art:status`: every look is `published`, `changed` (approved again with another picture), `unpublished` or `refused` (with the reason), with its date and bucket path. The manifest and the pictures are never touched |
+| AP79 | **The local galleries show the flag:** `publication.js` and one shared `publication-flag.js` add a Published badge beside each look's Approved and a line under the page's header. The pages still open from the file system; the tool puts its two script tags back when a gallery is regenerated |
+| AP80 | **The Local Art Gallery has a front page:** `pnpm art:gallery` (http://127.0.0.1:4323, launch config `art-gallery`) lists each universe with its approved and published counts and its study pages; this machine only, read only |
+| AP81 | **Who pushes:** the owner's approval in the manifest is the go. ChatGPT runs the push as the last step of an approval (P147); Claude runs it on the owner's word, as for the first 30 ("help me by publishing all already approved images") |
+| AP82 | **Local dev:** a push also fills `content/published/art/`, the same files at the same paths, which the local app reads (`ART_DIR`) |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 
 ## Later
@@ -166,12 +179,13 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
+| CA4 | The universe looks: `pnpm art:push`, `art:status` and `art:gallery`, the looks on each Uma's page, the published flag in the local galleries; 30 looks published | Claude | M | CA3 ✓, your ask ✓ | **Done** (P162) |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | US1 | Uma Story's shell: the tile, the cast by batch, a plain reader for both games' drafts, your verdicts, `story:push` and `story:pull` ([story.md](story.md)) | Claude | L | Your go ✓ | **Done** (P149) |
 | US2–US4 | The Cast book, the Quest book, the Farm book ([story.md](story.md)) | Claude | L each | Your ask | **Parked** (P150): local first |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; US1 is done and Uma Story is parked there (P150); GA1–GA3 and PB1 when you ask.
+**Order:** SH1, SH2, RK1 and CA1–CA4 are done; RK2 follows your ranking; US1 is done and Uma Story is parked there (P150); GA1–GA3 and PB1 when you ask.
 
 ## Your steps
 

@@ -86,7 +86,7 @@
     <div class="tile"><b>1</b><span>new bucket; no database</span></div>
     <div class="tile"><b>~$0.01</b><span>a month, under the $5 alert</span></div>
     <div class="tile"><b>27</b><span>sisters, ranked as Umas of their own</span></div>
-    <div class="tile"><b>50</b><span>calls, AP1–AP50</span></div>
+    <div class="tile"><b>62</b><span>calls, AP1–AP52, AP73–AP82</span></div>
   </div>
 
   <section class="card" id="apps">
@@ -194,11 +194,12 @@
         <tr><td class="id">CA1</td><td>Uma Character Art: uma-quest's Album moved here, laid out by the Ranker's batches</td><td>Claude</td><td>M</td><td>SH2 ✓, RK1 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA3</td><td>Full body: the 3D render as master data's <code>outfit-renders</code>, in Character Art</td><td>Claude</td><td>S</td><td>CA2 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">CA4</td><td>The universe looks: <code>pnpm art:push</code>, the looks on each Uma's page, the published flag in the local galleries; 30 looks published</td><td>Claude</td><td>M</td><td>CA3 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
     </table></div>
-    <p class="note">SH1, SH2, RK1 and CA1–CA3 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
+    <p class="note">SH1, SH2, RK1 and CA1–CA4 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
   </section>
 
   <section class="card" id="calls">
@@ -238,6 +239,16 @@
         <tr><td class="id">AP48</td><td><b>The inputs:</b> portrait and chibis, the approved chibi sprite, the shared references counted</td></tr>
         <tr><td class="id">AP49</td><td><b>Full body</b> (CA3): the 3D render, head to toe, as master data's <code>outfit-renders</code>, 768×1024 lossless, first on her page; the still only</td></tr>
         <tr><td class="id">AP50</td><td><b>No game reads it:</b> older parsers skip the new family; uma-quest's adult travelers take it as an input</td></tr>
+        <tr><td class="id">AP73</td><td><b>CA4: an Uma's universe looks sit on her own page,</b> under her full-body render, universe by universe; never a sister's page; her tiles count them; no separate tab</td></tr>
+        <tr><td class="id">AP74</td><td><b>They live in the app's own bucket,</b> <code>art/universes/&lt;universe&gt;/</code>: an index and the approved PNGs, byte for byte, under hash names</td></tr>
+        <tr><td class="id">AP75</td><td><b><code>pnpm art:push</code></b> sends only a look the owner approved whose PNG still has the approved hash and size; it reads each upload back, writes the index last and never deletes</td></tr>
+        <tr><td class="id">AP76</td><td><b>The API:</b> <code>/api/art/universes</code> reads the indexes on each request; the PNGs come through the art pack route, owner only, hash-checked</td></tr>
+        <tr><td class="id">AP77</td><td><b>A look finds her Uma by name,</b> matched against master data's names, so authoring carries no game ids</td></tr>
+        <tr><td class="id">AP78</td><td><b>The published flag</b> is <code>approved/publication.json</code>, beside the manifest: published, changed, unpublished or refused, look by look</td></tr>
+        <tr><td class="id">AP79</td><td><b>The local galleries show it:</b> a Published badge beside each look's Approved, and a line under the header</td></tr>
+        <tr><td class="id">AP80</td><td><b>The Local Art Gallery's front page:</b> <code>pnpm art:gallery</code>, each universe with its approved and published counts; this machine only</td></tr>
+        <tr><td class="id">AP81</td><td><b>Who pushes:</b> ChatGPT after an approval, or Claude on the owner's word</td></tr>
+        <tr><td class="id">AP82</td><td><b>Local dev:</b> a push also fills <code>content/published/art/</code>, which the local app reads</td></tr>
         <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>
         <tr><td class="id">AP25</td><td><b>Playable Umas ranks every outfit on ten straight tiers</b>, T1–T10, each an art batch; keys 1–9 and 0</td></tr>
         <tr><td class="id">AP26</td><td><b>Up and down:</b> one place crosses a tier's edge; a whole-tier step lands next to the boundary</td></tr>

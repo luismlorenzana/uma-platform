@@ -84,6 +84,46 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
   return album
 }
 
+/** A universe look (CA4, P162): an owner-approved picture of an Uma in another world, published by `pnpm art:push`. */
+export interface UniverseLook {
+  id: string
+  character: string
+  /** Her character in master data, found by name; null when no character has that name. */
+  characterId: number | null
+  outfit: string
+  title: string
+  /** Her PNG's pack path, read at /api/art/content/…; `bytes` and `sha256` check it. */
+  path: string
+  bytes: number
+  sha256: string
+  width: number
+  height: number
+  approvedOn: string | null
+  publishedAt: string | null
+}
+export interface Universe { id: string; title: string; style: string | null; revision: number | null; publishedAt: string | null; looks: UniverseLook[] }
+
+let universes: Promise<Universe[]> | null = null
+/** Every published universe, loaded once a visit; `fresh` reads them again. */
+export function loadUniverses(fresh = false): Promise<Universe[]> {
+  if (fresh) universes = null
+  universes ??= request<Universe[]>('/api/art/universes')
+  universes.catch(() => { universes = null })
+  return universes
+}
+
+/** A character's looks in every universe that has one of hers. */
+export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[] }[] {
+  return all.map((universe) => ({ universe, looks: universe.looks.filter((l) => l.characterId === characterId) })).filter((g) => g.looks.length > 0)
+}
+
+/** How many looks each character has across the universes, for her tiles. */
+export function lookCounts(all: readonly Universe[]): Map<number, number> {
+  const counts = new Map<number, number>()
+  for (const universe of all) for (const look of universe.looks) if (look.characterId !== null) counts.set(look.characterId, (counts.get(look.characterId) ?? 0) + 1)
+  return counts
+}
+
 /** The Ranker's order: ranked first by place, then by name. */
 export function byPlace(a: AlbumEntry, b: AlbumEntry): number {
   return (a.order ?? Infinity) - (b.order ?? Infinity) || a.name.localeCompare(b.name) || a.outfitId - b.outfitId

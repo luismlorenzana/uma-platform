@@ -1,7 +1,8 @@
 // Uma Character Art (CA1, P135), moved from uma-quest's Album (its AlbumScreen.tsx at 6c572e6) and laid out by the Ranker.
 // Two tabs: every Uma, in the Ranker's tiers (T1 to T10, then the unranked, then F, collapsed), each outfit as the Uma
 // she is (a sister by her own name); and the adult travelers, with all twelve battle keys put together as the fight
-// draws them and her ten expressions. Everything is read at run time from the private releases, hash-checked and kept on
+// draws them and her ten expressions. An Uma's page also shows her universe looks (CA4): the approved pictures of her in
+// another world, beside her full-body render and the rest of her input data. Everything is read at run time from the private releases, hash-checked and kept on
 // the device; nothing of it is in git.
 import './art.css'
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
@@ -10,10 +11,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CONTENT } from '../../content/client'
 import { KEY_SETS, KEYS } from './content'
-import { byPlace, loadAlbum, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry } from './data'
+import { byPlace, loadAlbum, loadUniverses, lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
 import { drawKeyFace, drawKeyPose } from './keyCanvas'
 import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
 import { SpritePlayer } from './SpritePlayer'
+import { UmaUniverses } from './Universes'
 import { request } from '../../api/client'
 
 type Keys = LoadedKeys<HTMLImageElement>
@@ -121,11 +123,17 @@ function FaceCanvas({ keys, expression }: { keys: Keys; expression: string }) {
   return <canvas ref={ref} className="h-20 w-auto" aria-label={expression} />
 }
 
-function AdultTile({ entry, onOpen }: { entry: AlbumEntry; onOpen: () => void }) {
+/** How many universe looks her page holds (CA4), on her tile. */
+function LooksBadge({ count, className }: { count: number; className: string }) {
+  return <span data-looks={count} title={`${count} universe look${count === 1 ? '' : 's'} on her page`} className={`absolute rounded-full bg-ink px-1.5 text-[10px] font-bold leading-4 text-page ${className}`}>{count} look{count === 1 ? '' : 's'}</span>
+}
+
+function AdultTile({ entry, looks, onOpen }: { entry: AlbumEntry; looks: number; onOpen: () => void }) {
   const keys = useKeys(entry.outfitId)
   return (
     <button type="button" onClick={onOpen} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-2 text-center shadow-1">
       <span className="absolute left-1.5 top-1.5"><Tier tier={entry.tier} /></span>
+      {looks > 0 && <LooksBadge count={looks} className="right-1.5 top-1.5" />}
       <div className="flex h-44 items-end justify-center">
         {keys?.set.stills ? <StillImg still={keys.set.stills.stand} alt={entry.name} className="max-h-44 w-auto" />
           : keys ? <PoseCanvas keys={keys} pose="ready" className="max-h-44 w-auto" /> : <span className="text-sm text-ink-soft">Loading</span>}
@@ -136,19 +144,22 @@ function AdultTile({ entry, onOpen }: { entry: AlbumEntry; onOpen: () => void })
   )
 }
 
-function UmaTile({ entry, path, onOpen }: { entry: AlbumEntry; path: string | null; onOpen: () => void }) {
+function UmaTile({ entry, path, looks, onOpen }: { entry: AlbumEntry; path: string | null; looks: number; onOpen: () => void }) {
   return (
     <button type="button" onClick={onOpen} title={`${entry.name} · ${entry.title}`} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-1.5 text-center">
       {path ? <ArtImg path={path} alt={entry.name} box="size-16" className="size-16 rounded-md object-cover" /> : <div className="size-16 rounded-md bg-sunken" />}
       {entry.adult && <span className="absolute right-1 top-1 rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-ink">Adult</span>}
       {entry.sister && <span aria-label="Sister" className="absolute left-1 top-1 size-2.5 rounded-full bg-accent ring-1 ring-panel" />}
+      {looks > 0 && <LooksBadge count={looks} className="left-1 top-[3.2rem]" />}
       <span className="line-clamp-2 text-[11px] font-semibold leading-tight">{entry.name}</span>
     </button>
   )
 }
 
-function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; onClose: () => void }) {
+function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: AlbumData; universes: readonly Universe[]; onClose: () => void }) {
   const keys = useKeys(entry.adult ? entry.outfitId : null)
+  // Her universe looks sit on her own page: a sister is another Uma, so they aren't hers.
+  const worlds = useMemo(() => (entry.sister ? [] : looksOf(universes, entry.characterId)), [universes, entry])
   const pictures = useMemo(() => picturesOf(data.art, entry), [data.art, entry])
   const render = renderOf(data.art, entry.outfitId)
   return (
@@ -176,6 +187,7 @@ function Detail({ entry, data, onClose }: { entry: AlbumEntry; data: AlbumData; 
             </figure>
           </section>
         )}
+        {worlds.length > 0 && <UmaUniverses groups={worlds} />}
         {entry.adult && (
           <section className="flex flex-col gap-3">
             {keys && <p className="text-xs text-ink-soft">Adult set {keys.set.revision} · {keys.set.archetype} · {keys.set.weapon}</p>}
@@ -269,8 +281,14 @@ export default function ArtScreen() {
   const [failed, setFailed] = useState(false)
   const [query, setQuery] = useState('')
   const [showF, setShowF] = useState(false)
+  // The universe looks load beside the album: without them every page still shows the rest.
+  const [universes, setUniverses] = useState<Universe[]>([])
   useEffect(() => { loadAlbum(true).then(setData, () => setFailed(true)) }, [])
+  useEffect(() => { loadUniverses(true).then(setUniverses, () => undefined) }, [])
   const tab = params.get('tab') === 'adult' ? 'adult' : 'all'
+  // Her looks are on her own pages, never a sister's.
+  const counts = useMemo(() => lookCounts(universes), [universes])
+  const looksFor = (e: AlbumEntry) => (e.sister ? 0 : counts.get(e.characterId) ?? 0)
   const openId = Number(params.get('o')) || null
   const adults = useMemo(() => (data?.entries.filter((e) => e.adult) ?? []).sort(byPlace), [data])
   const shown = useMemo(() => {
@@ -307,7 +325,7 @@ export default function ArtScreen() {
           {failed && <p className="text-center text-ink-soft">The art didn’t load. Check you’re signed in and online.</p>}
           {data && tab === 'adult' && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-              {adults.map((e) => <AdultTile key={e.outfitId} entry={e} onOpen={() => go({ o: String(e.outfitId) })} />)}
+              {adults.map((e) => <AdultTile key={e.outfitId} entry={e} looks={looksFor(e)} onOpen={() => go({ o: String(e.outfitId) })} />)}
               {adults.length === 0 && <p className="col-span-full text-center text-ink-soft">No adult keys reached this device.</p>}
             </div>
           )}
@@ -326,7 +344,7 @@ export default function ArtScreen() {
                     </header>
                     {!folded && (
                       <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
-                        {s.entries.map((e) => <UmaTile key={e.outfitId} entry={e} path={tileOf(data.art, e.outfitId)} onOpen={() => go({ o: String(e.outfitId) })} />)}
+                        {s.entries.map((e) => <UmaTile key={e.outfitId} entry={e} path={tileOf(data.art, e.outfitId)} looks={looksFor(e)} onOpen={() => go({ o: String(e.outfitId) })} />)}
                       </div>
                     )}
                   </section>
@@ -335,7 +353,7 @@ export default function ArtScreen() {
             </div>
           )}
         </div>
-        {open && data && <Detail entry={open} data={data} onClose={() => go({ o: null })} />}
+        {open && data && <Detail entry={open} data={data} universes={universes} onClose={() => go({ o: null })} />}
       </main>
     </AppFrame>
   )

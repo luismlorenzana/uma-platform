@@ -28,20 +28,35 @@ const json = async (files: FileSource, path: string): Promise<unknown | null> =>
   return bytes === null ? null : JSON.parse(decoder.decode(bytes)) as unknown
 }
 
+/** A name as one key: letters and digits only, so "Kitasan Black" and "kitasan-black" are the same Uma. */
+const nameKey = (name: string): string => name.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '')
+
+interface Loaded { catalog: TierCatalog; names: Map<string, number> }
+
 export class ArtService {
-  private catalog: Promise<TierCatalog> | undefined
+  private loaded: Promise<Loaded> | undefined
   /** `release`: the master data release; `ranker`: the Ranker's folder (`ranker/` in the bucket, its local copy in dev). */
   constructor(private readonly release: FileSource, private readonly ranker: FileSource) {}
 
-  private umas(): Promise<TierCatalog> {
-    this.catalog ??= (async () => {
+  private load(): Promise<Loaded> {
+    this.loaded ??= (async () => {
       const client = createReleaseClient({ source: { read: async (p) => { const b = await this.release.read(p); if (!b) throw new ReleaseSourceError(p, 404, `Release file ${p} not found`); return b } } })
       const manifest = await client.manifest()
       const [characters, outfits, art] = await Promise.all([client.set(manifest, 'characters'), client.set(manifest, 'outfits'), client.art(manifest)])
-      return buildCatalog({ release: manifest.version, characters, outfits, art, enemies: null, imports: [], legacy: emptyLegacy() })
+      // Every name master data has for a character, so an author's "Kitasan Black" finds her whichever text it is.
+      const names = new Map<string, number>()
+      for (const c of characters) for (const name of [c.name.global, c.name.en, c.name.ja]) { const key = name ? nameKey(name) : ''; if (key && !names.has(key)) names.set(key, c.id as number) }
+      return { catalog: buildCatalog({ release: manifest.version, characters, outfits, art, enemies: null, imports: [], legacy: emptyLegacy() }), names }
     })()
-    this.catalog.catch(() => { this.catalog = undefined })
-    return this.catalog
+    this.loaded.catch(() => { this.loaded = undefined })
+    return this.loaded
+  }
+  private async umas(): Promise<TierCatalog> { return (await this.load()).catalog }
+
+  /** Finds a character by any of her master data names (CA4): the universe looks name her, they don't carry her id. */
+  async characterByName(): Promise<(name: string) => number | null> {
+    const { names } = await this.load()
+    return (name) => names.get(nameKey(name)) ?? null
   }
 
   async order(): Promise<ArtOrder> {
