@@ -10,6 +10,7 @@ uma-quest's engine (its P90) and is shared now that uma-farm is its second user 
 |---|---|---|
 | `@luismlorenzana/uma-stage` | Everything: the stage, the world builder, the sprite player, and the formats | three.js, React, uma-kit, uma-data (peers) |
 | `@luismlorenzana/uma-stage/formats` | Only the kit and design formats, and (ST4) `farmProblems`, `standInFarmAtlas` and `SAMPLE_FARM`: pure, no three.js or DOM, **ESM and CommonJS** | Nothing |
+| `@luismlorenzana/uma-stage/look` | **The look path (LK1, P161), opt-in:** `LookStage`, the town square by day and the tavern at night, camera families, device tiers, the post stack with a per-scene grade, height fog, shafts, particles, wind, static batching, the packed kit (`LookKit`), and the phone test's `FrameRecorder` and `gpuEstimate`. No game uses it before LK3; the review app (`pnpm --filter @luismlorenzana/uma-stage look`) and the platform app's Look sub-app do. It patches three's fog chunks for height fog when a `LookStage` is made | three.js, uma-data (types), a private pack (`pnpm look:pack`) |
 
 A game's rules and its API import `formats` (uma-quest's `@quest/domain` re-exports it), so a server never installs or
 loads three.js. A farm's domain checks its designs there too: `farmProblems(design, standInFarmAtlas())` is what

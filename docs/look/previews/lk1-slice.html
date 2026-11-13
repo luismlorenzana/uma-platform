@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Look Slice Review</title>
+<!-- LK1's review page (P158-P161): the look slice as built, its frames (environment only: Uma art stays private),
+     its layers, its look measures against the references, the phone test and the calls. Self-contained, uma-kit's
+     tokens, light and dark. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .answer { background: var(--raised); border-radius: 10px; padding: 12px 14px; }
+  .answer b { display: block; color: var(--ink); margin-bottom: 4px; }
+  .answer p { margin: 0; font-size: 13px; }
+  figure { margin: 0; }
+  figure img { width: 100%; border-radius: 10px; display: block; background: var(--sunken); }
+  figcaption { font-size: 12px; color: var(--ink-faint); margin-top: 6px; }
+  .pill.big { background: color-mix(in srgb, var(--danger) 16%, var(--panel)); color: var(--danger); }
+  .pill.mid { background: var(--accent-wash); color: var(--accent); }
+  .pill.ok { background: var(--success-wash); color: var(--success); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); border-top: 3px solid var(--hairline-strong); }
+  .step b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 3px; }
+  .step.next { border-top-color: var(--info); }
+  .step.maybe { border-top-style: dashed; }
+  .chart { position: relative; }
+  .chart svg text { font: 12px system-ui, sans-serif; fill: var(--ink-soft); }
+  .chart svg text.v { font-weight: 700; fill: var(--ink); }
+  .chart .bar { fill: var(--info); }
+  .chart .bar:hover { fill: color-mix(in srgb, var(--info) 80%, var(--ink)); }
+  .chart .axis { stroke: var(--hairline-strong); }
+  .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--page); font: 500 12px system-ui; padding: 5px 8px; border-radius: 6px; opacity: 0; transition: opacity .1s; white-space: nowrap; }
+  details summary { cursor: pointer; font-size: 12px; color: var(--info); margin-top: 8px; }
+  ol li, ul li { margin: 4px 0; }
+
+  .frames { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  td.in { color: var(--success); font-weight: 700; } td.out { color: var(--danger); font-weight: 700; }
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; align-items: stretch; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; position: relative; }
+  .step b { display: block; color: var(--ink); font-size: 13px; } .step span { font-size: 12px; color: var(--ink-soft); }
+  .step.private { box-shadow: inset 0 0 0 1.5px var(--accent); }
+  .cta { display: inline-block; background: var(--accent); color: #1a1205; font-weight: 700; padding: 8px 14px; border-radius: 999px; text-decoration: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Look slice (LK1): the review</h1>
+  <p>The hero scene at the target look, built from the owner's references (P158), the CC0 kits we author on top of (P159)
+  and the owner's three notes on milestone 1 (P160). <b>Status, 2026-11-13: built and live; waiting on the phone run and
+  the owner's verdict</b> (P161).</p>
+  <p><a class="cta" href="https://uma-platform.web.app/look">Open the slice on the phone: uma-platform.web.app/look</a></p>
+  <nav><a href="#frames">Frames</a><a href="#layers">Layers</a><a href="#measures">Measures</a><a href="#phone">Phone test</a><a href="#pipeline">Pipeline</a><a href="#next">Next</a><a href="#calls">Calls</a></nav>
+
+  <div class="tiles">
+    <div class="tile"><b>2</b><span>scenes: the square by day, the tavern at night</span></div>
+    <div class="tile"><b>3</b><span>camera families: front, 3/4, high</span></div>
+    <div class="tile"><b>3</b><span>device tiers: High, Medium, Saver</span></div>
+    <div class="tile"><b>3.2 MB</b><span>the packed kit, from 265 MB of CC0 source</span></div>
+    <div class="tile"><b>5,000 → 690</b><span>draw calls a frame on High, after batching</span></div>
+    <div class="tile"><b>12.9 MB</b><span>first load with eight sprite sets (budget 15)</span></div>
+  </div>
+
+  <section class="card" id="frames">
+    <h2>The frames</h2>
+    <p>Rendered by the look stage at render scale 1.5. <b>The Umas are hidden in these pictures</b> because their art is
+    private (never in git); the live page and the private captures show them standing in the scenes.</p>
+    <div class="frames">
+      <figure><img src="lk1/square-front.jpg" alt="The town square by day from the front camera"><figcaption>Town square, day: front (Octopath)</figcaption></figure>
+      <figure><img src="lk1/square-tactics.jpg" alt="The town square by day from the diagonal camera"><figcaption>Town square, day: 3/4 (Triangle Strategy)</figcaption></figure>
+      <figure><img src="lk1/tavern-front.jpg" alt="The tavern at night from the front camera"><figcaption>Tavern, night: front</figcaption></figure>
+      <figure><img src="lk1/tavern-tactics.jpg" alt="The tavern at night from the diagonal camera, its near wall hidden"><figcaption>Tavern, night: 3/4, the near wall hidden</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="card" id="layers">
+    <h2>The layers</h2>
+    <p>The packet's eight layers, each switchable on the review page (<code>pnpm --filter @luismlorenzana/uma-stage look</code>),
+    and what the owner's notes added.</p>
+    <div class="scroll"><table>
+      <tr><th>Layer</th><th>What is in</th><th></th></tr>
+      <tr><td><b>1. Camera</b></td><td>Perspective, narrow field of view; Octopath's front view (27° down) and Triangle Strategy's diagonal 3/4 (40° down, 45° turned); a slight sway</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>2. Volume</b></td><td>3D kit buildings (lower roofs, 0.72 of the kit's pitch); 2.5D tufts, clover and flowers; our sprites as upright standees, stretched by the camera's pitch</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>3. Character light</b></td><td>A little of each sprite's own colour as a key; a warm rim from the key's side, read off normal maps made from each sprite's outline</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>4. Shadows</b></td><td>Sun or moon shadows that follow sprite silhouettes; a contact shadow at the feet; ambient occlusion on High</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>5. Focus</b></td><td>Depth of field by depth, the focus on the party's distance per camera family</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>6. Grade</b></td><td>Bloom, ACES tone mapping, a per-scene grade (saturation, contrast, warm light over cool shadow), a vignette, a touch of chromatic aberration</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>7. Atmosphere</b></td><td>Height fog; light shafts (between the trees by day, through the windows at night); petals, embers, dust; wind on leaves, flowers and grass; flicker on every flame</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>8. Resolution</b></td><td>The 3D frame at the tier's render scale (1.5, 1, 0.75 of the device's pixels), the interface at full density (a parchment dialogue box)</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>Pixel scale</b></td><td>Every kit texture redrawn at 64 texels with stepped colours, sampled nearest (milestone 1's "coarser")</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>Grass</b></td><td>One 1024-texel olive texture repeating every 48 m, world-space lush and dry patches, lit tufts (P160)</td><td><span class="pill done">in</span></td></tr>
+      <tr><td><b>Sprites</b></td><td>Our sets as drawn, by default; a pixel pass at 48 texels on a switch (P160: it mangles faces)</td><td><span class="pill done">in</span></td></tr>
+    </table></div>
+  </section>
+
+  <section class="card" id="measures">
+    <h2>The look measures against the references</h2>
+    <p>The look measures (LR12) on each frame at 640 px wide, against the twelve references' range. Green is within.</p>
+    <div class="scroll"><table>
+      <tr><th>Measure</th><th class="num">References</th><th class="num">Square, front</th><th class="num">Square, 3/4</th><th class="num">Tavern, front</th><th class="num">Tavern, 3/4</th></tr>
+      <tr><td><b>Contrast</b> (lightness p5–p95)</td><td class="num">58 – 99</td><td class="num in">66</td><td class="num in">67</td><td class="num in">68</td><td class="num in">69</td></tr>
+      <tr><td><b>Palette</b> (colours for 90%)</td><td class="num">82 – 431</td><td class="num in">241</td><td class="num in">215</td><td class="num in">132</td><td class="num in">126</td></tr>
+      <tr><td><b>Chroma</b>, mean</td><td class="num">10 – 37</td><td class="num in">25</td><td class="num in">22</td><td class="num in">30</td><td class="num in">33</td></tr>
+      <tr><td><b>Blurred share</b></td><td class="num">0.08 – 0.82</td><td class="num in">0.60</td><td class="num in">0.61</td><td class="num in">0.78</td><td class="num in">0.73</td></tr>
+      <tr><td><b>Lightness</b>, mean</td><td class="num">23 – 58</td><td class="num in">29</td><td class="num in">31</td><td class="num out">21</td><td class="num out">22</td></tr>
+      <tr><td><b>Focus band</b> (middle over outer)</td><td class="num">0.8 – 3.4</td><td class="num out">3.7</td><td class="num out">5.7</td><td class="num in">2.9</td><td class="num in">2.0</td></tr>
+      <tr><td><b>Vignette</b> (edge over middle)</td><td class="num">0.37 – 1.22</td><td class="num in">0.39</td><td class="num in">0.39</td><td class="num out">0.14</td><td class="num out">0.17</td></tr>
+      <tr><td><b>Warm light over cool shadow</b></td><td class="num">−4 – 24</td><td class="num out">32</td><td class="num out">28</td><td class="num out">47</td><td class="num out">47</td></tr>
+      <tr><th>Within</th><th></th><th class="num">6 of 8</th><th class="num">6 of 8</th><th class="num">5 of 8</th><th class="num">5 of 8</th></tr>
+    </table></div>
+    <p class="note">What is off, and why: <b>warm over cool</b> runs above every reference (orange roofs by day, firelight at
+    night); <b>the square's focus band</b> is a stronger miniature than the references (the 3/4 view most); <b>the
+    tavern</b> is a little darker than the references' night frames, with a dark room around it. Each is one setting on the
+    review page, held until the owner's verdict says which way.</p>
+  </section>
+
+  <section class="card" id="phone">
+    <h2>The phone test</h2>
+    <div class="two">
+      <div>
+        <h3>Your step</h3>
+        <ol>
+          <li>On the iPhone, open <a href="https://uma-platform.web.app/look">uma-platform.web.app/look</a> (signed in as for the Ranker).</li>
+          <li>Turn the phone sideways; look around both scenes and the camera buttons.</li>
+          <li>Tap <b>Run the phone test</b> and leave the phone still for about 16 minutes (the screen stays on).</li>
+          <li>Answer how warm the phone is: Cool, Warm or Hot. The numbers save themselves.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>What it runs, and the budgets (LR6)</h3>
+        <table>
+          <tr><th>Step</th><th class="num">Time</th><th>Budget</th></tr>
+          <tr><td>High</td><td class="num">10 min</td><td>30 fps held 95% of seconds; about 400 MB of GPU memory; the first minute against the last (heat)</td></tr>
+          <tr><td>Medium</td><td class="num">3 min</td><td>The same, on a warm phone: no ambient occlusion, render scale 1, a 1024 shadow map</td></tr>
+          <tr><td>Saver</td><td class="num">3 min</td><td>The same: render scale 0.75, no depth of field or bloom, no particles</td></tr>
+          <tr><td>First load</td><td class="num">—</td><td>About 15 MB: the kit (3.2 MB, kept on the device after) and eight sprite sets</td></tr>
+        </table>
+        <p class="note">On this Mac every tier holds 120 fps; the phone is the test. If High misses, the tiers say where the
+        budget goes; if every tier misses, LK4 weighs the same slice in Godot or Unity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="pipeline">
+    <h2>The pipeline the slice runs on</h2>
+    <div class="flow">
+      <div class="step private"><b>CC0 kits</b><span>Quaternius village and nature, 265 MB, private (content/authoring/licensed/)</span></div>
+      <div class="step"><b>pnpm look:pack</b><span>The 43 pieces the scenes name, merged into one glb with glTF Transform; textures 128 texels, positions quantized</span></div>
+      <div class="step private"><b>The pack</b><span>3.2 MB glb and the cast, private: content/authoring/look/pack/ and the app's bucket (look:upload)</span></div>
+      <div class="step"><b>/api/look/content</b><span>Owner only; the kit hash-checked and kept on the device</span></div>
+      <div class="step"><b>LookStage</b><span>@luismlorenzana/uma-stage/look: scenes, layers, tiers, batching, the frame recorder</span></div>
+      <div class="step private"><b>Our sprite sets</b><span>Master data's private release through /api/master</span></div>
+    </div>
+    <p class="note">Orange outline: private, never in git. The review app reads the same pack from disk.</p>
+  </section>
+
+  <section class="card" id="next">
+    <h2>Next</h2>
+    <table>
+      <tr><th>Packet</th><th>What</th><th>When</th></tr>
+      <tr><td class="id">LK1</td><td>Done when the owner says "this is the bar" (or lists what's missing, worked here) and the phone run is in</td><td><span class="pill you">your verdict and one run</span></td></tr>
+      <tr><td class="id">LK2</td><td>The pipeline from the slice: kit format v2 (2D, 2.5D, 3D pieces), the importer (the pack, generalised), batching at build time, sprite normal maps, the look measures in CI, a look-tuning page</td><td><span class="pill later">after LK1</span></td></tr>
+      <tr><td class="id">LK3</td><td>Each game's roll-out on the look path: uma-quest's towns first</td><td><span class="pill later">after LK2</span></td></tr>
+      <tr><td class="id">LK4</td><td>Only if the phone can't hold the budgets: the same slice in Godot 4 or Unity</td><td><span class="pill later">only if needed</span></td></tr>
+    </table>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>Calls</h2>
+    <table>
+      <tr><td class="id">P158</td><td>The owner's 12 references are the look bible v0 and the measures' target ranges; the hero scene is a town square by day with a tavern at night</td></tr>
+      <tr><td class="id">P159</td><td>No paid packs, ever: Claude authors the kits, with free CC0 kits as reference and raw material</td></tr>
+      <tr><td class="id">P160</td><td>The owner's three notes: sprites stretched upright and animated, Octopath's front and Triangle Strategy's 3/4 as camera families, natural grass</td></tr>
+      <tr><td class="id">P161</td><td>LK1 in full: the look path as a package export, the tavern at night, every layer, the pack and batching, the phone test on the platform site</td></tr>
+    </table>
+    <p class="note">Sources: <a href="../hd2d-quality.md">hd2d-quality.md</a> (LR1–LR14), <a href="../bible.md">bible.md</a>,
+    <a href="../../handoff/tasks/LK1-look-slice.md">the LK1 packet</a>, <a href="../../decisions.md">decisions.md</a>.</p>
+  </section>
+</main>
+</body>
+</html>

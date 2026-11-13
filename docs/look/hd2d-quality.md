@@ -3,7 +3,7 @@
 > **Status: 2026-11-13, research (P157).** The owner likes the gameplay and the HD-2D engine, but the look reads as
 > "done by a 12-year-old in 1999". This page answers the owner's questions with sources, audits where the stage and the
 > art stand today, and proposes a way to reach the quality of Octopath Traveler: a measured look-development slice
-> first (LK1), with the owner's eye as the gate. Visual page: [previews/hd2d-quality.html](previews/hd2d-quality.html).
+> first (LK1), with the owner's eye as the gate. Visual page: [previews/hd2d-quality.html](previews/hd2d-quality.html). **LK1 as built: [previews/lk1-slice.html](previews/lk1-slice.html)** (P161).
 > Calls are LR1–LR14; the packets are LK0–LK4 in [the handoff](../handoff/README.md#the-look-lk).
 >
 > **2026-11-13, LK0's references are in (P158):** 12 frames, private, turned into [the look bible](bible.md) with the

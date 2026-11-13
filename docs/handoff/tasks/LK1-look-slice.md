@@ -4,6 +4,12 @@
 owner's references, the hero scene and the asset-pack answer) and the owner's go · Unblocks: LK2 (the pipeline), LK3
 (each game's roll-out), or LK4 if the phone can't hold it**
 
+> **Status, 2026-11-13: in review (P161).** Built in full: the look path is `@luismlorenzana/uma-stage/look`; the town
+> square by day and the tavern at night; every layer below; the kit packed and batched; live at
+> https://uma-platform.web.app/look with the phone test. The review page is
+> [previews/lk1-slice.html](../../look/previews/lk1-slice.html). Steps 1, 3 and 4 are done; step 2 (a Blender still) was
+> replaced by the owner's review of the live slice (P161); steps 5 and 6 wait on the owner: one phone run and the verdict.
+
 ## Why
 
 The owner likes the gameplay and the HD-2D engine, but the look reads as 1999
