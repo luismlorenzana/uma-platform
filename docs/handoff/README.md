@@ -215,15 +215,16 @@ measured look slice first, with the owner's eye against references as the gate.
 
 | Id | What | Who | Size | Needs | State |
 |---|---|---|---|---|---|
-| LK0 | The target: 15–30 reference frames in `content/authoring/look/` (own captures or press material), the hero scene (recommended: a town square by day with one interior), a yes or no on buying asset packs | The owner | ~1 h | — | **References in** (12, P158: [the look bible](../look/bible.md)); hero scene defaulted to a town square by day with a tavern interior; **asset packs: the owner's yes or no** |
-| [LK1](tasks/LK1-look-slice.md) | The look slice: one hero scene to the target in an opt-in uma-stage look path, the target still in Blender first, measured on the iPhone, judged beside the references | Claude, art sourced or painted | L | LK0, the owner's go | Written ahead |
+| LK0 | The target: reference frames, the hero scene, the asset answer | The owner | ~1 h | — | **Done** (P158, P159): 12 references and [the look bible](../look/bible.md); a town square by day with a tavern at night; **no paid packs ever**: Claude authors the kits from references, with two free CC0 Quaternius kits as reference and raw material |
+| [LK1](tasks/LK1-look-slice.md) | The look slice: one hero scene to the target in an opt-in uma-stage look path, measured on the iPhone, judged beside the references | Claude, authoring the kit | L | LK0 ✓, the owner's go ✓ | **In progress**: milestone 1 (2026-11-13), the town square by day in a local look app (`pnpm --filter @luismlorenzana/uma-stage look`), 8 of 9 look measures within the references' ranges (our kits: 2); next, the pixel grid, the grass, the hall's ornament, the roofs, then the tavern at night and the phone |
 | LK2 | The pipeline from the slice: kit format v2 (2D, 2.5D, 3D; texel density; glTF pieces), the importer, sprite normal maps, the look measures, a look-tuning page | Claude | M | LK1's bar | After LK1 |
 | LK3 | Roll-out, each game opt-in by the change protocol: uma-quest's towns and dungeons, uma-farm's band, uma-cyberpunk's board | Each game's session; uma-stage minors here | M each | LK2 | After LK2 |
 | LK4 | Only if LK1 can't hold its budgets on the phone: the same slice in Godot 4 or Unity, side by side | Claude | M | LK1's measurements | Only if needed |
 
-**Proposed, for the owner (LR9):** environment art stops being drawn in code (P147's kits); environments come from
-licensed packs, CC0 shapes re-textured, AI-painted textures and Claude-scripted Blender volume, with Claude on the tools,
-shaders and pipeline. Code-drawn art stays for interface marks and icons.
+**Decided (P159, the owner):** no paid packs, ever. ChatGPT no longer builds kits; Claude is the kit author, working
+from the owner's references, with free CC0 kits (Quaternius's Medieval Village and Stylized Nature MegaKits, private in
+`content/authoring/licensed/`) as reference and raw material: their 3D modules and trims under our own pixel-scale
+textures, lighting and set dressing. The local Draw Things model stays out (its licence is research only).
 
 ## Releases while packets run in parallel
 

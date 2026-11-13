@@ -50,7 +50,8 @@
     "prepack": "pnpm run build",
     "lint": "tsc --noEmit",
     "test": "vitest run",
-    "review": "node review/build.mjs"
+    "review": "node review/build.mjs",
+    "look": "vite --config review/look/vite.config.mjs"
   },
   "peerDependencies": {
     "@luismlorenzana/uma-data": "^1.4.0",

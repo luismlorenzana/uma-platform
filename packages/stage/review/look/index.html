@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Look Slice (LK1)</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0f14; color: #eef2f7; font: 13px/1.4 system-ui, sans-serif; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+  #panel { position: absolute; top: 8px; right: 8px; width: 270px; max-height: calc(100% - 16px); overflow: auto; background: rgba(12, 16, 22, 0.86); border-radius: 10px; padding: 10px 12px; }
+  #panel h3 { margin: 10px 0 4px; font-size: 12px; color: #a6b3c2; text-transform: uppercase; letter-spacing: .04em; }
+  #panel label { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; margin: 3px 0; }
+  #panel input[type=range] { grid-column: 1 / -1; width: 100%; }
+  #panel button { font: inherit; background: #eef2f7; color: #0b0f14; border: 0; border-radius: 7px; padding: 5px 9px; margin: 2px 2px 2px 0; cursor: pointer; }
+  #measures { font-size: 11px; width: 100%; border-collapse: collapse; }
+  #measures td { padding: 2px 3px; border-bottom: 1px solid #ffffff12; }
+  #measures .below, #measures .above { color: #f08a80; } #measures .within { color: #7fd48a; }
+  #ref { position: absolute; left: 8px; bottom: 8px; width: 34%; border-radius: 8px; display: none; box-shadow: 0 2px 12px #0008; }
+  #status { position: absolute; left: 10px; top: 8px; font-size: 12px; color: #a6b3c2; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="status">Loading…</div>
+<img id="ref" alt="reference">
+<div id="panel"></div>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

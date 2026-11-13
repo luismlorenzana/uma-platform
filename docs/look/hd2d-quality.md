@@ -166,7 +166,7 @@ a scene's first load under about 15 MB, cached after.
 | LR6 | Budgets: 30 fps over ten minutes, about 400 MB of GPU memory and a first load under about 15 MB a scene |
 | LR7 | Three device tiers: High, Medium, Saver |
 | LR8 | The look path is a new, opt-in uma-stage path; today's stage keeps working until each game moves |
-| LR9 | Assets from licensed packs, CC0 models, AI-painted textures and Claude-scripted Blender volume; code-drawn shapes only for interface marks (proposes amending P147 for environments) |
+| LR9 | Assets from licensed packs, CC0 models, AI-painted textures and Claude-scripted Blender volume; code-drawn shapes only for interface marks (proposes amending P147 for environments). **Amended by P159:** no paid packs ever; Claude authors the kits from references, with free CC0 kits as reference and raw material |
 | LR10 | Licensed source files stay private and reach games only through master data's private release; CC0 and our own art may go to uma-art |
 | LR11 | A private reference library of target frames, tagged by scene type, used in every look review |
 | LR12 | Look measures on every capture, compared with the references' ranges: they flag flat images, they don't judge taste |

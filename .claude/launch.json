@@ -55,6 +55,16 @@
         "../uma-cyberpunk/tools/story-sandbox/server.ts"
       ],
       "port": 4322
+    },
+    {
+      "name": "look",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@luismlorenzana/uma-stage",
+        "look"
+      ],
+      "port": 4410
     }
   ]
 }
