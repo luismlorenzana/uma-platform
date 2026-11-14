@@ -27,3 +27,5 @@ export function savedAtlas(family: string): { img: Img; index: { width: number; 
   if (img.w !== index.width || img.h !== index.height) throw new Error(`${family}: PNG/index size mismatch`)
   return { img, index }
 }
+/** F83's fresh 2.29.0 baseline (`legacy-f83-2.29.0.json`) owns the items sheet and its contact sheet, which grew a row. */
+export const F83_ITEMS: readonly string[] = ['items/atlas.png', 'items/atlas.json', 'items.png']

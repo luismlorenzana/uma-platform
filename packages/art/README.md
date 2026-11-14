@@ -3,11 +3,13 @@
 Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`pnpm art:draw`); full-colour sprite props come from authored masters and `scripts/authored-art` (`pnpm art:props`). Never edit exported files by hand.
 
 - `items/atlas.png`: every item icon (32×32) on one sheet, ten grades across, one row per family side (raw, refined),
-  then the ungraded Speed Ticket (A02), ten graded tonics (A04), three made-item grade rows and the Branch Gem (H73).
+  then the ungraded Speed Ticket (A02), ten graded tonics (A04), three made-item grade rows and the Branch Gem (H73),
+  and uma-farm's ranch goods (F83, 2.30.0): one row of four, G1–G4.
 - `items/atlas.json`: `{ schemaVersion: 1, cell, width, height, frames }`, where `frames[itemId]` is
   `{ x, y, name, family, side, effect, grade, refined }`. Item ids follow uma-rpg's catalog (`docs/design/items.md`).
   Tonics add `{ x, y, w, h, name, kind: 'tonic', grade }`; made items add
-  `{ x, y, w, h, name, kind: 'made', line, grade }`; the existing ticket keeps its ungraded metadata.
+  `{ x, y, w, h, name, kind: 'made', line, grade }`; the ranch goods add
+  `{ x, y, w, h, name, kind: 'ranch', line: 'eggs-milk', grade }`; the existing ticket keeps its ungraded metadata.
 
 - `dishes/atlas.png` / `.json`: the 100 cooked dishes (32×32), one row per family with grades 1–10 across, then the
   Duo dishes and Feasts. Frames: `{ x, y, w, h, name, kind, grade, family? }` by uma-rpg dish id (`dish-<family>-<grade>`,
@@ -274,6 +276,20 @@ Standalone originals are in `assets/items/tonics/`. `assets/previews/racer-tonic
 The 16px/24px sheets and labelled `racer-tonics.html` additionally check the compact chip sizes. Tests pin every
 preceding item field/pixel, each fresh painter/standalone/atlas cutout, colour-independent structural differences,
 legendary glint clearance, transparent borders and deterministic comparison sheets. Other art families are unchanged.
+
+## Ranch goods (uma-farm F83, 2.30.0)
+
+Four native **32×32** frames append on a row of their own after the Branch Gem, keyed by uma-farm's ids, in its grade
+order from the left: `egg` (G1) at **(0, 1216)**, `milk` (G2) at **(32, 1216)**, `duck-egg` (G3) at **(64, 1216)**
+and `goat-milk` (G4) at **(96, 1216)**, so `x = (grade − 1) × 32`. The rest of the row stays empty. The items sheet is
+**320×1248**, 366 frames. Metadata is art identity only: `{ x, y, w: 32, h: 32, name, kind: 'ranch', line:
+'eggs-milk', grade }`. These are the farm's grades (G1–G4), not a material family's: no refined row, no RPG effect.
+
+An upright brown hen's egg; a slim glass milk bottle with a blue foil cap and band; a larger pale blue-green duck egg
+lying in a straw nest; a sage stoneware jug with a handle, full to its mouth, a drip from the spout. Each has its own
+silhouette (at least a quarter apart from the others, and the bottle from a tonic's, the eggs from the potato), a clear
+1 px border and no glints. Standalone files are in `assets/items/ranch/`; `assets/previews/ranch-goods-{1x,2x,4x}.png`
+shows them and four familiar neighbours on white and `#17202b`, and `ranch-goods.html` labels each with its id and cell.
 
 ## Made items (H73, 2.13.0)
 

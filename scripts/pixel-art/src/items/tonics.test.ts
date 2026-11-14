@@ -20,8 +20,8 @@ describe('A04 appended tonic items', () => {
     expect(Object.keys(retained)).toHaveLength(baseline.frames)
     expect(hash(JSON.stringify(retained))).toBe(baseline.metadata)
     expect(hash(img.crop(0, 0, baseline.width, baseline.height).px)).toBe(baseline.rgba)
-    expect([index.width, index.height, index.cell]).toEqual([320, 1216, 32])
-    expect(Object.keys(index.frames)).toHaveLength(362)
+    expect([index.width, index.height, index.cell]).toEqual([320, 1248, 32]) // F83 appends the ranch row
+    expect(Object.keys(index.frames)).toHaveLength(366)
   })
 
   it('appends exactly ten native frames in grade order, matching each painter and standalone PNG', () => {

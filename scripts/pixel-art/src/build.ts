@@ -11,6 +11,8 @@ import { TONICS } from './items/tonics.ts'
 import { TONIC_PREVIEW_SIZES, tonicPreview, tonicPreviewHtml } from './items/tonic-previews.ts'
 import { ACCESSORY_SETTINGS, ARMOR_FITTINGS, BRANCH_GEM, WEAPON_GEMS } from './items/made.ts'
 import { MADE_PREVIEW_SCALES, madePreview, madePreviewHtml } from './items/made-previews.ts'
+import { RANCH_GOODS } from './items/ranch.ts'
+import { RANCH_PREVIEW_SCALES, ranchPreview, ranchPreviewHtml } from './items/ranch-previews.ts'
 import type { ItemIcon } from './items/types.ts'
 import { encodePng } from './png.ts'
 import { drawIcon, ICON_SIZE } from './icon.ts'
@@ -23,12 +25,13 @@ const SIZE = ICON_SIZE
 const rows: Uint8Array[][] = []
 // The atlas: ten grades across, one row per family side (raw, then refined), families in catalog order.
 const ATLAS_COLUMNS = 10
-const atlasRows = FAMILIES.length * 2 + 6
+const atlasRows = FAMILIES.length * 2 + 7
 const atlas = new Uint8Array(ATLAS_COLUMNS * SIZE * atlasRows * SIZE * 4)
 type ItemFrame = { x: number; y: number; name: string; family: string; side: string; effect: string; grade: number; refined: boolean }
   | { x: number; y: number; name: string; kind: 'ticket' }
   | { x: number; y: number; w: number; h: number; name: string; kind: 'tonic'; grade: number }
   | { x: number; y: number; w: number; h: number; name: string; kind: 'made'; line: string; grade: number }
+  | { x: number; y: number; w: number; h: number; name: string; kind: 'ranch'; line: 'eggs-milk'; grade: number }
 const frames: Record<string, ItemFrame> = {}
 function blit(px: Uint8Array, col: number, row: number): void {
   for (let y = 0; y < SIZE; y++) {
@@ -113,6 +116,21 @@ writeFileSync(join(madeDir, `${BRANCH_GEM.id}.png`), branchPng)
 rows.push([branch])
 cards.push(`<section><h2>Branch Gem</h2><div class="grid">${card(BRANCH_GEM, `data:image/png;base64,${branchPng.toString('base64')}`)}</div></section>`)
 
+// F83 appends the ranch's eggs and milk on one raw row of their own, G1–G4 from the left, so uma-farm's
+// `x = (grade − 1) × 32` finds them. The farm's own grades; no refined row, and no material family or RPG effect.
+const ranchDir = join(OUT, 'ranch'), ranchRow = branchRow + 1
+if (RANCH_GOODS.some((item, col) => item.grade !== col + 1)) throw new Error('Expected the ranch goods G1…G4 in grade order')
+mkdirSync(ranchDir, { recursive: true })
+const ranchPixels = RANCH_GOODS.map((item, col) => {
+  const px = drawIcon(item)
+  blit(px, col, ranchRow)
+  frames[item.id] = { x: col * SIZE, y: ranchRow * SIZE, w: SIZE, h: SIZE, name: item.name, kind: 'ranch', line: 'eggs-milk', grade: item.grade }
+  writeFileSync(join(ranchDir, `${item.id}.png`), encodePng(SIZE, SIZE, px))
+  return px
+})
+rows.push(ranchPixels)
+cards.push(`<section><h2>Ranch goods <small>uma-farm · eggs and milk</small></h2><div class="grid">${RANCH_GOODS.map((item, index) => card(item, `data:image/png;base64,${encodePng(SIZE, SIZE, ranchPixels[index]!).toString('base64')}`)).join('')}</div></section>`)
+
 const atlasDir = join(ROOT, 'packages', 'art', 'items')
 mkdirSync(atlasDir, { recursive: true })
 writeFileSync(join(atlasDir, 'atlas.png'), encodePng(ATLAS_COLUMNS * SIZE, atlasRows * SIZE, atlas))
@@ -130,6 +148,11 @@ for (const scale of MADE_PREVIEW_SCALES) {
   writeFileSync(join(previews, `made-items-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
 }
 writeFileSync(join(previews, 'made-items.html'), madePreviewHtml())
+for (const scale of RANCH_PREVIEW_SCALES) {
+  const sheet = ranchPreview(scale)
+  writeFileSync(join(previews, `ranch-goods-${scale}x.png`), encodePng(sheet.w, sheet.h, sheet.px))
+}
+writeFileSync(join(previews, 'ranch-goods.html'), ranchPreviewHtml())
 const contact = contactSheet(rows, 3, 8, hex('#0f141b'), hex('#18202a'))
 writeFileSync(join(previews, 'items.png'), encodePng(contact.w, contact.h, contact.px))
 writeFileSync(

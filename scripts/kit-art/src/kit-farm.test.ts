@@ -141,11 +141,12 @@ describe('kit-farm wave 1 (F9, P147)', () => {
     const walk = (d: string) => {
       for (const f of readdirSync(d).sort()) {
         const p = join(d, f)
-        if (statSync(p).isDirectory()) { if (!LATER.has(f) && f !== 'node_modules') walk(p) }
+        if (statSync(p).isDirectory()) { if (!LATER.has(f) && f !== 'items' && f !== 'node_modules') walk(p) }
         else if (/\.(png|json)$/.test(f) && f !== 'package.json') now[relative(ART, p)] = sha(readFileSync(p))
       }
     }
     walk(ART)
-    expect(now).toEqual(legacy)
+    // The items sheet grew a row later (uma-farm F83, 2.30.0); scripts/pixel-art's ranch.test.ts freezes its earlier frames.
+    expect(now).toEqual(Object.fromEntries(Object.entries(legacy).filter(([f]) => !f.startsWith('items/'))))
   })
 })

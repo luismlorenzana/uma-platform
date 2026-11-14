@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { Sprite } from './sprite.ts'
-import { decodePng, hash, savedAtlas } from './testing/atlas.ts'
+import { F83_ITEMS, decodePng, hash, savedAtlas } from './testing/atlas.ts'
 import baseline from './testing/legacy-h141-2.18.0.json'
 import { drawUi, packUi, uiFrames } from './ui/atlas.ts'
 import { FRAME_SPECS, STAR_BODIES, STAT_MARKS } from './ui/spec.ts'
@@ -29,9 +29,9 @@ describe('H141 star crests and stat marks', () => {
   it('keeps earlier previews and other atlas files exact outside H156’s appended buildings', () => {
     // H156 owns a new 2.19.0 building freeze, allowing only its three formerly empty cells and general overviews.
     // A05 owns the fresh 2.20.0 UI freeze; only its three appended frames may change that sheet.
-    for (const [file, sha] of Object.entries(baseline.previews)) if (!['buildings.png', 'buildings-contact-3x.png'].includes(file))
+    for (const [file, sha] of Object.entries(baseline.previews)) if (![...F83_ITEMS, 'buildings.png', 'buildings-contact-3x.png'].includes(file))
       expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
-    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['buildings/atlas.png', 'buildings/atlas.json', 'ui/atlas.png', 'ui/atlas.json'].includes(file))
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (![...F83_ITEMS, 'buildings/atlas.png', 'buildings/atlas.json', 'ui/atlas.png', 'ui/atlas.json'].includes(file))
       expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
   })
 

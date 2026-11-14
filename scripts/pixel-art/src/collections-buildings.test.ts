@@ -7,7 +7,7 @@ import { PLACES } from './buildings/places.ts'
 import type { Place } from './buildings/types.ts'
 import { hex } from './color.ts'
 import { Sprite } from './sprite.ts'
-import { decodePng, hash, savedAtlas } from './testing/atlas.ts'
+import { F83_ITEMS, decodePng, hash, savedAtlas } from './testing/atlas.ts'
 import baseline from './testing/legacy-h156-2.19.0.json'
 import { Img } from './tiles/image.ts'
 
@@ -42,8 +42,8 @@ describe('H156 appended collections buildings', () => {
 
   it('keeps every other atlas and all earlier dedicated preview PNGs byte-identical', () => {
     // A05's fresh 2.20.0 baseline guards the UI sheet while allowing three frames below the old region.
-    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!['ui/atlas.png', 'ui/atlas.json'].includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
-    for (const [file, sha] of Object.entries(baseline.previews)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (![...F83_ITEMS, 'ui/atlas.png', 'ui/atlas.json'].includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
+    for (const [file, sha] of Object.entries(baseline.previews)) if (!F83_ITEMS.includes(file)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
   })
 
   it('fills the last three cells on the same sheet, in order, at ground line 44 without smoke', () => {

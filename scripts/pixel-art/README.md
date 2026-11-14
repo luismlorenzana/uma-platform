@@ -6,8 +6,8 @@ Draws the Uma games' original pixel art from code: no dependencies, no hand-edit
 pnpm art:draw
 ```
 
-It writes all 320 material icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`), the Speed Ticket, ten tonics
-and 31 made items,
+It writes all 320 material icons (16 families × 10 raw + 10 refined, in `src/items/index.ts`), the Speed Ticket, ten tonics,
+31 made items and uma-farm's four ranch goods,
 as 32×32 PNGs to
 `assets/items/<family>/<id>.png`, plus `assets/previews/items.png` (a 3× contact sheet) and
 `assets/previews/items.html` (named cards at 3× and 1×). The same code always draws the same pixels.
@@ -147,6 +147,20 @@ supplies the ungraded item, appended after all material families. Do not give ut
 `racer-marks-{1x,2x,4x}.png` shows all six on white/dark panels; `racer-ticket-items-2x.png` compares Speed Ticket,
 Wheat and Apple. Existing H11 contact sheets stay byte-identical. `ui/legacy-2.6.0.json` guards all prior UI/item
 bounds and metadata/pixel hashes; UI and ticket tests check the saved output, silhouettes, punched hole and pip counts.
+
+## The ranch goods (uma-farm F83, 2.30.0)
+
+`items/ranch.ts` paints the Coop's and the Barn's goods in uma-farm's grade order: Egg (G1), Milk (G2), Duck Egg (G3)
+and Goat Milk (G4). `build.ts` appends them on one raw row at y=1216, G1–G4 from the left, so the farm's
+`x = (grade − 1) × 32` finds them; the sheet grows to **320×1248**, 366 frames, with `kind: 'ranch'` and
+`line: 'eggs-milk'`. Four silhouettes, so they tell apart in a 16 px chip: an upright egg, a slim bottle (kept apart
+from a tonic's flask), an egg lying in a nest, a jug with a handle.
+
+`testing/legacy-f83-2.29.0.json` freezes all 362 earlier item records and the whole old 320×1216 sheet, the 48 other
+atlas files and the 126 other preview PNGs (`items.png`, the general contact sheet, grows a row). Older guards
+delegate the items sheet and `items.png` to it (`F83_ITEMS`). `items/ranch.test.ts` checks the append, the painters
+against the atlas and the standalones, clear borders, real shading, the silhouettes and the review sheets
+(`ranch-goods-{1x,2x,4x}.png`, `ranch-goods.html`).
 
 ## The romance core's marks and places (uma-farm F55, 2.26.0)
 

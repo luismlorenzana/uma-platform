@@ -8,8 +8,8 @@ import { speedTicketItem } from './tickets.ts'
 describe('A02 appended utility item', () => {
   it('keeps every published item position, metadata field and RGBA byte', () => {
     const { img, index } = savedAtlas('items'), old = baseline.items
-    expect([index.width, index.height, index.cell]).toEqual([320, 1216, 32])
-    expect(Object.keys(index.frames)).toHaveLength(362)
+    expect([index.width, index.height, index.cell]).toEqual([320, 1248, 32]) // F83 appends the ranch row
+    expect(Object.keys(index.frames)).toHaveLength(366)
     const retained = Object.fromEntries(Object.keys(old.frames).map(id => [id, index.frames[id]]))
     expect(hash(JSON.stringify(retained))).toBe(old.metadata)
     for (const [id, bounds] of Object.entries(old.frames)) {

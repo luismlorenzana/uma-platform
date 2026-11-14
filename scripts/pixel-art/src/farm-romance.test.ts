@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { encodePng } from './png.ts'
-import { decodePng, hash, savedAtlas } from './testing/atlas.ts'
+import { F83_ITEMS, decodePng, hash, savedAtlas } from './testing/atlas.ts'
 import { Img } from './tiles/image.ts'
 import baseline from './testing/legacy-f55-2.25.0.json'
 import { drawUi, packUi, uiFrames } from './ui/atlas.ts'
@@ -50,9 +50,10 @@ describe('F55: the romance core\'s marks and places (P126)', () => {
   it('keeps every other atlas file and every older preview PNG byte-identical', () => {
     expect(Object.keys(baseline.artFiles)).toHaveLength(24)
     expect(Object.keys(baseline.previews)).toHaveLength(108)
-    for (const [file, sha] of Object.entries(baseline.artFiles)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
+    // F83's fresh 2.29.0 baseline owns the items sheet and its contact sheet.
+    for (const [file, sha] of Object.entries(baseline.artFiles)) if (!F83_ITEMS.includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
     for (const [file, sha] of Object.entries(baseline.previews)) {
-      if (!GENERAL.includes(file)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
+      if (!GENERAL.includes(file) && !F83_ITEMS.includes(file)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
     }
   })
 

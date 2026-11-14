@@ -37,13 +37,13 @@ describe('H73 appended made items', () => {
     expect(Object.keys(retained)).toHaveLength(baseline.frames)
     expect(hash(JSON.stringify(retained))).toBe(baseline.metadata)
     expect(hash(img.crop(0, 0, baseline.width, baseline.height).px)).toBe(baseline.rgba)
-    expect([index.width, index.height, index.cell]).toEqual([320, 1216, 32])
-    expect(Object.keys(index.frames)).toHaveLength(362)
+    expect([index.width, index.height, index.cell]).toEqual([320, 1248, 32]) // F83 appends the ranch row
+    expect(Object.keys(index.frames)).toHaveLength(366)
   })
 
   it('appends the four rows at exact positions and in exact atlas order', () => {
     const { index } = savedAtlas('items')
-    expect(Object.keys(index.frames).slice(baseline.frames)).toEqual(expectedIds)
+    expect(Object.keys(index.frames).slice(baseline.frames, baseline.frames + expectedIds.length)).toEqual(expectedIds)
     for (const row of rows) row.icons.forEach((icon, col) => expect(index.frames[icon.id]).toEqual({
       x: col * 32, y: row.y, w: 32, h: 32, name: icon.name, kind: 'made', line: row.line, grade: col + 1,
     }))

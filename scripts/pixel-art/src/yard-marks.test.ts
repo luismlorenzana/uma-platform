@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { hex } from './color.ts'
 import { encodePng } from './png.ts'
 import { Sprite } from './sprite.ts'
-import { decodePng, hash, savedAtlas } from './testing/atlas.ts'
+import { F83_ITEMS, decodePng, hash, savedAtlas } from './testing/atlas.ts'
 import baseline from './testing/legacy-a05-2.20.0.json'
 import { drawUi, packUi, uiFrames } from './ui/atlas.ts'
 import { FRAME_SPECS, YARD_MARKS } from './ui/spec.ts'
@@ -39,7 +39,7 @@ describe('A05 Card Ticket and Training Yard marks', () => {
     expect(Object.keys(baseline.artFiles)).toHaveLength(18)
     expect(Object.keys(baseline.previews)).toHaveLength(94)
     // F25 part A's fresh 2.24.0 baseline owns the buildings sheet and its two general previews, which grew by one row.
-    const f25 = ['buildings/atlas.png', 'buildings/atlas.json', 'buildings.png', 'buildings-contact-3x.png']
+    const f25 = ['buildings/atlas.png', 'buildings/atlas.json', 'buildings.png', 'buildings-contact-3x.png', ...F83_ITEMS]
     for (const [file, sha] of Object.entries(baseline.artFiles)) if (!f25.includes(file)) expect(hash(readFileSync(new URL(`packages/art/${file}`, root))), file).toBe(sha)
     for (const [file, sha] of Object.entries(baseline.previews)) if (!f25.includes(file)) expect(hash(readFileSync(new URL(`assets/previews/${file}`, root))), file).toBe(sha)
   })
