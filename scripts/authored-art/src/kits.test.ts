@@ -47,6 +47,9 @@ it('preserves all previously published uma-art 2.23 PNGs and atlas records', asy
   expect(Object.keys(pins)).toHaveLength(26)
   // uma-art 2.25.0 (P132) appends to the ui and buildings sheets; pixel-art's legacy-f25-2.24.0.json freezes their old
   // records, cutouts and whole old regions, so these two whole-file pins hand over to it.
-  const grown = ['packages/art/ui/atlas.json', 'packages/art/ui/atlas.png', 'packages/art/buildings/atlas.json', 'packages/art/buildings/atlas.png']
+  // uma-art 2.30.0 (uma-farm F83, P178) appends the ranch row to the items sheet; pixel-art's legacy-f83-2.29.0.json
+  // freezes its earlier records and the whole old sheet.
+  const grown = ['packages/art/ui/atlas.json', 'packages/art/ui/atlas.png', 'packages/art/buildings/atlas.json', 'packages/art/buildings/atlas.png',
+    'packages/art/items/atlas.json', 'packages/art/items/atlas.png']
   for (const [file, hash] of Object.entries(pins)) if (!grown.includes(file)) expect(sha(await readFile(resolve(kitProject, file))), file).toBe(hash)
 })
