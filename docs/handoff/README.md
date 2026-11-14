@@ -136,7 +136,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 | uma-farm's art (P126) | F25 A, F29 A | [M4's](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F25-art-m4.md) and [M5's](https://github.com/luismlorenzana/uma-farm/blob/70071ac/docs/handoff/tasks/F29-art-m5.md) pixel art: buildings, marks, goods, animal icons, story items, tool tints; drawn in `scripts/pixel-art`, published here | Claude | S–M, M | F29 A: after uma-farm's romance spec (F41) | **F25 A done** (uma-art 2.25.0, `f0d119f`, `83ee2b6`, `77e9001`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43068430302), P132; uma-farm D49); F29 A waits |
 | | F25 B, F29 B | The farm cast's seven busts (`cast` atlas) | ChatGPT | M | F25 B first | Ready (F25 B) |
 | | F55 | [The romance core's pixel art](https://github.com/luismlorenzana/uma-farm/pull/14): the homestead, the ring bench, the Hearts marks and Memory frame, the five plays | Claude | S | uma-farm's F41 read ✓ | **Done** (uma-art 2.26.0, `fe20fec`, `dffe494`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43077021067), P134; uma-farm [PR #14](https://github.com/luismlorenzana/uma-farm/pull/14), D50) |
-| | F83 | The ranch goods' four item icons (Egg, Milk, Duck Egg, Goat Milk), one raw row on the items atlas | Claude | S | uma-farm's F83 ✓ | **Done** (uma-art 2.30.0, P178) |
+| | F83 | The ranch goods' four item icons (Egg, Milk, Duck Egg, Goat Milk), one raw row on the items atlas | Claude | S | uma-farm's F83 ✓ | **Done** (uma-art 2.30.0, `1e8a74c`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43643352786), P178) |
 
 ## Tier authoring (TA)
 
