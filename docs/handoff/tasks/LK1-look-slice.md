@@ -4,7 +4,7 @@
 owner's references, the hero scene and the asset-pack answer) and the owner's go · Unblocks: LK2 (the pipeline), LK3
 (each game's roll-out), or LK4 if the phone can't hold it**
 
-> **Status, 2026-11-13: in review (P161).** Built in full: the look path is `@luismlorenzana/uma-stage/look`; the town
+> **Status, 2026-11-14: the look is accepted as the bar (P166: "significantly better than what we had before"); the phone run is the last gate.** As of 2026-11-13 (P161): Built in full: the look path is `@luismlorenzana/uma-stage/look`; the town
 > square by day and the tavern at night; every layer below; the kit packed and batched; live at
 > https://uma-platform.web.app/look with the phone test. The review page is
 > [previews/lk1-slice.html](../../look/previews/lk1-slice.html). Steps 1, 3 and 4 are done; step 2 (a Blender still) was

@@ -3,8 +3,8 @@
 **uma-platform (uma-stage, the art tools, uma-art) · Claude · M · Needs: LK1's bar (the owner's verdict and the phone
 run) · Unblocks: LK3 (each game's roll-out)**
 
-> **Status: written ahead (2026-11-13, P161).** Starts when LK1 is done. What LK1 taught is folded in below; the owner's
-> verdict and the phone numbers may reorder the steps.
+> **Status: in progress (2026-11-14, P166).** LK1's look is the bar. Steps 1–3 (kit format v2, the importer, scenes as
+> data) hold on any engine and go first; steps 4–6 wait for LK1's phone run, which decides three.js or LK4.
 
 ## Why
 
