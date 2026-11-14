@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { FLAG_SCRIPT } from './flag.js'
 
@@ -62,10 +62,63 @@ export interface ApprovedLook {
   width: number
   height: number
   approvedOn: string | null
+  /** Where it was authored, when not the approved folder: `characters/<key>` (P174). */
+  collection?: string
 }
 /** A look of the manifest that can't go out. `unapproved`: the owner hasn't approved it. `damaged`: the file or its entry
  *  isn't what was approved, so a copy published earlier stays as it is. */
-export interface RefusedLook { id: string; image: string | null; kind: 'unapproved' | 'damaged'; why: string }
+export interface RefusedLook { id: string; image: string | null; kind: 'unapproved' | 'damaged'; why: string; collection?: string }
+
+// --- a character's own collection (P174)
+
+export const STUDIES = 'characters'
+/**
+ * A character's own approved collection inside a universe, the layout ChatGPT uses for a character authored on her own:
+ * `<universe>/characters/<key>/active-study.json` names the active version (and the owner's approval of it), whose
+ * `manifest.json` holds her approved full-body looks (`fullBodyAssets`) and her dialogue portraits (`assets`, `faces`),
+ * with paths relative to the version's folder.
+ */
+export interface CharacterStudy {
+  key: string
+  name: string
+  /** `<universe>/characters/<key>`. */
+  folder: string
+  /** The active version's folder, `<folder>/<version>`. */
+  versionDir: string
+  manifest: Record<string, unknown>
+}
+/** The universe's character collections whose active version the owner approved, by key. */
+export function characterStudies(universeDir: string): CharacterStudy[] {
+  const root = join(universeDir, STUDIES)
+  if (!existsSync(root)) return []
+  const out: CharacterStudy[] = []
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !KEBAB.test(entry.name)) continue
+    const folder = join(root, entry.name), activeFile = join(folder, 'active-study.json')
+    if (!existsSync(activeFile)) continue
+    const active = JSON.parse(readFileSync(activeFile, 'utf8')) as unknown
+    if (!object(active) || active.ownerApproved !== true || typeof active.activeVersion !== 'string' || !/^v\d{3}$/.test(active.activeVersion)) continue
+    const versionDir = join(folder, active.activeVersion), manifestFile = join(versionDir, MANIFEST)
+    if (!existsSync(manifestFile)) continue
+    const manifest = JSON.parse(readFileSync(manifestFile, 'utf8')) as unknown
+    if (!object(manifest)) continue
+    const names = object(manifest.characterNames) ? manifest.characterNames : {}
+    const name = typeof names[entry.name] === 'string' ? names[entry.name] as string : text(active.character) ?? words(entry.name)
+    out.push({ key: entry.name, name, folder, versionDir, manifest })
+  }
+  return out.sort((a, b) => a.key.localeCompare(b.key))
+}
+/** A PNG a study's manifest names, resolved from its version folder; null unless it stays inside the character's folder. */
+export function studyFile(study: Pick<CharacterStudy, 'folder' | 'versionDir'>, rel: unknown): string | null {
+  const p = text(rel)
+  if (!p || !p.endsWith('.png')) return null
+  const abs = resolve(study.versionDir, p)
+  return abs.startsWith(resolve(study.folder) + sep) ? abs : null
+}
+/** A path with forward slashes, as the galleries and the bucket write them. */
+export const slashed = (p: string) => p.split(sep).join('/')
+/** The collection a study's looks and pieces belong to, `characters/<key>`. */
+export const studyCollection = (key: string) => `${STUDIES}/${key}`
 export interface Collection {
   universe: string
   title: string
@@ -85,10 +138,22 @@ export function readCollection(universe: string, dir: string): Collection {
   const manifest = JSON.parse(readFileSync(file, 'utf8')) as unknown
   if (!object(manifest) || !Array.isArray(manifest.assets)) throw new Error(`${file} isn't an approved collection's manifest (no assets).`)
   const looks: ApprovedLook[] = [], refused: RefusedLook[] = [], order: string[] = [], seen = new Set<string>()
-  for (const asset of manifest.assets as unknown[]) {
+  // The approved folder's looks, then each character collection's (P174): an image of hers is named relative to the
+  // approved folder, so the push and the flags read every look the same way.
+  const sources: { asset: unknown; collection: string | null; locate: (image: string | null) => string | null }[] = [
+    ...(manifest.assets as unknown[]).map((asset) => ({
+      asset, collection: null,
+      locate: (image: string | null) => (image && /^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(image) && !image.split('/').some((p) => p === '' || p.startsWith('.')) ? image : null),
+    })),
+    ...characterStudies(resolve(dir, '..')).flatMap((study) => (Array.isArray(study.manifest.fullBodyAssets) ? study.manifest.fullBodyAssets as unknown[] : []).map((asset) => ({
+      asset, collection: studyCollection(study.key),
+      locate: (image: string | null) => { const abs = studyFile(study, image); return abs ? slashed(relative(dir, abs)) : null },
+    }))),
+  ]
+  for (const { asset, collection, locate } of sources) {
     if (!object(asset)) continue
-    const id = text(asset.id) ?? '(no id)', image = text(asset.image)
-    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image, kind, why }) }
+    const id = text(asset.id) ?? '(no id)', given = text(asset.image), image = locate(given)
+    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(collection ? { collection } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
     if (seen.has(id)) { refuse('damaged', 'its id is listed twice'); continue }
     seen.add(id)
@@ -97,7 +162,7 @@ export function readCollection(universe: string, dir: string): Collection {
     if (approval.status !== 'approved' || approval.by !== 'owner') { refuse('unapproved', 'the owner hasn’t approved it'); continue }
     const character = text(asset.character), outfit = text(asset.outfit), hash = text(asset.sha256)
     if (!character || !outfit || !hash || !/^[a-f0-9]{64}$/.test(hash)) { refuse('damaged', 'its entry has no character, outfit or SHA-256'); continue }
-    if (!image || !/^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(image) || image.split('/').some((p) => p === '' || p.startsWith('.'))) { refuse('damaged', 'its image isn’t a PNG inside the approved folder'); continue }
+    if (!image) { refuse('damaged', collection ? 'its image isn’t a PNG inside her folder' : 'its image isn’t a PNG inside the approved folder'); continue }
     const path = join(dir, image)
     if (!existsSync(path)) { refuse('damaged', 'its PNG is missing'); continue }
     const bytes = readFileSync(path)
@@ -106,7 +171,7 @@ export function readCollection(universe: string, dir: string): Collection {
     if (!size || size.width !== asset.width || size.height !== asset.height) { refuse('damaged', 'the PNG isn’t the size its entry says'); continue }
     looks.push({
       id, character, outfit, title: text(asset.title) ?? words(outfit), image, bytes: bytes.byteLength, sha256: hash,
-      width: size.width, height: size.height, approvedOn: text(approval.on),
+      width: size.width, height: size.height, approvedOn: text(approval.on) ?? text(approval.date), ...(collection ? { collection } : {}),
     })
   }
   return {
@@ -222,6 +287,8 @@ export interface LookFlag {
   path: string | null
   /** Why a look can't go out, or what a push would do. */
   note: string | null
+  /** `characters/<key>` for a look of a character's own collection (P174). */
+  collection?: string
 }
 /** The record kept beside the manifest, `approved/publication.json`: the published flag of every look in the manifest. */
 export interface Publication {
@@ -246,15 +313,16 @@ export interface Publication {
  */
 export function publicationOf(collection: Collection, remote: UniverseIndex | null, now: string, bucket = BUCKET): Publication {
   const there = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
-  const looks: LookFlag[] = collection.looks.map((look) => {
+  const from = (c?: string) => (c ? { collection: c } : {})
+  const looks: LookFlag[] = collection.looks.map((look): LookFlag => {
     const old = there.get(look.id)
-    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null }
-    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.' }
-    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null }
+    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null, ...from(look.collection) }
+    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.', ...from(look.collection) }
+    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null, ...from(look.collection) }
   })
   for (const r of collection.refused) {
     const old = there.get(r.id)
-    looks.push({ id: r.id, image: r.image, state: 'refused', sha256: null, publishedAt: old?.publishedAt ?? null, path: old?.path ?? null, note: `Can’t publish: ${r.why}.${old ? ' An earlier picture is still published.' : ''}` })
+    looks.push({ id: r.id, image: r.image, state: 'refused', sha256: null, publishedAt: old?.publishedAt ?? null, path: old?.path ?? null, note: `Can’t publish: ${r.why}.${old ? ' An earlier picture is still published.' : ''}`, ...from(r.collection) })
   }
   const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
   for (const l of looks) counts[l.state]++
@@ -292,14 +360,44 @@ export function withFlagTags(html: string, flagScript: string, records: readonly
  * manifest, the shared flag script at the universes' root, and the gallery's two script tags. The manifest, the
  * pictures and the rest of the gallery page are never touched. Says which files changed.
  */
+/** A record that differs from the one on disk only by its check time keeps the old file, so a status run leaves no diff. */
+export function stable<T extends { checkedAt: string }>(file: string, next: T): T {
+  const before = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) as T : null
+  return before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...next, checkedAt: '' }) ? before : next
+}
+/** One collection's share of a publication record, its counts recounted; `image` re-expressed for its own pages. */
+export function sliceOf(publication: Publication, collection: string | null, image: (path: string) => string = (p) => p): Publication {
+  const looks = publication.looks.filter((l) => (l.collection ?? null) === collection).map((l) => ({ ...l, image: l.image === null ? null : image(l.image) }))
+  const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
+  for (const l of looks) counts[l.state]++
+  // Withdrawals are the universe's, so they stay on the approved folder's record.
+  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [] }
+}
+/** The script a character's pages read: her looks' record and, once flagged, her portraits' (P174). */
+export function writeStudyScript(folder: string): boolean {
+  const looks = join(folder, RECORD), portraits = join(folder, PORTRAIT_RECORD)
+  const lines = ['// Written by pnpm art:push and pnpm art:status from publication.json and portraits-publication.json; her pages read it.']
+  if (existsSync(looks)) lines.push(`window.UMA_PUBLICATION = ${readFileSync(looks, 'utf8').trim()};`)
+  if (existsSync(portraits)) lines.push(`window.UMA_PORTRAIT_PUBLICATION = ${readFileSync(portraits, 'utf8').trim()};`)
+  return write(join(folder, RECORD_SCRIPT), `${lines.join('\n')}\n`)
+}
+/** Her portraits' share of a universe's portrait record, beside her looks' (`characters/<key>/`). */
+export const PORTRAIT_RECORD = 'portraits-publication.json'
+
 export function writeFlags(dir: string, publication: Publication): string[] {
   const changed: string[] = []
-  // The check's time alone isn't a change: an unchanged record keeps its file, so a status run leaves no diff.
   const recordFile = join(dir, RECORD)
-  const before = existsSync(recordFile) ? JSON.parse(readFileSync(recordFile, 'utf8')) as Publication : null
-  const record = before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...publication, checkedAt: '' }) ? before : publication
+  const record = stable(recordFile, sliceOf(publication, null))
   if (write(recordFile, encode(record))) changed.push(RECORD)
   if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push and pnpm art:status from ${RECORD}; the gallery reads it.\nwindow.UMA_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
+  // Each character collection keeps its own record beside her active study, with images as her pages name them.
+  for (const study of characterStudies(resolve(dir, '..'))) {
+    const mine = sliceOf(publication, studyCollection(study.key), (p) => slashed(relative(study.versionDir, resolve(dir, p))))
+    if (mine.looks.length === 0) continue
+    const file = join(study.folder, RECORD), at = slashed(relative(dir, study.folder))
+    if (write(file, encode(stable(file, mine)))) changed.push(`${at}/${RECORD}`)
+    if (writeStudyScript(study.folder)) changed.push(`${at}/${RECORD_SCRIPT}`)
+  }
   return [...changed, ...tagGalleries(resolve(dir, '..'), 'approved')]
 }
 
@@ -323,6 +421,13 @@ export function tagGalleries(universeDir: string, from: keyof typeof FLAGGED | '
   for (const [folder, records] of pages) {
     const gallery = join(universeDir, folder, GALLERY)
     if (records.length && existsSync(gallery) && write(gallery, withFlagTags(readFileSync(gallery, 'utf8'), `../../${FLAG_FILE}`, records))) changed.push(name(folder, GALLERY))
+  }
+  // A character's own album (P174): her active version's page reads her record, one folder up.
+  for (const study of characterStudies(universeDir)) {
+    const gallery = join(study.versionDir, GALLERY)
+    if (!existsSync(join(study.folder, RECORD_SCRIPT)) || !existsSync(gallery)) continue
+    const flag = slashed(relative(study.versionDir, join(universeDir, '..', FLAG_FILE)))
+    if (write(gallery, withFlagTags(readFileSync(gallery, 'utf8'), flag, [`../${RECORD_SCRIPT}`]))) changed.push(slashed(relative(join(universeDir, from), gallery)))
   }
   return changed
 }

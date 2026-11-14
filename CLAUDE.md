@@ -38,7 +38,8 @@
   Claude pushes only on the owner's word, and only the looks named (`--only <id|outfit>,…`, P168). **Dialogue portraits
   (CA5, P169)** go up as pieces (each outfit's neutral crop and each expression's face, with a recipe) by
   `pnpm art:push <universe> --portraits`: her page shows the pieces, and the games compose the states from
-  `/api/art/portraits/<universe>`; Character Art never composes one.
+  `/api/art/portraits/<universe>`; Character Art never composes one. A character authored on her own lives in
+  `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

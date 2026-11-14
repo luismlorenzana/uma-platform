@@ -6,8 +6,11 @@
 // it was made from; a piece goes up only when its file still has the hash the owner approved. Nothing is deleted online.
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-import { authoring, BUCKET, encode, FLAGGED, isUniverse, md5, pngSize, RECORD, RECORD_SCRIPT, sha256, tagGalleries, universesIn, write, type Remote } from './lib.js'
+import { dirname, join, relative, resolve } from 'node:path'
+import {
+  authoring, BUCKET, characterStudies, encode, FLAGGED, isUniverse, md5, pngSize, PORTRAIT_RECORD, RECORD, RECORD_SCRIPT, sha256, slashed, stable, studyFile,
+  tagGalleries, universesIn, write, writeStudyScript, type Remote,
+} from './lib.js'
 
 export const PORTRAITS_INDEX = 'portraits/index.json'
 /** A universe's dialogue portrait collection, beside its approved looks. */
@@ -89,73 +92,112 @@ const inside = (dir: string, rel: unknown): string | null => {
 
 /**
  * Reads the approved collection: `approval.json` (the owner's approval, each state's crop hash, face hash and position)
- * and `manifest.json` (where each crop and face is, and the characters and order). A piece is listed only when its file
- * has the approved hash and size; anything else is a problem, and a push with problems sends nothing.
+ * and `manifest.json` (where each crop and face is, and the characters and order), then each character's own collection
+ * (`characters/<key>/`, P174), whose manifest holds the same records with the owner's approval on each state. A piece is
+ * listed only when its file has the approved hash and size; anything else is a problem, and a push with problems sends
+ * nothing. Every piece's `file` is relative to `dir`.
  */
 export function readPortraits(universe: string, dir: string): PortraitSet {
   if (!isUniverse(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
   for (const f of ['manifest.json', 'approval.json']) if (!existsSync(join(dir, f))) throw new Error(`No approved dialogue portraits: ${join(dir, f)} doesn't exist.`)
   const manifest = json(join(dir, 'manifest.json')), approval = json(join(dir, 'approval.json'))
   const problems: string[] = []
-  if (approval.status !== 'approved' || approval.by !== 'owner') problems.push('approval.json doesn’t record the owner’s approval')
-  const names = object(manifest.characterNames) ? manifest.characterNames : {}
-  const characters = Object.entries(names).filter(([id, n]) => KEBAB.test(id) && typeof n === 'string').map(([id, n]) => ({ id, name: n as string }))
-  const outfits = strings(manifest.outfits), expressions = strings(manifest.expressions), retired = new Set(strings(manifest.retiredOutfits))
-  const neutral = expressions[0] ?? 'neutral'
-  const assets = Array.isArray(manifest.assets) ? (manifest.assets as unknown[]).filter(object) : []
-  const faceRecords = Array.isArray(manifest.faces) ? (manifest.faces as unknown[]).filter(object) : []
+  const characters: { id: string; name: string }[] = [], outfits: string[] = [], expressions: string[] = []
   const bases: PortraitSet['bases'] = [], faces = new Map<string, PortraitSet['faces'][number]>(), states: PortraitState[] = []
   let size: { width: number; height: number } | null = null, faceSize: { width: number; height: number } | null = null
+  const union = (into: string[], from: string[]) => { for (const v of from) if (!into.includes(v)) into.push(v) }
 
-  /** A local PNG with the approved hash; its bytes and size, or a problem. */
-  const piece = (rel: unknown, hash: unknown, what: string): { file: string; bytes: number; sha256: string; width: number; height: number } | null => {
-    const file = inside(dir, rel)
-    if (!file || typeof hash !== 'string' || !/^[a-f0-9]{64}$/.test(hash)) { problems.push(`${what}: no PNG or no approved hash`); return null }
-    if (!existsSync(join(dir, file))) { problems.push(`${what}: ${file} is missing`); return null }
-    const bytes = readFileSync(join(dir, file))
-    if (sha256(bytes) !== hash) { problems.push(`${what}: ${file} changed since it was approved`); return null }
-    const dims = pngSize(bytes)
-    if (!dims) { problems.push(`${what}: ${file} isn't a PNG`); return null }
-    return { file, bytes: bytes.byteLength, sha256: hash, ...dims }
+  /** One collection: its approved entries (a crop's hash, then each state's face hash and position), its manifest's records,
+   *  and how its paths resolve to a file and a name relative to `dir`. */
+  interface Source {
+    label: string
+    entries: Record<string, unknown>[]
+    manifest: Record<string, unknown>
+    locate: (rel: unknown) => { abs: string; file: string } | null
   }
+  const ingest = (src: Source) => {
+    const names = object(src.manifest.characterNames) ? src.manifest.characterNames : {}
+    const mine = Object.entries(names).filter(([id, n]) => KEBAB.test(id) && typeof n === 'string').map(([id, n]) => ({ id, name: n as string }))
+    for (const c of mine) if (!characters.some((x) => x.id === c.id)) characters.push(c)
+    const retired = new Set(strings(src.manifest.retiredOutfits))
+    const ownOutfits = strings(src.manifest.outfits).filter((o) => !retired.has(o)), ownExpressions = strings(src.manifest.expressions)
+    union(outfits, ownOutfits); union(expressions, ownExpressions)
+    const neutral = ownExpressions[0] ?? 'neutral'
+    const assets = Array.isArray(src.manifest.assets) ? (src.manifest.assets as unknown[]).filter(object) : []
+    const faceRecords = Array.isArray(src.manifest.faces) ? (src.manifest.faces as unknown[]).filter(object) : []
 
-  for (const entry of (Array.isArray(approval.assets) ? (approval.assets as unknown[]) : []).filter(object)) {
-    const character = text(entry.character), outfit = text(entry.outfit)
-    const what = `${character ?? '?'} ${outfit ?? '?'}`
-    if (!character || !outfit || !KEBAB.test(character) || !KEBAB.test(outfit)) { problems.push(`${what}: an approval entry without a character or outfit`); continue }
-    if (retired.has(outfit) || !outfits.includes(outfit)) { problems.push(`${what}: the outfit isn’t a current one`); continue }
-    if (!characters.some((c) => c.id === character)) { problems.push(`${what}: the character has no name in the manifest`); continue }
-    const record = assets.find((a) => a.character === character && a.outfit === outfit)
-    if (!record) { problems.push(`${what}: the manifest has no crop for it`); continue }
-    const base = piece(record.base, entry.baseSha256, `${what} crop`)
-    if (!base) continue
-    size ??= { width: base.width, height: base.height }
-    if (base.width !== size.width || base.height !== size.height) { problems.push(`${what} crop: ${base.width}×${base.height}, not ${size.width}×${size.height}`); continue }
-    const id = `${character}-${outfit}`
-    if (bases.some((b) => b.id === id)) { problems.push(`${what}: approved twice`); continue }
-    bases.push({ id, character, outfit, path: `bases/${id}.${base.sha256.slice(0, 16)}.png`, ...base })
-    states.push({ character, outfit, expression: neutral, base: id, face: null, at: null, approvedSha256: null })
-    for (const output of (Array.isArray(entry.outputs) ? (entry.outputs as unknown[]) : []).filter(object)) {
-      const expression = text(output.expression), position = at(output.position)
-      if (!expression || !KEBAB.test(expression) || !expressions.includes(expression) || !position) { problems.push(`${what}: a state without a known expression or position`); continue }
-      const faceId = `${character}-${expression}`
-      let face = faces.get(faceId)
-      if (!face) {
-        const record = faceRecords.find((f) => f.character === character && f.expression === expression)
-        const found = record ? piece(record.file, output.faceSha256, `${character} ${expression} face`) : null
-        if (!record) problems.push(`${character} ${expression} face: the manifest has no face for it`)
-        if (!found) continue
-        faceSize ??= { width: found.width, height: found.height }
-        if (found.width !== faceSize.width || found.height !== faceSize.height) { problems.push(`${character} ${expression} face: ${found.width}×${found.height}, not ${faceSize.width}×${faceSize.height}`); continue }
-        face = { id: faceId, character, expression, path: `faces/${faceId}.${found.sha256.slice(0, 16)}.png`, ...found }
-        faces.set(faceId, face)
-      } else if (face.sha256 !== output.faceSha256) { problems.push(`${what} ${expression}: approved with another ${expression} face`); continue }
-      if (position.x < 0 || position.y < 0 || position.x + face.width > size.width || position.y + face.height > size.height) { problems.push(`${what} ${expression}: the face falls outside the crop`); continue }
-      states.push({ character, outfit, expression, base: id, face: faceId, at: position, approvedSha256: text(output.sha256) })
+    /** A local PNG with the approved hash; its bytes and size, or a problem. */
+    const piece = (rel: unknown, hash: unknown, what: string): { file: string; bytes: number; sha256: string; width: number; height: number } | null => {
+      const found = src.locate(rel)
+      if (!found || typeof hash !== 'string' || !/^[a-f0-9]{64}$/.test(hash)) { problems.push(`${what}: no PNG or no approved hash`); return null }
+      if (!existsSync(found.abs)) { problems.push(`${what}: ${found.file} is missing`); return null }
+      const bytes = readFileSync(found.abs)
+      if (sha256(bytes) !== hash) { problems.push(`${what}: ${found.file} changed since it was approved`); return null }
+      const dims = pngSize(bytes)
+      if (!dims) { problems.push(`${what}: ${found.file} isn't a PNG`); return null }
+      return { file: found.file, bytes: bytes.byteLength, sha256: hash, ...dims }
+    }
+
+    for (const entry of src.entries) {
+      const character = text(entry.character), outfit = text(entry.outfit)
+      const what = `${character ?? '?'} ${outfit ?? '?'}`
+      if (!character || !outfit || !KEBAB.test(character) || !KEBAB.test(outfit)) { problems.push(`${what}: an approval entry without a character or outfit`); continue }
+      if (retired.has(outfit) || !ownOutfits.includes(outfit)) { problems.push(`${what}: the outfit isn’t a current one`); continue }
+      if (!mine.some((c) => c.id === character)) { problems.push(`${what}: the character has no name in ${src.label}`); continue }
+      const record = assets.find((a) => a.character === character && a.outfit === outfit)
+      if (!record) { problems.push(`${what}: ${src.label} has no crop for it`); continue }
+      const base = piece(record.base, entry.baseSha256, `${what} crop`)
+      if (!base) continue
+      size ??= { width: base.width, height: base.height }
+      if (base.width !== size.width || base.height !== size.height) { problems.push(`${what} crop: ${base.width}×${base.height}, not ${size.width}×${size.height}`); continue }
+      const id = `${character}-${outfit}`
+      if (bases.some((b) => b.id === id)) { problems.push(`${what}: approved twice`); continue }
+      bases.push({ id, character, outfit, path: `bases/${id}.${base.sha256.slice(0, 16)}.png`, ...base })
+      states.push({ character, outfit, expression: neutral, base: id, face: null, at: null, approvedSha256: null })
+      for (const output of (Array.isArray(entry.outputs) ? (entry.outputs as unknown[]) : []).filter(object)) {
+        const expression = text(output.expression), position = at(output.position)
+        if (!expression || !KEBAB.test(expression) || !ownExpressions.includes(expression) || !position) { problems.push(`${what}: a state without a known expression or position`); continue }
+        const faceId = `${character}-${expression}`
+        let face = faces.get(faceId)
+        if (!face) {
+          const record = faceRecords.find((f) => f.character === character && f.expression === expression)
+          const found = record ? piece(record.file, output.faceSha256, `${character} ${expression} face`) : null
+          if (!record) problems.push(`${character} ${expression} face: ${src.label} has no face for it`)
+          if (!found) continue
+          faceSize ??= { width: found.width, height: found.height }
+          if (found.width !== faceSize.width || found.height !== faceSize.height) { problems.push(`${character} ${expression} face: ${found.width}×${found.height}, not ${faceSize.width}×${faceSize.height}`); continue }
+          face = { id: faceId, character, expression, path: `faces/${faceId}.${found.sha256.slice(0, 16)}.png`, ...found }
+          faces.set(faceId, face)
+        } else if (face.sha256 !== output.faceSha256) { problems.push(`${what} ${expression}: approved with another ${expression} face`); continue }
+        if (position.x < 0 || position.y < 0 || position.x + face.width > size.width || position.y + face.height > size.height) { problems.push(`${what} ${expression}: the face falls outside the crop`); continue }
+        states.push({ character, outfit, expression, base: id, face: faceId, at: position, approvedSha256: text(output.sha256) })
+      }
     }
   }
+
+  // The shared collection: its approval record gates every state.
+  if (approval.status !== 'approved' || approval.by !== 'owner') problems.push('approval.json doesn’t record the owner’s approval')
+  ingest({
+    label: 'the manifest', manifest,
+    entries: (Array.isArray(approval.assets) ? (approval.assets as unknown[]) : []).filter(object),
+    locate: (rel) => { const f = inside(dir, rel); return f ? { abs: join(dir, f), file: f } : null },
+  })
+  // Each character's own collection: her manifest's approval, her crops the owner approved, and her approved states.
+  for (const study of characterStudies(resolve(dir, '..'))) {
+    const own = object(study.manifest.approval) ? study.manifest.approval : {}
+    if (!Array.isArray(study.manifest.assets)) continue
+    if (own.status !== 'approved' || own.by !== 'owner') { problems.push(`${study.key}: her manifest doesn’t record the owner’s approval`); continue }
+    ingest({
+      label: `${study.key}'s manifest`, manifest: study.manifest,
+      entries: (study.manifest.assets as unknown[]).filter(object).map((a) => ({
+        character: a.character, outfit: a.outfit, baseSha256: a.neutralOwnerApproved === true ? a.baseSha256 : null,
+        outputs: (Array.isArray(a.outputs) ? (a.outputs as unknown[]) : []).filter(object).filter((o) => o.ownerApproved === true),
+      })),
+      locate: (rel) => { const abs = studyFile(study, rel); return abs ? { abs, file: slashed(relative(dir, abs)) } : null },
+    })
+  }
   if (bases.length === 0) problems.push('no approved crop')
-  // In the collection's order: character, outfit, expression.
+  // In the collections' order: character, outfit, expression.
   const rank = (list: string[], v: string) => { const i = list.indexOf(v); return i === -1 ? Infinity : i }
   const order = characters.map((c) => c.id)
   states.sort((a, b) => rank(order, a.character) - rank(order, b.character) || rank(outfits, a.outfit) - rank(outfits, b.outfit) || rank(expressions, a.expression) - rank(expressions, b.expression))
@@ -163,7 +205,7 @@ export function readPortraits(universe: string, dir: string): PortraitSet {
   const faceList = [...faces.values()].sort((a, b) => rank(order, a.character) - rank(order, b.character) || rank(expressions, a.expression) - rank(expressions, b.expression))
   return {
     universe, revision: typeof manifest.revision === 'number' ? manifest.revision : null, approvedOn: text(approval.date),
-    characters, outfits: outfits.filter((o) => !retired.has(o)), expressions,
+    characters, outfits, expressions,
     size: size ?? { width: 0, height: 0 }, faceSize: faceSize ?? { width: 0, height: 0 }, bases, faces: faceList, states, problems,
   }
 }
@@ -215,6 +257,8 @@ export interface PortraitPublication {
   faces: number
   /** Uma Character Art shows the pieces on each Uma's page; the games compose the states. */
   composedBy: 'the games'
+  /** Each character's share, by key, for her own album's line (P174). */
+  characters?: Record<string, { states: number; bases: number; faces: number }>
   note: string | null
 }
 export function portraitPublicationOf(set: PortraitSet, remote: PortraitIndex | null, now: string, bucket = BUCKET): PortraitPublication {
@@ -223,6 +267,9 @@ export function portraitPublicationOf(set: PortraitSet, remote: PortraitIndex | 
   return {
     schemaVersion: 1, kind: 'universe-portraits-publication', universe: set.universe, destination: `gs://${bucket}/art/universes/${set.universe}/portraits/`,
     checkedAt: now, state, publishedAt: remote?.publishedAt ?? null, states: set.states.length, bases: set.bases.length, faces: set.faces.length, composedBy: 'the games',
+    characters: Object.fromEntries(set.characters.map((c) => [c.id, {
+      states: set.states.filter((s) => s.character === c.id).length, bases: set.bases.filter((b) => b.character === c.id).length, faces: set.faces.filter((f) => f.character === c.id).length,
+    }])),
     note: state === 'refused' ? `Can’t publish: ${set.problems.slice(0, 5).join('; ')}${set.problems.length > 5 ? `; and ${set.problems.length - 5} more` : ''}.`
       : state === 'changed' ? 'The approved collection changed since it was published; a push sends the new pieces.' : null,
   }
@@ -236,6 +283,15 @@ export function writePortraitFlags(dir: string, publication: PortraitPublication
   const record = before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...publication, checkedAt: '' }) ? before : publication
   if (write(recordFile, encode(record))) changed.push(RECORD)
   if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push --portraits and pnpm art:status from ${RECORD}; the galleries read it.\nwindow.UMA_PORTRAIT_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
+  // Each character collection keeps her share beside her active study, for her album's line (P174).
+  for (const study of characterStudies(resolve(dir, '..'))) {
+    const mine = record.characters?.[study.key]
+    if (!mine) continue
+    const { characters: _, ...rest } = record
+    const target = join(study.folder, PORTRAIT_RECORD), at = slashed(relative(dir, study.folder))
+    if (write(target, encode(stable(target, { ...rest, ...mine })))) changed.push(`${at}/${PORTRAIT_RECORD}`)
+    if (writeStudyScript(study.folder)) changed.push(`${at}/${RECORD_SCRIPT}`)
+  }
   return [...changed, ...tagGalleries(resolve(dir, '..'), 'dialogue-portraits')]
 }
 
