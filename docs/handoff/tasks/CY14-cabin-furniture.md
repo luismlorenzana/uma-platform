@@ -3,7 +3,7 @@
 **uma-platform (`scripts/pixel-art`, uma-art) · Claude, code-drawn (P126, P147) · M · Needs: nothing · Unblocks: the
 uma-cyberpunk packet that pins it, before its Phase 4 exit (CY19's play-through)**
 
-> **Status: 2026-11-13, accepted and in progress (P164).** The request is uma-cyberpunk's
+> **Status: 2026-11-13, done (P164): uma-art 2.29.0** ([#86](https://github.com/luismlorenzana/uma-platform/pull/86); previews in `assets/previews/cabins.html`). Deviations, all accepted: the Brass Lamp is a wall sconce, the other lights hang from the ceiling; the Quilted Bed is seen from its foot; `foot` is on every room frame (a wall or ceiling piece's bottom edge). The request: The request is uma-cyberpunk's
 > [art-requests/cabin-furniture.md](https://github.com/luismlorenzana/uma-cyberpunk/blob/main/docs/design/art-requests/cabin-furniture.md)
 > (its CY14, D25, at 891e50e); the item table is its `packages/domain/src/cabins/items.ts` (ids, names, slots, styles,
 > `DECOR_COLORS`). Original prop art: no Uma, no master data, so it is in git and in uma-art.
