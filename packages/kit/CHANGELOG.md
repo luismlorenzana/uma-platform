@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.20.0
+
+### Minor Changes
+
+- 36327a1: Opt-in landscape variants for uma-farm's layout on a landscape `KitStage` (uma-farm F74, uma-platform P171): `AppFrame landscape="rail-and-bar"` puts `bottom` in a full-height left rail and `top` in a bar across the top of the page column (the column zeroes `--inset-left` beside the rail); `AccountBar landscape="bar"` is a thin 44 pt top bar with the chips in a row, an `actions` slot and the Menu at its right end, `pt-safe`/`pl-safe`/`pr-safe`, with `initial` and `account` optional; `BottomBar side="left"` is a left rail (a right border, `pl-safe`, the active marker and the raised disc on its inner right edge, no menu slot, `menu` optional); `Sheet`/`BottomSheet` take `size="wide"`, up to `min(34rem, 75cqw)` on a landscape stage; `AccountPage columns={2}` sets its panels in two CSS columns on a page at least 36rem wide, each kept whole; `UpdateNotice clearSides` keeps clear of the left and right safe areas; and `HubMap flow="across"` runs the map sideways, the trunk road across the middle row, panned with `touch-pan-x`, a page swipe a vertical drag (with `hubGrid`, `layTerrain`, `HubCanvas`, `PlaceTargets` and `useHubGrid` taking the same `flow`, and `swipeDirectionAcross`). New types: `LandscapeArrangement`, `AccountBarProps`, `AccountLink`, `BottomBarProps`, `BarMenu`, `RailSide`, `SheetSize`, `HubFlow`. Every default draws exactly what it drew before.
+
 ## 0.19.0
 
 ### Minor Changes
