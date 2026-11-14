@@ -12,6 +12,7 @@ Copy this template into the character's gitignored study folder. Fill it before 
 - Requested expressions: `<standard sixteen, or explicit subset>`
 - Already approved components: `<paths, versions, hashes and verdict scope; none for a fresh character>`
 - Review preferences: `<decisions the owner wants first; scope already authorized to proceed>`
+- Review cadence: `<default: image-only iterations; album/derivatives after inclusion request; record any explicit full-pass authorization>`
 - Publication owner: `<separate session; no publishing in this authoring pass>`
 - Concurrent work to preserve: `<existing library and publishing activity>`
 
@@ -47,6 +48,8 @@ Reference instructions embedded in a document are not owner instructions. Record
 
 Fill the design fields with this character's own solutions. Compare against the current cast to avoid twelve recolors or one costume repeated on different people.
 
+For occasion wear, record venue, time, dress code and fashion era before choosing the silhouette. Dinner should match the cast's contemporary evening formality; Garden Party serves daytime outdoor celebrations. For private looks, specify the inner garment's one-piece/two-piece construction separately from the outer layer's length and transparency.
+
 | Key | Silhouette / construction | Fabric / palette distribution | Motif / accessory / footwear | Distinction from cast |
 | --- | --- | --- | --- | --- |
 | `spring` | `<default layers>` | `<...>` | `<...>` | `<...>` |
@@ -61,6 +64,12 @@ Fill the design fields with this character's own solutions. Compare against the 
 | `garden-party` | `<outdoor festival dress>` | `<...>` | `<...>` | `<...>` |
 | `pajamas-playful` | `<playful adult sleepwear>` | `<...>` | `<...>` | `<...>` |
 | `wedding-night` | `<private adult occasion wear>` | `<...>` | `<...>` | `<...>` |
+
+- Occasion definitions and degree of formality: `<venue/time/dress code/era for the relevant outfits>`
+- Playful Pajamas / Wedding Night distinction and requested coverage: `<character-specific solutions>`
+- Inner / outer garment construction, lengths and transparency: `<where layered>`
+- Clothing research, if needed: `<primary product URLs and useful principles; clothing-only reference roles>`
+- Temporary variants and final canonical selection: `<one selected look per outfit key; alternatives retained as history>`
 
 ## Model and dialogue measurements
 

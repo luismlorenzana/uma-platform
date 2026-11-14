@@ -11,6 +11,10 @@ Save the filled handoff in the private study folder. Update it after each meanin
 - Current local gallery URL and file: `<both>`
 - Latest active versions: `<full-body, face export, dialogue collection>`
 - Status: `<candidate / partial approval / complete approval; exact scope>`
+- Local authoring and owner approval: `<state and evidence>`
+- Shared canonical collection integration: `<done / pending; manifest locations>`
+- Publication and readback: `<done / pending; publisher and evidence>`
+- Game composition check: `<done / pending; actual tested scope>`
 - Publisher / concurrent session: `<owner; no publishing by authoring session>`
 
 ## Progress and evidence
@@ -54,6 +58,8 @@ Owner approval evidence: `<date, actual verdict and exact batch/version/hash sco
 - Visual revisions, including the exact observed issue: `<...>`
 - Failed checks or limitations: `<...>`
 - Owner decisions still needed, stated as concrete reviewable choices: `<...>`
+- Selected canonical variant and superseded alternatives: `<active key/image/hash; historical paths>`
+- Review cadence to preserve: `<image-only design iterations; next authorized album/derivative work>`
 - Integration changes to local builders/viewers still needed: `<...>`
 - Existing approved assets/other sessions' files that must remain unchanged: `<...>`
 

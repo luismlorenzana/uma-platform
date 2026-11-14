@@ -45,6 +45,20 @@ Design variety across the cast as well as within one wardrobe. For the same occa
 
 Distribute signature motifs deliberately. An ear ornament need not become a giant repeated chest emblem, and every garment need not repeat every identity color. Keep new accessories away from the eye/brow/mouth region when practical. A hairstyle change such as hair up for a festival is a separate identity and face-reuse decision; it is not required by the original packet.
 
+### Define the occasion before varying its clothes
+
+Record venue, time of day, dress code and fashion era for occasion wear. Farm Life's cozy setting does not make every outfit rustic, historical or modest. Dinner defaults to contemporary formal eveningwear, such as a celebration at a modern restaurant or hotel; Garden Party is a lighter outdoor daytime festival dress. Match the approved cast's degree of formality while finding a different garment construction. Shortening a formal gown into a cocktail dress merely to create variety can miss the occasion.
+
+Assess the complete silhouette and material behavior. Smooth satin, fluid crepe, clean tailoring, a halter or V neckline and restrained jewelry can establish modern eveningwear. Heavy texture combined with ornate trim, contrast skirt panels, sleeves and a cape can read as historical costume. Velvet itself is not banned; its cut and styling must suit the brief. Cleavage, bare shoulders and a skirt slit are available design choices for the adult formalwear brief, rather than reasons to change its category.
+
+If an outfit keeps reading in the wrong era or occasion, inspect real garment references before another generation. Prefer designer or retailer product pages that clearly show construction and fabric; save the source URLs and the useful design principles privately. Use them for clothing ideas only, preserving the character's own identity, proportions, rendering and pose. Inspect the other heroines to compare quality and variety; avoid supplying their whole outfit as an edit target for a new heroine.
+
+### Separate sleepwear, private occasion wear and garment layers
+
+Playful Pajamas is cute adult sleepwear; Wedding Night is intended to be the wardrobe's most playfully revealing and sexy private occasion look, within the established non-explicit fashion presentation. Express that distinction in the garment construction. Preserve the owner's requested coverage rather than assuming a reserved personality or farm setting requires a covered nightgown.
+
+Describe inner and outer garments separately: one-piece or two-piece construction, neckline, coverage, material, transparency and length for each. For example, an opaque two-piece beneath a transparent ankle-length robe is a different design from a one-piece teddy with a short capelet. A request to lengthen the sheer outer layer does not ask for a longer opaque inner dress. Retain successful colors, lace, bows and motifs when revising those specific construction choices. One selected solution does not become the mandatory costume for every new character.
+
 ## 3. Author the spring anchor
 
 Use the initial-anchor template in the [prompt kit](prompt-kit.md). Label reference roles explicitly: the new character supplies identity; an existing approved project image supplies rendering and staging only. If the character already has approved Farm Life art, start from her own art instead of adapting her identity again.
@@ -73,9 +87,15 @@ Use one built-in generation call per distinct outfit. Small parallel batches are
 
 Change clothing while holding presentation and identity stable. Inspect the face, body and full silhouette across the whole set, not just the newly interesting fabric. Keep figure scale and head position comparable to make dialogue reuse feasible, while retaining actual character height and proportion differences. Measure consistency within each character; do not force all characters to have the same face geometry.
 
-Build a local review with each full-size PNG, its exact prompt and status, plus wardrobe and face-detail sheets. Review similar occasions together: spring/summer/fall/winter, work/garden party, dinner/wedding, swimsuit/private looks. This reveals duplicated designs and identity drift more effectively than isolated previews.
+During design review, default to showing the generated image with its exact prompt and minimal provenance saved locally. Prepare album/gallery updates, outfit-expression combinations and review sheets only when the owner requests inclusion or has explicitly authorized them as part of the pass. Honor existing authorization without adding repeated approval questions. Reuse the established gallery and processing tools; a targeted clothing revision does not require new website features or copied collections of unchanged assets.
+
+When gallery inclusion is authorized, provide the full-size PNG, exact prompt and status, plus the relevant wardrobe and face-detail sheets. Review similar occasions together: spring/summer/fall/winter, work/garden party, dinner/wedding, swimsuit/private looks. This reveals duplicated designs and identity drift more effectively than isolated previews.
 
 After an owner verdict, copy the selected bytes and prompt into the approved location and record hashes and approval evidence. A technical check can say verified; only the owner's verdict can say owner approved. Honor broad explicit approval for the batch it actually covers; do not request it again image by image.
+
+If the owner likes the set and names only a few exceptions, preserve acceptance of the unchanged remainder and rework the named parts. Start a targeted edit from the best selected same-character image, returning to her accepted anchor when identity needs reinforcement. Change the requested garment features while retaining accepted face, proportions, pose, rendering and successful clothing details. A failed generation or a more covered fallback does not change the owner's brief or approve the fallback; record what happened accurately.
+
+Multiple candidates for one occasion are temporary choices. Once selected, keep one active image under the canonical outfit key, retire the alternatives from current selectors and retain their files as provenance. The standard collection still has twelve outfits. Update the full-body card, crop, expression references, recipe, active-study pointer and statuses together when album inclusion is requested; an approved new dress must not leave the previous dress in the dialogue view.
 
 ## 5. Establish dialogue framing with literal crops
 
@@ -109,6 +129,8 @@ Make a neutral crop for each of the twelve full-body looks. Measure each outfit'
 
 The per-character result is twelve neutral bases and 180 composed previews, representing 192 states. Generate neutral/outfit images and expression faces separately; do not ask the model for 192 individually drawn portraits. The local flattened previews are for exact review; retain the reusable pieces and recipe for the publishing/game session.
 
+When an outfit is revised after the faces are accepted, prepare only its new literal crop and fifteen shared-face previews, measure its placement, and inspect the relevant masks and garment edges. Reuse accepted faces without regeneration and reference unchanged outfits in place. Do not rebuild or copy the whole library merely to update one look. See [the dialogue revision guidance](dialogue-portraits.md#revise-one-outfit-after-face-approval).
+
 Before adding the character to shared active galleries, follow the preservation and builder-adaptation instructions in [dialogue-portraits.md](dialogue-portraits.md). A local study can be complete while still awaiting the owner's selection. Do not relabel candidates as approved or publish them to make counts look complete.
 
 ## 9. Finish with evidence another session can use
@@ -116,3 +138,5 @@ Before adding the character to shared active galleries, follow the preservation 
 Deliver the local review link, a short description of what is new, the saved prompts, and the validation result. Report any visual uncertainty, failed check or review still needed. Fill the [handoff template](templates/handoff.md), including a precise next action.
 
 Completion for an approved character means selected full-body masters and prompts; literal neutral crops; fifteen shared faces and masks; all authorized combinations; owner approval bound to exact hashes and positions; functioning gallery links and selectors; checked small-size readability; and existing approved art preserved. Production sprites, animation, transparency conversion, runtime integration and publishing are separate tasks unless the owner requests them.
+
+Report four delivery states separately: local authoring/approval, integration into the shared canonical collections, publication/readback, and composition tested in the game. A complete approved character album can still await the latter three. Record which are done and the exact remaining action; do not imply that a local album is already published or game-integrated.
