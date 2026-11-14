@@ -1,0 +1,469 @@
+{
+ "schemaVersion": 1,
+ "width": 512,
+ "height": 384,
+ "frames": {
+  "neon-bed": {
+   "x": 0,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Glow Pod Bed",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "neon"
+  },
+  "neon-desk": {
+   "x": 64,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Holo Desk",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "neon"
+  },
+  "neon-wall": {
+   "x": 128,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Neon Sign",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "neon"
+  },
+  "neon-floor": {
+   "x": 192,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Light-Grid Mat",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "neon"
+  },
+  "neon-light": {
+   "x": 256,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Strip Lights",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "neon"
+  },
+  "classic-bed": {
+   "x": 320,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Oak Bunk",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "classic"
+  },
+  "classic-desk": {
+   "x": 384,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Writing Desk",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "classic"
+  },
+  "classic-wall": {
+   "x": 448,
+   "y": 0,
+   "w": 64,
+   "h": 64,
+   "name": "Framed Print",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "classic"
+  },
+  "classic-floor": {
+   "x": 0,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Woven Rug",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "classic"
+  },
+  "classic-light": {
+   "x": 64,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Brass Lamp",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "classic"
+  },
+  "cozy-bed": {
+   "x": 128,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Quilted Bed",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "cozy"
+  },
+  "cozy-desk": {
+   "x": 192,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Tea Table",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "cozy"
+  },
+  "cozy-wall": {
+   "x": 256,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Plush Shelf",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "cozy"
+  },
+  "cozy-floor": {
+   "x": 320,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Fluffy Rug",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "cozy"
+  },
+  "cozy-light": {
+   "x": 384,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Paper Lantern",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "cozy"
+  },
+  "sporty-bed": {
+   "x": 448,
+   "y": 64,
+   "w": 64,
+   "h": 64,
+   "name": "Training Cot",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "sporty"
+  },
+  "sporty-desk": {
+   "x": 0,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Gear Bench",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "sporty"
+  },
+  "sporty-wall": {
+   "x": 64,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Race Poster",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "sporty"
+  },
+  "sporty-floor": {
+   "x": 128,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Stretch Mat",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "sporty"
+  },
+  "sporty-light": {
+   "x": 192,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Track Light",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "sporty"
+  },
+  "tech-bed": {
+   "x": 256,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Capsule Bunk",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "tech"
+  },
+  "tech-desk": {
+   "x": 320,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Console Desk",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "tech"
+  },
+  "tech-wall": {
+   "x": 384,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Wall Screen",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "tech"
+  },
+  "tech-floor": {
+   "x": 448,
+   "y": 128,
+   "w": 64,
+   "h": 64,
+   "name": "Grid Floor Panel",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "tech"
+  },
+  "tech-light": {
+   "x": 0,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Smart Lamp",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "tech"
+  },
+  "wild-bed": {
+   "x": 64,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Rope Hammock",
+   "kind": "furniture",
+   "slot": "bed",
+   "style": "wild"
+  },
+  "wild-desk": {
+   "x": 128,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Driftwood Desk",
+   "kind": "furniture",
+   "slot": "desk",
+   "style": "wild"
+  },
+  "wild-wall": {
+   "x": 192,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Vine Wall",
+   "kind": "furniture",
+   "slot": "wall",
+   "style": "wild"
+  },
+  "wild-floor": {
+   "x": 256,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Moss Rug",
+   "kind": "furniture",
+   "slot": "floor",
+   "style": "wild"
+  },
+  "wild-light": {
+   "x": 320,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Firefly Jar",
+   "kind": "furniture",
+   "slot": "light",
+   "style": "wild"
+  },
+  "keepsake-trophy": {
+   "x": 384,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "First Trophy",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "keepsake-photo": {
+   "x": 448,
+   "y": 192,
+   "w": 64,
+   "h": 64,
+   "name": "Crew Photo",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "keepsake-charm": {
+   "x": 0,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Captain’s Charm",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "keepsake-starmap": {
+   "x": 64,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Hand-Drawn Star Map",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "keepsake-ribbon": {
+   "x": 128,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Old Race Ribbon",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "keepsake-radio": {
+   "x": 192,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Pocket Radio",
+   "kind": "keepsake",
+   "slot": "keepsake"
+  },
+  "gift-buns": {
+   "x": 256,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Steamed Buns",
+   "kind": "gift",
+   "gift": "snacks"
+  },
+  "gift-candy": {
+   "x": 320,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Fizz Candy",
+   "kind": "gift",
+   "gift": "snacks"
+  },
+  "gift-tape": {
+   "x": 384,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Mix Tape",
+   "kind": "gift",
+   "gift": "music"
+  },
+  "gift-earbuds": {
+   "x": 448,
+   "y": 256,
+   "w": 64,
+   "h": 64,
+   "name": "Spare Earbuds",
+   "kind": "gift",
+   "gift": "music"
+  },
+  "gift-gloves": {
+   "x": 0,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Grip Gloves",
+   "kind": "gift",
+   "gift": "gear"
+  },
+  "gift-kit": {
+   "x": 64,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Tune-Up Kit",
+   "kind": "gift",
+   "gift": "gear"
+  },
+  "gift-succulent": {
+   "x": 128,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Tiny Succulent",
+   "kind": "gift",
+   "gift": "plants"
+  },
+  "gift-seeds": {
+   "x": 192,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Seed Packet",
+   "kind": "gift",
+   "gift": "plants"
+  },
+  "gift-novel": {
+   "x": 256,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Paperback Novel",
+   "kind": "gift",
+   "gift": "books"
+  },
+  "gift-atlas": {
+   "x": 320,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Pocket Atlas",
+   "kind": "gift",
+   "gift": "books"
+  },
+  "gift-pin": {
+   "x": 384,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Enamel Pin",
+   "kind": "gift",
+   "gift": "keepsakes"
+  },
+  "gift-postcard": {
+   "x": 448,
+   "y": 320,
+   "w": 64,
+   "h": 64,
+   "name": "Postcard",
+   "kind": "gift",
+   "gift": "keepsakes"
+  }
+ }
+}

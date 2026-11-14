@@ -1,0 +1,457 @@
+{
+ "schemaVersion": 1,
+ "width": 900,
+ "height": 642,
+ "frames": {
+  "neon-bed": {
+   "x": 0,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Glow Pod Bed",
+   "slot": "bed",
+   "style": "neon",
+   "mount": "floor",
+   "foot": {
+    "x": 50,
+    "y": 132,
+    "w": 50
+   }
+  },
+  "classic-bed": {
+   "x": 150,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Oak Bunk",
+   "slot": "bed",
+   "style": "classic",
+   "mount": "floor",
+   "foot": {
+    "x": 7,
+    "y": 133,
+    "w": 131
+   }
+  },
+  "cozy-bed": {
+   "x": 300,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Quilted Bed",
+   "slot": "bed",
+   "style": "cozy",
+   "mount": "floor",
+   "foot": {
+    "x": 20,
+    "y": 133,
+    "w": 110
+   }
+  },
+  "sporty-bed": {
+   "x": 450,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Training Cot",
+   "slot": "bed",
+   "style": "sporty",
+   "mount": "floor",
+   "foot": {
+    "x": 22,
+    "y": 133,
+    "w": 116
+   }
+  },
+  "tech-bed": {
+   "x": 600,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Capsule Bunk",
+   "slot": "bed",
+   "style": "tech",
+   "mount": "floor",
+   "foot": {
+    "x": 12,
+    "y": 133,
+    "w": 127
+   }
+  },
+  "wild-bed": {
+   "x": 750,
+   "y": 0,
+   "w": 150,
+   "h": 150,
+   "name": "Rope Hammock",
+   "slot": "bed",
+   "style": "wild",
+   "mount": "floor",
+   "foot": {
+    "x": 10,
+    "y": 133,
+    "w": 130
+   }
+  },
+  "neon-desk": {
+   "x": 0,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Holo Desk",
+   "slot": "desk",
+   "style": "neon",
+   "mount": "floor",
+   "foot": {
+    "x": 15,
+    "y": 133,
+    "w": 120
+   }
+  },
+  "classic-desk": {
+   "x": 150,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Writing Desk",
+   "slot": "desk",
+   "style": "classic",
+   "mount": "floor",
+   "foot": {
+    "x": 13,
+    "y": 133,
+    "w": 124
+   }
+  },
+  "cozy-desk": {
+   "x": 300,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Tea Table",
+   "slot": "desk",
+   "style": "cozy",
+   "mount": "floor",
+   "foot": {
+    "x": 24,
+    "y": 134,
+    "w": 102
+   }
+  },
+  "sporty-desk": {
+   "x": 450,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Gear Bench",
+   "slot": "desk",
+   "style": "sporty",
+   "mount": "floor",
+   "foot": {
+    "x": 18,
+    "y": 132,
+    "w": 114
+   }
+  },
+  "tech-desk": {
+   "x": 600,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Console Desk",
+   "slot": "desk",
+   "style": "tech",
+   "mount": "floor",
+   "foot": {
+    "x": 12,
+    "y": 133,
+    "w": 122
+   }
+  },
+  "wild-desk": {
+   "x": 750,
+   "y": 150,
+   "w": 150,
+   "h": 150,
+   "name": "Driftwood Desk",
+   "slot": "desk",
+   "style": "wild",
+   "mount": "floor",
+   "foot": {
+    "x": 12,
+    "y": 135,
+    "w": 123
+   }
+  },
+  "neon-floor": {
+   "x": 0,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Light-Grid Mat",
+   "slot": "floor",
+   "style": "neon",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "classic-floor": {
+   "x": 150,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Woven Rug",
+   "slot": "floor",
+   "style": "classic",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "cozy-floor": {
+   "x": 300,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Fluffy Rug",
+   "slot": "floor",
+   "style": "cozy",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "sporty-floor": {
+   "x": 450,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Stretch Mat",
+   "slot": "floor",
+   "style": "sporty",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "tech-floor": {
+   "x": 600,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Grid Floor Panel",
+   "slot": "floor",
+   "style": "tech",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "wild-floor": {
+   "x": 750,
+   "y": 300,
+   "w": 150,
+   "h": 150,
+   "name": "Moss Rug",
+   "slot": "floor",
+   "style": "wild",
+   "mount": "floor",
+   "foot": {
+    "x": 0,
+    "y": 149,
+    "w": 150
+   }
+  },
+  "neon-wall": {
+   "x": 0,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Neon Sign",
+   "slot": "wall",
+   "style": "neon",
+   "mount": "wall",
+   "foot": {
+    "x": 51,
+    "y": 84,
+    "w": 8
+   }
+  },
+  "classic-wall": {
+   "x": 96,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Framed Print",
+   "slot": "wall",
+   "style": "classic",
+   "mount": "wall",
+   "foot": {
+    "x": 39,
+    "y": 89,
+    "w": 18
+   }
+  },
+  "cozy-wall": {
+   "x": 192,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Plush Shelf",
+   "slot": "wall",
+   "style": "cozy",
+   "mount": "wall",
+   "foot": {
+    "x": 40,
+    "y": 78,
+    "w": 16
+   }
+  },
+  "sporty-wall": {
+   "x": 288,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Race Poster",
+   "slot": "wall",
+   "style": "sporty",
+   "mount": "wall",
+   "foot": {
+    "x": 19,
+    "y": 91,
+    "w": 4
+   }
+  },
+  "tech-wall": {
+   "x": 384,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Wall Screen",
+   "slot": "wall",
+   "style": "tech",
+   "mount": "wall",
+   "foot": {
+    "x": 27,
+    "y": 78,
+    "w": 42
+   }
+  },
+  "wild-wall": {
+   "x": 480,
+   "y": 450,
+   "w": 96,
+   "h": 96,
+   "name": "Vine Wall",
+   "slot": "wall",
+   "style": "wild",
+   "mount": "wall",
+   "foot": {
+    "x": 33,
+    "y": 91,
+    "w": 8
+   }
+  },
+  "neon-light": {
+   "x": 0,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Strip Lights",
+   "slot": "light",
+   "style": "neon",
+   "mount": "ceiling",
+   "foot": {
+    "x": 27,
+    "y": 66,
+    "w": 42
+   }
+  },
+  "classic-light": {
+   "x": 96,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Brass Lamp",
+   "slot": "light",
+   "style": "classic",
+   "mount": "wall",
+   "foot": {
+    "x": 16,
+    "y": 68,
+    "w": 6
+   }
+  },
+  "cozy-light": {
+   "x": 192,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Paper Lantern",
+   "slot": "light",
+   "style": "cozy",
+   "mount": "ceiling",
+   "foot": {
+    "x": 44,
+    "y": 90,
+    "w": 8
+   }
+  },
+  "sporty-light": {
+   "x": 288,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Track Light",
+   "slot": "light",
+   "style": "sporty",
+   "mount": "ceiling",
+   "foot": {
+    "x": 9,
+    "y": 36,
+    "w": 78
+   }
+  },
+  "tech-light": {
+   "x": 384,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Smart Lamp",
+   "slot": "light",
+   "style": "tech",
+   "mount": "ceiling",
+   "foot": {
+    "x": 30,
+    "y": 64,
+    "w": 36
+   }
+  },
+  "wild-light": {
+   "x": 480,
+   "y": 546,
+   "w": 96,
+   "h": 96,
+   "name": "Firefly Jar",
+   "slot": "light",
+   "style": "wild",
+   "mount": "ceiling",
+   "foot": {
+    "x": 31,
+    "y": 84,
+    "w": 34
+   }
+  }
+ }
+}
