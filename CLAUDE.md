@@ -61,8 +61,8 @@ The owner gave every session full autonomy to commit, publish and deploy (2026-1
   `latest`. Sprites publish sprite-only (UA5), and only sets whose `reviews.json` approval matches their current hashes.
   The owner's set approval is the go.
 - **Back up** `content/authoring/` with `pnpm sprites:backup` to `gs://uma-platform-authoring` (it runs on Windows too). It
-  leaves out `character-universes/`, `character-art/` and `character-art-trials/`, which the owner keeps on this machine
-  only (P165); never copy them to a bucket by hand.
+  leaves out `character-universes/`, `character-art/`, `character-art-trials/` and `splash-art/`, which the owner keeps on
+  this machine only (P165, P177); never copy them to a bucket by hand.
 - **Draw and release all non-character art in code (P126, P147):** the pixel art in `scripts/pixel-art`
   (`pnpm art:draw`) and the HD-2D kits in `scripts/kit-art` (`pnpm art:kit-farm`), with their tests and every earlier
   frame byte-identical; a changeset, `pnpm version-packages`, push; the release workflow publishes uma-art. The art tools

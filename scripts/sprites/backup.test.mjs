@@ -9,6 +9,7 @@ it('leaves out the caches and the folders kept on this machine, on either slash'
     'character-universes/brief.md', 'character-universes/cyberpunk/approved/kitasan-black/street.png', 'character-art/high-fantasy/README.md',
     'character-art-trials/2026-11-13-cyberpunk/manifest.json', 'character-universes\\farm-life\\approved\\manifest.json',
     'C:\\Users\\someone\\content\\authoring\\character-art-trials\\x.png', 'tools/node_modules/a.js', 'sprites/.cache/x.webp', 'draw-things/models/m.bin',
+    'splash-art/farm-life/kitasan-black/first-meeting/v003-framing/prompt.txt', 'splash-art\\farm-life\\x.png',
   ]) expect(excluded(path), path).toBe(true)
 })
 
@@ -17,7 +18,7 @@ it('keeps everything else, the Studio’s character-art folders included', () =>
     'ranker/profiles.json', 'sprites/106801/r3/set.json', 'farm-story/chapter-1.md', 'character-art-studio-batches/a.json',
     'uma-character-universes-notes.md', 'traveler-keys/106801/masters/ready.png', 'draw-things/prompts/a.txt',
   ]) expect(excluded(path), path).toBe(false)
-  expect(LOCAL_ONLY).toEqual(['character-universes', 'character-art', 'character-art-trials'])
+  expect(LOCAL_ONLY).toEqual(['character-universes', 'character-art', 'character-art-trials', 'splash-art'])
 })
 
 it('runs gcloud directly elsewhere, and gcloud.cmd through the shell with quoted arguments on Windows', () => {

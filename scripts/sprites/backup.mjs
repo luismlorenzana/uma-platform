@@ -1,6 +1,6 @@
 // `pnpm sprites:backup` (UA6, P96): copies `content/authoring/` to `gs://uma-platform-authoring/authoring`, adding and
 // replacing, never deleting. It leaves out rebuildable models, binaries and caches, and the folders the owner keeps on
-// this machine only (P165): ChatGPT's character universe studies and trials, whose approved looks are published by
+// this machine only (P165, P177): ChatGPT's character universe studies, trials and splash art work, whose approved art is published by
 // `pnpm art:push` instead. On Windows gcloud is `gcloud.cmd`, which Node only starts through the shell, so every argument
 // is quoted for cmd.exe there (as the Ranker's and Story's scripts do).
 import { spawn } from 'node:child_process'
@@ -10,7 +10,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 export const DESTINATION = 'gs://uma-platform-authoring/authoring'
 /** Folders at the top of `content/authoring/` that never leave this machine (the owner, 2026-11-13). */
-export const LOCAL_ONLY = ['character-universes', 'character-art', 'character-art-trials']
+export const LOCAL_ONLY = ['character-universes', 'character-art', 'character-art-trials', 'splash-art']
 /** One regex for gcloud's `--exclude`, matched against each file's path; either slash, so it holds on Windows too. */
 export const EXCLUDE = `.*(?:draw-things[/\\\\](?:models|bin)[/\\\\]|node_modules[/\\\\]|\\.cache[/\\\\]|(?:^|[/\\\\])(?:${LOCAL_ONLY.join('|')})[/\\\\]).*`
 
