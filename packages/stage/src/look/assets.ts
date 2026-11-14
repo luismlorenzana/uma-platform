@@ -7,6 +7,8 @@ import type { LookSprite } from './figures.js'
 export interface LookPackIndex {
   readonly version: 1
   readonly kit: { readonly path: string; readonly bytes: number; readonly sha256: string }
+  /** The kit's format v2 manifest (`formats`' `KitPack`, LK2), beside the glb; absent in packs before it. */
+  readonly kitPack?: { readonly path: string; readonly bytes: number; readonly sha256: string }
   /** Each scene's cast: [outfit id, x, z, action?]. */
   readonly cast: Readonly<Record<string, readonly (readonly [number, number, number, string?])[]>>
 }

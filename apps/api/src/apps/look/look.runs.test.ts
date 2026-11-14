@@ -31,6 +31,7 @@ describe('the pack route', () => {
   it('serves the index and a hash-named kit, nothing else', () => {
     expect(safePackPath('index.json', LOOK_PACK_ALLOW)).toEqual({ path: 'index.json', immutable: false })
     expect(safePackPath('kit.6c8c3d46dbc0dfe8.glb', LOOK_PACK_ALLOW)).toEqual({ path: 'kit.6c8c3d46dbc0dfe8.glb', immutable: true })
+    expect(safePackPath('kit.c1a2d5209cd22ce6.json', LOOK_PACK_ALLOW)).toEqual({ path: 'kit.c1a2d5209cd22ce6.json', immutable: true })
     expect(safePackPath('cast.json', LOOK_PACK_ALLOW)).toBeNull()
     expect(safePackPath('../runs/x.json', LOOK_PACK_ALLOW)).toBeNull()
   })

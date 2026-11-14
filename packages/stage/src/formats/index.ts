@@ -3,6 +3,7 @@
 export * from './kit.js'
 export * from './design.js'
 export * from './farm.js'
+export * from './kitPack.js'
 // ST4: what a farm's domain needs to test its designs without three.js: the check the stage builds by, the farm stand-in's
 // atlas and the sample farm.
 export { farmProblems } from '../world/farm.js'

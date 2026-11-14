@@ -1,8 +1,8 @@
 // A phone test's run (LK1, P161): what the Look page sends when a test ends. Checked here before it is stored: a known
 // shape, bounded sizes, numbers that are numbers. Pure, so it is tested without the API.
 
-/** The pack route's allowlist: the index, revalidated, and the hash-named kit, immutable. */
-export const LOOK_PACK_ALLOW = ['index.json', /kit\.[a-f0-9]{16}\.glb/]
+/** The pack route's allowlist: the index, revalidated, and the hash-named kit and its kit format v2 manifest, immutable. */
+export const LOOK_PACK_ALLOW = ['index.json', /kit\.[a-f0-9]{16}\.(glb|json)/]
 
 export interface LookTierRun {
   tier: string
