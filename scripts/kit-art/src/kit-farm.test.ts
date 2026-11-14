@@ -15,7 +15,8 @@ import { inflateSync } from 'node:zlib'
 
 const ART = fileURLToPath(new URL('../../../packages/art/', import.meta.url))
 /** Kits published after 2.26.0: kit-farm and the code-drawn kits since. */
-const LATER = new Set(['kit-farm', 'kit-town-spellblade', 'kit-town-mage', 'kit-town-summoner', 'kit-town-healer', 'kit-meadow', 'kit-ruins', 'kit-marsh', 'kit-coast'])
+// Families added after 2.26.0, each frozen by its own test (the cabins by scripts/pixel-art's cabins.test.ts, CY14).
+const LATER = new Set(['kit-farm', 'kit-town-spellblade', 'kit-town-mage', 'kit-town-summoner', 'kit-town-healer', 'kit-meadow', 'kit-ruins', 'kit-marsh', 'kit-coast', 'cabin-icons', 'cabin-room'])
 const sha = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
 const frames = drawWave()
 const { atlas, rgba } = pack('kit-farm', frames)
