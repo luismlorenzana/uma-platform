@@ -26,10 +26,12 @@ describe('the Local Art Gallery', () => {
   it('lists each universe with its approved looks, how many are published, and its study pages', () => {
     const base = root({ 'sky-city': { approved: 4, published: 4, studies: ['wardrobe-v001', 'helmet-v001'] }, 'old-road': { approved: 3, published: 1, waiting: 2 }, 'new-world': { approved: 2 } })
     mkdirSync(join(base, 'sky-city', 'notes'))
+    mkdirSync(join(base, 'sky-city', 'dialogue-portraits'))
+    writeFileSync(join(base, 'sky-city', 'dialogue-portraits', 'publication.json'), JSON.stringify({ state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }))
     expect(galleryRows(base)).toEqual([
-      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [] },
-      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [] },
-      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'] },
+      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [], portraits: null },
+      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [], portraits: null },
+      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'], portraits: { state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' } },
     ])
     const page = indexPage(base, 'https://example.test/art')
     expect(page).toContain('<title>Local Art Gallery</title>')
@@ -39,6 +41,7 @@ describe('the Local Art Gallery', () => {
     expect(page).toContain('href="/sky-city/approved/review.html"')
     expect(page).toContain('<a href="/sky-city/helmet-v001/review.html">helmet-v001</a>')
     expect(page).toContain('href="https://example.test/art"')
+    expect(page).toContain('<p><b>384</b> dialogue portrait states <span class="pub">Published as 54 pieces</span> <span class="when">2026-01-04</span> · <a href="/sky-city/dialogue-portraits/review.html">Open them</a></p>')
     expect(indexPage(temp(), 'https://example.test/art')).toContain('No approved collection yet.')
   })
 

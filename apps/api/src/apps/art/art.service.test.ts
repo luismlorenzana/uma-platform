@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { KEY_PACK_ALLOW } from './art.module'
 import { ArtService } from './art.service'
 import { sourceReleases } from './art.sources'
-import { UNIVERSE_PACK_ALLOW, universes } from './art.universes'
+import { PORTRAIT_PACK_ALLOW, portraitRecipe, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 // Invented records only: uma-data's synthetic release, with a second, invented outfit for character 9001.
 const data = () => { const d = syntheticMasterData(); d.outfits = [...d.outfits, { ...d.outfits[0]!, id: 900102, variant: 'summer' }]; return d }
@@ -107,5 +107,70 @@ describe('the universe looks (CA4)', () => {
     for (const path of ['universes/sky-city/index.json', 'universes/sky-city/images/rider-one-street.png', `universes/sky-city/prompts/street.${HASH.slice(0, 16)}.txt`, `universes/../ranker/x.${HASH.slice(0, 16)}.png`, 'ranker/profiles.json'])
       expect(safePackPath(path, allow)).toBeNull()
     expect(safePackPath('traveler-keys/index.json', allow)).toEqual({ path: 'traveler-keys/index.json', immutable: false })
+  })
+})
+
+describe('the dialogue portraits as pieces (CA5)', () => {
+  // The app's `art/` folder as a map; an invented recipe for invented riders, never a picture.
+  const store = (objects: ReadonlyMap<string, Uint8Array>) => ({
+    read: async (path: string) => { const bytes = objects.get(path); return bytes ? { bytes, generation: '1' } : null },
+    list: async (prefix: string) => [...objects.keys()].filter((p) => p.startsWith(`${prefix}/`)).sort(),
+  })
+  const A = 'ab'.repeat(32), B = 'cd'.repeat(32), C = 'ef'.repeat(32)
+  const recipe = (universe: string, extra: Record<string, unknown> = {}) => json({
+    schemaVersion: 1, kind: 'universe-portraits', universe, revision: 1, approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z',
+    size: { width: 60, height: 80 }, faceSize: { width: 24, height: 24 }, blend: 'Invented blend words.',
+    characters: [{ id: 'rider-one', name: 'Rider One' }], outfits: ['street'], expressions: ['neutral', 'happy'],
+    bases: [{ id: 'rider-one-street', character: 'rider-one', outfit: 'street', path: `bases/rider-one-street.${A.slice(0, 16)}.png`, bytes: 900, sha256: A, width: 60, height: 80 }],
+    faces: [
+      { id: 'rider-one-happy', character: 'rider-one', expression: 'happy', path: `faces/rider-one-happy.${B.slice(0, 16)}.png`, bytes: 90, sha256: B, width: 24, height: 24 },
+      { id: 'rider-one-sad', character: 'rider-one', expression: 'sad', path: `faces/rider-one-sad.${B.slice(0, 16)}.png`, bytes: 90, sha256: C, width: 24, height: 24 },
+      { id: 'rider-one-lost', character: 'nobody', expression: 'lost', path: `faces/rider-one-lost.${C.slice(0, 16)}.png`, bytes: 90, sha256: C, width: 24, height: 24 },
+    ],
+    states: [
+      { character: 'rider-one', outfit: 'street', expression: 'neutral', base: 'rider-one-street', face: null, at: null, approvedSha256: null },
+      { character: 'rider-one', outfit: 'street', expression: 'happy', base: 'rider-one-street', face: 'rider-one-happy', at: { x: 18, y: 20 }, approvedSha256: C },
+      { character: 'rider-one', outfit: 'street', expression: 'sad', base: 'rider-one-street', face: 'rider-one-sad', at: { x: 18, y: 20 }, approvedSha256: C },
+      { character: 'rider-one', outfit: 'street', expression: 'odd', base: 'rider-one-street', face: 'rider-one-happy', at: null, approvedSha256: C },
+    ],
+    ...extra,
+  })
+  const riderOne = (name: string) => (name === 'Rider One' ? 9001 : null)
+
+  it('gives the games the recipe: each piece at its pack path, tied to her character, and every state that holds', async () => {
+    const r = await portraitRecipe(store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')]])), 'sky-city', riderOne)
+    expect(r).toMatchObject({ universe: 'sky-city', revision: 1, approvedOn: '2026-01-02', size: { width: 60, height: 80 }, faceSize: { width: 24, height: 24 }, blend: 'Invented blend words.', outfits: ['street'], expressions: ['neutral', 'happy'] })
+    expect(r!.characters).toEqual([{ id: 'rider-one', name: 'Rider One', characterId: 9001 }])
+    expect(r!.bases).toEqual([{ kind: 'crop', id: 'rider-one-street', character: 'Rider One', characterId: 9001, outfit: 'street', expression: null, path: `universes/sky-city/portraits/bases/rider-one-street.${A.slice(0, 16)}.png`, bytes: 900, sha256: A, width: 60, height: 80 }])
+    // The sad face's name doesn't carry its own hash, and the lost face names nobody: both are dropped, with their states.
+    expect(r!.faces.map((f) => f.id)).toEqual(['rider-one-happy'])
+    expect(r!.states).toEqual([
+      { character: 'rider-one', outfit: 'street', expression: 'neutral', base: 'rider-one-street', face: null, at: null },
+      { character: 'rider-one', outfit: 'street', expression: 'happy', base: 'rider-one-street', face: 'rider-one-happy', at: { x: 18, y: 20 } },
+    ])
+  })
+
+  it('has no recipe for a universe without one, another universe’s, a damaged one, or a bad name', async () => {
+    const s = store(new Map([['universes/copied/portraits/index.json', recipe('sky-city')], ['universes/broken/portraits/index.json', new TextEncoder().encode('{ no')]]))
+    for (const u of ['sky-city', 'copied', 'broken', '../ranker', 'Sky']) expect(await portraitRecipe(s, u, riderOne)).toBeNull()
+  })
+
+  it('lists a universe’s pieces beside its looks, and a universe that has only portraits', async () => {
+    const s = store(new Map([
+      ['universes/sky-city/portraits/index.json', recipe('sky-city')],
+      ['universes/old-road/index.json', json({ kind: 'universe-art', universe: 'old-road', title: 'Old Road', looks: [] })],
+    ]))
+    const all = await universes(s, riderOne)
+    expect(all.map((u) => [u.id, u.title, u.looks.length, u.portraits?.states ?? null])).toEqual([['sky-city', 'Sky City', 0, 2]])
+    expect(all[0]!.portraits).toMatchObject({ approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z' })
+    expect(all[0]!.portraits!.pieces.map((p) => [p.kind, p.id, p.characterId])).toEqual([['crop', 'rider-one-street', 9001], ['face', 'rider-one-happy', 9001]])
+  })
+
+  it('serves only a piece’s hash-named PNG, never the recipe through the pack route', () => {
+    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW]
+    for (const path of [`universes/sky-city/portraits/bases/rider-one-street.${A.slice(0, 16)}.png`, `universes/sky-city/portraits/faces/rider-one-happy.${B.slice(0, 16)}.png`])
+      expect(safePackPath(path, allow)).toEqual({ path, immutable: true })
+    for (const path of ['universes/sky-city/portraits/index.json', `universes/sky-city/portraits/masks/rider-one-happy.${B.slice(0, 16)}.png`, 'universes/sky-city/portraits/faces/rider-one-happy.png'])
+      expect(safePackPath(path, allow)).toBeNull()
   })
 })

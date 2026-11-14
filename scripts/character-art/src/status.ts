@@ -1,6 +1,8 @@
 // `pnpm art:status [<universe>…]`: every approved look's published flag against the bucket as it is now, printed and
-// written where the local gallery reads it (`approved/publication.json`, `publication.js`). Publishes nothing.
+// written where the local gallery reads it (`approved/publication.json`, `publication.js`), and the dialogue portraits' flag
+// where a universe has them (`dialogue-portraits/publication.json`, CA5). Publishes nothing.
 import { approvedDir, authoring, bucketRemote, isUniverse, status, universesIn } from './lib.js'
+import { portraitsDir, portraitStatus, portraitUniverses } from './portraits.js'
 
 const named = process.argv.slice(2).filter((a) => a !== '--' && !a.startsWith('--'))
 const all = universesIn()
@@ -16,4 +18,9 @@ for (const universe of universes) {
   for (const look of p.looks) if (look.state !== 'published') console.log(`  ${look.state.padEnd(11)} ${look.id}${look.note ? `: ${look.note}` : ''}`)
   if (p.withdrawable.length) console.log(`  Published but no longer approved here (the next push takes them off the index): ${p.withdrawable.join(', ')}`)
   if (flagged.length) console.log(`  Wrote ${flagged.join(', ')}`)
+  if (portraitUniverses().includes(universe)) {
+    const { publication: q, flagged: written } = portraitStatus(universe, portraitsDir(universe), bucketRemote(universe), now)
+    console.log(`  Dialogue portraits: ${q.state}${q.publishedAt ? ` (${q.publishedAt.slice(0, 10)})` : ''}, ${q.states} states from ${q.bases} crops and ${q.faces} faces${q.note ? `: ${q.note}` : ''}`)
+    if (written.length) console.log(`  Wrote ${written.join(', ')}`)
+  }
 }

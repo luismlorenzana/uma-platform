@@ -1,6 +1,6 @@
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { describe, expect, it } from 'vitest'
-import { lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
+import { lookCounts, looksOf, type PortraitPiece, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
 
 // Invented records only (copied from uma-quest's album/data.test.ts at 6c572e6, then extended).
 const img = (path: string) => ({ path, width: 10, height: 10 })
@@ -63,6 +63,14 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([sky, road], 9001).map((g) => [g.universe.id, g.looks.map((l) => l.id)])).toEqual([['sky-city', ['a-street', 'a-pilot']]])
     expect(looksOf([sky, road], 9002).map((g) => g.universe.id)).toEqual(['sky-city', 'old-road'])
     expect(looksOf([sky, road], 9003)).toEqual([])
+  })
+  it('gives her page her dialogue portrait pieces too, crops before faces, even in a universe with none of her looks', () => {
+    const piece = (kind: 'crop' | 'face', id: string, characterId: number | null): PortraitPiece => ({
+      kind, id, character: 'Rider', characterId, outfit: kind === 'crop' ? id : null, expression: kind === 'face' ? id : null, path: `universes/u/portraits/x/${id}.0123456789abcdef.png`, bytes: 1, sha256: '0'.repeat(64), width: 1, height: 1,
+    })
+    const farm: Universe = { ...universe('farm', []), portraits: { states: 6, approvedOn: null, publishedAt: null, pieces: [piece('face', 'happy', 9003), piece('crop', 'spring', 9003), piece('crop', 'spring-2', 9001)] } }
+    expect(looksOf([sky, farm], 9003).map((g) => [g.universe.id, g.looks.length, g.pieces.map((p) => p.id)])).toEqual([['farm', 0, ['spring', 'happy']]])
+    expect(looksOf([sky, farm], 9001).map((g) => [g.universe.id, g.looks.length, g.pieces.map((p) => p.id)])).toEqual([['sky-city', 2, []], ['farm', 0, ['spring-2']]])
   })
   it('counts each character’s looks across the universes for her tiles, leaving out a look no character matches', () => {
     expect([...lookCounts([sky, road])]).toEqual([[9001, 2], [9002, 2]])

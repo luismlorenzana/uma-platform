@@ -34,8 +34,8 @@ export function universesIn(base = authoring): string[] {
     .map((e) => e.name).sort()
 }
 
-const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
-const md5 = (bytes: Uint8Array) => createHash('md5').update(bytes).digest('base64')
+export const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
+export const md5 = (bytes: Uint8Array) => createHash('md5').update(bytes).digest('base64')
 const object = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
 const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v : null)
 const words = (id: string) => id.split('-').map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
@@ -267,8 +267,8 @@ export function publicationOf(collection: Collection, remote: UniverseIndex | nu
   }
 }
 
-const encode = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`
-const write = (file: string, body: string): boolean => {
+export const encode = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`
+export const write = (file: string, body: string): boolean => {
   if (existsSync(file) && readFileSync(file, 'utf8') === body) return false
   mkdirSync(dirname(file), { recursive: true })
   writeFileSync(file, body)
@@ -277,9 +277,10 @@ const write = (file: string, body: string): boolean => {
 
 const BLOCK_START = '<!-- publication flags: written by pnpm art:push and pnpm art:status; keep this block -->'
 const BLOCK_END = '<!-- /publication flags -->'
-/** The gallery page with the two script tags that draw the flags, added before `</body>` once; the same page when they're in. */
-export function withFlagTags(html: string, flagScript: string): string {
-  const block = `${BLOCK_START}<script src="${RECORD_SCRIPT}"></script><script src="${flagScript}"></script>${BLOCK_END}`
+/** The gallery page with the script tags that draw the flags (each record's script, then the flag script), added before
+ *  `</body>` once; the same page when they're in. */
+export function withFlagTags(html: string, flagScript: string, records: readonly string[] = [RECORD_SCRIPT]): string {
+  const block = `${BLOCK_START}${records.map((r) => `<script src="${r}"></script>`).join('')}<script src="${flagScript}"></script>${BLOCK_END}`
   const start = html.indexOf(BLOCK_START), end = html.indexOf(BLOCK_END)
   if (start !== -1 && end > start) return html.slice(0, start) + block + html.slice(end + BLOCK_END.length)
   const body = html.lastIndexOf('</body>')
@@ -299,11 +300,30 @@ export function writeFlags(dir: string, publication: Publication): string[] {
   const record = before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...publication, checkedAt: '' }) ? before : publication
   if (write(recordFile, encode(record))) changed.push(RECORD)
   if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push and pnpm art:status from ${RECORD}; the gallery reads it.\nwindow.UMA_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
-  // approved/ sits two folders under the universes' root, where the shared flag script is kept.
-  const base = resolve(dir, '../..')
-  if (write(join(base, FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../${FLAG_FILE}`)
-  const gallery = join(dir, GALLERY)
-  if (existsSync(gallery) && write(gallery, withFlagTags(readFileSync(gallery, 'utf8'), `../../${FLAG_FILE}`))) changed.push(GALLERY)
+  return [...changed, ...tagGalleries(resolve(dir, '..'), 'approved')]
+}
+
+/** The two folders of a universe whose galleries show flags: its approved looks and its dialogue portraits (CA5). */
+export const FLAGGED = { approved: 'approved', portraits: 'dialogue-portraits' } as const
+/**
+ * Puts the shared flag script at the universes' root and the right script tags in a universe's galleries: the approved
+ * gallery reads its looks' record and, once the portraits are flagged, theirs too; the portraits' gallery reads its own.
+ * Says which files changed, relative to the folder named by `from`.
+ */
+export function tagGalleries(universeDir: string, from: keyof typeof FLAGGED | 'approved' | 'dialogue-portraits'): string[] {
+  const changed: string[] = []
+  const name = (folder: string, f: string) => (folder === from ? f : `../${folder}/${f}`)
+  // Each flagged folder sits two folders under the universes' root, where the shared flag script is kept.
+  if (write(join(universeDir, '..', FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../${FLAG_FILE}`)
+  const looks = existsSync(join(universeDir, FLAGGED.approved, RECORD_SCRIPT)), portraits = existsSync(join(universeDir, FLAGGED.portraits, RECORD_SCRIPT))
+  const pages: [string, string[]][] = [
+    [FLAGGED.approved, [...(looks ? [RECORD_SCRIPT] : []), ...(portraits ? [`../${FLAGGED.portraits}/${RECORD_SCRIPT}`] : [])]],
+    [FLAGGED.portraits, portraits ? [RECORD_SCRIPT] : []],
+  ]
+  for (const [folder, records] of pages) {
+    const gallery = join(universeDir, folder, GALLERY)
+    if (records.length && existsSync(gallery) && write(gallery, withFlagTags(readFileSync(gallery, 'utf8'), `../../${FLAG_FILE}`, records))) changed.push(name(folder, GALLERY))
+  }
   return changed
 }
 

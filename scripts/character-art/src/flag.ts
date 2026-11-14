@@ -1,13 +1,14 @@
-// The script a local approved gallery runs to show each look's published flag (CA4, AP79). The galleries are plain pages
+// The script a local gallery runs to show what is published (CA4, AP79; CA5's portraits, AP89). The galleries are plain pages
 // opened from the file system, where a page can't fetch a file, so the record reaches them as a script
-// (`publication.js` sets `window.UMA_PUBLICATION`) and this one draws it: a badge beside each look's "Approved", and a line
-// under the page's header. It matches a look by its picture's path, changes nothing else on the page, and does nothing
+// (`publication.js` sets `window.UMA_PUBLICATION`, the portraits' sets `window.UMA_PORTRAIT_PUBLICATION`) and this one draws
+// it: a badge beside each look's "Approved", a line under the page's header, and a line for the dialogue portraits. It matches a look by its picture's path, changes nothing else on the page, and does nothing
 // when the record is missing. Kept as text here because `pnpm art:push` and `pnpm art:status` write it into private
 // authoring (`character-universes/publication-flag.js`), which git never sees.
 export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma-platform, scripts/character-art). Don't edit: it is rewritten.
 (function () {
-  var record = window.UMA_PUBLICATION
-  if (!record || !Array.isArray(record.looks)) return
+  var record = window.UMA_PUBLICATION, portraits = window.UMA_PORTRAIT_PUBLICATION
+  var hasLooks = !!(record && Array.isArray(record.looks)), hasPortraits = !!(portraits && portraits.kind === 'universe-portraits-publication')
+  if (!hasLooks && !hasPortraits) return
   var WORDS = { published: 'Published', changed: 'Changed since published', unpublished: 'Not published', refused: 'Not published' }
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   function day(iso) {
@@ -24,42 +25,58 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
     '.uma-pub-line a{font-weight:650}'
   ].join('')
   document.head.appendChild(style)
-  var byImage = {}
-  record.looks.forEach(function (look) { if (look.image) byImage[look.image] = look })
-  var figures = document.querySelectorAll('figure')
-  for (var i = 0; i < figures.length; i++) {
-    var figure = figures[i], img = figure.querySelector('img[src]')
-    if (!img || figure.querySelector('.uma-pub')) continue
-    var src = decodeURI(img.getAttribute('src').split('?')[0].split('#')[0]).replace(/^\\.\\//, '')
-    var look = byImage[src]
-    if (!look) continue
-    var badge = document.createElement('span')
-    badge.className = 'uma-pub uma-pub-' + look.state
-    badge.textContent = WORDS[look.state] || look.state
-    badge.title = look.state === 'published' ? 'Published to Uma Character Art on ' + day(look.publishedAt) : (look.note || 'Approved, not in Uma Character Art yet')
-    figure.setAttribute('data-publication', look.state)
-    var approved = figure.querySelector('.badge')
-    if (approved && approved.parentNode) approved.parentNode.insertBefore(badge, approved.nextSibling)
-    else (figure.querySelector('figcaption') || figure).appendChild(badge)
+  /** A line under the page's header, or at the top of the page. */
+  function addLine(text, site) {
+    var line = document.createElement('p')
+    line.className = 'uma-pub-line'
+    line.appendChild(document.createTextNode(text + (site ? ' · ' : '')))
+    if (site) {
+      var link = document.createElement('a')
+      link.href = site
+      link.target = '_blank'
+      link.rel = 'noopener'
+      link.textContent = 'Open Uma Character Art'
+      line.appendChild(link)
+    }
+    var header = document.querySelector('header')
+    if (header) header.appendChild(line)
+    else document.body.insertBefore(line, document.body.firstChild)
   }
-  var counts = record.counts || {}, total = record.looks.length, published = counts.published || 0
-  var line = document.createElement('p')
-  line.className = 'uma-pub-line'
-  var text = published === total ? 'All ' + total + ' looks are published to Uma Character Art'
-    : published + ' of ' + total + ' looks are published to Uma Character Art'
-  if (record.publishedAt) text += ' · ' + day(record.publishedAt)
-  var waiting = (counts.unpublished || 0) + (counts.changed || 0)
-  if (waiting) text += ' · ' + waiting + ' waiting for a push'
-  if (counts.refused) text += ' · ' + counts.refused + ' can’t go out (see publication.json)'
-  line.appendChild(document.createTextNode(text + ' · '))
-  var link = document.createElement('a')
-  link.href = record.site
-  link.target = '_blank'
-  link.rel = 'noopener'
-  link.textContent = 'Open Uma Character Art'
-  line.appendChild(link)
-  var header = document.querySelector('header')
-  if (header) header.appendChild(line)
-  else document.body.insertBefore(line, document.body.firstChild)
+  if (hasLooks) {
+    var byImage = {}
+    record.looks.forEach(function (look) { if (look.image) byImage[look.image] = look })
+    var figures = document.querySelectorAll('figure')
+    for (var i = 0; i < figures.length; i++) {
+      var figure = figures[i], img = figure.querySelector('img[src]')
+      if (!img || figure.querySelector('.uma-pub')) continue
+      var src = decodeURI(img.getAttribute('src').split('?')[0].split('#')[0]).replace(/^\\.\\//, '')
+      var look = byImage[src]
+      if (!look) continue
+      var badge = document.createElement('span')
+      badge.className = 'uma-pub uma-pub-' + look.state
+      badge.textContent = WORDS[look.state] || look.state
+      badge.title = look.state === 'published' ? 'Published to Uma Character Art on ' + day(look.publishedAt) : (look.note || 'Approved, not in Uma Character Art yet')
+      figure.setAttribute('data-publication', look.state)
+      var approved = figure.querySelector('.badge')
+      if (approved && approved.parentNode) approved.parentNode.insertBefore(badge, approved.nextSibling)
+      else (figure.querySelector('figcaption') || figure).appendChild(badge)
+    }
+    var counts = record.counts || {}, total = record.looks.length, published = counts.published || 0
+    var text = published === total ? 'All ' + total + ' looks are published to Uma Character Art'
+      : published + ' of ' + total + ' looks are published to Uma Character Art'
+    if (record.publishedAt) text += ' · ' + day(record.publishedAt)
+    var waiting = (counts.unpublished || 0) + (counts.changed || 0)
+    if (waiting) text += ' · ' + waiting + ' waiting for a push'
+    if (counts.refused) text += ' · ' + counts.refused + ' can’t go out (see publication.json)'
+    addLine(text, record.site)
+  }
+  if (hasPortraits) {
+    var p = portraits, pieces = p.bases + ' outfit crops and ' + p.faces + ' faces'
+    var words = p.state === 'published' ? 'Dialogue portraits: all ' + p.states + ' states are published as ' + pieces + (p.publishedAt ? ' · ' + day(p.publishedAt) : '')
+      : p.state === 'changed' ? 'Dialogue portraits: changed since they were published' + (p.publishedAt ? ' on ' + day(p.publishedAt) : '') + ' · waiting for a push'
+      : p.state === 'refused' ? 'Dialogue portraits: can’t be published (see dialogue-portraits/publication.json)'
+      : 'Dialogue portraits: ' + p.states + ' states (' + pieces + '), not published yet'
+    addLine(words + ' · the pieces show on each Uma’s page, and the states are composed by the games', hasLooks ? null : 'https://uma-platform.web.app/art')
+  }
 })()
 `

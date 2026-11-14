@@ -1,14 +1,15 @@
 // Uma Character Art's API (CA1, CA2): the order (`/api/art/order`), the adult sets' source-art records (`/api/art/sources`),
 // a summary for its tile, and uma-quest's adult key pack, read only (`/api/art/content/traveler-keys/…`, its allowlist; AP11).
 // CA4 (P162) adds the universe looks: their indexes at `/api/art/universes`, their PNGs through the same pack route
-// (`/api/art/content/universes/…`), read from the app's own bucket (`art/`), or its local copy in dev.
+// (`/api/art/content/universes/…`), read from the app's own bucket (`art/`), or its local copy in dev. CA5 (P169) adds the
+// dialogue portraits' pieces through the same route, and their recipe for the games at `/api/art/portraits/<universe>`.
 import { resolve } from 'node:path'
 import { BucketFileSource, DirectoryFileSource, DirectoryReleaseSource, fileSource, PrivatePackModule, type FileSource } from '@luismlorenzana/uma-server/content'
-import { Controller, Get, Inject, Module } from '@nestjs/common'
+import { Controller, Get, Inject, Module, NotFoundException, Param } from '@nestjs/common'
 import { blobStore, type BlobStore } from '../../store/blob-store'
 import { ArtService } from './art.service'
 import { sourceReleases } from './art.sources'
-import { UNIVERSE_PACK_ALLOW, universes } from './art.universes'
+import { PORTRAIT_PACK_ALLOW, portraitRecipe, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 /** uma-quest's pack allowlist (its `PACK_ALLOW` at 47ca16d): the index and hash-named sets, pages and stills. */
 export const KEY_PACK_ALLOW = ['traveler-keys/index.json', /traveler-keys\/(sets|pages|stills)\/[a-z0-9-]+\.[a-f0-9]{16}\.(json|webp)/]
@@ -50,6 +51,14 @@ class ArtController {
   @Get('universes')
   async universes() { return universes(this.published, await this.art.characterByName()) }
 
+  /** A universe's dialogue portraits for a game to compose (CA5): every crop and face at its pack path, and every state. */
+  @Get('portraits/:universe')
+  async portraits(@Param('universe') universe: string) {
+    const recipe = await portraitRecipe(this.published, universe, await this.art.characterByName())
+    if (!recipe) throw new NotFoundException(`No published dialogue portraits for ${universe}`)
+    return recipe
+  }
+
   @Get('summary')
   async summary() {
     const [order, index, worlds] = await Promise.all([this.art.order(), this.keys.read('traveler-keys/index.json'), this.universes().catch(() => [])])
@@ -65,7 +74,7 @@ class ArtController {
 }
 
 @Module({
-  imports: [PrivatePackModule.forRoot({ route: 'art/content', source: pack(), allow: [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW] })],
+  imports: [PrivatePackModule.forRoot({ route: 'art/content', source: pack(), allow: [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW] })],
   controllers: [ArtController],
   providers: [
     { provide: ART, useFactory: () => new ArtService(release(), ranker()) },

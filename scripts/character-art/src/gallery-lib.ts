@@ -25,18 +25,25 @@ export function fileFor(base: string, urlPath: string): string | null {
 const escape = (text: string) => text.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!)
 const words = (id: string) => id.split('-').map((w) => (w ? w[0]!.toUpperCase() + w.slice(1) : w)).join(' ')
 
-export interface GalleryRow { universe: string; approved: number; published: number; waiting: number; publishedAt: string | null; studies: string[] }
+export interface GalleryRow {
+  universe: string; approved: number; published: number; waiting: number; publishedAt: string | null; studies: string[]
+  /** The dialogue portraits' flag (CA5), when a push or a status wrote one. */
+  portraits: { state: string; states: number; bases: number; faces: number; publishedAt: string | null } | null
+}
 /** Each universe's numbers: its manifest's looks, and its published record when a push or a status wrote one. */
 export function galleryRows(base: string): GalleryRow[] {
   return universesIn(base).map((universe) => {
     const dir = approvedDir(universe, base)
     const manifest = JSON.parse(readFileSync(join(dir, MANIFEST), 'utf8')) as { assets?: unknown[] }
     const record = existsSync(join(dir, RECORD)) ? JSON.parse(readFileSync(join(dir, RECORD), 'utf8')) as Publication : null
+    const portraitRecord = join(base, universe, 'dialogue-portraits', RECORD)
+    const p = existsSync(portraitRecord) ? JSON.parse(readFileSync(portraitRecord, 'utf8')) as { state: string; states: number; bases: number; faces: number; publishedAt: string | null } : null
     const studies = readdirSync(join(base, universe), { withFileTypes: true })
-      .filter((e) => e.isDirectory() && e.name !== 'approved' && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
+      .filter((e) => e.isDirectory() && e.name !== 'approved' && !(p && e.name === 'dialogue-portraits') && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
     return {
       universe, approved: Array.isArray(manifest.assets) ? manifest.assets.length : 0, published: record?.counts.published ?? 0,
       waiting: record ? record.counts.unpublished + record.counts.changed : 0, publishedAt: record?.publishedAt ?? null, studies,
+      portraits: p ? { state: p.state, states: p.states, bases: p.bases, faces: p.faces, publishedAt: p.publishedAt } : null,
     }
   })
 }
@@ -48,8 +55,10 @@ export function indexPage(base: string, site: string): string {
     const flag = r.published === r.approved && r.approved > 0 ? `<span class="pub">All ${r.approved} published</span>`
       : r.published > 0 ? `<span class="pub part">${r.published} of ${r.approved} published</span>` : `<span class="pub none">Not published</span>`
     const studies = r.studies.map((s) => `<a href="/${r.universe}/${s}/${GALLERY}">${escape(s)}</a>`).join('')
+    const q = r.portraits
+    const portraits = q ? `<p><b>${q.states}</b> dialogue portrait states ${q.state === 'published' ? `<span class="pub">Published as ${q.bases + q.faces} pieces</span>${q.publishedAt ? ` <span class="when">${q.publishedAt.slice(0, 10)}</span>` : ''}` : `<span class="pub ${q.state === 'changed' ? 'part' : 'none'}">${q.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`} · <a href="/${r.universe}/dialogue-portraits/${GALLERY}">Open them</a></p>` : ''
     return `<article data-universe="${r.universe}"><h2>${escape(words(r.universe))}</h2><p><b>${r.approved}</b> approved look${r.approved === 1 ? '' : 's'} ${flag}${r.publishedAt ? ` <span class="when">${r.publishedAt.slice(0, 10)}</span>` : ''}</p>`
-      + `<p><a class="main" href="/${r.universe}/approved/${GALLERY}">Open the approved gallery</a></p>${studies ? `<p class="studies">Studies: ${studies}</p>` : ''}</article>`
+      + `<p><a class="main" href="/${r.universe}/approved/${GALLERY}">Open the approved gallery</a></p>${portraits}${studies ? `<p class="studies">Studies: ${studies}</p>` : ''}</article>`
   }).join('')
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Local Art Gallery</title><style>
 *{box-sizing:border-box}body{margin:0;padding:28px clamp(16px,4vw,56px);background:#edf0f6;color:#202a3b;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}

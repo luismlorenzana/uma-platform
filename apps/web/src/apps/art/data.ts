@@ -101,7 +101,26 @@ export interface UniverseLook {
   approvedOn: string | null
   publishedAt: string | null
 }
-export interface Universe { id: string; title: string; style: string | null; revision: number | null; publishedAt: string | null; looks: UniverseLook[] }
+/** One piece of a universe's dialogue portraits (CA5, P169): an outfit's neutral crop or an expression's face. The page
+ *  shows the pieces; the games compose the states. */
+export interface PortraitPiece {
+  kind: 'crop' | 'face'
+  id: string
+  character: string
+  characterId: number | null
+  outfit: string | null
+  expression: string | null
+  path: string
+  bytes: number
+  sha256: string
+  width: number
+  height: number
+}
+export interface UniversePortraits { states: number; approvedOn: string | null; publishedAt: string | null; pieces: PortraitPiece[] }
+export interface Universe {
+  id: string; title: string; style: string | null; revision: number | null; publishedAt: string | null; looks: UniverseLook[]
+  portraits?: UniversePortraits | null
+}
 
 let universes: Promise<Universe[]> | null = null
 /** Every published universe, loaded once a visit; `fresh` reads them again. */
@@ -112,9 +131,12 @@ export function loadUniverses(fresh = false): Promise<Universe[]> {
   return universes
 }
 
-/** A character's looks in every universe that has one of hers. */
-export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[] }[] {
-  return all.map((universe) => ({ universe, looks: universe.looks.filter((l) => l.characterId === characterId) })).filter((g) => g.looks.length > 0)
+/** A character's looks and dialogue portrait pieces in every universe that has one of hers, crops before faces. */
+export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; pieces: PortraitPiece[] }[] {
+  return all.map((universe) => {
+    const pieces = (universe.portraits?.pieces ?? []).filter((p) => p.characterId === characterId)
+    return { universe, looks: universe.looks.filter((l) => l.characterId === characterId), pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')] }
+  }).filter((g) => g.looks.length > 0 || g.pieces.length > 0)
 }
 
 /** How many looks each character has across the universes, for her tiles. */

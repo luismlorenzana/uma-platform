@@ -86,7 +86,7 @@
     <div class="tile"><b>1</b><span>new bucket; no database</span></div>
     <div class="tile"><b>~$0.01</b><span>a month, under the $5 alert</span></div>
     <div class="tile"><b>27</b><span>sisters, ranked as Umas of their own</span></div>
-    <div class="tile"><b>64</b><span>calls, AP1–AP52, AP73–AP84</span></div>
+    <div class="tile"><b>70</b><span>calls, AP1–AP52, AP73–AP90</span></div>
   </div>
 
   <section class="card" id="apps">
@@ -195,11 +195,12 @@
         <tr><td class="id">CA2</td><td>Chibi sprite sets, support card art, adult sets' inputs and releases</td><td>Claude</td><td>M</td><td>CA1 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA3</td><td>Full body: the 3D render as master data's <code>outfit-renders</code>, in Character Art</td><td>Claude</td><td>S</td><td>CA2 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA4</td><td>The universe looks: <code>pnpm art:push</code>, the looks on each Uma's page, the published flag in the local galleries; 30 looks published</td><td>Claude</td><td>M</td><td>CA3 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">CA5</td><td>Dialogue portraits as pieces: <code>art:push --portraits</code>, the recipe route for the games, the pieces on each Uma's page; 54 pieces, 384 states</td><td>Claude</td><td>M</td><td>CA4 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
     </table></div>
-    <p class="note">SH1, SH2, RK1 and CA1–CA4 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
+    <p class="note">SH1, SH2, RK1 and CA1–CA5 are done; RK2 follows your ranking; GA1–GA3 and PB1 when you ask. Every cloud value: <a href="../infrastructure.md">infrastructure.md</a>.</p>
   </section>
 
   <section class="card" id="calls">
@@ -249,6 +250,12 @@
         <tr><td class="id">AP80</td><td><b>The Local Art Gallery's front page:</b> <code>pnpm art:gallery</code>, each universe with its approved and published counts; this machine only</td></tr>
         <tr><td class="id">AP81</td><td><b>Who pushes:</b> ChatGPT after an approval, or Claude on the owner's word</td></tr>
         <tr><td class="id">AP83</td><td><b><code>--only</code> changes only the named looks</b>: publish or withdraw those, leave every other look as the bucket has it (the pajamas swap)</td></tr>
+        <tr><td class="id">AP85</td><td><b>CA5: dialogue portraits as pieces,</b> each outfit's neutral crop and each expression's face plus a recipe; Farm Life's 54 pieces (17.4 MB) make 384 states</td></tr>
+        <tr><td class="id">AP86</td><td><b>The gate is the owner's approval record:</b> a piece goes only with the hash its approved states name; any problem sends nothing</td></tr>
+        <tr><td class="id">AP87</td><td><b><code>art:push &lt;universe&gt; --portraits</code></b> sends the whole collection, reads it back, writes the recipe last, deletes nothing; looks untouched</td></tr>
+        <tr><td class="id">AP88</td><td><b>The recipe is for the games:</b> <code>/api/art/portraits/&lt;universe&gt;</code>, every piece, state and the blend rule</td></tr>
+        <tr><td class="id">AP89</td><td><b>The flag:</b> <code>dialogue-portraits/publication.json</code>, shown as a line in both galleries and on the front page</td></tr>
+        <tr><td class="id">AP90</td><td><b>Her page shows her pieces, never a composed state:</b> her crops, then her faces on a checkerboard</td></tr>
         <tr><td class="id">AP84</td><td><b>A failed gcloud call stops the tool:</b> only "not found" is an answer, so a status run can't mistake no access for "nothing published"</td></tr>
         <tr><td class="id">AP82</td><td><b>Local dev:</b> a push also fills <code>content/published/art/</code>, which the local app reads</td></tr>
         <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>

@@ -5,7 +5,9 @@
 > each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
 > records (CA2, P136). **An Uma's page also shows her universe looks (CA4, P162):** the approved pictures of her in another
 > world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 30 looks are live, 15
-> each on Kitasan Black's and Almond Eye's pages. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> each on Kitasan Black's and Almond Eye's pages. **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
+> neutral crop and each expression's face, with a recipe for the games; her page shows the pieces, and the games compose the
+> 384 Farm Life states. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -13,7 +15,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP84 for the universe looks.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP90 for the universe looks and portraits.
 >
 > **Uma Story is live (US1, P149)** at https://uma-platform.web.app/story: the third sub-app, one Story App for
 > uma-quest's and uma-farm's stories, with three books (Cast, Quest, Farm) on one shared cast. Its page is
@@ -65,6 +67,7 @@ uma-platform.web.app   (Google sign-in, owner only)
  ranker/plan.json                                           source-art/ (read only)
  ranker/assets/ (enemy art)
  art/universes/<universe>/   (CA4: index.json, images/<look>.<hash>.png)
+   portraits/                (CA5: index.json, bases/ and faces/<piece>.<hash>.png)
 ```
 
 ## The app
@@ -99,7 +102,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Hosting site | ~2 MB of app | 10 GB stored, 360 MB a day transferred | $0 |
 | `platform-api` (owner only, min 0) | a few thousand requests | 2M requests, 180,000 vCPU-s, 360,000 GiB-s | $0 |
 | Image repository, last 3 images | ~0.15 GB | 0.5 GB, shared with the games' three repositories (0.37 GB today) | ≤$0.01 |
-| `gs://uma-platform-content` | ~0.25 GB (boards, 169 MB of franchise art, 50 MB of universe looks since CA4) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
+| `gs://uma-platform-content` | ~0.27 GB (boards, 169 MB of franchise art, 53 MB of universe looks since CA4, 17 MB of portrait pieces since CA5) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
 | Bucket operations | a few thousand reads, a few hundred writes | 50,000 Class B, 5,000 Class A | $0 |
 | Pictures to your phone | first visit ~0.3 GB, then cached on the device | 1 GB from Cloud Run in North America | $0 |
 | **Total** | | | **$0 to about $0.01**, under the project's $5 budget alert |
@@ -161,6 +164,12 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP81 | **Who pushes:** the owner's approval in the manifest is the go. ChatGPT runs the push as the last step of an approval (P147); Claude runs it on the owner's word, as for the first 30 ("help me by publishing all already approved images") |
 | AP83 | **`--only <id|outfit>,…` changes only the named looks** (P168): a named approved look is published, a named published look no longer approved leaves the index, and every other look stays exactly as the bucket has it, published or not, at its published picture. A name that matches nothing stops the push. The owner's pajamas swap was the first: `pnpm art:push farm-life --only pajamas,pajamas-playful` |
 | AP84 | **A failed gcloud call stops the tool** (P168): only "not found" (and a guarded write's lost race) is an answer; no gcloud, no sign-in or no network throws with gcloud's words, so `art:status` can never flag published looks as "not published" again |
+| AP85 | **CA5 publishes a universe's dialogue portraits as pieces** (P169): each outfit's neutral crop and each expression's face, byte for byte under hash names, and a recipe, at `art/universes/<universe>/portraits/`. Farm Life: 24 crops and 30 faces (17.4 MB) make 384 states, where the flattened portraits would be 205 MB; a new outfit adds one crop per Uma, a new expression one face, instead of multiplying |
+| AP86 | **The gate is the owner's approval record:** `dialogue-portraits/approval.json` binds each approved state to its crop's hash, its face's hash and its position; a piece goes up only when its file still has that hash, and a collection with any problem (a changed file, a retired or unknown outfit, a face off the crop, no owner approval) sends nothing |
+| AP87 | **`pnpm art:push <universe> --portraits`** sends the whole approved collection (no `--only`), reads every piece back by size and MD5, writes the recipe last under a generation check and deletes nothing. The looks are untouched by it, and a looks push never touches the portraits |
+| AP88 | **The recipe is for the games:** `GET /api/art/portraits/<universe>` returns every piece at its pack path, the characters with their master data ids, every state (crop, face or none, and where the face goes) and the blend rule (`round(base × (1 − a) + face × a)` per channel inside the face). The pieces come through the art pack route, hash-named only; the recipe never does |
+| AP89 | **The flag:** `dialogue-portraits/publication.json` (published, changed, unpublished or refused), written by each push and by `pnpm art:status`; the approved gallery and the portraits gallery each show a "Dialogue portraits" line, and the Local Art Gallery's front page counts the states |
+| AP90 | **Her page shows her pieces, never a composed state** (the owner: "just wiring and uploading the pieces is good enough", then "the pieces are visible in the page though right?"): under each universe, her outfit crops, then her faces on a checkerboard, each opening full size |
 | AP82 | **Local dev:** a push also fills `content/published/art/`, the same files at the same paths, which the local app reads (`ART_DIR`) |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 
@@ -182,12 +191,13 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
 | CA4 | The universe looks: `pnpm art:push`, `art:status` and `art:gallery`, the looks on each Uma's page, the published flag in the local galleries; 30 looks published | Claude | M | CA3 ✓, your ask ✓ | **Done** (P162) |
+| CA5 | Dialogue portraits as pieces: `art:push --portraits`, the recipe route for the games, the pieces on each Uma's page, the flag in the local galleries; Farm Life's 54 pieces (384 states) published | Claude | M | CA4 ✓, your ask ✓ | **Done** (P169) |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | US1 | Uma Story's shell: the tile, the cast by batch, a plain reader for both games' drafts, your verdicts, `story:push` and `story:pull` ([story.md](story.md)) | Claude | L | Your go ✓ | **Done** (P149) |
 | US2–US4 | The Cast book, the Quest book, the Farm book ([story.md](story.md)) | Claude | L each | Your ask | **Parked** (P150): local first |
 | GA1–GA3, PB1 | The art sub-apps and Publish | Claude | — | Your ask | Later |
 
-**Order:** SH1, SH2, RK1 and CA1–CA4 are done; RK2 follows your ranking; US1 is done and Uma Story is parked there (P150); GA1–GA3 and PB1 when you ask.
+**Order:** SH1, SH2, RK1 and CA1–CA5 are done; RK2 follows your ranking; US1 is done and Uma Story is parked there (P150); GA1–GA3 and PB1 when you ask.
 
 ## Your steps
 
