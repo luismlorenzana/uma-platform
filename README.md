@@ -175,5 +175,6 @@ accepts every newer release, so new characters, cards and skills arrive without 
 | [docs/roadmap.md](docs/roadmap.md) | Order of work across all repos, with exit checks |
 | [docs/decisions.md](docs/decisions.md) | Cross-game decisions (append-only) |
 | [docs/master-data.md](docs/master-data.md) | Every master set and field, the release layout and the client |
+| [Farm Life character authoring](docs/authoring/farm-life-characters/README.md) | A new character from identity references through a varied wardrobe, reusable dialogue pieces, local review and approval; prompts and handoff templates for ChatGPT |
 | [docs/racer-mapping.md](docs/racer-mapping.md) | uma-racer's current packs → master data, for the Phase 3 refactor |
 | [AGENTS.md](AGENTS.md) | Rules for any agent working here |
