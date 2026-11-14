@@ -16,6 +16,8 @@
 > uma-farm's [F40](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F40-story-authoring.md)
 > (RS1–RS20) and [F56](https://github.com/luismlorenzana/uma-farm/blob/main/docs/handoff/tasks/F56-story-delivery.md).
 
+> **The farm's World Page (P167, 2026-11-14):** `/story/farm/world` reads the farm's World Book (`world-book.md`, pushed with its drafts) in full, with a contents column and its "For the game" section set apart. Owner only; no editing or verdicts.
+
 ## The short answer
 
 - **Yes, centralize the tool, not the writing.** **Uma Story** becomes the platform app's third sub-app, at

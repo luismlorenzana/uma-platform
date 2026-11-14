@@ -39,7 +39,8 @@ function fakeRemote() {
 
 describe('which files are drafts', () => {
   it('follows the API’s rule, case for case', () => {
-    for (const path of ['world.md', 'cast.json', 'bundles/9000001.json', 'pairs/9000001-9000002.json', 'archive/2026-11-10-racing/bundles/9000001.json', 'docs/chapters/chapter-1.json', 'archive/2026-11-10-racing/reviews.json'])
+    // The farm's World Book and its pack's world file (uma-farm F40, F73; P167) travel as drafts.
+    for (const path of ['world.md', 'world-book.md', 'world.json', 'cast.json', 'bundles/9000001.json', 'pairs/9000001-9000002.json', 'archive/2026-11-10-racing/bundles/9000001.json', 'docs/chapters/chapter-1.json', 'archive/2026-11-10-racing/reviews.json'])
       expect(isDraftPath(path), path).toBe(true)
     for (const path of [
       'reviews.json', 'checks.json', 'index.json', 'published.json',

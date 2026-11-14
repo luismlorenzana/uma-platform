@@ -41,7 +41,7 @@ async function fresh(ranker: RankerFiles = rankerOf({ 'plan.json': plan, 'profil
 
 describe('which files are drafts', () => {
   it('takes text files on lowercase paths, and nothing else', () => {
-    for (const path of ['world.md', 'cast.json', 'bundles/9000001.json', 'pairs/9000001-9000002.json', 'archive/2026-11-10-racing/bundles/9000001.json', 'docs/chapters/chapter-1.json'])
+    for (const path of ['world.md', 'world-book.md', 'world.json', 'cast.json', 'bundles/9000001.json', 'pairs/9000001-9000002.json', 'archive/2026-11-10-racing/bundles/9000001.json', 'docs/chapters/chapter-1.json'])
       expect(isDraftPath(path), path).toBe(true)
     for (const path of [
       'reviews.json', 'checks.json', 'index.json', 'published.json', // the app's own files

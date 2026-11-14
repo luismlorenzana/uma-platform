@@ -121,6 +121,7 @@ export function Files({ book }: { book: Book }) {
   return (
     <StoryFrame book={book}>
       {book === 'cast' && <Link to="/story/cast" className="min-h-8 text-sm font-semibold text-accent-strong">‹ The cast by batch</Link>}
+      {book === 'farm' && view.files.some((f) => f.path === 'world-book.md') && <Link to="/story/farm/world" className="min-h-8 text-sm font-semibold text-accent-strong">The World Book ›</Link>}
       <Status view={view} />
       {view.files.length === 0 ? (
         <Panel><p className="py-2 text-ink-soft">No drafts here yet. The writer’s session pushes them with <code>pnpm story:push {book}</code>.</p></Panel>
