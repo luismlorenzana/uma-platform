@@ -6,6 +6,7 @@ import { resolve } from 'node:path'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
 import { moveChannel, publishManifest, publishRelease, type PublishReleaseResult } from './publish'
 import { DEFAULT_CONTENT_DIR, DEFAULT_RELEASE_DIR } from './release-dir'
+import { planDialoguePortraitsOnly } from './dialogue-portraits-only'
 import { planEnemiesOnly } from './enemies-only'
 import { planFamiliesOnly } from './families-only'
 import { LocalOverlayStorage } from './local-storage'
@@ -30,8 +31,9 @@ async function main(): Promise<void> {
   const project = argument('--project') ?? process.env.UMA_GCP_PROJECT ?? DEFAULT_PROJECT
   const bucket = argument('--bucket') ?? process.env.UMA_RELEASE_BUCKET ?? DEFAULT_BUCKET
   const enemiesOnly = process.argv.includes('--enemies-only')
-  // The enemies-only release goes to the candidate channel unless told otherwise; `--promote` then moves latest.
-  const channel = argument('--channel') ?? (enemiesOnly ? 'candidate' : 'latest')
+  const portraitsOnly = process.argv.includes('--portraits-only')
+  // The enemies-only and portraits-only releases go to the candidate channel unless told otherwise; `--promote` then moves latest.
+  const channel = argument('--channel') ?? (enemiesOnly || portraitsOnly ? 'candidate' : 'latest')
   const releaseDir = resolve(argument('--release-dir') ?? DEFAULT_RELEASE_DIR)
   // `--local <dir>` publishes into a folder over the bucket, which is only read: the dry run release:check reads back.
   const localDir = argument('--local')
@@ -67,6 +69,17 @@ async function main(): Promise<void> {
         `the enemies set (${plan.enemies.length}: ${tiers}); enemy keys ${plan.added.map((key) => `${key.enemyId} r${key.revision} ${key.tier}`).join(', ') || 'none'} ` +
         `added; ${Object.keys(plan.enemyKeys).length} enemy key(s) in all`)
       if (plan.unlisted.length > 0) console.log(`Enemy keys of units no longer on the boards (kept): ${plan.unlisted.join(', ')}`)
+      result = await publishManifest({ manifest: plan.manifest, manifestPath: plan.manifestPath, localPaths: plan.localPaths, storage, channel, dryRun })
+    } finally {
+      await rm(staging, { recursive: true, force: true })
+    }
+  } else if (portraitsOnly) {
+    const staging = await mkdtemp(resolve(tmpdir(), 'uma-portraits-only-'))
+    try {
+      const plan = await planDialoguePortraitsOnly({ releaseDir, storage, stagingDir: staging })
+      console.log(`Portraits-only release on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
+        `dialogue portraits ${plan.added.map((p) => `${p.characterId} r${p.revision} (${Object.keys(p.bases).length} bases, ${Object.keys(p.faces).length} faces)`).join(', ')} added, ` +
+        `${bytes(plan.addedBytes)}; ${Object.keys(plan.dialoguePortraits).length} character(s) in all`)
       result = await publishManifest({ manifest: plan.manifest, manifestPath: plan.manifestPath, localPaths: plan.localPaths, storage, channel, dryRun })
     } finally {
       await rm(staging, { recursive: true, force: true })

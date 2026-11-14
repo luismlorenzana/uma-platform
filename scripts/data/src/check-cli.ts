@@ -127,28 +127,50 @@ async function main(): Promise<void> {
   }
   if (keyIds.length > 0) console.log(`Enemy images: ${images} decoded, ${(imageBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 
+  // The dialogue-portraits family (uma-farm F75), read like a game reads it: every picture a WebP at its declared size.
+  const portraitIds = Object.keys(art?.dialoguePortraits ?? {}).map(Number).sort((a, b) => a - b)
+  let portraitImages = 0, portraitBytes = 0
+  for (const characterId of portraitIds) {
+    const p = (await client.dialoguePortraits(manifest, art!, characterId))!
+    for (const [what, image] of [...Object.entries(p.bases).map(([o, i]) => [`base-${o}`, i] as const), ...Object.entries(p.faces).map(([e, i]) => [`face-${e}`, i] as const)]) {
+      const bytes = await client.file(manifest, image.path)
+      if ((await sharp(bytes).metadata()).format !== 'webp') failures.push(`${image.path} isn't a WebP`)
+      const rgba = await decodeRgba(bytes)
+      if (rgba.width !== image.width || rgba.height !== image.height) failures.push(`${characterId} ${what} doesn't decode at ${image.width}x${image.height}`)
+      portraitImages += 1
+      portraitBytes += bytes.byteLength
+    }
+    console.log(`Dialogue portraits ${characterId} r${p.revision}: ${Object.keys(p.bases).length} base(s) on ${p.base.width}x${p.base.height}, ` +
+      `${Object.keys(p.faces).length} face(s) at ${p.faceSize.width}x${p.faceSize.height}`)
+  }
+  if (portraitIds.length > 0) console.log(`Dialogue portrait images: ${portraitImages} decoded, ${(portraitBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
+
   if (against) {
     const base = await createReleaseClient({ source, channel: against }).manifest()
     if (base.version === manifest.version) console.log(`${against} is the same release`)
     else {
       const sets = changedSets(base, manifest)
       const { carried } = checkCarried(base, manifest, sets)
-      const allowed = ['`sprites`', '`enemyKeys`', ...addedFamilies.map((family) => `\`${family}\``)].join(', ')
+      const allowed = ['`sprites`', '`enemyKeys`', '`dialoguePortraits`', ...addedFamilies.map((family) => `\`${family}\``)].join(', ')
       console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; ` +
         `the sets ${sets.length ? `change only by ${sets.join(', ')}` : 'unchanged'}; the art index may change only by ${allowed}`)
       if (base.art && manifest.art) {
         const read = async (path: string) => JSON.parse(new TextDecoder().decode(await client.file(path === base.art ? base : manifest, path))) as Record<string, unknown>
         const [before, after] = await Promise.all([read(base.art), read(manifest.art)])
         parseArtIndex(after, manifest.art)
-        const strip = ({ sprites: _sprites, enemyKeys: _enemyKeys, images, ...rest }: Record<string, unknown>) => {
+        const strip = ({ sprites: _sprites, enemyKeys: _enemyKeys, dialoguePortraits: _portraits, images, ...rest }: Record<string, unknown>) => {
           const kept = Object.fromEntries(Object.entries((images ?? {}) as Record<string, unknown>).filter(([family]) => !addedFamilies.includes(family)))
           return JSON.stringify({ ...rest, images: kept })
         }
-        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites and enemyKeys maps${addedFamilies.length ? ' and the added families' : ''}`)
+        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites, enemyKeys and dialoguePortraits maps${addedFamilies.length ? ' and the added families' : ''}`)
         const keysBefore = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).length, keysAfter = Object.keys((after.enemyKeys ?? {}) as Record<string, string>).length
         if (keysBefore !== keysAfter || sets.includes('enemies')) console.log(`Enemy keys: ${keysBefore} → ${keysAfter}`)
         const dropped = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).filter((id) => !(id in ((after.enemyKeys ?? {}) as Record<string, string>)))
         if (dropped.length > 0) failures.push(`${dropped.length} enemy key(s) of ${against} are gone, e.g. ${dropped[0]}`)
+        const portraitsBefore = (before.dialoguePortraits ?? {}) as Record<string, string>, portraitsAfter = (after.dialoguePortraits ?? {}) as Record<string, string>
+        if (Object.keys(portraitsBefore).length !== Object.keys(portraitsAfter).length) console.log(`Dialogue portraits: ${Object.keys(portraitsBefore).length} → ${Object.keys(portraitsAfter).length}`)
+        const lostPortraits = Object.keys(portraitsBefore).filter((key) => !(key in portraitsAfter))
+        if (lostPortraits.length > 0) failures.push(`${lostPortraits.length} character(s)' dialogue portraits of ${against} are gone, e.g. ${lostPortraits[0]}`)
         const beforeImages = (before.images ?? {}) as Record<string, unknown>, afterImages = (after.images ?? {}) as Record<string, Record<string, unknown>>
         for (const family of addedFamilies) {
           if (family in beforeImages) failures.push(`${family} was already in ${against}`)

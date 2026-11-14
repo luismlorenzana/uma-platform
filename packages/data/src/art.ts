@@ -74,6 +74,9 @@ export interface ArtIndex {
   sprites?: Record<string, string>
   /** Enemy id to her `enemy-keys` manifest (docs/sprites/enemy-keys.md). Absent before 1.6.0 and until one is published. */
   enemyKeys?: Record<string, string>
+  /** A character id to her `dialogue-portraits` manifest (docs/sprites/dialogue-portraits.md). Absent before 1.7.0 and
+   *  until one is published. */
+  dialoguePortraits?: Record<string, string>
 }
 
 const parseFrame: Parser<AtlasFrame> = (value, path) => {
@@ -130,9 +133,10 @@ export const parseArtIndex: Parser<ArtIndex> = (value, path) => {
       images[family] = recordOf(parseArtImage)(rawImages[family], `${path}.images.${family}`)
     }
   }
-  const { sprites, enemyKeys } = object(value, path)
+  const { sprites, enemyKeys, dialoguePortraits } = object(value, path)
   return { atlases, images, ...(sprites === undefined ? {} : { sprites: recordOf(releasePath)(sprites, `${path}.sprites`) }),
-    ...(enemyKeys === undefined ? {} : { enemyKeys: recordOf(releasePath)(enemyKeys, `${path}.enemyKeys`) }) }
+    ...(enemyKeys === undefined ? {} : { enemyKeys: recordOf(releasePath)(enemyKeys, `${path}.enemyKeys`) }),
+    ...(dialoguePortraits === undefined ? {} : { dialoguePortraits: recordOf(releasePath)(dialoguePortraits, `${path}.dialoguePortraits`) }) }
 }
 
 /** Every release file path the index points at. */
@@ -142,5 +146,6 @@ export function artPaths(index: ArtIndex): string[] {
   for (const family of Object.values(index.images)) paths.push(...Object.values(family).map((image) => image.path))
   paths.push(...Object.values(index.sprites ?? {}))
   paths.push(...Object.values(index.enemyKeys ?? {}))
+  paths.push(...Object.values(index.dialoguePortraits ?? {}))
   return paths
 }

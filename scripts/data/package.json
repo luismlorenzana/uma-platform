@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "GameTora → neutral master data importer and private release publisher.",
+  "description": "GameTora \u2192 neutral master data importer and private release publisher.",
   "exports": {
     "./release-dir": "./src/release-dir.ts",
     "./pack": "./src/pack.ts",
@@ -13,14 +13,17 @@
     "./sprites-only": "./src/sprites-only.ts",
     "./enemy-images": "./src/enemy-images.ts",
     "./enemy-release": "./src/enemy-release.ts",
-    "./enemy-fixture": "./src/enemy-fixture.ts"
+    "./enemy-fixture": "./src/enemy-fixture.ts",
+    "./dialogue-portrait-release": "./src/dialogue-portrait-release.ts",
+    "./dialogue-portrait-fixture": "./src/dialogue-portrait-fixture.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "import": "tsx src/import.ts",
     "publish": "tsx src/publish-cli.ts",
-    "check": "tsx src/check-cli.ts"
+    "check": "tsx src/check-cli.ts",
+    "portraits-pack": "tsx src/portraits-cli.ts"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",

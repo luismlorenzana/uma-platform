@@ -1,5 +1,6 @@
 import type { SpriteSet } from './sprites.js'
 import { enemyKeyPaths, type EnemyKey } from './enemy-keys.js'
+import type { DialoguePortraits } from './dialogue-portraits.js'
 import type { Enemy } from './sets/enemies.js'
 // Test helpers for games and this repo: small synthetic master records (invented names and values in the right
 // shape, never copied from real data) and an in-memory release. Imported as `@luismlorenzana/uma-data/testing`.
@@ -296,6 +297,17 @@ export function syntheticEnemyKey(tier: Enemy['tier'], enemyId = tier === 'regul
   }
 }
 
+/** Synthetic dialogue portraits (`dialogue-portraits`): bases for the outfits (525 × 700, the face at 150, 140) and
+ *  faces for the expressions (224 × 224). Paths are fake; `buildMemoryRelease` gives each its bytes and SHA-256. */
+export function syntheticDialoguePortraits(characterId = 1001, outfits: readonly string[] = ['spring', 'kimono'], expressions: readonly string[] = ['happy', 'sad']): DialoguePortraits {
+  const at = (stem: string, width: number, height: number) => ({ path: `art/dialogue-portraits/${characterId}-${stem}.0000000000000000.webp`, width, height, bytes: 1, sha256: '0'.repeat(64) })
+  return {
+    characterId, revision: 1, approvedOn: '2026-11-14', base: { width: 525, height: 700 }, faceSize: { width: 224, height: 224 },
+    bases: Object.fromEntries(outfits.map((o) => [o, { ...at(`base-${o}`, 525, 700), face: { left: 150, top: 140 } }])),
+    faces: Object.fromEntries(expressions.map((e) => [e, at(`face-${e}`, 224, 224)])),
+  }
+}
+
 /** A synthetic art index pointing at the given file paths (all must be in the release). */
 export function syntheticArtIndex(pagePath: string, imagePath: string): ArtIndex {
   return {
@@ -333,7 +345,7 @@ async function addFile(files: ReleaseFile[], objects: Map<string, Uint8Array>, p
  */
 export async function buildMemoryRelease(
   data: MasterData = syntheticMasterData(),
-  options: { art?: ArtIndex; sprites?: SpriteSet[]; enemies?: Enemy[]; enemyKeys?: EnemyKey[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
+  options: { art?: ArtIndex; sprites?: SpriteSet[]; enemies?: Enemy[]; enemyKeys?: EnemyKey[]; dialoguePortraits?: DialoguePortraits[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
 ): Promise<MemoryRelease> {
   const objects = new Map<string, Uint8Array>()
   const files: ReleaseFile[] = []
@@ -351,7 +363,23 @@ export async function buildMemoryRelease(
     await addFile(files, objects, sets.enemies, bytes)
   }
   for (const [path, bytes] of Object.entries(options.extraFiles ?? {})) await addFile(files, objects, path, bytes)
-  const artIndex = options.art ? structuredClone(options.art) : options.sprites || options.enemyKeys ? { atlases: {}, images: {} } as ArtIndex : undefined
+  const artIndex = options.art ? structuredClone(options.art) : options.sprites || options.enemyKeys || options.dialoguePortraits ? { atlases: {}, images: {} } as ArtIndex : undefined
+  if (artIndex && options.dialoguePortraits) {
+    artIndex.dialoguePortraits = { ...artIndex.dialoguePortraits }
+    for (const given of options.dialoguePortraits) {
+      const portraits = structuredClone(given)
+      for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.faces)]) {
+        const bytes = encoder.encode(`webp:${image.path}`)
+        if (!files.some((f) => f.path === image.path)) await addFile(files, objects, image.path, bytes)
+        image.bytes = bytes.byteLength
+        image.sha256 = await sha256Hex(bytes)
+      }
+      const bytes = encoder.encode(JSON.stringify(portraits))
+      const path = `art/dialogue-portraits/${portraits.characterId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      await addFile(files, objects, path, bytes)
+      artIndex.dialoguePortraits[String(portraits.characterId)] = path
+    }
+  }
   if (artIndex && options.enemyKeys) {
     artIndex.enemyKeys = { ...artIndex.enemyKeys }
     for (const key of options.enemyKeys) {

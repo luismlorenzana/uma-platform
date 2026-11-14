@@ -379,6 +379,15 @@ Files live at `art/enemy-keys/<enemyId>.<hash16>.json` and `art/enemy-keys/<enem
 (lossless). Tests use `syntheticEnemies()`, `syntheticEnemyKey(tier)` and
 `buildMemoryRelease(undefined, { enemies, enemyKeys })` only.
 
+### Dialogue portraits
+
+Since uma-data 1.7.0, the art index may include `dialoguePortraits: { <characterId>: <releasePath> }`: each character's
+manifest in the `dialogue-portraits` family ([sprites/dialogue-portraits.md](sprites/dialogue-portraits.md), P170): her
+bases by outfit (each with the position her faces sit at) and her faces by expression. Older parsers ignore it.
+`client.dialoguePortraits(manifest, art, characterId)` returns a validated `DialoguePortraits`, or null; it checks the id
+and that every picture is listed with its bytes and SHA-256. `dialoguePortraitFor` picks what to draw, with fallbacks.
+Tests use `syntheticDialoguePortraits()` and `buildMemoryRelease(undefined, { dialoguePortraits })` only.
+
 ## Releases
 
 Bucket layout (architecture §2.2, P23):

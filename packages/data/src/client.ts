@@ -3,6 +3,7 @@
 // through the API's logged-in endpoint.
 
 import { parseSpriteSet, type SpriteSet } from './sprites.js'
+import { parseDialoguePortraits, type DialoguePortraits } from './dialogue-portraits.js'
 import { enemyKeyPaths, parseEnemyKey, type EnemyKey } from './enemy-keys.js'
 import type { Enemy } from './sets/enemies.js'
 import { parseArtIndex, type ArtIndex } from './art.js'
@@ -96,6 +97,10 @@ export interface ReleaseClient {
   enemies(manifest: ReleaseManifest): Promise<Enemy[] | null>
   /** An enemy's key poses by enemy id, or null when this release has none for her. */
   enemyKey(manifest: ReleaseManifest, art: ArtIndex, enemyId: number): Promise<EnemyKey | null>
+  /** A character's dialogue portraits (`dialogue-portraits`, 1.7.0): her bases by outfit and faces by expression, each
+   *  base with its face position; null when none is published. Checks the id and that every picture is in the manifest
+   *  with its bytes and SHA-256. */
+  dialoguePortraits(manifest: ReleaseManifest, art: ArtIndex, characterId: number): Promise<DialoguePortraits | null>
   /** Every set and the art index of one release (the channel's when no version is given). */
   load(version?: string): Promise<MasterRelease>
 }
@@ -164,7 +169,7 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
         if (!listed.has(page.path)) throw new MasterDataError(release.art, `${page.path} to be in the manifest`)
       }
     }
-    for (const path of [...Object.values(index.sprites ?? {}), ...Object.values(index.enemyKeys ?? {})]) {
+    for (const path of [...Object.values(index.sprites ?? {}), ...Object.values(index.enemyKeys ?? {}), ...Object.values(index.dialoguePortraits ?? {})]) {
       if (!listed.has(path)) throw new MasterDataError(release.art, `${path} to be in the manifest`)
     }
     return index
@@ -195,11 +200,25 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return key
   }
 
+  async function dialoguePortraits(release: ReleaseManifest, index: ArtIndex, characterId: number): Promise<DialoguePortraits | null> {
+    const path = index.dialoguePortraits?.[String(characterId)]
+    if (!path) return null
+    const portraits = parseDialoguePortraits(json(await file(release, path), path), path)
+    if (portraits.characterId !== characterId) throw new MasterDataError(`${path}.characterId`, String(characterId))
+    const listed = new Map(release.files.map((entry) => [entry.path, entry]))
+    for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.faces)]) {
+      const entry = listed.get(image.path)
+      if (!entry) throw new MasterDataError(path, `${image.path} to be in the manifest`)
+      if (entry.sha256 !== image.sha256 || entry.bytes !== image.bytes) throw new MasterDataError(path, `${image.path}'s bytes and SHA-256 as the manifest lists them`)
+    }
+    return portraits
+  }
+
   async function load(version?: string): Promise<MasterRelease> {
     const release = await manifest(version)
     const entries = await Promise.all(SET_NAMES.map(async (name) => [MASTER_DATA_KEYS[name], await set(release, name)] as const))
     return { manifest: release, data: Object.fromEntries(entries) as unknown as MasterData, art: await art(release) }
   }
 
-  return { channel, manifest, set, art, spriteSet, enemies, enemyKey, file, load }
+  return { channel, manifest, set, art, spriteSet, enemies, enemyKey, dialoguePortraits, file, load }
 }
