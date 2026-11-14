@@ -59,6 +59,10 @@
     "./kit-marsh/atlas.json": "./kit-marsh/atlas.json",
     "./kit-coast/atlas.png": "./kit-coast/atlas.png",
     "./kit-coast/atlas.json": "./kit-coast/atlas.json",
+    "./cabin-icons/atlas.png": "./cabin-icons/atlas.png",
+    "./cabin-icons/atlas.json": "./cabin-icons/atlas.json",
+    "./cabin-room/atlas.png": "./cabin-room/atlas.png",
+    "./cabin-room/atlas.json": "./cabin-room/atlas.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -84,6 +88,8 @@
     "kit-meadow",
     "kit-ruins",
     "kit-marsh",
-    "kit-coast"
+    "kit-coast",
+    "cabin-icons",
+    "cabin-room"
   ]
 }

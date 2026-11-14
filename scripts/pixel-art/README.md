@@ -29,6 +29,50 @@ as 32×32 PNGs to
 The item catalog (names, families, grades) is uma-rpg game design and lives there. The art lives here so any game can
 use it.
 
+## The cabins' furniture, keepsakes and gifts (uma-cyberpunk CY14)
+
+`cabins/` draws uma-cyberpunk's 48 cabin items (P164) as two new families, keyed by the game's item ids:
+`cabin-icons` (all 48 at 64 px) and `cabin-room` (the 30 furniture pieces at room size for its 640 × 360 diorama).
+`cabins/items.ts` copies the game's item table (ids, names, slots, styles, `DECOR_COLORS`) from uma-cyberpunk's
+`packages/domain/src/cabins/items.ts` at 891e50e. Original prop art: no Uma, no person, no master data.
+
+| Module | Draws |
+|---|---|
+| `kit.ts` | The **Pen**: one piece on a 64-unit box at any cell size, so the same geometry is native pixels at 64, 96 and 150 (never a resampled image). Snapped rectangles (equal widths stay equal), strokes and hairlines, a linear-time `dome`, `cylV`/`cylH`, a 3/4 `box`, `halo` (a soft ring of a light's colour: one pixel at 64, two at room size, fainter where it falls on a surface) and `wash` (beams, light pools, holograms; kept off the cell's outer ring) |
+| `look.ts` | A style's materials: the body from its base colour (lifted for the night wall), the accent as paint (`trim`) and as light (`light`), tinted cloth and metal |
+| `beds.ts`, `desks.ts`, `walls.ts`, `floors.ts`, `lights.ts` | One painter per style per slot (30) |
+| `keepsakes.ts`, `gifts.ts` | Six keepsakes and twelve gifts, 64 px only |
+| `atlas.ts`, `preview.ts`, `build.ts` | Packing and frames, the review sheets and mock cabins, the files |
+
+**The look:** night and neon. Dark, cool shadows (the ramps turn blue as they darken); each style's accent glows only
+where the piece is a light (tubes, LEDs, screens, a candle, lanterns, fireflies), with its halo; the shared selective
+outline stays dark. Seen from the front and a little above, light from the top left, a soft contact shadow under
+standing pieces; wall pieces face on; rugs lie flat as parallelograms whose back edge leans right. Each line reads as a
+set by its `DECOR_COLORS` pair. The Quilted Bed is seen from its foot (a side-on headboard is only a sliver); the
+other beds stand side on, head to the left.
+
+**Sizes and packing.** `cabin-icons` is 512 × 384: 64 px cells, eight across, in the item table's order (30 furniture,
+6 keepsakes, 12 gifts). `cabin-room` is 900 × 642, one row per slot, styles left to right (Neon, Classic, Cozy,
+Sporty, Tech, Wild): beds at y 0, desks at y 150 and floors at y 300 in 150 px cells; walls at y 450 and lights at
+y 546 in 96 px cells (those two rows are 576 wide; the rest of them is empty).
+
+**Mount and foot.** Beds, desks and floors are `floor`; wall pieces `wall`; the lights hang from the `ceiling` (their
+wires or track reach two units from the cell's top, so hang one by its cell's top) except the Classic Brass Lamp, a
+`wall` sconce. `foot` is the lowest solid row of a piece and the span of its two lowest rows, in cell pixels: where a
+bed or a desk meets the floor (put `foot.y` on the floor line), and for a wall or ceiling piece its bottom edge. A rug
+lies flat, so its foot is its whole cell: `{ x: 0, y: 149, w: 150 }`.
+
+**Previews** (`pnpm art:draw` writes them): `cabin-icons-{night,light}-{1x,2x,4x}.png` (the six lines as sets, then the
+keepsakes, then the gifts in two rows), `cabin-room-{1x,2x}.png` (each line at room size on a common baseline),
+`cabin-diorama-<style>.png` (a plain code-drawn 640 × 360 cabin with that full line placed by `mount` and `foot`, and a
+keepsake icon on a ledge) and `cabins.html`, which names every piece at both sizes.
+
+`cabins.test.ts` checks every id once at its size in each atlas with its fields, both atlases against fresh draws,
+determinism, every cell's outer pixel ring transparent (outline, halo, shadow and light included), each furniture
+piece carrying its style's accent at both sizes, silhouettes at least 25% apart within each slot (at both sizes),
+within each line and among the keepsakes and the gifts, each foot inside its cell on its lowest solid row (a rug's
+the whole cell), the uma-art exports and the previews. Every other family's files are unchanged.
+
 ## Collections buildings (H156, 2.20.0)
 
 `buildings/collections.ts` appends the Gallery, Trials and Drills after the 51 published places. The native 48px

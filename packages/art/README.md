@@ -38,6 +38,22 @@ Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`p
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
 
+## Cabin furniture, keepsakes and gifts (uma-cyberpunk CY14)
+
+Two original pixel families for uma-cyberpunk's cabins (P164), keyed by the game's item ids (`neon-bed`,
+`keepsake-photo`, `gift-buns`…), in its night-and-neon look. No characters, no master data.
+
+| Family | Sheet | Frames | Fields |
+|---|---|---|---|
+| `cabin-icons/atlas.png` / `.json` | **512×384** | All 48 items in 64×64 cells, eight across, in the item table's order: 30 furniture (six styles × Bed, Desk, Wall, Floor, Light), 6 keepsakes, 12 gifts | `{ x, y, w, h, name, kind }` plus `slot` and `style` (furniture), `slot: 'keepsake'` (keepsakes) or `gift` (its kind) |
+| `cabin-room/atlas.png` / `.json` | **900×642** | The 30 furniture pieces at room size: Bed, Desk, Floor in 150×150 cells (rows at y 0, 150, 300); Wall, Light in 96×96 cells (rows at y 450, 546); styles left to right | `{ x, y, w, h, name, slot, style, mount, foot }` |
+
+`mount` is `floor` (beds, desks, rugs), `wall` (wall pieces and the Classic Brass Lamp, a sconce) or `ceiling` (the
+other five lights; hang one by its cell's top). `foot` is `{ x, y, w }` in cell pixels: where a bed or desk meets the
+floor (its lowest solid row and span: put `foot.y` on the floor line, centre on `x + w / 2`); for a wall or ceiling
+piece its bottom edge; for a rug, which lies flat, its whole cell (`{ x: 0, y: 149, w: 150 }`). Keepsakes show in the
+diorama by their icon, so they have no room frame. Review: `assets/previews/cabins.html`.
+
 ## Held items and emote bubbles (UA8, 2.22.0)
 
 Two original full-colour families match the 256px character sprites, with clean antialiased transparency and moderate

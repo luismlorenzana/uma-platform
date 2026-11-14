@@ -101,7 +101,8 @@ describe.each(NEW.map((k) => [k.id, k] as const))('%s (Q32, Q33)', (id, kit) => 
 
 describe('uma-art 2.27.0 (Q32, Q33)', () => {
   it('leaves every file published before byte-identical, kit-farm included', () => {
-    const now: Record<string, string> = {}, skip = new Set([...NEW.map((k) => k.id), 'node_modules'])
+    // The cabin families came after 2.27.0 and are frozen by scripts/pixel-art's cabins.test.ts (CY14).
+    const now: Record<string, string> = {}, skip = new Set([...NEW.map((k) => k.id), 'cabin-icons', 'cabin-room', 'node_modules'])
     const walk = (d: string) => {
       for (const f of readdirSync(d).sort()) {
         const p = join(d, f)
