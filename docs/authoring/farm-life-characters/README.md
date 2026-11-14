@@ -15,9 +15,9 @@ The target is **the same quality and shared rendering style, with a distinct per
 
 The generic method and blank templates belong in git. Reference images, character-specific descriptions from private sources, exact filled prompts, generated assets, reviews and approvals belong under `content/authoring/character-universes/`. Do not put private art or extracted master data into this documentation.
 
-## Current accepted scope
+## Standard scope
 
-Owner confirmed the current collection completely approved on **2026-11-14**. The two pilot characters each have twelve approved full-body looks and sixteen dialogue states per look: **24 full-body images, 24 neutral crops, 30 reusable non-neutral face layers, and 384 dialogue states**. New characters need their own review; the pilots' approval does not approve new art.
+The owner-approved two-character pilot baseline has twelve full-body looks and sixteen dialogue states per look: **24 full-body images, 24 neutral crops, 30 reusable non-neutral face layers, and 384 dialogue states**. These are baseline counts, not a fixed roster. Inspect the current manifests and each character's active-study pointer for later approved additions. New characters need their own review; the pilots' approval does not approve new art.
 
 | Part | Direction |
 | --- | --- |
@@ -43,6 +43,7 @@ Paths below are relative to the repository root. These files are private and abs
 | `farm-life/approved/review.html` | Current wardrobe and Dialogue Portraits gallery |
 | `farm-life/dialogue-portraits/manifest.json` and `approval.json` | Current crop, face, mask, placement and approved-state records |
 | `farm-life/dialogue-portraits/README.md` and `verification.json` | Current collection layout and verification claims |
+| `farm-life/characters/<key>/active-study.json` and its referenced study | Latest character selection, partial or complete local approvals, and handoff; may be newer than the shared collection |
 | `farm-life/optional-expressions-status.json` | Closed optional-expression scope; do not requeue it |
 | `farm-life/v006/setup.mjs` and `prompts/` | Successful outfit prompts with explicit identity, body and occasion reference roles |
 | `farm-life/face-reuse-v001/active-export.json` and `patches/v004/` | Corrected pilot masks after the doubled-eyebrow failure |
@@ -59,6 +60,8 @@ The existing local builders are study-specific, with hard-coded pilot names, cou
 Use the session's **built-in image generation** for raster authoring and edits. Read the installed `imagegen` skill and its current tool instructions; tool names and capabilities can vary by session. Inspect every local reference with the image-viewing tool before using it. Save one exact prompt and generation record per asset. Copy project outputs into the workspace before referencing them. Do not silently switch to an API/CLI workflow if built-in generation is unavailable.
 
 Cropping, measured alignment, mask construction, compositing and review-sheet assembly are deterministic asset processing. The existing study uses Node and Sharp, available through `scripts/assets` dependencies after the repository's normal installation. Do not substitute code-drawn faces for authored expression edits.
+
+**Review cadence:** default to image-only design iterations. Save the image, exact prompt and minimal provenance, then show the image. Wait for the owner's request to add it to the album before preparing its outfit-expression derivatives or updating the gallery, unless the owner explicitly authorized those steps already. Broad outfit-authoring permission does not require a new review website for every revision. Reuse the existing gallery when inclusion is requested. See [workflow §4](workflow.md#4-author-the-remaining-full-body-wardrobe) for partial approvals and variant selection.
 
 This packet ends at a verified, reviewed **local** collection and a handoff. **The owner assigned current publishing to a separate Claude session. Do not publish, refresh publication flags, deploy or change cloud resources as part of this authoring task.** Preserve the publication markers when regenerating galleries and leave the generated publication files to the publishing tools. Later publishing follows [CA4/CA5](../../platform-app/README.md); it is a separate coordinated action, not an implied last step here.
 
@@ -77,6 +80,9 @@ Requested scope: <the standard twelve outfits and sixteen dialogue states,
 or my explicit subset>.
 Existing authorization/review preferences: <what to complete autonomously
 and which design decisions I want to review first>.
+Default review cadence: show outfit images first; prepare album inclusion
+and outfit-expression derivatives when I request them, unless I explicitly
+authorize that work as part of the complete pass.
 
 Keep this character recognizable and visually distinct from the approved
 cast while matching the shared art direction. Use her own approved anchor
@@ -86,6 +92,6 @@ Do not publish; the publishing session handles that separately.
 
 Begin by inspecting the current local references and filling the character
 brief. Make concrete art within the authorized scope, verify it, and leave
-a complete local gallery and handoff. Do not mark new work owner approved
-without my verdict.
+a handoff. Complete or update the local gallery when authorized above.
+Do not mark new work owner approved without my verdict.
 ```

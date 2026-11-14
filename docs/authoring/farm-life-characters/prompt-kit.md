@@ -83,10 +83,17 @@ hair, tail, hem and footwear inside the canvas. Soft neutral daylight, opaque
 warm ivory backdrop and faint grounding shadow.
 
 Requested outfit: <key and occasion>.
+Occasion: <venue, time of day, dress code and fashion era; describe clothing
+context only, keeping the ivory studio backdrop>.
 Design: <silhouette, neckline, sleeves, waist, length, layers, material,
 fastenings, motif placement, palette proportions and footwear>.
+Material behavior: <smooth sheen, weight, drape or texture appropriate to
+the occasion; avoid accidental historical/fantasy styling>.
+For layered designs: <inner garment construction, coverage and length>;
+<outer garment construction, transparency and length>. State explicitly
+whether the inner outfit is one piece or two separate pieces.
 Distinctive design choices: <how it differs structurally from her other looks
-and the existing cast's same-occasion looks>.
+and the existing cast's same-occasion looks, at the same required formality>.
 Retain <specific identity accessories>; adapt <only explicitly allowed items>.
 Garments accommodate the tail. Keep facial features unobstructed.
 
@@ -155,7 +162,7 @@ The six optional extras—Crying, Teasing, Smug, Embarrassed, Startled and Dream
 
 ## D. Targeted revision
 
-Retain the original prompt and output; write a new revision prompt. State the failed observation and one intended correction, followed by the invariants that must remain fixed. For example:
+Retain the original prompt and output; write a new revision prompt. Use the owner's selected same-character candidate as the edit target. State the observed issue and the requested corrections, followed by the invariants that must remain fixed. Preserve any unchanged parts the owner already accepted. For example:
 
 ```text
 Edit target: <the selected same-character candidate>.
@@ -166,3 +173,5 @@ Keep the existing composition and background. Output one revised image.
 ```
 
 An eyebrow-coverage or clipped-blush problem may be an export-mask problem rather than bad generated art. Compare the raw source with the masked preview before spending another generation. Change the mask in a new export version when the source is already correct, and rerun the relevant checks.
+
+During image-only review, save and show this revised image first. Wait for the requested album inclusion before rebuilding its dialogue derivatives or gallery. When an owner-approved outfit replaces an earlier choice, reuse the accepted face layers and update only the affected crop, previews and references.

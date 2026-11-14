@@ -111,6 +111,12 @@ Search a bounded translation range, inspect eye spacing and feature alignment, t
 
 Keep the final approved face PNG bytes unchanged across every outfit. Placement belongs to the outfit/state recipe, not to a separately regenerated face. The manifest records actual positions; avoid assuming `(148, 140)` for a new character or every outfit.
 
+## Revise one outfit after face approval
+
+When the owner requests album inclusion of a revised outfit, retain its exact selected full-body bytes. Make its new literal neutral crop, measure placement against the accepted spring face, and compose the fifteen existing face layers. Check native feature details, opaque replacement guards, outside-mask pixels and nearby straps, earrings, necklines or sheer layers. A clothing revision does not by itself require new facial-expression art.
+
+Keep unchanged sources, faces, masks and previews at their existing paths where practical. Use fresh paths for changed derivatives, preserve earlier candidate files, and replace the active outfit's references throughout the album and recipe only after verification. Retain existing approvals and record the new master verdict and derivative checks separately, honoring the actual scope of the owner's verdict. Remove superseded variant keys from active selectors once a final outfit is chosen. Reuse the current viewer rather than creating a new site for each design iteration.
+
 ## Add a character without rebuilding the pilots
 
 The current private builders are hard-coded studies. For example, `dialogue-portraits/build.mjs` names two characters, assumes specific historical sources and asserts 24 bases, 30 faces and 384 states. `viewer.mjs` also contains pilot defaults and fixed explanatory counts. A search-and-replace of the character name is not a safe integration.
