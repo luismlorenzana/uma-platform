@@ -4,7 +4,12 @@
 // water, buildings and label rows. Pure, so the same page always lays out the same way; the scene only draws what this
 // returns. Frame ids follow uma-art's `tiles` atlas: `<tiles>/ground-<n>`, `<tiles>/path-<mask>`, `<tiles>/water-<mask>`,
 // `<tiles>/<prop>`.
-import { placeCell } from './grid.js'
+//
+// An `across` map (0.20.0, uma-farm's F74) lays the trunk road across the middle row instead. A place above the road runs
+// its branch straight down from its door; one on or below it runs round a side of its building and up to the road, and
+// one standing on the road gets that branch on both sides, a lane under it, so the road still runs from edge to edge.
+// Nothing is laid where it would close a 2 × 2 of road while another way round is free. The stream stays on the east edge.
+import { placeCell, type HubFlow } from './grid.js'
 import type { Clearing, PlaceAt, TileProp } from './types.js'
 
 /** Connection bits for path and water masks; a map edge counts as connected. */
@@ -50,6 +55,8 @@ export interface TerrainOptions {
   readonly props?: readonly TileProp[]
   /** A stream down the east edge (uma-rpg's Wilds). */
   readonly stream?: boolean
+  /** The trunk road down the middle column (`down`, the default) or across the middle row (`across`, 0.20.0). */
+  readonly flow?: HubFlow
 }
 
 function hash(a: number, b: number, c: number): number {
@@ -61,7 +68,7 @@ function hash(a: number, b: number, c: number): number {
 /** A page's seed, from its id: the same formula both games used before the kit. */
 export const pageSeed = (page: string): number => page.length * 31 + page.charCodeAt(0)
 
-export function layTerrain({ page, tiles, places, cols, rows, clearings = [], props: propList, stream = false }: TerrainOptions): Terrain {
+export function layTerrain({ page, tiles, places, cols, rows, clearings = [], props: propList, stream = false, flow = 'down' }: TerrainOptions): Terrain {
   const seed = pageSeed(page)
   const kind: ('ground' | 'path' | 'water' | 'block' | 'clear')[] = Array.from({ length: cols * rows }, () => 'ground')
   const at = (c: number, r: number) => (c >= 0 && r >= 0 && c < cols && r < rows ? kind[r * cols + c] : undefined)
@@ -84,20 +91,7 @@ export function layTerrain({ page, tiles, places, cols, rows, clearings = [], pr
       if (r > 0 && at(cols - 2 + wobble, r - 1) !== 'water') set(cols - 2 + (1 - wobble), r, 'water')
     }
   }
-  // One road down the middle. No cross road: place rows sit too close together (uma-rpg D64).
-  const trunk = Math.floor(cols / 2)
-  for (let r = 0; r < rows; r++) set(trunk, r, 'path')
-  // Branches: from each place's door (the cell below its footprint) to the trunk.
-  for (const p of places) {
-    const { col, row } = footprints[p.id]!
-    const door = row + 1
-    if (door >= rows) continue
-    const step = trunk >= col ? 1 : -1
-    for (let c = col; c !== trunk + step; c += step) set(c, door, 'path')
-  }
-  // A building standing on the road gets a lane round one side of it, from the road above its roof down to its door, so
-  // the road still runs from edge to edge. A lane joins a road it meets instead of doubling it, and is never laid where it
-  // would close a 2 × 2 of road (uma-platform D90), which the path tiles can't draw.
+  // A 2 × 2 of road is never laid by a lane (uma-platform D90): the path tiles can't draw it.
   const isPath = (c: number, r: number) => at(c, r) === 'path'
   const closesSquare = (c: number, r: number) => [[-1, -1], [0, -1], [-1, 0], [0, 0]].some(([dc, dr]) =>
     [[0, 0], [1, 0], [0, 1], [1, 1]].every(([ec, er]) => {
@@ -105,32 +99,96 @@ export function layTerrain({ page, tiles, places, cols, rows, clearings = [], pr
       const rr = r + dr! + er!
       return (cc === c && rr === r) || isPath(cc, rr)
     }))
-  for (const p of places) {
-    const { col, row } = footprints[p.id]!
-    if (col !== trunk) continue
-    const top = row - 3
-    const bottom = row + 1
-    for (const side of hash(col, row, seed) < 0.5 ? [-1, 1] : [1, -1]) {
-      const lane = col + side * 2
-      const joined = isPath(lane, top - 1)
-      const route: [number, number][] = joined ? [] : [[col + side, top]]
-      for (let r = top; r <= bottom; r++) route.push([lane, r])
-      route.push([col + side, bottom])
+  if (flow === 'across') {
+    // One road across the middle row (0.20.0).
+    const trunk = Math.floor(rows / 2)
+    for (let c = 0; c < cols; c++) set(c, trunk, 'path')
+    // A route of road that joins any road it meets; with `check`, nothing is laid (false) where it would cross a building
+    // or water or close a 2 × 2 of road.
+    const layRoute = (route: readonly (readonly [number, number])[], check: boolean): boolean => {
       const onMap = route.filter(([c, r]) => c >= 0 && r >= 0 && c < cols && r < rows)
-      if (onMap.some(([c, r]) => at(c, r) === 'block' || at(c, r) === 'water')) continue
+      if (check && onMap.some(([c, r]) => at(c, r) === 'block' || at(c, r) === 'water')) return false
       const laid: [number, number][] = []
-      let closed = false
       for (const [c, r] of onMap) {
         if (isPath(c, r)) continue
-        if (closesSquare(c, r)) {
-          closed = true
-          break
+        if (check && closesSquare(c, r)) {
+          for (const [lc, lr] of laid) kind[lr * cols + lc] = 'ground'
+          return false
         }
         set(c, r, 'path')
         laid.push([c, r])
       }
-      if (!closed) break
-      for (const [c, r] of laid) kind[r * cols + c] = 'ground'
+      return true
+    }
+    for (const p of places) {
+      const { col, row } = footprints[p.id]!
+      const door = row + 1
+      if (door >= rows) continue
+      // Above the road: straight down from the door.
+      if (door <= trunk) {
+        for (let r = door; r <= trunk; r++) set(col, r, 'path')
+        continue
+      }
+      // On or below it: along the door's row past the building's side, then up to the road. A building on the road takes
+      // both sides, so the road runs on under it; any other, the first side that's free.
+      const onRoad = trunk >= row - 2
+      const sides = hash(col, row, seed) < 0.5 ? [-1, 1] : [1, -1]
+      const routeOf = (side: number) => {
+        const route: [number, number][] = [[col, door], [col + side, door], [col + side * 2, door]]
+        for (let r = door - 1; r > trunk; r--) route.push([col + side * 2, r])
+        return route
+      }
+      let joined = false
+      for (const side of sides) {
+        if (!layRoute(routeOf(side), true)) continue
+        joined = true
+        if (!onRoad) break
+      }
+      // Hemmed in on both sides: the door still reaches the road, whatever the tiles make of it.
+      if (!joined) layRoute(routeOf(sides[0]!), false)
+    }
+  } else {
+    // One road down the middle. No cross road: place rows sit too close together (uma-rpg D64).
+    const trunk = Math.floor(cols / 2)
+    for (let r = 0; r < rows; r++) set(trunk, r, 'path')
+    // Branches: from each place's door (the cell below its footprint) to the trunk.
+    for (const p of places) {
+      const { col, row } = footprints[p.id]!
+      const door = row + 1
+      if (door >= rows) continue
+      const step = trunk >= col ? 1 : -1
+      for (let c = col; c !== trunk + step; c += step) set(c, door, 'path')
+    }
+    // A building standing on the road gets a lane round one side of it, from the road above its roof down to its door, so
+    // the road still runs from edge to edge. A lane joins a road it meets instead of doubling it, and is never laid where
+    // it would close a 2 × 2 of road.
+    for (const p of places) {
+      const { col, row } = footprints[p.id]!
+      if (col !== trunk) continue
+      const top = row - 3
+      const bottom = row + 1
+      for (const side of hash(col, row, seed) < 0.5 ? [-1, 1] : [1, -1]) {
+        const lane = col + side * 2
+        const joined = isPath(lane, top - 1)
+        const route: [number, number][] = joined ? [] : [[col + side, top]]
+        for (let r = top; r <= bottom; r++) route.push([lane, r])
+        route.push([col + side, bottom])
+        const onMap = route.filter(([c, r]) => c >= 0 && r >= 0 && c < cols && r < rows)
+        if (onMap.some(([c, r]) => at(c, r) === 'block' || at(c, r) === 'water')) continue
+        const laid: [number, number][] = []
+        let closed = false
+        for (const [c, r] of onMap) {
+          if (isPath(c, r)) continue
+          if (closesSquare(c, r)) {
+            closed = true
+            break
+          }
+          set(c, r, 'path')
+          laid.push([c, r])
+        }
+        if (!closed) break
+        for (const [c, r] of laid) kind[r * cols + c] = 'ground'
+      }
     }
   }
   // Keep each place's label rows clear of props: its name pill and up to two rows of pips hang under the door.

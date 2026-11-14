@@ -1,5 +1,8 @@
 // "Update ready · Restart" under the top safe area (both games' `UpdateNotice`; SD2). Never forced: the owner taps
 // Restart, and a tap that hasn't saved yet finishes first.
+//
+// With `clearSides` (0.20.0, uma-farm's F74) it keeps clear of the left and right safe areas too, as on a landscape stage,
+// where the notch and the home bar sit on the sides. Where those insets are 0 it sits where it always did.
 import { useSyncExternalStore } from 'react'
 import { appUpdateLifecycle, type UpdateLifecycle, type UpdateSnapshot } from './update-lifecycle.js'
 
@@ -28,7 +31,17 @@ export function useAppUpdate(lifecycle: UpdateLifecycle = appUpdateLifecycle): U
   return useSyncExternalStore(lifecycle.subscribe, lifecycle.getSnapshot, lifecycle.getSnapshot)
 }
 
-export function UpdateNotice({ words = UPDATE_WORDS, lifecycle = appUpdateLifecycle }: { words?: Partial<UpdateWords>; lifecycle?: UpdateLifecycle }) {
+const NOTICE_LOOK = 'z-50 flex min-h-14 items-center gap-3 rounded-sm border border-accent/40 bg-panel px-4 py-2 text-ink shadow-3'
+const TOP = 'top-[calc(var(--inset-top,env(safe-area-inset-top))+0.75rem)]'
+/** 0.75rem in from each side, past the side's safe area. */
+const SIDES = 'right-[calc(var(--inset-right,env(safe-area-inset-right))+0.75rem)] left-[calc(var(--inset-left,env(safe-area-inset-left))+0.75rem)]'
+
+export function UpdateNotice({ words = UPDATE_WORDS, lifecycle = appUpdateLifecycle, clearSides = false }: {
+  words?: Partial<UpdateWords>
+  lifecycle?: UpdateLifecycle
+  /** Keep clear of the left and right safe areas as well as the top one (a landscape stage). Off by default (0.20.0). */
+  clearSides?: boolean
+}) {
   const update = useAppUpdate(lifecycle)
   if (update.status === 'current') return null
   const say = { ...UPDATE_WORDS, ...words }
@@ -38,7 +51,8 @@ export function UpdateNotice({ words = UPDATE_WORDS, lifecycle = appUpdateLifecy
       role="status"
       aria-label={say.label}
       data-kit="update-notice"
-      className="fixed inset-x-3 top-[calc(var(--inset-top,env(safe-area-inset-top))+0.75rem)] z-50 flex min-h-14 items-center gap-3 rounded-sm border border-accent/40 bg-panel px-4 py-2 text-ink shadow-3"
+      data-clear-sides={clearSides || undefined}
+      className={`fixed ${clearSides ? SIDES : 'inset-x-3'} ${TOP} ${NOTICE_LOOK}`}
     >
       <div className="min-w-0 flex-1">
         <p className="font-display text-sm font-bold">{say.title}</p>

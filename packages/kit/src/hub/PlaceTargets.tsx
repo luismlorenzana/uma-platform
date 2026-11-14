@@ -3,11 +3,12 @@
 // covers its building down to the ground line, then its name pill with the counter and its slot pips, and carries the
 // Ready badge, a lock when closed, and its VoiceOver line. A plaza is a slot: one figure standing on the road, or a small
 // crowd of up to five round it (0.3.0). Links read in map order, row by row, as the eye meets them. A place may hang its
-// pips over its building's top in a half arch instead (0.15.0); its Ready badge then sits at the building's foot.
+// pips over its building's top in a half arch instead (0.15.0); its Ready badge then sits at the building's foot. On an
+// `across` map (0.20.0) the links follow its grid the same way.
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { Link } from 'react-router'
 import { LockedIcon } from '../ui/icons/index.js'
-import { BUILDING, hubDpr, hubGrid, placeAnchor, TARGET_W, type HubGrid } from './grid.js'
+import { BUILDING, hubDpr, hubGrid, placeAnchor, TARGET_W, type HubFlow, type HubGrid } from './grid.js'
 import { ArchPips, Pips, type PipModel } from './Pips.js'
 import type { PlaceAt } from './types.js'
 
@@ -38,8 +39,8 @@ function position(at: PlaceAt, grid: HubGrid | null, lift: number): CSSPropertie
   return { left: anchor.x, top: anchor.y, transform: `translate(-50%, -${lift}px)` }
 }
 
-/** The map's size, measured, so the links land on the scene's grid. */
-export function useHubGrid(): [RefObject<HTMLDivElement | null>, HubGrid | null] {
+/** The map's size, measured, so the links land on the scene's grid (an `across` map's with `flow`, 0.20.0). */
+export function useHubGrid(flow: HubFlow = 'down'): [RefObject<HTMLDivElement | null>, HubGrid | null] {
   const root = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState<{ w: number; h: number } | null>(null)
   useEffect(() => {
@@ -52,7 +53,7 @@ export function useHubGrid(): [RefObject<HTMLDivElement | null>, HubGrid | null]
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
-  return [root, size !== null && size.w > 0 && size.h > 0 ? hubGrid(size.w, size.h, hubDpr()) : null]
+  return [root, size !== null && size.w > 0 && size.h > 0 ? hubGrid(size.w, size.h, hubDpr(), flow) : null]
 }
 
 function PlaceTarget({ place, grid }: { place: TargetModel; grid: HubGrid | null }) {
@@ -148,12 +149,14 @@ function Crowd({ plaza, grid }: { plaza: Plaza; grid: HubGrid | null }) {
 /** Map order: top to bottom, then left to right. */
 const byMap = (a: { readonly at: PlaceAt }, b: { readonly at: PlaceAt }): number => a.at.y - b.at.y || a.at.x - b.at.x
 
-export function PlaceTargets({ places, plaza }: {
+export function PlaceTargets({ places, plaza, flow = 'down' }: {
   places: readonly TargetModel[]
   /** Something standing on the map without a building: the featured Uma, or a crowd, on a plaza. */
   plaza?: Plaza
+  /** The map's flow, so the links sit on its grid: `down` (the default) or `across` (0.20.0). */
+  flow?: HubFlow
 }) {
-  const [root, grid] = useHubGrid()
+  const [root, grid] = useHubGrid(flow)
   const items = [
     ...places.map((place) => ({ place, at: place.at })),
     ...(plaza === undefined ? [] : [{ place: null, at: plaza.at }]),
