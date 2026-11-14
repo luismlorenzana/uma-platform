@@ -4,8 +4,8 @@
 > and Google accepts the redirect. **Uma Ranker is live (RK1, P131)**: Playable Umas per outfit on ten tiers, one art batch
 > each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
 > records (CA2, P136). **An Uma's page also shows her universe looks (CA4, P162):** the approved pictures of her in another
-> world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 30 looks are live, 15
-> each on Kitasan Black's and Almond Eye's pages. **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
+> world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 54 looks are live, 27
+> each on Kitasan Black's and Almond Eye's pages (Cyberpunk 10, Farm Life 24, High Fantasy 20; P173). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
 > neutral crop and each expression's face, with a recipe for the games; her page shows the pieces, and the games compose the
 > 384 Farm Life states. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
