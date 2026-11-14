@@ -164,13 +164,28 @@ export interface PushPlan {
   /** Nothing differs from the bucket's index. */
   same: boolean
 }
-/** What a push sends. A look already published with the same picture keeps its date; the index lists the approved set. */
-export function planPush(collection: Collection, remote: UniverseIndex | null, now: string): PushPlan {
+/** Which looks a push may change, by id or outfit (`--only`); without one, every look. */
+export type Selection = ((look: { id: string; outfit: string }) => boolean) | undefined
+/** `--only kitasan-black-pajamas,pajamas-playful`: a look is chosen when its id or its outfit is named. */
+export const selectionOf = (names: readonly string[]): Selection => {
+  if (names.length === 0) return undefined
+  const wanted = new Set(names)
+  return (look) => wanted.has(look.id) || wanted.has(look.outfit)
+}
+
+/**
+ * What a push sends. A look already published with the same picture keeps its date; the index lists the approved set.
+ * With a selection, only the chosen looks change: a chosen approved look is published, a chosen published look that is
+ * no longer approved leaves the index, and every other look stays exactly as the bucket has it, published or not.
+ */
+export function planPush(collection: Collection, remote: UniverseIndex | null, now: string, select?: Selection): PushPlan {
+  const chosen = (look: { id: string; outfit: string }) => !select || select(look)
   const before = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
   const damaged = new Set(collection.refused.filter((r) => r.kind === 'damaged').map((r) => r.id))
   const upload: ApprovedLook[] = [], looks: PublishedLook[] = []
   for (const look of collection.looks) {
     const old = before.get(look.id), same = old?.sha256 === look.sha256
+    if (!chosen(look)) { if (old) looks.push(old); continue }
     if (!same) upload.push(look)
     looks.push({
       id: look.id, character: look.character, outfit: look.outfit, title: look.title, path: publishedPath(look), bytes: look.bytes, sha256: look.sha256,
@@ -178,8 +193,9 @@ export function planPush(collection: Collection, remote: UniverseIndex | null, n
     })
   }
   const here = new Set(collection.looks.map((l) => l.id))
-  const kept = [...before.values()].filter((l) => !here.has(l.id) && damaged.has(l.id))
-  const withdrawn = [...before.keys()].filter((id) => !here.has(id) && !damaged.has(id)).sort()
+  const gone = [...before.values()].filter((l) => !here.has(l.id))
+  const kept = gone.filter((l) => damaged.has(l.id) || !chosen(l))
+  const withdrawn = gone.filter((l) => !damaged.has(l.id) && chosen(l)).map((l) => l.id).sort()
   // In the manifest's order, a kept look where its entry still is.
   const place = new Map(collection.order.map((id, i) => [id, i]))
   const all = [...looks, ...kept].sort((a, b) => (place.get(a.id) ?? Infinity) - (place.get(b.id) ?? Infinity))
@@ -187,7 +203,7 @@ export function planPush(collection: Collection, remote: UniverseIndex | null, n
   const same = remote !== null && JSON.stringify({ ...head, looks: all }) === JSON.stringify({ universe: remote.universe, title: remote.title, style: remote.style, revision: remote.revision, looks: remote.looks })
   return {
     index: { schemaVersion: 1, kind: 'universe-art', ...head, publishedAt: same ? remote.publishedAt : now, looks: all },
-    upload, unchanged: looks.length - upload.length, withdrawn, kept: kept.map((l) => l.id).sort(), same,
+    upload, unchanged: looks.filter((l) => !upload.some((u) => u.id === l.id)).length, withdrawn, kept: kept.map((l) => l.id).sort(), same,
   }
 }
 
@@ -326,18 +342,28 @@ export interface PushResult {
  * against the bucket's own size and MD5, then writes the index and, locally, the published flags. Nothing is deleted in
  * the bucket: a withdrawn look leaves the index and its file stays, with the bucket's older versions.
  */
-export function push(universe: string, dir: string, mirrorDir: string, remote: Remote, now: string, options: { dryRun?: boolean } = {}): PushResult {
+export function push(universe: string, dir: string, mirrorDir: string, remote: Remote, now: string, options: { dryRun?: boolean; only?: readonly string[] } = {}): PushResult {
   const collection = readCollection(universe, dir)
   const there = remote.read(INDEX)
   const before = parseIndex(there?.text ?? null, universe)
   if (collection.looks.length === 0 && !before) throw new Error(`Nothing to publish: ${universe} has no approved look whose PNG matches its manifest.`)
-  const plan = planPush(collection, before, now)
+  const only = options.only ?? []
+  if (only.length) {
+    // A name that matches nothing is a typo: say so before anything moves.
+    const known = [...collection.looks, ...(before?.looks ?? [])]
+    const unknown = only.filter((name) => !known.some((l) => l.id === name || l.outfit === name))
+    if (unknown.length) throw new Error(`${universe}: --only names no approved or published look: ${unknown.join(', ')}.`)
+  }
+  const plan = planPush(collection, before, now, selectionOf(only))
   const result: PushResult = {
     universe, uploaded: plan.upload.map((l) => l.id), unchanged: plan.unchanged, withdrawn: plan.withdrawn, kept: plan.kept, refused: collection.refused,
     indexed: !plan.same, publication: publicationOf(collection, options.dryRun ? before : plan.index, now), flagged: [],
   }
   if (options.dryRun) return result
-  const local = new Map(collection.looks.map((l) => [publishedPath(l), l]))
+  // Only the pictures the new index lists from this machine: a look left unpublished, or one kept at its older picture
+  // because --only didn't name it, stays off the bucket and the mirror.
+  const listed = new Map(plan.index.looks.map((l) => [l.id, l.sha256]))
+  const local = new Map(collection.looks.filter((l) => listed.get(l.id) === l.sha256).map((l) => [publishedPath(l), l]))
   // The mirror first: the same files at the same paths, for the local app.
   const home = join(mirrorDir, 'universes', universe)
   for (const [path, look] of local) {
@@ -354,9 +380,9 @@ export function push(universe: string, dir: string, mirrorDir: string, remote: R
     } finally { rmSync(stage, { recursive: true, force: true }) }
   }
   // Read back before the index says so: every look this machine holds is in the bucket at its size and MD5.
-  const listed = new Map(remote.list().map((f) => [f.path, f]))
+  const inBucket = new Map(remote.list().map((f) => [f.path, f]))
   for (const [path, look] of local) {
-    const file = listed.get(path)
+    const file = inBucket.get(path)
     if (!file) throw new Error(`${universe}: ${path} isn't in the bucket after the upload. The index wasn't written; run the push again.`)
     if (file.bytes !== look.bytes || file.md5 !== md5(readFileSync(join(dir, look.image)))) throw new Error(`${universe}: the bucket's ${path} isn't the approved PNG. The index wasn't written.`)
   }
@@ -386,17 +412,28 @@ export function gcloudCommand(args: string[], platform: NodeJS.Platform = proces
   return { file: 'gcloud.cmd', args: args.map((a) => `"${a}"`), shell: true }
 }
 
-/** gcloud storage, scoped to the owner's default configuration and the games' project; never `config set`. Null on failure. */
-function gcloud(args: string[], options: { quiet?: boolean } = {}): string | null {
+/** How a failed gcloud call ended: the file isn't there, a guarded write lost its race, or anything else (no gcloud, no
+ *  sign-in, no network), which must stop the tool rather than read as "nothing published". */
+export function failureKind(stderr: string): 'missing' | 'precondition' | 'other' {
+  if (/not found: 404|matched no objects|No URLs matched/i.test(stderr)) return 'missing'
+  if (/412|precondition/i.test(stderr)) return 'precondition'
+  return 'other'
+}
+
+/** gcloud storage, scoped to the owner's default configuration and the games' project; never `config set`. With
+ *  `allow`, those failures return null; every other failure throws, with gcloud's own words. */
+function gcloud(args: string[], allow: readonly ('missing' | 'precondition')[] = []): string | null {
+  const command = gcloudCommand(['storage', ...args])
   try {
-    const command = gcloudCommand(['storage', ...args])
     return execFileSync(command.file, command.args, {
       env: { ...process.env, CLOUDSDK_ACTIVE_CONFIG_NAME: 'default', CLOUDSDK_CORE_PROJECT: process.env.CLOUDSDK_CORE_PROJECT ?? 'uma-rpg' },
-      stdio: ['ignore', 'pipe', options.quiet ? 'pipe' : 'inherit'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: command.shell,
+      stdio: ['ignore', 'pipe', 'pipe'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: command.shell,
     })
   } catch (error) {
-    if (options.quiet) return null
-    throw error
+    const stderr = String((error as { stderr?: unknown }).stderr ?? (error as Error).message ?? '').replace(/^.*FutureWarning.*$|^\s*warnings\.warn.*$/gm, '').trim()
+    const kind = failureKind(stderr)
+    if (kind !== 'other' && allow.includes(kind)) return null
+    throw new Error(`gcloud storage ${args[0]} failed, so nothing was decided from it: ${stderr || 'no message'}`)
   }
 }
 
@@ -405,16 +442,16 @@ export function bucketRemote(universe: string): Remote {
   const base = `gs://${BUCKET}/art/universes/${universe}`
   return {
     read(path) {
-      const generation = gcloud(['objects', 'describe', `${base}/${path}`, '--format=value(generation)'], { quiet: true })?.trim()
+      const generation = gcloud(['objects', 'describe', `${base}/${path}`, '--format=value(generation)'], ['missing'])?.trim()
       if (!generation) return null
-      const body = gcloud(['cat', `${base}/${path}`], { quiet: true })
+      const body = gcloud(['cat', `${base}/${path}`])
       return body === null ? null : { text: body, generation }
     },
     uploadFolder(dir) { gcloud(['rsync', '--recursive', dir, base]) },
-    uploadFile(file, path, ifGeneration) { return gcloud(['cp', `--if-generation-match=${ifGeneration}`, file, `${base}/${path}`], { quiet: true }) !== null },
+    uploadFile(file, path, ifGeneration) { return gcloud(['cp', `--if-generation-match=${ifGeneration}`, file, `${base}/${path}`], ['precondition']) !== null },
     list() {
-      const out = gcloud(['objects', 'list', `${base}/**`, '--format=json(name,size,md5_hash)'], { quiet: true })
-      if (!out) return []
+      const out = gcloud(['objects', 'list', `${base}/**`, '--format=json(name,size,md5_hash)'], ['missing'])
+      if (!out?.trim()) return []
       const prefix = `art/universes/${universe}/`
       return (JSON.parse(out) as { name: string; size: string | number; md5_hash: string }[])
         .filter((f) => f.name.startsWith(prefix))

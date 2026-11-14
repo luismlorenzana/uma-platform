@@ -35,7 +35,7 @@
   approved ones to the app's bucket (`art/universes/`), where Character Art shows them **on her own page**, never in a tab
   of their own; it also flags each look as published (`approved/publication.json`), which the local galleries show
   (`pnpm art:gallery`, http://127.0.0.1:4323; `pnpm art:status` refreshes the flags). ChatGPT pushes after an approval;
-  Claude pushes only on the owner's word.
+  Claude pushes only on the owner's word, and only the looks named (`--only <id|outfit>,…`, P168).
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

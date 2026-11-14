@@ -13,7 +13,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP82 for the universe looks.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP84 for the universe looks.
 >
 > **Uma Story is live (US1, P149)** at https://uma-platform.web.app/story: the third sub-app, one Story App for
 > uma-quest's and uma-farm's stories, with three books (Cast, Quest, Farm) on one shared cast. Its page is
@@ -159,6 +159,8 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP79 | **The local galleries show the flag:** `publication.js` and one shared `publication-flag.js` add a Published badge beside each look's Approved and a line under the page's header. The pages still open from the file system; the tool puts its two script tags back when a gallery is regenerated |
 | AP80 | **The Local Art Gallery has a front page:** `pnpm art:gallery` (http://127.0.0.1:4323, launch config `art-gallery`) lists each universe with its approved and published counts and its study pages; this machine only, read only |
 | AP81 | **Who pushes:** the owner's approval in the manifest is the go. ChatGPT runs the push as the last step of an approval (P147); Claude runs it on the owner's word, as for the first 30 ("help me by publishing all already approved images") |
+| AP83 | **`--only <id|outfit>,…` changes only the named looks** (P168): a named approved look is published, a named published look no longer approved leaves the index, and every other look stays exactly as the bucket has it, published or not, at its published picture. A name that matches nothing stops the push. The owner's pajamas swap was the first: `pnpm art:push farm-life --only pajamas,pajamas-playful` |
+| AP84 | **A failed gcloud call stops the tool** (P168): only "not found" (and a guarded write's lost race) is an answer; no gcloud, no sign-in or no network throws with gcloud's words, so `art:status` can never flag published looks as "not published" again |
 | AP82 | **Local dev:** a push also fills `content/published/art/`, the same files at the same paths, which the local app reads (`ART_DIR`) |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 

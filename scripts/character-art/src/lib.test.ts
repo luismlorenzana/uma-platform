@@ -5,7 +5,7 @@ import { dirname, join, relative, sep } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { FLAG_SCRIPT } from './flag.js'
 import {
-  gcloudCommand, INDEX, isUniverse, parseIndex, planPush, pngSize, publicationOf, publishedPath, push, readCollection, status, universesIn, withFlagTags,
+  failureKind, gcloudCommand, INDEX, isUniverse, parseIndex, planPush, pngSize, publicationOf, publishedPath, push, readCollection, status, universesIn, withFlagTags,
   type Publication, type Remote, type RemoteFile, type UniverseIndex,
 } from './lib.js'
 
@@ -274,6 +274,67 @@ describe('the published flag', () => {
   it('the flag script is plain browser code that reads the record and marks each figure', () => {
     expect(() => new Function(FLAG_SCRIPT)).not.toThrow()
     for (const word of ['window.UMA_PUBLICATION', 'Published', 'Not published', 'Changed since published', "querySelectorAll('figure')", "split('?')[0]"]) expect(FLAG_SCRIPT).toContain(word)
+  })
+})
+
+describe('--only: a push that changes only the named looks', () => {
+  // The owner's pajamas swap, with invented riders: an old look retired from the manifest, its replacement approved, and
+  // other new looks approved but not asked for.
+  const setup = () => {
+    const base = temp(), bucket = fakeRemote()
+    universe(base, 'sky-city', [{ id: 'rider-one-street', outfit: 'street' }, { id: 'rider-one-pajamas', outfit: 'pajamas' }])
+    push('sky-city', approvedDirOf(base), temp(), bucket.remote, T1)
+    const dir = universe(base, 'sky-city', [
+      { id: 'rider-one-street', outfit: 'street', seed: 'redrawn' }, { id: 'rider-one-pajamas-playful', outfit: 'pajamas-playful' },
+      { id: 'rider-one-farm-work', outfit: 'farm-work' },
+    ], { revision: 3 })
+    return { dir, bucket }
+  }
+  const approvedDirOf = (base: string) => join(base, 'sky-city', 'approved')
+
+  it('withdraws the retired look and publishes its replacement, leaving every other look as the bucket has it', () => {
+    const { dir, bucket } = setup()
+    const before = bucket.index().looks.find((l) => l.id === 'rider-one-street')!
+    const mirrorDir = temp()
+    const r = push('sky-city', dir, mirrorDir, bucket.remote, T2, { only: ['pajamas', 'pajamas-playful'] })
+    expect(r).toMatchObject({ uploaded: ['rider-one-pajamas-playful'], withdrawn: ['rider-one-pajamas'], kept: [], indexed: true })
+    const index = bucket.index()
+    expect(index.looks.map((l) => [l.id, l.publishedAt])).toEqual([['rider-one-street', T1], ['rider-one-pajamas-playful', T2]])
+    // Street was redrawn locally but not named: the published street is untouched, and it is flagged as changed.
+    expect(index.looks[0]).toEqual(before)
+    expect(r.publication.looks.map((l) => [l.id, l.state])).toEqual([['rider-one-street', 'changed'], ['rider-one-pajamas-playful', 'published'], ['rider-one-farm-work', 'unpublished']])
+    expect(r.publication.withdrawable).toEqual([])
+    // Farm work wasn't named: nothing of it reached the bucket or the mirror.
+    expect([...bucket.files.keys()].some((p) => p.includes('farm-work'))).toBe(false)
+    expect(existsSync(join(mirrorDir, 'universes/sky-city/images'))).toBe(true)
+    expect(readdirSync(join(mirrorDir, 'universes/sky-city/images')).some((p) => p.includes('farm-work'))).toBe(false)
+  })
+
+  it('matches by id as well as outfit, keeps a named-only-by-others withdrawal, and refuses a name that matches nothing', () => {
+    const { dir, bucket } = setup()
+    const r = push('sky-city', dir, temp(), bucket.remote, T2, { only: ['rider-one-pajamas-playful'] })
+    expect(r).toMatchObject({ uploaded: ['rider-one-pajamas-playful'], withdrawn: [], kept: ['rider-one-pajamas'] })
+    expect(bucket.index().looks.map((l) => l.id)).toEqual(['rider-one-street', 'rider-one-pajamas-playful', 'rider-one-pajamas'])
+    expect(r.publication.withdrawable).toEqual(['rider-one-pajamas'])
+    expect(() => push('sky-city', dir, temp(), bucket.remote, T3, { only: ['pajama'] })).toThrow(/--only names no approved or published look: pajama/)
+  })
+
+  it('a dry run with --only sends nothing', () => {
+    const { dir, bucket } = setup()
+    const generation = bucket.files.get(INDEX)!.generation
+    const r = push('sky-city', dir, temp(), bucket.remote, T2, { only: ['pajamas', 'pajamas-playful'], dryRun: true })
+    expect(r).toMatchObject({ uploaded: ['rider-one-pajamas-playful'], withdrawn: ['rider-one-pajamas'] })
+    expect(bucket.files.get(INDEX)!.generation).toBe(generation)
+  })
+})
+
+describe('a failed gcloud call is never read as an empty bucket', () => {
+  it('tells a missing file and a lost race from every other failure', () => {
+    expect(failureKind('ERROR: (gcloud.storage.objects.describe) gs://b/art%2Fx%2Findex.json not found: 404.')).toBe('missing')
+    expect(failureKind('ERROR: One or more URLs matched no objects.')).toBe('missing')
+    expect(failureKind('ERROR: HTTPError 412: At least one of the pre-conditions you specified did not hold.')).toBe('precondition')
+    for (const stderr of ["'gcloud.cmd' is not recognized as an internal or external command", 'spawn gcloud ENOENT', 'ERROR: (gcloud.storage.cat) There was a problem refreshing your current auth tokens: Reauthentication failed.', 'HTTPError 403: forbidden', ''])
+      expect(failureKind(stderr)).toBe('other')
   })
 })
 
