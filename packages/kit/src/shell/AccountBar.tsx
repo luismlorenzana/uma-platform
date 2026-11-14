@@ -7,6 +7,11 @@
 // On a landscape `KitStage` (0.18.0, KL1) it is the frame's left rail: the initial on top, the chips stacked under it, and
 // the Menu at its foot when the game passes `menu` (on a landscape stage the menu lives here, by the left thumb, and the
 // bottom bar's rail keeps only the actions). Outside a stage it is exactly as before.
+//
+// With `landscape="bar"` (0.20.0, uma-farm's F74) a landscape stage draws it as a thin bar across the top instead, for
+// `AppFrame landscape="rail-and-bar"`: one 44 pt row, clear of the stage's top and side insets, the initial (when given)
+// and the chips in a row from the left, then at the right end the game's `actions` and the Menu. Elsewhere `landscape`
+// changes nothing.
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { AnimatedNumber } from '../ui/AnimatedNumber.js'
@@ -61,24 +66,52 @@ export interface TierShifter {
 
 const crestMark = (tier: number) => `tier/${Math.min(3, Math.max(1, tier))}`
 
-export function AccountBar({ initial, tier, tierShifter, account, chips, sync, menu }: {
-  /** The trainer's initial, or empty while loading. */
-  initial: string
+/** The initial's link: the Account. */
+export interface AccountLink {
+  readonly to: string
+  readonly label: string
+}
+
+interface AccountBarCommon {
   /** The tier crest under the initial; none when undefined. */
   tier?: number
   /** Makes the crest a link of its own (drawn only with `tier`). The initial still opens `account`. */
   tierShifter?: TierShifter
-  account: { readonly to: string; readonly label: string }
   chips: readonly CurrencyChip[]
   /** The sync chip: its words and link. None when synced. */
   sync?: { readonly state: SyncState; readonly text: string; readonly label: string; readonly to: string }
-  /** The Menu, drawn at the rail's foot on a landscape stage only (portrait games keep it in the bottom bar). */
+  /**
+   * The Menu, on a landscape stage only: at the rail's foot, or at the bar's right end with `landscape="bar"` (portrait
+   * games keep it in the bottom bar).
+   */
   menu?: { readonly to: string; readonly label: string; readonly text: string; readonly state?: unknown }
-}) {
+}
+
+export type AccountBarProps = AccountBarCommon & (
+  | {
+    /** On a landscape stage: the left rail (`rail`, the default) or the thin top bar (`bar`). Ignored anywhere else. */
+    landscape?: 'rail'
+    /** The trainer's initial, or empty while loading. */
+    initial: string
+    account: AccountLink
+    actions?: undefined
+  }
+  | {
+    /** The thin top bar on a landscape stage (0.20.0), for `AppFrame landscape="rail-and-bar"`. */
+    landscape: 'bar'
+    /** The trainer's initial; without it and `account` the bar draws no initial and no crest. */
+    initial?: string
+    account?: AccountLink
+    /** The bar's trailing slot, before the Menu: the game's own buttons, such as End the day. */
+    actions?: ReactNode
+  }
+)
+
+export function AccountBar({ initial, tier, tierShifter, account, chips, sync, menu, landscape = 'rail', actions }: AccountBarProps) {
   const stage = useKitStage()
   const showSync = sync !== undefined && sync.state !== 'synced'
   const shifter = tier === undefined ? undefined : tierShifter
-  const accountLink = (
+  const accountLink = account === undefined || initial === undefined ? null : (
     <Link to={account.to} state={{ back: true }} aria-label={account.label} className="flex min-h-11 min-w-11 shrink-0 items-center justify-center">
       <span aria-hidden className="font-display relative flex size-8 items-center justify-center rounded-full bg-accent text-[15px] font-bold text-accent-ink shadow-1">
         {initial}
@@ -109,6 +142,46 @@ export function AccountBar({ initial, tier, tierShifter, account, chips, sync, m
     </>
   )
 
+  // The initial, with the crest as a link of its own beside it (the portrait bar's and the landscape bar's).
+  const ownCrest = accountLink !== null && shifter !== undefined
+  const leading = ownCrest && tier !== undefined && shifter !== undefined ? (
+    // The account link is 44 pt square with the 32 pt disc centred. The 12 pt crest's box sits 6 pt past the disc's
+    // right edge and 4 pt below it, so its left edge is at 32 pt and its foot 2 pt above the row's; it keeps the
+    // disc's type, so the mark sits on the same baseline as before. The shifter starts at that left edge, is
+    // positioned (so it paints and takes taps above the account link) and adds no width. The chips' row is
+    // positioned after it, so a crowded row keeps every chip's full tap area.
+    <div className="relative flex shrink-0">
+      {accountLink}
+      <Link to={shifter.to} state={shifter.state ?? { back: true }} aria-label={shifter.label} data-kit="tier-shifter" className="absolute inset-y-0 left-8 w-11">
+        <span className="font-display absolute bottom-0.5 left-0 text-[15px] font-bold drop-shadow-sm">
+          <UiMark mark={crestMark(tier)} />
+        </span>
+      </Link>
+    </div>
+  ) : accountLink
+
+  if (stage?.layout === 'landscape' && landscape === 'bar') {
+    return (
+      <header className="pt-safe pr-safe pl-safe relative z-20 shrink-0 border-b border-hairline bg-panel/95 backdrop-blur" data-kit="account-bar" data-layout="landscape" data-variant="bar">
+        <div className="flex h-11 items-center gap-0.5 px-1">
+          {leading}
+          <div className={ownCrest ? 'relative flex min-w-0 items-center gap-0.5' : 'flex min-w-0 items-center gap-0.5'}>{chipList}</div>
+          {(actions !== undefined || menu !== undefined) && (
+            <div className="ml-auto flex shrink-0 items-center gap-0.5" data-kit="bar-actions">
+              {actions}
+              {menu !== undefined && (
+                <Link to={menu.to} state={menu.state ?? { back: true }} aria-label={menu.label} data-kit="bar-menu"
+                  className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1 px-2 text-ink-soft">
+                  <MenuIcon size={20} />
+                  <span className="text-[12px] font-semibold">{menu.text}</span>
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
+      </header>
+    )
+  }
   if (stage?.layout === 'landscape') {
     return (
       <header className="pt-safe pb-safe pl-safe relative z-20 flex shrink-0 flex-col border-r border-hairline bg-panel/95 backdrop-blur" data-kit="account-bar" data-layout="landscape">
@@ -134,21 +207,7 @@ export function AccountBar({ initial, tier, tierShifter, account, chips, sync, m
   return (
     <header className="pt-safe relative z-20 border-b border-hairline bg-panel/95 backdrop-blur" data-kit="account-bar">
       <div className="flex items-center gap-0.5 px-1">
-        {tier !== undefined && shifter !== undefined ? (
-          // The account link is 44 pt square with the 32 pt disc centred. The 12 pt crest's box sits 6 pt past the disc's
-          // right edge and 4 pt below it, so its left edge is at 32 pt and its foot 2 pt above the row's; it keeps the
-          // disc's type, so the mark sits on the same baseline as before. The shifter starts at that left edge, is
-          // positioned (so it paints and takes taps above the account link) and adds no width. The chips' row is
-          // positioned after it, so a crowded row keeps every chip's full tap area.
-          <div className="relative flex shrink-0">
-            {accountLink}
-            <Link to={shifter.to} state={shifter.state ?? { back: true }} aria-label={shifter.label} data-kit="tier-shifter" className="absolute inset-y-0 left-8 w-11">
-              <span className="font-display absolute bottom-0.5 left-0 text-[15px] font-bold drop-shadow-sm">
-                <UiMark mark={crestMark(tier)} />
-              </span>
-            </Link>
-          </div>
-        ) : accountLink}
+        {leading}
         <div className={shifter !== undefined ? 'relative ml-auto flex min-w-0 items-center gap-0.5' : 'ml-auto flex min-w-0 items-center gap-0.5'}>
           {chipList}
         </div>

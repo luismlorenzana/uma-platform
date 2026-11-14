@@ -1,6 +1,10 @@
 // The Account, one frame for both games (uma-platform SD2): rename, a wallet grid, Appearance, a notifications slot,
 // the game's own sections, info rows, the update's Restart and sign out. The game fills each section; a section it
 // leaves empty isn't drawn.
+//
+// With `columns={2}` (0.20.0, uma-farm's F74, for a landscape stage) the panels sit in two CSS columns once the page is
+// at least 36rem wide, each kept whole (`break-inside: avoid`). A wrapper measures the page (`@container`), so the frame's
+// rails and the stage's insets count. Without it the page is one column, as before.
 import { useEffect, useState, type ReactNode } from 'react'
 import { APPEARANCES, setAppearance, useAppearance, type Appearance } from '../ui/appearance.js'
 import { Button } from '../ui/Button.js'
@@ -131,14 +135,17 @@ export interface AccountPageProps {
   /** Sign out; no button when absent (auth off). */
   readonly onSignOut?: () => Promise<void> | void
   readonly words?: Partial<AccountWords>
+  /** `2`: two columns of panels on a page at least 36rem wide, one below that (0.20.0). `1`, the default: one column. */
+  readonly columns?: 1 | 2
 }
 
-export function AccountPage({ rename, wallet = [], appearance = true, notifications, sections, info = [], onSignOut, words }: AccountPageProps) {
+export function AccountPage({ rename, wallet = [], appearance = true, notifications, sections, info = [], onSignOut, words, columns = 1 }: AccountPageProps) {
   const say = { ...ACCOUNT_WORDS, ...words }
   const update = useAppUpdate()
   const [signingOut, setSigningOut] = useState(false)
-  return (
-    <div className="space-y-3 px-4 pt-3 pb-24" data-kit="account">
+  const page = (
+    <div className={columns === 2 ? 'space-y-3 px-4 pt-3 pb-24 @xl:columns-2 @xl:gap-x-3 *:break-inside-avoid' : 'space-y-3 px-4 pt-3 pb-24'}
+      data-kit="account" data-columns={columns === 2 ? 2 : undefined}>
       {rename !== undefined && <RenameSection rename={rename} words={say} />}
       {wallet.length > 0 && (
         <Panel className="p-3" aria-label={say.wallet}>
@@ -181,4 +188,5 @@ export function AccountPage({ rename, wallet = [], appearance = true, notificati
       )}
     </div>
   )
+  return columns === 2 ? <div className="@container" data-kit="account-columns">{page}</div> : page
 }

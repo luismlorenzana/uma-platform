@@ -8,6 +8,11 @@
 // On a landscape `KitStage` (0.18.0, KL1) it is the frame's right rail, under the right thumb: the tabs stacked, the Play
 // disc rising out of the rail's inner edge toward the stage, the active marker on that edge. The menu isn't drawn there:
 // on a landscape stage it is the account rail's (`AccountBar`'s `menu`). Outside a stage it is exactly as before.
+//
+// With `side="left"` (0.20.0, uma-farm's F74) the rail runs down the stage's left edge instead, for `AppFrame
+// landscape="rail-and-bar"`: the pages by the left thumb, a border on its right, clear of the left inset, the active marker
+// and the raised disc on its inner (right) edge. It has no menu slot (the bar's `menu` holds it). Elsewhere `side`
+// changes nothing.
 import { m } from 'motion/react'
 import { Link } from 'react-router'
 import { MenuIcon, type IconComponent } from '../ui/icons/index.js'
@@ -37,9 +42,11 @@ function ActiveMark() {
   return <span aria-hidden className="absolute top-0 left-1/2 h-[3px] w-8 -translate-x-1/2 rounded-b-full bg-accent" />
 }
 
-/** The rail's marker, on its inner edge beside the active tab. */
-function RailMark() {
-  return <span aria-hidden className="absolute top-1/2 left-0 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-accent" />
+/** The rail's marker, on its inner edge beside the active tab: the left edge of the right rail, the right of the left. */
+function RailMark({ side }: { side: RailSide }) {
+  return side === 'left'
+    ? <span aria-hidden className="absolute top-1/2 right-0 h-8 w-[3px] -translate-y-1/2 rounded-l-full bg-accent" />
+    : <span aria-hidden className="absolute top-1/2 left-0 h-8 w-[3px] -translate-y-1/2 rounded-r-full bg-accent" />
 }
 
 function Badge({ count, at = '-top-1.5 -right-3' }: { count: number; at?: string }) {
@@ -71,10 +78,11 @@ function Glow() {
 }
 
 /**
- * The raised disc, rising out of the bar's top edge (`-mt-5`) or the rail's inner edge (`-ml-5`): a ring of the bar's colour
- * cuts it a notch. Without a badge or a glow its markup is 0.18.0's to the character (portrait.test.tsx holds it).
+ * The raised disc, rising out of the bar's top edge (`-mt-5`) or the rail's inner edge (`-ml-5` on the right rail, `-mr-5`
+ * on the left): a ring of the bar's colour cuts it a notch. Without a badge or a glow its markup is 0.18.0's to the
+ * character (portrait.test.tsx holds it).
  */
-function RaisedDisc({ tab, count, rise }: { tab: BarTab; count: number; rise: '-mt-5' | '-ml-5' }) {
+function RaisedDisc({ tab, count, rise }: { tab: BarTab; count: number; rise: '-mt-5' | '-ml-5' | '-mr-5' }) {
   const decorated = count > 0 || tab.glow === true
   return (
     <m.span
@@ -93,14 +101,23 @@ function RaisedDisc({ tab, count, rise }: { tab: BarTab; count: number; rise: '-
   )
 }
 
-/** The action rail on a landscape stage. */
-function BarRail({ tabs, label }: { tabs: readonly BarTab[]; label: string }) {
+/** Which edge of a landscape stage the rail runs down. */
+export type RailSide = 'right' | 'left'
+
+const RAIL_LOOK: Readonly<Record<RailSide, string>> = {
+  right: 'pt-safe pb-safe pr-safe relative z-20 flex shrink-0 flex-col justify-center gap-1 border-l border-hairline bg-panel shadow-[-6px_0_18px_-10px_rgb(16_26_36/0.35)]',
+  left: 'pt-safe pb-safe pl-safe relative z-20 flex shrink-0 flex-col justify-center gap-1 border-r border-hairline bg-panel shadow-[6px_0_18px_-10px_rgb(16_26_36/0.35)]',
+}
+
+/** The action rail on a landscape stage, on its right edge (KL1) or its left (0.20.0). */
+function BarRail({ tabs, label, side }: { tabs: readonly BarTab[]; label: string; side: RailSide }) {
   return (
     <nav
       aria-label={label}
       data-kit="bottom-bar"
       data-layout="landscape"
-      className="pt-safe pb-safe pr-safe relative z-20 flex shrink-0 flex-col justify-center gap-1 border-l border-hairline bg-panel shadow-[-6px_0_18px_-10px_rgb(16_26_36/0.35)]"
+      data-side={side === 'left' ? 'left' : undefined}
+      className={RAIL_LOOK[side]}
     >
       {tabs.map((tab) => {
         const count = tab.badge ?? 0
@@ -113,10 +130,10 @@ function BarRail({ tabs, label }: { tabs: readonly BarTab[]; label: string }) {
             className="relative flex w-16 justify-center"
           >
             {tab.raised ? (
-              <RaisedDisc tab={tab} count={count} rise="-ml-5" />
+              <RaisedDisc tab={tab} count={count} rise={side === 'left' ? '-mr-5' : '-ml-5'} />
             ) : (
               <m.span whileTap={{ scale: 0.94 }} transition={PRESS} className="flex h-14 w-full flex-col items-center justify-center gap-0.5 px-1">
-                {tab.active && <RailMark />}
+                {tab.active && <RailMark side={side} />}
                 <span className="relative">
                   <tab.Icon size={24} variant={tab.active ? 'duotone' : 'line'} className={tab.active ? 'text-ink' : 'text-ink-faint'} />
                   {count > 0 && <Badge count={count} />}
@@ -131,15 +148,36 @@ function BarRail({ tabs, label }: { tabs: readonly BarTab[]; label: string }) {
   )
 }
 
-export function BottomBar({ tabs, menu, label }: {
+/** The bar's Menu: the fifth slot. */
+export interface BarMenu {
+  readonly to: string
+  readonly label: string
+  readonly text: string
+  readonly state?: unknown
+}
+
+export type BottomBarProps = {
   tabs: readonly BarTab[]
-  /** The fifth slot; on a landscape stage it is the account rail's instead (`AccountBar`'s `menu`). */
-  menu: { readonly to: string; readonly label: string; readonly text: string; readonly state?: unknown }
   /** The bar's accessible name. */
   label: string
-}) {
+} & (
+  | {
+    /** On a landscape stage: the rail down the right edge (`right`, the default) or the left (`left`). Ignored anywhere else. */
+    side?: 'right'
+    /** The fifth slot; on a landscape stage it is the account rail's instead (`AccountBar`'s `menu`). */
+    menu: BarMenu
+  }
+  | {
+    /** The rail down a landscape stage's left edge (0.20.0), for `AppFrame landscape="rail-and-bar"`. */
+    side: 'left'
+    /** Never drawn on the left rail (`AccountBar landscape="bar"` holds the Menu); the fifth slot elsewhere when given. */
+    menu?: BarMenu
+  }
+)
+
+export function BottomBar({ tabs, menu, label, side = 'right' }: BottomBarProps) {
   const stage = useKitStage()
-  if (stage?.layout === 'landscape') return <BarRail tabs={tabs} label={label} />
+  if (stage?.layout === 'landscape') return <BarRail tabs={tabs} label={label} side={side} />
   return (
     <nav
       aria-label={label}
@@ -171,12 +209,14 @@ export function BottomBar({ tabs, menu, label }: {
           </Link>
         )
       })}
-      <Link to={menu.to} state={menu.state ?? { back: true }} aria-label={menu.label} className="relative flex min-w-0 justify-center">
-        <m.span whileTap={{ scale: 0.94 }} transition={PRESS} className="flex h-14 w-full flex-col items-center justify-center gap-0.5 px-1 text-ink-faint">
-          <MenuIcon size={24} />
-          <span className="text-[11px] font-semibold">{menu.text}</span>
-        </m.span>
-      </Link>
+      {menu !== undefined && (
+        <Link to={menu.to} state={menu.state ?? { back: true }} aria-label={menu.label} className="relative flex min-w-0 justify-center">
+          <m.span whileTap={{ scale: 0.94 }} transition={PRESS} className="flex h-14 w-full flex-col items-center justify-center gap-0.5 px-1 text-ink-faint">
+            <MenuIcon size={24} />
+            <span className="text-[11px] font-semibold">{menu.text}</span>
+          </m.span>
+        </Link>
+      )}
     </nav>
   )
 }

@@ -1,5 +1,5 @@
 // Builds the kit's review pages into self-contained HTML under docs/kit/previews/: one file each, scripts and styles
-// inlined, made from the kit's own source (KL1's landscape layout; 0.19.0's raised tab and durations). `pnpm --filter @luismlorenzana/uma-kit review`.
+// inlined, made from the kit's own source (KL1's landscape layout; 0.19.0's raised tab and durations; 0.20.0's rail and bar). `pnpm --filter @luismlorenzana/uma-kit review`.
 import tailwind from '@tailwindcss/vite'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -10,7 +10,7 @@ const here = dirname(fileURLToPath(import.meta.url))
 const docs = resolve(here, '../../../docs/kit/previews')
 await mkdir(docs, { recursive: true })
 
-for (const page of ['landscape', 'raised-and-durations']) {
+for (const page of ['landscape', 'raised-and-durations', 'rail-and-bar']) {
   const outDir = resolve(here, '.cache', page)
   await rm(outDir, { recursive: true, force: true })
   await build({

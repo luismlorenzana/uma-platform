@@ -71,6 +71,8 @@ root.render(
   `glow: true`: a soft accent halo that pulses, still under reduced motion (uma-farm's End the day, uma-platform P112).
   Without either the disc is 0.18.0's markup. Review page:
   [docs/kit/previews/raised-and-durations.html](../../docs/kit/previews/raised-and-durations.html).
+- On a landscape stage, `AppFrame`'s `landscape`, `AccountBar`'s `landscape` and `actions` and `BottomBar`'s `side`
+  (0.20.0) draw a left rail and a top bar instead of two rails: [A left rail and a top bar](#a-left-rail-and-a-top-bar-0200).
 
 ## On a game's own stage: the landscape layout (0.18.0)
 
@@ -103,6 +105,63 @@ import { KitStage } from '@luismlorenzana/uma-kit/ui'
 - **The side panel** keeps clear of the stage's right inset and reads its swipe in the stage's directions.
 - **Portrait games change nothing.** Without a `KitStage` every piece draws 0.17.0's markup, pinned by snapshots
   (`src/shell/testing/legacy-kl1-*.html`).
+
+### A left rail and a top bar (0.20.0)
+
+uma-farm's arrangement on a landscape stage (its F74, uma-platform P171): the pages down the left edge, a thin bar across
+the top of the page, wide panels, and a map that runs sideways. Every option is opt-in. Without it a landscape stage
+draws the two rails above, and off a landscape stage each option changes nothing.
+
+```tsx
+<KitStage layout="landscape">
+  <UpdateNotice clearSides />
+  <AppFrame landscape="rail-and-bar"
+    top={<AccountBar landscape="bar" chips={chips} sync={sync} actions={<EndDay />} menu={menu} />}
+    bottom={<BottomBar side="left" tabs={pages} label="Pages" />}>
+    <Outlet />
+  </AppFrame>
+</KitStage>
+```
+
+- **`AppFrame`** takes `landscape?: 'rails' | 'rail-and-bar'` (`LandscapeArrangement`, default `rails`). With
+  `rail-and-bar`, `bottom` is a full-height rail down the left edge and `top` a bar across the top of the page column
+  (`data-kit="frame-column"`), over the page. The rail clears the left inset, so the column sets `--inset-left: 0px`
+  and a `pl-safe` inside it adds nothing; a full-screen flow drops both bars and keeps the inset. The page keeps clear of
+  the right and bottom insets itself.
+- **`AccountBar`** takes `landscape?: 'rail' | 'bar'` (default `rail`). With `bar` it is one 44 pt row
+  (`data-variant="bar"`): `pt-safe`, `pl-safe` and `pr-safe`, a bottom border, the initial (and its crest or
+  `tierShifter`) when given, the chips and the sync chip in a row from the left, then at the right end `actions?:
+  ReactNode` (the game's own buttons, such as End the day) and the Menu (`menu`, `data-kit="bar-menu"`). `initial`
+  and `account` are optional there: without them the bar starts with the chips. `actions` is the bar's only.
+- **`BottomBar`** takes `side?: 'right' | 'left'` (default `right`). With `left` the rail runs down the left edge
+  (`data-side="left"`): `pt-safe`, `pb-safe`, `pl-safe`, a right border, the tabs stacked with their labels under the
+  icons, the active marker on its inner (right) edge, and a raised tab's disc (badge and glow too) rising out of that
+  edge toward the stage. It has no menu slot, so `menu` is optional with `side="left"` (the bar holds it); off a
+  landscape stage a given `menu` is the fifth slot as before.
+- **`Sheet` / `BottomSheet`** take `size?: 'regular' | 'wide'` (`SheetSize`, default `regular`). On a landscape stage
+  `wide` is at most `min(34rem, 75cqw)` wide instead of `min(26rem, 62cqw)` (`data-size="wide"`), for content-heavy
+  panels. A bottom sheet is full width already, so it ignores it.
+- **`AccountPage`** (`/places`) takes `columns?: 1 | 2` (default `1`). With `2` its panels sit in two CSS columns once
+  the page is at least 36rem wide (`@xl` on a `@container` wrapper, `data-kit="account-columns"`, that measures the
+  page), each kept whole (`break-inside: avoid`), in their order down the first column then the second.
+- **`UpdateNotice`** (`/places`) takes `clearSides?: boolean` (default `false`): it keeps 0.75rem clear of the left and
+  right safe areas (`--inset-left`/`--inset-right`, else `env()`) as well as the top one.
+- **`HubMap`** (`/hub`) takes `flow?: 'down' | 'across'` (`HubFlow`, default `down`). With `across` the trunk road runs
+  across the middle row (the grid's odd rows centred down the map, `hubGrid(w, h, dpr, 'across')` with its `top`), a
+  place above the road runs its branch straight down, one on or below it round its building's side and up, and one
+  standing on the road gets a lane under it so the road runs from edge to edge. The browser pans it sideways
+  (`touch-pan-x`, `data-flow="across"`), and a page swipe is a mostly vertical drag on the stage, up for the next page
+  (`swipeDirectionAcross`), read through the stage's turn. The game scrolls it, as it does a map that runs down:
+
+  ```tsx
+  <div className="absolute inset-0 overflow-x-auto overscroll-contain">
+    <div className="relative h-full" style={{ minWidth: columns * ART_TILE * artScale(hubDpr()) }}>
+      <HubMap flow="across" … />
+    </div>
+  </div>
+  ```
+
+  `layTerrain`, `HubCanvas`, `PlaceTargets` and `useHubGrid` take the same `flow`; a stream stays on the east edge.
 
 ## One Uma album (`/roster`, `/album`)
 
@@ -269,7 +328,8 @@ const auth = useAuth()
 - **`criticalAction(fn)`** holds an update's Restart until `fn` has committed; wrap every gameplay tap.
 - **`AccountPage`** takes `rename` (`value`, `maxLength`, `normalize?`, `onSave`), `wallet` (`{ icon, value, label }[]`),
   `appearance` (default on), `notifications` and `sections` (`ReactNode`), `info` (`{ label, value }[]`) and
-  `onSignOut`. A section left out isn't drawn.
+  `onSignOut`. A section left out isn't drawn. `columns={2}` (0.20.0) sets its panels in two columns on a wide page,
+  and `UpdateNotice`'s `clearSides` keeps clear of the side safe areas ([A left rail and a top bar](#a-left-rail-and-a-top-bar-0200)).
 - **`ShelfView`** takes `shelves`, `items` (`{ id, name, shelf, grade, count, group? }`), `renderItem`, and optionally
   `layout` (`grid` or `rows`), `rowDetail`, `details`, `price`, `sizes`, `ask` (a question before selling) and
   `onSell`. Grade chips offer every grade, one grade, or the highest held per `group`.

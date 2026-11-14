@@ -17,6 +17,14 @@ export function swipeDirection(start: Point, end: Point): -1 | 0 | 1 {
   return dx < 0 ? 1 : -1
 }
 
+/**
+ * An `across` map's page swipe (0.20.0): the map scrolls sideways, so it is a mostly vertical drag of more than 60 px.
+ * 1 = next page (finger moved up), -1 = previous (moved down), 0 = not a swipe.
+ */
+export function swipeDirectionAcross(start: Point, end: Point): -1 | 0 | 1 {
+  return swipeDirection({ x: start.y, y: start.x }, { x: end.y, y: end.x })
+}
+
 /** The neighbouring page in `pages` (the bar's order), or null at either end. */
 export function neighbourPage<T extends string>(pages: readonly T[], page: T, direction: -1 | 1): T | null {
   const i = pages.indexOf(page)

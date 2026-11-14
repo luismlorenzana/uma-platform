@@ -4,6 +4,7 @@
 // after it carries a tint's wash (0.12.0), under the place links so their names stay crisp.
 import { useEffect, useRef } from 'react'
 import { useKitArt } from '../ui/art.js'
+import type { HubFlow } from './grid.js'
 import type { HubGame } from './scene/createHubGame.js'
 import type { Clearing, MapPlace, PageGround } from './types.js'
 
@@ -17,16 +18,18 @@ export interface HubCanvasProps {
   readonly canvas?: boolean
   /** Expose `window.__hub`. */
   readonly debug?: boolean
+  /** The road down the middle (`down`, the default) or across it (`across`, 0.20.0). */
+  readonly flow?: HubFlow
 }
 
 const NONE: readonly Clearing[] = []
 
-export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMotion, canvas = false, debug = false }: HubCanvasProps) {
+export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMotion, canvas = false, debug = false, flow = 'down' }: HubCanvasProps) {
   const art = useKitArt()
   const host = useRef<HTMLDivElement>(null)
   const game = useRef<HubGame | null>(null)
-  const latest = useRef({ ground, places, clearings, reducedMotion })
-  latest.current = { ground, places, clearings, reducedMotion }
+  const latest = useRef({ ground, places, clearings, reducedMotion, flow })
+  latest.current = { ground, places, clearings, reducedMotion, flow }
   const pausedNow = useRef(paused)
   pausedNow.current = paused
   const options = useRef({ art: { tiles: art.tiles, buildings: art.buildings }, canvas, debug })
@@ -52,8 +55,8 @@ export function HubCanvas({ ground, places, clearings = NONE, paused, reducedMot
   }, [])
 
   useEffect(() => {
-    game.current?.update({ ground, places, clearings, reducedMotion })
-  }, [ground, places, clearings, reducedMotion])
+    game.current?.update({ ground, places, clearings, reducedMotion, flow })
+  }, [ground, places, clearings, reducedMotion, flow])
 
   useEffect(() => {
     const apply = () => game.current?.setPaused(paused || document.hidden)

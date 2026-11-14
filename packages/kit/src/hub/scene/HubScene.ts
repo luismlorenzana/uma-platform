@@ -6,7 +6,7 @@
 // placeholder in the page's palette, and if the atlases can't load at all, every building is.
 import Phaser from 'phaser'
 import type { Atlas, AtlasIndex } from '../../ui/art.js'
-import { ART_TILE, hubGrid, placeAnchor } from '../grid.js'
+import { ART_TILE, hubGrid, placeAnchor, type HubFlow } from '../grid.js'
 import { drawMarker, MARKER_BASE, type Ambient } from '../markers.js'
 import { layTerrain, pageSeed } from '../terrain.js'
 import type { Clearing, MapPlace, PageGround } from '../types.js'
@@ -34,6 +34,8 @@ export interface HubSceneState {
   /** Spots kept clear of props, such as a plaza. */
   readonly clearings: readonly Clearing[]
   readonly reducedMotion: boolean
+  /** The road down the middle (`down`, the default) or across it (`across`, 0.20.0). */
+  readonly flow?: HubFlow
 }
 
 export class HubScene extends Phaser.Scene {
@@ -136,14 +138,15 @@ export class HubScene extends Phaser.Scene {
           g.fillRect(tx * TILE + 6, ty * TILE + 8, 4, 4)
         }
       }
-    // A road down the middle, as the tiles lay it, and the stream along the east edge.
+    // A road down the middle (or across it), as the tiles lay it, and the stream along the east edge.
     g.fillStyle(palette.feature, 0.55)
-    g.fillRect(w / 2 - 9, 0, 18, h)
+    if (this.state.flow === 'across') g.fillRect(0, h / 2 - 9, w, 18)
+    else g.fillRect(w / 2 - 9, 0, 18, h)
     if (ground.stream) {
       g.fillStyle(0x2f6fa8, 0.9)
       g.fillRect(w - 30, 0, 18, h)
     }
-    const grid = hubGrid(w, h, this.dpr)
+    const grid = hubGrid(w, h, this.dpr, this.state.flow)
     for (const place of places) {
       const anchor = placeAnchor(place.at, grid)
       this.ambient.push(...drawMarker(this.markers, place.frame, anchor.x, anchor.y - MARKER_BASE, palette))
@@ -152,10 +155,12 @@ export class HubScene extends Phaser.Scene {
 
   /** Terrain, props and buildings, stamped once in art pixels into one texture and scaled up crisp. */
   private drawArt(w: number, h: number): void {
-    const { ground, places, clearings } = this.state!
-    const grid = hubGrid(w, h, this.dpr)
-    const terrain = layTerrain({ page: ground.id, tiles: ground.tiles, places, cols: grid.cols, rows: grid.rows, clearings, props: ground.props, stream: ground.stream })
-    const rt = this.add.renderTexture(-grid.left, 0, grid.cols * ART_TILE, grid.rows * ART_TILE).setOrigin(0, 0).setScale(grid.scale).setDepth(-1)
+    const { ground, places, clearings, flow } = this.state!
+    const grid = hubGrid(w, h, this.dpr, flow)
+    // An across grid overhangs the top and bottom instead of the sides (0.20.0).
+    const top = grid.top ?? 0
+    const terrain = layTerrain({ page: ground.id, tiles: ground.tiles, places, cols: grid.cols, rows: grid.rows, clearings, props: ground.props, stream: ground.stream, flow })
+    const rt = this.add.renderTexture(-grid.left, -top, grid.cols * ART_TILE, grid.rows * ART_TILE).setOrigin(0, 0).setScale(grid.scale).setDepth(-1)
     // Before drawing: under WebGL, changing a render texture's filter rebuilds it empty.
     rt.texture.setFilter(Phaser.Textures.FilterMode.NEAREST)
     const topLeft = { originX: 0, originY: 0 }
@@ -176,14 +181,14 @@ export class HubScene extends Phaser.Scene {
     for (const s of sprites) {
       rt.stamp(s.key, s.frame, s.x, s.y, topLeft)
       const smoke = s.key === BUILDINGS ? buildings[s.frame]?.smoke : undefined
-      if (smoke) this.ambient.push({ kind: 'smoke', x: (s.x + smoke.x) * grid.scale - grid.left, y: (s.y + smoke.y) * grid.scale })
+      if (smoke) this.ambient.push({ kind: 'smoke', x: (s.x + smoke.x) * grid.scale - grid.left, y: (s.y + smoke.y) * grid.scale - top })
     }
     rt.render()
     this.art = rt
     // A glint now and then on the stream.
     terrain.cells.forEach((frame, i) => {
       if (frame.startsWith(`${ground.tiles}/water`) && i % 5 === 0) {
-        this.ambient.push({ kind: 'shimmer', x: ((i % grid.cols) + 0.5) * grid.tile - grid.left, y: (Math.floor(i / grid.cols) + 0.5) * grid.tile, w: grid.tile * 0.5, color: 0xd8f0ff })
+        this.ambient.push({ kind: 'shimmer', x: ((i % grid.cols) + 0.5) * grid.tile - grid.left, y: (Math.floor(i / grid.cols) + 0.5) * grid.tile - top, w: grid.tile * 0.5, color: 0xd8f0ff })
       }
     })
     // A frame the pinned atlas doesn't draw yet: its code placeholder, standing on the same ground line.

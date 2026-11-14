@@ -6,6 +6,10 @@
 // Inside a `KitStage` (0.18.0, KL1) it lives on the stage: `Sheet` portals into the stage's layer, the sheet sizes by the
 // stage (`cqh`), and the drag to close follows the thumb through the stage's turn. On a landscape stage it comes in from
 // the right edge, the stage's full height, its handle on its left edge. Outside a stage it is exactly as before.
+//
+// `size="wide"` (0.20.0, uma-farm's F74) lets a content-heavy panel on a landscape stage take up to `min(34rem, 75cqw)`
+// instead of `min(26rem, 62cqw)`. A bottom sheet is already the stage's or the screen's full width, so it changes nothing
+// there.
 import { AnimatePresence, m, useDragControls } from 'motion/react'
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
@@ -27,6 +31,17 @@ export interface BottomSheetProps {
   /** Escape closes the sheet (default true). */
   closeOnEscape?: boolean
   closeLabel?: string
+  /** A landscape stage's side sheet: `regular` (the default) is at most `min(26rem, 62cqw)` wide, `wide` `min(34rem, 75cqw)`. */
+  size?: SheetSize
+}
+
+/** How wide a side sheet on a landscape stage gets (0.20.0). */
+export const SHEET_SIZES = ['regular', 'wide'] as const
+export type SheetSize = (typeof SHEET_SIZES)[number]
+
+const SIDE_WIDTH: Readonly<Record<SheetSize, string>> = {
+  regular: 'fixed inset-y-0 right-0 z-50 flex w-[min(26rem,62cqw)]',
+  wide: 'fixed inset-y-0 right-0 z-50 flex w-[min(34rem,75cqw)]',
 }
 
 /** How far the finger must pull (px), or how fast (px/s), to close the sheet. */
@@ -181,7 +196,7 @@ function useStageDrag(stage: KitStageValue, axis: 'x' | 'y', onClose: () => void
 }
 
 /** The sheet on a `KitStage`: portalled into its layer, sized by it, dragged through its turn. */
-function StageSheet({ stage, open, onClose, children, label, title, footer, closeOnEscape = true, closeLabel = 'Close' }: BottomSheetProps & { stage: KitStageValue }) {
+function StageSheet({ stage, open, onClose, children, label, title, footer, closeOnEscape = true, closeLabel = 'Close', size = 'regular' }: BottomSheetProps & { stage: KitStageValue }) {
   const reducedMotion = useReducedMotionSetting()
   const side = stage.layout === 'landscape'
   const { panel, handle } = useStageDrag(stage, side ? 'x' : 'y', onClose)
@@ -228,7 +243,8 @@ function StageSheet({ stage, open, onClose, children, label, title, footer, clos
             aria-modal="true"
             data-kit="sheet"
             data-placement={side ? 'side' : 'bottom'}
-            className={side ? 'fixed inset-y-0 right-0 z-50 flex w-[min(26rem,62cqw)]' : 'fixed inset-x-0 bottom-0 z-50 flex max-h-[92cqh]'}
+            data-size={side && size === 'wide' ? 'wide' : undefined}
+            className={side ? SIDE_WIDTH[size] : 'fixed inset-x-0 bottom-0 z-50 flex max-h-[92cqh]'}
             initial={reducedMotion ? false : away}
             animate={side ? { x: 0 } : { y: 0 }}
             exit={reducedMotion ? { opacity: 0 } : away}
