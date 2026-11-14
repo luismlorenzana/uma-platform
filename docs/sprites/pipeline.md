@@ -199,7 +199,7 @@ Queued ─► Key drawn ─► [ Key gate ] ─► Drawn ─► Verified ─► 
 | `pnpm sprites:pack` | Builds the `outfit-sprites` family from approved revisions into `content/release/` (`--measure` compares the encodings) | UA5 |
 | `pnpm release:publish -- --sprites-only` | The published `latest` plus the packed sets, every other file carried byte for byte; `--promote <version>` moves a channel | UA5 |
 | `pnpm release:check` | Reads a channel back like a game: every set, every sprite set and page, and the carry against another channel | UA5 |
-| `pnpm sprites:backup` | Copies `content/authoring/` to the backup bucket, never deleting | UA6 |
+| `pnpm sprites:backup [--dry-run]` | Copies `content/authoring/` to the backup bucket, never deleting; leaves out caches and the owner's local-only character art folders (P165); runs on Windows too | UA6, P165 |
 | `pnpm enemies:pack`, `release:publish -- --enemies-only` | The enemies' counterparts: the `enemies` roster and the `enemy-keys` family, on top of `latest` ([enemy-keys.md](enemy-keys.md)) | uma-quest Q16 |
 
 UA2's four commands are implemented in `scripts/sprites/` ([usage](../../scripts/sprites/README.md)). Existing sealed revisions use reconstructed export sidecars under `export-configs/<id>/rN.json`; fresh reports go under `reports/<id>/rN/`, preserving the original receipts. New revisions use config schema version 2 in place. Exports always target a separate directory. Check 13 compares the first standing contact with its facing still and requires a constant scale for the whole cycle.
