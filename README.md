@@ -166,6 +166,9 @@ accepts every newer release, so new characters, cards and skills arrive without 
 2. On `main`, `pnpm version-packages` bumps versions and writes the changelog; commit and push.
 3. The **Release packages** workflow publishes every version not yet on GitHub Packages, using the workflow's
    `GITHUB_TOKEN` with `packages: write`, and pushes the release tags.
+   It builds every package once, in dependency order, and then publishes; each package's `prepack`
+   (`scripts/prepack.mjs`) skips its own rebuild there (`UMA_PACKAGES_BUILT=1`), so packages released together never
+   clear a `dist` another is compiling against (P172). A manual `pnpm pack` or `pnpm publish` still builds first.
 
 ## Documentation
 

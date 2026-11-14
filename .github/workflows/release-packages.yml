@@ -55,10 +55,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      # The Verify step built every package in dependency order; the packages' prepacks skip a second build here, so
+      # packages published together never rebuild (and clear) a dist another is compiling against (P172).
       - name: Publish unpublished versions
         run: pnpm publish-packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UMA_PACKAGES_BUILT: '1'
 
       - name: Push release tags
         run: git push origin --tags

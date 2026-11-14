@@ -39,7 +39,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json && node scripts/write-cjs-package.mjs",
-    "prepack": "pnpm run build",
+    "prepack": "node ../../scripts/prepack.mjs",
     "lint": "tsc --noEmit",
     "test": "vitest run"
   },
