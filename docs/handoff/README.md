@@ -103,7 +103,7 @@ and bubbles are uma-art.
 | [UA9](tasks/UA9-batch-2.md) | Art: batch 2 in the full profile (130 frames since P105); the template for batches 3–20 | ChatGPT | L | UA2, UA3, UA7 (UA5 to publish) | **Ready after the slice** |
 | [UA11](tasks/UA11-townsfolk-batch.md) | Art: a townsfolk batch of ten; the template for T2–T7, in the Uma NPCs order (P93, P153) | ChatGPT | M | UA10 ✓, UA2 ✓ | The template; T4 onward after the next traveler batch |
 | [UA13](tasks/UA13-townsfolk-t2.md), [UA14](tasks/UA14-townsfolk-t3.md) | Art: townsfolk T2 and T3, ten each, for uma-quest's Q23 towns (P153) | ChatGPT | M each | UA10 ✓, UA2 ✓ | **Ready, after Q16 B** |
-| [CY14](tasks/CY14-cabin-furniture.md) | Art: uma-cyberpunk's cabins, 48 item icons (64 px) and the 30 furniture pieces at room size, two new uma-art families (P164) | Claude (code-drawn) | M | — | **Done**: uma-art **2.29.0** ([#86](https://github.com/luismlorenzana/uma-platform/pull/86)); uma-cyberpunk pins it |
+| [CY14](tasks/CY14-cabin-furniture.md) | Art: uma-cyberpunk's cabins, 48 item icons (64 px) and the 30 furniture pieces at room size, two new uma-art families (P164) | Claude (code-drawn) | M | — | **Done**: uma-art **2.29.0** ([#86](https://github.com/luismlorenzana/uma-platform/pull/86)); pinned and drawn in uma-cyberpunk (2ff1087, its D32) |
 
 **Order:** UA1–UA8, UA10 and UA12 are complete. UA5 first published batch 1 in `4757517816a0` (P100). After the owner’s feedback, P105 added independent left field cycles, and release `7c34dbe2c8de` now holds all five at 130 frames plus T1’s three townsfolk at 45 frames (P108).
 
