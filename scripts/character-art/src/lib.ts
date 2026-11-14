@@ -62,8 +62,10 @@ export interface ApprovedLook {
   width: number
   height: number
   approvedOn: string | null
-  /** Where it was authored, when not the approved folder: `characters/<key>` (P174). */
+  /** Where it was authored, when not the approved folder: `characters/<key>` (P174), `splash-art` (P175). */
   collection?: string
+  /** A splash illustration rather than a full-body look (P175). */
+  kind?: 'splash'
 }
 /** A look of the manifest that can't go out. `unapproved`: the owner hasn't approved it. `damaged`: the file or its entry
  *  isn't what was approved, so a copy published earlier stays as it is. */
@@ -72,6 +74,10 @@ export interface RefusedLook { id: string; image: string | null; kind: 'unapprov
 // --- a character's own collection (P174)
 
 export const STUDIES = 'characters'
+/** A universe's splash art (P175): `<universe>/splash-art/manifest.json`, approved scene illustrations of a character. */
+export const SPLASH = 'splash-art'
+/** A name as a key: "Kitasan Black" is `kitasan-black`. */
+export const keyOf = (name: string) => name.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 /**
  * A character's own approved collection inside a universe, the layout ChatGPT uses for a character authored on her own:
  * `<universe>/characters/<key>/active-study.json` names the active version (and the owner's approval of it), whose
@@ -140,7 +146,12 @@ export function readCollection(universe: string, dir: string): Collection {
   const looks: ApprovedLook[] = [], refused: RefusedLook[] = [], order: string[] = [], seen = new Set<string>()
   // The approved folder's looks, then each character collection's (P174): an image of hers is named relative to the
   // approved folder, so the push and the flags read every look the same way.
-  const sources: { asset: unknown; collection: string | null; locate: (image: string | null) => string | null }[] = [
+  // Then the splash art (P175): its own kind, its ids prefixed by the character so two characters' scenes never collide.
+  const splashDir = resolve(dir, '..', SPLASH), splashFile = join(splashDir, MANIFEST)
+  const splash = existsSync(splashFile) ? JSON.parse(readFileSync(splashFile, 'utf8')) as unknown : null
+  const splashAssets = object(splash) && Array.isArray(splash.assets) ? (splash.assets as unknown[]).filter(object)
+    .map((a, i) => ({ a, rank: typeof a.order === 'number' ? a.order : i + 1000 })).sort((x, y) => x.rank - y.rank).map((x) => x.a) : []
+  const sources: { asset: unknown; collection: string | null; kind?: 'splash'; id?: string; locate: (image: string | null) => string | null }[] = [
     ...(manifest.assets as unknown[]).map((asset) => ({
       asset, collection: null,
       locate: (image: string | null) => (image && /^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(image) && !image.split('/').some((p) => p === '' || p.startsWith('.')) ? image : null),
@@ -149,10 +160,21 @@ export function readCollection(universe: string, dir: string): Collection {
       asset, collection: studyCollection(study.key),
       locate: (image: string | null) => { const abs = studyFile(study, image); return abs ? slashed(relative(dir, abs)) : null },
     }))),
+    ...splashAssets.map((asset) => {
+      const who = text(asset.character) ?? (object(splash) ? text(splash.character) : null), own = text(asset.id)
+      return {
+        asset: { ...asset, character: who }, collection: SPLASH, kind: 'splash' as const, id: who && own ? `${keyOf(who)}-splash-${own}` : undefined,
+        locate: (image: string | null) => {
+          if (!image || !image.endsWith('.png')) return null
+          const abs = resolve(splashDir, image)
+          return abs.startsWith(splashDir + sep) ? slashed(relative(dir, abs)) : null
+        },
+      }
+    }),
   ]
-  for (const { asset, collection, locate } of sources) {
+  for (const { asset, collection, kind, id: named, locate } of sources) {
     if (!object(asset)) continue
-    const id = text(asset.id) ?? '(no id)', given = text(asset.image), image = locate(given)
+    const id = named ?? text(asset.id) ?? '(no id)', given = text(asset.image), image = locate(given)
     const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(collection ? { collection } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
     if (seen.has(id)) { refuse('damaged', 'its id is listed twice'); continue }
@@ -162,7 +184,7 @@ export function readCollection(universe: string, dir: string): Collection {
     if (approval.status !== 'approved' || approval.by !== 'owner') { refuse('unapproved', 'the owner hasn’t approved it'); continue }
     const character = text(asset.character), outfit = text(asset.outfit), hash = text(asset.sha256)
     if (!character || !outfit || !hash || !/^[a-f0-9]{64}$/.test(hash)) { refuse('damaged', 'its entry has no character, outfit or SHA-256'); continue }
-    if (!image) { refuse('damaged', collection ? 'its image isn’t a PNG inside her folder' : 'its image isn’t a PNG inside the approved folder'); continue }
+    if (!image) { refuse('damaged', kind ? 'its image isn’t a PNG inside the splash art folder' : collection ? 'its image isn’t a PNG inside her folder' : 'its image isn’t a PNG inside the approved folder'); continue }
     const path = join(dir, image)
     if (!existsSync(path)) { refuse('damaged', 'its PNG is missing'); continue }
     const bytes = readFileSync(path)
@@ -171,7 +193,7 @@ export function readCollection(universe: string, dir: string): Collection {
     if (!size || size.width !== asset.width || size.height !== asset.height) { refuse('damaged', 'the PNG isn’t the size its entry says'); continue }
     looks.push({
       id, character, outfit, title: text(asset.title) ?? words(outfit), image, bytes: bytes.byteLength, sha256: hash,
-      width: size.width, height: size.height, approvedOn: text(approval.on) ?? text(approval.date), ...(collection ? { collection } : {}),
+      width: size.width, height: size.height, approvedOn: text(approval.on) ?? text(approval.date), ...(collection ? { collection } : {}), ...(kind ? { kind } : {}),
     })
   }
   return {
@@ -196,6 +218,8 @@ export interface PublishedLook {
   height: number
   approvedOn: string | null
   publishedAt: string
+  /** A splash illustration rather than a full-body look (P175); absent for a look. */
+  kind?: 'splash'
 }
 /** A universe's index in the bucket, `art/universes/<universe>/index.json`: exactly what Character Art shows. */
 export interface UniverseIndex {
@@ -253,7 +277,7 @@ export function planPush(collection: Collection, remote: UniverseIndex | null, n
     if (!chosen(look)) { if (old) looks.push(old); continue }
     if (!same) upload.push(look)
     looks.push({
-      id: look.id, character: look.character, outfit: look.outfit, title: look.title, path: publishedPath(look), bytes: look.bytes, sha256: look.sha256,
+      ...{ id: look.id, character: look.character, outfit: look.outfit, title: look.title, path: publishedPath(look), bytes: look.bytes, sha256: look.sha256 }, ...(look.kind ? { kind: look.kind } : {}),
       width: look.width, height: look.height, approvedOn: look.approvedOn, publishedAt: same ? old!.publishedAt : now,
     })
   }
@@ -287,8 +311,9 @@ export interface LookFlag {
   path: string | null
   /** Why a look can't go out, or what a push would do. */
   note: string | null
-  /** `characters/<key>` for a look of a character's own collection (P174). */
+  /** `characters/<key>` for a look of a character's own collection (P174), `splash-art` for a splash (P175). */
   collection?: string
+  kind?: 'splash'
 }
 /** The record kept beside the manifest, `approved/publication.json`: the published flag of every look in the manifest. */
 export interface Publication {
@@ -305,6 +330,8 @@ export interface Publication {
   looks: LookFlag[]
   /** Published looks the approved set no longer holds; the next push takes them off the index. */
   withdrawable: string[]
+  /** What the record counts, for a gallery's line: "looks" when absent, "splash images" for the splash art (P175). */
+  noun?: string
 }
 
 /**
@@ -313,12 +340,12 @@ export interface Publication {
  */
 export function publicationOf(collection: Collection, remote: UniverseIndex | null, now: string, bucket = BUCKET): Publication {
   const there = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
-  const from = (c?: string) => (c ? { collection: c } : {})
+  const from = (c?: string, kind?: 'splash') => ({ ...(c ? { collection: c } : {}), ...(kind ? { kind } : {}) })
   const looks: LookFlag[] = collection.looks.map((look): LookFlag => {
     const old = there.get(look.id)
-    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null, ...from(look.collection) }
-    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.', ...from(look.collection) }
-    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null, ...from(look.collection) }
+    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null, ...from(look.collection, look.kind) }
+    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.', ...from(look.collection, look.kind) }
+    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null, ...from(look.collection, look.kind) }
   })
   for (const r of collection.refused) {
     const old = there.get(r.id)
@@ -366,18 +393,24 @@ export function stable<T extends { checkedAt: string }>(file: string, next: T): 
   return before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...next, checkedAt: '' }) ? before : next
 }
 /** One collection's share of a publication record, its counts recounted; `image` re-expressed for its own pages. */
-export function sliceOf(publication: Publication, collection: string | null, image: (path: string) => string = (p) => p): Publication {
+export function sliceOf(publication: Publication, collection: string | null, image: (path: string) => string = (p) => p, noun?: string): Publication {
   const looks = publication.looks.filter((l) => (l.collection ?? null) === collection).map((l) => ({ ...l, image: l.image === null ? null : image(l.image) }))
   const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
   for (const l of looks) counts[l.state]++
   // Withdrawals are the universe's, so they stay on the approved folder's record.
-  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [] }
+  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [], ...(noun ? { noun } : {}) }
 }
+/**
+ * A record as the script a gallery loads: it adds itself to `window.UMA_PUBLICATIONS` with its own address, so a page can
+ * load several records (the looks, the splash art) and the flag script finds each picture where it really is (P175).
+ */
+export const recordScript = (record: unknown, from: string) =>
+  `// Written by pnpm art:push and pnpm art:status from ${from}; the galleries read it.\n(window.UMA_PUBLICATIONS = window.UMA_PUBLICATIONS || []).push({ base: document.currentScript ? document.currentScript.src : null, record: ${JSON.stringify(record, null, 2)} });\n`
 /** The script a character's pages read: her looks' record and, once flagged, her portraits' (P174). */
 export function writeStudyScript(folder: string): boolean {
   const looks = join(folder, RECORD), portraits = join(folder, PORTRAIT_RECORD)
   const lines = ['// Written by pnpm art:push and pnpm art:status from publication.json and portraits-publication.json; her pages read it.']
-  if (existsSync(looks)) lines.push(`window.UMA_PUBLICATION = ${readFileSync(looks, 'utf8').trim()};`)
+  if (existsSync(looks)) lines.push(`(window.UMA_PUBLICATIONS = window.UMA_PUBLICATIONS || []).push({ base: document.currentScript ? document.currentScript.src : null, record: ${readFileSync(looks, 'utf8').trim()} });`)
   if (existsSync(portraits)) lines.push(`window.UMA_PORTRAIT_PUBLICATION = ${readFileSync(portraits, 'utf8').trim()};`)
   return write(join(folder, RECORD_SCRIPT), `${lines.join('\n')}\n`)
 }
@@ -389,10 +422,19 @@ export function writeFlags(dir: string, publication: Publication): string[] {
   const recordFile = join(dir, RECORD)
   const record = stable(recordFile, sliceOf(publication, null))
   if (write(recordFile, encode(record))) changed.push(RECORD)
-  if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push and pnpm art:status from ${RECORD}; the gallery reads it.\nwindow.UMA_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
-  // Each character collection keeps its own record beside her active study, with images as her pages name them.
+  if (write(join(dir, RECORD_SCRIPT), recordScript(record, RECORD))) changed.push(RECORD_SCRIPT)
+  // The splash art keeps its own record in its folder, its images named from there (P175).
+  const splashDir = resolve(dir, '..', SPLASH)
+  const splash = sliceOf(publication, SPLASH, (p) => slashed(relative(splashDir, resolve(dir, p))), 'splash images')
+  if (splash.looks.length) {
+    const file = join(splashDir, RECORD), at = `../${SPLASH}`
+    const kept = stable(file, splash)
+    if (write(file, encode(kept))) changed.push(`${at}/${RECORD}`)
+    if (write(join(splashDir, RECORD_SCRIPT), recordScript(kept, RECORD))) changed.push(`${at}/${RECORD_SCRIPT}`)
+  }
+  // Each character collection keeps its own record beside her active study, its images named from there.
   for (const study of characterStudies(resolve(dir, '..'))) {
-    const mine = sliceOf(publication, studyCollection(study.key), (p) => slashed(relative(study.versionDir, resolve(dir, p))))
+    const mine = sliceOf(publication, studyCollection(study.key), (p) => slashed(relative(study.folder, resolve(dir, p))))
     if (mine.looks.length === 0) continue
     const file = join(study.folder, RECORD), at = slashed(relative(dir, study.folder))
     if (write(file, encode(stable(file, mine)))) changed.push(`${at}/${RECORD}`)
@@ -401,22 +443,24 @@ export function writeFlags(dir: string, publication: Publication): string[] {
   return [...changed, ...tagGalleries(resolve(dir, '..'), 'approved')]
 }
 
-/** The two folders of a universe whose galleries show flags: its approved looks and its dialogue portraits (CA5). */
-export const FLAGGED = { approved: 'approved', portraits: 'dialogue-portraits' } as const
+/** The folders of a universe whose galleries show flags: its approved looks, its dialogue portraits (CA5), its splash art. */
+export const FLAGGED = { approved: 'approved', portraits: 'dialogue-portraits', splash: 'splash-art' } as const
 /**
  * Puts the shared flag script at the universes' root and the right script tags in a universe's galleries: the approved
  * gallery reads its looks' record and, once the portraits are flagged, theirs too; the portraits' gallery reads its own.
  * Says which files changed, relative to the folder named by `from`.
  */
-export function tagGalleries(universeDir: string, from: keyof typeof FLAGGED | 'approved' | 'dialogue-portraits'): string[] {
+export function tagGalleries(universeDir: string, from: 'approved' | 'dialogue-portraits' | 'splash-art'): string[] {
   const changed: string[] = []
   const name = (folder: string, f: string) => (folder === from ? f : `../${folder}/${f}`)
   // Each flagged folder sits two folders under the universes' root, where the shared flag script is kept.
   if (write(join(universeDir, '..', FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../${FLAG_FILE}`)
-  const looks = existsSync(join(universeDir, FLAGGED.approved, RECORD_SCRIPT)), portraits = existsSync(join(universeDir, FLAGGED.portraits, RECORD_SCRIPT))
+  const has = (folder: string) => existsSync(join(universeDir, folder, RECORD_SCRIPT))
+  const looks = has(FLAGGED.approved), portraits = has(FLAGGED.portraits), splash = has(FLAGGED.splash)
   const pages: [string, string[]][] = [
-    [FLAGGED.approved, [...(looks ? [RECORD_SCRIPT] : []), ...(portraits ? [`../${FLAGGED.portraits}/${RECORD_SCRIPT}`] : [])]],
+    [FLAGGED.approved, [...(looks ? [RECORD_SCRIPT] : []), ...(splash ? [`../${FLAGGED.splash}/${RECORD_SCRIPT}`] : []), ...(portraits ? [`../${FLAGGED.portraits}/${RECORD_SCRIPT}`] : [])]],
     [FLAGGED.portraits, portraits ? [RECORD_SCRIPT] : []],
+    [FLAGGED.splash, splash ? [RECORD_SCRIPT] : []],
   ]
   for (const [folder, records] of pages) {
     const gallery = join(universeDir, folder, GALLERY)

@@ -5,7 +5,8 @@
 > each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
 > records (CA2, P136). **An Uma's page also shows her universe looks (CA4, P162):** the approved pictures of her in another
 > world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 54 looks are live, 27
-> each on Kitasan Black's and Almond Eye's pages (Cyberpunk 10, Farm Life 24, High Fantasy 20; P173), and Satono Diamond's 12 Farm Life looks with her 27 portrait pieces (P174). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
+> each on Kitasan Black's and Almond Eye's pages (Cyberpunk 10, Farm Life 24, High Fantasy 20; P173), and Satono Diamond's 12 Farm Life looks with her 27 portrait pieces (P174). Kitasan Black's 9 Farm Life splash
+> illustrations show in a "Splash art" section on her page (P175). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
 > neutral crop and each expression's face, with a recipe for the games; her page shows the pieces, and the games compose the
 > 384 Farm Life states. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
@@ -15,7 +16,7 @@
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
-> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP91 for the universe looks and portraits.
+> [authoring/tiers.md](../authoring/tiers.md) (P113–P125). It adds AP1–AP52, and AP73–AP92 for the universe looks and portraits.
 >
 > **Uma Story is live (US1, P149)** at https://uma-platform.web.app/story: the third sub-app, one Story App for
 > uma-quest's and uma-farm's stories, with three books (Cast, Quest, Farm) on one shared cast. Its page is
@@ -171,6 +172,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP89 | **The flag:** `dialogue-portraits/publication.json` (published, changed, unpublished or refused), written by each push and by `pnpm art:status`; the approved gallery and the portraits gallery each show a "Dialogue portraits" line, and the Local Art Gallery's front page counts the states |
 | AP90 | **Her page shows her pieces, never a composed state** (the owner: "just wiring and uploading the pieces is good enough", then "the pieces are visible in the page though right?"): under each universe, her outfit crops, then her faces on a checkerboard, each opening full size |
 | AP91 | **A character's own collection is read like the shared ones** (P174): `<universe>/characters/<key>/active-study.json` names her active version (with the owner's approval of it), whose `manifest.json` holds her approved full-body looks (`fullBodyAssets`) and her portraits (`assets`, `faces`, each state approved). `art:push` adds her looks to the universe's index and `--portraits` her crops and faces to its recipe, under the same hash gate; a path that leaves her folder is refused. Her flags sit beside her active study (`publication.json`, `portraits-publication.json`), her album shows the badges, and the Local Art Gallery's front page lists her |
+| AP92 | **Splash art is published with the looks, as its own kind** (P175): `<universe>/splash-art/manifest.json` lists approved scene illustrations (owner approval, SHA-256, size, an `order`); `art:push` adds them to the universe's index as `kind: "splash"` with ids prefixed by the character (`kitasan-black-splash-<scene>`), and her page shows them in a "Splash art" section after her looks; her tile still counts looks only. The splash folder keeps its own published record, and each record's script now adds itself, with its own address, to `window.UMA_PUBLICATIONS`, so one gallery page can show the looks', the splash art's and the portraits' lines and badge every picture where it really is |
 | AP82 | **Local dev:** a push also fills `content/published/art/`, the same files at the same paths, which the local app reads (`ART_DIR`) |
 | AP23 | **uma-quest's Album moves here once CA1 is live:** a uma-quest packet (its next Q number, written by its session) replaces `/album` with a link to the platform's Character Art and removes its Album code; its key pack and baseline stills stay, since the game plays them. Its infrastructure doc's "See it all" row points here |
 

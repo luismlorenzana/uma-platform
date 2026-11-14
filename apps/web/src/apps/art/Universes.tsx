@@ -109,16 +109,23 @@ function Pieces({ pieces, universe }: { pieces: readonly PortraitPiece[]; univer
   )
 }
 
-/** An Uma's page: her looks in each universe, and her dialogue portrait pieces where a universe has them. */
-export function UmaUniverses({ groups }: { groups: readonly { universe: Universe; looks: UniverseLook[]; pieces?: PortraitPiece[] }[] }) {
+/** An Uma's page: her looks in each universe, her splash art (P175), and her dialogue portrait pieces where a universe has them. */
+export function UmaUniverses({ groups }: { groups: readonly { universe: Universe; looks: UniverseLook[]; splash?: UniverseLook[]; pieces?: PortraitPiece[] }[] }) {
   const looks = groups.reduce((n, g) => n + g.looks.length, 0), pieces = groups.reduce((n, g) => n + (g.pieces?.length ?? 0), 0)
+  const scenes = groups.reduce((n, g) => n + (g.splash?.length ?? 0), 0)
   return (
     <section className="flex flex-col gap-3" data-testid="uma-universes">
-      <h3 className="font-display text-base font-bold">Universes <span className="text-sm font-normal text-ink-soft">{looks} approved look{looks === 1 ? '' : 's'}{pieces ? ` · ${pieces} portrait pieces` : ''}</span></h3>
-      {groups.map(({ universe, looks, pieces = [] }) => (
+      <h3 className="font-display text-base font-bold">Universes <span className="text-sm font-normal text-ink-soft">{looks} approved look{looks === 1 ? '' : 's'}{scenes ? ` · ${scenes} splash image${scenes === 1 ? '' : 's'}` : ''}{pieces ? ` · ${pieces} portrait pieces` : ''}</span></h3>
+      {groups.map(({ universe, looks, splash = [], pieces = [] }) => (
         <div key={universe.id} className="flex flex-col gap-2">
           <p className="text-sm"><b className="font-semibold">{universe.title}</b> <span className="text-xs text-ink-soft">{universeLine(universe, looks.length)}</span></p>
           {looks.length > 0 && <Looks looks={looks} universe={universe} />}
+          {splash.length > 0 && (
+            <div className="flex flex-col gap-2" data-testid="splash-art">
+              <p className="text-xs text-ink-soft"><b className="font-semibold text-ink">Splash art</b> · {splash.length} scene{splash.length === 1 ? '' : 's'}</p>
+              <Looks looks={splash} universe={universe} columns="grid-cols-1 sm:grid-cols-3" />
+            </div>
+          )}
           {pieces.length > 0 && <Pieces pieces={pieces} universe={universe} />}
         </div>
       ))}

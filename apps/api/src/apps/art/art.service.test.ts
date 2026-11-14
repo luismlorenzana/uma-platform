@@ -71,10 +71,14 @@ describe('the universe looks (CA4)', () => {
     const all = await universes(store(objects), (name) => (name === 'Rider One' ? 9001 : null))
     expect(all.map((u) => [u.id, u.title, u.style, u.revision, u.looks.length])).toEqual([['old-road', 'Old Road', null, null, 1], ['sky-city', 'Sky City', 'Invented Style', 2, 2]])
     expect(all[1]!.looks[0]).toEqual({
-      id: 'rider-one-street', character: 'Rider One', characterId: 9001, outfit: 'street', title: 'A look', path: `universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`,
+      id: 'rider-one-street', kind: 'look', character: 'Rider One', characterId: 9001, outfit: 'street', title: 'A look', path: `universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`,
       bytes: 1200, sha256: HASH, width: 64, height: 96, approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z',
     })
     expect(all[1]!.looks.map((l) => l.id)).toEqual(['rider-one-street', 'rider-one-pilot'])
+    // A splash illustration keeps its kind (P175).
+    const withSplash = new Map(objects)
+    withSplash.set('universes/sky-city/index.json', index('sky-city', [look('rider-one-street', HASH), { ...look('rider-one-splash-meeting', OTHER), kind: 'splash' }]))
+    expect((await universes(store(withSplash), () => 9001)).find((u) => u.id === 'sky-city')!.looks.map((l) => [l.id, l.kind])).toEqual([['rider-one-street', 'look'], ['rider-one-splash-meeting', 'splash']])
   })
 
   it('drops a look whose entry isn’t a hash-named PNG of its own, another universe’s index, and a damaged file', async () => {

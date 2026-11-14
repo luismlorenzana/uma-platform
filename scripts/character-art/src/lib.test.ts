@@ -219,7 +219,7 @@ describe('the published flag', () => {
     const p = record(dir)
     expect(p).toMatchObject({ schemaVersion: 1, kind: 'universe-art-publication', universe: 'sky-city', destination: 'gs://uma-platform-content/art/universes/sky-city/', checkedAt: T1, publishedAt: T1, revision: 2, counts: { published: 2, changed: 0, unpublished: 0, refused: 0 }, withdrawable: [] })
     expect(p.looks[0]).toMatchObject({ id: 'rider-one-street', image: 'rider-one/street.png', state: 'published', publishedAt: T1, path: bucket.index().looks[0]!.path })
-    expect(readFileSync(join(dir, 'publication.js'), 'utf8')).toContain('window.UMA_PUBLICATION = {')
+    expect(readFileSync(join(dir, 'publication.js'), 'utf8')).toContain('(window.UMA_PUBLICATIONS = window.UMA_PUBLICATIONS || []).push({ base: document.currentScript ? document.currentScript.src : null, record: {')
     expect(readFileSync(join(base, 'publication-flag.js'), 'utf8')).toBe(FLAG_SCRIPT)
     const page = readFileSync(join(dir, 'review.html'), 'utf8')
     expect(page).toContain('<script src="publication.js"></script><script src="../../publication-flag.js"></script>')

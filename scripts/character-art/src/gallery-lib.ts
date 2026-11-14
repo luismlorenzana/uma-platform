@@ -29,6 +29,8 @@ export interface GalleryRow {
   universe: string; approved: number; published: number; waiting: number; publishedAt: string | null; studies: string[]
   /** The dialogue portraits' flag (CA5), when a push or a status wrote one. */
   portraits: { state: string; states: number; bases: number; faces: number; publishedAt: string | null } | null
+  /** The splash art (P175): how many scenes are approved and published. */
+  splash: { approved: number; published: number; publishedAt: string | null } | null
   /** Each character's own collection (P174): her approved looks, how many are published, her portraits, her album. */
   characters: { key: string; name: string; approved: number; published: number; portraits: { state: string; states: number } | null; page: string | null }[]
 }
@@ -40,12 +42,16 @@ export function galleryRows(base: string): GalleryRow[] {
     const record = existsSync(join(dir, RECORD)) ? JSON.parse(readFileSync(join(dir, RECORD), 'utf8')) as Publication : null
     const portraitRecord = join(base, universe, 'dialogue-portraits', RECORD)
     const p = existsSync(portraitRecord) ? JSON.parse(readFileSync(portraitRecord, 'utf8')) as { state: string; states: number; bases: number; faces: number; publishedAt: string | null } : null
+    const splashManifest = join(base, universe, 'splash-art', MANIFEST), splashRecord = join(base, universe, 'splash-art', RECORD)
+    const scenes = existsSync(splashManifest) ? JSON.parse(readFileSync(splashManifest, 'utf8')) as { assets?: unknown[] } : null
+    const shown = existsSync(splashRecord) ? JSON.parse(readFileSync(splashRecord, 'utf8')) as Publication : null
     const studies = readdirSync(join(base, universe), { withFileTypes: true })
-      .filter((e) => e.isDirectory() && e.name !== 'approved' && !(p && e.name === 'dialogue-portraits') && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
+      .filter((e) => e.isDirectory() && e.name !== 'approved' && !(p && e.name === 'dialogue-portraits') && !(scenes && e.name === 'splash-art') && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
     return {
       universe, approved: Array.isArray(manifest.assets) ? manifest.assets.length : 0, published: record?.counts.published ?? 0,
       waiting: record ? record.counts.unpublished + record.counts.changed : 0, publishedAt: record?.publishedAt ?? null, studies,
       portraits: p ? { state: p.state, states: p.states, bases: p.bases, faces: p.faces, publishedAt: p.publishedAt } : null,
+      splash: scenes ? { approved: Array.isArray(scenes.assets) ? scenes.assets.length : 0, published: shown?.counts.published ?? 0, publishedAt: shown?.publishedAt ?? null } : null,
       characters: characterStudies(join(base, universe)).map((study) => {
         const read = <T>(f: string): T | null => (existsSync(join(study.folder, f)) ? JSON.parse(readFileSync(join(study.folder, f), 'utf8')) as T : null)
         const looks = read<Publication>(RECORD), mine = read<{ state: string; states: number }>(PORTRAIT_RECORD)
@@ -74,9 +80,11 @@ export function indexPage(base: string, site: string): string {
       const portraits = c.portraits ? ` · <b>${c.portraits.states}</b> portrait states ${c.portraits.state === 'published' ? '<span class="pub">Published</span>' : `<span class="pub ${c.portraits.state === 'changed' ? 'part' : 'none'}">${c.portraits.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`}` : ''
       return `<p data-character="${c.key}"><b>${escape(c.name)}</b> · ${c.approved} approved looks ${looks}${portraits}${c.page ? ` · <a href="${c.page}">Open her album</a>` : ''}</p>`
     }).join('')
+    const sp = r.splash
+    const splash = sp ? `<p><b>${sp.approved}</b> splash images ${sp.published === sp.approved && sp.approved > 0 ? `<span class="pub">All ${sp.approved} published</span>` : sp.published > 0 ? `<span class="pub part">${sp.published} of ${sp.approved} published</span>` : '<span class="pub none">Not published</span>'} · <a href="/${r.universe}/splash-art/${GALLERY}">Open them</a></p>` : ''
     const portraits = q ? `<p><b>${q.states}</b> dialogue portrait states ${q.state === 'published' ? `<span class="pub">Published as ${q.bases + q.faces} pieces</span>${q.publishedAt ? ` <span class="when">${q.publishedAt.slice(0, 10)}</span>` : ''}` : `<span class="pub ${q.state === 'changed' ? 'part' : 'none'}">${q.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`} · <a href="/${r.universe}/dialogue-portraits/${GALLERY}">Open them</a></p>` : ''
     return `<article data-universe="${r.universe}"><h2>${escape(words(r.universe))}</h2><p><b>${r.approved}</b> approved look${r.approved === 1 ? '' : 's'} ${flag}${r.publishedAt ? ` <span class="when">${r.publishedAt.slice(0, 10)}</span>` : ''}</p>`
-      + `<p><a class="main" href="/${r.universe}/approved/${GALLERY}">Open the approved gallery</a></p>${portraits}${people}${studies ? `<p class="studies">Studies: ${studies}</p>` : ''}</article>`
+      + `<p><a class="main" href="/${r.universe}/approved/${GALLERY}">Open the approved gallery</a></p>${splash}${portraits}${people}${studies ? `<p class="studies">Studies: ${studies}</p>` : ''}</article>`
   }).join('')
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Local Art Gallery</title><style>
 *{box-sizing:border-box}body{margin:0;padding:28px clamp(16px,4vw,56px);background:#edf0f6;color:#202a3b;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}

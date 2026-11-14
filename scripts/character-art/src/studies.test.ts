@@ -114,10 +114,11 @@ describe('a character’s own collection', () => {
     expect(shared.looks.map((l) => l.id)).toEqual(['rider-one-street'])
     expect(shared.counts.published).toBe(1)
     const mine = JSON.parse(readFileSync(join(folder, 'publication.json'), 'utf8')) as Publication
-    expect(mine.looks.map((l) => [l.id, l.image, l.state])).toEqual([['rider-two-street', '../v001/full-body/street.png', 'published'], ['rider-two-dinner-v002', 'rider-two-dinner-v002.png', 'published']])
+    // Named from her folder, where her record's script lives (P175): the flag script resolves them from there.
+    expect(mine.looks.map((l) => [l.id, l.image, l.state])).toEqual([['rider-two-street', 'v001/full-body/street.png', 'published'], ['rider-two-dinner-v002', 'v002/rider-two-dinner-v002.png', 'published']])
     expect(mine.counts).toEqual({ published: 2, changed: 0, unpublished: 0, refused: 0 })
     expect(r.flagged).toEqual(expect.arrayContaining(['../characters/rider-two/publication.json', '../characters/rider-two/publication.js', '../characters/rider-two/v002/review.html']))
-    expect(readFileSync(join(folder, 'publication.js'), 'utf8')).toContain('window.UMA_PUBLICATION = {')
+    expect(readFileSync(join(folder, 'publication.js'), 'utf8')).toContain('(window.UMA_PUBLICATIONS = window.UMA_PUBLICATIONS || []).push({')
     expect(readFileSync(join(folder, 'v002/review.html'), 'utf8')).toContain('<script src="../publication.js"></script><script src="../../../../publication-flag.js"></script>')
   })
 

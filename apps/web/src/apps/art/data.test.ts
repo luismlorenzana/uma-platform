@@ -64,6 +64,13 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([sky, road], 9002).map((g) => g.universe.id)).toEqual(['sky-city', 'old-road'])
     expect(looksOf([sky, road], 9003)).toEqual([])
   })
+  it('keeps her splash art apart from her looks, and counts only looks on her tiles (P175)', () => {
+    const splashUniverse: Universe = { ...universe('farm', [look('a-spring', 'Rider One', 9001), { ...look('a-splash-meeting', 'Rider One', 9001), kind: 'splash' }]) }
+    expect(looksOf([splashUniverse], 9001).map((g) => [g.looks.map((l) => l.id), g.splash.map((l) => l.id)])).toEqual([[['a-spring'], ['a-splash-meeting']]])
+    expect([...lookCounts([splashUniverse])]).toEqual([[9001, 1]])
+    const onlySplash: Universe = universe('beach', [{ ...look('a-splash-beach', 'Rider One', 9001), kind: 'splash' }])
+    expect(looksOf([onlySplash], 9001).map((g) => [g.universe.id, g.looks.length, g.splash.length])).toEqual([['beach', 0, 1]])
+  })
   it('gives her page her dialogue portrait pieces too, crops before faces, even in a universe with none of her looks', () => {
     const piece = (kind: 'crop' | 'face', id: string, characterId: number | null): PortraitPiece => ({
       kind, id, character: 'Rider', characterId, outfit: kind === 'crop' ? id : null, expression: kind === 'face' ? id : null, path: `universes/u/portraits/x/${id}.0123456789abcdef.png`, bytes: 1, sha256: '0'.repeat(64), width: 1, height: 1,

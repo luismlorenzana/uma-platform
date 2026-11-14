@@ -29,9 +29,9 @@ describe('the Local Art Gallery', () => {
     mkdirSync(join(base, 'sky-city', 'dialogue-portraits'))
     writeFileSync(join(base, 'sky-city', 'dialogue-portraits', 'publication.json'), JSON.stringify({ state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }))
     expect(galleryRows(base)).toEqual([
-      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [], portraits: null, characters: [] },
-      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [], portraits: null, characters: [] },
-      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'], portraits: { state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }, characters: [] },
+      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [], portraits: null, splash: null, characters: [] },
+      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [], portraits: null, splash: null, characters: [] },
+      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'], portraits: { state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }, splash: null, characters: [] },
     ])
     const page = indexPage(base, 'https://example.test/art')
     expect(page).toContain('<title>Local Art Gallery</title>')
@@ -43,6 +43,18 @@ describe('the Local Art Gallery', () => {
     expect(page).toContain('href="https://example.test/art"')
     expect(page).toContain('<p><b>384</b> dialogue portrait states <span class="pub">Published as 54 pieces</span> <span class="when">2026-01-04</span> · <a href="/sky-city/dialogue-portraits/review.html">Open them</a></p>')
     expect(indexPage(temp(), 'https://example.test/art')).toContain('No approved collection yet.')
+  })
+
+  it('lists the splash art with how many scenes are published, and keeps its folder out of the studies (P175)', () => {
+    const base = root({ 'sky-city': { approved: 1, published: 1 } })
+    const splash = join(base, 'sky-city', 'splash-art')
+    mkdirSync(splash)
+    writeFileSync(join(splash, 'manifest.json'), JSON.stringify({ assets: [{}, {}] }))
+    writeFileSync(join(splash, 'review.html'), '<html></html>')
+    expect(galleryRows(base)[0]!.splash).toEqual({ approved: 2, published: 0, publishedAt: null })
+    writeFileSync(join(splash, 'publication.json'), JSON.stringify({ publishedAt: '2026-01-05T10:00:00.000Z', counts: { published: 2, changed: 0, unpublished: 0, refused: 0 } }))
+    expect(galleryRows(base)[0]).toMatchObject({ splash: { approved: 2, published: 2, publishedAt: '2026-01-05T10:00:00.000Z' }, studies: [] })
+    expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>2</b> splash images <span class="pub">All 2 published</span> · <a href="/sky-city/splash-art/review.html">Open them</a></p>')
   })
 
   it('lists each character’s own collection with her looks, her portraits and her album (P174)', () => {

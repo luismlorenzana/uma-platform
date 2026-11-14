@@ -87,6 +87,8 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
 /** A universe look (CA4, P162): an owner-approved picture of an Uma in another world, published by `pnpm art:push`. */
 export interface UniverseLook {
   id: string
+  /** A full-body look, or a splash illustration (P175); absent from an older API, which means a look. */
+  kind?: 'look' | 'splash'
   character: string
   /** Her character in master data, found by name; null when no character has that name. */
   characterId: number | null
@@ -132,17 +134,21 @@ export function loadUniverses(fresh = false): Promise<Universe[]> {
 }
 
 /** A character's looks and dialogue portrait pieces in every universe that has one of hers, crops before faces. */
-export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; pieces: PortraitPiece[] }[] {
+export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[] }[] {
   return all.map((universe) => {
     const pieces = (universe.portraits?.pieces ?? []).filter((p) => p.characterId === characterId)
-    return { universe, looks: universe.looks.filter((l) => l.characterId === characterId), pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')] }
-  }).filter((g) => g.looks.length > 0 || g.pieces.length > 0)
+    const hers = universe.looks.filter((l) => l.characterId === characterId)
+    return {
+      universe, looks: hers.filter((l) => l.kind !== 'splash'), splash: hers.filter((l) => l.kind === 'splash'),
+      pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')],
+    }
+  }).filter((g) => g.looks.length > 0 || g.splash.length > 0 || g.pieces.length > 0)
 }
 
 /** How many looks each character has across the universes, for her tiles. */
 export function lookCounts(all: readonly Universe[]): Map<number, number> {
   const counts = new Map<number, number>()
-  for (const universe of all) for (const look of universe.looks) if (look.characterId !== null) counts.set(look.characterId, (counts.get(look.characterId) ?? 0) + 1)
+  for (const universe of all) for (const look of universe.looks) if (look.characterId !== null && look.kind !== 'splash') counts.set(look.characterId, (counts.get(look.characterId) ?? 0) + 1)
   return counts
 }
 
