@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Illustrations Family</title>
+<!-- The illustrations family (docs/sprites/illustrations.md, P176) on one page: what a character has, the moments, the
+     release files and their encoding, the checks, and the path from the art pipeline to a game. Self-contained, uma-kit's
+     tokens, light and dark. No character art: the scenes are named by moment and id only. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  pre { background: var(--sunken); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--ink); margin: 8px 0; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 8px; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); }
+  .step b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
+  .step code { display: block; margin-top: 6px; color: var(--ink); white-space: normal; word-break: break-word; }
+  .step.dry { background: var(--violet-wash); }
+  svg text { font: 12px system-ui, sans-serif; fill: var(--ink-soft); }
+  svg text.t { font-weight: 700; fill: var(--ink); }
+  svg text.m { font: 11px ui-monospace, Menlo, monospace; }
+  .cv { fill: var(--raised); stroke: var(--hairline-strong); stroke-width: 1; }
+  .bd { fill: none; stroke: var(--danger); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+  .mx { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 5 4; }
+  .cape { fill: var(--violet); opacity: .55; }
+  .body { fill: var(--ink-faint); }
+  .headc { fill: var(--accent); opacity: .85; }
+  .arm { stroke: var(--info); stroke-width: 6; stroke-linecap: round; fill: none; }
+  .staff { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+  .a-foot { fill: var(--success); } .a-hit { fill: var(--danger); } .a-face { fill: var(--info); } .a-cast { fill: var(--violet); }
+  .ground { stroke: var(--success); stroke-width: 1.5; stroke-dasharray: 2 3; }
+  .box { fill: var(--panel); stroke: var(--hairline-strong); }
+  .box.b { fill: var(--accent-wash); } .box.k { fill: var(--info-wash); } .box.r { fill: var(--success-wash); } .box.v { fill: var(--violet-wash); }
+  .flow { stroke: var(--ink-faint); stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  .arrowhead { fill: var(--ink-faint); }
+  .scene { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1; }
+  .box.g { fill: var(--sunken); }
+  td.num { white-space: nowrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Illustrations: the family</h1>
+  <p>An Uma's full-screen scene illustrations, each tied to a story moment, as a private master data family that a game
+    reads by character id. The doc is <a href="../illustrations.md">illustrations.md</a>, beside
+    <a href="../dialogue-portraits.md">dialogue-portraits.md</a>; the decision is P176 (uma-farm F84). This page shows no
+    character art: scenes appear by moment and id.</p>
+  <nav>
+    <a href="#has">What she has</a>
+    <a href="#moments">Moments</a>
+    <a href="#files">The release</a>
+    <a href="#path">How they get there</a>
+    <a href="#calls">The calls</a>
+  </nav>
+
+  <div class="tiles">
+    <div class="tile"><b>9 scenes</b><span>character 1068, Farm Life's splash art</span></div>
+    <div class="tile"><b>1672 × 941</b><span>landscape, opaque, at the art's own size</span></div>
+    <div class="tile"><b>3.1 MB</b><span>all nine as WebP q92; lossless would be 15.2 MB</span></div>
+    <div class="tile"><b>&ge; 38 dB</b><span>the quality floor; hers come back at 38.7&ndash;41.0 dB</span></div>
+    <div class="tile"><b>1.8.0</b><span>uma-data minor: <code>illustrations</code>; older clients skip it</span></div>
+    <div class="tile"><b>Live</b><span>master data latest <code>e7cdecde7c15</code>, read back with every hash checked</span></div>
+  </div>
+
+  <section class="card" id="has">
+    <h2>What a character has</h2>
+    <p>Her scenes in the art pipeline's order, the order a gallery shows them. One manifest per character, by character
+      id, in the art index's <code>illustrations</code> map.</p>
+    <div class="scroll"><table>
+      <tr><th>Field</th><th>Example</th><th>Notes</th></tr>
+      <tr><td class="id">id</td><td><code>confession-loving</code></td><td>Hers, unique among hers: the universe's id without its <code>&lt;her key&gt;-splash-</code> prefix. A story names it to show this scene.</td></tr>
+      <tr><td class="id">title</td><td>the art's title</td><td>As Uma Character Art shows it</td></tr>
+      <tr><td class="id">outfit</td><td><code>kimono</code></td><td>Named as the dialogue portraits name outfits</td></tr>
+      <tr><td class="id">moment</td><td><code>confession-yes</code></td><td>The story moment it opens onto; open names</td></tr>
+      <tr><td class="id">approvedOn</td><td><code>2026-11-14</code></td><td>The owner's approval</td></tr>
+      <tr><td class="id">path &middot; width &middot; height &middot; bytes &middot; sha256</td><td></td><td>The release file, checked against the release manifest when read</td></tr>
+    </table></div>
+  </section>
+
+  <section class="card" id="moments">
+    <h2>The moments</h2>
+    <p>uma-farm's story opens these onto an illustration (its F84). The names are open: a new moment or outfit needs no
+      uma-data release. <code>illustrationFor(ills, moment)</code> gives her scene for one, the first in her order.</p>
+    <div class="scroll"><table>
+      <tr><th>Moment</th><th>Outfit</th><th>Scene id</th><th>Where the story shows it</th><th class="num">WebP</th><th class="num">PSNR</th></tr>
+      <tr><td class="id">meeting</td><td>spring</td><td><code>first-meeting-organic-framed</code></td><td>Her meeting scene opens on it</td><td class="num">412 KB</td><td class="num">39.8 dB</td></tr>
+      <tr><td class="id">beach</td><td>swimsuit</td><td><code>beach-sunbathing-framed</code></td><td>A summer date at the shore</td><td class="num">331 KB</td><td class="num">40.5 dB</td></tr>
+      <tr><td class="id">confession</td><td>kimono</td><td><code>confession-flustered</code></td><td>Her confession, at the question</td><td class="num">344 KB</td><td class="num">38.8 dB</td></tr>
+      <tr><td class="id">confession-yes</td><td>kimono</td><td><code>confession-loving</code></td><td>Her confession, after her yes</td><td class="num">343 KB</td><td class="num">38.7 dB</td></tr>
+      <tr><td class="id">wedding</td><td>wedding</td><td><code>wedding-tearful-joy</code></td><td>The wedding</td><td class="num">411 KB</td><td class="num">39.4 dB</td></tr>
+      <tr><td class="id">wedding-night</td><td>wedding-night</td><td><code>wedding-night-bedside-flustered</code></td><td>The wedding night, as it begins</td><td class="num">296 KB</td><td class="num">41.0 dB</td></tr>
+      <tr><td class="id">wedding-night-end</td><td>wedding-night</td><td><code>wedding-night-cropped-recline-wide-loving</code></td><td>The wedding night, as it fades</td><td class="num">368 KB</td><td class="num">39.6 dB</td></tr>
+      <tr><td class="id">night-in</td><td>pajamas-playful</td><td><code>quiet-evening-loving</code></td><td>A night in</td><td class="num">376 KB</td><td class="num">39.0 dB</td></tr>
+      <tr><td class="id">companion</td><td>pajamas-playful</td><td><code>pajamas-cropped-recline-wide-loving</code></td><td>The night's companion, before her morning greeting</td><td class="num">332 KB</td><td class="num">40.3 dB</td></tr>
+    </table></div>
+    <p class="note">The moments come from the private map <code>content/authoring/illustrations/farm-life.json</code>; a
+      scene it doesn't name stops the pack.</p>
+  </section>
+
+  <section class="card" id="files">
+    <h2>The release</h2>
+    <div class="two">
+      <div>
+        <h3>Files</h3>
+        <pre>files/data/art.&lt;hash16&gt;.json                 illustrations: { "1068": … }
+files/art/illustrations/1068.&lt;hash16&gt;.json     her manifest
+files/art/illustrations/1068-&lt;scene&gt;.&lt;hash16&gt;.webp</pre>
+        <h3>Her manifest</h3>
+        <pre>{ "characterId": 1068, "universe": "farm-life",
+  "scenes": [ { "id": "first-meeting-organic-framed",
+    "title": "…", "outfit": "spring", "moment": "meeting",
+    "approvedOn": "2026-11-14", "path": "art/illustrations/…webp",
+    "width": 1672, "height": 941, "bytes": …, "sha256": "…" }, … ] }</pre>
+      </div>
+      <div>
+        <h3>Why lossy WebP</h3>
+        <p>A scene is only ever shown whole, never drawn over another picture (unlike a portrait's face over its base),
+          so lossless buys nothing visible. Quality 92 is about a fifth of lossless's bytes, and the pack refuses a scene
+          that comes back under 38 dB colour PSNR against its approved PNG.</p>
+        <svg viewBox="0 0 420 120" role="img" aria-label="All nine scenes: 15.2 MB lossless against 3.1 MB at quality 92">
+          <text x="0" y="22" class="t">Lossless</text>
+          <rect x="90" y="10" width="300" height="18" rx="4" class="box g"/>
+          <text x="396" y="24" text-anchor="end">15.2 MB</text>
+          <text x="0" y="62" class="t">q92</text>
+          <rect x="90" y="50" width="61" height="18" rx="4" class="scene"/>
+          <text x="158" y="64">3.1 MB</text>
+          <text x="0" y="104" class="m">all nine of 1068's scenes, 1672 × 941</text>
+        </svg>
+        <h3>Checks</h3>
+        <ul>
+          <li><b>Pack:</b> each PNG is the approved one (SHA-256 and size), opaque, and decodes back at its size within the floor.</li>
+          <li><b>Parser:</b> at least one scene, ids unique, names lowercase words joined by hyphens, paths under <code>art/illustrations/</code>.</li>
+          <li><b>Client:</b> her id, and every scene listed in the release with its bytes and SHA-256.</li>
+          <li><b>Read-back:</b> <code>release:check</code> decodes every scene: a WebP, no alpha, at its size.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="path">
+    <h2>How they get there</h2>
+    <div class="steps">
+      <div class="step"><b>1. Approved and pushed</b>ChatGPT's scenes, owner-approved; the push adds each to the universe's index as <code>kind: "splash"</code> (P175).<code>pnpm art:push farm-life</code></div>
+      <div class="step"><b>2. Moments named</b>Each scene's moment from the game's request, in the private map.<code>content/authoring/illustrations/farm-life.json</code></div>
+      <div class="step"><b>3. Packed</b>Fetches the index and the splash PNGs, matches her by name, checks and encodes each.<code>pnpm illustrations:pack</code></div>
+      <div class="step"><b>4. Candidate</b>Latest plus the family, every other file carried byte for byte.<code>pnpm release:publish -- --illustrations-only</code></div>
+      <div class="step"><b>5. Read back</b>Like a game reads it, against latest.<code>pnpm release:check -- --channel candidate --against latest</code></div>
+      <div class="step"><b>6. Latest</b>Moves the channel; the games read it once they pin 1.8.0.<code>pnpm release:publish -- --promote &lt;version&gt;</code></div>
+    </div>
+    <p class="note">With <code>--portraits-only</code> too, the dialogue portraits and the illustrations go in one release.</p>
+  </section>
+
+  <section class="card" id="calls">
+    <h2>The calls</h2>
+    <div class="scroll"><table>
+      <tr><th>Id</th><th>Call</th></tr>
+      <tr><td class="id">P176</td><td>The illustrations family: per character by id, scenes in order, each with its moment; lossy WebP q92 with a 38 dB floor; moments from a private map; one publish planner for both per-character families</td></tr>
+      <tr><td class="id">P175</td><td>The first Uma's 9 splash scenes are published to Uma Character Art as their own kind</td></tr>
+      <tr><td class="id">P170</td><td>The dialogue portraits family, the pattern this one follows</td></tr>
+    </table></div>
+  </section>
+</main>
+</body>
+</html>

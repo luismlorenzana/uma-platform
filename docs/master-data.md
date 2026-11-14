@@ -388,6 +388,15 @@ bases by outfit (each with the position her faces sit at) and her faces by expre
 and that every picture is listed with its bytes and SHA-256. `dialoguePortraitFor` picks what to draw, with fallbacks.
 Tests use `syntheticDialoguePortraits()` and `buildMemoryRelease(undefined, { dialoguePortraits })` only.
 
+### Illustrations
+
+Since uma-data 1.8.0, the art index may include `illustrations: { <characterId>: <releasePath> }`: each character's
+manifest in the `illustrations` family ([sprites/illustrations.md](sprites/illustrations.md), P176): her full-screen
+scenes in order, each with its id, title, outfit and story moment. Older parsers ignore it.
+`client.illustrations(manifest, art, characterId)` returns a validated `Illustrations`, or null; it checks the id and that
+every picture is listed with its bytes and SHA-256. `illustrationFor` finds her scene for a moment, `illustrationById` by
+id. Tests use `syntheticIllustrations()` and `buildMemoryRelease(undefined, { illustrations })` only.
+
 ## Releases
 
 Bucket layout (architecture §2.2, P23):

@@ -89,3 +89,23 @@ const raw = (image: Rgba) => sharp(Buffer.from(image.data.buffer, image.data.byt
 export const encodeLossless = (image: Rgba): Promise<Buffer> => raw(image).webp({ lossless: true, effort: 6 }).toBuffer()
 /** The masters' encoding. */
 export const encodePng = (image: Rgba): Promise<Buffer> => raw(image).png({ compressionLevel: 9 }).toBuffer()
+/** An opaque picture's lossy WebP (the illustrations, P176): its colour only, no alpha. */
+export const encodeLossyOpaque = (image: Rgba, quality: number): Promise<Buffer> =>
+  raw(image).removeAlpha().webp({ quality, effort: 6, smartSubsample: true }).toBuffer()
+/** Every pixel's alpha is 255. */
+export function isOpaque(image: Rgba): boolean {
+  for (let i = 3; i < image.data.length; i += 4) if (image.data[i] !== 255) return false
+  return true
+}
+/** The colour channels' peak signal-to-noise ratio between two pictures of one size, in dB (Infinity when equal). */
+export function psnr(a: Rgba, b: Rgba): number {
+  if (a.width !== b.width || a.height !== b.height) throw new Error(`${a.width}x${a.height} and ${b.width}x${b.height} differ in size`)
+  let sum = 0, n = 0
+  for (let i = 0; i < a.data.length; i += 1) {
+    if (i % 4 === 3) continue
+    const d = a.data[i]! - b.data[i]!
+    sum += d * d
+    n += 1
+  }
+  return sum === 0 ? Infinity : 10 * Math.log10((255 * 255) / (sum / n))
+}

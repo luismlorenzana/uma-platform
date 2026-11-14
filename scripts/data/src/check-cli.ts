@@ -2,7 +2,8 @@
 //   pnpm release:check -- --channel candidate --against latest [--added-families=outfit-renders] [--local <dir>]
 // It loads the channel with the release client (every set and the art index, hash-checked), confirms the bucket holds
 // every file at its size, loads each sprite set with `spriteSet` and decodes each of its pages, reads the `enemies` set
-// and each enemy key with `enemyKey` and checks her images (enemy-keys.md §6), and with `--against` confirms every file
+// and each enemy key with `enemyKey` and checks her images (enemy-keys.md §6), reads each character's dialogue portraits
+// and illustrations and decodes their pictures, and with `--against` confirms every file
 // of the other channel's release is carried byte for byte. `--local <dir>` reads a release written there by
 // `release:publish -- --local <dir>` first, then the bucket (Q16 part A's dry run).
 
@@ -145,24 +146,42 @@ async function main(): Promise<void> {
   }
   if (portraitIds.length > 0) console.log(`Dialogue portrait images: ${portraitImages} decoded, ${(portraitBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 
+  // The illustrations family (uma-farm F84), read like a game reads it: every scene an opaque WebP at its declared size.
+  const illustrationIds = Object.keys(art?.illustrations ?? {}).map(Number).sort((a, b) => a - b)
+  let sceneImages = 0, sceneBytes = 0
+  for (const characterId of illustrationIds) {
+    const ills = (await client.illustrations(manifest, art!, characterId))!
+    for (const scene of ills.scenes) {
+      const bytes = await client.file(manifest, scene.path)
+      const meta = await sharp(bytes).metadata()
+      if (meta.format !== 'webp') failures.push(`${scene.path} isn't a WebP`)
+      if (meta.hasAlpha) failures.push(`${characterId} ${scene.id} has an alpha channel; a scene is opaque`)
+      if (meta.width !== scene.width || meta.height !== scene.height) failures.push(`${characterId} ${scene.id} doesn't decode at ${scene.width}x${scene.height}`)
+      sceneImages += 1
+      sceneBytes += bytes.byteLength
+    }
+    console.log(`Illustrations ${characterId} (${ills.universe}): ${ills.scenes.map((s) => `${s.moment} ${s.id}`).join(', ')}`)
+  }
+  if (illustrationIds.length > 0) console.log(`Illustration images: ${sceneImages} decoded, ${(sceneBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
+
   if (against) {
     const base = await createReleaseClient({ source, channel: against }).manifest()
     if (base.version === manifest.version) console.log(`${against} is the same release`)
     else {
       const sets = changedSets(base, manifest)
       const { carried } = checkCarried(base, manifest, sets)
-      const allowed = ['`sprites`', '`enemyKeys`', '`dialoguePortraits`', ...addedFamilies.map((family) => `\`${family}\``)].join(', ')
+      const allowed = ['`sprites`', '`enemyKeys`', '`dialoguePortraits`', '`illustrations`', ...addedFamilies.map((family) => `\`${family}\``)].join(', ')
       console.log(`Against ${against} (${base.version}): ${carried} of ${base.files.length} files carried byte for byte; ` +
         `the sets ${sets.length ? `change only by ${sets.join(', ')}` : 'unchanged'}; the art index may change only by ${allowed}`)
       if (base.art && manifest.art) {
         const read = async (path: string) => JSON.parse(new TextDecoder().decode(await client.file(path === base.art ? base : manifest, path))) as Record<string, unknown>
         const [before, after] = await Promise.all([read(base.art), read(manifest.art)])
         parseArtIndex(after, manifest.art)
-        const strip = ({ sprites: _sprites, enemyKeys: _enemyKeys, dialoguePortraits: _portraits, images, ...rest }: Record<string, unknown>) => {
+        const strip = ({ sprites: _sprites, enemyKeys: _enemyKeys, dialoguePortraits: _portraits, illustrations: _illustrations, images, ...rest }: Record<string, unknown>) => {
           const kept = Object.fromEntries(Object.entries((images ?? {}) as Record<string, unknown>).filter(([family]) => !addedFamilies.includes(family)))
           return JSON.stringify({ ...rest, images: kept })
         }
-        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites, enemyKeys and dialoguePortraits maps${addedFamilies.length ? ' and the added families' : ''}`)
+        if (strip(before) !== strip(after)) failures.push(`The art index changed beyond its sprites, enemyKeys, dialoguePortraits and illustrations maps${addedFamilies.length ? ' and the added families' : ''}`)
         const keysBefore = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).length, keysAfter = Object.keys((after.enemyKeys ?? {}) as Record<string, string>).length
         if (keysBefore !== keysAfter || sets.includes('enemies')) console.log(`Enemy keys: ${keysBefore} → ${keysAfter}`)
         const dropped = Object.keys((before.enemyKeys ?? {}) as Record<string, string>).filter((id) => !(id in ((after.enemyKeys ?? {}) as Record<string, string>)))
@@ -171,6 +190,10 @@ async function main(): Promise<void> {
         if (Object.keys(portraitsBefore).length !== Object.keys(portraitsAfter).length) console.log(`Dialogue portraits: ${Object.keys(portraitsBefore).length} → ${Object.keys(portraitsAfter).length}`)
         const lostPortraits = Object.keys(portraitsBefore).filter((key) => !(key in portraitsAfter))
         if (lostPortraits.length > 0) failures.push(`${lostPortraits.length} character(s)' dialogue portraits of ${against} are gone, e.g. ${lostPortraits[0]}`)
+        const illsBefore = (before.illustrations ?? {}) as Record<string, string>, illsAfter = (after.illustrations ?? {}) as Record<string, string>
+        if (Object.keys(illsBefore).length !== Object.keys(illsAfter).length) console.log(`Illustrations: ${Object.keys(illsBefore).length} → ${Object.keys(illsAfter).length}`)
+        const lostIlls = Object.keys(illsBefore).filter((key) => !(key in illsAfter))
+        if (lostIlls.length > 0) failures.push(`${lostIlls.length} character(s)' illustrations of ${against} are gone, e.g. ${lostIlls[0]}`)
         const beforeImages = (before.images ?? {}) as Record<string, unknown>, afterImages = (after.images ?? {}) as Record<string, Record<string, unknown>>
         for (const family of addedFamilies) {
           if (family in beforeImages) failures.push(`${family} was already in ${against}`)

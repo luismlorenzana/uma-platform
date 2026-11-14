@@ -38,6 +38,7 @@
     "look:upload": "pnpm --filter @uma-platform/look run upload",
     "enemies:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run enemies-pack",
     "portraits:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run portraits-pack",
+    "illustrations:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run illustrations-pack",
     "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start",
     "tiers:import": "pnpm --filter @uma-platform/studio run import",
     "ranker:seed": "turbo run build --filter=@uma-platform/tiers... --output-logs=errors-only && pnpm --filter @uma-platform/ranker-scripts run seed",

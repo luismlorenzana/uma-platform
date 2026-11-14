@@ -6,7 +6,8 @@ import { resolve } from 'node:path'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
 import { moveChannel, publishManifest, publishRelease, type PublishReleaseResult } from './publish'
 import { DEFAULT_CONTENT_DIR, DEFAULT_RELEASE_DIR } from './release-dir'
-import { planDialoguePortraitsOnly } from './dialogue-portraits-only'
+import { CHARACTER_FAMILIES, planCharacterFamiliesOnly } from './character-families-only'
+import type { CharacterFamilyKey } from './character-family-release'
 import { planEnemiesOnly } from './enemies-only'
 import { planFamiliesOnly } from './families-only'
 import { LocalOverlayStorage } from './local-storage'
@@ -31,9 +32,11 @@ async function main(): Promise<void> {
   const project = argument('--project') ?? process.env.UMA_GCP_PROJECT ?? DEFAULT_PROJECT
   const bucket = argument('--bucket') ?? process.env.UMA_RELEASE_BUCKET ?? DEFAULT_BUCKET
   const enemiesOnly = process.argv.includes('--enemies-only')
-  const portraitsOnly = process.argv.includes('--portraits-only')
-  // The enemies-only and portraits-only releases go to the candidate channel unless told otherwise; `--promote` then moves latest.
-  const channel = argument('--channel') ?? (enemiesOnly || portraitsOnly ? 'candidate' : 'latest')
+  // The per-character families (P170, P176), alone or together in one release.
+  const characterFamilies = ([['--portraits-only', 'dialoguePortraits'], ['--illustrations-only', 'illustrations']] as const)
+    .filter(([flag]) => process.argv.includes(flag)).map(([, key]): CharacterFamilyKey => key)
+  // The enemies-only and character-family releases go to the candidate channel unless told otherwise; `--promote` then moves latest.
+  const channel = argument('--channel') ?? (enemiesOnly || characterFamilies.length > 0 ? 'candidate' : 'latest')
   const releaseDir = resolve(argument('--release-dir') ?? DEFAULT_RELEASE_DIR)
   // `--local <dir>` publishes into a folder over the bucket, which is only read: the dry run release:check reads back.
   const localDir = argument('--local')
@@ -73,13 +76,14 @@ async function main(): Promise<void> {
     } finally {
       await rm(staging, { recursive: true, force: true })
     }
-  } else if (portraitsOnly) {
-    const staging = await mkdtemp(resolve(tmpdir(), 'uma-portraits-only-'))
+  } else if (characterFamilies.length > 0) {
+    const staging = await mkdtemp(resolve(tmpdir(), 'uma-character-families-'))
     try {
-      const plan = await planDialoguePortraitsOnly({ releaseDir, storage, stagingDir: staging })
-      console.log(`Portraits-only release on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
-        `dialogue portraits ${plan.added.map((p) => `${p.characterId} r${p.revision} (${Object.keys(p.bases).length} bases, ${Object.keys(p.faces).length} faces)`).join(', ')} added, ` +
-        `${bytes(plan.addedBytes)}; ${Object.keys(plan.dialoguePortraits).length} character(s) in all`)
+      const plan = await planCharacterFamiliesOnly({ releaseDir, storage, families: characterFamilies, stagingDir: staging })
+      const name = (key: CharacterFamilyKey) => CHARACTER_FAMILIES[key].name
+      console.log(`Character-family release (${characterFamilies.map(name).join(' and ')}) on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
+        `${characterFamilies.map((key) => `${name(key)} ${plan.added[key]!.map((a) => a.summary).join(', ')}`).join('; ')} added, ${bytes(plan.addedBytes)}; ` +
+        `${characterFamilies.map((key) => `${name(key)} for ${Object.keys(plan.maps[key]!).length} character(s)`).join(', ')} in all`)
       result = await publishManifest({ manifest: plan.manifest, manifestPath: plan.manifestPath, localPaths: plan.localPaths, storage, channel, dryRun })
     } finally {
       await rm(staging, { recursive: true, force: true })

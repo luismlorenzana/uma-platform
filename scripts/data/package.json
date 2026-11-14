@@ -23,7 +23,8 @@
     "import": "tsx src/import.ts",
     "publish": "tsx src/publish-cli.ts",
     "check": "tsx src/check-cli.ts",
-    "portraits-pack": "tsx src/portraits-cli.ts"
+    "portraits-pack": "tsx src/portraits-cli.ts",
+    "illustrations-pack": "tsx src/illustrations-cli.ts"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",

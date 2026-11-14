@@ -1,8 +1,10 @@
 # Dialogue portraits (`dialogue-portraits`)
 
-> **Status: 2026-11-14, live (P170): master data `f4ca0273cb2b`, uma-data 1.7.0.** uma-farm's F75 builds its dialogue on
-> these. The pilot is two Umas: Kitasan Black (1068) and Almond Eye (1129), 12 bases and 15 faces each. Private: they show
-> franchise characters, so they live in master data's private release only, never in git or uma-art.
+> **Status: 2026-11-14, live (P170): master data `f4ca0273cb2b`, uma-data 1.7.0; a third Uma (1067) joined in
+> `6983da0f6614` (P176).** uma-farm's F75 builds its dialogue on these. Three Umas by character id: 1068, 1129 and 1067,
+> 12 bases and 15 faces each. Private: they show franchise characters, so they live in master
+> data's private release only, never in git or uma-art. Her full-screen scenes are the sibling family,
+> [illustrations.md](illustrations.md).
 
 ## What a character has
 
@@ -50,7 +52,8 @@ hasn't got is neutral.
    (`content/published/art/universes/<universe>/portraits/`), matches each character to master data by name, takes each
    base's face position from its approved states (one place per base, or it stops), checks every file against the index's
    SHA-256 and size, and writes the family into the local release as lossless WebP.
-3. `pnpm release:publish -- --portraits-only` publishes latest plus the family to the `candidate` channel;
+3. `pnpm release:publish -- --portraits-only` publishes latest plus the family to the `candidate` channel (with
+   `--illustrations-only` too, both families go in one release);
    `pnpm release:check -- --channel candidate --against latest` reads it back; `--promote <version>` moves latest.
 
 The next Umas join the same way: the art pipeline publishes them, then steps 2 and 3.

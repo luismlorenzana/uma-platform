@@ -89,6 +89,18 @@ pnpm release:check -- --channel candidate --against latest
 pnpm release:publish -- --promote <version>
 ```
 
+**Dialogue portraits and illustrations** (per character, uma-farm F75 and F84, P170, P176) come from the art the
+pipeline published to the app's bucket ([dialogue-portraits.md](docs/sprites/dialogue-portraits.md),
+[illustrations.md](docs/sprites/illustrations.md)) and publish the same way, alone or together:
+
+```bash
+pnpm portraits:pack                                                  # a universe's portraits → content/release/
+pnpm illustrations:pack                                              # its splash scenes, with the private moments map
+pnpm release:publish -- --portraits-only --illustrations-only        # to candidate; every other file carried byte for byte
+pnpm release:check -- --channel candidate --against latest
+pnpm release:publish -- --promote <version>
+```
+
 **A new art family** (an additive one, like `outfit-renders`, P137) publishes the same way, on top of `latest`:
 
 ```bash

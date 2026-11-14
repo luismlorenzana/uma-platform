@@ -1,6 +1,7 @@
 import type { SpriteSet } from './sprites.js'
 import { enemyKeyPaths, type EnemyKey } from './enemy-keys.js'
 import type { DialoguePortraits } from './dialogue-portraits.js'
+import type { Illustrations } from './illustrations.js'
 import type { Enemy } from './sets/enemies.js'
 // Test helpers for games and this repo: small synthetic master records (invented names and values in the right
 // shape, never copied from real data) and an in-memory release. Imported as `@luismlorenzana/uma-data/testing`.
@@ -308,6 +309,18 @@ export function syntheticDialoguePortraits(characterId = 1001, outfits: readonly
   }
 }
 
+/** Synthetic illustrations (`illustrations`): a 1672 × 941 scene per moment, its id the moment's, in the order given.
+ *  Paths are fake; `buildMemoryRelease` gives each its bytes and SHA-256. */
+export function syntheticIllustrations(characterId = 1001, moments: readonly string[] = ['meeting', 'confession', 'confession-yes']): Illustrations {
+  return {
+    characterId, universe: 'farm-life',
+    scenes: moments.map((moment) => ({
+      id: moment, title: `Scene ${moment}`, outfit: 'spring', moment, approvedOn: '2026-11-14',
+      path: `art/illustrations/${characterId}-${moment}.0000000000000000.webp`, width: 1672, height: 941, bytes: 1, sha256: '0'.repeat(64),
+    })),
+  }
+}
+
 /** A synthetic art index pointing at the given file paths (all must be in the release). */
 export function syntheticArtIndex(pagePath: string, imagePath: string): ArtIndex {
   return {
@@ -345,7 +358,7 @@ async function addFile(files: ReleaseFile[], objects: Map<string, Uint8Array>, p
  */
 export async function buildMemoryRelease(
   data: MasterData = syntheticMasterData(),
-  options: { art?: ArtIndex; sprites?: SpriteSet[]; enemies?: Enemy[]; enemyKeys?: EnemyKey[]; dialoguePortraits?: DialoguePortraits[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
+  options: { art?: ArtIndex; sprites?: SpriteSet[]; enemies?: Enemy[]; enemyKeys?: EnemyKey[]; dialoguePortraits?: DialoguePortraits[]; illustrations?: Illustrations[]; extraFiles?: Record<string, Uint8Array>; createdAt?: string } = {},
 ): Promise<MemoryRelease> {
   const objects = new Map<string, Uint8Array>()
   const files: ReleaseFile[] = []
@@ -363,7 +376,7 @@ export async function buildMemoryRelease(
     await addFile(files, objects, sets.enemies, bytes)
   }
   for (const [path, bytes] of Object.entries(options.extraFiles ?? {})) await addFile(files, objects, path, bytes)
-  const artIndex = options.art ? structuredClone(options.art) : options.sprites || options.enemyKeys || options.dialoguePortraits ? { atlases: {}, images: {} } as ArtIndex : undefined
+  const artIndex = options.art ? structuredClone(options.art) : options.sprites || options.enemyKeys || options.dialoguePortraits || options.illustrations ? { atlases: {}, images: {} } as ArtIndex : undefined
   if (artIndex && options.dialoguePortraits) {
     artIndex.dialoguePortraits = { ...artIndex.dialoguePortraits }
     for (const given of options.dialoguePortraits) {
@@ -378,6 +391,22 @@ export async function buildMemoryRelease(
       const path = `art/dialogue-portraits/${portraits.characterId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
       await addFile(files, objects, path, bytes)
       artIndex.dialoguePortraits[String(portraits.characterId)] = path
+    }
+  }
+  if (artIndex && options.illustrations) {
+    artIndex.illustrations = { ...artIndex.illustrations }
+    for (const given of options.illustrations) {
+      const ills = structuredClone(given)
+      for (const scene of ills.scenes) {
+        const bytes = encoder.encode(`webp:${scene.path}`)
+        if (!files.some((f) => f.path === scene.path)) await addFile(files, objects, scene.path, bytes)
+        scene.bytes = bytes.byteLength
+        scene.sha256 = await sha256Hex(bytes)
+      }
+      const bytes = encoder.encode(JSON.stringify(ills))
+      const path = `art/illustrations/${ills.characterId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      await addFile(files, objects, path, bytes)
+      artIndex.illustrations[String(ills.characterId)] = path
     }
   }
   if (artIndex && options.enemyKeys) {

@@ -10,7 +10,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { FakeBucket } from './__fixtures__/bucket'
 import { fixtureBase, fixtureFace, FIXTURE_BASE, FIXTURE_FACE_AT, FIXTURE_FACE_SIZE, FIXTURE_PORTRAIT_ID } from './dialogue-portrait-fixture'
 import { writeDialoguePortraitRelease, type PackedDialoguePortraits } from './dialogue-portrait-release'
-import { planDialoguePortraitsOnly } from './dialogue-portraits-only'
+import { planCharacterFamiliesOnly } from './character-families-only'
 import { encodePng } from './enemy-images'
 import { LocalOverlayStorage } from './local-storage'
 import { writeDataSets, type MasterSets } from './pack'
@@ -105,7 +105,7 @@ describe('the portraits-only release on latest', () => {
   it('carries latest byte for byte, adds the map, and a game reads her through the published release', async () => {
     const release = await buildMemoryRelease(syntheticMasterData(), { art: syntheticArtIndex(PAGE, IMAGE), extraFiles: { [PAGE]: new Uint8Array([1, 2, 3]), [IMAGE]: new Uint8Array([4, 5]) } })
     const bucket = new FakeBucket(release.objects)
-    const plan = await planDialoguePortraitsOnly({ releaseDir: await localRelease(await packed()), storage: bucket, stagingDir: await temp('uma-portraits-stage-'), now: () => new Date('2026-11-14T12:00:00Z') })
+    const plan = await planCharacterFamiliesOnly({ families: ['dialoguePortraits'], releaseDir: await localRelease(await packed()), storage: bucket, stagingDir: await temp('uma-portraits-stage-'), now: () => new Date('2026-11-14T12:00:00Z') })
     expect(checkCarried(plan.base, plan.manifest).carried).toBe(plan.base.files.length - 1)
     expect(plan.manifest.sets).toEqual(plan.base.sets)
     const out = await temp('uma-portraits-published-')
@@ -118,6 +118,6 @@ describe('the portraits-only release on latest', () => {
   })
   it('refuses a local release with no portraits', async () => {
     const release = await buildMemoryRelease(syntheticMasterData(), { art: syntheticArtIndex(PAGE, IMAGE), extraFiles: { [PAGE]: new Uint8Array([1, 2, 3]), [IMAGE]: new Uint8Array([4, 5]) } })
-    await expect(planDialoguePortraitsOnly({ releaseDir: await localRelease([]), storage: new FakeBucket(release.objects), stagingDir: await temp('uma-portraits-stage-') })).rejects.toThrow(/no (art index|dialogue portraits)/)
+    await expect(planCharacterFamiliesOnly({ families: ['dialoguePortraits'], releaseDir: await localRelease([]), storage: new FakeBucket(release.objects), stagingDir: await temp('uma-portraits-stage-') })).rejects.toThrow(/no (art index|dialogue portraits)/)
   })
 })
