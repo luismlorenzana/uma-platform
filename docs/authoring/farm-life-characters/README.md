@@ -4,6 +4,8 @@ Use this packet to author a new adult Uma for the Farm Life Adventure, from iden
 
 The target is **the same quality and shared rendering style, with a distinct person and wardrobe**. Match the project's linework, shading, staging and asset behavior. Preserve the new character's own facial design, hair, markings, proportions, accessories and manner of expressing emotion. An existing character is a style reference, never a replacement identity.
 
+Once the required outfits and expressions are approved, use the [Farm Life splash art packet](../farm-life-splash-art/README.md) to author her nine event illustrations in a separate study.
+
 ## Start here
 
 1. Read [AGENTS.md](../../../AGENTS.md), [architecture](../../architecture.md), the [roadmap](../../roadmap.md), the latest [decisions](../../decisions.md), and the current [handoff queue](../../handoff/README.md).

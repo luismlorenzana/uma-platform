@@ -72,3 +72,4 @@ Character 1068's:
    reads it back; `--promote <version>` moves latest.
 
 The next Umas join the same way: the art pipeline publishes their scenes, the moments map names them, then steps 3 and 4.
+Use the [Farm Life splash art authoring packet](../authoring/farm-life-splash-art/README.md) to prepare a character's local set and record her scene-to-moment mapping before this handoff.
