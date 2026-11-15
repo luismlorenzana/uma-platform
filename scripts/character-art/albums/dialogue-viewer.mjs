@@ -1,0 +1,44 @@
+// The dialogue portrait viewer (P181, from ChatGPT's dialogue-portraits/viewer.mjs): pick a character, outfit and
+// expression, compare with a reference, see the edited area. Everything comes from the collection's `manifest.json`;
+// the words that vary (its intro, the default selection, where the overview sheets are) come from its `album.json`.
+import path from 'node:path'
+import { escape, fill, readJson, title } from './lib.mjs'
+import { DIALOGUE_CSS } from './styles.mjs'
+
+/**
+ * Renders the viewer for the dialogue portrait collection in `dir`; `prefix` is that folder seen from the page it
+ * goes in (`''` on its own page, `'../dialogue-portraits/'` in the album). `text` is `album.json`'s `viewer`:
+ * `intro` (HTML, with {states}, {outfits}, {expressions}), `defaults` ({character, outfit, expression, reference}),
+ * `referenceOutfit` (the outfit compared against, e.g. spring), `boardDir` (where the overview sheets are) and
+ * `faceSize` (the face layers' width, when the manifest doesn't say).
+ */
+export async function renderDialogueViewer({ dir, prefix = '', text = {} }) {
+  const manifest = await readJson(path.join(dir, 'manifest.json'))
+  const file = (f) => path.posix.normalize(prefix + f)
+  const assets = manifest.assets.map((a) => ({
+    character: a.character, name: a.name, outfit: a.outfit, title: title(a.outfit), base: file(a.base), sourceImage: file(a.sourceImage), position: a.position,
+    neutralOwnerApproved: a.neutralOwnerApproved,
+    outputs: a.outputs.map((o) => ({ expression: o.expression, image: file(o.image), mask: file(o.mask), ownerApproved: o.ownerApproved, reviewStatus: o.reviewStatus })),
+  }))
+  const faces = manifest.faces.map((f) => ({ character: f.character, expression: f.expression, file: file(f.file), prompt: file(f.prompt) }))
+  const data = { assets, faces, outfits: manifest.outfits, expressions: manifest.expressions, names: manifest.characterNames, prefix }
+  const counts = { states: manifest.assets.length * manifest.expressions.length, outfits: manifest.outfits.length, expressions: manifest.expressions.length }
+  const ref = text.referenceOutfit ?? 'spring', d = { reference: ref, ...(text.defaults ?? {}) }
+  const width = manifest.assets[0]?.width ?? 525, height = manifest.assets[0]?.height ?? 700, face = manifest.faces[0]?.width ?? text.faceSize ?? 224
+  const boardDir = text.boardDir ?? ''
+  const css = DIALOGUE_CSS
+  const markup = `<section class="dialogue-library" aria-label="Dialogue portraits"><h2>Dialogue Portraits</h2><p>${fill(text.intro ?? '<strong>{states} portrait states</strong>', counts)}</p><p class="dlg-links"><a href="${file('README.md')}">Notes and files</a> · <a href="${file('manifest.json')}">Portrait manifest</a> · <a href="${file('verification.json')}">Pixel verification</a></p>
+ <div class="dlg-controls"><label>Character<select id="dlg-character">${Object.entries(manifest.characterNames).map(([key, name]) => `<option value="${key}">${escape(name)}</option>`).join('')}</select></label><label>Outfit<select id="dlg-outfit">${manifest.outfits.map((o) => `<option value="${o}">${title(o)}</option>`).join('')}</select></label><label>Expression<select id="dlg-expression">${manifest.expressions.map((e) => `<option value="${e}">${title(e)}</option>`).join('')}</select></label><label>Reference<select id="dlg-reference"><option value="${ref}">${title(ref)} · same expression</option><option value="neutral">This outfit · neutral</option></select></label><label>Width<select id="dlg-size"><option value="300">300 px · dialogue</option><option value="240">240 px · phone</option><option value="${width}">${width} px · native</option></select></label></div>
+ <div class="dlg-controls"><button type="button" id="dlg-prev-outfit">Previous outfit</button><button type="button" id="dlg-next-outfit">Next outfit</button><button type="button" id="dlg-prev-expression">Previous expression</button><button type="button" id="dlg-next-expression">Next expression</button><label><input type="checkbox" id="dlg-mask-toggle"> Show edited area</label></div>
+ <div class="dlg-pair" id="dlg-pair" style="--dlg-width:300px">${['left', 'right'].map((id) => `<figure class="dlg-card"><div class="dlg-portrait"><img class="dlg-image" id="dlg-${id}-image" alt="Dialogue portrait"><div class="dlg-mask" id="dlg-${id}-mask" hidden></div></div><figcaption><strong id="dlg-${id}-title"></strong><span class="dlg-status" id="dlg-${id}-status"></span><a id="dlg-${id}-png" href="#" target="_blank" rel="noopener">Portrait PNG</a> · <a id="dlg-${id}-source" href="#" target="_blank" rel="noopener">Approved outfit</a></figcaption></figure>`).join('')}</div>
+ <div class="dlg-evidence" id="dlg-evidence" aria-live="polite"></div><p class="dlg-links" id="dlg-face-links"><a id="dlg-face" href="#" target="_blank" rel="noopener">Shared face layer</a> · <a id="dlg-prompt" href="#" target="_blank" rel="noopener">Exact expression prompt</a></p><details><summary>All ${numberWord(manifest.expressions.length)} expressions for this outfit</summary><a id="dlg-board-link" href="#" target="_blank" rel="noopener"><img class="dlg-board" id="dlg-board" alt="All ${numberWord(manifest.expressions.length)} expressions for the selected outfit" loading="lazy"></a></details></section>`
+  const script = `(()=>{const data=${JSON.stringify(data)};const el=id=>document.getElementById(id);const title=s=>s.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
+ function show(side,asset,expression,label){const state=expression==='neutral'?null:asset.outputs.find(o=>o.expression===expression);const image=state?state.image:asset.base;el('dlg-'+side+'-image').src=image;el('dlg-'+side+'-image').alt=asset.name+' · '+title(asset.outfit)+' · '+title(expression);el('dlg-'+side+'-title').textContent=label+' · '+title(expression);el('dlg-'+side+'-status').textContent=state?state.reviewStatus:asset.neutralOwnerApproved?'Approved portrait · unchanged':'New native crop · ready for review';el('dlg-'+side+'-png').href=image;el('dlg-'+side+'-source').href=asset.sourceImage;const mask=el('dlg-'+side+'-mask');mask.hidden=!state;Object.assign(mask.style,{left:(asset.position.x/${width}*100)+'%',top:(asset.position.y/${height}*100)+'%',width:(${face}/${width}*100)+'%'});mask.style.maskImage=state?'url('+state.mask+')':'none';mask.style.webkitMaskImage=mask.style.maskImage;}
+ function update(){const character=el('dlg-character').value,outfit=el('dlg-outfit').value,expression=el('dlg-expression').value,mode=el('dlg-reference').value;const selected=data.assets.find(a=>a.character===character&&a.outfit===outfit),reference=mode==='neutral'?selected:data.assets.find(a=>a.character===character&&a.outfit==='${ref}');show('left',reference,mode==='neutral'?'neutral':expression,mode==='neutral'?'Neutral reference':'${title(ref)} reference');show('right',selected,expression,title(outfit));el('dlg-pair').classList.toggle('dlg-show-mask',el('dlg-mask-toggle').checked);el('dlg-face-links').hidden=expression==='neutral';const face=data.faces.find(f=>f.character===character&&f.expression===(expression==='neutral'?'happy':expression));el('dlg-face').href=face.file;el('dlg-prompt').href=face.prompt;el('dlg-evidence').textContent=expression==='neutral'?'Native crops from the approved full-body art.':'The approved '+title(expression)+' face layer is reused unchanged. Full eye and brow replacement; zero changed pixels outside the saved face mask.';const board=data.prefix+'${boardDir}'+character+'-'+outfit+'-portraits.png';el('dlg-board').src=board;el('dlg-board-link').href=board;}
+ el('dlg-character').value='${d.character ?? Object.keys(manifest.characterNames)[0]}';el('dlg-outfit').value='${d.outfit ?? manifest.outfits[0]}';el('dlg-expression').value='${d.expression ?? 'happy'}';el('dlg-reference').value='${d.reference}';for(const id of ['dlg-character','dlg-outfit','dlg-expression','dlg-reference','dlg-mask-toggle'])el(id).addEventListener('change',update);el('dlg-size').addEventListener('change',function(){el('dlg-pair').style.setProperty('--dlg-width',this.value+'px');});for(const [id,control,values,step]of[['dlg-prev-outfit','dlg-outfit',data.outfits,-1],['dlg-next-outfit','dlg-outfit',data.outfits,1],['dlg-prev-expression','dlg-expression',data.expressions,-1],['dlg-next-expression','dlg-expression',data.expressions,1]])el(id).addEventListener('click',()=>{const select=el(control),index=values.indexOf(select.value);select.value=values[(index+step+values.length)%values.length];update();});update();})();`
+  return { css, markup, script, data, states: counts.states }
+}
+
+const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty']
+/** 16 is "sixteen", as the pages say it; past twenty, the digits. */
+export const numberWord = (n) => WORDS[n] ?? String(n)

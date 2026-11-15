@@ -51,6 +51,7 @@
     "art:push": "pnpm --filter @uma-platform/character-art-scripts run push",
     "art:status": "pnpm --filter @uma-platform/character-art-scripts run status",
     "art:gallery": "pnpm --filter @uma-platform/character-art-scripts run gallery",
+    "art:albums": "pnpm --filter @uma-platform/character-art-scripts run albums",
     "art:props": "pnpm --filter @uma-platform/authored-art run draw",
     "art:kits": "pnpm --filter @uma-platform/authored-art run kits",
     "art:kits:previews": "pnpm --filter @uma-platform/authored-art run kit-previews",

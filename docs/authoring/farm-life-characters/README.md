@@ -67,6 +67,23 @@ Cropping, measured alignment, mask construction, compositing and review-sheet as
 
 This packet ends at a verified, reviewed **local** collection and a handoff. **The owner assigned current publishing to a separate Claude session. Do not publish, refresh publication flags, deploy or change cloud resources as part of this authoring task.** Preserve the publication markers when regenerating galleries and leave the generated publication files to the publishing tools. Later publishing follows [CA4/CA5](../../platform-app/README.md); it is a separate coordinated action, not an implied last step here.
 
+## Album pages
+
+The local review pages (each universe's approved album with its Dialogue Portraits and Splash Art tabs, the portraits' and
+the splash art's own pages, and a character's own album) are built by code in git: `scripts/character-art/albums/`
+(P181). Use it; don't write a new page builder.
+
+- **The code is generic.** It names no character and holds no words of an album. Everything a page says (title, intro,
+  captions, footer, the default selection, the compare shortcuts, the overview sheets) is in the `album.json` beside the
+  page, in the gitignored collection folder, with the manifests and pictures it shows.
+- **Rebuild** every page of a universe with `pnpm art:albums farm-life`; `--check` builds in memory and reports which pages
+  would change, writing nothing. The older local scripts (`approved/build-review.mjs`, `dialogue-portraits/build-review.mjs`,
+  a character's `build-review.mjs`) are now short stubs that call it.
+- **A new character's own album:** add `album.json` to her active version (copy Satono Diamond's `v005/album.json` and
+  change its words); `pnpm art:albums` builds her page from her manifest.
+- **Changing a page's behaviour or layout** is a code change: edit the module, keep it generic, and run
+  `pnpm --filter @uma-platform/character-art-scripts test`. A rebuilt page keeps the publication block at its end.
+
 ## Starter request for another ChatGPT session
 
 Replace the angle-bracket fields and send this together with the identity references:
