@@ -191,5 +191,6 @@ accepts every newer release, so new characters, cards and skills arrive without 
 | [docs/decisions.md](docs/decisions.md) | Cross-game decisions (append-only) |
 | [docs/master-data.md](docs/master-data.md) | Every master set and field, the release layout and the client |
 | [Farm Life character authoring](docs/authoring/farm-life-characters/README.md) | A new character from identity references through a varied wardrobe, reusable dialogue pieces, local review and approval; prompts and handoff templates for ChatGPT |
+| [Farm Life splash art authoring](docs/authoring/farm-life-splash-art/README.md) | A new character's nine event illustrations from approved outfits and expressions; starter prompt, private study commands and review workflow |
 | [docs/racer-mapping.md](docs/racer-mapping.md) | uma-racer's current packs → master data, for the Phase 3 refactor |
 | [AGENTS.md](AGENTS.md) | Rules for any agent working here |

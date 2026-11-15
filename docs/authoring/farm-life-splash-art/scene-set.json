@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "canvas": "16:9 landscape",
+  "scenes": [
+    {
+      "id": "greeting",
+      "moment": "meeting",
+      "title": "Greeting at the Farm",
+      "outfit": "spring",
+      "expression": "happy",
+      "direction": "Full figure opening the farm gate or taking a natural step. Yard, misty fields and farmhouse; clear spring morning. Keep a visible point of contact with the setting."
+    },
+    {
+      "id": "beach",
+      "moment": "beach",
+      "title": "A Day at the Beach — Sunbathing",
+      "outfit": "swimsuit",
+      "expression": "happy",
+      "direction": "Full figure reclining on a towel at the valley beach below the harbour; summer afternoon, shallow waves, sand and a parasol. Face toward the viewer, with plausible limbs and towel contact."
+    },
+    {
+      "id": "confession-flustered",
+      "moment": "confession",
+      "title": "The Confession (Kimono) — Flustered",
+      "outfit": "kimono",
+      "expression": "flustered",
+      "direction": "Frontal waist-up at the summer night festival. Floating Pond lanterns, stalls and soft fireworks. The pair uses the same pose, outfit, location, camera and lighting."
+    },
+    {
+      "id": "confession-loving",
+      "moment": "confession-yes",
+      "title": "The Confession (Kimono) — Loving",
+      "outfit": "kimono",
+      "expression": "loving",
+      "direction": "Expression edit of the frontal Flustered scene. Keep the composition and kimono fixed; change the face using this character's approved Loving portrait."
+    },
+    {
+      "id": "wedding",
+      "moment": "wedding",
+      "title": "The Wedding — Tearful Joy",
+      "outfit": "wedding",
+      "expression": "tearful-joy",
+      "direction": "Full figure facing the viewer at the aisle's end under Willowmere chapel's bell. Show the gown silhouette, flowers and tall windows in warm spring afternoon light."
+    },
+    {
+      "id": "wedding-night-seated",
+      "moment": "wedding-night",
+      "title": "Wedding Night — Seated — Flustered",
+      "outfit": "wedding-night",
+      "expression": "flustered",
+      "direction": "Seated at the bed's edge in the approved bridal nightwear. Front-facing, hands grounded on bedding or lap, warm bedside lamp on a spring night."
+    },
+    {
+      "id": "wedding-night-recline",
+      "moment": "wedding-night-end",
+      "title": "Wedding Night — Cropped Recline — Loving",
+      "outfit": "wedding-night",
+      "expression": "loving",
+      "direction": "Supported on pillows, near-frontal upward gaze, vertically arranged body within the horizontal room, crop around upper thighs. Dim bedside light; retain bridal nightwear and accessories."
+    },
+    {
+      "id": "pajamas-window",
+      "moment": "night-in",
+      "title": "Pajamas by the Window — Loving",
+      "outfit": "pajamas-playful",
+      "expression": "loving",
+      "direction": "Waist-up facing the viewer by a farmhouse window, armchair, cushions and bookshelf. Warm lamplight with winter snow outside."
+    },
+    {
+      "id": "pajamas-recline",
+      "moment": "companion",
+      "title": "Pajamas — Cropped Recline — Loving",
+      "outfit": "pajamas-playful",
+      "expression": "loving",
+      "direction": "Supported on pillows, near-frontal upward gaze, vertically arranged body within the horizontal room, crop around upper thighs. Dim warm light and approved everyday pajamas. Use the wedding-night recline as a framing reference."
+    }
+  ]
+}
