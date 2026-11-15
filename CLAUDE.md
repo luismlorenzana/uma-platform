@@ -41,6 +41,11 @@
   `/api/art/portraits/<universe>`; Character Art never composes one. A character authored on her own lives in
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
+- **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
+  `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
+  franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's
+  `content/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
+  would publish them as an Uma's looks); no publishing route exists for them yet.
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is
