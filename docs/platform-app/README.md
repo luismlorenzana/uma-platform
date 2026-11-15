@@ -5,11 +5,11 @@
 > each, plus F for Umas not used, and 27 sisters ranked as Umas of their own (P131, P133, P138). **Uma Character Art is live (CA1, P135)**, laid out by the Ranker, with chibi sprites, support cards and source-art
 > records (CA2, P136). **An Uma's page also shows her universe looks (CA4, P162):** the approved pictures of her in another
 > world (Cyberpunk, Farm Life, High Fantasy), published from private authoring by `pnpm art:push`; 54 looks are live, 27
-> each on Kitasan Black's and Almond Eye's pages (Cyberpunk 10, Farm Life 24, High Fantasy 20; P173), and Satono Diamond's 12 Farm Life looks with her 27 portrait pieces (P174). Kitasan Black's 9 Farm Life splash
-> illustrations show in a "Splash art" section on her page (P175). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
+> each on Kitasan Black's and Almond Eye's pages (Cyberpunk 10, Farm Life 24, High Fantasy 20; P173), and Satono Diamond's 12 Farm Life looks with her 27 portrait pieces (P174). Farm Life's splash
+> illustrations, 9 each for Kitasan Black, Almond Eye and Satono Diamond, show in a "Splash art" section on each one's page (P175, P182, P184). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
 > neutral crop and each expression's face, with a recipe for the games; her page shows the pieces, and the games compose the
 > 384 Farm Life states. **Uma Enemy Art is live (EA1, P183):** the enemies' approved looks in a sub-app of their own,
-> game by game (Uma Cyberpunk, then Uma Quest) and faction by faction; Uma Cyberpunk's first look is published. Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> game by game (Uma Cyberpunk, then Uma Quest) and faction by faction; Uma Cyberpunk's five approved looks, one a faction, are published (P184). Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -106,7 +106,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Hosting site | ~2 MB of app | 10 GB stored, 360 MB a day transferred | $0 |
 | `platform-api` (owner only, min 0) | a few thousand requests | 2M requests, 180,000 vCPU-s, 360,000 GiB-s | $0 |
 | Image repository, last 3 images | ~0.15 GB | 0.5 GB, shared with the games' three repositories (0.37 GB today) | ≤$0.01 |
-| `gs://uma-platform-content` | ~0.27 GB (boards, 169 MB of franchise art, 53 MB of universe looks since CA4, 17 MB of portrait pieces since CA5, 1.5 MB of enemy looks since EA1) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
+| `gs://uma-platform-content` | ~0.40 GB (boards, 169 MB of franchise art, universe looks since CA4 with 68 MB of splash art since P175, 17 MB of portrait pieces since CA5, 9.4 MB of enemy looks since EA1) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
 | Bucket operations | a few thousand reads, a few hundred writes | 50,000 Class B, 5,000 Class A | $0 |
 | Pictures to your phone | first visit ~0.3 GB, then cached on the device | 1 GB from Cloud Run in North America | $0 |
 | **Total** | | | **$0 to about $0.01**, under the project's $5 budget alert |
@@ -213,7 +213,7 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |
 | CA4 | The universe looks: `pnpm art:push`, `art:status` and `art:gallery`, the looks on each Uma's page, the published flag in the local galleries; 30 looks published | Claude | M | CA3 ✓, your ask ✓ | **Done** (P162) |
 | CA5 | Dialogue portraits as pieces: `art:push --portraits`, the recipe route for the games, the pieces on each Uma's page, the flag in the local galleries; Farm Life's 54 pieces (384 states) published | Claude | M | CA4 ✓, your ask ✓ | **Done** (P169) |
-| EA1 | Uma Enemy Art: the sub-app, its API and pack route, `art:push --enemies`, the flags in the enemy album and the gallery; Uma Cyberpunk's first look published | Claude | M | P182 ✓, your ask ✓ | **Done** (P183) |
+| EA1 | Uma Enemy Art: the sub-app, its API and pack route, `art:push --enemies`, the flags in the enemy album and the gallery; Uma Cyberpunk's five approved looks published (P184) | Claude | M | P182 ✓, your ask ✓ | **Done** (P183) |
 | EA2 | Uma Quest's enemies: their authoring folder and packet (as `docs/authoring/cyberpunk-enemies`), then the first push | Claude | S | Uma Quest's enemy authoring | When it starts |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | US1 | Uma Story's shell: the tile, the cast by batch, a plain reader for both games' drafts, your verdicts, `story:push` and `story:pull` ([story.md](story.md)) | Claude | L | Your go ✓ | **Done** (P149) |
