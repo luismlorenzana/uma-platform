@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { KEY_PACK_ALLOW } from './art.module'
 import { ArtService } from './art.service'
 import { sourceReleases } from './art.sources'
-import { PORTRAIT_PACK_ALLOW, portraitRecipe, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
+import { PORTRAIT_PACK_ALLOW, portraitRecipe, profilePictures, PROFILE_PACK_ALLOW, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 // Invented records only: uma-data's synthetic release, with a second, invented outfit for character 9001.
 const data = () => { const d = syntheticMasterData(); d.outfits = [...d.outfits, { ...d.outfits[0]!, id: 900102, variant: 'summer' }]; return d }
@@ -176,5 +176,32 @@ describe('the dialogue portraits as pieces (CA5)', () => {
       expect(safePackPath(path, allow)).toEqual({ path, immutable: true })
     for (const path of ['universes/sky-city/portraits/index.json', `universes/sky-city/portraits/masks/rider-one-happy.${B.slice(0, 16)}.png`, 'universes/sky-city/portraits/faces/rider-one-happy.png'])
       expect(safePackPath(path, allow)).toBeNull()
+  })
+
+  // P180: her profile pictures beside the pieces, from their own index.
+  const profiles = (universe: string) => json({
+    schemaVersion: 1, kind: 'universe-profiles', universe, size: 192, release: 'abcdef012345', publishedAt: '2026-01-04T10:00:00.000Z',
+    characters: [{ id: 'rider-one', name: 'Rider One' }],
+    profiles: [
+      { id: 'rider-one-street', character: 'rider-one', outfit: 'street', path: `profiles/rider-one-street.${A.slice(0, 16)}.webp`, bytes: 9000, sha256: A, width: 192, height: 192, crop: { left: 1, top: 2, size: 40 } },
+      { id: 'rider-one-png', character: 'rider-one', outfit: 'png', path: `profiles/rider-one-png.${B.slice(0, 16)}.png`, bytes: 9000, sha256: B, width: 192, height: 192 },
+      { id: 'nobody-street', character: 'nobody', outfit: 'street', path: `profiles/nobody-street.${C.slice(0, 16)}.webp`, bytes: 9000, sha256: C, width: 192, height: 192 },
+    ],
+  })
+  it('lists her profile pictures beside the pieces, each a hash-named WebP tied to her character', async () => {
+    const s = store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')], ['universes/sky-city/profiles/index.json', profiles('sky-city')]]))
+    const p = await profilePictures(s, 'sky-city', riderOne)
+    expect(p).toMatchObject({ size: 192, release: 'abcdef012345', publishedAt: '2026-01-04T10:00:00.000Z' })
+    expect(p!.pieces).toEqual([{ kind: 'profile', id: 'rider-one-street', character: 'Rider One', characterId: 9001, outfit: 'street', expression: null, path: `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.webp`, bytes: 9000, sha256: A, width: 192, height: 192 }])
+    expect((await universes(s, riderOne))[0]!.profiles!.pieces.map((x) => x.id)).toEqual(['rider-one-street'])
+    expect(await profilePictures(store(new Map([['universes/sky-city/profiles/index.json', profiles('other')]])), 'sky-city', riderOne)).toBeNull()
+    expect((await universes(store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')]])), riderOne))[0]!.profiles).toBeNull()
+  })
+  it('serves only a profile\'s hash-named WebP, never its index', () => {
+    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW, PROFILE_PACK_ALLOW]
+    const path = `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.webp`
+    expect(safePackPath(path, allow)).toEqual({ path, immutable: true })
+    for (const bad of ['universes/sky-city/profiles/index.json', `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.png`, 'universes/sky-city/profiles/rider-one-street.webp'])
+      expect(safePackPath(bad, allow)).toBeNull()
   })
 })

@@ -300,11 +300,13 @@ export function syntheticEnemyKey(tier: Enemy['tier'], enemyId = tier === 'regul
 
 /** Synthetic dialogue portraits (`dialogue-portraits`): bases for the outfits (525 × 700, the face at 150, 140) and
  *  faces for the expressions (224 × 224). Paths are fake; `buildMemoryRelease` gives each its bytes and SHA-256. */
-export function syntheticDialoguePortraits(characterId = 1001, outfits: readonly string[] = ['spring', 'kimono'], expressions: readonly string[] = ['happy', 'sad']): DialoguePortraits {
+export function syntheticDialoguePortraits(characterId = 1001, outfits: readonly string[] = ['spring', 'kimono'], expressions: readonly string[] = ['happy', 'sad'], options: { profiles?: boolean } = {}): DialoguePortraits {
   const at = (stem: string, width: number, height: number) => ({ path: `art/dialogue-portraits/${characterId}-${stem}.0000000000000000.webp`, width, height, bytes: 1, sha256: '0'.repeat(64) })
+  // With `profiles`, each base carries a 192 × 192 profile picture cut from a 336 px square around its face (P180).
+  const profile = (o: string) => (options.profiles ? { profile: { ...at(`profile-${o}`, 192, 192), crop: { left: 94, top: 84, size: 336 } } } : {})
   return {
     characterId, revision: 1, approvedOn: '2026-11-14', base: { width: 525, height: 700 }, faceSize: { width: 224, height: 224 },
-    bases: Object.fromEntries(outfits.map((o) => [o, { ...at(`base-${o}`, 525, 700), face: { left: 150, top: 140 } }])),
+    bases: Object.fromEntries(outfits.map((o) => [o, { ...at(`base-${o}`, 525, 700), face: { left: 150, top: 140 }, ...profile(o) }])),
     faces: Object.fromEntries(expressions.map((e) => [e, at(`face-${e}`, 224, 224)])),
   }
 }
@@ -381,7 +383,7 @@ export async function buildMemoryRelease(
     artIndex.dialoguePortraits = { ...artIndex.dialoguePortraits }
     for (const given of options.dialoguePortraits) {
       const portraits = structuredClone(given)
-      for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.faces)]) {
+      for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.bases).flatMap((b) => (b.profile ? [b.profile] : [])), ...Object.values(portraits.faces)]) {
         const bytes = encoder.encode(`webp:${image.path}`)
         if (!files.some((f) => f.path === image.path)) await addFile(files, objects, image.path, bytes)
         image.bytes = bytes.byteLength

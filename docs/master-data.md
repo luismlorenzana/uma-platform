@@ -386,7 +386,9 @@ manifest in the `dialogue-portraits` family ([sprites/dialogue-portraits.md](spr
 bases by outfit (each with the position her faces sit at) and her faces by expression. Older parsers ignore it.
 `client.dialoguePortraits(manifest, art, characterId)` returns a validated `DialoguePortraits`, or null; it checks the id
 and that every picture is listed with its bytes and SHA-256. `dialoguePortraitFor` picks what to draw, with fallbacks.
-Tests use `syntheticDialoguePortraits()` and `buildMemoryRelease(undefined, { dialoguePortraits })` only.
+Since uma-data 1.9.0 each base may carry a `profile`, a 192 px square lossy WebP of it around her face (P180, uma-farm
+F88); `dialogueProfileFor(portraits, outfit)` picks one, falling back to her first outfit that has one. Tests use
+`syntheticDialoguePortraits()` and `buildMemoryRelease(undefined, { dialoguePortraits })` only.
 
 ### Illustrations
 

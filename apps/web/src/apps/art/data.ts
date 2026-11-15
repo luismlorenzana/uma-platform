@@ -104,9 +104,9 @@ export interface UniverseLook {
   publishedAt: string | null
 }
 /** One piece of a universe's dialogue portraits (CA5, P169): an outfit's neutral crop or an expression's face. The page
- *  shows the pieces; the games compose the states. */
+ *  shows the pieces; the games compose the states. Or an outfit's profile picture (P180), the square master data ships. */
 export interface PortraitPiece {
-  kind: 'crop' | 'face'
+  kind: 'crop' | 'face' | 'profile'
   id: string
   character: string
   characterId: number | null
@@ -119,9 +119,12 @@ export interface PortraitPiece {
   height: number
 }
 export interface UniversePortraits { states: number; approvedOn: string | null; publishedAt: string | null; pieces: PortraitPiece[] }
+/** Her profile pictures (P180): one square a base, as the master data release named ships them. */
+export interface UniverseProfiles { size: number | null; release: string | null; publishedAt: string | null; pieces: PortraitPiece[] }
 export interface Universe {
   id: string; title: string; style: string | null; revision: number | null; publishedAt: string | null; looks: UniverseLook[]
   portraits?: UniversePortraits | null
+  profiles?: UniverseProfiles | null
 }
 
 let universes: Promise<Universe[]> | null = null
@@ -133,16 +136,18 @@ export function loadUniverses(fresh = false): Promise<Universe[]> {
   return universes
 }
 
-/** A character's looks and dialogue portrait pieces in every universe that has one of hers, crops before faces. */
-export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[] }[] {
+/** A character's looks, dialogue portrait pieces (crops before faces) and profile pictures in every universe that has one
+ *  of hers. */
+export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[]; profiles: PortraitPiece[] }[] {
   return all.map((universe) => {
     const pieces = (universe.portraits?.pieces ?? []).filter((p) => p.characterId === characterId)
     const hers = universe.looks.filter((l) => l.characterId === characterId)
     return {
       universe, looks: hers.filter((l) => l.kind !== 'splash'), splash: hers.filter((l) => l.kind === 'splash'),
       pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')],
+      profiles: (universe.profiles?.pieces ?? []).filter((p) => p.characterId === characterId),
     }
-  }).filter((g) => g.looks.length > 0 || g.splash.length > 0 || g.pieces.length > 0)
+  }).filter((g) => g.looks.length > 0 || g.splash.length > 0 || g.pieces.length > 0 || g.profiles.length > 0)
 }
 
 /** How many looks each character has across the universes, for her tiles. */

@@ -210,7 +210,7 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     const portraits = parseDialoguePortraits(json(await file(release, path), path), path)
     if (portraits.characterId !== characterId) throw new MasterDataError(`${path}.characterId`, String(characterId))
     const listed = new Map(release.files.map((entry) => [entry.path, entry]))
-    for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.faces)]) {
+    for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.bases).flatMap((b) => (b.profile ? [b.profile] : [])), ...Object.values(portraits.faces)]) {
       const entry = listed.get(image.path)
       if (!entry) throw new MasterDataError(path, `${image.path} to be in the manifest`)
       if (entry.sha256 !== image.sha256 || entry.bytes !== image.bytes) throw new MasterDataError(path, `${image.path}'s bytes and SHA-256 as the manifest lists them`)

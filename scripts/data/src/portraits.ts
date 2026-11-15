@@ -3,12 +3,14 @@
 // bucket, `art/universes/<universe>/portraits/` (an `index.json` of `kind: universe-portraits`, `bases/` and `faces/`),
 // mirrored privately: everything in that index is owner-approved (its `approvedOn`). Each character is matched to master
 // data by her name; each base's face position is the one its approved states place every face at; every file must still
-// have the index's SHA-256 and size. PNGs go to the release as lossless WebP, checked to decode to their pixels.
+// have the index's SHA-256 and size. PNGs go to the release as lossless WebP, checked to decode to their pixels. Each base
+// also gives her profile picture (P180, profiles.ts): a square around her face, scaled to 192 px, lossy WebP.
 
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { resolve, sep } from 'node:path'
-import { decodeRgba, encodeLossless, imageDistance } from './enemy-images'
+import { decodeRgba, encodeLossless, imageDistance, type Rgba } from './enemy-images'
+import { cropProblem, faceExtent, faceOnBase, packProfile, profileCrop, type ProfileCrop, type ProfileOverrides } from './profiles'
 import type { PackedDialoguePortraits, PackedPortraitImage } from './dialogue-portrait-release'
 
 interface IndexImage { id: string; character: string; path: string; sha256: string; width: number; height: number; bytes?: number }
@@ -74,10 +76,16 @@ export function planPortraits(index: UniversePortraitsIndex, characterIdOf: (nam
 
 const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
 
-/** Packs one character from the mirrored folder: every file checked against the index, encoded lossless, decoded back. */
-export async function packPortraits(dir: string, index: UniversePortraitsIndex, plan: PortraitPlan): Promise<PackedDialoguePortraits> {
+/** How a base's profile came out: its square (by hand or not), its size and its quality. */
+export interface ProfileReport { outfit: string; crop: ProfileCrop; override: boolean; bytes: number; psnr: number }
+
+/**
+ * Packs one character from the mirrored folder: every file checked against the index, encoded lossless, decoded back; and
+ * each base's profile picture, its square from `overrides` (`<character id>/<outfit>`) or around her face.
+ */
+export async function packPortraits(dir: string, index: UniversePortraitsIndex, plan: PortraitPlan, overrides: ProfileOverrides | null = null): Promise<PackedDialoguePortraits & { profiles: ProfileReport[] }> {
   const root = resolve(dir)
-  const image = async (path: string, want: { sha256: string; width: number; height: number }): Promise<PackedPortraitImage> => {
+  const image = async (path: string, want: { sha256: string; width: number; height: number }): Promise<PackedPortraitImage & { rgba: Rgba }> => {
     const file = resolve(root, ...path.split('/'))
     if (!file.startsWith(root + sep)) throw new Error(`${path} leaves the portraits folder`)
     const png = await readFile(file)
@@ -87,11 +95,28 @@ export async function packPortraits(dir: string, index: UniversePortraitsIndex, 
     const bytes = await encodeLossless(rgba)
     const back = imageDistance(await decodeRgba(bytes), rgba)
     if (back.alpha !== 0 || back.color !== 0) throw new Error(`${path} doesn't decode to its pixels`)
-    return { bytes, width: rgba.width, height: rgba.height }
+    return { bytes, width: rgba.width, height: rgba.height, rgba }
   }
-  const bases: PackedDialoguePortraits['bases'] = {}
-  for (const b of plan.bases) bases[b.outfit] = { ...(await image(b.path, b)), face: b.face }
-  const faces: PackedDialoguePortraits['faces'] = {}
-  for (const f of plan.faces) faces[f.expression] = await image(f.path, f)
-  return { characterId: plan.characterId, revision: index.revision, approvedOn: index.approvedOn.slice(0, 10), base: index.size, faceSize: index.faceSize, bases, faces }
+  const faces: PackedDialoguePortraits['faces'] = {}, faceImages: Rgba[] = []
+  for (const f of plan.faces) {
+    const { rgba, ...packed } = await image(f.path, f)
+    faces[f.expression] = packed
+    faceImages.push(rgba)
+  }
+  const extent = faceExtent(faceImages, index.faceSize)
+  const bases: PackedDialoguePortraits['bases'] = {}, profiles: ProfileReport[] = []
+  for (const b of plan.bases) {
+    const { rgba, ...packed } = await image(b.path, b)
+    const label = `${plan.characterId}/${b.outfit}`, face = faceOnBase(extent, b.face)
+    const given = overrides?.crops[label]
+    const crop = given ?? profileCrop(face, { width: rgba.width, height: rgba.height })
+    if (crop.left + crop.size > rgba.width || crop.top + crop.size > rgba.height) throw new Error(`${label}: its profile crop runs past the ${rgba.width}x${rgba.height} base`)
+    // A square by hand must still hold her whole face; one made here must also keep it out of the badge corners.
+    const problem = cropProblem(crop, face, !given)
+    if (problem) throw new Error(`${label}: ${problem}; set its square in content/authoring/profiles/${index.universe}.json`)
+    const profile = await packProfile(rgba, crop, label)
+    bases[b.outfit] = { ...packed, face: b.face, profile: { bytes: profile.bytes, width: profile.width, height: profile.height, crop } }
+    profiles.push({ outfit: b.outfit, crop, override: !!given, bytes: profile.bytes.byteLength, psnr: profile.psnr })
+  }
+  return { characterId: plan.characterId, revision: index.revision, approvedOn: index.approvedOn.slice(0, 10), base: index.size, faceSize: index.faceSize, bases, faces, profiles }
 }

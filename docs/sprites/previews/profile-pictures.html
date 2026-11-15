@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile Pictures</title>
+<!-- The dialogue portraits' profile pictures (docs/sprites/dialogue-portraits.md#profile-pictures, uma-farm F88, P180) on
+     one page: how each square is cut, the release fields, how a game reads one, and the review path. Self-contained,
+     uma-kit's tokens, light and dark. No character art: the Umas are named by character id only, and the diagram is to
+     scale with the first three Umas' numbers. -->
+<style>
+  :root {
+    --page: #edf1f6; --panel: #ffffff; --raised: #f3f6fa; --sunken: #e4eaf2;
+    --ink: #101a24; --ink-soft: #5a6b84; --ink-faint: #8a98ac;
+    --accent: #d39a2b; --accent-wash: #fbf1dd; --info: #2f6fe0; --info-wash: #e3ecfc; --success: #2f7a4f;
+    --success-wash: #e1f1e7; --danger: #c23b33; --violet: #7b5bd6; --violet-wash: #eee8fb;
+    --hairline: rgb(16 26 36 / 0.08); --hairline-strong: rgb(16 26 36 / 0.16);
+    --radius: 12px; color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+      --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+      --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+      --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+      --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0f1620; --panel: #17202b; --raised: #1f2a37; --sunken: #0b1118;
+    --ink: #e9eef4; --ink-soft: #a6b3c2; --ink-faint: #6f7d8e;
+    --accent: #d6a23e; --accent-wash: #2b2312; --info: #5b8def; --info-wash: #16233a; --success: #4fb37a;
+    --success-wash: #13261b; --danger: #e0645c; --violet: #9d83ea; --violet-wash: #221a3a;
+    --hairline: rgb(255 255 255 / 0.08); --hairline-strong: rgb(255 255 255 / 0.16); color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, 'Inter', sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font: 700 24px/1.2 ui-rounded, 'SF Pro Rounded', system-ui, sans-serif; margin: 0 0 6px; }
+  h2 { font: 700 17px/1.25 ui-rounded, system-ui, sans-serif; margin: 0 0 8px; }
+  h3 { font: 700 14px/1.3 system-ui; margin: 14px 0 6px; }
+  p, li { color: var(--ink-soft); max-width: 86ch; }
+  a { color: var(--info); }
+  code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  nav { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+  nav a { font: 600 12px system-ui; padding: 6px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-soft); text-decoration: none; }
+  .card { background: var(--panel); border-radius: var(--radius); padding: 16px; box-shadow: 0 1px 0 var(--hairline-strong); margin-bottom: 16px; }
+  svg { display: block; width: 100%; height: auto; }
+  .scroll { overflow-x: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; }
+  .note { font-size: 12px; color: var(--ink-faint); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .tile { background: var(--panel); border-radius: var(--radius); padding: 12px 14px; box-shadow: 0 1px 0 var(--hairline-strong); }
+  .tile b { display: block; font: 700 22px/1.1 ui-rounded, system-ui, sans-serif; color: var(--ink); }
+  .tile span { font-size: 12px; color: var(--ink-soft); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--hairline); text-align: left; vertical-align: top; }
+  th { color: var(--ink-soft); font-weight: 600; }
+  td { color: var(--ink-soft); } td b { color: var(--ink); }
+  td.id { font: 700 12px ui-monospace, Menlo, monospace; white-space: nowrap; color: var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font: 700 11px system-ui; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.done { background: var(--success-wash); color: var(--success); }
+  .pill.miss { background: var(--accent-wash); color: var(--accent); }
+  .pill.later { background: var(--sunken); color: var(--ink-faint); }
+  .pill.claude { background: var(--info-wash); color: var(--info); }
+  .pill.art { background: var(--accent-wash); color: var(--accent); }
+  .pill.either { background: var(--violet-wash); color: var(--violet); }
+  .pill.you { background: var(--success-wash); color: var(--success); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  pre { background: var(--sunken); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font: 12px/1.5 ui-monospace, Menlo, monospace; color: var(--ink); margin: 8px 0; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 8px; }
+  .step { background: var(--raised); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-soft); }
+  .step b { display: block; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
+  .step code { display: block; margin-top: 6px; color: var(--ink); white-space: normal; word-break: break-word; }
+  .step.dry { background: var(--violet-wash); }
+  svg text { font: 12px system-ui, sans-serif; fill: var(--ink-soft); }
+  svg text.t { font-weight: 700; fill: var(--ink); }
+  svg text.m { font: 11px ui-monospace, Menlo, monospace; }
+  .cv { fill: var(--raised); stroke: var(--hairline-strong); stroke-width: 1; }
+  .bd { fill: none; stroke: var(--danger); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
+  .mx { fill: none; stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 5 4; }
+  .cape { fill: var(--violet); opacity: .55; }
+  .body { fill: var(--ink-faint); }
+  .headc { fill: var(--accent); opacity: .85; }
+  .arm { stroke: var(--info); stroke-width: 6; stroke-linecap: round; fill: none; }
+  .staff { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+  .a-foot { fill: var(--success); } .a-hit { fill: var(--danger); } .a-face { fill: var(--info); } .a-cast { fill: var(--violet); }
+  .ground { stroke: var(--success); stroke-width: 1.5; stroke-dasharray: 2 3; }
+  .box { fill: var(--panel); stroke: var(--hairline-strong); }
+  .box.b { fill: var(--accent-wash); } .box.k { fill: var(--info-wash); } .box.r { fill: var(--success-wash); } .box.v { fill: var(--violet-wash); }
+  .flow { stroke: var(--ink-faint); stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  .arrowhead { fill: var(--ink-faint); }
+  .scene { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1; }
+  .box.g { fill: var(--sunken); }
+  td.num { white-space: nowrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Profile pictures</h1>
+  <p>uma-farm's F88 (P180): each dialogue portrait base carries a small square head-and-shoulders crop of itself with her calm
+  face, for lists of faces. Made in code from the approved base by <code>pnpm portraits:pack</code>; nothing is drawn. The doc is
+  <a href="../dialogue-portraits.md#profile-pictures">dialogue-portraits.md</a>.</p>
+  <nav><a href="#cut">How it's cut</a><a href="#release">In master data</a><a href="#read">Reading one</a><a href="#review">Review</a><a href="#path">How they get there</a></nav>
+
+  <div class="tiles">
+    <div class="tile"><b>36</b><span>profile pictures: 3 Umas × 12 outfits (1068, 1129, 1067)</span></div>
+    <div class="tile"><b>192 px</b><span>square, lossy WebP q90, no alpha</span></div>
+    <div class="tile"><b>9–12 KB</b><span>each; about 1 MB for a list of 100 faces</span></div>
+    <div class="tile"><b>35–39 dB</b><span>against the scaled crop; the pack refuses one under 34</span></div>
+    <div class="tile"><b>c8c971f6791e</b><span>master data latest; uma-data 1.9.0 reads them</span></div>
+  </div>
+
+  <section class="card" id="cut">
+    <h2>How it's cut</h2>
+    <p>Half scale, with the first three Umas' numbers. The square is placed from her face, never from a fixed spot, so a base
+    whose head sits a pixel or two apart gets its own square.</p>
+    <div class="scroll"><svg viewBox="-10 -10 640 380" role="img" aria-label="The profile square on a 525 by 700 base: the face square, her face's box, the 336 pixel crop and its four badge corners">
+  <g transform="translate(0,0)">
+    <rect x="0" y="0" width="262.5" height="350.0" rx="4" fill="var(--sunken)" stroke="var(--hairline-strong)"/>
+    <text x="131.25" y="342.0" text-anchor="middle" font-size="11" fill="var(--ink-faint)">base 525 × 700</text>
+    <rect x="74.0" y="70.0" width="112.0" height="112.0" fill="none" stroke="var(--info)" stroke-dasharray="4 3"/>
+    <rect x="94.5" y="87.0" width="70.0" height="64.5" fill="var(--accent-wash)" stroke="var(--accent)"/>
+    <rect x="46.0" y="35.5" width="168.0" height="168.0" fill="none" stroke="var(--success)" stroke-width="2"/>
+    <rect x="46.0" y="35.5" width="47.0" height="47.0" fill="var(--violet-wash)" stroke="var(--violet)" stroke-width="1"/><rect x="167.0" y="35.5" width="47.0" height="47.0" fill="var(--violet-wash)" stroke="var(--violet)" stroke-width="1"/><rect x="46.0" y="156.5" width="47.0" height="47.0" fill="var(--violet-wash)" stroke="var(--violet)" stroke-width="1"/><rect x="167.0" y="156.5" width="47.0" height="47.0" fill="var(--violet-wash)" stroke="var(--violet)" stroke-width="1"/>
+    <text x="129.5" y="123.2" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ink)">her face</text>
+  </g>
+  <g font-size="12" fill="var(--ink-soft)">
+    <rect x="300" y="20" width="14" height="14" fill="none" stroke="var(--info)" stroke-dasharray="4 3"/><text x="322" y="31">The face square: 224 × 224 at the base's face position, about (148, 140)</text>
+    <rect x="300" y="50" width="14" height="14" fill="var(--accent-wash)" stroke="var(--accent)"/><text x="322" y="61">Her face: where her expression faces draw (alpha ≥ 32), about 141 × 130</text>
+    <rect x="300" y="80" width="14" height="14" fill="none" stroke="var(--success)" stroke-width="2"/><text x="322" y="91">The profile square: face width ÷ 0.42 = 336 px, her face at its centre</text>
+    <rect x="300" y="110" width="14" height="14" fill="var(--violet-wash)" stroke="var(--violet)"/><text x="322" y="121">Badge corners: 28% of the side (94 px); her face stays out of all four</text>
+    <text x="300" y="160" font-weight="700" fill="var(--ink)">→ scaled to 192 × 192, lossy WebP q90</text>
+    <text x="300" y="180">9–12 KB each; 35–39 dB against the scaled crop (floor 34)</text>
+    <text x="300" y="210">Each side keeps about 29% margin around her face,</text>
+    <text x="300" y="228">so the corners show hair, shoulders or background.</text>
+    <text x="300" y="258">The square moves only as far as it must to stay on the base.</text>
+    <text x="300" y="288">A square by hand (the private override file) must still</text>
+    <text x="300" y="306">hold her whole face; none is set today.</text>
+  </g>
+</svg></div>
+  </section>
+
+  <section class="card" id="release">
+    <h2>In master data</h2>
+    <p>Each base of her <code>dialogue-portraits</code> manifest gains a <code>profile</code>; older readers ignore it.</p>
+    <table>
+      <tr><th>Field</th><th>Example</th><th>Notes</th></tr>
+      <tr><td class="id">path</td><td><code>art/dialogue-portraits/1068-profile-spring.&lt;hash16&gt;.webp</code></td><td>Beside her bases and faces</td></tr>
+      <tr><td class="id">width, height</td><td>192, 192</td><td>Always a square</td></tr>
+      <tr><td class="id">bytes, sha256</td><td></td><td>As the release manifest lists them; the client checks both</td></tr>
+      <tr><td class="id">crop</td><td><code>{ left: 92, top: 71, size: 336 }</code></td><td>The square in the base's pixels, inside the base</td></tr>
+    </table>
+  </section>
+
+  <section class="card" id="read">
+    <h2>Reading one</h2>
+    <table>
+      <tr><th>Call</th><th>Gives</th></tr>
+      <tr><td class="id">client.dialoguePortraits(manifest, art, id)</td><td>Her manifest, every picture (profiles too) checked against the release, or null</td></tr>
+      <tr><td class="id">dialogueProfileFor(portraits, outfit)</td><td><code>{ profile, outfit }</code>: that outfit's, else her first in Farm Life's order that has one (spring first); null in a release made before them</td></tr>
+      <tr><td class="id">client.file(manifest, profile.path)</td><td>The WebP's bytes, fetched and cached by hash</td></tr>
+    </table>
+    <p class="note">The seasons' outfits are <code>spring</code>, <code>summer</code>, <code>fall</code> and <code>winter</code>.</p>
+  </section>
+
+  <section class="card" id="review">
+    <h2>Review</h2>
+    <p><code>pnpm profiles:push</code> reads the profiles from the master data channel and sends them, then their index
+    (<code>kind: universe-profiles</code>, with the release's version), to the app's bucket,
+    <code>art/universes/&lt;universe&gt;/profiles/</code>. <a href="https://uma-platform.web.app/art">Uma Character Art</a> shows them on
+    each Uma's page under "Profile pictures". If one looks off, its square goes in
+    <code>content/authoring/profiles/&lt;universe&gt;.json</code> (private), keyed <code>&lt;character id&gt;/&lt;outfit&gt;</code>.</p>
+  </section>
+
+  <section class="card" id="path">
+    <h2>How they get there</h2>
+    <table>
+      <tr><th>Step</th><th>Command</th><th>Does</th></tr>
+      <tr><td class="id">1</td><td><code>pnpm portraits:pack</code></td><td>Each base's square around her face (or by hand), scaled, encoded, decoded back within the floor; written with her bases and faces</td></tr>
+      <tr><td class="id">2</td><td><code>pnpm release:publish -- --portraits-only</code></td><td>To candidate on latest, every other file carried byte for byte</td></tr>
+      <tr><td class="id">3</td><td><code>pnpm release:check -- --channel candidate --against latest</code></td><td>Each profile decoded as a square WebP without alpha; then <code>--promote</code></td></tr>
+      <tr><td class="id">4</td><td><code>pnpm profiles:push</code></td><td>The review copy to Character Art</td></tr>
+    </table>
+  </section>
+</main>
+</body>
+</html>

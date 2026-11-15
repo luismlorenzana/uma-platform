@@ -4,7 +4,9 @@
 // read on every request; a look is tied to her character by name, from master data, so nothing here knows a game's ids.
 // CA5 (P169) adds the dialogue portraits as pieces: `art/universes/<universe>/portraits/` holds each outfit's neutral crop,
 // each expression's face and a recipe (`index.json`). An Uma's page shows her pieces; the games compose the states from
-// the recipe at `/api/art/portraits/<universe>`. Nothing here composes a state.
+// the recipe at `/api/art/portraits/<universe>`. Nothing here composes a state. Her profile pictures (uma-farm F88, P180)
+// sit beside them: `art/universes/<universe>/profiles/` holds the square crops master data ships, published by
+// `pnpm profiles:push` with an `index.json` (`kind: universe-profiles`), for the owner's review on her page.
 import type { BlobStore } from '../../store/blob-store'
 
 export interface UniverseLook {
@@ -25,16 +27,18 @@ export interface UniverseLook {
   approvedOn: string | null
   publishedAt: string | null
 }
-/** One piece of a universe's dialogue portraits (CA5): an outfit's neutral crop, or an expression's face layer. */
+/** One piece of a universe's dialogue portraits (CA5): an outfit's neutral crop, or an expression's face layer; or an
+ *  outfit's profile picture (P180). */
 export interface PortraitPiece {
-  kind: 'crop' | 'face'
+  kind: 'crop' | 'face' | 'profile'
   id: string
   /** Her name, as the recipe gives it, and her character in master data by that name (null when none has it). */
   character: string
   characterId: number | null
   outfit: string | null
   expression: string | null
-  /** The pack path, `universes/<universe>/portraits/(bases|faces)/<id>.<16 hex>.png`, read at `/api/art/content/…`. */
+  /** The pack path, `universes/<universe>/portraits/(bases|faces)/<id>.<16 hex>.png` (a profile's
+   *  `universes/<universe>/profiles/<id>.<16 hex>.webp`), read at `/api/art/content/…`. */
   path: string
   bytes: number
   sha256: string
@@ -43,6 +47,8 @@ export interface PortraitPiece {
 }
 /** What an Uma's page needs of a universe's portraits: its pieces, and how many states the games make of them. */
 export interface UniversePortraits { states: number; approvedOn: string | null; publishedAt: string | null; pieces: PortraitPiece[] }
+/** Her profile pictures (P180): one square a base, from the master data release named. */
+export interface UniverseProfiles { size: number | null; release: string | null; publishedAt: string | null; pieces: PortraitPiece[] }
 export interface Universe {
   id: string
   title: string
@@ -51,6 +57,7 @@ export interface Universe {
   publishedAt: string | null
   looks: UniverseLook[]
   portraits: UniversePortraits | null
+  profiles: UniverseProfiles | null
 }
 /** The whole recipe, for the games (`/api/art/portraits/<universe>`): the pieces at their pack paths, and every state. */
 export interface PortraitRecipe {
@@ -73,6 +80,8 @@ export interface PortraitRecipe {
 export const UNIVERSE_PACK_ALLOW = /universes\/[a-z0-9-]+\/images\/[a-z0-9-]+\.[a-f0-9]{16}\.png/
 /** A portrait piece's PNG, named by its hash (CA5). */
 export const PORTRAIT_PACK_ALLOW = /universes\/[a-z0-9-]+\/portraits\/(?:bases|faces)\/[a-z0-9-]+\.[a-f0-9]{16}\.png/
+/** A profile picture's WebP, named by its hash (P180). */
+export const PROFILE_PACK_ALLOW = /universes\/[a-z0-9-]+\/profiles\/[a-z0-9-]+\.[a-f0-9]{16}\.webp/
 
 const decoder = new TextDecoder()
 const object = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -138,6 +147,25 @@ export async function portraitRecipe(store: Pick<BlobStore, 'read'>, universe: s
   }
 }
 
+/** A universe's profile pictures as published (P180), each tied to her character by name; null when it has none. */
+export async function profilePictures(store: Pick<BlobStore, 'read'>, universe: string, characterOf: (name: string) => number | null): Promise<UniverseProfiles | null> {
+  if (!KEBAB.test(universe)) return null
+  const index = await readJson(store, `universes/${universe}/profiles/index.json`)
+  if (!index || index.kind !== 'universe-profiles' || index.universe !== universe) return null
+  const names = new Map((Array.isArray(index.characters) ? index.characters as unknown[] : []).filter(object)
+    .flatMap((c) => (typeof c.id === 'string' && KEBAB.test(c.id) && typeof c.name === 'string' ? [[c.id, c.name] as const] : [])))
+  const pieces = (Array.isArray(index.profiles) ? index.profiles as unknown[] : []).flatMap((raw): PortraitPiece[] => {
+    if (!object(raw)) return []
+    const id = text(raw.id), name = names.get(String(raw.character)), path = text(raw.path), sha256 = text(raw.sha256)
+    const bytes = whole(raw.bytes), width = whole(raw.width), height = whole(raw.height)
+    if (!id || !KEBAB.test(id) || !name || !path || !sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !bytes || !width || !height) return []
+    if (path !== `profiles/${id}.${sha256.slice(0, 16)}.webp`) return []
+    return [{ kind: 'profile', id, character: name, characterId: characterOf(name), outfit: text(raw.outfit), expression: null, path: `universes/${universe}/${path}`, bytes, sha256, width, height }]
+  })
+  if (pieces.length === 0) return null
+  return { size: whole(index.size), release: text(index.release), publishedAt: text(index.publishedAt), pieces }
+}
+
 /** Every published universe, by name: the looks its index lists, in the index's order, and its portrait pieces (CA5). */
 export async function universes(store: Pick<BlobStore, 'read' | 'list'>, characterOf: (name: string) => number | null): Promise<Universe[]> {
   const files = await store.list('universes')
@@ -148,11 +176,13 @@ export async function universes(store: Pick<BlobStore, 'read' | 'list'>, charact
     const valid = !!index && index.kind === 'universe-art' && index.universe === id && Array.isArray(index.looks)
     const looks = valid ? (index.looks as unknown[]).flatMap((raw) => lookOf(id, raw, characterOf) ?? []) : []
     const recipe = files.includes(`universes/${id}/portraits/index.json`) ? await portraitRecipe(store, id, characterOf) : null
+    const profiles = files.includes(`universes/${id}/profiles/index.json`) ? await profilePictures(store, id, characterOf) : null
     if (looks.length === 0 && !recipe) continue
     out.push({
       id, title: (valid ? text(index.title) : null) ?? words(id), style: valid ? text(index.style) : null, revision: valid && typeof index.revision === 'number' ? index.revision : null,
       publishedAt: valid ? text(index.publishedAt) : null, looks,
       portraits: recipe ? { states: recipe.states.length, approvedOn: recipe.approvedOn, publishedAt: recipe.publishedAt, pieces: [...recipe.bases, ...recipe.faces] } : null,
+      profiles,
     })
   }
   return out

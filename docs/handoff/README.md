@@ -137,6 +137,7 @@ need from here, in order. A uma-platform session writes the missing packets from
 | | F25 B, F29 B | The farm cast's seven busts (`cast` atlas) | ChatGPT | M | F25 B first | Ready (F25 B) |
 | | F55 | [The romance core's pixel art](https://github.com/luismlorenzana/uma-farm/pull/14): the homestead, the ring bench, the Hearts marks and Memory frame, the five plays | Claude | S | uma-farm's F41 read ✓ | **Done** (uma-art 2.26.0, `fe20fec`, `dffe494`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43077021067), P134; uma-farm [PR #14](https://github.com/luismlorenzana/uma-farm/pull/14), D50) |
 | | F83 | The ranch goods' four item icons (Egg, Milk, Duck Egg, Goat Milk), one raw row on the items atlas | Claude | S | uma-farm's F83 ✓ | **Done** (uma-art 2.30.0, `1e8a74c`, [release](https://github.com/luismlorenzana/uma-platform/actions/runs/43643352786), P178) |
+| | F88 | Profile pictures: a 192 px square of each dialogue portrait base around her face, in master data and in Character Art for review | Claude | S | uma-farm's F88 ✓ | **Done** (master data `c8c971f6791e`, uma-data 1.9.0, P180) |
 
 ## Tier authoring (TA)
 

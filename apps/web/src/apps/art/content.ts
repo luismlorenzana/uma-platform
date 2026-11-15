@@ -23,11 +23,12 @@ export async function decodeImage(bytes: Uint8Array, type: string): Promise<HTML
 }
 
 const lookUrls = new Map<string, Promise<string>>()
-/** A universe look's PNG (CA4) from the art pack route, checked against its hash, as an object URL kept for the visit. */
+/** A universe look's PNG (CA4), or a profile picture's WebP (P180), from the art pack route, checked against its hash, as an object URL kept for the visit. */
 export function lookUrl(look: { path: string; bytes: number; sha256: string }): Promise<string> {
   let url = lookUrls.get(look.path)
   if (!url) {
-    url = KEYS.pack(look.path, { path: look.path, bytes: look.bytes, sha256: look.sha256 }).then((b) => URL.createObjectURL(new Blob([b as BlobPart], { type: 'image/png' })))
+    const type = look.path.endsWith('.webp') ? 'image/webp' : 'image/png'
+    url = KEYS.pack(look.path, { path: look.path, bytes: look.bytes, sha256: look.sha256 }).then((b) => URL.createObjectURL(new Blob([b as BlobPart], { type })))
     url.catch(() => lookUrls.delete(look.path))
     lookUrls.set(look.path, url)
   }

@@ -9,7 +9,7 @@ import { Controller, Get, Inject, Module, NotFoundException, Param } from '@nest
 import { blobStore, type BlobStore } from '../../store/blob-store'
 import { ArtService } from './art.service'
 import { sourceReleases } from './art.sources'
-import { PORTRAIT_PACK_ALLOW, portraitRecipe, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
+import { PORTRAIT_PACK_ALLOW, portraitRecipe, PROFILE_PACK_ALLOW, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 /** uma-quest's pack allowlist (its `PACK_ALLOW` at 47ca16d): the index and hash-named sets, pages and stills. */
 export const KEY_PACK_ALLOW = ['traveler-keys/index.json', /traveler-keys\/(sets|pages|stills)\/[a-z0-9-]+\.[a-f0-9]{16}\.(json|webp)/]
@@ -74,7 +74,7 @@ class ArtController {
 }
 
 @Module({
-  imports: [PrivatePackModule.forRoot({ route: 'art/content', source: pack(), allow: [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW] })],
+  imports: [PrivatePackModule.forRoot({ route: 'art/content', source: pack(), allow: [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW, PROFILE_PACK_ALLOW] })],
   controllers: [ArtController],
   providers: [
     { provide: ART, useFactory: () => new ArtService(release(), ranker()) },

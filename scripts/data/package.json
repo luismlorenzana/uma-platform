@@ -24,7 +24,8 @@
     "publish": "tsx src/publish-cli.ts",
     "check": "tsx src/check-cli.ts",
     "portraits-pack": "tsx src/portraits-cli.ts",
-    "illustrations-pack": "tsx src/illustrations-cli.ts"
+    "illustrations-pack": "tsx src/illustrations-cli.ts",
+    "profiles-push": "tsx src/profiles-push-cli.ts"
   },
   "dependencies": {
     "@luismlorenzana/uma-data": "workspace:*",

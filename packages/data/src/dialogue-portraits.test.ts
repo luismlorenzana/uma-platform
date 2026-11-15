@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { artPaths } from './art.js'
 import { createReleaseClient } from './client.js'
-import { DIALOGUE_PORTRAIT_EXPRESSIONS, dialoguePortraitChoices, dialoguePortraitFor, dialoguePortraitPaths, parseDialoguePortraits } from './dialogue-portraits.js'
+import { DIALOGUE_PORTRAIT_EXPRESSIONS, dialoguePortraitChoices, dialoguePortraitFor, dialoguePortraitPaths, dialogueProfileFor, parseDialoguePortraits } from './dialogue-portraits.js'
 import { buildMemoryRelease, createMemorySource, syntheticDialoguePortraits } from './testing.js'
 
 const portraits = () => {
@@ -66,5 +66,47 @@ describe('reading a character’s portraits through a release', () => {
     for (const i of Object.values(p.bases)) expect(listed.get(i.path)?.sha256).toBe(i.sha256)
     expect((await client.dialoguePortraits(manifest, art, 1129))!.faces).toEqual({})
     expect(await client.dialoguePortraits(manifest, art, 1002)).toBeNull()
+  })
+})
+
+describe('profile pictures (P180)', () => {
+  const withProfiles = () => {
+    const p = syntheticDialoguePortraits(1068, ['spring', 'summer', 'kimono'], ['happy'], { profiles: true })
+    for (const b of Object.values(p.bases)) { b.sha256 = 'a'.repeat(64); b.profile!.sha256 = 'b'.repeat(64) }
+    p.faces.happy!.sha256 = 'c'.repeat(64)
+    return p
+  }
+  it('reads each base\'s square profile and its crop, and lists its picture with the rest', () => {
+    const p = parseDialoguePortraits(withProfiles(), 'p')
+    expect(p.bases.summer!.profile).toMatchObject({ width: 192, height: 192, crop: { left: 94, top: 84, size: 336 } })
+    expect(dialoguePortraitPaths(p)).toHaveLength(7)
+  })
+  it('stays optional, so a release made before them still reads', () => {
+    const p = parseDialoguePortraits(portraits(), 'p')
+    expect(p.bases.spring!.profile).toBeUndefined()
+    expect(dialogueProfileFor(p, 'spring')).toBeNull()
+  })
+  it('holds a profile square and its crop inside the base', () => {
+    const wide = withProfiles(); wide.bases.spring!.profile!.width = 200
+    expect(() => parseDialoguePortraits(wide, 'p')).toThrow(/square profile/)
+    const off = withProfiles(); off.bases.kimono!.profile!.crop = { left: 300, top: 0, size: 336 }
+    expect(() => parseDialoguePortraits(off, 'p')).toThrow(/crop square inside the base/)
+  })
+  it('picks the outfit\'s profile, else her first in Farm Life\'s order that has one', () => {
+    const p = parseDialoguePortraits(withProfiles(), 'p')
+    expect(dialogueProfileFor(p, 'summer')?.outfit).toBe('summer')
+    expect(dialogueProfileFor(p, 'winter')?.outfit).toBe('spring')
+    delete p.bases.spring!.profile
+    expect(dialogueProfileFor(p, 'fall')?.outfit).toBe('summer')
+  })
+  it('checks every profile picture against the release, like the bases', async () => {
+    const release = await buildMemoryRelease(undefined, { dialoguePortraits: [syntheticDialoguePortraits(1068, ['spring', 'winter'], ['happy'], { profiles: true })] })
+    const client = createReleaseClient({ source: createMemorySource(release.objects) })
+    const manifest = await client.manifest()
+    const art = (await client.art(manifest))!
+    const p = (await client.dialoguePortraits(manifest, art, 1068))!
+    const listed = new Map(manifest.files.map((f) => [f.path, f]))
+    for (const b of Object.values(p.bases)) expect(listed.get(b.profile!.path)?.sha256).toBe(b.profile!.sha256)
+    expect(dialogueProfileFor(p, 'winter')?.profile.path).toContain('profile-winter')
   })
 })

@@ -7,6 +7,11 @@
 // Drawing a state: the neutral state is the base alone. Any other draws its face over the base with its top-left corner
 // at the base's `face` position, no scaling or rotation, straight alpha: each colour channel becomes
 // round(base × (1 − a/255) + face × a/255) where the face's alpha a > 0, and the base unchanged elsewhere.
+//
+// Profile pictures (uma-farm F88, P180): each base may carry a `profile`, a small square head-and-shoulders crop of that
+// base with her calm face, for lists of faces. Lossy WebP, cut from the base at `crop` (in the base's pixels) and scaled
+// down to its own size; her face is centred, so a corner badge covers hair, shoulders or background, never her face.
+// Older readers ignore it.
 
 import { fail, fields, id, nonNegativeInteger, positiveInteger, recordOf, text, type Parser } from './parse.js'
 
@@ -25,9 +30,15 @@ export interface DialoguePortraitImage {
   bytes: number
   sha256: string
 }
+/** A base's profile picture: a square WebP cut from the base at `crop` (a square in the base's pixels), scaled down. */
+export interface DialoguePortraitProfile extends DialoguePortraitImage {
+  crop: { left: number; top: number; size: number }
+}
 export interface DialoguePortraitBase extends DialoguePortraitImage {
   /** Where every face's top-left corner sits on this base, in its pixels. */
   face: { left: number; top: number }
+  /** Her profile picture in this outfit (P180); absent in releases made before it. */
+  profile?: DialoguePortraitProfile
 }
 export interface DialoguePortraits {
   characterId: number
@@ -56,9 +67,20 @@ const image: Parser<DialoguePortraitImage> = (value, path) => {
   const f = fields(value, path)
   return { path: f('path', releasePath), width: f('width', positiveInteger), height: f('height', positiveInteger), bytes: f('bytes', positiveInteger), sha256: f('sha256', sha) }
 }
+const profile: Parser<DialoguePortraitProfile> = (value, path) => {
+  const f = fields(value, path)
+  const crop = f('crop', (v, p) => ({ left: fields(v, p)('left', nonNegativeInteger), top: fields(v, p)('top', nonNegativeInteger), size: fields(v, p)('size', positiveInteger) }))
+  const out = { ...image(value, path), crop }
+  if (out.width !== out.height) fail(path, 'a square profile picture')
+  return out
+}
 const base: Parser<DialoguePortraitBase> = (value, path) => {
   const f = fields(value, path)
-  return { ...image(value, path), face: f('face', (v, p) => ({ left: fields(v, p)('left', nonNegativeInteger), top: fields(v, p)('top', nonNegativeInteger) })) }
+  const raw = (value as Record<string, unknown>).profile
+  return {
+    ...image(value, path), face: f('face', (v, p) => ({ left: fields(v, p)('left', nonNegativeInteger), top: fields(v, p)('top', nonNegativeInteger) })),
+    ...(raw === undefined ? {} : { profile: profile(raw, `${path}.profile`) }),
+  }
 }
 const named = <T>(what: string, value: Record<string, T>, path: string) => {
   for (const key of Object.keys(value)) if (!DIALOGUE_PORTRAIT_NAME.test(key) || key.length > 40) fail(`${path}.${key}`, `${what} named in lowercase words joined by hyphens`)
@@ -78,6 +100,8 @@ export const parseDialoguePortraits: Parser<DialoguePortraits> = (value, path) =
   for (const [outfit, b] of Object.entries(p.bases)) {
     if (b.width !== p.base.width || b.height !== p.base.height) fail(`${path}.bases.${outfit}`, `the ${p.base.width} × ${p.base.height} base`)
     if (b.face.left + p.faceSize.width > b.width || b.face.top + p.faceSize.height > b.height) fail(`${path}.bases.${outfit}.face`, 'a face square inside the base')
+    const c = b.profile?.crop
+    if (c && (c.left + c.size > b.width || c.top + c.size > b.height)) fail(`${path}.bases.${outfit}.profile.crop`, 'a crop square inside the base')
   }
   if (p.faces.neutral) fail(`${path}.faces.neutral`, 'no neutral face: neutral is each base’s own face')
   for (const [expression, face] of Object.entries(p.faces)) {
@@ -87,7 +111,8 @@ export const parseDialoguePortraits: Parser<DialoguePortraits> = (value, path) =
 }
 
 /** Every release file a character's portraits point at. */
-export const dialoguePortraitPaths = (p: DialoguePortraits): string[] => [...Object.values(p.bases), ...Object.values(p.faces)].map((i) => i.path)
+export const dialoguePortraitPaths = (p: DialoguePortraits): string[] =>
+  [...Object.values(p.bases), ...Object.values(p.bases).flatMap((b) => (b.profile ? [b.profile] : [])), ...Object.values(p.faces)].map((i) => i.path)
 
 /** The outfits and expressions she has, in Farm Life's order, then any others by name; `neutral` always. */
 export function dialoguePortraitChoices(p: DialoguePortraits): { outfits: string[]; expressions: string[] } {
@@ -105,4 +130,15 @@ export function dialoguePortraitFor(p: DialoguePortraits, outfit: string, expres
   const b = p.bases[o]!
   const face = expression === 'neutral' ? null : p.faces[expression] ?? null
   return { base: b, face, at: b.face, outfit: o, expression: face ? expression : 'neutral' }
+}
+
+/**
+ * Her profile picture for an outfit (P180): that outfit's when its base has one, else her first in Farm Life's order that
+ * has one (spring first); null when none of her bases has a profile (a release made before them). Says which outfit.
+ */
+export function dialogueProfileFor(p: DialoguePortraits, outfit: string): { profile: DialoguePortraitProfile; outfit: string } | null {
+  const own = p.bases[outfit]?.profile
+  if (own) return { profile: own, outfit }
+  const first = dialoguePortraitChoices(p).outfits.find((o) => p.bases[o]!.profile)
+  return first ? { profile: p.bases[first]!.profile!, outfit: first } : null
 }

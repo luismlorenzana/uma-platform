@@ -141,8 +141,21 @@ async function main(): Promise<void> {
       portraitImages += 1
       portraitBytes += bytes.byteLength
     }
+    // Each base's profile picture (P180): a square lossy WebP with no alpha.
+    let profiles = 0
+    for (const [outfit, b] of Object.entries(p.bases)) {
+      if (!b.profile) continue
+      const bytes = await client.file(manifest, b.profile.path)
+      const meta = await sharp(bytes).metadata()
+      if (meta.format !== 'webp' || meta.hasAlpha) failures.push(`${b.profile.path} isn't a WebP without alpha`)
+      const rgba = await decodeRgba(bytes)
+      if (rgba.width !== b.profile.width || rgba.height !== b.profile.height || rgba.width !== rgba.height) failures.push(`${characterId} profile-${outfit} doesn't decode as its ${b.profile.width}x${b.profile.height} square`)
+      profiles += 1
+      portraitImages += 1
+      portraitBytes += bytes.byteLength
+    }
     console.log(`Dialogue portraits ${characterId} r${p.revision}: ${Object.keys(p.bases).length} base(s) on ${p.base.width}x${p.base.height}, ` +
-      `${Object.keys(p.faces).length} face(s) at ${p.faceSize.width}x${p.faceSize.height}`)
+      `${Object.keys(p.faces).length} face(s) at ${p.faceSize.width}x${p.faceSize.height}, ${profiles} profile picture(s)`)
   }
   if (portraitIds.length > 0) console.log(`Dialogue portrait images: ${portraitImages} decoded, ${(portraitBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 

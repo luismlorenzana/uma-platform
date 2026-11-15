@@ -1,5 +1,6 @@
 // Writes the `dialogue-portraits` family into the local release (`pnpm portraits:pack`, uma-farm F75, P170;
-// docs/sprites/dialogue-portraits.md): per character her bases and faces (lossless WebP) and one manifest naming them,
+// docs/sprites/dialogue-portraits.md): per character her bases and faces (lossless WebP), each base's profile picture
+// (lossy WebP, P180) and one manifest naming them,
 // by character id. The art index gains a `dialoguePortraits` map; every other file and index entry is kept as it is.
 // Deterministic: the same pictures write the same bytes.
 
@@ -16,7 +17,7 @@ export interface PackedDialoguePortraits {
   approvedOn: string
   base: { width: number; height: number }
   faceSize: { width: number; height: number }
-  bases: Record<string, PackedPortraitImage & { face: { left: number; top: number } }>
+  bases: Record<string, PackedPortraitImage & { face: { left: number; top: number }; profile?: PackedPortraitImage & { crop: { left: number; top: number; size: number } } }>
   faces: Record<string, PackedPortraitImage>
 }
 
@@ -29,7 +30,11 @@ export async function writeDialoguePortraitRelease(releaseDir: string, character
         return { path: file.path, width: img.width, height: img.height, bytes: file.bytes, sha256: file.sha256 }
       }
       const out: DialoguePortraits = { characterId: packed.characterId, revision: packed.revision, approvedOn: packed.approvedOn, base: packed.base, faceSize: packed.faceSize, bases: {}, faces: {} }
-      for (const name of Object.keys(packed.bases).sort()) out.bases[name] = { ...(await write(`${packed.characterId}-base-${name}`, packed.bases[name]!)), face: packed.bases[name]!.face }
+      for (const name of Object.keys(packed.bases).sort()) {
+        const b = packed.bases[name]!
+        out.bases[name] = { ...(await write(`${packed.characterId}-base-${name}`, b)), face: b.face }
+        if (b.profile) out.bases[name]!.profile = { ...(await write(`${packed.characterId}-profile-${name}`, b.profile)), crop: b.profile.crop }
+      }
       for (const name of Object.keys(packed.faces).sort()) out.faces[name] = await write(`${packed.characterId}-face-${name}`, packed.faces[name]!)
       return out
     },

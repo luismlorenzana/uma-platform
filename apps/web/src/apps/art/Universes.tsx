@@ -3,7 +3,8 @@
 // universe (the owner: "visible on a per-uma basis, on the same menu that shows the full uma input data"). A look opens
 // full size. Each PNG is read through the art pack route, checked against its hash and kept on the device.
 // CA5 (P169) adds her dialogue portrait pieces under each universe: her outfits' neutral crops and her expressions' faces,
-// shown as they are. The page never composes a state; the games do, from the recipe the API gives them.
+// shown as they are. The page never composes a state; the games do, from the recipe the API gives them. Her profile
+// pictures (P180) follow: the square crops master data ships, one an outfit, for the owner's review.
 import { Button } from '@luismlorenzana/uma-kit/ui'
 import { useEffect, useRef, useState } from 'react'
 import { lookUrl } from './content'
@@ -15,7 +16,7 @@ const words = (id: string) => id.split('-').map((w) => (w ? w[0]!.toUpperCase() 
 /** A portrait piece as a picture to show: "Spring · neutral crop", "Happy · face". */
 const shownOf = (piece: PortraitPiece, portraits: { approvedOn: string | null; publishedAt: string | null }): Shown => ({
   id: piece.id, character: piece.character, path: piece.path, bytes: piece.bytes, sha256: piece.sha256, width: piece.width, height: piece.height,
-  title: piece.kind === 'crop' ? `${words(piece.outfit ?? piece.id)} · neutral crop` : `${words(piece.expression ?? piece.id)} · face`,
+  title: piece.kind === 'crop' ? `${words(piece.outfit ?? piece.id)} · neutral crop` : piece.kind === 'profile' ? `${words(piece.outfit ?? piece.id)} · profile` : `${words(piece.expression ?? piece.id)} · face`,
   approvedOn: portraits.approvedOn, publishedAt: portraits.publishedAt,
 })
 /** A light checkerboard behind a face layer, which is see-through but for its features. */
@@ -109,14 +110,30 @@ function Pieces({ pieces, universe }: { pieces: readonly PortraitPiece[]; univer
   )
 }
 
-/** An Uma's page: her looks in each universe, her splash art (P175), and her dialogue portrait pieces where a universe has them. */
-export function UmaUniverses({ groups }: { groups: readonly { universe: Universe; looks: UniverseLook[]; splash?: UniverseLook[]; pieces?: PortraitPiece[] }[] }) {
+/** Her profile pictures in one universe (P180): each outfit's square, as master data ships it. Its corners (28% of a side)
+ *  stay clear of her face, so a game's badge fits there. */
+function Profiles({ profiles, universe }: { profiles: readonly PortraitPiece[]; universe: Universe }) {
+  const p = universe.profiles ?? { size: null, release: null, publishedAt: null }
+  const shown = profiles.map((piece) => shownOf(piece, { approvedOn: universe.portraits?.approvedOn ?? null, publishedAt: p.publishedAt }))
+  return (
+    <div className="flex flex-col gap-2" data-testid="profile-pictures">
+      <p className="text-xs text-ink-soft">
+        <b className="font-semibold text-ink">Profile pictures</b> · {shown.length} outfit{shown.length === 1 ? '' : 's'}, {p.size ?? '—'} px squares cut around her face from each neutral crop; the corners stay clear for a badge{p.release ? ` · master data ${p.release}` : ''} · published {day(p.publishedAt)}
+      </p>
+      <Looks looks={shown} universe={universe} columns="grid-cols-4 sm:grid-cols-6 lg:grid-cols-12" />
+    </div>
+  )
+}
+
+/** An Uma's page: her looks in each universe, her splash art (P175), and her dialogue portrait pieces and profile pictures
+ *  where a universe has them. */
+export function UmaUniverses({ groups }: { groups: readonly { universe: Universe; looks: UniverseLook[]; splash?: UniverseLook[]; pieces?: PortraitPiece[]; profiles?: PortraitPiece[] }[] }) {
   const looks = groups.reduce((n, g) => n + g.looks.length, 0), pieces = groups.reduce((n, g) => n + (g.pieces?.length ?? 0), 0)
   const scenes = groups.reduce((n, g) => n + (g.splash?.length ?? 0), 0)
   return (
     <section className="flex flex-col gap-3" data-testid="uma-universes">
       <h3 className="font-display text-base font-bold">Universes <span className="text-sm font-normal text-ink-soft">{looks} approved look{looks === 1 ? '' : 's'}{scenes ? ` · ${scenes} splash image${scenes === 1 ? '' : 's'}` : ''}{pieces ? ` · ${pieces} portrait pieces` : ''}</span></h3>
-      {groups.map(({ universe, looks, splash = [], pieces = [] }) => (
+      {groups.map(({ universe, looks, splash = [], pieces = [], profiles = [] }) => (
         <div key={universe.id} className="flex flex-col gap-2">
           <p className="text-sm"><b className="font-semibold">{universe.title}</b> <span className="text-xs text-ink-soft">{universeLine(universe, looks.length)}</span></p>
           {looks.length > 0 && <Looks looks={looks} universe={universe} />}
@@ -127,6 +144,7 @@ export function UmaUniverses({ groups }: { groups: readonly { universe: Universe
             </div>
           )}
           {pieces.length > 0 && <Pieces pieces={pieces} universe={universe} />}
+          {profiles.length > 0 && <Profiles profiles={profiles} universe={universe} />}
         </div>
       ))}
     </section>

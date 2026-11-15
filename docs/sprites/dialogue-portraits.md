@@ -1,8 +1,9 @@
 # Dialogue portraits (`dialogue-portraits`)
 
 > **Status: 2026-11-14, live (P170): master data `f4ca0273cb2b`, uma-data 1.7.0; a third Uma (1067) joined in
-> `6983da0f6614` (P176).** uma-farm's F75 builds its dialogue on these. Three Umas by character id: 1068, 1129 and 1067,
-> 12 bases and 15 faces each. Private: they show franchise characters, so they live in master
+> `6983da0f6614` (P176); every base has its [profile picture](#profile-pictures) since `c8c971f6791e`, uma-data 1.9.0
+> (P180).** uma-farm's F75 builds its dialogue on these, and F88 its lists of faces. Three Umas by character id: 1068,
+> 1129 and 1067, 12 bases, 15 faces and 12 profile pictures each. Private: they show franchise characters, so they live in master
 > data's private release only, never in git or uma-art. Her full-screen scenes are the sibling family,
 > [illustrations.md](illustrations.md).
 
@@ -56,4 +57,30 @@ hasn't got is neutral.
    `--illustrations-only` too, both families go in one release);
    `pnpm release:check -- --channel candidate --against latest` reads it back; `--promote <version>` moves latest.
 
-The next Umas join the same way: the art pipeline publishes them, then steps 2 and 3.
+The next Umas join the same way: the art pipeline publishes them, then steps 2 and 3, then `pnpm profiles:push` for
+the owner's review of their profile pictures.
+
+## Profile pictures
+
+uma-farm's F88 (P180): for lists of faces, each base carries a small square head-and-shoulders crop of itself with her
+calm face, so a list of 100 faces loads about 1 MB, not 30. Made in code from the approved base by `pnpm portraits:pack`;
+nothing is drawn. [Desktop page](previews/profile-pictures.html).
+
+| | |
+|---|---|
+| **Size** | 192 × 192, **lossy WebP at quality 90**, no alpha: 9–12 KB each on the first three Umas (35–39 dB colour PSNR against the scaled crop; the pack refuses one under **34 dB**) |
+| **Where it's cut** | A square of the base around her face: the face is where her expression faces draw (the box of every face pixel of every expression, alpha ≥ 32, placed at the base's face position), **42%** of the square's side and at its centre, so each side keeps about 29% margin. The square moves only as far as it must to stay on the base. For the first three Umas: 331–336 px squares from about (92, 71), the face box about 141 × 130 |
+| **The corners** | Her face stays out of every corner square of 28% of the side, so a corner badge covers hair, shoulders or background, never her face. The pack refuses an automatic square that breaks this |
+| **By hand** | `content/authoring/profiles/<universe>.json` (private, optional): `{ "universe": "farm-life", "crops": { "<character id>/<outfit>": { "left", "top", "size" } } }` in the base's pixels. A square by hand must still hold her whole face. None is set today |
+
+In master data, each base's `profile` is `{ path, width, height, bytes, sha256, crop: { left, top, size } }`, the file
+`art/dialogue-portraits/<id>-profile-<outfit>.<hash16>.webp`; `crop` is the square in the base's pixels. Older readers
+ignore it; `client.dialoguePortraits` (uma-data 1.9.0) checks each profile's bytes and SHA-256 against the release, and
+`dialogueProfileFor(portraits, outfit)` gives `{ profile, outfit }`: that outfit's, else her first in Farm Life's order
+that has one (spring first), or null in a release made before them. The seasons are `spring`, `summer`, `fall` and
+`winter`. Tests: `syntheticDialoguePortraits(id, outfits, expressions, { profiles: true })`.
+
+**Review:** `pnpm profiles:push [universe]` reads the profiles from the master data channel (hash-checked, as a game
+reads them) and sends them, then their index (`kind: universe-profiles`, with the release's version), to the app's
+bucket, `art/universes/<universe>/profiles/`. Uma Character Art shows them on her page under "Profile pictures", one a
+outfit. If one looks off, its square goes in the override file, then the pack, the publish and the push again.

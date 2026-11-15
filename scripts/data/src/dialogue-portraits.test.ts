@@ -1,6 +1,6 @@
 // uma-farm F75 (P170): a universe's published portraits → the dialogue-portraits family in the local release → the
 // portraits-only release on latest, read back as a game reads it. Code-drawn stand-ins only.
-import { createReleaseClient, dialoguePortraitFor, type ArtIndex } from '@luismlorenzana/uma-data'
+import { createReleaseClient, dialoguePortraitFor, dialogueProfileFor, type ArtIndex } from '@luismlorenzana/uma-data'
 import { buildMemoryRelease, syntheticArtIndex, syntheticMasterData } from '@luismlorenzana/uma-data/testing'
 import { createHash } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
@@ -11,10 +11,11 @@ import { FakeBucket } from './__fixtures__/bucket'
 import { fixtureBase, fixtureFace, FIXTURE_BASE, FIXTURE_FACE_AT, FIXTURE_FACE_SIZE, FIXTURE_PORTRAIT_ID } from './dialogue-portrait-fixture'
 import { writeDialoguePortraitRelease, type PackedDialoguePortraits } from './dialogue-portrait-release'
 import { planCharacterFamiliesOnly } from './character-families-only'
-import { encodePng } from './enemy-images'
+import { decodeRgba, encodePng } from './enemy-images'
 import { LocalOverlayStorage } from './local-storage'
 import { writeDataSets, type MasterSets } from './pack'
 import { packPortraits, planPortraits, readPortraitsIndex, type UniversePortraitsIndex } from './portraits'
+import { cropProblem, PROFILE_SIZE } from './profiles'
 import { publishManifest } from './publish'
 import { readLocalManifest } from './release-dir'
 import { checkCarried } from './sprites-only'
@@ -119,5 +120,37 @@ describe('the portraits-only release on latest', () => {
   it('refuses a local release with no portraits', async () => {
     const release = await buildMemoryRelease(syntheticMasterData(), { art: syntheticArtIndex(PAGE, IMAGE), extraFiles: { [PAGE]: new Uint8Array([1, 2, 3]), [IMAGE]: new Uint8Array([4, 5]) } })
     await expect(planCharacterFamiliesOnly({ families: ['dialoguePortraits'], releaseDir: await localRelease([]), storage: new FakeBucket(release.objects), stagingDir: await temp('uma-portraits-stage-') })).rejects.toThrow(/no (art index|dialogue portraits)/)
+  })
+})
+
+describe('profile pictures (uma-farm F88, P180)', () => {
+  it('gives every base a 192 px square around her face, a lossy WebP read back through the release', async () => {
+    const [p] = await packed()
+    for (const [outfit, b] of Object.entries(p!.bases)) {
+      expect(b.profile, outfit).toMatchObject({ width: PROFILE_SIZE, height: PROFILE_SIZE })
+      const back = await decodeRgba(b.profile!.bytes)
+      expect([back.width, back.height]).toEqual([PROFILE_SIZE, PROFILE_SIZE])
+      expect(b.profile!.bytes.subarray(12, 16).toString()).toBe('VP8 ') // lossy, not VP8L
+    }
+    // The fixture's face is the ellipse the faces draw: centred in the square, clear of the corners.
+    const crop = p!.bases.spring!.profile!.crop, face = { left: 167, top: 210, right: 356, bottom: 369 }
+    expect(Math.abs(crop.left + crop.size / 2 - (face.left + face.right + 1) / 2)).toBeLessThanOrEqual(1)
+    expect(cropProblem(crop, face)).toBeNull()
+    const dir = await localRelease([p!])
+    const manifest = (await readLocalManifest(dir))!
+    const index = JSON.parse(await readFile(resolve(dir, manifest.art!), 'utf8')) as ArtIndex
+    const client = createReleaseClient({ source: { read: async (path) => new Uint8Array(await readFile(resolve(dir, ...path.replace(/^files\//, '').split('/')))) } })
+    const read = (await client.dialoguePortraits(manifest, index, FIXTURE_PORTRAIT_ID))!
+    expect(dialogueProfileFor(read, 'kimono')?.profile.path).toMatch(/9999-profile-kimono\.[0-9a-f]{16}\.webp$/)
+    expect(dialogueProfileFor(read, 'winter')?.outfit).toBe('spring')
+  })
+  it('takes a square by hand from the override file, and refuses one that cuts her face', async () => {
+    const { dir, index } = await universe()
+    const [plan] = planPortraits(index, idOf).plans
+    const byHand = await packPortraits(dir, index, plan!, { universe: 'test-life', crops: { [`${FIXTURE_PORTRAIT_ID}/kimono`]: { left: 40, top: 40, size: 445 } } })
+    expect(byHand.bases.kimono!.profile!.crop).toEqual({ left: 40, top: 40, size: 445 })
+    expect(byHand.profiles.find((r) => r.outfit === 'kimono')?.override).toBe(true)
+    expect(byHand.profiles.find((r) => r.outfit === 'spring')?.override).toBe(false)
+    await expect(packPortraits(dir, index, plan!, { universe: 'test-life', crops: { [`${FIXTURE_PORTRAIT_ID}/spring`]: { left: 0, top: 0, size: 200 } } })).rejects.toThrow(/runs past the crop/)
   })
 })

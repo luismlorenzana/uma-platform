@@ -79,6 +79,14 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([sky, farm], 9003).map((g) => [g.universe.id, g.looks.length, g.pieces.map((p) => p.id)])).toEqual([['farm', 0, ['spring', 'happy']]])
     expect(looksOf([sky, farm], 9001).map((g) => [g.universe.id, g.looks.length, g.pieces.map((p) => p.id)])).toEqual([['sky-city', 2, []], ['farm', 0, ['spring-2']]])
   })
+  it('gives her page her profile pictures (P180), hers only', () => {
+    const profile = (id: string, characterId: number): PortraitPiece => ({
+      kind: 'profile', id, character: 'Rider', characterId, outfit: id, expression: null, path: `universes/u/profiles/${id}.0123456789abcdef.webp`, bytes: 1, sha256: '0'.repeat(64), width: 192, height: 192,
+    })
+    const farm: Universe = { ...universe('farm', []), profiles: { size: 192, release: 'abcdef012345', publishedAt: null, pieces: [profile('spring', 9003), profile('winter', 9001)] } }
+    expect(looksOf([farm], 9003).map((g) => [g.universe.id, g.profiles.map((p) => p.id)])).toEqual([['farm', ['spring']]])
+    expect(looksOf([farm], 9002)).toEqual([])
+  })
   it('counts each character’s looks across the universes for her tiles, leaving out a look no character matches', () => {
     expect([...lookCounts([sky, road])]).toEqual([[9001, 2], [9002, 2]])
     expect(lookCounts([]).size).toBe(0)
