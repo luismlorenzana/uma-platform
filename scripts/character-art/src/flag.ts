@@ -2,7 +2,8 @@
 // opened from the file system, where a page can't fetch a file, so the record reaches them as a script
 // (each `publication.js` adds its record and its own address to `window.UMA_PUBLICATIONS`, the portraits' sets
 // `window.UMA_PORTRAIT_PUBLICATION`; P175) and this one draws
-// it: a badge beside each look's "Approved", a line under the page's header, and a line for the dialogue portraits. It matches a look by its picture's path, changes nothing else on the page, and does nothing
+// it: a badge beside each look's "Approved", a line under the page's header, and a line for the dialogue portraits. A
+// record names the app it publishes to (`app`: Uma Enemy Art's, EA1); without one, it is Uma Character Art. It matches a look by its picture's path, changes nothing else on the page, and does nothing
 // when the record is missing. Kept as text here because `pnpm art:push` and `pnpm art:status` write it into private
 // authoring (`character-universes/publication-flag.js`), which git never sees.
 export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma-platform, scripts/character-art). Don't edit: it is rewritten.
@@ -38,7 +39,7 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
   ].join('')
   document.head.appendChild(style)
   /** A line under the page's header, or at the top of the page. */
-  function addLine(text, site) {
+  function addLine(text, site, app) {
     var line = document.createElement('p')
     line.className = 'uma-pub-line'
     line.appendChild(document.createTextNode(text + (site ? ' · ' : '')))
@@ -47,7 +48,7 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
       link.href = site
       link.target = '_blank'
       link.rel = 'noopener'
-      link.textContent = 'Open Uma Character Art'
+      link.textContent = 'Open ' + (app || 'Uma Character Art')
       line.appendChild(link)
     }
     var header = document.querySelector('header')
@@ -56,7 +57,7 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
   }
   var figures = document.querySelectorAll('figure')
   list.forEach(function (entry, n) {
-    var record = entry.record, base = entry.base || null, byImage = {}
+    var record = entry.record, base = entry.base || null, byImage = {}, app = record.app || 'Uma Character Art'
     record.looks.forEach(function (look) { if (look.image) byImage[keyOf(look.image, base)] = look })
     for (var i = 0; i < figures.length; i++) {
       var figure = figures[i], img = figure.querySelector('img[src]')
@@ -66,7 +67,7 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
       var badge = document.createElement('span')
       badge.className = 'uma-pub uma-pub-' + look.state
       badge.textContent = WORDS[look.state] || look.state
-      badge.title = look.state === 'published' ? 'Published to Uma Character Art on ' + day(look.publishedAt) : (look.note || 'Approved, not in Uma Character Art yet')
+      badge.title = look.state === 'published' ? 'Published to ' + app + ' on ' + day(look.publishedAt) : (look.note || 'Approved, not in ' + app + ' yet')
       figure.setAttribute('data-publication', look.state)
       var approved = figure.querySelector('.badge')
       if (approved && approved.parentNode) approved.parentNode.insertBefore(badge, approved.nextSibling)
@@ -74,13 +75,15 @@ export const FLAG_SCRIPT = `// Written by pnpm art:push and pnpm art:status (uma
     }
     var noun = record.noun || 'looks', counts = record.counts || {}, total = record.looks.length, published = counts.published || 0
     if (!total) return
-    var text = published === total ? 'All ' + total + ' ' + noun + ' are published to Uma Character Art'
-      : published + ' of ' + total + ' ' + noun + ' are published to Uma Character Art'
+    // One picture reads in the singular: "The enemy look is published", "0 of 1 look is published".
+    var one = noun.replace(/s$/, '')
+    var text = published === total ? (total === 1 ? 'The ' + one + ' is published to ' + app : 'All ' + total + ' ' + noun + ' are published to ' + app)
+      : published + ' of ' + total + ' ' + (total === 1 ? one + ' is' : noun + ' are') + ' published to ' + app
     if (record.publishedAt) text += ' · ' + day(record.publishedAt)
     var waiting = (counts.unpublished || 0) + (counts.changed || 0)
     if (waiting) text += ' · ' + waiting + ' waiting for a push'
     if (counts.refused) text += ' · ' + counts.refused + ' can’t go out (see publication.json)'
-    addLine(text, n === 0 ? record.site : null)
+    addLine(text, n === 0 ? record.site : null, app)
   })
   if (hasPortraits) {
     var p = portraits, pieces = p.bases + ' outfit crops and ' + p.faces + ' faces'

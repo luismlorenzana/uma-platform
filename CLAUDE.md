@@ -43,12 +43,14 @@
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
   The local album pages are built by code in git, `scripts/character-art/albums` (`pnpm art:albums`, P181); their words
   stay local in each page's `album.json`. Uma Cyberpunk has two separate authoring cycles (P182): characters
-  (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, approval only, names local).
+  (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, names local).
 - **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
   `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
   franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's
   `content/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
-  would publish them as an Uma's looks); no publishing route exists for them yet.
+  would publish them as an Uma's looks). **Uma Enemy Art (EA1, P183, AP93–AP98)** is their own sub-app
+  (https://uma-platform.web.app/enemy-art): `pnpm art:push cyberpunk --enemies` publishes the approved ones to
+  `enemy-art/cyberpunk/`, on the owner's word only; Uma Quest's enemies join it later (EA2); Uma Farm has none.
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

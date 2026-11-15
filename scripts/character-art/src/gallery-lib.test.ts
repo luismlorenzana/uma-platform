@@ -57,14 +57,16 @@ describe('the Local Art Gallery', () => {
     expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>2</b> splash images <span class="pub">All 2 published</span> · <a href="/sky-city/splash-art/review.html">Open them</a></p>')
   })
 
-  it('lists the enemy album with its approved looks, not published (P182)', () => {
+  it('lists the enemy album with its approved looks, and how many are in Uma Enemy Art (P182, EA1)', () => {
     const base = root({ 'sky-city': { approved: 1, published: 1 } })
     const enemies = join(base, 'sky-city', 'enemies', 'approved')
     mkdirSync(enemies, { recursive: true })
     writeFileSync(join(enemies, 'manifest.json'), JSON.stringify({ assets: [{ approval: { status: 'approved', by: 'owner' } }, { approval: { status: 'pending' } }] }))
-    expect(galleryRows(base)[0]!.enemies).toEqual({ approved: 1, page: null })
+    expect(galleryRows(base)[0]!.enemies).toEqual({ approved: 1, published: 0, publishedAt: null, page: null })
     writeFileSync(join(enemies, 'review.html'), '<html></html>')
     expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>1</b> approved enemy look <span class="pub none">Not published</span> · <a href="/sky-city/enemies/approved/review.html">Open the enemy album</a></p>')
+    writeFileSync(join(enemies, 'publication.json'), JSON.stringify({ publishedAt: '2026-01-06T10:00:00.000Z', counts: { published: 1, changed: 0, unpublished: 0, refused: 1 } }))
+    expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>1</b> approved enemy look <span class="pub">All 1 in Uma Enemy Art</span> <span class="when">2026-01-06</span> · <a href="/sky-city/enemies/approved/review.html">Open the enemy album</a></p>')
   })
 
   it('lists each character’s own collection with her looks, her portraits and her album (P174)', () => {

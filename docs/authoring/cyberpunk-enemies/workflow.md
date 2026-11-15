@@ -38,14 +38,21 @@ Run `pnpm art:albums cyberpunk`: the enemy album (`approved/review.html`) shows 
 When a new faction gets its first approved look, add its name (and its place in the order) to `approved/album.json`'s
 `factions`, and a caption for a new look to `looks`.
 
-## 6. Handoff
+## 6. Publishing, on the owner's word
 
-Update [the handoff](templates/handoff.md): each enemy's studies, verdicts and approved looks, and the next step in the
-baseline's order of work. Publishing has no route yet; it waits for the owner's decision.
+Approved looks publish to **Uma Enemy Art** (https://uma-platform.web.app/enemy-art, EA1, P183), the app's own section for
+enemies, never Character Art. Claude runs `pnpm art:push cyberpunk --enemies --only <ids>` when the owner says which looks
+go up: it sends each approved PNG byte for byte to `gs://uma-platform-content/enemy-art/cyberpunk/`, reads it back, writes
+the index last and flags the looks in the enemy album. An authoring session only approves.
+
+## 7. Handoff
+
+Update [the handoff](templates/handoff.md): each enemy's studies, verdicts, approved looks and what is published, and the
+next step in the baseline's order of work.
 
 ## Never
 
 - Put an enemy look in the universe's `approved/` or `characters/`.
 - Put an enemy, faction or franchise name in git.
 - Overwrite an approved PNG, or change one after its approval.
-- Publish, upload, back up or change cloud resources from an authoring session.
+- Publish, upload, back up or change cloud resources from an authoring session; publishing is Claude's, on the owner's word.

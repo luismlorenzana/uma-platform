@@ -607,8 +607,13 @@ function gcloud(args: string[], allow: readonly ('missing' | 'precondition')[] =
 }
 
 /** A universe's folder in the app's bucket, `gs://uma-platform-content/art/universes/<universe>/`. */
-export function bucketRemote(universe: string): Remote {
-  const base = `gs://${BUCKET}/art/universes/${universe}`
+export const bucketRemote = (universe: string): Remote => remoteAt(`art/universes/${universe}`)
+
+/** A folder of the app's bucket, `gs://uma-platform-content/<prefix>/`: a universe's looks (CA4), or a game's enemy looks
+ *  (`enemy-art/<game>`, EA1). */
+export function remoteAt(prefix: string): Remote {
+  if (!/^[a-z0-9-]+(\/[a-z0-9-]+)*$/.test(prefix)) throw new Error(`A bucket folder is lowercase names joined by slashes: ${prefix}`)
+  const base = `gs://${BUCKET}/${prefix}`
   return {
     read(path) {
       const generation = gcloud(['objects', 'describe', `${base}/${path}`, '--format=value(generation)'], ['missing'])?.trim()
@@ -621,10 +626,10 @@ export function bucketRemote(universe: string): Remote {
     list() {
       const out = gcloud(['objects', 'list', `${base}/**`, '--format=json(name,size,md5_hash)'], ['missing'])
       if (!out?.trim()) return []
-      const prefix = `art/universes/${universe}/`
+      const start = `${prefix}/`
       return (JSON.parse(out) as { name: string; size: string | number; md5_hash: string }[])
-        .filter((f) => f.name.startsWith(prefix))
-        .map((f) => ({ path: f.name.slice(prefix.length), bytes: Number(f.size), md5: f.md5_hash }))
+        .filter((f) => f.name.startsWith(start))
+        .map((f) => ({ path: f.name.slice(start.length), bytes: Number(f.size), md5: f.md5_hash }))
     },
   }
 }

@@ -49,14 +49,15 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/enemies/`
 ## The approval cycle
 
 ```
-study (v00N) ─► review page ─► owner's verdict ─► copied into approved/ + manifest entry ─► enemy album rebuilt
-                 (per study)     (exact words,      (byte for byte, SHA-256,                 (pnpm art:albums cyberpunk)
-                                  date, scope)        approval)
+study (v00N) ─► review page ─► owner's verdict ─► copied into approved/ + manifest entry ─► enemy album rebuilt ─► Uma Enemy Art
+                 (per study)     (exact words,      (byte for byte, SHA-256,                 (pnpm art:albums      (on the owner's word:
+                                  date, scope)        approval)                                cyberpunk)            art:push --enemies)
 ```
 
-The cycle ends at **approved, locally**. Enemy looks have no publishing route yet (CE9): nothing is pushed, uploaded or
-backed up. When the owner picks a destination, a publishing session builds it; until then the enemy album and the Local
-Art Gallery show each approved look as **Not published**.
+An authoring session ends at **approved, locally**. Publishing is a separate step, Claude's, on the owner's word: approved
+looks go to **Uma Enemy Art** (https://uma-platform.web.app/enemy-art, EA1, P183), the app's own section for enemies, never
+Character Art, with `pnpm art:push cyberpunk --enemies --only <ids>`. The enemy album and the Local Art Gallery then show
+each look as **Published** (or **Not published** until it goes up). Nothing here is backed up.
 
 ## Album
 

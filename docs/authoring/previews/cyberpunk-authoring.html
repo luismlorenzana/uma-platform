@@ -124,7 +124,7 @@
     </section>
 
     <section class="card" id="enemies">
-      <h2>Enemies <span class="pill wait">Approval only</span></h2>
+      <h2>Enemies <span class="pill go">Uma Enemy Art</span></h2>
       <p class="lead">Enemies and bosses on the Standard, one kit per faction. <a href="../cyberpunk-enemies/README.md">Packet</a> · <a href="../cyberpunk-enemies/workflow.md">Workflow</a></p>
       <ol class="steps">
         <li><span class="n">1</span><span><b>Wired</b>: references, variant brief, prompt draft (<code>enemies/tools/wire.py</code>)</span></li>
@@ -132,7 +132,7 @@
         <li><span class="n">3</span><span><b>Review page</b>: recognition, the shared look, the faction read, hers, anatomy</span></li>
         <li><span class="n">4</span><span><b>Owner's verdict</b>: the PNG copied into <code>enemies/approved/</code> with a manifest entry</span></li>
         <li><span class="n">5</span><span><b>The enemy album</b>: <code>pnpm art:albums cyberpunk</code>, faction by faction</span></li>
-        <li class="stop"><span class="n">6</span><span><b>Publishing</b>: no route yet; waits for the owner's choice of destination</span></li>
+        <li class="end"><span class="n">6</span><span><b>Published on the owner's word</b>: <code>pnpm art:push cyberpunk --enemies --only …</code>, then in Uma Enemy Art, faction by faction</span></li>
       </ol>
       <h3>Scope</h3>
       <table>
@@ -151,6 +151,7 @@
       <tr><th>Collection (local)</th><td><code>cyberpunk/approved/</code> (the pilots), <code>cyberpunk/characters/&lt;key&gt;/</code></td><td><code>cyberpunk/enemies/</code></td></tr>
       <tr><th>Approval record</th><td>Each collection's <code>manifest.json</code></td><td><code>enemies/approved/manifest.json</code></td></tr>
       <tr><th>Album</th><td><code>cyberpunk/approved/review.html</code>; her own album in her active version</td><td><code>enemies/approved/review.html</code></td></tr>
+      <tr><th>Published to</th><td>Uma Character Art, on her own page (<code>art:push cyberpunk</code>)</td><td>Uma Enemy Art, <code>/enemy-art</code> (<code>art:push cyberpunk --enemies</code>)</td></tr>
       <tr><th>Album's words</th><td colspan="2">The <code>album.json</code> beside each page, local</td></tr>
       <tr><th>Album code (git)</th><td colspan="2"><code>scripts/character-art/albums/</code>: <code>universe-album.mjs</code>, <code>character-album.mjs</code> (looks-only mode), <code>enemy-album.mjs</code></td></tr>
       <tr><th>Front page</th><td colspan="2">The Local Art Gallery (<code>pnpm art:gallery</code>) lists both on the Cyberpunk card</td></tr>
@@ -164,7 +165,7 @@
       <tr><td class="id">2</td><td><b>The pilots' album is built by the album code</b> from a local <code>album.json</code>; the hand-written page is kept in <code>_retired-gallery-code/</code></td></tr>
       <tr><td class="id">3</td><td><b>A character with looks only</b> gets a looks-only album; dialogue portraits and keys are later packets</td></tr>
       <tr><td class="id">4</td><td><b>The enemy album</b> groups approved looks by faction, in <code>album.json</code>'s order; the code names no enemy or faction</td></tr>
-      <tr><td class="id">5</td><td><b>Enemy approval ends locally:</b> shown as Not published until the owner chooses where enemy looks go</td></tr>
+      <tr><td class="id">5</td><td><b>Enemy looks publish to Uma Enemy Art</b> (P183), their own sub-app, never Character Art; on the owner's word</td></tr>
       <tr><td class="id">6</td><td><b>Characters publish as before,</b> on the owner's word, with <code>art:push cyberpunk</code></td></tr>
     </table>
   </section>

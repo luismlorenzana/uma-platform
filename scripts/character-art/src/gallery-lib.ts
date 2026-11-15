@@ -31,8 +31,8 @@ export interface GalleryRow {
   portraits: { state: string; states: number; bases: number; faces: number; publishedAt: string | null } | null
   /** The splash art (P175): how many scenes are approved and published. */
   splash: { approved: number; published: number; publishedAt: string | null } | null
-  /** The enemy album (P182): how many enemy looks the owner approved, and its page. */
-  enemies: { approved: number; page: string | null } | null
+  /** The enemy album (P182): how many enemy looks the owner approved, how many are in Uma Enemy Art (EA1), and its page. */
+  enemies: { approved: number; published: number; publishedAt: string | null; page: string | null } | null
   /** Each character's own collection (P174): her approved looks, how many are published, her portraits, her album. */
   characters: { key: string; name: string; approved: number; published: number; portraits: { state: string; states: number } | null; page: string | null }[]
 }
@@ -56,7 +56,9 @@ export function galleryRows(base: string): GalleryRow[] {
       enemies: existsSync(join(base, universe, 'enemies', 'approved', MANIFEST)) ? (() => {
         const m = JSON.parse(readFileSync(join(base, universe, 'enemies', 'approved', MANIFEST), 'utf8')) as { assets?: { approval?: { status?: string; by?: string } }[] }
         const approved = (m.assets ?? []).filter((a) => a.approval?.status === 'approved' && a.approval?.by === 'owner').length
-        return { approved, page: existsSync(join(base, universe, 'enemies', 'approved', GALLERY)) ? `/${universe}/enemies/approved/${GALLERY}` : null }
+        const flags = join(base, universe, 'enemies', 'approved', RECORD)
+        const shown = existsSync(flags) ? JSON.parse(readFileSync(flags, 'utf8')) as { counts?: { published?: number }; publishedAt?: string | null } : null
+        return { approved, published: shown?.counts?.published ?? 0, publishedAt: shown?.publishedAt ?? null, page: existsSync(join(base, universe, 'enemies', 'approved', GALLERY)) ? `/${universe}/enemies/approved/${GALLERY}` : null }
       })() : null,
       splash: scenes ? { approved: Array.isArray(scenes.assets) ? scenes.assets.length : 0, published: shown?.counts.published ?? 0, publishedAt: shown?.publishedAt ?? null } : null,
       characters: characterStudies(join(base, universe)).map((study) => {
@@ -88,7 +90,9 @@ export function indexPage(base: string, site: string): string {
       return `<p data-character="${c.key}"><b>${escape(c.name)}</b> · ${c.approved} approved looks ${looks}${portraits}${c.page ? ` · <a href="${c.page}">Open her album</a>` : ''}</p>`
     }).join('')
     const en = r.enemies
-    const enemies = en ? `<p><b>${en.approved}</b> approved enemy look${en.approved === 1 ? '' : 's'} <span class="pub none">Not published</span>${en.page ? ` · <a href="${en.page}">Open the enemy album</a>` : ''}</p>` : ''
+    const enemyFlag = !en ? '' : en.published === en.approved && en.approved > 0 ? `<span class="pub">All ${en.approved} in Uma Enemy Art</span>`
+      : en.published > 0 ? `<span class="pub part">${en.published} of ${en.approved} in Uma Enemy Art</span>` : '<span class="pub none">Not published</span>'
+    const enemies = en ? `<p><b>${en.approved}</b> approved enemy look${en.approved === 1 ? '' : 's'} ${enemyFlag}${en.publishedAt && en.published ? ` <span class="when">${en.publishedAt.slice(0, 10)}</span>` : ''}${en.page ? ` · <a href="${en.page}">Open the enemy album</a>` : ''}</p>` : ''
     const sp = r.splash
     const splash = sp ? `<p><b>${sp.approved}</b> splash images ${sp.published === sp.approved && sp.approved > 0 ? `<span class="pub">All ${sp.approved} published</span>` : sp.published > 0 ? `<span class="pub part">${sp.published} of ${sp.approved} published</span>` : '<span class="pub none">Not published</span>'} · <a href="/${r.universe}/splash-art/${GALLERY}">Open them</a></p>` : ''
     const portraits = q ? `<p><b>${q.states}</b> dialogue portrait states ${q.state === 'published' ? `<span class="pub">Published as ${q.bases + q.faces} pieces</span>${q.publishedAt ? ` <span class="when">${q.publishedAt.slice(0, 10)}</span>` : ''}` : `<span class="pub ${q.state === 'changed' ? 'part' : 'none'}">${q.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`} · <a href="/${r.universe}/dialogue-portraits/${GALLERY}">Open them</a></p>` : ''

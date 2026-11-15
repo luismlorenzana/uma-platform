@@ -95,6 +95,7 @@
     <div class="apps">
       <div class="app"><h3>Uma Ranker</h3><p>Every board online at <code>/ranker</code>. Playable Umas ranks all 272 outfits on ten tiers, T1–T10, one art batch each; one place or a whole tier up and down; sisters rank as Umas of their own. The bucket is the source of truth; <code>pnpm ranker:pull</code> keeps the Mac's copy.</p><span class="pill ready">RK1 live</span> <span class="pill wait">RK2 after your ranking</span></div>
       <div class="app"><h3>Uma Character Art</h3><p>uma-quest's Album at <code>/art</code>, laid out by the Ranker's ten batches: adult travelers (baseline, keys, faces) and every Uma and sister (portrait, bust, face, glass, chibis, dresses). CA2 adds chibi sprite sets, support card art and each adult set's inputs; CA3 the full-body 3D render.</p><span class="pill ready">CA1 live</span> <span class="pill ready">CA2 live</span> <span class="pill ready">CA3 live</span></div>
+      <div class="app"><h3>Uma Enemy Art</h3><p>The enemies' approved looks at <code>/enemy-art</code>, apart from Character Art: a tab per game with enemies (Uma Cyberpunk, then Uma Quest; Uma Farm has none), faction by faction, each look opening full size. Published by <code>pnpm art:push &lt;universe&gt; --enemies</code>.</p><span class="pill ready">EA1 live</span> <span class="pill later">EA2 with Uma Quest's enemies</span></div>
       <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
       <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
     </div>
@@ -196,6 +197,8 @@
         <tr><td class="id">CA3</td><td>Full body: the 3D render as master data's <code>outfit-renders</code>, in Character Art</td><td>Claude</td><td>S</td><td>CA2 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA4</td><td>The universe looks: <code>pnpm art:push</code>, the looks on each Uma's page, the published flag in the local galleries; 30 looks published</td><td>Claude</td><td>M</td><td>CA3 ✓</td><td><span class="pill ready">Done</span></td></tr>
         <tr><td class="id">CA5</td><td>Dialogue portraits as pieces: <code>art:push --portraits</code>, the recipe route for the games, the pieces on each Uma's page; 54 pieces, 384 states</td><td>Claude</td><td>M</td><td>CA4 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">EA1</td><td>Uma Enemy Art: the sub-app, <code>art:push --enemies</code>, the flags in the enemy album; Uma Cyberpunk's first look published</td><td>Claude</td><td>M</td><td>P182 ✓</td><td><span class="pill ready">Done</span></td></tr>
+        <tr><td class="id">EA2</td><td>Uma Quest's enemies: their authoring folder and packet, then the first push</td><td>Claude</td><td>S</td><td>Its enemy authoring</td><td><span class="pill later">When it starts</span></td></tr>
         <tr><td class="id">—</td><td>uma-quest: <code>/album</code> becomes a link here; its Album code goes</td><td>uma-quest's session</td><td>S</td><td>CA1 live</td><td><span class="pill later">Requested then</span></td></tr>
         <tr><td class="id">GA1–3, PB1</td><td>The art sub-apps and Publish</td><td>Claude</td><td>—</td><td>Your ask</td><td><span class="pill later">Later</span></td></tr>
       </tbody>
@@ -260,6 +263,12 @@
         <tr><td class="id">AP90</td><td><b>Her page shows her pieces, never a composed state:</b> her crops, then her faces on a checkerboard</td></tr>
         <tr><td class="id">AP84</td><td><b>A failed gcloud call stops the tool:</b> only "not found" is an answer, so a status run can't mistake no access for "nothing published"</td></tr>
         <tr><td class="id">AP82</td><td><b>Local dev:</b> a push also fills <code>content/published/art/</code>, which the local app reads</td></tr>
+        <tr><td class="id">AP93</td><td><b>EA1: enemy looks get a sub-app of their own, Uma Enemy Art,</b> a tab per game with enemies (Uma Cyberpunk, Uma Quest), faction by faction; never an Uma's page</td></tr>
+        <tr><td class="id">AP94</td><td><b>They live in the app's own bucket,</b> <code>enemy-art/&lt;game&gt;/</code>: an index and the approved PNGs under hash names, read through the sub-app's own pack route; no new cloud resource</td></tr>
+        <tr><td class="id">AP95</td><td><b><code>art:push &lt;universe&gt; --enemies</code></b> sends only owner-approved looks with their approved hash, reads them back, writes the index last, deletes nothing; <code>--only</code> by id, faction or name</td></tr>
+        <tr><td class="id">AP96</td><td><b>Names stay out of git:</b> enemy names from the private manifest, faction titles and captions from the album's local words</td></tr>
+        <tr><td class="id">AP97</td><td><b>The flags:</b> <code>enemies/approved/publication.json</code>; the enemy album's badges and the front page name Uma Enemy Art</td></tr>
+        <tr><td class="id">AP98</td><td><b>Who pushes:</b> Claude, on the owner's word, naming the looks</td></tr>
         <tr><td class="id">AP23</td><td><b>uma-quest's Album moves here</b> once CA1 is live: its session swaps <code>/album</code> for a link</td></tr>
         <tr><td class="id">AP25</td><td><b>Playable Umas ranks every outfit on ten straight tiers</b>, T1–T10, each an art batch; keys 1–9 and 0</td></tr>
         <tr><td class="id">AP26</td><td><b>Up and down:</b> one place crosses a tier's edge; a whole-tier step lands next to the boundary</td></tr>

@@ -1,7 +1,9 @@
 // `pnpm art:status [<universe>…]`: every approved look's published flag against the bucket as it is now, printed and
 // written where the local gallery reads it (`approved/publication.json`, `publication.js`), and the dialogue portraits' flag
-// where a universe has them (`dialogue-portraits/publication.json`, CA5). Publishes nothing.
-import { approvedDir, authoring, bucketRemote, isUniverse, status, universesIn } from './lib.js'
+// where a universe has them (`dialogue-portraits/publication.json`, CA5), and its enemy looks' flag in Uma Enemy Art where it
+// has an enemy collection (`enemies/approved/publication.json`, EA1). Publishes nothing.
+import { enemiesDir, enemyPrefix, enemyStatus, enemyUniverses } from './enemies.js'
+import { approvedDir, authoring, bucketRemote, isUniverse, remoteAt, status, universesIn } from './lib.js'
 import { portraitsDir, portraitStatus, portraitUniverses } from './portraits.js'
 
 const named = process.argv.slice(2).filter((a) => a !== '--' && !a.startsWith('--'))
@@ -21,6 +23,13 @@ for (const universe of universes) {
   if (portraitUniverses().includes(universe)) {
     const { publication: q, flagged: written } = portraitStatus(universe, portraitsDir(universe), bucketRemote(universe), now)
     console.log(`  Dialogue portraits: ${q.state}${q.publishedAt ? ` (${q.publishedAt.slice(0, 10)})` : ''}, ${q.states} states from ${q.bases} crops and ${q.faces} faces${q.note ? `: ${q.note}` : ''}`)
+    if (written.length) console.log(`  Wrote ${written.join(', ')}`)
+  }
+  if (enemyUniverses().includes(universe)) {
+    const { publication: e, flagged: written } = enemyStatus(universe, enemiesDir(universe), remoteAt(enemyPrefix(universe)), now)
+    const c = e.counts
+    console.log(`  Enemy looks (Uma Enemy Art): ${c.published} of ${e.looks.length} published${e.publishedAt ? ` (${e.publishedAt.slice(0, 10)})` : ''}, ${c.changed} changed, ${c.unpublished} not published, ${c.refused} refused`)
+    for (const look of e.looks) if (look.state !== 'published' && look.state !== 'refused') console.log(`    ${look.state.padEnd(11)} ${look.id}${look.note ? `: ${look.note}` : ''}`)
     if (written.length) console.log(`  Wrote ${written.join(', ')}`)
   }
 }
