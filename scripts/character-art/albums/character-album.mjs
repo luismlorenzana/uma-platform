@@ -4,7 +4,9 @@
 // heading, intro, summary (lines with {placeholders}), links (HTML), outfitsNote, leadOutfit (shown first),
 // approvedVersions and approvedOutfits (which looks read "Approved by owner" rather than "Accepted unchanged by
 // owner"), defaults, referenceOutfit, pairs (compare shortcuts: [id, label, left, right]), overviewsIntro, overviews
-// ([sheet, label]) and footer (HTML, with {placeholders}). The page is the only thing it writes.
+// ([sheet, label]) and footer (HTML, with {placeholders}). The page is the only thing it writes. A character whose
+// manifest has no dialogue portraits yet (no assets or faces, as in Uma Cyberpunk, P182) gets a looks-only album: her
+// outfits with the same header and footer, and no tabs.
 import path from 'node:path'
 import { escape, exists, fill, jsList, keepFlags, pageResult, readJson, readText, title } from './lib.mjs'
 import { numberWord } from './dialogue-viewer.mjs'
@@ -16,6 +18,7 @@ export async function renderCharacterAlbum(versionDir) {
   const v = (await exists(path.join(versionDir, 'verification.json'))) ? await readJson(path.join(versionDir, 'verification.json')) : {}
   const t = await readJson(path.join(versionDir, 'album.json'))
   const name = Object.values(m.characterNames ?? {})[0] ?? t.heading
+  if (!Array.isArray(m.assets) || !Array.isArray(m.faces)) return renderLooksOnly({ file, m, v, t, name })
   const options = (items, selected) => items.map((x) => `<option value="${escape(x)}"${x === selected ? ' selected' : ''}>${title(x)}</option>`).join('')
   const data = { assets: m.assets, faces: m.faces, outfits: m.outfits, expressions: m.expressions, fullBody: m.fullBodyAssets }
   const values = { fullBody: m.fullBodyAssets.length, faces: m.faces.length, outfits: m.outfits.length, expressions: m.expressions.length, verification: v }
@@ -45,5 +48,20 @@ function show(side,asset,expression){const state=expression==='neutral'?null:ass
 function update(){const outfit=el('outfit').value,expression=el('expression').value,mode=el('reference').value,selected=data.assets.find(a=>a.outfit===outfit),reference=mode==='${ref}'?data.assets.find(a=>a.outfit==='${ref}'):selected,leftExpression=mode==='neutral'?'neutral':mode==='expression'?el('reference-expression').value:expression;show('left',reference,leftExpression);show('right',selected,expression);el('reference-expression-label').hidden=mode!=='expression';el('pair').classList.toggle('show-mask',el('mask-toggle').checked);const face=data.faces.find(f=>f.expression===expression);el('face-links').hidden=!face;el('face-link').href=face?face.file:'#';el('mask-link').href=face?face.mask:'#';el('face-prompt').href=face?face.prompt:'#';el('evidence').textContent='${name} · '+title(outfit)+' · '+title(expression)+(selected.neutralOwnerApproved?(${jsList(approvedOutfits)}.includes(selected.outfit)?' · Approved by owner. ':' · Accepted unchanged. '):' · Revised outfit for review. ')+(expression==='neutral'?'Original native crop, unchanged.':'Same shared face layer; complete feature replacement and zero changes outside its saved mask.');for(const [key,kind] of [['portraits','portraits'],['faces','faces']]){const board='review/'+outfit+'-'+kind+'.png';el(key+'-board').src=board;el(key+'-board-link').href=board;}}
 el('outfit').value='${d.outfit}';el('expression').value='${d.expression}';el('reference').value='${d.reference}';el('reference-expression').value='${d.referenceExpression}';for(const id of ['outfit','expression','reference','reference-expression','mask-toggle'])el(id).addEventListener('change',update);el('size').addEventListener('change',function(){el('pair').style.setProperty('--portrait-width',this.value+'px');});for(const name of ['outfits','dialogue','overviews'])el('tab-'+name).addEventListener('click',()=>openTab(name));for(const link of document.querySelectorAll('.open-dialogue'))link.addEventListener('click',()=>{el('outfit').value=link.dataset.outfit;update();openTab('dialogue');});for(const [id,control,values,step] of [['previous-outfit','outfit',data.outfits,-1],['next-outfit','outfit',data.outfits,1],['previous-expression','expression',data.expressions,-1],['next-expression','expression',data.expressions,1]])el(id).addEventListener('click',()=>{const i=values.indexOf(el(control).value);el(control).value=values[(i+step+values.length)%values.length];update();});for(const [id,left,right] of [${pairs.map(([id, , left, right]) => jsList([id, left, right])).join(',')}])el(id).addEventListener('click',()=>{el('reference').value='expression';el('reference-expression').value=left;el('expression').value=right;update();});update();openTab(['outfits','dialogue','overviews'].includes(location.hash.slice(1))?location.hash.slice(1):'outfits');
 </script></main></body></html>`
+  return pageResult(file, keepFlags(html, await readText(file)))
+}
+
+/** A character's album when she has looks but no dialogue portraits yet: her outfits, lead outfit first. */
+async function renderLooksOnly({ file, m, v, t, name }) {
+  const values = { fullBody: m.fullBodyAssets.length, outfits: (m.outfits ?? []).length, verification: v }
+  const lead = t.leadOutfit ?? null, approvedVersions = t.approvedVersions ?? []
+  const looks = [...m.fullBodyAssets].sort((a, b) => Number(b.outfit === lead) - Number(a.outfit === lead))
+  const label = (a) => a.title ?? title(a.outfit)
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(t.title)}</title><style>
+${CHARACTER_CSS}
+</style></head><body><main><div class="eyebrow">${escape(t.eyebrow)}</div><h1>${escape(t.heading)}</h1><p>${t.intro}</p><div class="summary">${(t.summary ?? []).map((s) => `<span>${fill(s, values)}</span>`).join('')}</div><p class="links">${t.links ?? ''}</p>
+<section class="panel" id="panel-outfits"><p class="small">${t.outfitsNote ?? ''}</p><div class="grid">${looks.map((a) => `<article class="look" id="look-${a.outfit}"><figure><a href="${a.image}" target="_blank" rel="noopener"><img src="${a.image}" loading="lazy" alt="${escape(name)} ${escape(label(a))} approved outfit"></a><figcaption><strong>${escape(label(a))}</strong><span class="status">${a.ownerApproved || a.approval?.status === 'approved' ? (approvedVersions.includes(a.sourceVersion) ? 'Approved by owner' : 'Accepted unchanged by owner') : (a.reviewStatus ?? 'Awaiting owner review')}</span><a href="${a.image}" target="_blank" rel="noopener">Full PNG</a>${a.prompt ? ` · <a href="${a.prompt}" target="_blank" rel="noopener">Exact prompt</a>` : ''}</figcaption></figure></article>`).join('')}</div></section>
+${fill(t.footer ?? '', values)}
+</main></body></html>`
   return pageResult(file, keepFlags(html, await readText(file)))
 }

@@ -1,12 +1,14 @@
 // `pnpm art:albums [<universe>…] [--check]` (P181): rebuilds the local album pages of private authoring from their
 // manifests and album.json files: each universe's approved album, its dialogue portraits' and splash art's own pages,
-// and each character's own album (her active version, named by characters/<key>/active-study.json). With --check it
+// each character's own album (her active version, named by characters/<key>/active-study.json), and the enemy album
+// (enemies/approved/, P182). With --check it
 // builds them in memory and says which differ from the files there, writing nothing (exit 1 when any does).
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { authoring, exists, readJson, writePages } from './lib.mjs'
 import { renderUniverseAlbums } from './universe-album.mjs'
 import { renderCharacterAlbum } from './character-album.mjs'
+import { renderEnemyAlbum } from './enemy-album.mjs'
 
 const args = process.argv.slice(2).filter((a) => a !== '--')
 const check = args.includes('--check')
@@ -34,6 +36,7 @@ for (const universe of universes) {
   const dir = path.join(authoring, universe)
   const pages = [...await renderUniverseAlbums(dir)]
   for (const version of await characterAlbums(dir)) pages.push(await renderCharacterAlbum(version))
+  if (await exists(path.join(dir, 'enemies', 'approved', 'album.json'))) pages.push(await renderEnemyAlbum(dir))
   if (pages.length === 0) { console.log(`${universe}: no album.json, nothing to build`); continue }
   const rel = (f) => path.relative(dir, f).split(path.sep).join('/')
   if (check) {

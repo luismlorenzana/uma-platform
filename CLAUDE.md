@@ -42,7 +42,8 @@
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
   The local album pages are built by code in git, `scripts/character-art/albums` (`pnpm art:albums`, P181); their words
-  stay local in each page's `album.json`.
+  stay local in each page's `album.json`. Uma Cyberpunk has two separate authoring cycles (P182): characters
+  (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, approval only, names local).
 - **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
   `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
   franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's

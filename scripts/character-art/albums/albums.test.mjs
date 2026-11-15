@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { renderCharacterAlbum } from './character-album.mjs'
+import { renderEnemyAlbum } from './enemy-album.mjs'
 import { fill, jsList, keepFlags } from './lib.mjs'
 import { renderUniverseAlbums } from './universe-album.mjs'
 
@@ -114,6 +115,53 @@ describe('a character’s own album', () => {
     expect(page.html).toContain("el(side+'-image').alt='Rider Three · '")
     expect(page.html).toContain('<footer>41 files kept</footer>')
     expect(page.html).toContain('All three expressions for this outfit')
+  })
+})
+
+describe('a looks-only album and the enemy album (P182)', () => {
+  it('gives a character with no dialogue portraits a looks-only album, lead outfit first, with no tabs', async () => {
+    const v = join(temp(), 'v001')
+    put(join(v, 'manifest.json'), { characterNames: { 'rider-four': 'Rider Four' }, outfits: ['street', 'armor'],
+      fullBodyAssets: [{ outfit: 'street', image: 'street.png', prompt: 'street.txt', approval: { status: 'approved', by: 'owner' }, sourceVersion: 'v001' }, { outfit: 'armor', title: 'Combat armor', image: 'armor.png', approval: { status: 'approved', by: 'owner' }, sourceVersion: 'v001' }] })
+    put(join(v, 'album.json'), { title: 'Rider Four · album', eyebrow: 'Invented', heading: 'Rider Four', intro: 'Two looks.', summary: ['{fullBody} looks'], leadOutfit: 'armor', approvedVersions: ['v001'], footer: '<footer>{fullBody} pictures</footer>' })
+    put(join(v, 'review.html'), `<html><body>old${FLAGS}</body></html>`)
+    const page = await renderCharacterAlbum(v)
+    expect(page.html).toContain('<span>2 looks</span>')
+    expect(page.html.indexOf('id="look-armor"')).toBeLessThan(page.html.indexOf('id="look-street"'))
+    expect(page.html).toContain('<strong>Combat armor</strong><span class="status">Approved by owner</span>')
+    expect(page.html).toContain(' · <a href="street.txt"')
+    expect(page.html).not.toContain('id="tab-dialogue"')
+    expect(page.html).not.toContain('<script>')
+    expect(page.html).toContain('<footer>2 pictures</footer>')
+    expect(page.html.split(FLAGS).length - 1).toBe(1)
+  })
+
+  it('builds the enemy album faction by faction from the approved records, and keeps its flag block', async () => {
+    const { u } = universe()
+    const e = join(u, 'enemies/approved')
+    const foe = (id, character, faction, look, status = 'approved') => ({ id, character, faction, look, image: `${faction}/${id}.png`, width: 64, height: 96, sha256: 'a'.repeat(64), approval: { status, by: 'owner', date: '2026-01-02', scope: 'uniform' } })
+    put(join(e, 'manifest.json'), { assets: [foe('foe-a', 'Foe A', 'north-pact', 'combat-station'), foe('foe-b', 'Foe B', 'south-guild', 'free'), foe('foe-c', 'Foe C', 'north-pact', 'free', 'pending')] })
+    put(join(e, 'album.json'), { title: 'Sky City foes', header: '<h1>Foes</h1><p>{total} looks in {factions} factions.</p>', footer: '<footer>{total} approved</footer>', factions: { 'south-guild': 'The South Guild', 'north-pact': 'The North Pact' }, looks: { 'combat-station': 'Combat station' } })
+    put(join(e, 'review.html'), `<html><body>old${FLAGS}</body></html>`)
+    const page = await renderEnemyAlbum(u)
+    expect(page.html).toContain('<title>Sky City foes</title>')
+    expect(page.html).toContain('<p>2 looks in 2 factions.</p>')
+    // In album.json's order, the unapproved look left out.
+    expect(page.html.indexOf('<h2>The South Guild</h2>')).toBeLessThan(page.html.indexOf('<h2>The North Pact</h2>'))
+    expect(page.html).not.toContain('Foe C')
+    expect(page.html).toContain('<strong>Foe A</strong><span class="badge">Approved</span></div><p class="detail">Combat station<br>Approved 2026-01-02 · uniform</p>')
+    expect(page.html).toContain('<p class="detail">Free<br>')
+    expect(page.html).toContain('<footer>2 approved</footer>')
+    expect(page.html.split(FLAGS).length - 1).toBe(1)
+  })
+
+  it('the command builds the enemy album with the rest', () => {
+    const { base, u } = universe()
+    put(join(u, 'enemies/approved/manifest.json'), { assets: [] })
+    put(join(u, 'enemies/approved/album.json'), { title: 'Foes' })
+    const out = execFileSync(process.execPath, [join(here, 'build.mjs'), 'sky-city'], { env: { ...process.env, UNIVERSES_DIR: base }, encoding: 'utf8' })
+    expect(out).toContain('enemies/approved/review.html')
+    expect(readFileSync(join(u, 'enemies/approved/review.html'), 'utf8')).toContain('No enemy look is approved yet.')
   })
 })
 
