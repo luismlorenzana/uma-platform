@@ -83,6 +83,13 @@ the splash art's own pages, and a character's own album) are built by code in gi
   a character's `build-review.mjs`) are now short stubs that call it.
 - **A new character's own album:** add `album.json` to her active version (copy Satono Diamond's `v005/album.json` and
   change its words); `pnpm art:albums` builds her page from her manifest.
+- **Compact portrait collections:** set `compactPortraits: true` in the character's `album.json` and provide
+  `portraitSheets` as `[relative image path, label]` pairs for Spring and useful stress proofs. Each base records its
+  decoded `rgbaSha256`, and each non-neutral state records its decoded `rgbaSha256`, shared face/mask and measured
+  position. The existing character album composes selections from the pieces and verifies the resulting RGBA hash;
+  individual state PNGs are optional and the PNG link exports the selected portrait on demand. It embeds the
+  hash-verified source PNG bytes for local viewing, including from
+  disk, and decodes straight alpha without Canvas premultiplication. No library of 180 saved previews is required.
 - **Changing a page's behaviour or layout** is a code change: edit the module, keep it generic, and run
   `pnpm --filter @uma-platform/character-art-scripts test`. A rebuilt page keeps the publication block at its end.
 
