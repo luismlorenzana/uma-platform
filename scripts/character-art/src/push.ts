@@ -7,7 +7,7 @@
 // `--portraits` her pieces and states, every other character's staying as the bucket has them (P189).
 // With `--enemies` it publishes the universe's approved enemy looks (`enemies/approved/`, P182) to Uma Enemy Art instead,
 // `gs://uma-platform-content/enemy-art/<game>/` (EA1, P183); `--only` then names looks by id, faction or enemy name.
-import { enemiesDir, enemyMirror, enemyPrefix, enemyUniverses, pushEnemies } from './enemies.js'
+import { enemiesDir, enemyMirror, enemyPrefix, enemySlice, enemyUniverses, pushEnemies } from './enemies.js'
 import { approvedDir, authoring, bucketRemote, BUCKET, isUniverse, mirror, push, remoteAt, universesIn } from './lib.js'
 import { portraitsDir, portraitUniverses, pushPortraits } from './portraits.js'
 
@@ -51,8 +51,10 @@ if (enemies) {
     if (r.kept.length) console.log(`  ${r.kept.length} kept as published (outside --only, or the local copy is damaged): ${r.kept.join(', ')}`)
     for (const look of r.refused) console.log(`  Not sent, ${look.id}: ${look.why}`)
     refusedEnemies += r.refused.filter((l) => l.kind === 'damaged').length
-    const c = r.publication.counts
-    console.log(`  Flags: ${c.published} published, ${c.changed} changed, ${c.unpublished} not published, ${c.refused} refused${r.flagged.length ? `; wrote ${r.flagged.join(', ')}` : ''}`)
+    // Each album's own flags: a look both albums hold (P190) counts in each.
+    const line = (name: string, c: Record<string, number>) => `${name} ${c.published} published, ${c.changed} changed, ${c.unpublished} not published, ${c.refused} refused`
+    const casualCounts = enemySlice(r.publication, 'casual').counts
+    console.log(`  Flags: ${line('enemy album', enemySlice(r.publication, null).counts)}${casualCounts.published + casualCounts.changed + casualCounts.unpublished + casualCounts.refused ? `; ${line('casual album', casualCounts)}` : ''}${r.flagged.length ? `; wrote ${r.flagged.join(', ')}` : ''}`)
   }
   if (refusedEnemies) process.exitCode = 1
   process.exit()

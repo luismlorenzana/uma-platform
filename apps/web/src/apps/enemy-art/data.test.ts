@@ -12,9 +12,9 @@ const game = (id: string, title: string): EnemyGame => ({
 })
 
 describe('Uma Enemy Art’s bosses (P186)', () => {
-  it('groups a faction’s looks by enemy, in first-seen order, her casual looks first', () => {
-    const faction = { id: 'red-guild', title: 'The Red Guild', looks: [look('a-armor', 'red-guild', 'Foe A'), look('b-armor', 'red-guild', 'Foe B'), look('a-helm', 'red-guild', 'Foe A'), look('a-suit', 'red-guild', 'Foe A', 'casual')] }
-    expect(bossesOf(faction).map((b) => [b.name, b.looks.map((l) => l.id)])).toEqual([['Foe A', ['a-suit', 'a-armor', 'a-helm']], ['Foe B', ['b-armor']]])
+  it('groups a faction’s looks by enemy, in first-seen order, her base first, then her casual looks', () => {
+    const faction = { id: 'red-guild', title: 'The Red Guild', looks: [look('a-armor', 'red-guild', 'Foe A'), look('b-armor', 'red-guild', 'Foe B'), look('a-helm', 'red-guild', 'Foe A'), look('a-jeans', 'red-guild', 'Foe A', 'casual'), look('a-suit', 'red-guild', 'Foe A', 'base')] }
+    expect(bossesOf(faction).map((b) => [b.name, b.looks.map((l) => l.id)])).toEqual([['Foe A', ['a-suit', 'a-jeans', 'a-armor', 'a-helm']], ['Foe B', ['b-armor']]])
     expect(bossCount({ id: 'g', title: 'G', publishedAt: null, factions: [faction] })).toBe(2)
   })
 })

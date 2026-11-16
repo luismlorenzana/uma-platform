@@ -147,19 +147,29 @@ describe('pnpm art:push <universe> --enemies (EA1)', () => {
 
   it('sends the casual collection in the same push, each of its looks marked casual, with its own flags (EA3)', () => {
     const base = temp(), dir = collection(base, 'neon-city', FOES.slice(0, 2)), bucket = fakeRemote()
-    const c = casual(dir, [{ id: 'red-one-suit', character: 'Red One', faction: 'red-guild' }, { id: 'green-one-suit', character: 'Green One', faction: 'green-guild' }, { id: 'red-one-station', character: 'Red One', faction: 'red-guild' }])
+    // The casual album holds two looks of its own, an enemy-album look itself (same picture: shared, P191), and one with
+    // an enemy-album id but another picture (refused).
+    const c = casual(dir, [{ id: 'red-one-suit', character: 'Red One', faction: 'red-guild' }, { id: 'green-one-suit', character: 'Green One', faction: 'green-guild' },
+      { id: 'red-one-station', character: 'Red One', faction: 'red-guild' }, { id: 'blue-one-station', character: 'Blue One', faction: 'blue-guild', seed: 'another picture' }])
     const read = readEnemies('neon-city', dir)
-    expect(read.looks.map((l) => [l.id, l.kind, l.title])).toEqual([['red-one-station', 'combat', 'Station uniform'], ['blue-one-station', 'combat', 'Station uniform'], ['red-one-suit', 'casual', 'Pilot suit'], ['green-one-suit', 'casual', 'Pilot suit']])
-    // An id both collections use is refused the second time; a faction only the casual album names joins in its order.
-    expect(read.refused).toEqual([expect.objectContaining({ id: 'red-one-station', kind: 'damaged', why: 'its id is listed twice', collection: 'casual' })])
+    expect(read.looks.map((l) => [l.id, l.kind, l.title, l.shared ?? false])).toEqual([
+      ['red-one-station', 'combat', 'Station uniform', true], ['blue-one-station', 'combat', 'Station uniform', false], ['red-one-suit', 'casual', 'Pilot suit', false],
+      ['green-one-suit', 'casual', 'Pilot suit', false], ['red-one-station', 'casual', 'Pilot suit', true],
+    ])
+    expect(read.refused).toEqual([expect.objectContaining({ id: 'blue-one-station', kind: 'damaged', why: 'its id is listed twice with another picture', collection: 'casual' })])
+    // A faction only the casual album names joins in its order.
     expect(read.factions.map((f) => f.id)).toEqual(['blue-guild', 'red-guild', 'green-guild'])
     pushEnemies('neon-city', dir, temp(), bucket.remote, T1)
     const index = bucket.index()
-    expect(index.looks.map((l) => [l.id, l.kind ?? 'combat'])).toEqual([['red-one-station', 'combat'], ['blue-one-station', 'combat'], ['red-one-suit', 'casual'], ['green-one-suit', 'casual']])
+    // The shared look is listed once, as the base of both.
+    expect(index.looks.map((l) => [l.id, l.kind ?? 'combat'])).toEqual([['red-one-station', 'base'], ['blue-one-station', 'combat'], ['red-one-suit', 'casual'], ['green-one-suit', 'casual']])
     expect(bucket.files.get(index.looks[2]!.path)!.bytes.equals(readFileSync(join(c, 'red-guild/red-one-suit/suit.png')))).toBe(true)
     const mine = JSON.parse(readFileSync(join(dir, 'publication.json'), 'utf8')) as EnemyPublication, theirs = JSON.parse(readFileSync(join(c, 'publication.json'), 'utf8')) as EnemyPublication
-    expect([mine.looks.map((l) => l.id), mine.noun]).toEqual([['red-one-station', 'blue-one-station'], 'enemy looks'])
-    expect([theirs.looks.map((l) => [l.id, l.state, l.image]), theirs.noun, theirs.counts.refused]).toEqual([[['red-one-suit', 'published', 'red-guild/red-one-suit/suit.png'], ['green-one-suit', 'published', 'green-guild/green-one-suit/suit.png'], ['red-one-station', 'refused', 'red-guild/red-one-station/suit.png']], 'casual looks', 1])
+    expect([mine.looks.map((l) => [l.id, l.state]), mine.noun]).toEqual([[['red-one-station', 'published'], ['blue-one-station', 'published']], 'enemy looks'])
+    expect([theirs.looks.map((l) => [l.id, l.state, l.image]), theirs.noun, theirs.counts.refused]).toEqual([[
+      ['red-one-suit', 'published', 'red-guild/red-one-suit/suit.png'], ['green-one-suit', 'published', 'green-guild/green-one-suit/suit.png'],
+      ['red-one-station', 'published', 'red-guild/red-one-station/suit.png'], ['blue-one-station', 'refused', 'blue-guild/blue-one-station/suit.png'],
+    ], 'casual looks', 1])
     expect(readFileSync(join(c, 'review.html'), 'utf8')).toContain('<script src="publication.js"></script><script src="../../../../publication-flag.js"></script>')
   })
 

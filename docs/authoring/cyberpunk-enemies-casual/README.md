@@ -25,7 +25,7 @@ and the casual album's `album.json`.
 | Part | Direction |
 | --- | --- |
 | Who | An enemy whose combat look is approved: her approved combat-station look is the likeness anchor (her face, proportions and rendering as this game draws her) |
-| First set | **Her pilot suit** (P186): the suit each boss wore as her combat-station look, moved here from the enemy album at the owner's request, so the enemy album holds her armour looks and this one her unarmoured outfits |
+| Base | **Her pilot suit** (P186, P191): the suit each boss wears as her combat-station look is the base of both enemy cycles, so it is in this album and the enemy album alike, with the same id, picture and approval. Every casual look starts from it, as every armour look does. Uma Enemy Art shows it once, labelled Base |
 | What she wears | Then everyday clothes for the game's city, off duty: no armour plates, helmet, mantle, weapon, core emitter or Hold mark. Her own taste, read from her source outfit |
 | Her colours | Her **accent** leads the outfit. Her faction shows in **one small piece** only (a trim colour, a lining, an emblem pin), so her side still reads. Her light, if at all, in one small accessory |
 | Style | The baseline's drawing style and adult model (§2.1), the same as her combat looks, so the two sit side by side |

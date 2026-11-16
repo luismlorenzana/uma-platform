@@ -7,7 +7,9 @@
 // before the index is written, the index goes last over the generation read, and the flags are written beside the
 // manifest (`publication.json`, `publication.js`), where the enemy album and the gallery's front page show them.
 // EA3 (P186): the casual collection beside it, `enemies/casual/approved/` (P185), goes up in the same push and the same
-// index, each of its looks marked `kind: "casual"`, with its own flags in the casual album.
+// index, each of its looks marked `kind: "casual"`, with its own flags in the casual album. A look both albums hold with
+// the same id and picture (the bosses' pilot suits, the base of both cycles, P191) is published once, marked `kind: "base"`,
+// and flagged in both albums.
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
@@ -59,6 +61,8 @@ export interface ApprovedEnemy {
   kind: 'combat' | 'casual'
   /** The PNG on disk, whichever collection holds it. */
   file: string
+  /** Both albums hold this look, with the same id and picture: the base of both cycles (P191). */
+  shared?: boolean
 }
 export interface Faction { id: string; title: string }
 export interface EnemyCollection {
@@ -99,9 +103,10 @@ export function readEnemies(universe: string, dir: string): EnemyCollection {
     const image = given && /^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(given) && !given.split('/').some((p) => p === '' || p.startsWith('.')) ? given : null
     const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(from === 'casual' ? { collection: 'casual' } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
-    if (seen.has(id)) { refuse('damaged', 'its id is listed twice'); continue }
-    seen.add(id)
-    order.push(id)
+    // The casual album may hold an enemy-album look itself, same id and picture: the base of both (P191).
+    const twin = from === 'casual' && seen.has(id) ? looks.find((l) => l.id === id && l.kind === 'combat') ?? null : null
+    if (seen.has(id) && !(twin && twin.sha256 === text(asset.sha256))) { refuse('damaged', twin ? 'its id is listed twice with another picture' : 'its id is listed twice'); continue }
+    if (!twin) { seen.add(id); order.push(id) }
     const approval = object(asset.approval) ? asset.approval : {}
     if (approval.status !== 'approved' || approval.by !== 'owner') { refuse('unapproved', 'the owner hasn’t approved it'); continue }
     const character = text(asset.character), faction = text(asset.faction), look = text(asset.look), hash = text(asset.sha256)
@@ -116,8 +121,9 @@ export function readEnemies(universe: string, dir: string): EnemyCollection {
     if (!factionIds.includes(faction)) factionIds.push(faction)
     looks.push({
       id, character, faction, unitId: text(asset.unitId), look, title: text(lookNames[look]) ?? words(look), image, bytes: bytes.byteLength, sha256: hash,
-      width: size.width, height: size.height, approvedOn: text(approval.date) ?? text(approval.on), kind: from, file: path,
+      width: size.width, height: size.height, approvedOn: text(approval.date) ?? text(approval.on), kind: from, file: path, ...(twin ? { shared: true } : {}),
     })
+    if (twin) twin.shared = true
   }
   const title = (object(album) ? text(album.game) : null) ?? `Uma ${words(universe)}`
   return { game: universe, title, factions: factionIds.map((f) => ({ id: f, title: text(factionNames[f]) ?? words(f) })), looks, refused, order }
@@ -140,8 +146,9 @@ export interface PublishedEnemy {
   height: number
   approvedOn: string | null
   publishedAt: string
-  /** A look of her casual collection (EA3); absent for her armour and combat looks. */
-  kind?: 'casual'
+  /** A look of her casual collection (EA3), or one both albums hold, the base of both (P191); absent for her armour and
+   *  combat looks. */
+  kind?: 'casual' | 'base'
 }
 /** A game's index in the bucket, `enemy-art/<game>/index.json`: exactly what Uma Enemy Art shows. */
 export interface EnemyIndex {
@@ -187,15 +194,18 @@ export function planEnemyPush(collection: EnemyCollection, remote: EnemyIndex | 
   const chosen = (look: { id: string; faction: string; character: string }) => !select || select(look)
   const before = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
   const damaged = new Set(collection.refused.filter((r) => r.kind === 'damaged').map((r) => r.id))
-  const upload: ApprovedEnemy[] = [], looks: PublishedEnemy[] = []
+  const upload: ApprovedEnemy[] = [], looks: PublishedEnemy[] = [], listed = new Set<string>()
   for (const look of collection.looks) {
+    // A shared look is listed once, from the enemy album's entry.
+    if (listed.has(look.id)) continue
+    listed.add(look.id)
     const old = before.get(look.id), same = old?.sha256 === look.sha256
     if (!chosen(look)) { if (old) looks.push(old); continue }
     if (!same) upload.push(look)
     looks.push({
       id: look.id, character: look.character, faction: look.faction, unitId: look.unitId, look: look.look, title: look.title, path: enemyPath(look), bytes: look.bytes,
       sha256: look.sha256, width: look.width, height: look.height, approvedOn: look.approvedOn, publishedAt: same ? old!.publishedAt : now,
-      ...(look.kind === 'casual' ? { kind: 'casual' as const } : {}),
+      ...(look.shared ? { kind: 'base' as const } : look.kind === 'casual' ? { kind: 'casual' as const } : {}),
     })
   }
   const here = new Set(collection.looks.map((l) => l.id))
@@ -256,7 +266,7 @@ export function enemyPublicationOf(collection: EnemyCollection, remote: EnemyInd
 }
 
 /** One collection's share of the record, its counts recounted: the armour looks' (`null`) or the casual ones'. */
-function enemySlice(publication: EnemyPublication, collection: string | null): EnemyPublication {
+export function enemySlice(publication: EnemyPublication, collection: string | null): EnemyPublication {
   const looks = publication.looks.filter((l) => (l.collection ?? null) === collection)
   const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
   for (const l of looks) counts[l.state]++

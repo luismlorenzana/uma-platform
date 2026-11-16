@@ -1,7 +1,8 @@
 // Uma Enemy Art (EA1, P183): the enemy looks the owner approved, in a section of their own, apart from Character Art
 // (the owner: "approved enemy looks should go into a completely new section"). A tab for each game with enemies, Uma
 // Cyberpunk first and Uma Quest next; in each, the factions in their published order, and in a faction each boss under
-// her own name (P186) with her looks: her casual ones first (EA3), then her armour looks. A look opens full size. Each PNG
+// her own name (P186) with her looks: her base first, the pilot suit both enemy albums hold (P191), then her casual ones
+// (EA3), then her armour looks. A look opens full size. Each PNG
 // is read through this sub-app's pack route, checked against its hash and kept on the device.
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button } from '@luismlorenzana/uma-kit/ui'
@@ -63,7 +64,7 @@ function LookCard({ look, onOpen }: { look: EnemyLook; onOpen: () => void }) {
       <figcaption className="flex flex-col gap-0.5 p-2">
         <span className="flex items-center gap-1.5 text-sm font-semibold leading-tight">
           {look.title}
-          {look.kind === 'casual' && <span className="rounded-full bg-sunken px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">Casual</span>}
+          {look.kind !== 'combat' && <span className="rounded-full bg-sunken px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">{look.kind === 'base' ? 'Base' : 'Casual'}</span>}
         </span>
         <span className="text-[10px] leading-tight text-ink-faint">approved {day(look.approvedOn)} · published {day(look.publishedAt)}</span>
       </figcaption>

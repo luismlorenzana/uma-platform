@@ -17,8 +17,8 @@ export interface EnemyLook {
   height: number
   approvedOn: string | null
   publishedAt: string | null
-  /** Her armour and combat looks, or her casual collection's (EA3). */
-  kind: 'combat' | 'casual'
+  /** Her armour and combat looks, her casual collection's (EA3), or one both albums hold, the base of both (P191). */
+  kind: 'combat' | 'casual' | 'base'
 }
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame { id: string; title: string; publishedAt: string | null; factions: EnemyFaction[] }
@@ -33,15 +33,16 @@ export const lookCount = (game: EnemyGame): number => game.factions.reduce((n, f
 
 /** One enemy's looks in her faction: the group the page titles with her name (P186). */
 export interface Boss { name: string; looks: EnemyLook[] }
-/** A faction's enemies in the order they first appear, each with her looks: her casual ones first, then her armour looks in
- *  the published order. */
+/** A faction's enemies in the order they first appear, each with her looks: her base first (P191), then her casual ones,
+ *  then her armour looks, each in the published order. */
 export function bossesOf(faction: EnemyFaction): Boss[] {
   const out: Boss[] = []
   for (const look of faction.looks) {
     const boss = out.find((b) => b.name === look.character) ?? (out.push({ name: look.character, looks: [] }), out[out.length - 1]!)
     boss.looks.push(look)
   }
-  for (const boss of out) boss.looks = [...boss.looks.filter((l) => l.kind === 'casual'), ...boss.looks.filter((l) => l.kind !== 'casual')]
+  const rank = { base: 0, casual: 1, combat: 2 } as const
+  for (const boss of out) boss.looks = [...boss.looks].sort((a, b) => rank[a.kind] - rank[b.kind])
   return out
 }
 export const bossCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).length, 0)
