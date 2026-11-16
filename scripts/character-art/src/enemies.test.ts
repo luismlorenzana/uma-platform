@@ -74,6 +74,21 @@ describe('an approved enemy collection (EA1)', () => {
   })
 })
 
+/** An invented casual collection beside an enemy collection (EA3): its manifest, PNGs, words and album page. */
+function casual(enemyDir: string, foes: Foe[]): string {
+  const dir = join(enemyDir, '..', 'casual', 'approved')
+  const assets = foes.map((f) => {
+    const image = `${f.faction}/${f.id}/suit.png`, bytes = png(32, 48, f.seed ?? f.id)
+    mkdirSync(dirname(join(dir, image)), { recursive: true })
+    writeFileSync(join(dir, image), bytes)
+    return { id: f.id, character: f.character, faction: f.faction, unitId: null, look: f.look ?? 'suit', image, sha256: sha(bytes), width: 32, height: 48, approval: f.approval ?? APPROVED }
+  })
+  writeFileSync(join(dir, 'manifest.json'), JSON.stringify({ assets }))
+  writeFileSync(join(dir, 'album.json'), JSON.stringify({ factions: { 'green-guild': 'The Green Guild' }, looks: { suit: 'Pilot suit' } }))
+  writeFileSync(join(dir, 'review.html'), `<!doctype html><html><head><title>t</title></head><body>${assets.map((a) => `<figure><img src="${a.image}"></figure>`).join('')}</body></html>`)
+  return dir
+}
+
 describe('pnpm art:push <universe> --enemies (EA1)', () => {
   it('sends each approved look under its hash name, then the index, its factions in the album’s order, and flags them', () => {
     const base = temp(), dir = collection(base, 'neon-city', FOES), mirror = join(base, '..', `mirror-${Date.now()}`), bucket = fakeRemote()
@@ -128,6 +143,24 @@ describe('pnpm art:push <universe> --enemies (EA1)', () => {
     const s = enemyStatus('neon-city', dir, bucket.remote, T1)
     expect(s.publication.counts).toEqual({ published: 0, changed: 0, unpublished: 2, refused: 1 })
     expect(bucket.files.size).toBe(0)
+  })
+
+  it('sends the casual collection in the same push, each of its looks marked casual, with its own flags (EA3)', () => {
+    const base = temp(), dir = collection(base, 'neon-city', FOES.slice(0, 2)), bucket = fakeRemote()
+    const c = casual(dir, [{ id: 'red-one-suit', character: 'Red One', faction: 'red-guild' }, { id: 'green-one-suit', character: 'Green One', faction: 'green-guild' }, { id: 'red-one-station', character: 'Red One', faction: 'red-guild' }])
+    const read = readEnemies('neon-city', dir)
+    expect(read.looks.map((l) => [l.id, l.kind, l.title])).toEqual([['red-one-station', 'combat', 'Station uniform'], ['blue-one-station', 'combat', 'Station uniform'], ['red-one-suit', 'casual', 'Pilot suit'], ['green-one-suit', 'casual', 'Pilot suit']])
+    // An id both collections use is refused the second time; a faction only the casual album names joins in its order.
+    expect(read.refused).toEqual([expect.objectContaining({ id: 'red-one-station', kind: 'damaged', why: 'its id is listed twice', collection: 'casual' })])
+    expect(read.factions.map((f) => f.id)).toEqual(['blue-guild', 'red-guild', 'green-guild'])
+    pushEnemies('neon-city', dir, temp(), bucket.remote, T1)
+    const index = bucket.index()
+    expect(index.looks.map((l) => [l.id, l.kind ?? 'combat'])).toEqual([['red-one-station', 'combat'], ['blue-one-station', 'combat'], ['red-one-suit', 'casual'], ['green-one-suit', 'casual']])
+    expect(bucket.files.get(index.looks[2]!.path)!.bytes.equals(readFileSync(join(c, 'red-guild/red-one-suit/suit.png')))).toBe(true)
+    const mine = JSON.parse(readFileSync(join(dir, 'publication.json'), 'utf8')) as EnemyPublication, theirs = JSON.parse(readFileSync(join(c, 'publication.json'), 'utf8')) as EnemyPublication
+    expect([mine.looks.map((l) => l.id), mine.noun]).toEqual([['red-one-station', 'blue-one-station'], 'enemy looks'])
+    expect([theirs.looks.map((l) => [l.id, l.state, l.image]), theirs.noun, theirs.counts.refused]).toEqual([[['red-one-suit', 'published', 'red-guild/red-one-suit/suit.png'], ['green-one-suit', 'published', 'green-guild/green-one-suit/suit.png'], ['red-one-station', 'refused', 'red-guild/red-one-station/suit.png']], 'casual looks', 1])
+    expect(readFileSync(join(c, 'review.html'), 'utf8')).toContain('<script src="publication.js"></script><script src="../../../../publication-flag.js"></script>')
   })
 
   it('plans a kept look’s faction with its old title when the album no longer names it', () => {

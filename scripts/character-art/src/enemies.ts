@@ -6,11 +6,13 @@
 // from the manifest: all local, none in git. As with `art:push`, nothing is deleted in the bucket, every picture is read back
 // before the index is written, the index goes last over the generation read, and the flags are written beside the
 // manifest (`publication.json`, `publication.js`), where the enemy album and the gallery's front page show them.
+// EA3 (P186): the casual collection beside it, `enemies/casual/approved/` (P185), goes up in the same push and the same
+// index, each of its looks marked `kind: "casual"`, with its own flags in the casual album.
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join, relative, resolve } from 'node:path'
 import {
-  authoring, BUCKET, content, encode, FLAG_FILE, GALLERY, INDEX, isUniverse, keyOf, MANIFEST, md5, pngSize, RECORD, RECORD_SCRIPT, recordScript, sha256, stable,
+  authoring, BUCKET, content, encode, FLAG_FILE, GALLERY, INDEX, isUniverse, keyOf, MANIFEST, md5, pngSize, RECORD, RECORD_SCRIPT, recordScript, sha256, slashed, stable,
   withFlagTags, write, type LookFlag, type LookState, type RefusedLook, type Remote,
 } from './lib.js'
 import { FLAG_SCRIPT } from './flag.js'
@@ -29,6 +31,8 @@ const words = (id: string) => id.split('-').map((w) => (w ? w[0]!.toUpperCase() 
 const readJson = (file: string): unknown => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) as unknown : null)
 
 export const enemiesDir = (universe: string, base = authoring): string => join(base, universe, 'enemies', 'approved')
+/** The casual collection beside an enemy collection (P185): `enemies/casual/approved/`. */
+export const casualOf = (dir: string): string => resolve(dir, '..', 'casual', 'approved')
 /** The universes with an approved enemy collection. */
 export function enemyUniverses(base = authoring): string[] {
   if (!existsSync(base)) return []
@@ -51,6 +55,10 @@ export interface ApprovedEnemy {
   width: number
   height: number
   approvedOn: string | null
+  /** Her armour and combat looks, or her casual collection's (EA3). */
+  kind: 'combat' | 'casual'
+  /** The PNG on disk, whichever collection holds it. */
+  file: string
 }
 export interface Faction { id: string; title: string }
 export interface EnemyCollection {
@@ -64,21 +72,32 @@ export interface EnemyCollection {
   order: string[]
 }
 
-/** The approved enemy collection as it is now: every look whose approval, hash and size hold, and every one refused. */
+/**
+ * The approved enemy collection as it is now: every look whose approval, hash and size hold, and every one refused. The
+ * casual collection beside it (EA3), when there is one, is read the same way and joins it, its looks marked casual.
+ */
 export function readEnemies(universe: string, dir: string): EnemyCollection {
   if (!isUniverse(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
   const manifest = readJson(join(dir, MANIFEST))
   if (!object(manifest) || !Array.isArray(manifest.assets)) throw new Error(`${join(dir, MANIFEST)} isn't an approved enemy collection's manifest (no assets).`)
   const album = readJson(join(dir, 'album.json'))
-  const factionNames = object(album) && object(album.factions) ? album.factions : {}
-  const lookNames = object(album) && object(album.looks) ? album.looks : {}
+  const factionNames: Record<string, unknown> = object(album) && object(album.factions) ? { ...album.factions } : {}
   const looks: ApprovedEnemy[] = [], refused: RefusedLook[] = [], order: string[] = [], seen = new Set<string>()
   const factionIds = Object.keys(factionNames).filter((f) => KEBAB.test(f))
-  for (const asset of manifest.assets as unknown[]) {
+  const casualDir = casualOf(dir), casual = readJson(join(casualDir, MANIFEST))
+  const sources: { dir: string; assets: unknown[]; lookNames: Record<string, unknown>; kind: 'combat' | 'casual' }[] = [
+    { dir, assets: manifest.assets as unknown[], lookNames: object(album) && object(album.looks) ? album.looks : {}, kind: 'combat' },
+  ]
+  if (object(casual) && Array.isArray(casual.assets)) {
+    const words = readJson(join(casualDir, 'album.json'))
+    if (object(words) && object(words.factions)) for (const [k, v] of Object.entries(words.factions)) if (!(k in factionNames)) { factionNames[k] = v; if (KEBAB.test(k)) factionIds.push(k) }
+    sources.push({ dir: casualDir, assets: casual.assets as unknown[], lookNames: object(words) && object(words.looks) ? words.looks : {}, kind: 'casual' })
+  }
+  for (const { dir, assets, lookNames, kind: from } of sources) for (const asset of assets) {
     if (!object(asset)) continue
     const id = text(asset.id) ?? '(no id)', given = text(asset.image)
     const image = given && /^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(given) && !given.split('/').some((p) => p === '' || p.startsWith('.')) ? given : null
-    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why }) }
+    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(from === 'casual' ? { collection: 'casual' } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
     if (seen.has(id)) { refuse('damaged', 'its id is listed twice'); continue }
     seen.add(id)
@@ -97,7 +116,7 @@ export function readEnemies(universe: string, dir: string): EnemyCollection {
     if (!factionIds.includes(faction)) factionIds.push(faction)
     looks.push({
       id, character, faction, unitId: text(asset.unitId), look, title: text(lookNames[look]) ?? words(look), image, bytes: bytes.byteLength, sha256: hash,
-      width: size.width, height: size.height, approvedOn: text(approval.date) ?? text(approval.on),
+      width: size.width, height: size.height, approvedOn: text(approval.date) ?? text(approval.on), kind: from, file: path,
     })
   }
   const title = (object(album) ? text(album.game) : null) ?? `Uma ${words(universe)}`
@@ -121,6 +140,8 @@ export interface PublishedEnemy {
   height: number
   approvedOn: string | null
   publishedAt: string
+  /** A look of her casual collection (EA3); absent for her armour and combat looks. */
+  kind?: 'casual'
 }
 /** A game's index in the bucket, `enemy-art/<game>/index.json`: exactly what Uma Enemy Art shows. */
 export interface EnemyIndex {
@@ -174,6 +195,7 @@ export function planEnemyPush(collection: EnemyCollection, remote: EnemyIndex | 
     looks.push({
       id: look.id, character: look.character, faction: look.faction, unitId: look.unitId, look: look.look, title: look.title, path: enemyPath(look), bytes: look.bytes,
       sha256: look.sha256, width: look.width, height: look.height, approvedOn: look.approvedOn, publishedAt: same ? old!.publishedAt : now,
+      ...(look.kind === 'casual' ? { kind: 'casual' as const } : {}),
     })
   }
   const here = new Set(collection.looks.map((l) => l.id))
@@ -215,14 +237,14 @@ export interface EnemyPublication {
 export function enemyPublicationOf(collection: EnemyCollection, remote: EnemyIndex | null, now: string, bucket = BUCKET): EnemyPublication {
   const there = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
   const looks: LookFlag[] = collection.looks.map((look): LookFlag => {
-    const old = there.get(look.id)
-    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null }
-    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.' }
-    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null }
+    const old = there.get(look.id), from = look.kind === 'casual' ? { collection: 'casual' } : {}
+    if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null, ...from }
+    if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.', ...from }
+    return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null, ...from }
   })
   for (const r of collection.refused) {
     const old = there.get(r.id)
-    looks.push({ id: r.id, image: r.image, state: 'refused', sha256: null, publishedAt: old?.publishedAt ?? null, path: old?.path ?? null, note: `Can’t publish: ${r.why}.${old ? ' An earlier picture is still published.' : ''}` })
+    looks.push({ id: r.id, image: r.image, state: 'refused', sha256: null, publishedAt: old?.publishedAt ?? null, path: old?.path ?? null, note: `Can’t publish: ${r.why}.${old ? ' An earlier picture is still published.' : ''}`, ...(r.collection ? { collection: r.collection } : {}) })
   }
   const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
   for (const l of looks) counts[l.state]++
@@ -233,18 +255,32 @@ export function enemyPublicationOf(collection: EnemyCollection, remote: EnemyInd
   }
 }
 
+/** One collection's share of the record, its counts recounted: the armour looks' (`null`) or the casual ones'. */
+function enemySlice(publication: EnemyPublication, collection: string | null): EnemyPublication {
+  const looks = publication.looks.filter((l) => (l.collection ?? null) === collection)
+  const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
+  for (const l of looks) counts[l.state]++
+  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [], noun: collection === 'casual' ? 'casual looks' : publication.noun }
+}
+
 /**
- * Flags the enemy looks where the owner reviews them: `publication.json` and `publication.js` beside the manifest, the
- * shared flag script at the universes' root (three folders up), and the enemy album's script tags. Says which files changed.
+ * Flags the enemy looks where the owner reviews them: `publication.json` and `publication.js` beside each manifest (the
+ * enemy album's, and the casual album's when it has looks), the shared flag script at the universes' root, and each
+ * album's script tags. Says which files changed, relative to the enemy album's folder.
  */
 export function writeEnemyFlags(dir: string, publication: EnemyPublication): string[] {
   const changed: string[] = []
-  const recordFile = join(dir, RECORD), record = stable(recordFile, publication)
-  if (write(recordFile, encode(record))) changed.push(RECORD)
-  if (write(join(dir, RECORD_SCRIPT), recordScript(record, RECORD))) changed.push(RECORD_SCRIPT)
-  if (write(join(dir, '..', '..', '..', FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../../${FLAG_FILE}`)
-  const album = join(dir, GALLERY)
-  if (existsSync(album) && write(album, withFlagTags(readFileSync(album, 'utf8'), `../../../${FLAG_FILE}`, [RECORD_SCRIPT]))) changed.push(GALLERY)
+  const flagAt = (folder: string) => slashed(relative(folder, resolve(dir, '..', '..', '..', FLAG_FILE)))
+  const at = (folder: string, f: string) => (folder === dir ? f : slashed(relative(dir, join(folder, f))))
+  if (write(resolve(dir, '..', '..', '..', FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../../${FLAG_FILE}`)
+  const casualDir = casualOf(dir), casual = enemySlice(publication, 'casual')
+  for (const [folder, slice] of [[dir, enemySlice(publication, null)], ...(casual.looks.length ? [[casualDir, casual] as const] : [])] as const) {
+    const recordFile = join(folder, RECORD), record = stable(recordFile, slice)
+    if (write(recordFile, encode(record))) changed.push(at(folder, RECORD))
+    if (write(join(folder, RECORD_SCRIPT), recordScript(record, RECORD))) changed.push(at(folder, RECORD_SCRIPT))
+    const album = join(folder, GALLERY)
+    if (existsSync(album) && write(album, withFlagTags(readFileSync(album, 'utf8'), flagAt(folder), [RECORD_SCRIPT]))) changed.push(at(folder, GALLERY))
+  }
   return changed
 }
 
@@ -282,17 +318,18 @@ export function pushEnemies(universe: string, dir: string, mirrorDir: string, re
   if (options.dryRun) return result
   const listed = new Map(plan.index.looks.map((l) => [l.id, l.sha256]))
   const local = new Map(collection.looks.filter((l) => listed.get(l.id) === l.sha256).map((l) => [enemyPath(l), l]))
+  // Each look's PNG is read where its collection holds it (the enemy album's folder, or the casual one's).
   const home = join(mirrorDir, collection.game)
   for (const [path, look] of local) {
     const to = join(home, path)
     if (existsSync(to) && sha256(readFileSync(to)) === look.sha256) continue
     mkdirSync(dirname(to), { recursive: true })
-    copyFileSync(join(dir, look.image), to)
+    copyFileSync(look.file, to)
   }
   if (plan.upload.length) {
     const stage = mkdtempSync(join(tmpdir(), 'enemy-push-'))
     try {
-      for (const look of plan.upload) { const to = join(stage, enemyPath(look)); mkdirSync(dirname(to), { recursive: true }); copyFileSync(join(dir, look.image), to) }
+      for (const look of plan.upload) { const to = join(stage, enemyPath(look)); mkdirSync(dirname(to), { recursive: true }); copyFileSync(look.file, to) }
       remote.uploadFolder(stage)
     } finally { rmSync(stage, { recursive: true, force: true }) }
   }
@@ -300,7 +337,7 @@ export function pushEnemies(universe: string, dir: string, mirrorDir: string, re
   for (const [path, look] of local) {
     const file = inBucket.get(path)
     if (!file) throw new Error(`${universe}: ${path} isn't in the bucket after the upload. The index wasn't written; run the push again.`)
-    if (file.bytes !== look.bytes || file.md5 !== md5(readFileSync(join(dir, look.image)))) throw new Error(`${universe}: the bucket's ${path} isn't the approved PNG. The index wasn't written.`)
+    if (file.bytes !== look.bytes || file.md5 !== md5(readFileSync(look.file))) throw new Error(`${universe}: the bucket's ${path} isn't the approved PNG. The index wasn't written.`)
   }
   const file = join(home, INDEX)
   write(file, encode(plan.index))

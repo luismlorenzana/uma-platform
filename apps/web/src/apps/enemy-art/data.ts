@@ -17,6 +17,8 @@ export interface EnemyLook {
   height: number
   approvedOn: string | null
   publishedAt: string | null
+  /** Her armour and combat looks, or her casual collection's (EA3). */
+  kind: 'combat' | 'casual'
 }
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame { id: string; title: string; publishedAt: string | null; factions: EnemyFaction[] }
@@ -28,6 +30,21 @@ export const GAMES: readonly { id: string; title: string }[] = [{ id: 'cyberpunk
 export interface GameTab { id: string; title: string; game: EnemyGame | null; looks: number; factions: number }
 
 export const lookCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + f.looks.length, 0)
+
+/** One enemy's looks in her faction: the group the page titles with her name (P186). */
+export interface Boss { name: string; looks: EnemyLook[] }
+/** A faction's enemies in the order they first appear, each with her looks: her casual ones first, then her armour looks in
+ *  the published order. */
+export function bossesOf(faction: EnemyFaction): Boss[] {
+  const out: Boss[] = []
+  for (const look of faction.looks) {
+    const boss = out.find((b) => b.name === look.character) ?? (out.push({ name: look.character, looks: [] }), out[out.length - 1]!)
+    boss.looks.push(look)
+  }
+  for (const boss of out) boss.looks = [...boss.looks.filter((l) => l.kind === 'casual'), ...boss.looks.filter((l) => l.kind !== 'casual')]
+  return out
+}
+export const bossCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).length, 0)
 
 /** A tab for each game with enemies, published or not, then one for any other game that is published. */
 export function gameTabs(games: readonly EnemyGame[]): GameTab[] {

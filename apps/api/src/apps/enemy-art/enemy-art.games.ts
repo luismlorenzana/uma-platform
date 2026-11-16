@@ -2,7 +2,8 @@
 // first, Uma Quest when its enemy authoring starts; Uma Farm has none), published by `pnpm art:push <universe> --enemies`
 // to the app's own bucket under `enemy-art/<game>/`: an `index.json` (`kind: enemy-art`) and the approved PNGs, byte for
 // byte, under hash names. Uma Enemy Art shows exactly what each index lists, read on every request, faction by faction in
-// the index's order. Enemy and faction names come from the index; nothing here names one.
+// the index's order. Enemy and faction names come from the index; nothing here names one. EA3 (P186): a look of her
+// casual collection is marked `kind: "casual"`; the page shows it beside her armour looks.
 import type { BlobStore } from '../../store/blob-store'
 
 export interface EnemyLook {
@@ -21,6 +22,8 @@ export interface EnemyLook {
   height: number
   approvedOn: string | null
   publishedAt: string | null
+  /** Her armour and combat looks, or her casual collection's (EA3). */
+  kind: 'combat' | 'casual'
 }
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame {
@@ -51,7 +54,7 @@ function lookOf(game: string, raw: unknown): EnemyLook | null {
   const look = text(raw.look) ?? 'look'
   return {
     id, character, faction, unitId: text(raw.unitId), look, title: text(raw.title) ?? words(look), path: `${game}/${path}`, bytes, sha256, width, height,
-    approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt),
+    approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt), kind: raw.kind === 'casual' ? 'casual' : 'combat',
   }
 }
 

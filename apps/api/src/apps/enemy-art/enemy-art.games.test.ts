@@ -19,16 +19,18 @@ const index = (game: string, looks: unknown[], extra: Record<string, unknown> = 
 describe('Uma Enemy Art’s games (EA1)', () => {
   it('lists each published game with its looks by faction, in the index’s order, each at its pack path', async () => {
     const games = await enemyGames(store(new Map([
-      ['neon-city/index.json', index('neon-city', [look('red-one', 'red-guild'), look('blue-one', 'blue-guild', OTHER), look('green-one', 'green-guild')])],
+      ['neon-city/index.json', index('neon-city', [look('red-one', 'red-guild'), look('blue-one', 'blue-guild', OTHER), look('green-one', 'green-guild'), look('red-one-suit', 'red-guild', OTHER, { kind: 'casual' })])],
       [`neon-city/images/red-one.${HASH.slice(0, 16)}.png`, json('not an index')],
     ])))
     expect(games.map((g) => [g.id, g.title, g.factions.map((f) => [f.id, f.title, f.looks.map((l) => l.id)])])).toEqual([
-      ['neon-city', 'Uma Neon City', [['blue-guild', 'The Blue Guild', ['blue-one']], ['red-guild', 'The Red Guild', ['red-one']], ['green-guild', 'Green Guild', ['green-one']]]],
+      ['neon-city', 'Uma Neon City', [['blue-guild', 'The Blue Guild', ['blue-one']], ['red-guild', 'The Red Guild', ['red-one', 'red-one-suit']], ['green-guild', 'Green Guild', ['green-one']]]],
     ])
     expect(games[0]!.factions[1]!.looks[0]).toEqual({
       id: 'red-one', character: 'Foe red-one', faction: 'red-guild', unitId: 'unit-red-one', look: 'station', title: 'Station uniform', path: `neon-city/images/red-one.${HASH.slice(0, 16)}.png`,
-      bytes: 1200, sha256: HASH, width: 64, height: 96, approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z',
+      bytes: 1200, sha256: HASH, width: 64, height: 96, approvedOn: '2026-01-02', publishedAt: '2026-01-03T10:00:00.000Z', kind: 'combat',
     })
+    // A casual look keeps its kind (EA3).
+    expect(games[0]!.factions[1]!.looks[1]!.kind).toBe('casual')
   })
 
   it('drops a look that isn’t a hash-named PNG of its own, another game’s index, and a damaged file', async () => {

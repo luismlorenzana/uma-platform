@@ -1,13 +1,16 @@
 // Uma Enemy Art (EA1, P183): the enemy looks the owner approved, in a section of their own, apart from Character Art
 // (the owner: "approved enemy looks should go into a completely new section"). A tab for each game with enemies, Uma
-// Cyberpunk first and Uma Quest next; in each, the factions in their published order and each enemy's looks. A look opens
-// full size. Each PNG is read through this sub-app's pack route, checked against its hash and kept on the device.
+// Cyberpunk first and Uma Quest next; in each, the factions in their published order, and in a faction each boss under
+// her own name (P186) with her looks: her casual ones first (EA3), then her armour looks. A look opens full size. Each PNG
+// is read through this sub-app's pack route, checked against its hash and kept on the device.
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button } from '@luismlorenzana/uma-kit/ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { lookUrl } from './content'
-import { chosenTab, day, gameTabs, loadGames, lookCount, plural, type EnemyFaction, type EnemyGame, type EnemyLook } from './data'
+import { bossCount, bossesOf, chosenTab, day, gameTabs, loadGames, lookCount, plural, type EnemyFaction, type EnemyGame, type EnemyLook } from './data'
+
+const bosses = (n: number) => `${n} boss${n === 1 ? '' : 'es'}`
 
 /** A look's picture, fetched when it scrolls near the screen (or at once when `eager`). */
 function LookImg({ look, alt, className, eager }: { look: EnemyLook; alt: string; className?: string; eager?: boolean }) {
@@ -50,38 +53,52 @@ function Viewer({ look, game, faction, onClose }: { look: EnemyLook; game: Enemy
   )
 }
 
+/** One look of a boss: her name is the group's title, so the card names the look. */
 function LookCard({ look, onOpen }: { look: EnemyLook; onOpen: () => void }) {
   return (
-    <figure className="flex flex-col overflow-hidden rounded-lg bg-panel shadow-1" data-look={look.id}>
+    <figure className="flex flex-col overflow-hidden rounded-lg bg-panel shadow-1" data-look={look.id} data-kind={look.kind}>
       <button type="button" onClick={onOpen} aria-label={`Open ${look.character}: ${look.title}`} className="block bg-sunken">
         <LookImg look={look} alt={`${look.character}: ${look.title}`} className="w-full" />
       </button>
       <figcaption className="flex flex-col gap-0.5 p-2">
-        <span className="text-sm font-semibold leading-tight">{look.character}</span>
-        <span className="text-xs leading-tight text-ink-soft">{look.title}</span>
+        <span className="flex items-center gap-1.5 text-sm font-semibold leading-tight">
+          {look.title}
+          {look.kind === 'casual' && <span className="rounded-full bg-sunken px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">Casual</span>}
+        </span>
         <span className="text-[10px] leading-tight text-ink-faint">approved {day(look.approvedOn)} · published {day(look.publishedAt)}</span>
       </figcaption>
     </figure>
   )
 }
 
-/** A game's enemies: its factions in their published order, each with its looks. */
+/** A game's enemies: its factions in their published order, and in each faction every boss under her own name. */
 function Game({ game, onOpen }: { game: EnemyGame; onOpen: (look: EnemyLook, faction: EnemyFaction) => void }) {
   const looks = lookCount(game)
   return (
-    <div className="flex flex-col gap-5" data-testid="enemy-game" data-game={game.id}>
-      <p className="text-sm text-ink-soft">{plural(looks, 'approved enemy look')} in {plural(game.factions.length, 'faction')} · published {day(game.publishedAt)}</p>
-      {game.factions.map((faction) => (
-        <section key={faction.id} className="flex flex-col gap-2" data-faction={faction.id}>
-          <header className="flex items-baseline gap-2">
-            <h2 className="font-display text-lg font-bold">{faction.title}</h2>
-            <span className="ml-auto text-xs text-ink-soft">{plural(faction.looks.length, 'look')}</span>
-          </header>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
-            {faction.looks.map((look) => <LookCard key={look.id} look={look} onOpen={() => onOpen(look, faction)} />)}
-          </div>
-        </section>
-      ))}
+    <div className="flex flex-col gap-6" data-testid="enemy-game" data-game={game.id}>
+      <p className="text-sm text-ink-soft">{plural(looks, 'approved enemy look')} of {bosses(bossCount(game))} in {plural(game.factions.length, 'faction')} · published {day(game.publishedAt)}</p>
+      {game.factions.map((faction) => {
+        const group = bossesOf(faction)
+        return (
+          <section key={faction.id} className="flex flex-col gap-3" data-faction={faction.id}>
+            <header className="flex items-baseline gap-2 border-b border-hairline pb-1">
+              <h2 className="font-display text-lg font-bold">{faction.title}</h2>
+              <span className="ml-auto text-xs text-ink-soft">{bosses(group.length)} · {plural(faction.looks.length, 'look')}</span>
+            </header>
+            {group.map((boss) => (
+              <div key={boss.name} className="flex flex-col gap-2" data-boss={boss.name}>
+                <h3 className="flex items-baseline gap-2 font-display text-base font-bold">
+                  {boss.name}
+                  <span className="text-xs font-normal text-ink-soft">{plural(boss.looks.length, 'look')}</span>
+                </h3>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+                  {boss.looks.map((look) => <LookCard key={look.id} look={look} onOpen={() => onOpen(look, faction)} />)}
+                </div>
+              </div>
+            ))}
+          </section>
+        )
+      })}
     </div>
   )
 }

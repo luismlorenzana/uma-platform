@@ -27,7 +27,7 @@ her casual look and her combat look side by side.
 
 Record the owner's verdict exactly, with the date and the precise scope. Copy each approved PNG byte for byte to
 `casual/approved/<faction>/<enemy>/casual.png` (or `casual-<variant>.png` for a second casual look) and add its entry to
-`casual/approved/manifest.json`: `id`, `character`, `faction`, `unitId`, `look: "casual"`, `image` (relative to
+`casual/approved/manifest.json`: `id`, `character`, `faction`, `unitId`, `look` (`casual` for everyday clothes), `image` (relative to
 `casual/approved/`), `sha256`, `width`, `height`, `approval: { status: "approved", by: "owner", date, scope }` and
 `source` (the study's manifest). Keep a superseded look's entry under `previousAssets` rather than deleting it. The first
 approval writes `casual/approved/style-guide.md`, the casual baseline.
@@ -37,10 +37,11 @@ approval writes `casual/approved/style-guide.md`, the casual baseline.
 Run `pnpm art:albums cyberpunk`: the casual album (`casual/approved/review.html`) shows every approved casual look,
 faction by faction. A faction appears under its key until `casual/approved/album.json`'s `factions` names it.
 
-## 6. Publishing, later
+## 6. Publishing, on the owner's word
 
-Casual looks publish to Uma Enemy Art once EA3 is built, as each enemy's own look beside her combat looks, by Claude on the
-owner's word. An authoring session only approves.
+Claude publishes the casual looks with the armour looks, `pnpm art:push cyberpunk --enemies` (EA3, P186): Uma Enemy Art
+shows each one first in her group, under her name, with a "Casual" label, and the casual album gets its own flags. An
+authoring session only approves.
 
 ## 7. Handoff
 

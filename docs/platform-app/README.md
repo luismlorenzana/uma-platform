@@ -9,7 +9,7 @@
 > illustrations, 9 each for Kitasan Black, Almond Eye and Satono Diamond, show in a "Splash art" section on each one's page (P175, P182, P184). **Her dialogue portraits are published as pieces (CA5, P169):** each outfit's
 > neutral crop and each expression's face, with a recipe for the games; her page shows the pieces, and the games compose the
 > 384 Farm Life states. **Uma Enemy Art is live (EA1, P183):** the enemies' approved looks in a sub-app of their own,
-> game by game (Uma Cyberpunk, then Uma Quest) and faction by faction; Uma Cyberpunk's five approved looks, one a faction, are published (P184). Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
+> game by game (Uma Cyberpunk, then Uma Quest) and faction by faction; each faction's bosses under their own names (P186); Uma Cyberpunk's 20 approved looks of five bosses are published, each boss's pilot suit (her casual look) and three armour looks (P186). Every cloud value: [infrastructure.md](infrastructure.md). The owner's direction: an Uma Platform
 > website in the `uma-rpg` project, with Google sign-in and the games' shell, where separate sub-apps open from tiles. It
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
@@ -106,7 +106,7 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | Hosting site | ~2 MB of app | 10 GB stored, 360 MB a day transferred | $0 |
 | `platform-api` (owner only, min 0) | a few thousand requests | 2M requests, 180,000 vCPU-s, 360,000 GiB-s | $0 |
 | Image repository, last 3 images | ~0.15 GB | 0.5 GB, shared with the games' three repositories (0.37 GB today) | ≤$0.01 |
-| `gs://uma-platform-content` | ~0.40 GB (boards, 169 MB of franchise art, universe looks since CA4 with 68 MB of splash art since P175, 17 MB of portrait pieces since CA5, 9.4 MB of enemy looks since EA1) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
+| `gs://uma-platform-content` | ~0.43 GB (boards, 169 MB of franchise art, universe looks since CA4 with 68 MB of splash art since P175, 17 MB of portrait pieces since CA5, 40 MB of enemy looks since EA1) | 5 GB-months in us-central1, shared by every bucket on the billing account | $0 to $0.004 |
 | Bucket operations | a few thousand reads, a few hundred writes | 50,000 Class B, 5,000 Class A | $0 |
 | Pictures to your phone | first visit ~0.3 GB, then cached on the device | 1 GB from Cloud Run in North America | $0 |
 | **Total** | | | **$0 to about $0.01**, under the project's $5 budget alert |
@@ -193,6 +193,9 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | AP96 | **Names stay out of git:** the enemies' names come from the private manifest, the faction titles and look captions from the enemy album's local `album.json`; they reach only the bucket and the signed-in page. The code, its tests and the docs name no enemy, faction or franchise |
 | AP97 | **The flags:** `enemies/approved/publication.json` and `publication.js` (`kind: enemy-art-publication`, `app: Uma Enemy Art`); the enemy album's badges and line name Uma Enemy Art (the shared flag script reads a record's `app`), the Local Art Gallery's front page counts them, and `pnpm art:status` refreshes them. Local dev: a push also fills `content/published/enemy-art/` (`ENEMY_ART_DIR`), which the local app reads |
 | AP98 | **Who pushes:** Claude, on the owner's word, naming the looks that go up, as for the universe looks (P168); an authoring session only approves |
+| AP99 | **Each boss under her own name** (P186): in a faction, one group per enemy, titled with her name and her look count, in the order her looks first appear; each card names the look only. The game's line counts looks, bosses and factions |
+| AP100 | **EA3, casual looks in the same push and index:** `art:push <universe> --enemies` also reads `enemies/casual/approved/` (P185); its looks are marked `kind: "casual"` in the index and in `/api/enemy-art/games`, shown first in her group with a "Casual" label; an id both collections use is refused the second time. Each album keeps its own flags (`enemies/approved/` and `enemies/casual/approved/publication.json`) |
+| AP101 | **The pilot suits are the casual album's first set** (P186): the owner asked for the casual album to start with them, so their approvals moved from the enemy album's record to the casual one's (`movedAssets` keeps the old entries, the PNGs stay where the armour prompts read them); the enemy album holds the armour looks |
 
 ## Later
 
@@ -214,7 +217,7 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | CA4 | The universe looks: `pnpm art:push`, `art:status` and `art:gallery`, the looks on each Uma's page, the published flag in the local galleries; 30 looks published | Claude | M | CA3 ✓, your ask ✓ | **Done** (P162) |
 | CA5 | Dialogue portraits as pieces: `art:push --portraits`, the recipe route for the games, the pieces on each Uma's page, the flag in the local galleries; Farm Life's 54 pieces (384 states) published | Claude | M | CA4 ✓, your ask ✓ | **Done** (P169) |
 | EA1 | Uma Enemy Art: the sub-app, its API and pack route, `art:push --enemies`, the flags in the enemy album and the gallery; Uma Cyberpunk's five approved looks published (P184) | Claude | M | P182 ✓, your ask ✓ | **Done** (P183) |
-| EA3 | Casual enemy looks in Uma Enemy Art: `art:push <universe> --enemies` also reads `enemies/casual/approved/` (P185), each casual look shown beside her combat looks (a "Casual" label on its card), with its own flags in the casual album | Claude | S | P185 ✓, a first approved casual look, your word | When the first casual look is approved |
+| EA3 | Casual enemy looks in Uma Enemy Art: `art:push <universe> --enemies` also reads `enemies/casual/approved/` (P185), each casual look shown first in her group with a "Casual" label, with its own flags in the casual album; each boss grouped under her name | Claude | S | P185 ✓, your word ✓ | **Done** (P186) |
 | EA2 | Uma Quest's enemies: their authoring folder and packet (as `docs/authoring/cyberpunk-enemies`), then the first push | Claude | S | Uma Quest's enemy authoring | When it starts |
 | — | uma-quest: `/album` becomes a link here, and its Album code goes | uma-quest's session | S | CA1 live | Requested when CA1 lands |
 | US1 | Uma Story's shell: the tile, the cast by batch, a plain reader for both games' drafts, your verdicts, `story:push` and `story:pull` ([story.md](story.md)) | Claude | L | Your go ✓ | **Done** (P149) |

@@ -25,11 +25,12 @@ and the casual album's `album.json`.
 | Part | Direction |
 | --- | --- |
 | Who | An enemy whose combat look is approved: her approved combat-station look is the likeness anchor (her face, proportions and rendering as this game draws her) |
-| What she wears | Everyday clothes for the game's city, off duty: no armour plates, helmet, mantle, weapon, core emitter or Hold mark. Her own taste, read from her source outfit |
+| First set | **Her pilot suit** (P186): the suit each boss wore as her combat-station look, moved here from the enemy album at the owner's request, so the enemy album holds her armour looks and this one her unarmoured outfits |
+| What she wears | Then everyday clothes for the game's city, off duty: no armour plates, helmet, mantle, weapon, core emitter or Hold mark. Her own taste, read from her source outfit |
 | Her colours | Her **accent** leads the outfit. Her faction shows in **one small piece** only (a trim colour, a lining, an emblem pin), so her side still reads. Her light, if at all, in one small accessory |
 | Style | The baseline's drawing style and adult model (§2.1), the same as her combat looks, so the two sit side by side |
 | Image | One transparent RGBA PNG, **1024 × 1536**, full body, neutral stance, straight on at eye level, visible hands, the same framing and scale as the combat looks |
-| Baseline | The **first owner-approved casual look sets the casual baseline** (`casual/approved/style-guide.md`): rendering, framing, how much of the faction shows. Later looks use it as the shared anchor |
+| Baseline | The **first owner-approved everyday-clothes look sets the casual baseline** (`casual/approved/style-guide.md`): rendering, framing, how much of the faction shows. Later looks use it as the shared anchor |
 | Order | The enemies with approved combat looks, one a faction, then the next as their combat looks are approved |
 
 ## Local source of truth
@@ -42,7 +43,7 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/enemies/`
 | `approved/<faction>/<enemy>/` | Her approved combat looks: the likeness anchor |
 | `casual/README.md`, `casual/handoff.md` | The casual cycle's local notes and its handoff |
 | `casual/<faction>/<enemy>-casual-v00N/` | One study: `brief.md`, `images/`, `prompts/`, `manifest.json`, its review page |
-| `casual/approved/manifest.json` | **The approval record:** each approved casual look with `id`, `character`, `faction`, `unitId`, `look: "casual"`, `image`, `sha256`, `width`, `height`, `approval`, `source` |
+| `casual/approved/manifest.json` | **The approval record:** each approved casual look with `id`, `character`, `faction`, `unitId`, `look` (the outfit's key: `combat-station` for the pilot suits, `casual` for everyday clothes), `image`, `sha256`, `width`, `height`, `approval`, `source` |
 | `casual/approved/<faction>/<enemy>/casual.png` | The approved PNGs, byte for byte |
 | `casual/approved/album.json` | The casual album's words: title, header, footer, `noun`, `empty`, faction names in their order, look captions |
 | `casual/approved/review.html` | The casual album, built by `pnpm art:albums cyberpunk` |
@@ -55,9 +56,10 @@ combat look      (one main         (per study)    (exact words,      + manifest 
 (the anchor)      change a round)                  date, scope)       (byte for byte, SHA-256)        cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing to Uma Enemy Art comes later (EA3): the casual looks will
-show as each enemy's own look beside her combat looks, published by Claude on the owner's word. Until then the casual
-album and the Local Art Gallery show them as **Not published**. Nothing here is backed up.
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm art:push cyberpunk
+--enemies` sends the casual looks with the armour looks (EA3, P186), and Uma Enemy Art shows each one first in her group,
+under her name, with a "Casual" label. The casual album and the Local Art Gallery then show it as **Published**. Nothing
+here is backed up.
 
 ## Album
 
