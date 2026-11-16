@@ -35,9 +35,10 @@
   approved ones to the app's bucket (`art/universes/`), where Character Art shows them **on her own page**, never in a tab
   of their own; it also flags each look as published (`approved/publication.json`), which the local galleries show
   (`pnpm art:gallery`, http://127.0.0.1:4323; `pnpm art:status` refreshes the flags). ChatGPT pushes after an approval;
-  Claude pushes only on the owner's word, and only the looks named (`--only <id|outfit>,…`, P168). **Dialogue portraits
+  Claude pushes only on the owner's word, and only the looks or characters named (`--only <id|outfit|character>,…`, P168,
+  P189; a character not on this machine stays live). **Dialogue portraits
   (CA5, P169)** go up as pieces (each outfit's neutral crop and each expression's face, with a recipe) by
-  `pnpm art:push <universe> --portraits`: her page shows the pieces, and the games compose the states from
+  `pnpm art:push <universe> --portraits [--only <character>,…]`: her page shows the pieces, and the games compose the states from
   `/api/art/portraits/<universe>`; Character Art never composes one. A character authored on her own lives in
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).

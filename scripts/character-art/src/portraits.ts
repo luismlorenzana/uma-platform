@@ -4,20 +4,27 @@
 // pieces is good enough", then "the pieces are visible in the page though right?"). The source is
 // `<universe>/dialogue-portraits/`, whose `approval.json` binds each approved state to the exact crop, face and position
 // it was made from; a piece goes up only when its file still has the hash the owner approved. Nothing is deleted online.
+// Each character's own collection (`characters/<key>/`, P174) adds hers, so a universe may have no shared folder at all.
+// A push changes only the characters it reads (all held here, or those `--only` names); every other character's pieces
+// and states stay in the recipe as the bucket has them (P189).
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
 import {
-  authoring, BUCKET, characterStudies, encode, FLAGGED, isUniverse, md5, pngSize, PORTRAIT_RECORD, RECORD, RECORD_SCRIPT, sha256, slashed, stable, studyFile,
-  tagGalleries, universesIn, write, writeStudyScript, type Remote,
+  authoring, BUCKET, characterStudies, encode, FLAGGED, isUniverse, md5, newest, pngSize, PORTRAIT_RECORD, RECORD, RECORD_SCRIPT, sha256, slashed, stable, studyFile,
+  tagGalleries, universesIn, write, writeStudyScript, type CharacterStudy, type Remote,
 } from './lib.js'
 
 export const PORTRAITS_INDEX = 'portraits/index.json'
 /** A universe's dialogue portrait collection, beside its approved looks. */
 export const portraitsDir = (universe: string, base = authoring): string => join(base, universe, FLAGGED.portraits)
-/** The universes whose dialogue portraits have an owner approval record. */
+/** A universe's shared portrait collection: its manifest and the owner's approval record, both there. */
+const hasShared = (dir: string) => existsSync(join(dir, 'manifest.json')) && existsSync(join(dir, 'approval.json'))
+/** A character's own collection that holds dialogue portrait crops (P174). */
+const hasPortraits = (study: CharacterStudy) => Array.isArray(study.manifest.assets) && study.manifest.assets.length > 0
+/** The universes with dialogue portraits: a shared approved collection, or a character's own collection with crops. */
 export const portraitUniverses = (base = authoring): string[] =>
-  universesIn(base).filter((u) => existsSync(join(portraitsDir(u, base), 'manifest.json')) && existsSync(join(portraitsDir(u, base), 'approval.json')))
+  universesIn(base).filter((u) => hasShared(portraitsDir(u, base)) || characterStudies(join(base, u)).some(hasPortraits))
 
 /** How a state is put together, written into the index for the games. */
 export const BLEND = 'The neutral state is the base alone. Any other state draws its face over the base with its top-left corner at (x, y), no scaling or rotation: for each face pixel with alpha a > 0, each colour channel becomes round(base × (1 − a/255) + face × a/255), and pixels outside the face are the base unchanged.'
@@ -97,10 +104,14 @@ const inside = (dir: string, rel: unknown): string | null => {
  * listed only when its file has the approved hash and size; anything else is a problem, and a push with problems sends
  * nothing. Every piece's `file` is relative to `dir`.
  */
-export function readPortraits(universe: string, dir: string): PortraitSet {
+export function readPortraits(universe: string, dir: string, only: readonly string[] = []): PortraitSet {
   if (!isUniverse(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
-  for (const f of ['manifest.json', 'approval.json']) if (!existsSync(join(dir, f))) throw new Error(`No approved dialogue portraits: ${join(dir, f)} doesn't exist.`)
-  const manifest = json(join(dir, 'manifest.json')), approval = json(join(dir, 'approval.json'))
+  const shared = hasShared(dir), studies = characterStudies(resolve(dir, '..')).filter(hasPortraits)
+  if (!shared && studies.length === 0) throw new Error(`No approved dialogue portraits: neither ${join(dir, 'manifest.json')} and approval.json, nor a character's own collection with crops.`)
+  const manifest = shared ? json(join(dir, 'manifest.json')) : {}, approval = shared ? json(join(dir, 'approval.json')) : {}
+  /** With --only, the named characters alone are read; nothing else counts, not even its problems. */
+  const wanted = (character: string) => only.length === 0 || only.includes(character)
+  const dates: string[] = []
   const problems: string[] = []
   const characters: { id: string; name: string }[] = [], outfits: string[] = [], expressions: string[] = []
   const bases: PortraitSet['bases'] = [], faces = new Map<string, PortraitSet['faces'][number]>(), states: PortraitState[] = []
@@ -117,11 +128,11 @@ export function readPortraits(universe: string, dir: string): PortraitSet {
   }
   const ingest = (src: Source) => {
     const names = object(src.manifest.characterNames) ? src.manifest.characterNames : {}
-    const mine = Object.entries(names).filter(([id, n]) => KEBAB.test(id) && typeof n === 'string').map(([id, n]) => ({ id, name: n as string }))
+    const mine = Object.entries(names).filter(([id, n]) => KEBAB.test(id) && typeof n === 'string' && wanted(id)).map(([id, n]) => ({ id, name: n as string }))
     for (const c of mine) if (!characters.some((x) => x.id === c.id)) characters.push(c)
     const retired = new Set(strings(src.manifest.retiredOutfits))
     const ownOutfits = strings(src.manifest.outfits).filter((o) => !retired.has(o)), ownExpressions = strings(src.manifest.expressions)
-    union(outfits, ownOutfits); union(expressions, ownExpressions)
+    if (mine.length) { union(outfits, ownOutfits); union(expressions, ownExpressions) }
     const neutral = ownExpressions[0] ?? 'neutral'
     const assets = Array.isArray(src.manifest.assets) ? (src.manifest.assets as unknown[]).filter(object) : []
     const faceRecords = Array.isArray(src.manifest.faces) ? (src.manifest.faces as unknown[]).filter(object) : []
@@ -140,6 +151,7 @@ export function readPortraits(universe: string, dir: string): PortraitSet {
 
     for (const entry of src.entries) {
       const character = text(entry.character), outfit = text(entry.outfit)
+      if (character && !wanted(character)) continue
       const what = `${character ?? '?'} ${outfit ?? '?'}`
       if (!character || !outfit || !KEBAB.test(character) || !KEBAB.test(outfit)) { problems.push(`${what}: an approval entry without a character or outfit`); continue }
       if (retired.has(outfit) || !ownOutfits.includes(outfit)) { problems.push(`${what}: the outfit isn’t a current one`); continue }
@@ -176,17 +188,19 @@ export function readPortraits(universe: string, dir: string): PortraitSet {
   }
 
   // The shared collection: its approval record gates every state.
-  if (approval.status !== 'approved' || approval.by !== 'owner') problems.push('approval.json doesn’t record the owner’s approval')
-  ingest({
-    label: 'the manifest', manifest,
-    entries: (Array.isArray(approval.assets) ? (approval.assets as unknown[]) : []).filter(object),
-    locate: (rel) => { const f = inside(dir, rel); return f ? { abs: join(dir, f), file: f } : null },
-  })
+  if (shared) {
+    const entries = (Array.isArray(approval.assets) ? (approval.assets as unknown[]) : []).filter(object)
+    if ((approval.status !== 'approved' || approval.by !== 'owner') && entries.some((e) => typeof e.character !== 'string' || wanted(e.character))) problems.push('approval.json doesn’t record the owner’s approval')
+    ingest({ label: 'the manifest', manifest, entries, locate: (rel) => { const f = inside(dir, rel); return f ? { abs: join(dir, f), file: f } : null } })
+  }
   // Each character's own collection: her manifest's approval, her crops the owner approved, and her approved states.
-  for (const study of characterStudies(resolve(dir, '..'))) {
+  for (const study of studies) {
     const own = object(study.manifest.approval) ? study.manifest.approval : {}
-    if (!Array.isArray(study.manifest.assets)) continue
+    const names = object(study.manifest.characterNames) ? Object.keys(study.manifest.characterNames) : []
+    if (![study.key, ...names].some(wanted)) continue
     if (own.status !== 'approved' || own.by !== 'owner') { problems.push(`${study.key}: her manifest doesn’t record the owner’s approval`); continue }
+    const on = text(own.on) ?? text(own.date)
+    if (on) dates.push(on)
     ingest({
       label: `${study.key}'s manifest`, manifest: study.manifest,
       entries: (study.manifest.assets as unknown[]).filter(object).map((a) => ({
@@ -204,7 +218,7 @@ export function readPortraits(universe: string, dir: string): PortraitSet {
   bases.sort((a, b) => rank(order, a.character) - rank(order, b.character) || rank(outfits, a.outfit) - rank(outfits, b.outfit))
   const faceList = [...faces.values()].sort((a, b) => rank(order, a.character) - rank(order, b.character) || rank(expressions, a.expression) - rank(expressions, b.expression))
   return {
-    universe, revision: typeof manifest.revision === 'number' ? manifest.revision : null, approvedOn: text(approval.date),
+    universe, revision: typeof manifest.revision === 'number' ? manifest.revision : null, approvedOn: text(approval.date) ?? (dates.sort().at(-1) ?? null),
     characters, outfits, expressions,
     size: size ?? { width: 0, height: 0 }, faceSize: faceSize ?? { width: 0, height: 0 }, bases, faces: faceList, states, problems,
   }
@@ -220,15 +234,48 @@ export function parsePortraitIndex(source: string | null, universe: string): Por
 }
 
 const strip = <T extends { file: string }>({ file: _, ...rest }: T): Omit<T, 'file'> => rest
-export interface PortraitPlan { index: PortraitIndex; upload: (PortraitSet['bases'][number] | PortraitSet['faces'][number])[]; unchanged: number; same: boolean }
-/** What a push sends: every piece the bucket doesn't hold yet, then an index of the whole approved collection. */
+export interface PortraitPlan {
+  index: PortraitIndex
+  upload: (PortraitSet['bases'][number] | PortraitSet['faces'][number])[]
+  unchanged: number
+  same: boolean
+  /** Characters of the bucket's recipe this push leaves as they are: not read here (not on this machine, or not named). */
+  kept: string[]
+}
+/** Why the read characters can't join the bucket's recipe beside the ones it keeps: they'd need another crop or face size. */
+export function sizeConflict(set: PortraitSet, remote: PortraitIndex | null): string | null {
+  const ours = new Set(set.characters.map((c) => c.id))
+  if (!remote || !remote.characters.some((c) => !ours.has(c.id))) return null
+  const same = (a: { width: number; height: number }, b: { width: number; height: number }) => a.width === b.width && a.height === b.height
+  if (set.bases.length && !same(set.size, remote.size)) return `the crops are ${set.size.width}×${set.size.height}, the published ones ${remote.size.width}×${remote.size.height}`
+  if (set.faces.length && !same(set.faceSize, remote.faceSize)) return `the faces are ${set.faceSize.width}×${set.faceSize.height}, the published ones ${remote.faceSize.width}×${remote.faceSize.height}`
+  return null
+}
+/**
+ * What a push sends: every piece the bucket doesn't hold yet, then the recipe: the read characters as they are here, and
+ * every other character of the bucket's recipe exactly as it was (P189), in the bucket's order with new ones after.
+ */
 export function planPortraits(set: PortraitSet, remote: PortraitIndex | null, now: string): PortraitPlan {
   const there = new Set([...(remote?.bases ?? []), ...(remote?.faces ?? [])].map((p) => `${p.path}:${p.sha256}`))
   const pieces = [...set.bases, ...set.faces]
   const upload = pieces.filter((p) => !there.has(`${p.path}:${p.sha256}`))
+  const ours = new Set(set.characters.map((c) => c.id)), theirs = <T extends { character: string }>(list: T[] = []) => list.filter((p) => !ours.has(p.character))
+  const characters = [...(remote?.characters ?? []).map((c) => set.characters.find((s) => s.id === c.id) ?? c), ...set.characters.filter((c) => !remote?.characters.some((r) => r.id === c.id))]
+  const outfits = [...(remote?.outfits ?? [])], expressions = [...(remote?.expressions ?? [])]
+  for (const o of set.outfits) if (!outfits.includes(o)) outfits.push(o)
+  for (const e of set.expressions) if (!expressions.includes(e)) expressions.push(e)
+  const rank = (list: string[], v: string) => { const i = list.indexOf(v); return i === -1 ? Infinity : i }
+  const who = characters.map((c) => c.id)
+  const byCharacter = (a: { character: string }, b: { character: string }) => rank(who, a.character) - rank(who, b.character)
+  const bases = [...theirs(remote?.bases), ...set.bases.map(strip)].sort((a, b) => byCharacter(a, b) || rank(outfits, a.outfit) - rank(outfits, b.outfit))
+  const faces = [...theirs(remote?.faces), ...set.faces.map(strip)].sort((a, b) => byCharacter(a, b) || rank(expressions, a.expression) - rank(expressions, b.expression))
+  const states = [...theirs(remote?.states), ...set.states].sort((a, b) => byCharacter(a, b) || rank(outfits, a.outfit) - rank(outfits, b.outfit) || rank(expressions, a.expression) - rank(expressions, b.expression))
+  const kept = (remote?.characters ?? []).filter((c) => !ours.has(c.id)).map((c) => c.id)
+  const later = (a: string | null, b: string | null | undefined) => (a && b ? (a > b ? a : b) : a ?? b ?? null)
   const body = {
-    universe: set.universe, revision: set.revision, approvedOn: set.approvedOn, size: set.size, faceSize: set.faceSize, blend: BLEND,
-    characters: set.characters, outfits: set.outfits, expressions: set.expressions, bases: set.bases.map(strip), faces: set.faces.map(strip), states: set.states,
+    universe: set.universe, revision: newest(set.revision, remote?.revision), approvedOn: kept.length ? later(set.approvedOn, remote?.approvedOn) : set.approvedOn,
+    size: set.bases.length || !remote ? set.size : remote.size, faceSize: set.faces.length || !remote ? set.faceSize : remote.faceSize, blend: BLEND,
+    characters, outfits, expressions, bases, faces, states,
   }
   // The bucket's index without its own stamps, in the same key order, so equal collections give equal text.
   const same = remote !== null && JSON.stringify(body) === JSON.stringify({
@@ -237,7 +284,7 @@ export function planPortraits(set: PortraitSet, remote: PortraitIndex | null, no
   })
   return {
     index: { schemaVersion: 1, kind: 'universe-portraits', ...body, publishedAt: same ? remote.publishedAt : now } as PortraitIndex,
-    upload, unchanged: pieces.length - upload.length, same,
+    upload, unchanged: pieces.length - upload.length, same, kept,
   }
 }
 
@@ -257,32 +304,54 @@ export interface PortraitPublication {
   faces: number
   /** Uma Character Art shows the pieces on each Uma's page; the games compose the states. */
   composedBy: 'the games'
-  /** Each character's share, by key, for her own album's line (P174). */
-  characters?: Record<string, { states: number; bases: number; faces: number }>
+  /** Each character's share, by key, for her own album's line (P174), with her own flag (P189). */
+  characters?: Record<string, { states: number; bases: number; faces: number; state?: PortraitPublication['state']; publishedAt?: string | null; note?: string | null }>
   note: string | null
 }
 export function portraitPublicationOf(set: PortraitSet, remote: PortraitIndex | null, now: string, bucket = BUCKET): PortraitPublication {
-  const plan = set.problems.length ? null : planPortraits(set, remote, now)
-  const state: PortraitPublication['state'] = set.problems.length ? 'refused' : !remote ? 'unpublished' : plan!.same && plan!.upload.length === 0 ? 'published' : 'changed'
+  const conflict = sizeConflict(set, remote), problems = conflict ? [...set.problems, conflict] : set.problems
+  const plan = problems.length ? null : planPortraits(set, remote, now)
+  const state: PortraitPublication['state'] = problems.length ? 'refused' : !remote ? 'unpublished' : plan!.same && plan!.upload.length === 0 ? 'published' : 'changed'
+  // Her own flag: her pieces and states here against hers in the bucket's recipe, whatever the order.
+  const hers = (c: string, list: { character: string }[]) => list.filter((p) => p.character === c).map((p) => JSON.stringify(p)).sort()
+  const own = (c: string): PortraitPublication['state'] => {
+    if (problems.length) return 'refused'
+    if (!remote || !remote.bases.some((b) => b.character === c)) return 'unpublished'
+    const local = [hers(c, set.bases.map(strip)), hers(c, set.faces.map(strip)), hers(c, set.states)]
+    return JSON.stringify(local) === JSON.stringify([hers(c, remote.bases), hers(c, remote.faces), hers(c, remote.states)]) ? 'published' : 'changed'
+  }
   return {
     schemaVersion: 1, kind: 'universe-portraits-publication', universe: set.universe, destination: `gs://${bucket}/art/universes/${set.universe}/portraits/`,
     checkedAt: now, state, publishedAt: remote?.publishedAt ?? null, states: set.states.length, bases: set.bases.length, faces: set.faces.length, composedBy: 'the games',
-    characters: Object.fromEntries(set.characters.map((c) => [c.id, {
-      states: set.states.filter((s) => s.character === c.id).length, bases: set.bases.filter((b) => b.character === c.id).length, faces: set.faces.filter((f) => f.character === c.id).length,
-    }])),
-    note: state === 'refused' ? `Can’t publish: ${set.problems.slice(0, 5).join('; ')}${set.problems.length > 5 ? `; and ${set.problems.length - 5} more` : ''}.`
-      : state === 'changed' ? 'The approved collection changed since it was published; a push sends the new pieces.' : null,
+    characters: Object.fromEntries(set.characters.map((c) => {
+      const mine = own(c.id)
+      return [c.id, {
+        states: set.states.filter((s) => s.character === c.id).length, bases: set.bases.filter((b) => b.character === c.id).length, faces: set.faces.filter((f) => f.character === c.id).length,
+        state: mine, publishedAt: mine === 'published' || mine === 'changed' ? remote?.publishedAt ?? null : null,
+        note: mine === 'refused' ? refusal(problems) : mine === 'changed' ? CHANGED : null,
+      }]
+    })),
+    note: state === 'refused' ? refusal(problems) : state === 'changed' ? CHANGED : null,
   }
 }
 
-/** Writes the record and its script beside the portraits' manifest, and the galleries' tags. Says which files changed. */
-export function writePortraitFlags(dir: string, publication: PortraitPublication): string[] {
+const CHANGED = 'The approved collection changed since it was published; a push sends the new pieces.'
+const refusal = (problems: string[]) => `Can’t publish: ${problems.slice(0, 5).join('; ')}${problems.length > 5 ? `; and ${problems.length - 5} more` : ''}.`
+
+/**
+ * Writes the record and its script beside the portraits' manifest, and the galleries' tags. Says which files changed.
+ * The shared record is the whole collection's, so a push of some characters (`whole: false`) or a universe with no shared
+ * folder writes only the characters' own records.
+ */
+export function writePortraitFlags(dir: string, publication: PortraitPublication, whole = true): string[] {
   const changed: string[] = []
   const recordFile = join(dir, RECORD)
   const before = existsSync(recordFile) ? JSON.parse(readFileSync(recordFile, 'utf8')) as PortraitPublication : null
   const record = before && JSON.stringify({ ...before, checkedAt: '' }) === JSON.stringify({ ...publication, checkedAt: '' }) ? before : publication
-  if (write(recordFile, encode(record))) changed.push(RECORD)
-  if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push --portraits and pnpm art:status from ${RECORD}; the galleries read it.\nwindow.UMA_PORTRAIT_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
+  if (whole && hasShared(dir)) {
+    if (write(recordFile, encode(record))) changed.push(RECORD)
+    if (write(join(dir, RECORD_SCRIPT), `// Written by pnpm art:push --portraits and pnpm art:status from ${RECORD}; the galleries read it.\nwindow.UMA_PORTRAIT_PUBLICATION = ${JSON.stringify(record, null, 2)};\n`)) changed.push(RECORD_SCRIPT)
+  }
   // Each character collection keeps her share beside her active study, for her album's line (P174).
   for (const study of characterStudies(resolve(dir, '..'))) {
     const mine = record.characters?.[study.key]
@@ -297,23 +366,28 @@ export function writePortraitFlags(dir: string, publication: PortraitPublication
 
 // --- the push
 
-export interface PortraitPushResult { universe: string; uploaded: string[]; unchanged: number; states: number; indexed: boolean; publication: PortraitPublication; flagged: string[] }
+export interface PortraitPushResult { universe: string; uploaded: string[]; unchanged: number; states: number; indexed: boolean; kept: string[]; publication: PortraitPublication; flagged: string[] }
 /**
  * `pnpm art:push <universe> --portraits`: sends every approved crop and face the bucket doesn't hold yet (byte for byte,
  * under hash names), reads each back by size and MD5, then writes the index last under a generation check and flags the
  * collection as published. A collection with any problem sends nothing.
  */
-export function pushPortraits(universe: string, dir: string, mirrorDir: string, remote: Remote, now: string, options: { dryRun?: boolean } = {}): PortraitPushResult {
-  const set = readPortraits(universe, dir)
+export function pushPortraits(universe: string, dir: string, mirrorDir: string, remote: Remote, now: string, options: { dryRun?: boolean; only?: readonly string[] } = {}): PortraitPushResult {
+  const only = options.only ?? []
+  const set = readPortraits(universe, dir, only)
+  // A name that matches no character read here is a typo: say so before anything moves.
+  const unknown = only.filter((name) => !set.characters.some((c) => c.id === name))
+  if (unknown.length) throw new Error(`${universe}: --only names no character with dialogue portraits here: ${unknown.join(', ')}.`)
   const there = remote.read(PORTRAITS_INDEX)
   const before = parsePortraitIndex(there?.text ?? null, universe)
-  if (set.problems.length) {
-    const shown = set.problems.slice(0, 8).join('\n  ')
-    throw new Error(`${universe}: the dialogue portraits can't be published, nothing was sent:\n  ${shown}${set.problems.length > 8 ? `\n  … and ${set.problems.length - 8} more` : ''}`)
+  const conflict = sizeConflict(set, before), problems = conflict ? [...set.problems, conflict] : set.problems
+  if (problems.length) {
+    const shown = problems.slice(0, 8).join('\n  ')
+    throw new Error(`${universe}: the dialogue portraits can't be published, nothing was sent:\n  ${shown}${problems.length > 8 ? `\n  … and ${problems.length - 8} more` : ''}`)
   }
   const plan = planPortraits(set, before, now)
   const result: PortraitPushResult = {
-    universe, uploaded: plan.upload.map((p) => p.id), unchanged: plan.unchanged, states: set.states.length, indexed: !plan.same,
+    universe, uploaded: plan.upload.map((p) => p.id), unchanged: plan.unchanged, states: set.states.length, indexed: !plan.same, kept: plan.kept,
     publication: portraitPublicationOf(set, options.dryRun ? before : plan.index, now), flagged: [],
   }
   if (options.dryRun) return result
@@ -341,7 +415,7 @@ export function pushPortraits(universe: string, dir: string, mirrorDir: string, 
   const indexFile = join(home, PORTRAITS_INDEX)
   write(indexFile, encode(plan.index))
   if (!plan.same && !remote.uploadFile(indexFile, PORTRAITS_INDEX, there?.generation ?? '0')) throw new Error(`${universe}: the portraits index changed in the bucket while pushing. Run it again.`)
-  result.flagged = writePortraitFlags(dir, result.publication)
+  result.flagged = writePortraitFlags(dir, result.publication, only.length === 0)
   return result
 }
 

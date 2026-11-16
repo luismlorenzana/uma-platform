@@ -69,7 +69,7 @@ export interface ApprovedLook {
 }
 /** A look of the manifest that can't go out. `unapproved`: the owner hasn't approved it. `damaged`: the file or its entry
  *  isn't what was approved, so a copy published earlier stays as it is. */
-export interface RefusedLook { id: string; image: string | null; kind: 'unapproved' | 'damaged'; why: string; collection?: string }
+export interface RefusedLook { id: string; image: string | null; kind: 'unapproved' | 'damaged'; why: string; collection?: string; character?: string }
 
 // --- a character's own collection (P174)
 
@@ -174,8 +174,8 @@ export function readCollection(universe: string, dir: string): Collection {
   ]
   for (const { asset, collection, kind, id: named, locate } of sources) {
     if (!object(asset)) continue
-    const id = named ?? text(asset.id) ?? '(no id)', given = text(asset.image), image = locate(given)
-    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(collection ? { collection } : {}) }) }
+    const id = named ?? text(asset.id) ?? '(no id)', given = text(asset.image), image = locate(given), who = text(asset.character)
+    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(collection ? { collection } : {}), ...(who ? { character: who } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
     if (seen.has(id)) { refuse('damaged', 'its id is listed twice'); continue }
     seen.add(id)
@@ -253,22 +253,30 @@ export interface PushPlan {
   /** Nothing differs from the bucket's index. */
   same: boolean
 }
-/** Which looks a push may change, by id or outfit (`--only`); without one, every look. */
-export type Selection = ((look: { id: string; outfit: string }) => boolean) | undefined
-/** `--only kitasan-black-pajamas,pajamas-playful`: a look is chosen when its id or its outfit is named. */
+/** Which looks a push may change, by id, outfit or character (`--only`); without one, every look. */
+export type Selection = ((look: { id: string; outfit: string; character: string }) => boolean) | undefined
+/** `--only kitasan-black-pajamas,pajamas-playful,orfevre`: a look is chosen when its id, its outfit or her key is named. */
 export const selectionOf = (names: readonly string[]): Selection => {
   if (names.length === 0) return undefined
   const wanted = new Set(names)
-  return (look) => wanted.has(look.id) || wanted.has(look.outfit)
+  return (look) => wanted.has(look.id) || wanted.has(look.outfit) || wanted.has(keyOf(look.character))
 }
+/** The characters this machine holds in a collection, by key: any look of hers is in the manifests, approved or not. */
+export const heldCharacters = (collection: Pick<Collection, 'looks' | 'refused'>): Set<string> =>
+  new Set([...collection.looks.map((l) => l.character), ...collection.refused.flatMap((r) => (r.character ? [r.character] : []))].map(keyOf))
+/** The later revision, so a push from a machine that holds part of a universe never sets it back. */
+export const newest = (a: number | null, b: number | null | undefined): number | null => (a === null ? b ?? null : typeof b === 'number' ? Math.max(a, b) : a)
 
 /**
  * What a push sends. A look already published with the same picture keeps its date; the index lists the approved set.
  * With a selection, only the chosen looks change: a chosen approved look is published, a chosen published look that is
  * no longer approved leaves the index, and every other look stays exactly as the bucket has it, published or not.
+ * Without one, a published look of a character this machine doesn't hold at all stays too (P189): her folder being
+ * elsewhere isn't a withdrawal. Naming her with --only takes her looks off.
  */
 export function planPush(collection: Collection, remote: UniverseIndex | null, now: string, select?: Selection): PushPlan {
-  const chosen = (look: { id: string; outfit: string }) => !select || select(look)
+  const held = heldCharacters(collection)
+  const chosen = (look: { id: string; outfit: string; character: string }) => (select ? select(look) : held.has(keyOf(look.character)))
   const before = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
   const damaged = new Set(collection.refused.filter((r) => r.kind === 'damaged').map((r) => r.id))
   const upload: ApprovedLook[] = [], looks: PublishedLook[] = []
@@ -288,7 +296,7 @@ export function planPush(collection: Collection, remote: UniverseIndex | null, n
   // In the manifest's order, a kept look where its entry still is.
   const place = new Map(collection.order.map((id, i) => [id, i]))
   const all = [...looks, ...kept].sort((a, b) => (place.get(a.id) ?? Infinity) - (place.get(b.id) ?? Infinity))
-  const head = { universe: collection.universe, title: collection.title, style: collection.style, revision: collection.revision }
+  const head = { universe: collection.universe, title: collection.title, style: collection.style, revision: newest(collection.revision, remote?.revision) }
   const same = remote !== null && JSON.stringify({ ...head, looks: all }) === JSON.stringify({ universe: remote.universe, title: remote.title, style: remote.style, revision: remote.revision, looks: remote.looks })
   return {
     index: { schemaVersion: 1, kind: 'universe-art', ...head, publishedAt: same ? remote.publishedAt : now, looks: all },
@@ -340,6 +348,7 @@ export interface Publication {
  */
 export function publicationOf(collection: Collection, remote: UniverseIndex | null, now: string, bucket = BUCKET): Publication {
   const there = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
+  const held = heldCharacters(collection)
   const from = (c?: string, kind?: 'splash') => ({ ...(c ? { collection: c } : {}), ...(kind ? { kind } : {}) })
   const looks: LookFlag[] = collection.looks.map((look): LookFlag => {
     const old = there.get(look.id)
@@ -358,7 +367,8 @@ export function publicationOf(collection: Collection, remote: UniverseIndex | nu
     schemaVersion: 1, kind: 'universe-art-publication', universe: collection.universe,
     destination: `gs://${bucket}/art/universes/${collection.universe}/`, site: SITE, checkedAt: now,
     publishedAt: remote?.publishedAt ?? null, revision: collection.revision, counts, looks,
-    withdrawable: [...there.keys()].filter((id) => !listed.has(id)).sort(),
+    // Only a character held here can lose a look; one whose folder is elsewhere stays as published (P189).
+    withdrawable: [...there.values()].filter((l) => !listed.has(l.id) && held.has(keyOf(l.character))).map((l) => l.id).sort(),
   }
 }
 
@@ -520,7 +530,7 @@ export function push(universe: string, dir: string, mirrorDir: string, remote: R
   if (only.length) {
     // A name that matches nothing is a typo: say so before anything moves.
     const known = [...collection.looks, ...(before?.looks ?? [])]
-    const unknown = only.filter((name) => !known.some((l) => l.id === name || l.outfit === name))
+    const unknown = only.filter((name) => !known.some((l) => l.id === name || l.outfit === name || keyOf(l.character) === name))
     if (unknown.length) throw new Error(`${universe}: --only names no approved or published look: ${unknown.join(', ')}.`)
   }
   const plan = planPush(collection, before, now, selectionOf(only))

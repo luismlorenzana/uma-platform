@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { join, relative, sep } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { characterStudies, INDEX, push, readCollection, studyFile, type Publication, type Remote, type RemoteFile, type UniverseIndex } from './lib.js'
-import { PORTRAITS_INDEX, pushPortraits, readPortraits, type PortraitIndex } from './portraits.js'
+import { BLEND, PORTRAITS_INDEX, pushPortraits, readPortraits, type PortraitIndex } from './portraits.js'
 
 const png = (width: number, height: number, seed: string): Buffer => {
   const head = Buffer.alloc(24)
@@ -144,7 +144,10 @@ describe('a character’s own collection', () => {
     const index = JSON.parse(bucket.files.get(PORTRAITS_INDEX)!.bytes.toString('utf8')) as PortraitIndex
     expect(index.bases.map((b) => b.path.split('.')[0])).toEqual(['bases/rider-one-street', 'bases/rider-two-street', 'bases/rider-two-dinner'])
     expect(index.bases.every((b) => !('file' in b))).toBe(true)
-    expect(r.publication.characters).toEqual({ 'rider-one': { states: 2, bases: 1, faces: 1 }, 'rider-two': { states: 4, bases: 2, faces: 1 } })
+    expect(r.publication.characters).toEqual({
+      'rider-one': { states: 2, bases: 1, faces: 1, state: 'published', publishedAt: T1, note: null },
+      'rider-two': { states: 4, bases: 2, faces: 1, state: 'published', publishedAt: T1, note: null },
+    })
     // Her share sits beside her looks' record, and her album's script carries both.
     expect(JSON.parse(readFileSync(join(folder, 'portraits-publication.json'), 'utf8'))).toMatchObject({ state: 'published', states: 4, bases: 2, faces: 1 })
     expect(existsSync(join(folder, 'publication.js'))).toBe(true)
@@ -156,5 +159,91 @@ describe('a character’s own collection', () => {
     const manifest = JSON.parse(readFileSync(join(folder, 'v002/manifest.json'), 'utf8')) as Record<string, unknown>
     writeFileSync(join(folder, 'v002/manifest.json'), JSON.stringify({ ...manifest, approval: { status: 'pending' } }))
     expect(readPortraits('sky-city', dialogue).problems).toEqual(['rider-two: her manifest doesn’t record the owner’s approval'])
+  })
+})
+
+// P189: a machine may hold only some of a universe's characters (the others authored and published elsewhere), and the
+// owner names whose art goes up. A push changes the characters it reads; every other one stays as the bucket has it.
+describe('publishing some characters of a universe', () => {
+  /** A bucket that already publishes an invented rider this machine doesn't hold: a look and her portrait pieces. */
+  const withAbsentRider = (size = { width: 40, height: 50 }) => {
+    const bucket = fakeRemote(), crop = png(size.width, size.height, 'rider-zero-street-crop'), face = png(10, 10, 'rider-zero-happy')
+    const add = (path: string, bytes: Buffer) => bucket.files.set(path, { bytes, generation: 1 })
+    const look = png(60, 90, 'rider-zero-street')
+    add('images/rider-zero-street.0000000000000000.png', look)
+    add(INDEX, Buffer.from(JSON.stringify({
+      schemaVersion: 1, kind: 'universe-art', universe: 'sky-city', title: 'Sky City', style: null, revision: 4, publishedAt: '2026-01-01T00:00:00.000Z',
+      looks: [{ id: 'rider-zero-street', character: 'Rider Zero', outfit: 'street', title: 'Street', path: 'images/rider-zero-street.0000000000000000.png', bytes: look.byteLength, sha256: sha(look), width: 60, height: 90, approvedOn: '2025-12-31', publishedAt: '2026-01-01T00:00:00.000Z' }],
+    })))
+    add('portraits/bases/rider-zero-street.0.png', crop); add('portraits/faces/rider-zero-happy.0.png', face)
+    const zero: PortraitIndex = {
+      schemaVersion: 1, kind: 'universe-portraits', universe: 'sky-city', revision: 3, approvedOn: '2025-12-31', publishedAt: '2026-01-01T00:00:00.000Z',
+      size, faceSize: { width: 10, height: 10 }, blend: 'old words', characters: [{ id: 'rider-zero', name: 'Rider Zero' }], outfits: ['street'], expressions: ['neutral', 'happy'],
+      bases: [{ id: 'rider-zero-street', character: 'rider-zero', outfit: 'street', path: 'bases/rider-zero-street.0.png', bytes: crop.byteLength, sha256: sha(crop), ...size }],
+      faces: [{ id: 'rider-zero-happy', character: 'rider-zero', expression: 'happy', path: 'faces/rider-zero-happy.0.png', bytes: face.byteLength, sha256: sha(face), width: 10, height: 10 }],
+      states: [
+        { character: 'rider-zero', outfit: 'street', expression: 'neutral', base: 'rider-zero-street', face: null, at: null, approvedSha256: null },
+        { character: 'rider-zero', outfit: 'street', expression: 'happy', base: 'rider-zero-street', face: 'rider-zero-happy', at: { x: 1, y: 1 }, approvedSha256: 'd'.repeat(64) },
+      ],
+    }
+    add(PORTRAITS_INDEX, Buffer.from(JSON.stringify(zero)))
+    return { bucket, zero }
+  }
+  const looks = (bucket: ReturnType<typeof fakeRemote>) => JSON.parse(bucket.files.get(INDEX)!.bytes.toString('utf8')) as UniverseIndex
+  const recipe = (bucket: ReturnType<typeof fakeRemote>) => JSON.parse(bucket.files.get(PORTRAITS_INDEX)!.bytes.toString('utf8')) as PortraitIndex
+
+  it('a push never takes off the looks of a character this machine doesn’t hold, nor sets the revision back', () => {
+    const { approved } = universe(), { bucket } = withAbsentRider()
+    const r = push('sky-city', approved, temp(), bucket.remote, T1)
+    expect(r).toMatchObject({ withdrawn: [], kept: ['rider-zero-street'] })
+    expect(looks(bucket).looks.map((l) => l.id)).toEqual(['rider-one-street', 'rider-two-street', 'rider-two-dinner-v002', 'rider-zero-street'])
+    expect(looks(bucket).revision).toBe(4)
+    expect(r.publication.withdrawable).toEqual([])
+  })
+
+  it('--only <her key> publishes her whole set alone, and names her to take her off', () => {
+    const { approved } = universe(), { bucket } = withAbsentRider()
+    const r = push('sky-city', approved, temp(), bucket.remote, T1, { only: ['rider-two'] })
+    expect(r).toMatchObject({ uploaded: ['rider-two-street', 'rider-two-dinner-v002'], withdrawn: [], kept: ['rider-zero-street'] })
+    expect(looks(bucket).looks.map((l) => l.id)).toEqual(['rider-two-street', 'rider-two-dinner-v002', 'rider-zero-street'])
+    expect([...bucket.files.keys()].some((p) => p.includes('rider-one'))).toBe(false)
+    expect(r.publication.looks.map((l) => [l.id, l.state])).toEqual([['rider-one-street', 'unpublished'], ['rider-two-street', 'published'], ['rider-two-dinner-v002', 'published']])
+    const gone = push('sky-city', approved, temp(), bucket.remote, T1, { only: ['rider-zero'] })
+    expect(gone.withdrawn).toEqual(['rider-zero-street'])
+    expect(() => push('sky-city', approved, temp(), bucket.remote, T1, { only: ['rider-nine'] })).toThrow(/names no approved or published look: rider-nine/)
+  })
+
+  it('publishes her portraits from her own collection when the universe has no shared one, keeping the bucket’s other characters', () => {
+    const { dialogue, folder } = universe(), { bucket, zero } = withAbsentRider()
+    rmSync(dialogue, { recursive: true })
+    const r = pushPortraits('sky-city', dialogue, temp(), bucket.remote, T1, { only: ['rider-two'] })
+    expect(r).toMatchObject({ uploaded: ['rider-two-street', 'rider-two-dinner', 'rider-two-happy'], kept: ['rider-zero'], states: 4, indexed: true })
+    const index = recipe(bucket)
+    expect(index.characters.map((c) => c.id)).toEqual(['rider-zero', 'rider-two'])
+    expect(index.bases.map((b) => b.id)).toEqual(['rider-zero-street', 'rider-two-street', 'rider-two-dinner'])
+    expect(index.faces.map((f) => f.id)).toEqual(['rider-zero-happy', 'rider-two-happy'])
+    expect(index.states.filter((s) => s.character === 'rider-zero')).toEqual(zero.states)
+    expect(index.outfits).toEqual(['street', 'dinner'])
+    expect(index).toMatchObject({ revision: 3, approvedOn: '2026-01-02', blend: BLEND })
+    // Her flag is her own; no shared folder or record appears.
+    expect(JSON.parse(readFileSync(join(folder, 'portraits-publication.json'), 'utf8'))).toMatchObject({ state: 'published', states: 4, bases: 2, faces: 1 })
+    expect(existsSync(dialogue)).toBe(false)
+    // Again: nothing to send, the recipe untouched.
+    const generation = bucket.files.get(PORTRAITS_INDEX)!.generation
+    expect(pushPortraits('sky-city', dialogue, temp(), bucket.remote, T1, { only: ['rider-two'] })).toMatchObject({ uploaded: [], indexed: false })
+    expect(bucket.files.get(PORTRAITS_INDEX)!.generation).toBe(generation)
+  })
+
+  it('--only leaves an unnamed local character out, refuses an unknown name, and a crop size the recipe can’t share', () => {
+    const { dialogue } = universe(), { bucket } = withAbsentRider()
+    pushPortraits('sky-city', dialogue, temp(), bucket.remote, T1, { only: ['rider-two'] })
+    expect(recipe(bucket).characters.map((c) => c.id)).toEqual(['rider-zero', 'rider-two'])
+    expect(() => pushPortraits('sky-city', dialogue, temp(), bucket.remote, T1, { only: ['rider-nine'] })).toThrow(/names no character with dialogue portraits here: rider-nine/)
+    const other = withAbsentRider({ width: 41, height: 50 })
+    expect(() => pushPortraits('sky-city', dialogue, temp(), other.bucket.remote, T1, { only: ['rider-two'] })).toThrow(/the crops are 40×50, the published ones 41×50/)
+    // Without --only, every character held here goes up, and the absent one still stays.
+    const all = withAbsentRider()
+    pushPortraits('sky-city', dialogue, temp(), all.bucket.remote, T1)
+    expect(recipe(all.bucket).characters.map((c) => c.id)).toEqual(['rider-zero', 'rider-one', 'rider-two'])
   })
 })
