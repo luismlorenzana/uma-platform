@@ -18,7 +18,9 @@ node scripts/character-art/splash-study.mjs check <character-key>
 node scripts/character-art/splash-study.mjs check <character-key> --approved
 ```
 
-`init` creates a resumable study under `content/authoring/splash-art/farm-life/<character-key>/`. `prepare-beach` creates a new private prompt/input attempt from the locked spec and verifies her approved references; it preserves all selections. The checks verify the full set, source hashes, dimensions and provenance; `--approved` also requires recorded owner approval for every selected image. Use `review <character-key>` to generate a private HTML review when requested. These commands do not generate images, change the shared album, upload or publish. See [the workflow](workflow.md#4-record-a-selected-version) for the record format.
+`init` creates a resumable study under `content/authoring/splash-art/farm-life/<character-key>/`. `prepare-beach` creates a new private prompt/input attempt from the locked spec and verifies her approved references; it preserves all selections. The checks verify the full set, source hashes, dimensions and provenance; `--approved` also requires recorded owner approval for every selected image. These commands do not generate images, change the shared album, upload or publish. See [the workflow](workflow.md#4-record-a-selected-version) for the record format.
+
+**Lean default:** generate one scene at a time, save its PNG/prompt/provenance as soon as it finishes, inspect that image and deliver direct links to the individual PNGs. No combined raster, contact sheet, giant overview image, review website or album rebuild is required for a draft pass. Use `review <character-key>` only when the owner requests a review page. Compose only the approved portrait references actually needed by the scene; do not pre-export an entire outfit/expression library. Keep technical checking and visual review focused on the new or revised scenes.
 
 ## Paste into a new session
 
@@ -40,7 +42,8 @@ Greeting at the Farm. Prepare the beach slot with the locked beach-baseline.md
 method and prepare-beach command: fresh generation from her own approved bikini
 base and Happy portrait, tail mostly hidden behind her toward viewer-right.
 Save each version, exact prompt and provenance locally.
-Show the candidates and record my verdicts on the exact versions I select.
+Link each candidate PNG directly and record my verdicts on the exact versions
+I select. Do not render a combined sheet or giant overview image.
 <Optional: show me the greeting first and wait for my art direction.>
 
 Default to image-only design iterations. Make a review page or update the local

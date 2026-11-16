@@ -9,6 +9,7 @@
 - Manner of expressing Happy, Flustered, Loving and Tearful Joy:
 - Scene or wardrobe overrides and who authorized them:
 - Review cadence and album inclusion authorization:
+- Delivery: direct individual PNG links by default; any explicitly requested optional review artifacts:
 - Beach: prepared attempt, locked spec version/hash, own approved bikini/Happy portrait references, and any explicit owner override:
 - Missing or unverified references:
 
