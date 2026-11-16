@@ -9,7 +9,7 @@
     "status": "node --import tsx src/status.ts",
     "gallery": "node --import tsx src/gallery.ts",
     "lint": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "node --test beach.check.mjs && vitest run",
     "albums": "node albums/build.mjs"
   },
   "devDependencies": {

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { lstat, mkdir, readFile, realpath, writeFile } from 'node:fs/promises'
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { prepareBeach, verifyPreparedBeach } from './beach.mjs'
 
 const repo = fileURLToPath(new URL('../../', import.meta.url))
 const packet = join(repo, 'docs/authoring/farm-life-splash-art')
@@ -16,7 +17,7 @@ const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', 
 const encode = value => JSON.stringify(value, null, 2) + '\n'
 const nonempty = value => typeof value === 'string' && Boolean(value.trim())
 const keyOf = name => name.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-const usage = 'Usage: node scripts/character-art/splash-study.mjs init "<Character Name>" | check <character-key> [--approved] | review <character-key>'
+const usage = 'Usage: node scripts/character-art/splash-study.mjs init "<Character Name>" | prepare-beach <character-key> <vNNN> | check <character-key> [--approved] | review <character-key>'
 
 // Resolve links as well as the spelling: provenance stays inside private content.
 async function contained(parent, child) {
@@ -56,7 +57,8 @@ async function verifySelection(dir, scene, approvedOnly) {
   assert(width === selected.width && height === selected.height, 'Dimensions differ from selection')
   assert(width > height && height > 0 && Math.abs(width - height * 16 / 9) < 2, 'Expected near-16:9 landscape (one-pixel rounding is OK)')
   assert.equal(sha(image), selected.sha256, 'Selected PNG hash changed')
-  assert(nonempty(await readFile(await file('prompt.txt'), 'utf8')), 'Exact prompt is empty')
+  const prompt = await readFile(await file('prompt.txt'), 'utf8')
+  assert(nonempty(prompt), 'Exact prompt is empty')
   const record = await json(await file('generation.json'))
   assert(nonempty(record.tool), 'Missing generation tool')
   assert.equal(record.outputSha256, selected.sha256, 'Generation record does not match the selected PNG')
@@ -69,6 +71,7 @@ async function verifySelection(dir, scene, approvedOnly) {
     const target = await contained(content, resolve(repo, ref.path))
     assert.equal(sha(await readFile(target)), ref.sha256, 'Reference hash changed: ' + ref.path)
   }
+  if (scene.id === 'beach') await verifyPreparedBeach({ repo, folder, record, prompt })
   const approval = selected.approval
   if (approval != null || approvedOnly) {
     assert(approval?.status === 'approved' && approval.by === 'owner' && /^\d{4}-\d{2}-\d{2}$/.test(approval.on) &&
@@ -111,14 +114,15 @@ function render({ character, results }) {
 async function main(args) {
   if (!args.length || args[0] === '--help') { console.log(usage); return }
   const [command, value = '', flag, ...rest] = args
-  const isInit = command === 'init', isReview = command === 'review'
-  if ((!isInit && !isReview && command !== 'check') || rest.length ||
-      (flag && (command !== 'check' || flag !== '--approved'))) throw new Error(usage)
+  const isInit = command === 'init', isReview = command === 'review', isBeach = command === 'prepare-beach'
+  if ((!isInit && !isReview && !isBeach && command !== 'check') || rest.length ||
+      (isBeach ? !/^v\d{3,}$/.test(flag ?? '') : (flag && (command !== 'check' || flag !== '--approved')))) throw new Error(usage)
   const key = isInit ? keyOf(value) : value
   assert(kebab.test(key) && key.length <= 60, 'Expected a lowercase character key (or a name for init)')
   const standard = await json(join(packet, 'scene-set.json'))
   try {
     if (isInit) return await init(value.trim(), key, standard)
+    if (isBeach) { console.log(encode(await prepareBeach({ repo, key, revision: flag }))); return }
     const dir = await contained(studies, join(studies, key))
     await contained(repo, dir)
     const data = await check(dir, key, standard, { partial: isReview, approvedOnly: flag === '--approved' })

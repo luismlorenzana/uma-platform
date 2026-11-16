@@ -8,6 +8,8 @@ Under `content/authoring/character-universes/farm-life/`, check `characters/<key
 
 Use the current nine approved Kitasan scenes under `content/authoring/character-universes/farm-life/splash-art/manifest.json` as a private visual baseline. Select her entries by character and order; use the [scene set](scene-set.json) to map the nine positions. The two older Loving wedding-night alternates (seated and full-body diagonal) and the portrait-format pajama study are historical, outside the final set. A pilot image supplies composition, environment or style only. The new character supplies her own facial structure, markings, natural adult proportions, accessories, palette and outfit.
 
+**The beach slot uses the [locked beach baseline](beach-baseline.md) instead.** Read the private `splash-art/authoring-reference.json` beach override for the approved local staging image. Prepare a fresh attempt with `prepare-beach <character-key> <vNNN>`, then use only her own approved bikini base and Happy swimsuit portrait as image inputs. Keep the lounger/props/harbour composition and the mostly hidden viewer-right tail from [beach-spec.json](beach-spec.json). Earlier beach renders are inspected as staging evidence, not sent as image inputs or edited into a new character. Apply the same method when reauthoring an older beach scene, retaining its approval until the owner selects the replacement.
+
 ## 2. Establish the scene look
 
 Use [the prompt kit](prompt-kit.md) and the session's built-in image generation for each scene and edit. Read the installed imagegen skill when available, inspect every reference and label its role in the prompt. If facilities or private references are missing, report the gap; do not use an unapproved fallback or claim the full set is ready.

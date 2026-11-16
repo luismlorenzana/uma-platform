@@ -16,7 +16,7 @@
       "title": "A Day at the Beach — Sunbathing",
       "outfit": "swimsuit",
       "expression": "happy",
-      "direction": "Full figure reclining on a towel at the valley beach below the harbour; summer afternoon, shallow waves, sand and a parasol. Face toward the viewer, with plausible limbs and towel contact."
+      "direction": "Use beach-spec.json via prepare-beach: fresh generation from her own approved swimsuit base and Happy portrait. Eye-level full figure on a raised-back wooden lounger, character left of center, legs toward lower right; striped towel/parasol, flower and lemonade table, basket, shells and harbour bay. Tail behind her toward viewer-right, root/upper length hidden by body and cushion; a small visible section is optional."
     },
     {
       "id": "confession-flustered",

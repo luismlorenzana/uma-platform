@@ -9,6 +9,7 @@
 - Manner of expressing Happy, Flustered, Loving and Tearful Joy:
 - Scene or wardrobe overrides and who authorized them:
 - Review cadence and album inclusion authorization:
+- Beach: prepared attempt, locked spec version/hash, own approved bikini/Happy portrait references, and any explicit owner override:
 - Missing or unverified references:
 
 For each scene, note the approved outfit and expression files and their hashes, the pose/setting reference, and any changes specific to this character. The ordered scene defaults are in `study.json`. A different outfit or scene slot needs explicit direction; do not borrow one from the pilot.
