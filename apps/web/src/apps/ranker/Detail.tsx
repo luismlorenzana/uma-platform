@@ -47,8 +47,9 @@ export function Detail({ board, item, tier, moves }: { board: BoardId; item: Ite
 
   return (
     <div className="flex flex-col gap-4">
+      {/* The art big, the panel's whole width, so a card can be judged at a glance. */}
+      <Art path={kind === 'enemy' ? unit?.images.art ?? item.image : outfit?.portrait ?? item.image} kind={item.imageKind} alt={item.name} className="aspect-[2/3] max-h-[62vh] w-full rounded-md bg-raised" />
       <div className="flex gap-3">
-        <Art path={kind === 'enemy' ? unit?.images.art ?? item.image : outfit?.portrait ?? item.image} kind={item.imageKind} alt={item.name} className="size-32 shrink-0 rounded-md bg-raised" />
         <div className="min-w-0 flex-1">
           <h2 className="font-display text-xl font-bold leading-tight tracking-tight">{item.name}</h2>
           <p className="text-sm text-ink-soft">{item.line}</p>
