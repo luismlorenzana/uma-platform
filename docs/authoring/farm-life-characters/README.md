@@ -34,7 +34,7 @@ The owner-approved two-character pilot baseline has twelve full-body looks and s
 | Expressions | Ten core and six romance states, including Neutral; see the [expression table](prompt-kit.md#expression-directions) |
 | Excluded | Original `pajamas` look is retired. Crying, Teasing, Smug, Embarrassed, Startled and Dreamy are **won't do** because they do not fit the game's direction |
 
-For one new character with this scope, completion means **12 full-body looks + 12 neutral crops + 15 reusable face layers + 180 composed expression previews = 192 dialogue states**, with evidence and owner verdicts. Neutral is the crop alone; do not generate a sixteenth face overlay. Counts describe coverage, not a quota to reach by duplicating artwork.
+For one new character with this scope, author **12 full-body looks, 12 neutral crops and 15 reusable expression face layers**. These pieces represent 192 dialogue states. Review expressions on Spring, automatically validate reuse across the wardrobe, and render other previews on demand. Saving or visually reviewing 180 separate composites is not a completion requirement. Neutral is the crop alone; do not generate a sixteenth face overlay. See the [compact expression workflow](dialogue-portraits.md#compact-expression-workflow).
 
 ## Local source of truth
 

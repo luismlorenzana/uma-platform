@@ -8,7 +8,17 @@ The game-facing assets are **one neutral waist-up base per outfit, fifteen trans
 
 This is the existing CA5 direction, not a proposed replacement pipeline. See [P169](../../decisions.md), [AP85–AP90](../../platform-app/README.md) and the implementation in `scripts/character-art/src/portraits.ts`. The publisher carries the pieces and the recipe; local flattened composites remain review and verification evidence. Do not deliver an opaque generated face square as an alpha layer, or assume the game should store all flattened outfit/expression permutations.
 
-For one new character, twelve bases plus fifteen faces represent 192 states. Keep 180 flattened expression previews locally so the owner and verification scripts can inspect the exact intended result. Runtime composition reduces shipped duplication; it does **not** remove the need to check every outfit with every expression.
+For one new character, twelve bases plus fifteen faces represent 192 states. Author fifteen small facial expressions, review them on Spring, and automatically check their reuse across the wardrobe. There is no requirement to save 180 flattened portraits or have the model inspect every combination. The published assets remain the bases, face layers and recipe.
+
+## Compact expression workflow
+
+1. Extract the character's own Spring face tile. Prove Happy, Angry and Shy, then finish the fifteen non-neutral expressions using face-only edits. A full-pass authorization covers this internal proof and continuation.
+2. Review all expressions on Spring, preferably in one sheet. Check recognizable likeness, readable differences, clean masks and small-size presentation. Neutral is the approved base; it needs no generated face.
+3. Measure placement on each outfit's neutral face. Automatically compose every authorized state in memory and check bounds, opaque feature guards, matching face/mask alpha, unchanged pixels outside the mask and deterministic reconstruction. Record source/face/mask hashes, positions and computed state hashes/results.
+4. Visually inspect a small stress set on contrasting outfits, such as Winter's scarf and Wedding's veil. Choose expressions that exercise closed eyes, a large mouth, blush and tears. Investigate every failed check or visible mismatch; checking Spring alone does not establish fit on the other outfits.
+5. Keep the pieces, masks, recipe, automated report, Spring sheet and useful stress/failure proofs. Other previews are composed on demand in the local viewer or rebuilt from the recipe. Save individual flattened PNGs only when useful for a review, regression case or owner request.
+
+These steps replace the former mandatory 180-file preview export. They change local review effort, not approval scope or publication: retain the owner's actual verdict and exact per-state hash/placement bindings. Report the sampled visual checks separately from automated full-coverage checks. Local pixel composition calls no generative model; model-assisted scripting and visual inspection still use the agent.
 
 ## Workspace and provenance
 
@@ -27,7 +37,7 @@ content/authoring/character-universes/farm-life/
     face-inputs/            # exact spring edit target and neutral reference
     faces/                  # versioned RGBA expression layers
     masks/                  # matching per-expression alpha masks
-    composites/             # deterministic flattened QA previews
+    composites/             # optional representative or failure proofs
     review/                 # native detail and outfit overview sheets
     review.html
     manifest.json
@@ -101,7 +111,7 @@ Preserve the base alpha; the current neutral busts are opaque. Pixels outside th
 
 For an opaque guard pixel (`a = 1`), final RGB must equal the expression RGB exactly. That is the useful guarantee that neutral brows, eyes and mouth are actually replaced. Feather only the outer transition. The recipe operates on decoded color-channel bytes; a different color-space blend or resampling mode in the game may produce a different result and must be verified by the consuming app.
 
-Flattened local preview PNGs are the reference results for the recipe. A browser or game renderer is not proven correct merely because it uses a familiar source-over operation. Check its alpha handling, pixel placement, texture filtering and color behavior against known reference states during runtime integration. That integration is the game's task; the authoring session supplies the pieces, positions and expected results.
+The deterministic composition is the reference result for the recipe. Compute it in memory for automated checks and save selected reference PNGs when useful. A browser or game renderer is not proven correct merely because it uses a familiar source-over operation. Check its alpha handling, pixel placement, texture filtering and color behavior against representative reference states during runtime integration. That integration is the game's task; the authoring session supplies the pieces, positions and expected results.
 
 ## Fit each outfit on its neutral face
 
@@ -113,7 +123,7 @@ Keep the final approved face PNG bytes unchanged across every outfit. Placement 
 
 ## Revise one outfit after face approval
 
-When the owner requests album inclusion of a revised outfit, retain its exact selected full-body bytes. Make its new literal neutral crop, measure placement against the accepted spring face, and compose the fifteen existing face layers. Check native feature details, opaque replacement guards, outside-mask pixels and nearby straps, earrings, necklines or sheer layers. A clothing revision does not by itself require new facial-expression art.
+When the owner requests album inclusion of a revised outfit, retain its exact selected full-body bytes. Make its new literal neutral crop, measure placement against the accepted Spring face, and automatically check the fifteen existing layers in memory. Visually inspect representative native feature details and nearby straps, earrings, necklines or sheer layers; save proofs for exceptions or useful review cases. A clothing revision does not by itself require new facial-expression art or fifteen saved composites.
 
 Keep unchanged sources, faces, masks and previews at their existing paths where practical. Use fresh paths for changed derivatives, preserve earlier candidate files, and replace the active outfit's references throughout the album and recipe only after verification. Retain existing approvals and record the new master verdict and derivative checks separately, honoring the actual scope of the owner's verdict. Remove superseded variant keys from active selectors once a final outfit is chosen. Reuse the current viewer rather than creating a new site for each design iteration.
 
@@ -141,7 +151,7 @@ Inspect the current files before extending them. These are the key relationships
 | Dialogue collection | `characterNames` keyed by character slug, current `outfits`, ordered `expressions` with Neutral first, `retiredOutfits`, `faces`, `assets`, revision/status and evidence paths |
 | Face | `character`, `expression`, `file`, `sha256`, `mask`, `maskSha256`, `guards`, `prompt`, `source`, approval status |
 | Outfit base | `character` key and display `name`, `outfit`, `sourceImage`, `sourceSha256`, `crop`, `base`, `baseSha256`, dimensions, measured `position`/translation, neutral approval status, `outputs` |
-| Output state | `expression`, flattened QA `image`, its `sha256`, `face`/`faceSha256`, `mask`, `position`, scale 1, rotation 0, review/owner status and outside-change evidence |
+| Output state | `expression`, computed deterministic `sha256`, `face`/`faceSha256`, `mask`, `position`, scale 1, rotation 0, review/owner status and outside-change evidence; optional saved QA `image` |
 | Owner approval | `status: approved`, `by: owner`, date, scope and verdict evidence; each approved outfit's `baseSha256`, and each approved output's expression, `sha256`, `faceSha256` and `position` |
 
 Keep `approval.json` limited to states actually approved by the owner; candidate states may live in a separate study or remain explicitly unapproved. Do not make a global status imply approval for newly appended states. The current publisher validates approved-state hash bindings and builds its own public recipe from the pieces; do not hand-edit that published index.
@@ -155,11 +165,11 @@ Run meaningful checks on the assets and behavior, not only assertions that count
 - Each character has exactly the authorized outfit/expression coverage, with no retired pajamas or closed optional extras.
 - A face's RGB/alpha and its mask remain the same bytes across that character's outfits; face alpha equals saved mask alpha.
 - All old/new feature guards are fully opaque, including necessary blush/tear areas; final guard RGB equals face RGB.
-- Every flattened preview reconstructs exactly from its recorded base, face and position under the blend contract; outside-mask changed pixels are zero.
+- Every authorized state passes deterministic in-memory composition checks from its recorded base, face and position; outside-mask changed pixels are zero. Saved proofs, when present, equal that result.
 - Layer placement is in bounds and explicitly recorded; no hidden scaling, rotation or mirroring.
 - Existing approved masters, bases, faces, masks and state hash bindings remain unchanged after integration.
 - Gallery character/outfit/expression selectors, reference modes, links, masks and displayed statuses point to the correct files. Test both the standalone view and the embedded dialogue tab after a shared viewer change.
-- Inspect every outfit's overview and native face-detail sheet, plus the new character beside original identity and style references. Review at 240, 300 and native 525-pixel bust widths.
+- Visually review every expression on Spring and a representative stress set on other outfits, comparing the character with her identity reference. Check small-size readability at 240/300 pixels and native details as needed. Record the inspected cases; do not claim every combination was visually reviewed.
 
 Record visual review separately from pixel checks. Exact composition cannot prove attractive anatomy, likeness, wardrobe variety or story suitability. A simulated DOM test can verify gallery state wiring but is not an observed browser-rendering test; say which was actually done.
 
