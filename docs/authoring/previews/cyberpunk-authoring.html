@@ -143,23 +143,46 @@
     </section>
   </div>
 
+  <section class="card" id="casual">
+    <h2>Enemies in casual clothing <span class="pill wait">Approval first · publishing in EA3</span></h2>
+    <p class="lead">Each enemy off duty, in everyday clothes: the enemy art's second cycle (P185), with its own studies, approvals and album, apart from the combat looks. <a href="../cyberpunk-enemies-casual/README.md">Packet</a> · <a href="../cyberpunk-enemies-casual/workflow.md">Workflow</a></p>
+    <div class="two">
+      <ol class="steps">
+        <li><span class="n">1</span><span><b>Pick her:</b> an enemy whose combat look is approved; that look is the likeness anchor</span></li>
+        <li><span class="n">2</span><span><b>A study</b> per round (<code>casual/&lt;faction&gt;/&lt;enemy&gt;-casual-v00N/</code>): her combat look first, then her references</span></li>
+        <li><span class="n">3</span><span><b>Review page:</b> recognition, off duty, her taste and accent, the one faction piece, the shared look</span></li>
+        <li><span class="n">4</span><span><b>Owner's verdict:</b> the PNG copied into <code>casual/approved/</code> with a manifest entry (<code>look: "casual"</code>)</span></li>
+        <li><span class="n">5</span><span><b>The casual album:</b> <code>pnpm art:albums cyberpunk</code>, faction by faction</span></li>
+        <li class="stop"><span class="n">6</span><span><b>Publishing, later (EA3):</b> to Uma Enemy Art beside her combat looks, on the owner's word</span></li>
+      </ol>
+      <table>
+        <tr><th>Look</th><td>Everyday clothes for the game's city: no armour, helmet, mantle, weapon, emitter or Hold mark</td></tr>
+        <tr><th>Colours</th><td>Her accent leads; her faction in one small piece (trim, lining or emblem pin)</td></tr>
+        <tr><th>Style</th><td>The enemy baseline's drawing style and adult model, the same framing as the combat looks</td></tr>
+        <tr><th>Image</th><td>1024 × 1536 transparent RGBA, full body, neutral front</td></tr>
+        <tr><th>Baseline</th><td>The first approved casual look sets it (<code>casual/approved/style-guide.md</code>)</td></tr>
+        <tr><th>Order</th><td>The enemies with approved combat looks, one a faction, then the next</td></tr>
+      </table>
+    </div>
+  </section>
+
   <section class="card" id="where">
     <h2>Where everything lives</h2>
     <div class="wide"><table>
-      <tr><th></th><th>Characters</th><th>Enemies</th></tr>
-      <tr><th>Packet (git)</th><td><code>docs/authoring/cyberpunk-characters/</code></td><td><code>docs/authoring/cyberpunk-enemies/</code></td></tr>
-      <tr><th>Collection (local)</th><td><code>cyberpunk/approved/</code> (the pilots), <code>cyberpunk/characters/&lt;key&gt;/</code></td><td><code>cyberpunk/enemies/</code></td></tr>
-      <tr><th>Approval record</th><td>Each collection's <code>manifest.json</code></td><td><code>enemies/approved/manifest.json</code></td></tr>
-      <tr><th>Album</th><td><code>cyberpunk/approved/review.html</code>; her own album in her active version</td><td><code>enemies/approved/review.html</code></td></tr>
-      <tr><th>Published to</th><td>Uma Character Art, on her own page (<code>art:push cyberpunk</code>)</td><td>Uma Enemy Art, <code>/enemy-art</code> (<code>art:push cyberpunk --enemies</code>)</td></tr>
-      <tr><th>Album's words</th><td colspan="2">The <code>album.json</code> beside each page, local</td></tr>
-      <tr><th>Album code (git)</th><td colspan="2"><code>scripts/character-art/albums/</code>: <code>universe-album.mjs</code>, <code>character-album.mjs</code> (looks-only mode), <code>enemy-album.mjs</code></td></tr>
-      <tr><th>Front page</th><td colspan="2">The Local Art Gallery (<code>pnpm art:gallery</code>) lists both on the Cyberpunk card</td></tr>
+      <tr><th></th><th>Characters</th><th>Enemies</th><th>Enemies, casual</th></tr>
+      <tr><th>Packet (git)</th><td><code>docs/authoring/cyberpunk-characters/</code></td><td><code>docs/authoring/cyberpunk-enemies/</code></td><td><code>docs/authoring/cyberpunk-enemies-casual/</code></td></tr>
+      <tr><th>Collection (local)</th><td><code>cyberpunk/approved/</code> (the pilots), <code>cyberpunk/characters/&lt;key&gt;/</code></td><td><code>cyberpunk/enemies/</code></td><td><code>cyberpunk/enemies/casual/</code></td></tr>
+      <tr><th>Approval record</th><td>Each collection's <code>manifest.json</code></td><td><code>enemies/approved/manifest.json</code></td><td><code>enemies/casual/approved/manifest.json</code></td></tr>
+      <tr><th>Album</th><td><code>cyberpunk/approved/review.html</code>; her own album in her active version</td><td><code>enemies/approved/review.html</code></td><td><code>enemies/casual/approved/review.html</code></td></tr>
+      <tr><th>Published to</th><td>Uma Character Art, on her own page (<code>art:push cyberpunk</code>)</td><td>Uma Enemy Art, <code>/enemy-art</code> (<code>art:push cyberpunk --enemies</code>)</td><td>Uma Enemy Art, beside her combat looks, once EA3 is built</td></tr>
+      <tr><th>Album's words</th><td colspan="3">The <code>album.json</code> beside each page, local</td></tr>
+      <tr><th>Album code (git)</th><td colspan="3"><code>scripts/character-art/albums/</code>: <code>universe-album.mjs</code>, <code>character-album.mjs</code> (looks-only mode), <code>enemy-album.mjs</code> (combat and casual collections)</td></tr>
+      <tr><th>Front page</th><td colspan="3">The Local Art Gallery (<code>pnpm art:gallery</code>) lists all three on the Cyberpunk card</td></tr>
     </table></div>
   </section>
 
   <section class="card" id="calls">
-    <h2>The calls (P182)</h2>
+    <h2>The calls (P182, P185)</h2>
     <table>
       <tr><td class="id">1</td><td><b>Two separate initiatives,</b> each with its own packet, collection, approval record and album</td></tr>
       <tr><td class="id">2</td><td><b>The pilots' album is built by the album code</b> from a local <code>album.json</code>; the hand-written page is kept in <code>_retired-gallery-code/</code></td></tr>
@@ -167,6 +190,11 @@
       <tr><td class="id">4</td><td><b>The enemy album</b> groups approved looks by faction, in <code>album.json</code>'s order; the code names no enemy or faction</td></tr>
       <tr><td class="id">5</td><td><b>Enemy looks publish to Uma Enemy Art</b> (P183), their own sub-app, never Character Art; on the owner's word</td></tr>
       <tr><td class="id">6</td><td><b>Characters publish as before,</b> on the owner's word, with <code>art:push cyberpunk</code></td></tr>
+      <tr><td class="id">7</td><td><b>Casual clothing is its own cycle</b> (P185): its own packet, studies, approval record and album, apart from the combat looks</td></tr>
+      <tr><td class="id">8</td><td><b>Her approved combat look is the likeness anchor;</b> the first approved casual look sets the casual baseline</td></tr>
+      <tr><td class="id">9</td><td><b>Off duty:</b> no armour, helmet, weapon, emitter or Hold mark; her accent leads, her faction in one small piece</td></tr>
+      <tr><td class="id">10</td><td><b>One album code for both enemy collections:</b> <code>enemy-album.mjs</code> takes the collection, its words say the noun and the empty line</td></tr>
+      <tr><td class="id">11</td><td><b>Casual looks publish later</b> to Uma Enemy Art, beside her combat looks (EA3, written ahead), on the owner's word</td></tr>
     </table>
   </section>
 </main>

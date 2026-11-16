@@ -163,6 +163,26 @@ describe('a looks-only album and the enemy album (P182)', () => {
     expect(out).toContain('enemies/approved/review.html')
     expect(readFileSync(join(u, 'enemies/approved/review.html'), 'utf8')).toContain('No enemy look is approved yet.')
   })
+
+  it('builds the casual enemy album from its own collection, apart from the combat looks (P185)', async () => {
+    const { base, u } = universe()
+    const foe = (id, faction, look) => ({ id, character: `Foe ${id}`, faction, look, image: `${faction}/${id}.png`, width: 64, height: 96, sha256: 'a'.repeat(64), approval: { status: 'approved', by: 'owner', date: '2026-01-03', scope: 'casual' } })
+    put(join(u, 'enemies/approved/manifest.json'), { assets: [foe('combat-a', 'north-pact', 'combat-station')] })
+    put(join(u, 'enemies/approved/album.json'), { title: 'Foes', factions: { 'north-pact': 'The North Pact' } })
+    put(join(u, 'enemies/casual/approved/manifest.json'), { assets: [] })
+    put(join(u, 'enemies/casual/approved/album.json'), { title: 'Casual foes', header: '<h1>Casual</h1><p>{looks}</p>', noun: 'casual look', empty: 'No casual look is approved yet.', factions: { 'north-pact': 'The North Pact' }, looks: { casual: 'Casual clothing' } })
+    expect((await renderEnemyAlbum(u, 'enemies/casual')).html).toContain('<p>No casual look is approved yet.</p>')
+    put(join(u, 'enemies/casual/approved/manifest.json'), { assets: [foe('casual-a', 'north-pact', 'casual')] })
+    const page = await renderEnemyAlbum(u, 'enemies/casual')
+    expect(page.file).toBe(join(u, 'enemies/casual/approved/review.html'))
+    expect(page.html).toContain('<p>1 casual look</p>')
+    expect(page.html).toContain('<strong>Foe casual-a</strong><span class="badge">Approved</span></div><p class="detail">Casual clothing<br>')
+    expect(page.html).not.toContain('combat-a')
+    const out = execFileSync(process.execPath, [join(here, 'build.mjs'), 'sky-city'], { env: { ...process.env, UNIVERSES_DIR: base }, encoding: 'utf8' })
+    expect(out).toContain('enemies/approved/review.html')
+    expect(out).toContain('enemies/casual/approved/review.html')
+    expect(readFileSync(join(u, 'enemies/approved/review.html'), 'utf8')).not.toContain('casual-a')
+  })
 })
 
 describe('the command', () => {

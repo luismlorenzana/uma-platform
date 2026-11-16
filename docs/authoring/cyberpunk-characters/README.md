@@ -3,8 +3,8 @@
 Use this packet to author an Uma for Uma Cyberpunk, from identity references to an approved wardrobe in the local album,
 ready for the owner to have it published. It follows the same shape as the
 [Farm Life character packet](../farm-life-characters/README.md) but is a separate initiative: its own look, its own
-collection, its own album and its own approvals. [Desktop page](../previews/cyberpunk-authoring.html) (both Cyberpunk
-cycles on one page).
+collection, its own album and its own approvals. [Desktop page](../previews/cyberpunk-authoring.html) (every Cyberpunk
+cycle on one page).
 
 The target is **the approved Cyberpunk standard with a distinct person**: the same Hardline Anime rendering, staging and
 wardrobe roles as the approved pilots, with the new Uma's own face, hair, markings, ears, tail and colours.

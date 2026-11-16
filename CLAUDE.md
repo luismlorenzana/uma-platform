@@ -51,6 +51,9 @@
   would publish them as an Uma's looks). **Uma Enemy Art (EA1, P183, AP93–AP98)** is their own sub-app
   (https://uma-platform.web.app/enemy-art): `pnpm art:push cyberpunk --enemies` publishes the approved ones to
   `enemy-art/cyberpunk/`, on the owner's word only; Uma Quest's enemies join it later (EA2); Uma Farm has none.
+  **Casual clothing (P185)** is the enemies' second cycle: `docs/authoring/cyberpunk-enemies-casual`, its own collection
+  and album in `enemies/casual/` (approved/manifest.json, `look: "casual"`); it publishes beside the combat looks once
+  EA3 is built.
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

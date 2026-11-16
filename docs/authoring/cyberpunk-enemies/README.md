@@ -3,7 +3,8 @@
 Use this packet to author Uma Cyberpunk's enemies and bosses, from the wired references to approved looks in the local
 enemy album. It has the same shape as the [character packets](../cyberpunk-characters/README.md) but is a separate
 initiative: enemy looks have their own folder, their own approvals and their own album, and they are never an Uma's look.
-[Desktop page](../previews/cyberpunk-authoring.html) (both Cyberpunk cycles on one page).
+[Desktop page](../previews/cyberpunk-authoring.html) (every Cyberpunk cycle on one page). Each enemy off duty, in everyday
+clothes, is a second cycle with its own approvals and album: [cyberpunk-enemies-casual](../cyberpunk-enemies-casual/README.md) (P185).
 
 **Names stay local (P179).** An enemy's id can be a franchise character's name, so this packet, the templates and the
 album code name no enemy, faction or franchise. Every name lives in the local folder: the baseline brief, the picks, each

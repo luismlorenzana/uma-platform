@@ -32,10 +32,23 @@ export interface GalleryRow {
   /** The splash art (P175): how many scenes are approved and published. */
   splash: { approved: number; published: number; publishedAt: string | null } | null
   /** The enemy album (P182): how many enemy looks the owner approved, how many are in Uma Enemy Art (EA1), and its page. */
-  enemies: { approved: number; published: number; publishedAt: string | null; page: string | null } | null
+  enemies: EnemyRow | null
+  /** The casual enemy album (P185), counted the same way. */
+  casual: EnemyRow | null
   /** Each character's own collection (P174): her approved looks, how many are published, her portraits, her album. */
   characters: { key: string; name: string; approved: number; published: number; portraits: { state: string; states: number } | null; page: string | null }[]
 }
+export interface EnemyRow { approved: number; published: number; publishedAt: string | null; page: string | null }
+/** An enemy collection's numbers (`enemies`, or `enemies/casual`, P185): its owner-approved looks, the published ones, its album. */
+function enemyRow(base: string, universe: string, collection: string): EnemyRow | null {
+  const dir = join(base, universe, ...collection.split('/'), 'approved')
+  if (!existsSync(join(dir, MANIFEST))) return null
+  const m = JSON.parse(readFileSync(join(dir, MANIFEST), 'utf8')) as { assets?: { approval?: { status?: string; by?: string } }[] }
+  const approved = (m.assets ?? []).filter((a) => a.approval?.status === 'approved' && a.approval?.by === 'owner').length
+  const shown = existsSync(join(dir, RECORD)) ? JSON.parse(readFileSync(join(dir, RECORD), 'utf8')) as { counts?: { published?: number }; publishedAt?: string | null } : null
+  return { approved, published: shown?.counts?.published ?? 0, publishedAt: shown?.publishedAt ?? null, page: existsSync(join(dir, GALLERY)) ? `/${universe}/${collection}/approved/${GALLERY}` : null }
+}
+
 /** Each universe's numbers: its manifest's looks, and its published record when a push or a status wrote one. */
 export function galleryRows(base: string): GalleryRow[] {
   return universesIn(base).map((universe) => {
@@ -53,13 +66,8 @@ export function galleryRows(base: string): GalleryRow[] {
       universe, approved: Array.isArray(manifest.assets) ? manifest.assets.length : 0, published: record?.counts.published ?? 0,
       waiting: record ? record.counts.unpublished + record.counts.changed : 0, publishedAt: record?.publishedAt ?? null, studies,
       portraits: p ? { state: p.state, states: p.states, bases: p.bases, faces: p.faces, publishedAt: p.publishedAt } : null,
-      enemies: existsSync(join(base, universe, 'enemies', 'approved', MANIFEST)) ? (() => {
-        const m = JSON.parse(readFileSync(join(base, universe, 'enemies', 'approved', MANIFEST), 'utf8')) as { assets?: { approval?: { status?: string; by?: string } }[] }
-        const approved = (m.assets ?? []).filter((a) => a.approval?.status === 'approved' && a.approval?.by === 'owner').length
-        const flags = join(base, universe, 'enemies', 'approved', RECORD)
-        const shown = existsSync(flags) ? JSON.parse(readFileSync(flags, 'utf8')) as { counts?: { published?: number }; publishedAt?: string | null } : null
-        return { approved, published: shown?.counts?.published ?? 0, publishedAt: shown?.publishedAt ?? null, page: existsSync(join(base, universe, 'enemies', 'approved', GALLERY)) ? `/${universe}/enemies/approved/${GALLERY}` : null }
-      })() : null,
+      enemies: enemyRow(base, universe, 'enemies'),
+      casual: enemyRow(base, universe, 'enemies/casual'),
       splash: scenes ? { approved: Array.isArray(scenes.assets) ? scenes.assets.length : 0, published: shown?.counts.published ?? 0, publishedAt: shown?.publishedAt ?? null } : null,
       characters: characterStudies(join(base, universe)).map((study) => {
         const read = <T>(f: string): T | null => (existsSync(join(study.folder, f)) ? JSON.parse(readFileSync(join(study.folder, f), 'utf8')) as T : null)
@@ -89,10 +97,13 @@ export function indexPage(base: string, site: string): string {
       const portraits = c.portraits ? ` · <b>${c.portraits.states}</b> portrait states ${c.portraits.state === 'published' ? '<span class="pub">Published</span>' : `<span class="pub ${c.portraits.state === 'changed' ? 'part' : 'none'}">${c.portraits.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`}` : ''
       return `<p data-character="${c.key}"><b>${escape(c.name)}</b> · ${c.approved} approved looks ${looks}${portraits}${c.page ? ` · <a href="${c.page}">Open her album</a>` : ''}</p>`
     }).join('')
-    const en = r.enemies
-    const enemyFlag = !en ? '' : en.published === en.approved && en.approved > 0 ? `<span class="pub">All ${en.approved} in Uma Enemy Art</span>`
-      : en.published > 0 ? `<span class="pub part">${en.published} of ${en.approved} in Uma Enemy Art</span>` : '<span class="pub none">Not published</span>'
-    const enemies = en ? `<p><b>${en.approved}</b> approved enemy look${en.approved === 1 ? '' : 's'} ${enemyFlag}${en.publishedAt && en.published ? ` <span class="when">${en.publishedAt.slice(0, 10)}</span>` : ''}${en.page ? ` · <a href="${en.page}">Open the enemy album</a>` : ''}</p>` : ''
+    const enemyLine = (en: EnemyRow | null, noun: string, album: string) => {
+      if (!en) return ''
+      const flag = en.published === en.approved && en.approved > 0 ? `<span class="pub">All ${en.approved} in Uma Enemy Art</span>`
+        : en.published > 0 ? `<span class="pub part">${en.published} of ${en.approved} in Uma Enemy Art</span>` : '<span class="pub none">Not published</span>'
+      return `<p><b>${en.approved}</b> approved ${noun}${en.approved === 1 ? '' : 's'} ${flag}${en.publishedAt && en.published ? ` <span class="when">${en.publishedAt.slice(0, 10)}</span>` : ''}${en.page ? ` · <a href="${en.page}">Open the ${album}</a>` : ''}</p>`
+    }
+    const enemies = enemyLine(r.enemies, 'enemy look', 'enemy album') + enemyLine(r.casual, 'casual enemy look', 'casual album')
     const sp = r.splash
     const splash = sp ? `<p><b>${sp.approved}</b> splash images ${sp.published === sp.approved && sp.approved > 0 ? `<span class="pub">All ${sp.approved} published</span>` : sp.published > 0 ? `<span class="pub part">${sp.published} of ${sp.approved} published</span>` : '<span class="pub none">Not published</span>'} · <a href="/${r.universe}/splash-art/${GALLERY}">Open them</a></p>` : ''
     const portraits = q ? `<p><b>${q.states}</b> dialogue portrait states ${q.state === 'published' ? `<span class="pub">Published as ${q.bases + q.faces} pieces</span>${q.publishedAt ? ` <span class="when">${q.publishedAt.slice(0, 10)}</span>` : ''}` : `<span class="pub ${q.state === 'changed' ? 'part' : 'none'}">${q.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`} · <a href="/${r.universe}/dialogue-portraits/${GALLERY}">Open them</a></p>` : ''

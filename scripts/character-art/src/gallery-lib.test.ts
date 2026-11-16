@@ -29,9 +29,9 @@ describe('the Local Art Gallery', () => {
     mkdirSync(join(base, 'sky-city', 'dialogue-portraits'))
     writeFileSync(join(base, 'sky-city', 'dialogue-portraits', 'publication.json'), JSON.stringify({ state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }))
     expect(galleryRows(base)).toEqual([
-      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [], portraits: null, enemies: null, splash: null, characters: [] },
-      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [], portraits: null, enemies: null, splash: null, characters: [] },
-      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'], portraits: { state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }, enemies: null, splash: null, characters: [] },
+      { universe: 'new-world', approved: 2, published: 0, waiting: 0, publishedAt: null, studies: [], portraits: null, enemies: null, casual: null, splash: null, characters: [] },
+      { universe: 'old-road', approved: 3, published: 1, waiting: 2, publishedAt: '2026-01-03T10:00:00.000Z', studies: [], portraits: null, enemies: null, casual: null, splash: null, characters: [] },
+      { universe: 'sky-city', approved: 4, published: 4, waiting: 0, publishedAt: '2026-01-03T10:00:00.000Z', studies: ['helmet-v001', 'wardrobe-v001'], portraits: { state: 'published', states: 384, bases: 24, faces: 30, publishedAt: '2026-01-04T10:00:00.000Z' }, enemies: null, casual: null, splash: null, characters: [] },
     ])
     const page = indexPage(base, 'https://example.test/art')
     expect(page).toContain('<title>Local Art Gallery</title>')
@@ -67,6 +67,14 @@ describe('the Local Art Gallery', () => {
     expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>1</b> approved enemy look <span class="pub none">Not published</span> · <a href="/sky-city/enemies/approved/review.html">Open the enemy album</a></p>')
     writeFileSync(join(enemies, 'publication.json'), JSON.stringify({ publishedAt: '2026-01-06T10:00:00.000Z', counts: { published: 1, changed: 0, unpublished: 0, refused: 1 } }))
     expect(indexPage(base, 'https://example.test/art')).toContain('<p><b>1</b> approved enemy look <span class="pub">All 1 in Uma Enemy Art</span> <span class="when">2026-01-06</span> · <a href="/sky-city/enemies/approved/review.html">Open the enemy album</a></p>')
+    // The casual album (P185) gets its own line after the combat looks'.
+    const casual = join(base, 'sky-city', 'enemies', 'casual', 'approved')
+    mkdirSync(casual, { recursive: true })
+    writeFileSync(join(casual, 'manifest.json'), JSON.stringify({ assets: [] }))
+    writeFileSync(join(casual, 'review.html'), '<html></html>')
+    expect(galleryRows(base)[0]!.casual).toEqual({ approved: 0, published: 0, publishedAt: null, page: '/sky-city/enemies/casual/approved/review.html' })
+    const page = indexPage(base, 'https://example.test/art')
+    expect(page).toContain('Open the enemy album</a></p><p><b>0</b> approved casual enemy looks <span class="pub none">Not published</span> · <a href="/sky-city/enemies/casual/approved/review.html">Open the casual album</a></p>')
   })
 
   it('lists each character’s own collection with her looks, her portraits and her album (P174)', () => {
