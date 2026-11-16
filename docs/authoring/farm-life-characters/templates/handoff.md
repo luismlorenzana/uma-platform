@@ -35,7 +35,7 @@ Owner approval evidence: `<date, actual verdict and exact batch/version/hash sco
 - Raw generation outputs and copied workspace files: `<paths>`
 - Source/crop/face/mask manifests and dimensions: `<paths>`
 - Per-outfit placement recipe: `<path>`
-- Flattened QA previews and sheets: `<paths>`
+- Spring expression sheet and representative/failure proofs: `<paths; other previews composed on demand>`
 - Scripts and exact local rebuild commands: `<commands actually written and run>`
 - Tool mode: `<built-in image generation; record any explicitly authorized alternative>`
 - Private content available only in the main working checkout: `<location; worktrees do not automatically contain it>`
@@ -45,7 +45,8 @@ Owner approval evidence: `<date, actual verdict and exact batch/version/hash sco
 - Hashes, literal crop pixels and prior approved-state preservation: `<result/report>`
 - Exact base-plus-face reconstruction and outside-mask differences: `<result/report>`
 - Opaque original/new feature guards, blush and tears: `<result/report>`
-- Every outfit with every authorized expression: `<coverage and visual sheets inspected>`
+- Automatic checks for every authorized outfit/expression: `<coverage/report; in-memory composition is sufficient>`
+- Sampled visual review: `<all Spring expressions plus named stress/exception cases actually inspected>`
 - Character identity, anatomy, wardrobe variety and small-size expression reading: `<observations>`
 - Gallery selectors, statuses, links and reference modes: `<method/result>`
 - Actual browser rendering inspected: `<yes/no; distinguish from simulated DOM>`
