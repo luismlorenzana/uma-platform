@@ -6,6 +6,8 @@ The target is **the same quality and shared rendering style, with a distinct per
 
 Once the required outfits and expressions are approved, use the [Farm Life splash art packet](../farm-life-splash-art/README.md) to author her nine event illustrations in a separate study.
 
+Every character's beach scene follows the [locked beach baseline](../farm-life-splash-art/beach-baseline.md): the shared lounger/harbour setting and props, her own approved bikini base and Happy portrait, and a tail mostly hidden behind her toward viewer-right. Use the packet's `prepare-beach` command for fresh generation, including when replacing earlier beach art; each replacement gets its own review and exact-image approval.
+
 ## Start here
 
 1. Read [AGENTS.md](../../../AGENTS.md), [architecture](../../architecture.md), the [roadmap](../../roadmap.md), the latest [decisions](../../decisions.md), and the current [handoff queue](../../handoff/README.md).

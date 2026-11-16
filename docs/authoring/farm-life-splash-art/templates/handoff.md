@@ -6,6 +6,7 @@
 - Visual check: face, outfit, scene, pose, framing and continuity:
 - Owner approvals: selected scene IDs and hashes, exact scope and evidence:
 - Rejected, superseded or pending versions:
+- Beach spec version/hash, fresh-generation inputs, tail occlusion check, and any prior approved scene retained during replacement review:
 - Review page or image links:
 - Local album: authorization, integration status and validation:
 - Uma Character Art publication: status, if performed by the delivery session:
