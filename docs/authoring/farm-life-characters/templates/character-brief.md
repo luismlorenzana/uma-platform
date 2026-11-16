@@ -60,7 +60,7 @@ For occasion wear, record venue, time, dress code and fashion era before choosin
 | `kimono` | `<festival yukata/kimono>` | `<...>` | `<obi/accessories>` | `<...>` |
 | `dinner` | `<evening>` | `<...>` | `<...>` | `<...>` |
 | `wedding` | `<individual bridal silhouette>` | `<white fabrics/trim>` | `<veil/motif>` | `<...>` |
-| `farm-work` | `<functional>` | `<...>` | `<pockets/boots/tail clearance>` | `<...>` |
+| `farm-work` | `<functional; overalls, styled utility apron or another practical cut>` | `<...>` | `<work gloves on both hands, pockets, sturdy boots, tail clearance>` | `<...>` |
 | `garden-party` | `<outdoor festival dress>` | `<...>` | `<...>` | `<...>` |
 | `pajamas-playful` | `<playful adult sleepwear>` | `<...>` | `<...>` | `<...>` |
 | `wedding-night` | `<private adult occasion wear>` | `<...>` | `<...>` | `<...>` |

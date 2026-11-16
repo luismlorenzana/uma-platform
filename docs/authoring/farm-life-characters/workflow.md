@@ -34,7 +34,7 @@ Write a wardrobe matrix before generation. Give each occasion a silhouette, mate
 | `kimono` | Japanese summer festival look, such as a light yukata with coherent collar, sleeves and obi |
 | `dinner` | Elegant evening celebration; design a distinct silhouette and materials |
 | `wedding` | An individual white bridal dress and veil with the character's own motifs |
-| `farm-work` | Practical clothes with usable pockets, movement, sturdy footwear and tail clearance |
+| `farm-work` | Practical clothes with work gloves worn on both hands, usable pockets, movement, sturdy footwear and tail clearance; a styled utility apron is an option |
 | `garden-party` | Harvest-festival dress suitable for an outdoor celebration and garden paths |
 | `pajamas-playful` | Active sleepwear category: cute, playful adult pajamas with the requested degree of coverage |
 | `wedding-night` | Private adult occasion wear with individual fabric and trim choices; non-explicit presentation |
@@ -42,6 +42,8 @@ Write a wardrobe matrix before generation. Give each occasion a silhouette, mate
 The two private outfit categories and bikini were explicitly selected for the adult pilot characters. Preserve the requested category when it is included for a new adult character; do not replace it with the retired plain pajamas or impose a different costume brief from the older technical packet. The owner can narrow scope or set different coverage for a new character. Do not add unrequested variants just to probe boundaries.
 
 Design variety across the cast as well as within one wardrobe. For the same occasion, compare neckline, sleeve, waist treatment, skirt/trouser structure, length, fabric and accessories. Meaningful structural differences matter more than recoloring. A workwear pair can differ in overalls versus apron-and-trousers; bridal looks can differ in silhouette and textile treatment. These are examples of design axes, not costumes to copy onto every future character.
+
+Farm Work includes **functional work gloves worn on both hands**, visible in the neutral arms-down pose. Reinforced canvas or leather palms/fingertips and practical wrist cuffs should make their work purpose clear. An apron may be styled through its cut, character palette, straps, stitching or a restrained motif while keeping protective coverage, useful pockets and freedom of movement. Choose overalls, apron-and-trousers or another practical construction for that character; gloves are the shared requirement, while an apron is optional. Inspect the glove shapes and garment function during outfit review.
 
 Distribute signature motifs deliberately. An ear ornament need not become a giant repeated chest emblem, and every garment need not repeat every identity color. Keep new accessories away from the eye/brow/mouth region when practical. A hairstyle change such as hair up for a festival is a separate identity and face-reuse decision; it is not required by the original packet.
 
