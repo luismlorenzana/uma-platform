@@ -15,7 +15,7 @@ const here = dirname(fileURLToPath(import.meta.url))
 const folders = []
 const temp = () => { const d = mkdtempSync(join(tmpdir(), 'albums-test-')); folders.push(d); return d }
 afterEach(() => { for (const d of folders.splice(0)) rmSync(d, { recursive: true, force: true }) })
-const put = (file, value) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, typeof value === 'string' ? value : JSON.stringify(value)) }
+const put = (file, value) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, typeof value === 'string' || Buffer.isBuffer(value) ? value : JSON.stringify(value)) }
 const APPROVED = { status: 'approved', by: 'owner', on: '2026-01-02', imageSha256: 'a'.repeat(64) }
 const FLAGS = '<!-- publication flags: written by pnpm art:push and pnpm art:status; keep this block --><script src="publication.js"></script><!-- /publication flags -->'
 
@@ -182,6 +182,29 @@ describe('a looks-only album and the enemy album (P182)', () => {
     expect(out).toContain('enemies/approved/review.html')
     expect(out).toContain('enemies/casual/approved/review.html')
     expect(readFileSync(join(u, 'enemies/approved/review.html'), 'utf8')).not.toContain('casual-a')
+  })
+})
+
+describe('compact character portraits', () => {
+  it('builds from pieces when state images are absent and preserves publication flags', async () => {
+    const { v } = universe(), file = join(v, 'manifest.json'), m = JSON.parse(readFileSync(file, 'utf8'))
+    const image = Buffer.from('synthetic source bytes'), hash = (await import('node:crypto')).createHash('sha256').update(image).digest('hex')
+    for (const a of m.assets) { put(join(v, a.base), image); a.baseSha256 = hash; a.rgbaSha256 = 'b'.repeat(64); for (const o of a.outputs) { delete o.image; o.rgbaSha256 = 'c'.repeat(64) } }
+    for (const f of m.faces) { put(join(v, f.file), image); f.sha256 = hash }
+    put(file, m)
+    const t = JSON.parse(readFileSync(join(v, 'album.json'), 'utf8')); t.compactPortraits = true; t.portraitSheets = [['review/spring.png', 'Spring expressions']]; put(join(v, 'album.json'), t)
+    put(join(v, 'review.html'), `<html><body>old${FLAGS}</body></html>`)
+    const page = await renderCharacterAlbum(v)
+    const { Script } = await import('node:vm')
+    for (const script of page.html.matchAll(/<script>([\s\S]*?)<\/script>/g)) expect(() => new Script(script[1])).not.toThrow()
+    expect(page.html).toContain('decodePortraitPNG')
+    expect(page.html).toContain(image.toString('base64'))
+    expect(page.html).toContain('Spring expressions')
+    expect(page.html).not.toContain('portraits-board-link')
+    expect(page.html).not.toContain('src=\"undefined\"')
+    expect(page.html.split(FLAGS).length - 1).toBe(1)
+    put(join(v, m.faces[0].file), 'changed bytes')
+    await expect(renderCharacterAlbum(v)).rejects.toThrow(/hash mismatch/)
   })
 })
 
