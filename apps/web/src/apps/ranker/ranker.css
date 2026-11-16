@@ -24,7 +24,7 @@
 /* Uma Cyberpunk's enemy casting (P193): each Uma card carries her faction's colour on its left edge; a Boss slot is a
    larger crimson frame with a gold crown, a Sub-boss slot a smaller teal frame with a diamond; an open slot is dashed. */
 .cast-grid { grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); }
-.faction-grid { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+.faction-grid { grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); }
 .cast-card { border-left: 4px solid var(--faction, transparent); }
 .faction-dot { background: var(--faction, currentColor); }
 .cast-faction { border-left: 4px solid var(--faction, transparent); }
