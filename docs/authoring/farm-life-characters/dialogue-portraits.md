@@ -83,6 +83,12 @@ The earlier interactive proof showed both the neutral eyebrows and the expressio
 
 Build a mask specific to the new character. Start with measured face/skin coverage and fully opaque windows for both old and new eyebrows, eyes and mouth. Include lower eye marks when the eyes close, a larger laughing/yawning mouth, and each expression's blush or tear effects. Keep surrounding hair, jaw, accessories, collar and background out of the replaced area as far as the actual feature geometry allows. Do not copy rectangular coordinates from another character as a universal face mask.
 
+The exported layer must show a **continuous, softly feathered face**, rather than separate rectangular eye, brow and mouth patches. Establish a smooth facial field measured on this character, connecting the visible forehead, nose, cheeks and skin around the mouth. Combine that field with the opaque feature/effect guards using maximum alpha. The guards guarantee complete feature replacement; they are not the whole mask. Keep the field inside the measured facial area instead of revealing the whole generated square or unnecessarily replacing hair and clothing.
+
+Record small continuity checks inside visible facial skin, including the nose/cheek bridge and skin between the feature windows. Those points or regions must not become transparent holes. One connected-component count is insufficient: feathered rectangles can touch while still leaving a hole through the nose. Inspect the actual exported RGBA PNG on a checkerboard and on light/dark backgrounds, at native size and enlarged; an image viewer that ignores alpha can conceal the problem. Also inspect the layer composed on Spring and a small outfit stress set.
+
+If an existing accepted expression has this export defect, reuse its registered source RGB and repair the mask deterministically in a new version. Preserve opaque feature coverage, blush/tears, source registration and measured outfit positions; recompute the represented states and their hashes. Keep earlier approved bytes and evidence, and record corrected masks as awaiting their own verdict rather than silently transferring an old exact-hash approval.
+
 The accepted pilot guard windows, in their 224-pixel tiles, are useful only as an implementation example:
 
 | Region | x | y | width | height |
@@ -164,6 +170,7 @@ Run meaningful checks on the assets and behavior, not only assertions that count
 - Every neutral base equals its recorded source rectangle pixel for pixel.
 - Each character has exactly the authorized outfit/expression coverage, with no retired pajamas or closed optional extras.
 - A face's RGB/alpha and its mask remain the same bytes across that character's outfits; face alpha equals saved mask alpha.
+- Each exported face has continuous measured facial coverage with no transparent holes between its feature windows. Check recorded skin continuity regions as well as the actual PNG on a checkerboard and light/dark backgrounds; record the visual inspection separately from pixel checks.
 - All old/new feature guards are fully opaque, including necessary blush/tear areas; final guard RGB equals face RGB.
 - Every authorized state passes deterministic in-memory composition checks from its recorded base, face and position; outside-mask changed pixels are zero. Saved proofs, when present, equal that result.
 - Layer placement is in bounds and explicitly recorded; no hidden scaling, rotation or mirroring.

@@ -140,6 +140,8 @@ and masked deterministically into a transparent reusable face layer.
 
 The generator's square output is **not yet the game-ready face piece**. It includes context from hair, background and clothing. Export the registered expression through its saved alpha mask using the [dialogue recipe](dialogue-portraits.md). Retain the raw edit for provenance. The resulting RGBA layer replaces features when drawn over the neutral bust.
 
+The exporter combines a measured continuous facial field with fully opaque old/new feature guards. Rectangular guards alone are insufficient. Inspect the actual transparent export on a checkerboard, verify skin continuity around the nose and cheeks, and check its composition on the approved base before accepting the mask.
+
 ## Expression directions
 
 Use these sixteen accepted keys. Adapt intensity to confirmed characterization while keeping each state readable. The descriptions constrain the facial change; they do not authorize a new head pose or a new face design.
