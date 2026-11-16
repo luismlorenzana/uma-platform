@@ -12,7 +12,7 @@ in again.
 
 ## 2. A study
 
-Make a new versioned folder inside her faction (`<faction>/<study>-v00N/`). Fill [the brief](templates/enemy-brief.md):
+Make a new versioned folder inside her cast folder (`cast/tier-<n>/<NN>-<uma>/<boss>/v00N/`, P200; `pnpm art:cast` made it, with her references), where the bosses' cast album shows every picture as it is saved. Fill [the brief](templates/enemy-brief.md):
 what this study tries, and from which inputs. One generation per image, from her references (face first, then art, then
 splash) and one shared anchor, nothing else. Save each output unchanged and the exact prompt beside it; record each input
 and its hash in the study's `manifest.json`. Change one main thing per revision; never overwrite an earlier image.

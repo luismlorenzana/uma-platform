@@ -1,7 +1,8 @@
 # Enemy study brief: <enemy> · <study>-v00N
 
-Save the filled brief in the study folder, `content/authoring/character-universes/cyberpunk/enemies/<faction>/<study>-v00N/brief.md`
-(gitignored). Names belong here, never in git.
+Save the filled brief in the study folder, inside her cast folder (P200),
+`content/authoring/character-universes/cyberpunk/enemies/cast/tier-<n>/<NN>-<uma>/<boss>/v00N/brief.md` (gitignored); the
+first bosses' earlier studies stay in `enemies/<faction>/<study>-v00N/`. Names belong here, never in git.
 
 ## The study
 

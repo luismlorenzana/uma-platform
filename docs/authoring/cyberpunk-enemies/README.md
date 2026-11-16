@@ -41,7 +41,8 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/enemies/`
 | --- | --- |
 | `brief.md`, `picks.json`, `references.json` | The baseline, the wired picks, every source image and its hash |
 | `<faction>/kit.md`, `<faction>/<enemy>/` | A faction's kit; an enemy's variant brief, prompt draft and references (written by `tools/wire.py`) |
-| `<faction>/<study>-v00N/` | One study: `brief.md`, `images/`, `prompts/`, `manifest.json`, its review page |
+| `cast/tier-<n>/<NN>-<uma>/<boss>/` | **Her folder** (P200): `character.json` (the Uma she opposes, her tier and faction, her references), `references/` (the Ranker's art, face and splash, byte for byte), and her studies, `v00N/`. `cast/review.html` is the bosses' cast album: every cast boss and every picture in her folder, newest first |
+| `<faction>/<study>-v00N/` | The first bosses' earlier studies, kept where they were; new studies go in her cast folder |
 | `approved/manifest.json` | **The approval record:** each approved look with `id`, `character`, `faction`, `unitId`, `look`, `image`, `sha256`, `width`, `height`, `approval` |
 | `approved/<faction>/<enemy>/` | The approved PNGs, byte for byte |
 | `approved/album.json` | The enemy album's words: title, header, footer, faction names in their order, look captions |

@@ -42,7 +42,8 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/enemies/`
 | `brief.md`, `<faction>/kit.md` | The enemy baseline and the faction kits, shared with the combat looks |
 | `approved/<faction>/<enemy>/` | Her approved combat looks: the likeness anchor |
 | `casual/README.md`, `casual/handoff.md` | The casual cycle's local notes and its handoff |
-| `casual/<faction>/<enemy>-casual-v00N/` | One study: `brief.md`, `images/`, `prompts/`, `manifest.json`, its review page |
+| `casual/cast/tier-<n>/<NN>-<uma>/<boss>/` | **Her folder** (P200): `character.json`, `references/` (the Ranker's pictures of her), and her casual studies, `v00N/`; `casual/cast/review.html` is the casual cast album |
+| `casual/cast/…/<boss>/v00N/` | One study: `brief.md`, `images/`, `prompts/`, `manifest.json`, its review page |
 | `casual/approved/manifest.json` | **The approval record:** each approved casual look with `id`, `character`, `faction`, `unitId`, `look` (the outfit's key: `combat-station` for the pilot suits, `casual` for everyday clothes), `image`, `sha256`, `width`, `height`, `approval`, `source` |
 | `casual/approved/<faction>/<enemy>/casual.png` | The approved PNGs, byte for byte |
 | `casual/approved/album.json` | The casual album's words: title, header, footer, `noun`, `empty`, faction names in their order, look captions |

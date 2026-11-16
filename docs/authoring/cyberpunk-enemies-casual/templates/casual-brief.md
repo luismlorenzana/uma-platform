@@ -1,7 +1,7 @@
 # Casual study brief: <enemy> · <enemy>-casual-v00N
 
 Save the filled brief in the study folder,
-`content/authoring/character-universes/cyberpunk/enemies/casual/<faction>/<enemy>-casual-v00N/brief.md` (gitignored).
+`content/authoring/character-universes/cyberpunk/enemies/casual/cast/tier-<n>/<NN>-<uma>/<boss>/v00N/brief.md` (gitignored).
 Names belong here, never in git.
 
 ## The study

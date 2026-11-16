@@ -1,6 +1,7 @@
 // The album builders (P181) on invented collections: invented riders, words and file names, no pictures. Each page's
 // words come from its album.json, a rebuilt page keeps its flag block, and nothing but the pages is written.
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -8,6 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it } from 'vitest'
 import { renderCharacterAlbum } from './character-album.mjs'
 import { renderEnemyAlbum } from './enemy-album.mjs'
+import { castApps, renderCastAlbum } from './cast-album.mjs'
 import { fill, jsList, keepFlags } from './lib.mjs'
 import { renderUniverseAlbums } from './universe-album.mjs'
 
@@ -205,6 +207,60 @@ describe('compact character portraits', () => {
     expect(page.html.split(FLAGS).length - 1).toBe(1)
     put(join(v, m.faces[0].file), 'changed bytes')
     await expect(renderCharacterAlbum(v)).rejects.toThrow(/hash mismatch/)
+  })
+})
+
+describe('a cast album (P200)', () => {
+  /** An invented app with two Umas' cast: her record, her reference, and what the author added. */
+  function castApp() {
+    const { base, u } = universe()
+    const app = join(u, 'enemies', 'lieutenants')
+    const record = (id, name, uma, order, tier = 'T1') => ({ schemaVersion: 1, kind: 'enemy-cast-character', id, name, franchise: 'invented', rankerTier: 'S', uma: { id: uma, name: `Rider ${uma}`, tier, order }, faction: { id: 'f1', title: 'Faction 1', color: '#123456' }, references: [{ kind: 'art', file: 'references/art.webp' }], castRevision: 9 })
+    const add = (rel, rec) => { put(join(app, 'cast', rel, 'character.json'), rec); put(join(app, 'cast', rel, 'references', 'art.webp'), `ref ${rec.id}`) }
+    add('tier-2/01-rider-3/foe-z', record('foe-z', 'Foe Z', '3', 1, 'T2'))
+    add('tier-1/02-rider-2/foe-b', record('foe-b', 'Foe B', '2', 2))
+    add('tier-1/01-rider-1/foe-a', record('foe-a', 'Foe A', '1', 1))
+    put(join(app, 'cast', 'album.json'), { kind: 'cast-album', title: 'Cast', noun: 'lieutenant', plural: 'lieutenants', header: '<h1>Cast</h1><p>{characters} against {umas}: {withWork} with pictures, {approved} approved, {published} published</p>', footer: '<footer>revision {revision}</footer>' })
+    return { base, u, app }
+  }
+
+  it('shows every cast character in tier and board order, her reference, and nothing else until pictures are added', async () => {
+    const { app } = castApp()
+    const page = await renderCastAlbum(app)
+    expect(page.file).toBe(join(app, 'cast', 'review.html'))
+    expect(page.html).toContain('<p>3 lieutenants against 3 Umas: 0 with pictures, 0 approved, 0 published</p>')
+    expect(page.html.indexOf('Foe A')).toBeLessThan(page.html.indexOf('Foe B'))
+    expect(page.html.indexOf('Foe B')).toBeLessThan(page.html.indexOf('Foe Z'))
+    expect(page.html).toContain('<h2>Tier 1</h2>')
+    expect(page.html).toContain('<b>01 · Rider 1</b><span class="chip">Faction 1</span>')
+    expect(page.html).toContain('<img src="tier-1/01-rider-1/foe-a/references/art.webp" alt="Foe A, her Ranker reference" loading="lazy">')
+    expect(page.html).toContain('data-id="foe-a" data-state="empty"')
+    expect(page.html).toContain('<footer>revision 9</footer>')
+  })
+
+  it('shows each picture added to her folder, newest first, and her approved looks, a work copy of one shown once', async () => {
+    const { app } = castApp()
+    const folder = join(app, 'cast', 'tier-1', '01-rider-1', 'foe-a')
+    put(join(folder, 'v001', 'images', 'first try.png'), 'a study')
+    put(join(folder, 'v002', 'images', 'kept.png'), 'the approved picture')
+    const kept = createHash('sha256').update('the approved picture').digest('hex')
+    put(join(app, 'approved', 'manifest.json'), { assets: [{ id: 'foe-a-look', unitId: 'foe-a', look: 'station', image: 'f/foe-a/look.png', sha256: kept, approval: { status: 'approved', by: 'owner' } }] })
+    put(join(app, 'approved', 'publication.json'), { looks: [{ id: 'foe-a-look', state: 'published' }] })
+    const page = await renderCastAlbum(app)
+    expect(page.html).toContain('data-id="foe-a" data-state="published"')
+    expect(page.html).toContain('1 new picture · 1 approved · 1 published')
+    expect(page.html).toContain('<a href="../approved/f/foe-a/look.png"')
+    expect(page.html).toContain('<span class="tag pub">Published</span>')
+    expect(page.html).toContain('href="tier-1/01-rider-1/foe-a/v001/images/first%20try.png"')
+    expect(page.html).not.toContain('v002/images/kept.png')
+    expect(page.html).toContain('<p>3 lieutenants against 3 Umas: 1 with pictures, 1 approved, 1 published</p>')
+  })
+
+  it('is found in its app folder, and the command builds it with the rest', async () => {
+    const { base, u, app } = castApp()
+    expect(await castApps(u)).toEqual([app])
+    const out = execFileSync(process.execPath, [join(here, 'build.mjs'), 'sky-city'], { env: { ...process.env, UNIVERSES_DIR: base }, encoding: 'utf8' })
+    expect(out).toContain('enemies/lieutenants/cast/review.html')
   })
 })
 

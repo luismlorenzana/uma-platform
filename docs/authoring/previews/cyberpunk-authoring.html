@@ -87,6 +87,8 @@
   th { color: var(--ink-soft); font-weight: 650; }
   code { font-size: 12px; background: var(--sunken); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
   .wide { overflow-x: auto; }
+  pre.tree { margin: 0; background: var(--sunken); border: 1px solid var(--hairline); border-radius: 10px; padding: 12px 14px; overflow-x: auto; font-size: 12px; line-height: 1.55; }
+  pre.tree code { background: none; padding: 0; overflow-wrap: normal; }
   .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
   .pill.go { background: var(--success-wash); color: var(--success); }
   .pill.wait { background: var(--sunken); color: var(--ink-soft); }
@@ -166,23 +168,71 @@
     </div>
   </section>
 
+  <section class="card" id="lieutenants">
+    <h2>Lieutenants <span class="pill wait">Blank · publishing in EA4</span></h2>
+    <p class="lead">The three lieutenants who serve each boss: the enemy art's third app (P200), with its own studies, approvals and albums. Nothing is authored yet; all 150 cast lieutenants already have their folders and Ranker references. <a href="../cyberpunk-enemies-lieutenants/README.md">Packet</a> · <a href="../cyberpunk-enemies-lieutenants/workflow.md">Workflow</a></p>
+    <div class="two">
+      <ol class="steps">
+        <li><span class="n">1</span><span><b>Find her</b> in the lieutenants' cast album: Tier 1 first, Uma by Uma</span></li>
+        <li><span class="n">2</span><span><b>A study</b> inside her own folder (<code>lieutenants/cast/tier-&lt;n&gt;/&lt;NN&gt;-&lt;uma&gt;/&lt;lieutenant&gt;/v00N/</code>)</span></li>
+        <li><span class="n">3</span><span><b>Review:</b> the cast album shows each picture on her card as it is saved</span></li>
+        <li><span class="n">4</span><span><b>Owner's verdict:</b> the PNG copied into <code>lieutenants/approved/</code> with a manifest entry</span></li>
+        <li><span class="n">5</span><span><b>The albums:</b> <code>pnpm art:albums cyberpunk</code>; her cast card badges it Approved</span></li>
+        <li class="stop"><span class="n">6</span><span><b>Publishing, later (EA4):</b> to Uma Enemy Art with the boss she serves, on the owner's word</span></li>
+      </ol>
+      <table>
+        <tr><th>Who</th><td>150 lieutenants, three for each of the 50 Umas in Tiers 1–5</td></tr>
+        <tr><th>Base</th><td>The pilot suit, as for the bosses (a default the owner's first approval can change)</td></tr>
+        <tr><th>Rank</th><td>Key or Regular marks, below her boss</td></tr>
+        <tr><th>Image</th><td>1024 × 1536 transparent RGBA, full body, neutral front</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="cast">
+    <h2>The cast folders <span class="pill go">250 ready</span></h2>
+    <p class="lead">Every boss and lieutenant the owner cast in the Ranker (Tiers 1–5: 50 Umas, each with one boss and three lieutenants) has a folder in each app that authors her, with her Ranker pictures already in it. <code>pnpm art:cast cyberpunk</code> keeps the folders in step with the Ranker; each app's cast album shows every character, in tier and board order, and every picture added to her folder, fresh on each visit through the Local Art Gallery.</p>
+    <div class="two">
+      <pre class="tree"><code>enemies/                     bosses: 50 folders
+  cast/
+    review.html              the bosses' cast album
+    tier-1/
+      01-&lt;uma&gt;/
+        &lt;boss&gt;/
+          character.json     who, whom she opposes, her references
+          references/        art, face, splash (byte for byte)
+          v001/ …            her studies
+enemies/casual/cast/         bosses again: 50 folders
+enemies/lieutenants/cast/    lieutenants: 150 folders
+  tier-1/01-&lt;uma&gt;/&lt;lieutenant&gt;/ (three an Uma)</code></pre>
+      <table>
+        <tr><th>Reads</th><td>The local Ranker (<code>pnpm ranker:pull</code>): the plan's cast, the catalog and imports for each unit's pictures</td></tr>
+        <tr><th>Re-cast</th><td>A character cast against another Uma moves with all her work</td></tr>
+        <tr><th>Never</th><td>Deletes: one no longer cast keeps her folder, reported</td></tr>
+        <tr><th>Album</th><td>Her reference, her approved looks (by her unit id) badged Approved or Published, then every new picture, newest first</td></tr>
+        <tr><th>Live</th><td><code>pnpm art:gallery</code> builds each cast album fresh on every visit; refresh to see a new picture</td></tr>
+        <tr><th>Names</th><td>In each local <code>character.json</code> only; none in git</td></tr>
+      </table>
+    </div>
+  </section>
+
   <section class="card" id="where">
     <h2>Where everything lives</h2>
     <div class="wide"><table>
-      <tr><th></th><th>Characters</th><th>Enemies</th><th>Enemies, casual</th></tr>
-      <tr><th>Packet (git)</th><td><code>docs/authoring/cyberpunk-characters/</code></td><td><code>docs/authoring/cyberpunk-enemies/</code></td><td><code>docs/authoring/cyberpunk-enemies-casual/</code></td></tr>
-      <tr><th>Collection (local)</th><td><code>cyberpunk/approved/</code> (the pilots), <code>cyberpunk/characters/&lt;key&gt;/</code></td><td><code>cyberpunk/enemies/</code></td><td><code>cyberpunk/enemies/casual/</code></td></tr>
-      <tr><th>Approval record</th><td>Each collection's <code>manifest.json</code></td><td><code>enemies/approved/manifest.json</code></td><td><code>enemies/casual/approved/manifest.json</code></td></tr>
-      <tr><th>Album</th><td><code>cyberpunk/approved/review.html</code>; her own album in her active version</td><td><code>enemies/approved/review.html</code></td><td><code>enemies/casual/approved/review.html</code></td></tr>
-      <tr><th>Published to</th><td>Uma Character Art, on her own page (<code>art:push cyberpunk</code>)</td><td>Uma Enemy Art, <code>/enemy-art</code> (<code>art:push cyberpunk --enemies</code>)</td><td>Uma Enemy Art, first in her group (<code>art:push cyberpunk --enemies</code>)</td></tr>
-      <tr><th>Album's words</th><td colspan="3">The <code>album.json</code> beside each page, local</td></tr>
-      <tr><th>Album code (git)</th><td colspan="3"><code>scripts/character-art/albums/</code>: <code>universe-album.mjs</code>, <code>character-album.mjs</code> (looks-only mode), <code>enemy-album.mjs</code> (combat and casual collections)</td></tr>
-      <tr><th>Front page</th><td colspan="3">The Local Art Gallery (<code>pnpm art:gallery</code>) lists all three on the Cyberpunk card</td></tr>
+      <tr><th></th><th>Characters</th><th>Enemies</th><th>Enemies, casual</th><th>Lieutenants</th></tr>
+      <tr><th>Packet (git)</th><td><code>docs/authoring/cyberpunk-characters/</code></td><td><code>docs/authoring/cyberpunk-enemies/</code></td><td><code>docs/authoring/cyberpunk-enemies-casual/</code></td><td><code>docs/authoring/cyberpunk-enemies-lieutenants/</code></td></tr>
+      <tr><th>Collection (local)</th><td><code>cyberpunk/approved/</code> (the pilots), <code>cyberpunk/characters/&lt;key&gt;/</code></td><td><code>cyberpunk/enemies/</code></td><td><code>cyberpunk/enemies/casual/</code></td><td><code>cyberpunk/enemies/lieutenants/</code></td></tr>
+      <tr><th>Approval record</th><td>Each collection's <code>manifest.json</code></td><td><code>enemies/approved/manifest.json</code></td><td><code>enemies/casual/approved/manifest.json</code></td><td><code>enemies/lieutenants/approved/manifest.json</code></td></tr>
+      <tr><th>Album</th><td><code>cyberpunk/approved/review.html</code>; her own album in her active version</td><td><code>enemies/approved/review.html</code>; the cast, <code>enemies/cast/review.html</code></td><td><code>enemies/casual/approved/review.html</code>; the cast, <code>enemies/casual/cast/review.html</code></td><td><code>enemies/lieutenants/approved/review.html</code>; the cast, <code>enemies/lieutenants/cast/review.html</code></td></tr>
+      <tr><th>Published to</th><td>Uma Character Art, on her own page (<code>art:push cyberpunk</code>)</td><td>Uma Enemy Art, <code>/enemy-art</code> (<code>art:push cyberpunk --enemies</code>)</td><td>Uma Enemy Art, first in her group (<code>art:push cyberpunk --enemies</code>)</td><td>Uma Enemy Art with her boss, once EA4 is built</td></tr>
+      <tr><th>Album's words</th><td colspan="4">The <code>album.json</code> beside each page, local</td></tr>
+      <tr><th>Album code (git)</th><td colspan="4"><code>scripts/character-art/albums/</code>: <code>universe-album.mjs</code>, <code>character-album.mjs</code> (looks-only mode), <code>enemy-album.mjs</code> (each enemy collection), <code>cast-album.mjs</code> (each app's cast)</td></tr>
+      <tr><th>Front page</th><td colspan="4">The Local Art Gallery (<code>pnpm art:gallery</code>) lists every album and each cast album on the Cyberpunk card</td></tr>
     </table></div>
   </section>
 
   <section class="card" id="calls">
-    <h2>The calls (P182, P185, P186)</h2>
+    <h2>The calls (P182, P185, P186, P200)</h2>
     <table>
       <tr><td class="id">1</td><td><b>Two separate initiatives,</b> each with its own packet, collection, approval record and album</td></tr>
       <tr><td class="id">2</td><td><b>The pilots' album is built by the album code</b> from a local <code>album.json</code>; the hand-written page is kept in <code>_retired-gallery-code/</code></td></tr>
@@ -195,6 +245,12 @@
       <tr><td class="id">9</td><td><b>Off duty:</b> no armour, helmet, weapon, emitter or Hold mark; her accent leads, her faction in one small piece</td></tr>
       <tr><td class="id">10</td><td><b>One album code for both enemy collections:</b> <code>enemy-album.mjs</code> takes the collection, its words say the noun and the empty line</td></tr>
       <tr><td class="id">11</td><td><b>Casual looks publish</b> to Uma Enemy Art, first in her group beside her armour looks (EA3, P186), on the owner's word</td></tr>
+      <tr><td class="id">12</td><td><b>Lieutenants are the third enemy app</b> (P200): their own packet, studies, approvals and albums; blank until authoring starts</td></tr>
+      <tr><td class="id">13</td><td><b>Every cast character has a folder</b> in each app that authors her: bosses in the boss and casual apps, lieutenants in theirs, ordered as the Ranker's cast (tier, Uma)</td></tr>
+      <tr><td class="id">14</td><td><b>Her Ranker pictures are her references,</b> copied byte for byte with their hashes into her folder's <code>references/</code></td></tr>
+      <tr><td class="id">15</td><td><b>New studies go in her own folder;</b> the first bosses' earlier studies stay where they were</td></tr>
+      <tr><td class="id">16</td><td><b>The cast albums read the folders,</b> so a new picture shows on her card at once through the Local Art Gallery</td></tr>
+      <tr><td class="id">17</td><td><b><code>art:cast</code> follows the Ranker:</b> re-cast characters move with their work, nothing is deleted, leftovers are reported</td></tr>
     </table>
   </section>
 </main>

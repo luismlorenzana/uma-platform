@@ -10,7 +10,7 @@ and its SHA-256 from `enemies/approved/manifest.json`, her face and art referenc
 
 ## 2. A study
 
-Make a new versioned folder, `casual/<faction>/<enemy>-casual-v00N/`. Fill [the brief](templates/casual-brief.md): what
+Make a new versioned folder inside her casual cast folder, `casual/cast/tier-<n>/<NN>-<uma>/<boss>/v00N/` (P200), where the casual cast album shows every picture as it is saved. Fill [the brief](templates/casual-brief.md): what
 she wears, what of her faction shows, and from which inputs. One generation per image: her approved combat look first
 (likeness, proportions, rendering), then her face and art references, then the casual baseline once one is approved;
 nothing else. Save each output unchanged with the exact prompt beside it, and record each input and its hash in the

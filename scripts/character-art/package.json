@@ -10,7 +10,8 @@
     "gallery": "node --import tsx src/gallery.ts",
     "lint": "tsc --noEmit",
     "test": "node --test beach.check.mjs && vitest run",
-    "albums": "node albums/build.mjs"
+    "albums": "node albums/build.mjs",
+    "cast": "node --import tsx src/cast.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

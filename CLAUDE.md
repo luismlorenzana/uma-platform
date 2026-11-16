@@ -61,6 +61,11 @@
   **Casual clothing (P185)** is the enemies' second cycle: `docs/authoring/cyberpunk-enemies-casual`, its own collection
   and album in `enemies/casual/` (approved/manifest.json), with the bosses' pilot suits as the base of both enemy albums (P191); the same
   `art:push cyberpunk --enemies` publishes it (EA3), and Uma Enemy Art groups each faction by boss, her name as the title.
+  **Lieutenants (P200)** are the third enemy app: `docs/authoring/cyberpunk-enemies-lieutenants`, `enemies/lieutenants/`,
+  blank so far; publishing is EA4. **The cast folders (P200):** `pnpm art:cast cyberpunk` (after `ranker:pull`) gives every
+  boss and lieutenant cast in the Ranker a folder in each app that authors her, `<app>/cast/tier-<n>/<NN>-<uma>/<enemy>/`,
+  with her Ranker references and `character.json`; studies go there, and each app's cast album (`<app>/cast/review.html`,
+  built fresh by `art:gallery`) shows every picture as it is added. It never deletes; re-cast characters move with their work.
 - **Uma Story:** [docs/platform-app/story.md](docs/platform-app/story.md) (P141, AP53–AP72, US1–US4): one Story App,
   the app's third sub-app (US1 live, P149: https://uma-platform.web.app/story), with three books (Cast, Quest, Farm) on
   one shared cast. Each game's story is

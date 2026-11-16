@@ -35,10 +35,43 @@ export interface GalleryRow {
   enemies: EnemyRow | null
   /** The casual enemy album (P185), counted the same way. */
   casual: EnemyRow | null
+  /** The lieutenants' album (P200), counted the same way. */
+  lieutenants: EnemyRow | null
+  /** Each enemy app's cast album (P200): how many characters are cast there, how many have pictures, and its page. */
+  casts: CastRow[]
   /** Each character's own collection (P174): her approved looks, how many are published, her portraits, her album. */
   characters: { key: string; name: string; approved: number; published: number; portraits: { state: string; states: number } | null; page: string | null }[]
 }
 export interface EnemyRow { approved: number; published: number; publishedAt: string | null; page: string | null }
+export interface CastRow { app: string; title: string; characters: number; withWork: number; page: string }
+const PICTURE = /\.(png|webp|jpe?g)$/i
+/** Whether a character's folder holds any picture besides her references. */
+function hasWork(folder: string, depth = 0): boolean {
+  if (depth > 5) return false
+  return readdirSync(folder, { withFileTypes: true }).some((e) => (e.isDirectory() ? !(depth === 0 && e.name === 'references') && !e.name.startsWith('.') && hasWork(join(folder, e.name), depth + 1) : PICTURE.test(e.name)))
+}
+/** The enemy apps' cast albums of a universe (P200): each app folder with a cast/album.json, its characters counted. */
+function castRows(base: string, universe: string): CastRow[] {
+  const rows: CastRow[] = []
+  for (const app of ['enemies', 'enemies/casual', 'enemies/lieutenants']) {
+    const cast = join(base, universe, ...app.split('/'), 'cast')
+    if (!existsSync(join(cast, 'album.json'))) continue
+    const words = JSON.parse(readFileSync(join(cast, 'album.json'), 'utf8')) as { title?: string; plural?: string }
+    const folders: string[] = []
+    const walk = (dir: string, depth: number) => {
+      if (depth > 4) return
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        if (!e.isDirectory() || e.name.startsWith('.') || e.name === 'references') continue
+        const folder = join(dir, e.name)
+        if (existsSync(join(folder, 'character.json'))) folders.push(folder)
+        else walk(folder, depth + 1)
+      }
+    }
+    walk(cast, 0)
+    rows.push({ app, title: words.plural ?? 'characters', characters: folders.length, withWork: folders.filter((f) => hasWork(f)).length, page: `/${universe}/${app}/cast/${GALLERY}` })
+  }
+  return rows
+}
 /** An enemy collection's numbers (`enemies`, or `enemies/casual`, P185): its owner-approved looks, the published ones, its album. */
 function enemyRow(base: string, universe: string, collection: string): EnemyRow | null {
   const dir = join(base, universe, ...collection.split('/'), 'approved')
@@ -68,6 +101,8 @@ export function galleryRows(base: string): GalleryRow[] {
       portraits: p ? { state: p.state, states: p.states, bases: p.bases, faces: p.faces, publishedAt: p.publishedAt } : null,
       enemies: enemyRow(base, universe, 'enemies'),
       casual: enemyRow(base, universe, 'enemies/casual'),
+      lieutenants: enemyRow(base, universe, 'enemies/lieutenants'),
+      casts: castRows(base, universe),
       splash: scenes ? { approved: Array.isArray(scenes.assets) ? scenes.assets.length : 0, published: shown?.counts.published ?? 0, publishedAt: shown?.publishedAt ?? null } : null,
       characters: characterStudies(join(base, universe)).map((study) => {
         const read = <T>(f: string): T | null => (existsSync(join(study.folder, f)) ? JSON.parse(readFileSync(join(study.folder, f), 'utf8')) as T : null)
@@ -103,7 +138,9 @@ export function indexPage(base: string, site: string): string {
         : en.published > 0 ? `<span class="pub part">${en.published} of ${en.approved} in Uma Enemy Art</span>` : '<span class="pub none">Not published</span>'
       return `<p><b>${en.approved}</b> approved ${noun}${en.approved === 1 ? '' : 's'} ${flag}${en.publishedAt && en.published ? ` <span class="when">${en.publishedAt.slice(0, 10)}</span>` : ''}${en.page ? ` · <a href="${en.page}">Open the ${album}</a>` : ''}</p>`
     }
+    const castLine = (c: CastRow) => `<p data-cast="${c.app}"><b>${c.characters}</b> ${escape(c.title)} cast in <code>${escape(c.app)}/</code> · ${c.withWork} with pictures · <a href="${c.page}">Open the cast album</a></p>`
     const enemies = enemyLine(r.enemies, 'enemy look', 'enemy album') + enemyLine(r.casual, 'casual enemy look', 'casual album')
+      + enemyLine(r.lieutenants, 'lieutenant look', 'lieutenants\' album') + r.casts.map(castLine).join('')
     const sp = r.splash
     const splash = sp ? `<p><b>${sp.approved}</b> splash images ${sp.published === sp.approved && sp.approved > 0 ? `<span class="pub">All ${sp.approved} published</span>` : sp.published > 0 ? `<span class="pub part">${sp.published} of ${sp.approved} published</span>` : '<span class="pub none">Not published</span>'} · <a href="/${r.universe}/splash-art/${GALLERY}">Open them</a></p>` : ''
     const portraits = q ? `<p><b>${q.states}</b> dialogue portrait states ${q.state === 'published' ? `<span class="pub">Published as ${q.bases + q.faces} pieces</span>${q.publishedAt ? ` <span class="when">${q.publishedAt.slice(0, 10)}</span>` : ''}` : `<span class="pub ${q.state === 'changed' ? 'part' : 'none'}">${q.state === 'changed' ? 'Changed since published' : 'Not published'}</span>`} · <a href="/${r.universe}/dialogue-portraits/${GALLERY}">Open them</a></p>` : ''
