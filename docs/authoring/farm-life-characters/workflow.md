@@ -113,6 +113,8 @@ Extract a square edit target from the new character's spring crop and record its
 
 Review those layers on unchanged Spring, then use a contrasting outfit such as Winter to check reuse. Do not redraw the head or whole bust to obtain an expression. Measure translation on the neutral outfit faces, keep eye/brow/mouth replacements fully opaque, and verify zero outside-mask changes. Save a small proof or sheet for seams and leftover neutral features; a separate image for every combination is unnecessary. With a full pass authorized, resolve this proof internally and continue without an extra approval pause.
 
+Inspect the exported transparent face itself on a checkerboard and light/dark backgrounds before expanding the set. It needs a continuous, softly feathered facial field with fully opaque feature guards, not only disconnected or rectangular feature patches. Measure skin continuity regions on this character so gaps through the nose or cheeks fail verification. Repeat the export check for all fifteen layers; see [mask construction](dialogue-portraits.md#masks-must-replace-old-and-new-features).
+
 The proof is an opportunity to resolve face drift, mask coverage or framing once. It is not an excuse to assume a universal face across different characters. Each character gets her own fifteen layers and masks. If a later outfit needs scaling, rotation or extensive skin repainting to fit, diagnose the full-body model or hairstyle mismatch rather than quietly stretching the approved face.
 
 ## 7. Finish the sixteen accepted states
