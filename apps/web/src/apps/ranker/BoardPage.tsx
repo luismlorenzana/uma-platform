@@ -3,8 +3,8 @@
 // boards: their tiers, 0 unranks), Backspace unranks, arrows browse, [ ] move one place, Shift+[ ] a whole tier, D makes an
 // outfit her default, Cmd/Ctrl+Z undoes, / searches. Cards drag between rows on desktop.
 import {
-  boardOf, BOARDS, ordered, parseBoard, pools, setDefaultOutfit, setNote, setTier, shift, tierStep, tiersOf, WAYS, place, outfitIndex, identityByOutfit,
-  type AnyTier, type BoardId, type BoardState, type Way,
+  boardOf, BOARDS, CATEGORIES, ordered, parseBoard, pools, setDefaultOutfit, setNote, setTier, shift, tierStep, tiersOf, WAYS, place, outfitIndex, identityByOutfit,
+  type AnyTier, type BoardId, type BoardState, type Category, type Way,
 } from '@uma-platform/tiers'
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button, Chip, Sheet } from '@luismlorenzana/uma-kit/ui'
@@ -49,6 +49,8 @@ export function BoardPage() {
   const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState('')
   const [way, setWay] = useState<Way | 'all'>('all')
+  /** An enemy's role in its own game (Azur Lane's Boss, Sub-boss, Key enemy, Regular): the board's role filter. */
+  const [role, setRole] = useState<Category | 'all'>('all')
   const [onlyUnranked, setOnlyUnranked] = useState(false)
   const [dropAt, setDropAt] = useState<string | null>(null)
   /** Playable Umas' F row starts collapsed (P133). */
@@ -66,13 +68,15 @@ export function BoardPage() {
   const byId = useMemo(() => new Map(list.map((i) => [i.id, i])), [list])
   const poolIds = useMemo(() => new Set(list.map((i) => i.id)), [list])
   const tiers = board ? tiersOf(id) : []
-  const shown = (i: Item) => matches(i, query, way)
+  const shown = (i: Item) => matches(i, query, way, role)
+  /** The roles this board's units have in their games, when there are several (Azur Lane's), in the catalog's order. */
+  const roles = useMemo(() => { const has = new Set(list.map((i) => i.category)); return has.size > 1 ? CATEGORIES.filter((c) => has.has(c.id)) : [] }, [list])
   const rows = useMemo(() => {
     if (!state) return []
     const ranked = ordered(state, poolIds)
     return tiers.map((t) => ({ tier: t, items: ranked.filter((e) => e.tier === t.id).map((e) => byId.get(e.id)!).filter(shown) }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, poolIds, byId, query, way, id])
+  }, [state, poolIds, byId, query, way, role, id])
   const tierOf = useMemo(() => new Map(state?.entries.map((e) => [e.id, e.tier]) ?? []), [state])
   /** Every tier's cards, ignoring the filters: what each count says. */
   const totals = useMemo(() => new Map(tiers.map((t) => [t.id, list.filter((i) => tierOf.get(i.id) === t.id)])), [tiers, list, tierOf])
@@ -82,7 +86,7 @@ export function BoardPage() {
     const ranked = new Set(list.filter((i) => tierOf.get(i.id)).map((i) => i.identity ?? i.id))
     return new Set(allUnranked.map((i) => i.identity ?? i.id).filter((x) => !ranked.has(x))).size
   }, [list, tierOf, allUnranked])
-  const unranked = useMemo(() => list.filter((i) => !tierOf.get(i.id) && shown(i)), [list, tierOf, query, way]) // eslint-disable-line react-hooks/exhaustive-deps
+  const unranked = useMemo(() => list.filter((i) => !tierOf.get(i.id) && shown(i)), [list, tierOf, query, way, role]) // eslint-disable-line react-hooks/exhaustive-deps
   const leftOut = useMemo(() => (data && board?.franchise && state?.out ? items(id, state.out.map((o) => ({ id: o, via: null, viaTier: null })), data.catalog, data.profiles) : []), [data, board, state, id])
   const visible = useMemo(() => [...(onlyUnranked ? [] : rows.filter((r) => r.tier.id !== 'F' || id !== 'umas' || showF).flatMap((r) => r.items)), ...unranked], [rows, unranked, onlyUnranked, showF, id])
   const current = selected ? byId.get(selected) ?? leftOut.find((i) => i.id === selected) ?? null : null
@@ -197,6 +201,12 @@ export function BoardPage() {
                 <div className="flex flex-wrap gap-1" role="group" aria-label="Playstyle">
                   <Chip selected={way === 'all'} onClick={() => setWay('all')}>Every playstyle</Chip>
                   {WAYS.map((w) => <Chip key={w.id} selected={way === w.id} onClick={() => setWay(w.id)}>{w.label}</Chip>)}
+                </div>
+              )}
+              {roles.length > 0 && (
+                <div className="flex flex-wrap gap-1" role="group" aria-label="Role in its game">
+                  <Chip selected={role === 'all'} onClick={() => setRole('all')}>Every role</Chip>
+                  {roles.map((c) => <Chip key={c.id} selected={role === c.id} onClick={() => setRole(role === c.id ? 'all' : c.id)}>{c.label} ({list.filter((i) => i.category === c.id).length})</Chip>)}
                 </div>
               )}
               <Chip selected={onlyUnranked} onClick={() => setOnlyUnranked((v) => !v)}>Unranked only</Chip>

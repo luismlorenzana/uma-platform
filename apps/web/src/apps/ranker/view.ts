@@ -70,9 +70,10 @@ export function items(board: BoardId, pool: readonly PoolMember[], catalog: Tier
   })
 }
 
-/** Does an item pass the board's filters? */
-export function matches(item: Item, query: string, way: Way | 'all'): boolean {
+/** Does an item pass the board's filters: the search, the playstyle, and an enemy's role in its own game? */
+export function matches(item: Item, query: string, way: Way | 'all', role: Category | 'all' = 'all'): boolean {
   if (way !== 'all' && item.way !== way) return false
+  if (role !== 'all' && item.category !== role) return false
   const q = query.trim().toLowerCase()
   return !q || item.name.toLowerCase().includes(q) || item.line.toLowerCase().includes(q) || item.id.includes(q)
 }
