@@ -18,7 +18,7 @@ export interface EnemyLook {
   approvedOn: string | null
   publishedAt: string | null
   /** Her armour and combat looks, her casual collection's (EA3), or one both albums hold, the base of both (P191). */
-  kind: 'combat' | 'casual' | 'base'
+  kind: 'combat' | 'casual' | 'base' | 'lieutenant'
 }
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame { id: string; title: string; publishedAt: string | null; factions: EnemyFaction[] }
@@ -32,20 +32,22 @@ export interface GameTab { id: string; title: string; game: EnemyGame | null; lo
 export const lookCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + f.looks.length, 0)
 
 /** One enemy's looks in her faction: the group the page titles with her name (P186). */
-export interface Boss { name: string; looks: EnemyLook[] }
+export interface Boss { name: string; looks: EnemyLook[]; role: 'boss' | 'lieutenant' }
 /** A faction's enemies in the order they first appear, each with her looks: her base first (P191), then her casual ones,
  *  then her armour looks, each in the published order. */
 export function bossesOf(faction: EnemyFaction): Boss[] {
   const out: Boss[] = []
   for (const look of faction.looks) {
-    const boss = out.find((b) => b.name === look.character) ?? (out.push({ name: look.character, looks: [] }), out[out.length - 1]!)
+    const boss = out.find((b) => b.name === look.character) ?? (out.push({ name: look.character, looks: [], role: 'boss' }), out[out.length - 1]!)
     boss.looks.push(look)
   }
-  const rank = { base: 0, casual: 1, combat: 2 } as const
-  for (const boss of out) boss.looks = [...boss.looks].sort((a, b) => rank[a.kind] - rank[b.kind])
-  return out
+  const rank = { base: 0, casual: 1, combat: 2, lieutenant: 2 } as const
+  for (const boss of out) { boss.looks = [...boss.looks].sort((a, b) => rank[a.kind] - rank[b.kind]); if (boss.looks.every((l) => l.kind === 'lieutenant')) boss.role = 'lieutenant' }
+  // A faction's bosses first, then its lieutenants (EA4), each in the order they first appear.
+  return [...out.filter((b) => b.role === 'boss'), ...out.filter((b) => b.role === 'lieutenant')]
 }
-export const bossCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).length, 0)
+export const bossCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).filter((b) => b.role === 'boss').length, 0)
+export const lieutenantCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).filter((b) => b.role === 'lieutenant').length, 0)
 
 /** A tab for each game with enemies, published or not, then one for any other game that is published. */
 export function gameTabs(games: readonly EnemyGame[]): GameTab[] {

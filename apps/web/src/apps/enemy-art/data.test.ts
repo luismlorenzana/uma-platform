@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bossCount, bossesOf, chosenTab, gameTabs, lookCount, plural, type EnemyGame, type EnemyLook } from './data'
+import { bossCount, bossesOf, chosenTab, gameTabs, lieutenantCount, lookCount, plural, type EnemyGame, type EnemyLook } from './data'
 
 // Invented enemies only.
 const look = (id: string, faction: string, character = `Foe ${id}`, kind: EnemyLook['kind'] = 'combat'): EnemyLook => ({
@@ -16,6 +16,11 @@ describe('Uma Enemy Art’s bosses (P186)', () => {
     const faction = { id: 'red-guild', title: 'The Red Guild', looks: [look('a-armor', 'red-guild', 'Foe A'), look('b-armor', 'red-guild', 'Foe B'), look('a-helm', 'red-guild', 'Foe A'), look('a-jeans', 'red-guild', 'Foe A', 'casual'), look('a-suit', 'red-guild', 'Foe A', 'base')] }
     expect(bossesOf(faction).map((b) => [b.name, b.looks.map((l) => l.id)])).toEqual([['Foe A', ['a-suit', 'a-jeans', 'a-armor', 'a-helm']], ['Foe B', ['b-armor']]])
     expect(bossCount({ id: 'g', title: 'G', publishedAt: null, factions: [faction] })).toBe(2)
+    // A lieutenant's group comes after the bosses' (EA4).
+    const withLt = { ...faction, looks: [look('c-suit', 'red-guild', 'Foe C', 'lieutenant'), ...faction.looks] }
+    expect(bossesOf(withLt).map((b) => [b.name, b.role])).toEqual([['Foe A', 'boss'], ['Foe B', 'boss'], ['Foe C', 'lieutenant']])
+    const g = { id: 'g', title: 'G', publishedAt: null, factions: [withLt] }
+    expect([bossCount(g), lieutenantCount(g)]).toEqual([2, 1])
   })
 })
 

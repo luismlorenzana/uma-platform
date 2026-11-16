@@ -3,7 +3,8 @@
 Use this packet to author the **lieutenants**: the three enemies who serve each boss, cast against each Uma in the Ranker
 (the cast page's Sub-bosses). It is the enemy art's third app (P200), beside the bosses' armour looks
 ([enemy packet](../cyberpunk-enemies/README.md)) and their casual looks ([casual packet](../cyberpunk-enemies-casual/README.md)):
-its own studies, approvals and album. Nothing is authored yet.
+its own studies, approvals and album. Its first approved looks are one lieutenant's four, moved from the bosses' side
+when the cast made her a lieutenant (P201); every other lieutenant is still to author.
 [Desktop page](../previews/cyberpunk-authoring.html) (every Cyberpunk cycle on one page).
 
 **Names stay local (P179).** A lieutenant's id can be a franchise character's name, so this packet, its templates and the
@@ -56,8 +57,9 @@ her folder ─► study (v00N) ─► cast album ─► owner's verdict ─► c
                change a round)  picture)       date, scope)       (byte for byte, SHA-256)    cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing to Uma Enemy Art comes later (EA4): each lieutenant shown
-with the boss she serves, published by Claude on the owner's word. Nothing here is backed up.
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm art:push cyberpunk
+--enemies` sends the lieutenants' looks with the bosses' (EA4, P201), and Uma Enemy Art shows each lieutenant in her
+faction under her own name, labelled Lieutenant. Nothing here is backed up.
 
 ## The cast folders
 

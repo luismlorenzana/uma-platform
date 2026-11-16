@@ -53,8 +53,9 @@ if (enemies) {
     refusedEnemies += r.refused.filter((l) => l.kind === 'damaged').length
     // Each album's own flags: a look both albums hold (P190) counts in each.
     const line = (name: string, c: Record<string, number>) => `${name} ${c.published} published, ${c.changed} changed, ${c.unpublished} not published, ${c.refused} refused`
-    const casualCounts = enemySlice(r.publication, 'casual').counts
-    console.log(`  Flags: ${line('enemy album', enemySlice(r.publication, null).counts)}${casualCounts.published + casualCounts.changed + casualCounts.unpublished + casualCounts.refused ? `; ${line('casual album', casualCounts)}` : ''}${r.flagged.length ? `; wrote ${r.flagged.join(', ')}` : ''}`)
+    const albums = [['enemy album', null], ['casual album', 'casual'], ['lieutenants\' album', 'lieutenants']] as const
+    const lines = albums.map(([name, c]) => [name, enemySlice(r.publication, c).counts] as const).filter(([name, c]) => name === 'enemy album' || c.published + c.changed + c.unpublished + c.refused)
+    console.log(`  Flags: ${lines.map(([name, c]) => line(name, c)).join('; ')}${r.flagged.length ? `; wrote ${r.flagged.join(', ')}` : ''}`)
   }
   if (refusedEnemies) process.exitCode = 1
   process.exit()

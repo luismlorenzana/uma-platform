@@ -173,6 +173,27 @@ describe('pnpm art:push <universe> --enemies (EA1)', () => {
     expect(readFileSync(join(c, 'review.html'), 'utf8')).toContain('<script src="publication.js"></script><script src="../../../../publication-flag.js"></script>')
   })
 
+  it('sends the lieutenants’ collection in the same push, each of its looks marked lieutenant, with its own flags (EA4)', () => {
+    const base = temp(), dir = collection(base, 'neon-city', FOES.slice(0, 1)), bucket = fakeRemote()
+    const lt = join(dir, '..', 'lieutenants', 'approved')
+    const bytes = png(32, 48, 'a lieutenant')
+    mkdirSync(join(lt, 'red-guild', 'red-two'), { recursive: true })
+    writeFileSync(join(lt, 'red-guild', 'red-two', 'suit.png'), bytes)
+    writeFileSync(join(lt, 'manifest.json'), JSON.stringify({ assets: [
+      { id: 'red-two-suit', character: 'Red Two', faction: 'red-guild', unitId: 'unit-red-two', look: 'suit', image: 'red-guild/red-two/suit.png', sha256: sha(bytes), width: 32, height: 48, approval: APPROVED },
+      { id: 'red-one-station', character: 'Red One', faction: 'red-guild', look: 'suit', image: 'red-guild/red-two/suit.png', sha256: sha(bytes), width: 32, height: 48, approval: APPROVED },
+    ] }))
+    writeFileSync(join(lt, 'album.json'), JSON.stringify({ looks: { suit: 'Pilot suit' } }))
+    writeFileSync(join(lt, 'review.html'), '<html><body><figure><img src="red-guild/red-two/suit.png"></figure></body></html>')
+    pushEnemies('neon-city', dir, temp(), bucket.remote, T1)
+    expect(bucket.index().looks.map((l) => [l.id, l.kind ?? 'combat', l.title])).toEqual([['red-one-station', 'combat', 'Station uniform'], ['red-two-suit', 'lieutenant', 'Pilot suit']])
+    const record = JSON.parse(readFileSync(join(lt, 'publication.json'), 'utf8')) as EnemyPublication
+    // Only a casual look may share an enemy-album id; a lieutenant's is refused.
+    expect([record.noun, record.looks.map((l) => [l.id, l.state])]).toEqual(['lieutenant looks', [['red-two-suit', 'published'], ['red-one-station', 'refused']]])
+    expect(readFileSync(join(lt, 'review.html'), 'utf8')).toContain('<script src="../../../../publication-flag.js"></script>')
+    expect(existsSync(join(dir, '..', 'casual', 'approved', 'publication.json'))).toBe(false)
+  })
+
   it('plans a kept look’s faction with its old title when the album no longer names it', () => {
     const base = temp(), dir = collection(base, 'neon-city', FOES.slice(0, 2))
     const c = readEnemies('neon-city', dir)

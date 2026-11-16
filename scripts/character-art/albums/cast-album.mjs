@@ -4,7 +4,9 @@
 // is, the Uma she opposes, her references) and references/ (the Ranker's pictures of her). Every other picture under her
 // folder is her work, newest first. Her approved looks come from the app's approved/manifest.json (matched by her unit
 // id), badged Approved, and Published when the app's publication.json says so; a work picture identical to an approved
-// one is badged with it. The page's words come from cast/album.json beside it (title, header, footer, noun, plural, empty;
+// one is badged with it. When album.json names a leadLook (the pilot suit's key, P201), a character with an approved look of
+// that key shows it as her card's picture, her Ranker reference one link away. The page's words come from cast/album.json
+// beside it (title, header, footer, noun, plural, empty, leadLook;
 // {characters}, {umas}, {withWork}, {approved}, {published}, {revision}); names come from each character.json. Nothing
 // here names a character, faction or franchise.
 import { createHash } from 'node:crypto'
@@ -24,6 +26,7 @@ const CAST_CSS = '.tier{margin-top:30px}.umas{display:grid;grid-template-columns
   + '.char[data-state=work] .state{background:#fdf0d5;color:#8a5300}.char[data-state=approved] .state{background:#e7eddf;color:#4e6947}.char[data-state=published] .state{background:#e1ecfb;color:#1d4f91}'
   + '.thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:0 10px 10px}.thumbs a{position:relative;display:block;background:#eee5d8;border-radius:6px;overflow:hidden;aspect-ratio:2/3}'
   + '.thumbs img{width:100%;height:100%;object-fit:contain}.tag{position:absolute;left:3px;bottom:3px;font-size:9px;text-transform:uppercase;letter-spacing:.06em;padding:2px 4px;border-radius:3px;background:#e7eddf;color:#4e6947}'
+  + '.char .ref{position:relative}.char .ref .tag{left:6px;bottom:6px;font-size:10px}'
   + '.tag.pub{background:#e1ecfb;color:#1d4f91}.tag.new{background:#fdf0d5;color:#8a5300}@media(max-width:620px){.umas{grid-template-columns:1fr}.chars{grid-template-columns:repeat(min(var(--n,1),2),minmax(0,1fr))}}'
 
 /** A path relative to the page, each part URL-encoded. */
@@ -84,12 +87,15 @@ export async function renderCastAlbum(appDir) {
       if (approved.length && approvedHashes.has(await sha256Of(w.file, w.stat))) continue
       work.push(path.relative(castDir, w.file).split(path.sep).join('/'))
     }
+    // Her lead look (the album's leadLook, her pilot suit), when one is approved, is her card's picture.
+    const lead = text.leadLook ? approved.find((a) => a.look === text.leadLook) ?? null : null
+    const badge = (a) => ({ tag: published.has(a.id) ? 'Published' : 'Approved', cls: published.has(a.id) ? 'tag pub' : 'tag' })
     const shown = [
-      ...approved.map((a) => ({ src: `../approved/${a.image}`, tag: published.has(a.id) ? 'Published' : 'Approved', cls: published.has(a.id) ? 'tag pub' : 'tag', title: a.look ?? a.id })),
+      ...approved.filter((a) => a !== lead).map((a) => ({ src: `../approved/${a.image}`, ...badge(a), title: a.look ?? a.id })),
       ...work.map((w) => ({ src: w, tag: 'New', cls: 'tag new', title: w.slice(rel.length + 1) })),
     ]
     const state = approved.some((a) => published.has(a.id)) ? 'published' : approved.length ? 'approved' : work.length ? 'work' : 'empty'
-    cards.push({ record, rel, shown, state, approved: approved.length, published: approved.filter((a) => published.has(a.id)).length, work: work.length })
+    cards.push({ record, rel, shown, state, approved: approved.length, published: approved.filter((a) => published.has(a.id)).length, work: work.length, lead: lead ? { src: `../approved/${lead.image}`, title: lead.look, ...badge(lead) } : null })
   }
   // In the Ranker's order: tier, then the Uma's place in it.
   const tierNumber = (t) => Number(String(t).replace(/\D/g, '')) || 99
@@ -107,8 +113,9 @@ export async function renderCastAlbum(appDir) {
     const r = c.record, art = r.references.find((x) => x.kind === 'art') ?? r.references[0]
     const status = c.state === 'empty' ? 'No pictures yet' : [c.work ? plural(c.work, 'new picture', 'new pictures') : null, c.approved ? `${c.approved} approved` : null, c.published ? `${c.published} published` : null].filter(Boolean).join(' · ')
     const thumbs = c.shown.length ? `<div class="thumbs">${c.shown.map((s) => `<a href="${href(s.src)}" target="_blank" rel="noopener" title="${escape(s.title)}"><img src="${href(s.src)}" alt="${escape(r.name)}: ${escape(s.title)}" loading="lazy"><span class="${s.cls}">${s.tag}</span></a>`).join('')}</div>` : ''
-    return `<figure class="char" data-id="${escape(r.id)}" data-state="${c.state}">`
-      + (art ? `<a class="ref" href="${href(`${c.rel}/${art.file}`)}" target="_blank" rel="noopener"><img src="${href(`${c.rel}/${art.file}`)}" alt="${escape(r.name)}, her Ranker reference" loading="lazy"></a>` : '')
+    return `<figure class="char" data-id="${escape(r.id)}" data-state="${c.state}"${c.lead ? ' data-lead="look"' : ''}>`
+      + (c.lead ? `<a class="ref" href="${href(c.lead.src)}" target="_blank" rel="noopener"><img src="${href(c.lead.src)}" alt="${escape(r.name)}: ${escape(c.lead.title)}" loading="lazy"><span class="${c.lead.cls}">${c.lead.tag}</span></a>`
+        : art ? `<a class="ref" href="${href(`${c.rel}/${art.file}`)}" target="_blank" rel="noopener"><img src="${href(`${c.rel}/${art.file}`)}" alt="${escape(r.name)}, her Ranker reference" loading="lazy"></a>` : '')
       + `<figcaption><strong>${escape(r.name)}</strong><span class="meta">${escape([r.franchise, r.rankerTier, r.id].filter(Boolean).join(' · '))}</span>`
       + `<span class="refs">${r.references.map((x) => `<a href="${href(`${c.rel}/${x.file}`)}" target="_blank" rel="noopener">${escape(x.kind)}</a>`).join('')}<a href="${href(`${c.rel}/character.json`)}" target="_blank" rel="noopener">record</a></span>`
       + `<span class="state">${escape(status)}</span></figcaption>${thumbs}</figure>`

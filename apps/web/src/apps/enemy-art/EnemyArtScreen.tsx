@@ -2,14 +2,14 @@
 // (the owner: "approved enemy looks should go into a completely new section"). A tab for each game with enemies, Uma
 // Cyberpunk first and Uma Quest next; in each, the factions in their published order, and in a faction each boss under
 // her own name (P186) with her looks: her base first, the pilot suit both enemy albums hold (P191), then her casual ones
-// (EA3), then her armour looks. A look opens full size. Each PNG
+// (EA3), then her armour looks; then the faction's lieutenants, each under her own name (EA4, P201). A look opens full size. Each PNG
 // is read through this sub-app's pack route, checked against its hash and kept on the device.
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button } from '@luismlorenzana/uma-kit/ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { lookUrl } from './content'
-import { bossCount, bossesOf, chosenTab, day, gameTabs, loadGames, lookCount, plural, type EnemyFaction, type EnemyGame, type EnemyLook } from './data'
+import { bossCount, bossesOf, chosenTab, day, gameTabs, lieutenantCount, loadGames, lookCount, plural, type EnemyFaction, type EnemyGame, type EnemyLook } from './data'
 
 const bosses = (n: number) => `${n} boss${n === 1 ? '' : 'es'}`
 
@@ -64,7 +64,7 @@ function LookCard({ look, onOpen }: { look: EnemyLook; onOpen: () => void }) {
       <figcaption className="flex flex-col gap-0.5 p-2">
         <span className="flex items-center gap-1.5 text-sm font-semibold leading-tight">
           {look.title}
-          {look.kind !== 'combat' && <span className="rounded-full bg-sunken px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">{look.kind === 'base' ? 'Base' : 'Casual'}</span>}
+          {(look.kind === 'base' || look.kind === 'casual') && <span className="rounded-full bg-sunken px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">{look.kind === 'base' ? 'Base' : 'Casual'}</span>}
         </span>
         <span className="text-[10px] leading-tight text-ink-faint">approved {day(look.approvedOn)} · published {day(look.publishedAt)}</span>
       </figcaption>
@@ -77,19 +77,20 @@ function Game({ game, onOpen }: { game: EnemyGame; onOpen: (look: EnemyLook, fac
   const looks = lookCount(game)
   return (
     <div className="flex flex-col gap-6" data-testid="enemy-game" data-game={game.id}>
-      <p className="text-sm text-ink-soft">{plural(looks, 'approved enemy look')} of {bosses(bossCount(game))} in {plural(game.factions.length, 'faction')} · published {day(game.publishedAt)}</p>
+      <p className="text-sm text-ink-soft">{plural(looks, 'approved enemy look')} of {bosses(bossCount(game))}{lieutenantCount(game) ? ` and ${plural(lieutenantCount(game), 'lieutenant')}` : ''} in {plural(game.factions.length, 'faction')} · published {day(game.publishedAt)}</p>
       {game.factions.map((faction) => {
         const group = bossesOf(faction)
         return (
           <section key={faction.id} className="flex flex-col gap-3" data-faction={faction.id}>
             <header className="flex items-baseline gap-2 border-b border-hairline pb-1">
               <h2 className="font-display text-lg font-bold">{faction.title}</h2>
-              <span className="ml-auto text-xs text-ink-soft">{bosses(group.length)} · {plural(faction.looks.length, 'look')}</span>
+              <span className="ml-auto text-xs text-ink-soft">{[group.some((b) => b.role === 'boss') ? bosses(group.filter((b) => b.role === 'boss').length) : null, group.some((b) => b.role === 'lieutenant') ? plural(group.filter((b) => b.role === 'lieutenant').length, 'lieutenant') : null, plural(faction.looks.length, 'look')].filter(Boolean).join(' · ')}</span>
             </header>
             {group.map((boss) => (
-              <div key={boss.name} className="flex flex-col gap-2" data-boss={boss.name}>
+              <div key={boss.name} className="flex flex-col gap-2" data-boss={boss.name} data-role={boss.role}>
                 <h3 className="flex items-baseline gap-2 font-display text-base font-bold">
                   {boss.name}
+                  {boss.role === 'lieutenant' && <span className="rounded-full bg-sunken px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wide text-ink-soft">Lieutenant</span>}
                   <span className="text-xs font-normal text-ink-soft">{plural(boss.looks.length, 'look')}</span>
                 </h3>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-5">

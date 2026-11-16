@@ -254,6 +254,12 @@ describe('a cast album (P200)', () => {
     expect(page.html).toContain('href="tier-1/01-rider-1/foe-a/v001/images/first%20try.png"')
     expect(page.html).not.toContain('v002/images/kept.png')
     expect(page.html).toContain('<p>3 lieutenants against 3 Umas: 1 with pictures, 1 approved, 1 published</p>')
+    // With a leadLook, her approved look of that key is her card's picture, not among the thumbnails (P201).
+    const words = JSON.parse(readFileSync(join(app, 'cast', 'album.json'), 'utf8')); words.leadLook = 'station'; put(join(app, 'cast', 'album.json'), words)
+    const led = await renderCastAlbum(app)
+    expect(led.html).toContain('data-id="foe-a" data-state="published" data-lead="look"><a class="ref" href="../approved/f/foe-a/look.png" target="_blank" rel="noopener"><img src="../approved/f/foe-a/look.png" alt="Foe A: station" loading="lazy"><span class="tag pub">Published</span></a>')
+    expect(led.html.split('../approved/f/foe-a/look.png').length - 1).toBe(2)
+    expect(led.html).toContain('data-id="foe-b" data-state="empty"><a class="ref" href="tier-1/02-rider-2/foe-b/references/art.webp"')
   })
 
   it('is found in its app folder, and the command builds it with the rest', async () => {

@@ -9,7 +9,8 @@
 // EA3 (P186): the casual collection beside it, `enemies/casual/approved/` (P185), goes up in the same push and the same
 // index, each of its looks marked `kind: "casual"`, with its own flags in the casual album. A look both albums hold with
 // the same id and picture (the bosses' pilot suits, the base of both cycles, P191) is published once, marked `kind: "base"`,
-// and flagged in both albums.
+// and flagged in both albums. EA4 (P201): the lieutenants' collection, `enemies/lieutenants/approved/` (P200), goes up in the
+// same push too, each of its looks marked `kind: "lieutenant"`, with its own flags in the lieutenants' album.
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative, resolve } from 'node:path'
@@ -35,6 +36,14 @@ const readJson = (file: string): unknown => (existsSync(file) ? JSON.parse(readF
 export const enemiesDir = (universe: string, base = authoring): string => join(base, universe, 'enemies', 'approved')
 /** The casual collection beside an enemy collection (P185): `enemies/casual/approved/`. */
 export const casualOf = (dir: string): string => resolve(dir, '..', 'casual', 'approved')
+/** The lieutenants' collection beside an enemy collection (P200): `enemies/lieutenants/approved/`. */
+export const lieutenantsOf = (dir: string): string => resolve(dir, '..', 'lieutenants', 'approved')
+/** The collections a push reads beside the bosses' own, the flag record each keeps, and the kind each look carries. */
+const OTHERS = [
+  { collection: 'casual', at: casualOf, kind: 'casual', noun: 'casual looks' },
+  { collection: 'lieutenants', at: lieutenantsOf, kind: 'lieutenant', noun: 'lieutenant looks' },
+] as const
+const collectionOf = (kind: ApprovedEnemy['kind']): string | null => OTHERS.find((o) => o.kind === kind)?.collection ?? null
 /** The universes with an approved enemy collection. */
 export function enemyUniverses(base = authoring): string[] {
   if (!existsSync(base)) return []
@@ -57,8 +66,8 @@ export interface ApprovedEnemy {
   width: number
   height: number
   approvedOn: string | null
-  /** Her armour and combat looks, or her casual collection's (EA3). */
-  kind: 'combat' | 'casual'
+  /** Her armour and combat looks, her casual collection's (EA3), or a lieutenant's (EA4). */
+  kind: 'combat' | 'casual' | 'lieutenant'
   /** The PNG on disk, whichever collection holds it. */
   file: string
   /** Both albums hold this look, with the same id and picture: the base of both cycles (P191). */
@@ -88,20 +97,21 @@ export function readEnemies(universe: string, dir: string): EnemyCollection {
   const factionNames: Record<string, unknown> = object(album) && object(album.factions) ? { ...album.factions } : {}
   const looks: ApprovedEnemy[] = [], refused: RefusedLook[] = [], order: string[] = [], seen = new Set<string>()
   const factionIds = Object.keys(factionNames).filter((f) => KEBAB.test(f))
-  const casualDir = casualOf(dir), casual = readJson(join(casualDir, MANIFEST))
-  const sources: { dir: string; assets: unknown[]; lookNames: Record<string, unknown>; kind: 'combat' | 'casual' }[] = [
+  const sources: { dir: string; assets: unknown[]; lookNames: Record<string, unknown>; kind: ApprovedEnemy['kind'] }[] = [
     { dir, assets: manifest.assets as unknown[], lookNames: object(album) && object(album.looks) ? album.looks : {}, kind: 'combat' },
   ]
-  if (object(casual) && Array.isArray(casual.assets)) {
-    const words = readJson(join(casualDir, 'album.json'))
+  for (const other of OTHERS) {
+    const otherDir = other.at(dir), record = readJson(join(otherDir, MANIFEST))
+    if (!object(record) || !Array.isArray(record.assets)) continue
+    const words = readJson(join(otherDir, 'album.json'))
     if (object(words) && object(words.factions)) for (const [k, v] of Object.entries(words.factions)) if (!(k in factionNames)) { factionNames[k] = v; if (KEBAB.test(k)) factionIds.push(k) }
-    sources.push({ dir: casualDir, assets: casual.assets as unknown[], lookNames: object(words) && object(words.looks) ? words.looks : {}, kind: 'casual' })
+    sources.push({ dir: otherDir, assets: record.assets as unknown[], lookNames: object(words) && object(words.looks) ? words.looks : {}, kind: other.kind })
   }
   for (const { dir, assets, lookNames, kind: from } of sources) for (const asset of assets) {
     if (!object(asset)) continue
     const id = text(asset.id) ?? '(no id)', given = text(asset.image)
     const image = given && /^[a-z0-9][a-z0-9._/-]{0,199}\.png$/.test(given) && !given.split('/').some((p) => p === '' || p.startsWith('.')) ? given : null
-    const refuse = (kind: RefusedLook['kind'], why: string) => { refused.push({ id, image: image ?? given, kind, why, ...(from === 'casual' ? { collection: 'casual' } : {}) }) }
+    const refuse = (kind: RefusedLook['kind'], why: string) => { const collection = collectionOf(from); refused.push({ id, image: image ?? given, kind, why, ...(collection ? { collection } : {}) }) }
     if (!KEBAB.test(id) || id.length > 80) { refuse('damaged', 'its id isn’t a lowercase name joined by hyphens'); continue }
     // The casual album may hold an enemy-album look itself, same id and picture: the base of both (P191).
     const twin = from === 'casual' && seen.has(id) ? looks.find((l) => l.id === id && l.kind === 'combat') ?? null : null
@@ -148,7 +158,7 @@ export interface PublishedEnemy {
   publishedAt: string
   /** A look of her casual collection (EA3), or one both albums hold, the base of both (P191); absent for her armour and
    *  combat looks. */
-  kind?: 'casual' | 'base'
+  kind?: 'casual' | 'base' | 'lieutenant'
 }
 /** A game's index in the bucket, `enemy-art/<game>/index.json`: exactly what Uma Enemy Art shows. */
 export interface EnemyIndex {
@@ -205,7 +215,7 @@ export function planEnemyPush(collection: EnemyCollection, remote: EnemyIndex | 
     looks.push({
       id: look.id, character: look.character, faction: look.faction, unitId: look.unitId, look: look.look, title: look.title, path: enemyPath(look), bytes: look.bytes,
       sha256: look.sha256, width: look.width, height: look.height, approvedOn: look.approvedOn, publishedAt: same ? old!.publishedAt : now,
-      ...(look.shared ? { kind: 'base' as const } : look.kind === 'casual' ? { kind: 'casual' as const } : {}),
+      ...(look.shared ? { kind: 'base' as const } : look.kind === 'casual' || look.kind === 'lieutenant' ? { kind: look.kind } : {}),
     })
   }
   const here = new Set(collection.looks.map((l) => l.id))
@@ -247,7 +257,7 @@ export interface EnemyPublication {
 export function enemyPublicationOf(collection: EnemyCollection, remote: EnemyIndex | null, now: string, bucket = BUCKET): EnemyPublication {
   const there = new Map((remote?.looks ?? []).map((l) => [l.id, l]))
   const looks: LookFlag[] = collection.looks.map((look): LookFlag => {
-    const old = there.get(look.id), from = look.kind === 'casual' ? { collection: 'casual' } : {}
+    const old = there.get(look.id), collection = collectionOf(look.kind), from = collection ? { collection } : {}
     if (old?.sha256 === look.sha256) return { id: look.id, image: look.image, state: 'published', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: null, ...from }
     if (old) return { id: look.id, image: look.image, state: 'changed', sha256: look.sha256, publishedAt: old.publishedAt, path: old.path, note: 'Approved again with another picture; a push replaces the published one.', ...from }
     return { id: look.id, image: look.image, state: 'unpublished', sha256: look.sha256, publishedAt: null, path: null, note: null, ...from }
@@ -270,7 +280,7 @@ export function enemySlice(publication: EnemyPublication, collection: string | n
   const looks = publication.looks.filter((l) => (l.collection ?? null) === collection)
   const counts: Record<LookState, number> = { published: 0, changed: 0, unpublished: 0, refused: 0 }
   for (const l of looks) counts[l.state]++
-  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [], noun: collection === 'casual' ? 'casual looks' : publication.noun }
+  return { ...publication, counts, looks, withdrawable: collection === null ? publication.withdrawable : [], noun: OTHERS.find((o) => o.collection === collection)?.noun ?? publication.noun }
 }
 
 /**
@@ -283,8 +293,13 @@ export function writeEnemyFlags(dir: string, publication: EnemyPublication): str
   const flagAt = (folder: string) => slashed(relative(folder, resolve(dir, '..', '..', '..', FLAG_FILE)))
   const at = (folder: string, f: string) => (folder === dir ? f : slashed(relative(dir, join(folder, f))))
   if (write(resolve(dir, '..', '..', '..', FLAG_FILE), FLAG_SCRIPT)) changed.push(`../../../${FLAG_FILE}`)
-  const casualDir = casualOf(dir), casual = enemySlice(publication, 'casual')
-  for (const [folder, slice] of [[dir, enemySlice(publication, null)], ...(casual.looks.length ? [[casualDir, casual] as const] : [])] as const) {
+  // Each album's record: the bosses' always; another collection's once it has looks, or when it already had a record.
+  const slices: [string, EnemyPublication][] = [[dir, enemySlice(publication, null)]]
+  for (const other of OTHERS) {
+    const folder = other.at(dir), slice = enemySlice(publication, other.collection)
+    if (slice.looks.length || existsSync(join(folder, RECORD))) slices.push([folder, slice])
+  }
+  for (const [folder, slice] of slices) {
     const recordFile = join(folder, RECORD), record = stable(recordFile, slice)
     if (write(recordFile, encode(record))) changed.push(at(folder, RECORD))
     if (write(join(folder, RECORD_SCRIPT), recordScript(record, RECORD))) changed.push(at(folder, RECORD_SCRIPT))

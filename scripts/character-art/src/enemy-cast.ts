@@ -173,6 +173,8 @@ export function castWords(app: CastApp, game: string): Record<string, unknown> {
     kind: 'cast-album',
     title: `Uma ${game[0]!.toUpperCase()}${game.slice(1)} · ${app.title} · cast`,
     noun, plural,
+    // An approved look of this key leads her card (the pilot suit, the base of every enemy app, P191, P201).
+    leadLook: 'combat-station',
     header: `<div class="eyebrow">Cast album · ${app.title}</div><h1>${app.title}: the cast</h1><p>{characters} cast against {umas} in the Ranker: {withWork} with authored pictures, {approved} with an approved look, {published} published. Each card shows her Ranker reference, then every picture added to her folder, newest first.</p><a href="../approved/review.html">The approved album</a>`,
     footer: '<footer>Cast from the Ranker (revision {revision}) · local authoring folders · refresh to see new pictures</footer>',
     empty: `No ${noun} is cast here yet: cast them on the Ranker, then run pnpm art:cast.`,

@@ -24,7 +24,7 @@ export interface EnemyLook {
   approvedOn: string | null
   publishedAt: string | null
   /** Her armour and combat looks, her casual collection's (EA3), or one both albums hold, the base of both (P191). */
-  kind: 'combat' | 'casual' | 'base'
+  kind: 'combat' | 'casual' | 'base' | 'lieutenant'
 }
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame {
@@ -55,7 +55,7 @@ function lookOf(game: string, raw: unknown): EnemyLook | null {
   const look = text(raw.look) ?? 'look'
   return {
     id, character, faction, unitId: text(raw.unitId), look, title: text(raw.title) ?? words(look), path: `${game}/${path}`, bytes, sha256, width, height,
-    approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt), kind: raw.kind === 'casual' || raw.kind === 'base' ? raw.kind : 'combat',
+    approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt), kind: raw.kind === 'casual' || raw.kind === 'base' || raw.kind === 'lieutenant' ? raw.kind : 'combat',
   }
 }
 

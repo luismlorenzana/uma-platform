@@ -62,7 +62,8 @@
   and album in `enemies/casual/` (approved/manifest.json), with the bosses' pilot suits as the base of both enemy albums (P191); the same
   `art:push cyberpunk --enemies` publishes it (EA3), and Uma Enemy Art groups each faction by boss, her name as the title.
   **Lieutenants (P200)** are the third enemy app: `docs/authoring/cyberpunk-enemies-lieutenants`, `enemies/lieutenants/`,
-  blank so far; publishing is EA4. **The cast folders (P200):** `pnpm art:cast cyberpunk` (after `ranker:pull`) gives every
+  with one lieutenant's looks so far (moved from the bosses when the cast made her one, P201); the same push publishes them
+  (EA4), labelled Lieutenant. Cast cards lead with her approved pilot suit (P201). **The cast folders (P200):** `pnpm art:cast cyberpunk` (after `ranker:pull`) gives every
   boss and lieutenant cast in the Ranker a folder in each app that authors her, `<app>/cast/tier-<n>/<NN>-<uma>/<enemy>/`,
   with her Ranker references and `character.json`; studies go there, and each app's cast album (`<app>/cast/review.html`,
   built fresh by `art:gallery`) shows every picture as it is added. It never deletes; re-cast characters move with their work.
