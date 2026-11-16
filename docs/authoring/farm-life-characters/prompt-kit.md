@@ -83,9 +83,11 @@ hair, tail, hem and footwear inside the canvas. Soft neutral daylight, opaque
 warm ivory backdrop and faint grounding shadow.
 
 Requested outfit: <key and occasion>.
-For farm-work: functional work gloves WORN ON BOTH HANDS, usable pockets,
-sturdy footwear and tail clearance. A styled protective utility apron is an
-option; describe its cut, straps, pockets and materials if selected.
+For farm-work: a PAIR OF WORK GLOVES HANGING BY THEIR CUFFS FROM THE APRON
+OR WORKWEAR UTILITY LOOP, fingertips down. BOTH HANDS ARE BARE and relaxed
+down, holding nothing. Keep usable pockets, sturdy footwear and tail clearance.
+A styled protective utility apron is optional; describe its cut, straps,
+pockets and materials if selected.
 Occasion: <venue, time of day, dress code and fashion era; describe clothing
 context only, keeping the ivory studio backdrop>.
 Design: <silhouette, neckline, sleeves, waist, length, layers, material,
