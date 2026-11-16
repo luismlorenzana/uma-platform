@@ -7,7 +7,8 @@
 - Owner approvals: selected scene IDs and hashes, exact scope and evidence:
 - Rejected, superseded or pending versions:
 - Beach spec version/hash, fresh-generation inputs, tail occlusion check, and any prior approved scene retained during replacement review:
-- Review page or image links:
+- Direct links to individual scene PNGs (default; no combined sheet required):
+- Optional review page/comparison artifact, only if requested:
 - Local album: authorization, integration status and validation:
 - Uma Character Art publication: status, if performed by the delivery session:
 - Master data/game handoff: scene IDs and moments, status if performed:
