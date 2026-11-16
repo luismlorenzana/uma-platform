@@ -47,11 +47,12 @@ history. Tests use invented records/bytes only; the sprite pipeline's local name
 - **Azur Lane and NIKKE:** `content/authoring/enemies/catalog.json`, the private schema-1 catalog imported from
   uma-rpg's enemy release (strict `assets/enemies/<id>-<kind>.<hash8>.webp` paths). The old enemy roster
   `content/authoring/enemy-art-roster.json` is history; its roles and tiers seeded the boards and show on each card.
-- **Genshin Impact, Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd and Punishing: Gray
-  Raven** (P115, P118, P120): `pnpm tiers:import <genshin|wuwa|hsr|zzz|hi3|pgr>` reads the public character lists
+- **Genshin Impact, Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero and Honkai Impact 3rd** (P115, P118, P120;
+  Punishing: Gray Raven was removed, P195): `pnpm tiers:import <genshin|wuwa|hsr|zzz|hi3>` reads the public character lists
   (Project Amber, Encore, Project Yatta with StarRailRes, Enka) and keeps the female characters (HSR by its stories'
-  pronouns plus a by-id list checked by hand); HI3 and PGR read their wikis' MediaWiki APIs (honkaiimpact3.fandom.com's
-  battlesuits, grayravens.com's frames) and keep every unit, unfiltered. Each import downloads each one's face,
+  pronouns plus a by-id list checked by hand); HI3 reads its wiki's MediaWiki API (honkaiimpact3.fandom.com's
+  battlesuits) and keeps every unit, unfiltered; the Ranker's private removed list (`ranker/catalog/removed.json`, P196)
+  keeps its cleanup off the boards whatever an import brings. Each import downloads each one's face,
   portrait and splash once into the ignored `content/authoring/enemies/.cache/`, and writes WebP references beside the others plus
   `content/authoring/enemies/imports/<franchise>.json`. Owner-supplied images go in `content/authoring/enemies/inbox/`
   with `inbox/<franchise>.json` (`{ "units": [{ "key", "name", "category", "face", "art", "splash" }] }`).

@@ -25,13 +25,14 @@ export function gcloudCommand(args: string[], platform: NodeJS.Platform = proces
   return { file: 'gcloud.cmd', args: args.map((a) => `"${a}"`), shell: true }
 }
 
-/** gcloud storage, scoped to the owner's default configuration and the games' project; never `config set`. */
-export function gcloud(args: string[], options: { allowFail?: boolean } = {}): string {
+/** gcloud storage, scoped to the owner's default configuration and the games' project; never `config set`. `input` is its stdin. */
+export function gcloud(args: string[], options: { allowFail?: boolean; input?: string } = {}): string {
   try {
     const command = gcloudCommand(['storage', ...args])
     return execFileSync(command.file, command.args, {
       env: { ...process.env, CLOUDSDK_ACTIVE_CONFIG_NAME: 'default', CLOUDSDK_CORE_PROJECT: process.env.CLOUDSDK_CORE_PROJECT ?? 'uma-rpg' },
-      stdio: ['ignore', 'pipe', options.allowFail ? 'pipe' : 'inherit'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: command.shell,
+      stdio: [options.input === undefined ? 'ignore' : 'pipe', 'pipe', options.allowFail ? 'pipe' : 'inherit'], encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: command.shell,
+      ...(options.input === undefined ? {} : { input: options.input }),
     })
   } catch (error) {
     if (options.allowFail) return ''
@@ -39,8 +40,8 @@ export function gcloud(args: string[], options: { allowFail?: boolean } = {}): s
   }
 }
 
-/** `content/release` read like the bucket: files at their manifest paths, the `latest` channel made from the manifest. */
-export function localRelease(dir = resolve(content, 'release')): ReleaseSource {
+/** `content/release` (or `UMA_RELEASE_DIR`) read like the bucket: files at their manifest paths, the `latest` channel made from the manifest. */
+export function localRelease(dir = resolve(process.env.UMA_RELEASE_DIR ?? resolve(content, 'release'))): ReleaseSource {
   return {
     async read(path) {
       const file = path.startsWith('files/') ? path.slice('files/'.length) : path.startsWith('manifests/') ? 'manifest.json' : path

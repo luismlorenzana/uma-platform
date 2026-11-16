@@ -15,7 +15,7 @@ export const ENEMY_ID_MAX = 799999
 export interface Enemy {
   /** Numeric, opaque and stable: a unit keeps it whatever board or rank she moves to. */
   id: number
-  /** The franchise's code on the boards: `azurlane`, `nikke`, `genshin`, `wuwa`, `hsr`, `zzz`, `hi3`, `pgr`, … */
+  /** The franchise's code on the boards: `azurlane`, `nikke`, `genshin`, `wuwa`, `hsr`, `zzz`, `hi3`, … */
   franchise: string
   /** Her tier when the set was generated; a published enemy key's own tier is the one her art was drawn to. */
   tier: EnemyTier

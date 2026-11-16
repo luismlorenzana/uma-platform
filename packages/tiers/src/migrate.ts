@@ -1,7 +1,7 @@
 // Moving the old boards onto the Ranker (P131): the per-character Playable Umas board becomes the per-outfit board, its
 // picks become profiles, and a board that has never been saved starts from the old rosters (P113).
 import {
-  BOARDS, emptyBoard, isTier, isWay, LEGACY_TIER, UMA_TIERS,
+  BOARDS, boardOf, emptyBoard, hasTier, isTier, isWay, LEGACY_TIER, UMA_TIERS,
   type BoardId, type BoardState, type BoardStates, type Tier, type TierCatalog, type TierEntry, type Way,
 } from './model.js'
 import { defaultOutfit, type UmaProfiles } from './profiles.js'
@@ -64,7 +64,8 @@ export function migrateUmasBoard(catalog: TierCatalog, old: LegacyUmasBoard, pro
 /**
  * The first state of every board that has never been saved (P113): enemies keep their tier and note on the board their
  * old role points to: Azur Lane bosses on theirs, other Azur Lane elites on Key, Azur Lane regulars and every NIKKE unit
- * on Regular. Playable Umas, Uma NPCs and the imported boards start empty.
+ * on Regular. Playable Umas, Uma NPCs and the imported boards start empty. The enemy boards rank SS, S and F (P192): an old
+ * A or B starts unranked, with its note.
  */
 export function seedBoards(catalog: TierCatalog, legacy: Pick<LegacyHints, 'enemies'>): BoardStates {
   const states = Object.fromEntries(BOARDS.map((b) => [b.id, emptyBoard(b.id)])) as BoardStates
@@ -72,14 +73,25 @@ export function seedBoards(catalog: TierCatalog, legacy: Pick<LegacyHints, 'enem
   for (const row of legacy.enemies) {
     const unit = units.get(row.enemyId)
     if (!unit) continue
-    const tier = row.tier ? LEGACY_TIER[row.tier] ?? null : null
     const board: BoardId = unit.franchise === 'azurlane' ? (row.bucket === 'boss' ? 'azurlane-bosses' : row.bucket === 'elite' ? 'key-enemies' : 'regular-enemies') : 'regular-enemies'
-    if (board === 'azurlane-bosses') states[board].members!.push(unit.id)
+    const old = row.tier ? LEGACY_TIER[row.tier] ?? null : null, tier = old && hasTier(board, old) ? old : null
     if (tier || row.note) states[board].entries.push({ id: unit.id, tier, note: row.note })
   }
-  // An Azur Lane boss the old board never saw is still a boss: its game says so.
-  for (const unit of catalog.enemies) {
-    if (unit.franchise === 'azurlane' && unit.category === 'boss' && !legacy.enemies.some((r) => r.enemyId === unit.id)) states['azurlane-bosses'].members!.push(unit.id)
-  }
   return states
+}
+
+/**
+ * An enemy board saved before P192 on SS, S, A, B and F: A and B become unranked (their notes stay; an entry with neither
+ * goes), SS, S and F stay where they are. Azur Lane's old `members` list goes (P194). Every other board comes back as it was.
+ */
+export function retireTiers(value: unknown): unknown {
+  if (!object(value) || !Array.isArray(value.entries)) return value
+  const board = boardOf(String(value.board))
+  if (board?.kind !== 'enemy') return value
+  const entries = value.entries.flatMap((e: unknown) => {
+    if (!object(e) || e.tier === null || hasTier(board.id, e.tier)) return [e]
+    return typeof e.note === 'string' && e.note ? [{ ...e, tier: null }] : []
+  })
+  const { members: _, ...rest } = value
+  return { ...rest, entries }
 }

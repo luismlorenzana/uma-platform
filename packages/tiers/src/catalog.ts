@@ -44,11 +44,11 @@ export function parseEnemyCatalog(value: unknown): EnemyCatalogFile {
   return { schemaVersion: 1, sourceVersion: value.sourceVersion, sources: value.sources as string[], importedAt: value.importedAt, units }
 }
 
-// ---- The franchise imports (P115–P120) ----
+// ---- The franchise imports (P115–P120; Punishing: Gray Raven removed, P195) ----
 
-export const IMPORTED = ['genshin', 'wuwa', 'hsr', 'zzz', 'hi3', 'pgr'] as const
+export const IMPORTED = ['genshin', 'wuwa', 'hsr', 'zzz', 'hi3'] as const
 export type ImportedFranchise = typeof IMPORTED[number]
-export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-', hsr: 'hsr-', zzz: 'zzz-', hi3: 'hi3-', pgr: 'pgr-' }
+export const IMPORT_PREFIX: Record<ImportedFranchise, string> = { genshin: 'gi-', wuwa: 'ww-', hsr: 'hsr-', zzz: 'zzz-', hi3: 'hi3-' }
 export interface ImportUnit { id: string; name: string; category: Category; details: string[]; images: { face?: string; art?: string; splash?: string } }
 export interface EnemyImport {
   schemaVersion: 1
@@ -85,6 +85,25 @@ export function parseEnemyImport(value: unknown): EnemyImport {
     return { id: u.id, name: u.name, category: u.category as Category, details: [...u.details as string[]], images }
   })
   return { schemaVersion: 1, kind: 'enemy-import', franchise, source: value.source, filter: value.filter, importedAt: value.importedAt, units }
+}
+
+// ---- Units removed for good (P196) ----
+
+/**
+ * Units taken off the catalog for good, whatever an import or a push brings: the owner's cleanups (Honkai Impact 3rd's
+ * lower-rarity and look-alike battlesuits, P196). Private, by id (`ranker/catalog/removed.json`): names stay out of git.
+ */
+export interface RemovedUnits { schemaVersion: 1; kind: 'enemy-removed'; units: { id: string; reason: string; removedAt: string }[] }
+export function parseRemoved(value: unknown): RemovedUnits {
+  if (!object(value) || value.schemaVersion !== 1 || value.kind !== 'enemy-removed' || !Array.isArray(value.units)) throw new Error('Invalid removed-units list (schemaVersion 1).')
+  const seen = new Set<string>()
+  const units = value.units.map((u: unknown) => {
+    if (!object(u) || typeof u.id !== 'string' || !enemyIdPattern.test(u.id) || seen.has(u.id) || typeof u.reason !== 'string' || u.reason.length > 200 ||
+        typeof u.removedAt !== 'string') throw new Error('Each removed unit needs a unique id, a reason and a date.')
+    seen.add(u.id)
+    return { id: u.id, reason: u.reason, removedAt: u.removedAt }
+  })
+  return { schemaVersion: 1, kind: 'enemy-removed', units }
 }
 
 // ---- The old boards' tiers, as hints ----
@@ -136,9 +155,11 @@ export interface CatalogInput {
   enemies: EnemyCatalogFile | null
   imports: readonly EnemyImport[]
   legacy: LegacyHints
+  /** Unit ids off the catalog for good (P196). */
+  removed?: readonly string[]
 }
 
-/** Every Uma character with an outfit (outfits original first), and every enemy unit, each sorted by name. */
+/** Every Uma character with an outfit (outfits original first), and every enemy unit but the removed, each sorted by name. */
 export function buildCatalog(input: CatalogInput): TierCatalog {
   const names = new Map(input.characters.map((c) => [c.id, c.name.global ?? c.name.en ?? c.name.ja]))
   const outfitTier = new Map(input.legacy.outfits.map((r) => [r.outfitId, LEGACY_TIER[r.tier] ?? null]))
@@ -158,7 +179,7 @@ export function buildCatalog(input: CatalogInput): TierCatalog {
     c.outfits.sort((a, b) => Number(b.original) - Number(a.original) || a.id - b.id)
     return { ...c, face: c.outfits[0]?.face ?? null, portrait: c.outfits[0]?.portrait ?? null }
   }).sort((a, b) => a.name.localeCompare(b.name) || Number(a.id) - Number(b.id))
-  const old = new Map(input.legacy.enemies.map((r) => [r.enemyId, r]))
+  const old = new Map(input.legacy.enemies.map((r) => [r.enemyId, r])), removed = new Set(input.removed ?? [])
   const enemies: EnemyUnit[] = [
     ...(input.enemies?.units ?? []).map((u): EnemyUnit => {
       const row = old.get(u.id)
@@ -170,7 +191,7 @@ export function buildCatalog(input: CatalogInput): TierCatalog {
     ...input.imports.flatMap((i) => i.units.map((u): EnemyUnit => ({
       id: u.id, name: u.name, franchise: i.franchise, category: u.category, studyAvailable: false, images: { ...u.images }, details: u.details, before: null,
     }))),
-  ].sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
+  ].filter((u) => !removed.has(u.id)).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id))
   return { release: input.release, umas, enemies }
 }
 

@@ -13,6 +13,14 @@ it('leaves out the caches and the folders kept on this machine, on either slash'
   ]) expect(excluded(path), path).toBe(true)
 })
 
+it('never sends back a removed franchise’s files (P195)', () => {
+  for (const path of [
+    'enemies/imports/pgr.json', 'enemies/assets/enemies/pgr-x-face.0a1b2c3d.webp', 'ranker/imports/pgr.json', 'ranker/boards/pgr-bosses.json',
+    'ranker\\assets\\enemies\\pgr-x-art.0a1b2c3d.webp', 'tiers/pgr-bosses.json', '/Users/someone/content/authoring/ranker/imports/pgr.json',
+  ]) expect(excluded(path), path).toBe(true)
+  for (const path of ['ranker/imports/hi3.json', 'ranker/assets/enemies/hi3-x-face.0a1b2c3d.webp', 'sprites/pgr-notes.md', 'enemies/imports/genshin.json']) expect(excluded(path), path).toBe(false)
+})
+
 it('keeps everything else, the Studio’s character-art folders included', () => {
   for (const path of [
     'ranker/profiles.json', 'sprites/106801/r3/set.json', 'farm-story/chapter-1.md', 'character-art-studio-batches/a.json',

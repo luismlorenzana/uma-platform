@@ -1,6 +1,6 @@
 // The Ranker's routes (RK1), under /api/ranker, behind the owner guard like every route.
 import { BadRequestException, Body, ConflictException, Controller, Get, HttpCode, Inject, NotFoundException, Param, Post, Put } from '@nestjs/common'
-import { boardOf, BOARDS, inBatch, inCast, pools, rankedIdentities, type BoardId } from '@uma-platform/tiers'
+import { boardOf, BOARDS, inBatch, inCast, isCastGame, pools, rankedIdentities, type BoardId } from '@uma-platform/tiers'
 import { CatalogService } from './catalog.service'
 import { RankerConflict, RankerInvalid, RankerStore } from './ranker.store'
 
@@ -19,11 +19,11 @@ async function guarded<T>(work: () => Promise<T>): Promise<T> {
 export class RankerController {
   constructor(@Inject(RANKER_STORE) private readonly store: RankerStore, @Inject(RANKER_CATALOG) private readonly catalogs: CatalogService) {}
 
-  /** Everything the pages draw: the catalog, every board, the profiles, the imports. */
+  /** Everything the pages draw: the catalog, every board, the profiles, each game's enemy casting, the imports. */
   @Get()
   async all() {
-    const [loaded, states, profiles] = await Promise.all([this.catalogs.get(), this.store.boards(), this.store.profiles()])
-    return { release: loaded.catalog.release, builtAt: loaded.builtAt, catalog: loaded.catalog, states, profiles: profiles.profiles, imports: loaded.imports }
+    const [loaded, states, profiles, casts] = await Promise.all([this.catalogs.get(), this.store.boards(), this.store.profiles(), this.store.casts()])
+    return { release: loaded.catalog.release, builtAt: loaded.builtAt, catalog: loaded.catalog, states, profiles: profiles.profiles, casts, imports: loaded.imports }
   }
 
   /** A few numbers for the home tile (AP4). */
@@ -51,6 +51,18 @@ export class RankerController {
     return guarded(async () => {
       const { catalog } = await this.catalogs.get()
       const saved = await this.store.saveBoard(board as BoardId, body, catalog)
+      await this.store.writePlan(catalog)
+      return saved
+    })
+  }
+
+  /** A game's enemy casting (P193): Uma Cyberpunk's Bosses and Sub-bosses, Uma by Uma. */
+  @Put('casts/:game')
+  async saveCast(@Param('game') game: string, @Body() body: unknown) {
+    if (!isCastGame(game)) throw new NotFoundException({ error: 'No such game' })
+    return guarded(async () => {
+      const { catalog } = await this.catalogs.get()
+      const saved = await this.store.saveCast(game, body, catalog)
       await this.store.writePlan(catalog)
       return saved
     })

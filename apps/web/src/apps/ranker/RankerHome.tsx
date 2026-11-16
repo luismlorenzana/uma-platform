@@ -1,6 +1,6 @@
-// The Ranker's home (RK1, P133): a tile for each board with its numbers, the batches, the careers and the data in use.
-// Numbers only; the little there is to know sits behind the header's (i).
-import { allStats, BOARDS, BOSS_BOARDS, careerMath, inBatch, MIN_CAREER_BOSSES, rankedIdentities, tiersOf, type BoardGroup } from '@uma-platform/tiers'
+// The Ranker's home (RK1, P133): a tile for each board with its numbers, Uma Cyberpunk's enemy casting (P193), the
+// batches, the careers and the data in use. Numbers only; the little there is to know sits behind the header's (i).
+import { allStats, BOARDS, BOSS_BOARDS, careerMath, castPlan, inBatch, MIN_CAREER_BOSSES, rankedIdentities, SUB_BOSS_SLOTS, tiersOf, type BoardGroup } from '@uma-platform/tiers'
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button, Panel } from '@luismlorenzana/uma-kit/ui'
 import { useMemo, useState } from 'react'
@@ -22,6 +22,7 @@ export function RankerHome() {
   const [busy, setBusy] = useState(false)
   const stats = useMemo(() => (data ? allStats(data.catalog, data.states, data.profiles) : null), [data])
   const identities = useMemo(() => (data ? rankedIdentities(data.catalog, data.states, data.profiles) : []), [data])
+  const cyberpunk = useMemo(() => (data ? castPlan(data.catalog, data.states, identities, data.casts.cyberpunk).counts : null), [data, identities])
   if (error) return <div className="fixed inset-0 flex items-center justify-center bg-page p-8 text-center text-ink-soft">The Ranker couldn’t load: {error}</div>
   if (!data || !stats) return <div className="fixed inset-0 flex items-center justify-center bg-page text-ink-soft">Loading the boards</div>
   const careers = careerMath(identities.filter(inBatch).length, BOSS_BOARDS.map((b) => stats[b]))
@@ -47,6 +48,16 @@ export function RankerHome() {
               </div>
             </div>
           </Panel>
+
+          <section className="flex flex-col gap-2">
+            <h2 className="font-display text-lg font-bold">Uma Cyberpunk</h2>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <Link to="/ranker/cyberpunk" className="flex items-baseline justify-between gap-2 rounded-md bg-panel p-3 shadow-1 hover:shadow-2">
+                <span className="font-display font-bold">Enemy casting</span>
+                {cyberpunk && <span className="text-sm text-ink-soft">♛ <b className="text-ink">{cyberpunk.bosses}</b> / {cyberpunk.umas} · ◆ <b className="text-ink">{cyberpunk.subBosses}</b> / {cyberpunk.umas * SUB_BOSS_SLOTS}</span>}
+              </Link>
+            </div>
+          </section>
 
           {GROUPS.map((g) => (
             <section key={g.id} className="flex flex-col gap-2">

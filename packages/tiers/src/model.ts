@@ -1,6 +1,7 @@
-// The tier boards (P113), moved online as the Uma Ranker (P127, P131). Two scales: Playable Umas ranks each outfit on ten
-// straight tiers, T1 to T10, one art batch each (P131); every other board keeps SS, S, A, B, F, with SSS on Uma NPCs
-// (P122, P124). Boards hand their leftovers down. Shared by the API and the pages, so nothing here imports Node.
+// The tier boards (P113), moved online as the Uma Ranker (P127, P131). Three scales: Playable Umas ranks each outfit on ten
+// straight tiers, T1 to T10, one art batch each (P131); Uma NPCs keeps SSS to F (P122, P124); the enemy boards rank SS, S
+// and F, where F is "won't use" (P192). Boards hand their leftovers down. Shared by the API and the pages, so nothing here
+// imports Node.
 
 // ---- Scales ----
 
@@ -15,7 +16,7 @@ export const TIERS = [
 export type Tier = typeof TIERS[number]['id']
 const TIER_IDS: readonly string[] = TIERS.map((t) => t.id)
 export const isTier = (value: unknown): value is Tier => typeof value === 'string' && TIER_IDS.includes(value)
-/** On the lettered boards SSS (Uma NPCs only), SS, S and A are the cast; B, F and unranked flow to the board below. */
+/** On the lettered boards SSS (Uma NPCs only), SS, S and A are the cast; the rest flows to the board below (F on an enemy board stays, P192). */
 export const CAST_TIERS: readonly Tier[] = ['SSS', 'SS', 'S', 'A']
 /** The old boards' five tiers on the lettered scale (P113): SS stays, A1 is S, A2 is A, B and F stay. */
 export const LEGACY_TIER: Readonly<Record<string, Tier>> = { SS: 'SS', A1: 'S', A2: 'A', B: 'B', F: 'F' }
@@ -40,12 +41,27 @@ export const isUmaTier = (value: unknown): value is UmaTier => typeof value === 
 export const batchOf = (tier: UmaTier): number => UMA_TIER_IDS.indexOf(tier) + 1
 /** Playable Umas' F (P133): outfits the owner won't use. Not a batch and not the cast; its row starts collapsed. */
 export const UMA_F = { id: 'F', label: 'Not used', description: 'Outfits you won’t use: in no batch.' } as const
+/**
+ * The enemy boards' scale (P192): SS and S are the cast, F is "won't use". F stays on its own board and never flows down;
+ * an unranked unit does. On the boss boards SS is Boss material and S Sub-boss material: Uma Cyberpunk's casting draws its
+ * slots from them (P193).
+ */
+export const BOSS_TIERS = [
+  { id: 'SS', label: 'Boss', description: 'Boss material: an Uma Cyberpunk Boss slot picks from here.' },
+  { id: 'S', label: 'Sub-boss', description: 'Sub-boss material: an Uma Cyberpunk Sub-boss slot picks from here.' },
+  { id: 'F', label: 'Won’t use', description: 'Not used: it stays here and never flows to another board.' },
+] as const
+export const ENEMY_TIERS = [
+  { id: 'SS', label: 'First cast', description: 'Author first.' },
+  { id: 'S', label: 'Next wave', description: 'Right after the first cast.' },
+  { id: 'F', label: 'Won’t use', description: 'Not used: it stays here and never flows to another board.' },
+] as const
 export type AnyTier = Tier | UmaTier
 export interface TierInfo { readonly id: AnyTier; readonly label: string; readonly description: string }
 
 // ---- Boards ----
 
-export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'hsr-bosses' | 'zzz-bosses' | 'hi3-bosses' | 'pgr-bosses' | 'key-enemies' | 'regular-enemies'
+export type BoardId = 'umas' | 'npcs' | 'azurlane-bosses' | 'genshin-bosses' | 'wuwa-bosses' | 'hsr-bosses' | 'zzz-bosses' | 'hi3-bosses' | 'key-enemies' | 'regular-enemies'
 export type BoardGroup = 'umas' | 'bosses' | 'enemies'
 export interface Board {
   readonly id: BoardId
@@ -62,7 +78,7 @@ export interface Board {
   readonly from: readonly BoardId[]
   /** Where this board's leftovers go. */
   readonly next: BoardId | null
-  /** An imported boss board: the franchise whose import is its base, minus the ones left out (P121). */
+  /** A boss board: the franchise whose units are its base, minus the ones left out (P121; Azur Lane too since P194). */
   readonly franchise?: Franchise
 }
 export const BOARDS: readonly Board[] = [
@@ -72,9 +88,9 @@ export const BOARDS: readonly Board[] = [
   { id: 'npcs', kind: 'uma', group: 'umas', title: 'Uma NPCs', short: 'NPCs', from: ['umas'], next: null,
     blurb: 'The townsfolk, rivals and familiar faces around the cast.',
     pool: 'Every Uma none of whose own outfits is ranked on Playable Umas.' },
-  { id: 'azurlane-bosses', kind: 'enemy', group: 'bosses', title: 'Azur Lane bosses', short: 'Azur Lane', from: [], next: 'key-enemies',
-    blurb: 'The bosses already sorted on the old enemy board, on the new scale.',
-    pool: 'The Azur Lane units marked Boss. Add or remove one from its card.' },
+  { id: 'azurlane-bosses', kind: 'enemy', group: 'bosses', title: 'Azur Lane bosses', short: 'Azur Lane', from: [], next: 'key-enemies', franchise: 'azurlane',
+    blurb: 'Every Azur Lane unit; the old board’s bosses came ranked.',
+    pool: 'Every Azur Lane unit in the private catalog, minus the ones left out (P194).' },
   { id: 'genshin-bosses', kind: 'enemy', group: 'bosses', title: 'Genshin Impact bosses', short: 'Genshin', from: [], next: 'key-enemies', franchise: 'genshin',
     blurb: 'Female characters, imported locally.',
     pool: 'Every Genshin Impact character in the import (female characters to start).' },
@@ -90,34 +106,37 @@ export const BOARDS: readonly Board[] = [
   { id: 'hi3-bosses', kind: 'enemy', group: 'bosses', title: 'Honkai Impact 3rd bosses', short: 'HI3', from: [], next: 'key-enemies', franchise: 'hi3',
     blurb: 'Every battlesuit, unfiltered. Leave out the ones that don’t fit.',
     pool: 'Every Honkai Impact 3rd battlesuit in the import, unfiltered, minus the ones left out.' },
-  { id: 'pgr-bosses', kind: 'enemy', group: 'bosses', title: 'Punishing: Gray Raven bosses', short: 'PGR', from: [], next: 'key-enemies', franchise: 'pgr',
-    blurb: 'Every frame, unfiltered. Leave out the ones that don’t fit.',
-    pool: 'Every Punishing: Gray Raven frame in the import, unfiltered, minus the ones left out.' },
-  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses'], next: 'regular-enemies',
+  { id: 'key-enemies', kind: 'enemy', group: 'enemies', title: 'Key enemies', short: 'Key', from: ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses'], next: 'regular-enemies',
     blurb: 'They escort the bosses and lead the regular groups.',
-    pool: 'Every other Azur Lane unit, plus each boss board’s B, F and unranked.' },
+    pool: 'Each boss board’s unranked units.' },
   { id: 'regular-enemies', kind: 'enemy', group: 'enemies', title: 'Regular enemies', short: 'Regular', from: ['key-enemies'], next: null,
-    blurb: 'Two or three make a random fight.',
-    pool: 'Every NIKKE unit, plus Key enemies’ B, F and unranked.' },
+    blurb: 'NIKKE: two or three make a random fight.',
+    pool: 'Every NIKKE unit, plus Key enemies’ unranked.' },
 ]
 export const BOARD_IDS = BOARDS.map((b) => b.id)
 export const boardOf = (id: string): Board | undefined => BOARDS.find((b) => b.id === id)
-export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses', 'pgr-bosses']
-/** The imported boss boards, whose units can be left out of every board (P121). */
+export const BOSS_BOARDS: readonly BoardId[] = ['azurlane-bosses', 'genshin-bosses', 'wuwa-bosses', 'hsr-bosses', 'zzz-bosses', 'hi3-bosses']
+/** A franchise's boss board, whose units can be left out of every board (P121). */
 export const importBoardOf = (franchise: string): Board | undefined => BOARDS.find((b) => b.franchise === franchise)
 /** Playable Umas' tiers: the ten batches, then F (P131, P133). */
 export const PLAYABLE_TIERS: readonly TierInfo[] = [...UMA_TIERS, UMA_F]
-/** A board's tiers, best first: T1–T10 and F on Playable Umas (P131, P133), SSS to F on Uma NPCs (P124), SS to F elsewhere. */
+/** A board's tiers, best first: T1–T10 and F on Playable Umas (P131, P133), SSS to F on Uma NPCs (P124), SS, S and F on the enemy boards (P192). */
 export function tiersOf(board: BoardId): readonly TierInfo[] {
   if (board === 'umas') return PLAYABLE_TIERS
-  return boardOf(board)?.kind === 'uma' ? TIERS : TIERS.filter((t) => t.id !== 'SSS')
+  const found = boardOf(board)
+  if (found?.kind === 'uma') return TIERS
+  return found?.group === 'bosses' ? BOSS_TIERS : ENEMY_TIERS
 }
 export const tierIdsOf = (board: BoardId): AnyTier[] => tiersOf(board).map((t) => t.id)
 export const hasTier = (board: BoardId, tier: unknown): tier is AnyTier => tiersOf(board).some((t) => t.id === tier)
-/** In the board's cast: a batch (T1–T10) on Playable Umas, where F is not used; SSS to A elsewhere. */
+/** In the board's cast: a batch (T1–T10) on Playable Umas, where F is not used; SSS to A on Uma NPCs; SS and S on the enemy boards. */
 export function inCast(board: BoardId, tier: AnyTier | null | undefined): boolean {
   if (!tier) return false
   return board === 'umas' ? isUmaTier(tier) : (CAST_TIERS as readonly string[]).includes(tier)
+}
+/** Does an entry flow to the board below? Anything outside the cast does, except F on an enemy board: "won't use" (P192). */
+export function flowsDown(board: BoardId, tier: AnyTier | null | undefined): boolean {
+  return !inCast(board, tier) && !(tier === 'F' && boardOf(board)?.kind === 'enemy')
 }
 
 // ---- The catalog the boards rank ----
@@ -180,7 +199,7 @@ export function leadOutfit(outfits: readonly UmaOutfit[]): UmaOutfit | undefined
 export const FRANCHISES = [
   { id: 'azurlane', label: 'Azur Lane' }, { id: 'genshin', label: 'Genshin Impact' },
   { id: 'wuwa', label: 'Wuthering Waves' }, { id: 'hsr', label: 'Honkai: Star Rail' }, { id: 'zzz', label: 'Zenless Zone Zero' },
-  { id: 'hi3', label: 'Honkai Impact 3rd' }, { id: 'pgr', label: 'Punishing: Gray Raven' }, { id: 'nikke', label: 'NIKKE' },
+  { id: 'hi3', label: 'Honkai Impact 3rd' }, { id: 'nikke', label: 'NIKKE' },
 ] as const
 export type Franchise = typeof FRANCHISES[number]['id']
 export const CATEGORIES = [
@@ -225,15 +244,13 @@ export interface BoardState {
   updatedAt: string | null
   /** Array order is the order within each tier. */
   entries: TierEntry[]
-  /** Azur Lane bosses only: who is on the board. */
-  members?: string[]
-  /** Imported boss boards only: units left out of every board (P121). */
+  /** Boss boards only: units left out of every board (P121). */
   out?: string[]
 }
 export type BoardStates = Record<BoardId, BoardState>
 export const schemaOf = (board: BoardId): 1 | 2 => (board === 'umas' ? 2 : 1)
 export const emptyBoard = (board: BoardId): BoardState => ({
-  schemaVersion: schemaOf(board), kind: 'tier-board', board, revision: 0, updatedAt: null, entries: [], ...(board === 'azurlane-bosses' ? { members: [] } : {}),
+  schemaVersion: schemaOf(board), kind: 'tier-board', board, revision: 0, updatedAt: null, entries: [],
 })
 const object = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
 const idPattern = /^[A-Za-z0-9][A-Za-z0-9-]{0,99}$/
@@ -255,21 +272,16 @@ export function parseBoard(value: unknown, board?: BoardId): BoardState {
         Object.keys(e).some((k) => !['id', 'tier', 'note'].includes(k))) {
       throw new Error(boardId === 'umas'
         ? 'Each Playable Umas entry needs a unique outfit id, a tier from T1 to T10, F or null, and a note of at most 4,000 characters.'
-        : 'Each entry needs a unique id, a tier of this board (SSS is for Uma NPCs only) or null, and a note of at most 4,000 characters.')
+        : 'Each entry needs a unique id, a tier of this board (SSS to F on Uma NPCs; SS, S or F on an enemy board) or null, and a note of at most 4,000 characters.')
     }
     seen.add(e.id)
     return { id: e.id, tier: e.tier as AnyTier | null, note: e.note }
   })
   const state: BoardState = { schemaVersion: schemaOf(boardId), kind: 'tier-board', board: boardId, revision: Number(value.revision), updatedAt: value.updatedAt as string | null, entries }
-  if (boardId === 'azurlane-bosses') {
-    if (!Array.isArray(value.members) || !value.members.every((m) => typeof m === 'string' && idPattern.test(m)) || new Set(value.members).size !== value.members.length) {
-      throw new Error('The Azur Lane bosses board needs a list of unique member ids.')
-    }
-    state.members = [...value.members as string[]]
-  }
+  // Azur Lane's old curated list (`members`, before P194) is read and dropped: every Azur Lane unit is on the board now.
   if (value.out !== undefined) {
     if (!boardOf(boardId)?.franchise || !Array.isArray(value.out) || !value.out.every((m) => typeof m === 'string' && idPattern.test(m)) || new Set(value.out).size !== value.out.length) {
-      throw new Error('Only an imported boss board leaves units out, as a list of unique ids.')
+      throw new Error('Only a boss board leaves units out, as a list of unique ids.')
     }
     state.out = [...value.out as string[]]
   }
@@ -302,8 +314,8 @@ export function boardStats(pool: readonly PoolMember[], state: BoardState): Boar
 
 // ---- Edits, all pure ----
 
-const bump = (state: BoardState, entries: TierEntry[], members = state.members): BoardState => ({ ...state, entries, ...(members ? { members } : {}) })
-/** Units left out of every board, on an imported boss board. */
+const bump = (state: BoardState, entries: TierEntry[]): BoardState => ({ ...state, entries })
+/** Units left out of every board, on a boss board. */
 export const leftOut = (state: BoardState): string[] => state.out ?? []
 const blank = (e: TierEntry): boolean => e.tier === null && !e.note
 
@@ -357,14 +369,8 @@ export function shift(state: BoardState, id: string, direction: -1 | 1, pool: Re
   const moved = move(state, id, direction, pool)
   return moved !== state ? moved : tierStep(state, id, direction, pool)
 }
-/** Adds an Azur Lane unit to the bosses board, or takes it off (with its tier and note there). */
-export function setMember(state: BoardState, id: string, member: boolean): BoardState {
-  const members = state.members ?? []
-  if (members.includes(id) === member) return state
-  return member ? bump(state, state.entries, [...members, id]) : bump(state, state.entries.filter((e) => e.id !== id), members.filter((m) => m !== id))
-}
 /**
- * An imported boss board: leaves a unit out of every board (it loses its tier and note here), or brings it back unranked
+ * A boss board: leaves a unit out of every board (it loses its tier and note here), or brings it back unranked
  * (P121). A unit that doesn't fit the roster, such as a male character from an unfiltered import, leaves this way.
  */
 export function setOut(state: BoardState, id: string, out: boolean): BoardState {
@@ -379,7 +385,7 @@ export const MIN_CAREER_BOSSES = 3
 export interface Careers { careers: number; bosses: number; bossesPerCareer: number; fights: number; careersPerBoss: number | null }
 /**
  * Every ranked Uma identity is a career (a sister runs her sister's career, P131), and each fights at least three bosses
- * from the boss boards' cast (P116). Ten tiers no longer pair with the bosses' letters, so the count is one pool: when
+ * from the boss boards' cast (P116; Uma Cyberpunk's own casting is cast.ts, P193). Ten tiers no longer pair with the bosses' letters, so the count is one pool: when
  * bosses outnumber three a career, careers lengthen so every boss is met.
  */
 export function careerMath(careers: number, bossStats: readonly BoardStats[]): Careers {

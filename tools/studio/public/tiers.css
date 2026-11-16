@@ -61,7 +61,6 @@ input[type=checkbox]{accent-color:var(--green);width:16px;height:16px}
 .portrait-stage.franchise-hsr{background:radial-gradient(ellipse at 50% 55%,#ebe2ec 0,transparent 65%),linear-gradient(135deg,#eee8ef,#e6e1e3)}
 .portrait-stage.franchise-zzz{background:radial-gradient(ellipse at 50% 55%,#efe9d8 0,transparent 65%),linear-gradient(135deg,#efeadc,#e3e0d8)}
 .portrait-stage.franchise-hi3{background:radial-gradient(ellipse at 50% 55%,#e3e8f2 0,transparent 65%),linear-gradient(135deg,#e8ecf3,#dfe2e8)}
-.portrait-stage.franchise-pgr{background:radial-gradient(ellipse at 50% 55%,#e9e4e4 0,transparent 65%),linear-gradient(135deg,#ece8e8,#e0dddd)}
 .portrait-stage.franchise-wuwa{background:radial-gradient(ellipse at 50% 55%,#e2e3ec 0,transparent 65%),linear-gradient(135deg,#e7e8ee,#e5e1dc)}
 .portrait-meta{position:absolute;top:13px;left:18px;right:18px;display:flex;justify-content:space-between;gap:10px;color:#536363;font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:650}
 .study-tag{color:var(--green);letter-spacing:.02em;text-transform:none}
@@ -149,7 +148,6 @@ textarea{width:100%;resize:vertical;padding:10px 12px;font-size:12px;line-height
 .tile.franchise-hsr{box-shadow:inset 0 -3px #c9a0b8}
 .tile.franchise-zzz{box-shadow:inset 0 -3px #e0b24a}
 .tile.franchise-hi3{box-shadow:inset 0 -3px #7f9ccc}
-.tile.franchise-pgr{box-shadow:inset 0 -3px #b54a4a}
 .tile.selected{outline:2px solid var(--accent);outline-offset:1px}
 .tile.dragging{opacity:.35}
 .tile.drop-target{box-shadow:-4px 0 0 var(--accent)}

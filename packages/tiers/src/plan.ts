@@ -2,26 +2,25 @@
 // (`ranker/plan.json`, pulled to `content/authoring/tiers/plan.json`). Character Art follows its identities and batches
 // (P131).
 import {
-  batchOf, BOARDS, BOSS_BOARDS, boardStats, careerMath, inCast, isUmaTier, leftOut, ordered, outfitIndex, PLAYABLE_TIERS, tierIdsOf, tierMap, TIERS, UMA_TIERS, WAYS,
+  batchOf, BOARDS, BOSS_BOARDS, boardStats, careerMath, flowsDown, inCast, isUmaTier, leftOut, ordered, outfitIndex, PLAYABLE_TIERS, tierIdsOf, tierMap, TIERS, UMA_TIERS, WAYS,
   type AnyTier, type Board, type BoardId, type BoardStates, type BoardStats, type PoolMember, type TierCatalog, type UmaTier, type Way,
 } from './model.js'
 import { defaultOutfit, identities, identityByOutfit, outfitPick, ownOutfits, playstyleOf, type UmaIdentity, type UmaProfiles } from './profiles.js'
+import { CAST_GAMES, castPlan, emptyCast, type CastGame, type EnemyCast } from './cast.js'
 
 export type Pools = Record<BoardId, PoolMember[]>
 
 /**
  * Every board's members in board order: its base, then the leftovers of the boards above it. Playable Umas is every
  * outfit; a character comes down to Uma NPCs when none of her own outfits is ranked there (a sister's outfit counts for
- * the sister, who has no NPC card).
+ * the sister, who has no NPC card). Each boss board's base is its franchise, Azur Lane included (P194); Key enemies has
+ * only the boss boards' unranked; Regular enemies is NIKKE, then Key's unranked. F on an enemy board stays there (P192).
  */
 export function pools(catalog: TierCatalog, states: BoardStates, profiles: UmaProfiles): Pools {
-  const al = catalog.enemies.filter((u) => u.franchise === 'azurlane'), members = new Set(states['azurlane-bosses'].members ?? [])
-  // An imported board's base is its franchise's import, minus the units left out: those are on no board at all.
-  const imported = (b: Board) => { const out = new Set(states[b.id].out ?? []); return catalog.enemies.filter((u) => u.franchise === b.franchise && !out.has(u.id)).map((u) => u.id) }
-  const base = Object.fromEntries(BOARDS.map((b) => [b.id, b.franchise ? imported(b) : []])) as Record<BoardId, string[]>
+  // A boss board's base is its franchise's units, minus the ones left out: those are on no board at all.
+  const franchise = (b: Board) => { const out = new Set(states[b.id].out ?? []); return catalog.enemies.filter((u) => u.franchise === b.franchise && !out.has(u.id)).map((u) => u.id) }
+  const base = Object.fromEntries(BOARDS.map((b) => [b.id, b.franchise ? franchise(b) : []])) as Record<BoardId, string[]>
   base.umas = catalog.umas.flatMap((u) => u.outfits.map((o) => String(o.id)))
-  base['azurlane-bosses'] = al.filter((u) => members.has(u.id)).map((u) => u.id)
-  base['key-enemies'] = al.filter((u) => !members.has(u.id)).map((u) => u.id)
   base['regular-enemies'] = catalog.enemies.filter((u) => u.franchise === 'nikke').map((u) => u.id)
   const result = {} as Pools
   for (const board of BOARDS) {
@@ -38,7 +37,7 @@ export function pools(catalog: TierCatalog, states: BoardStates, profiles: UmaPr
       }
       for (const m of result[upstream]) {
         const tier = tiers.get(m.id) ?? null
-        if (!inCast(upstream, tier) && !seen.has(m.id)) { seen.add(m.id); list.push({ id: m.id, via: upstream, viaTier: tier }) }
+        if (flowsDown(upstream, tier) && !seen.has(m.id)) { seen.add(m.id); list.push({ id: m.id, via: upstream, viaTier: tier }) }
       }
     }
     result[board.id] = list
@@ -74,8 +73,8 @@ export function rankedIdentities(catalog: TierCatalog, states: BoardStates, prof
 /** Batches first, then the unranked, then F. */
 const group = (i: RankedIdentity): number => (inBatch(i) ? 0 : i.tier === null ? 1 : 2)
 
-/** The plan every later tool reads (schema 2, P131). */
-export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: UmaProfiles, generatedAt: string) {
+/** The plan every later tool reads (schema 2, P131); since P193 with each game's enemy casting. */
+export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: UmaProfiles, generatedAt: string, casts: Partial<Record<CastGame, EnemyCast>> = {}) {
   const all = pools(catalog, states, profiles), stats = allStats(catalog, states, profiles, all)
   const umas = new Map(catalog.umas.map((u) => [u.id, u])), enemies = new Map(catalog.enemies.map((u) => [u.id, u]))
   const outfits = outfitIndex(catalog), byOutfit = identityByOutfit(catalog, profiles)
@@ -120,6 +119,8 @@ export function tierPlan(catalog: TierCatalog, states: BoardStates, profiles: Um
     batches: UMA_TIERS.map((t) => ({ batch: batchOf(t.id), tier: t.id, outfits: states.umas.entries.filter((e) => e.tier === t.id && outfits.has(Number(e.id))).map((e) => Number(e.id)) })),
     careers: careerMath(careers, BOSS_BOARDS.map((b) => stats[b])),
     playstyles: playstyleCounts(catalog, states, profiles),
+    /** Each game's enemy casting (P193): the batches' Umas by tier and by faction, each with her Boss and three Sub-bosses. */
+    enemyCasts: Object.fromEntries(CAST_GAMES.map((g) => [g, castPlan(catalog, states, ranked, casts[g] ?? emptyCast(g))])) as Record<CastGame, ReturnType<typeof castPlan>>,
   }
 }
 export type TierPlan = ReturnType<typeof tierPlan>

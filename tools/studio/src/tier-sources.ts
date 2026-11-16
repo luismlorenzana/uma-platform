@@ -115,7 +115,7 @@ export function zzzCandidates(agents: Record<string, EnkaAgent>, names: Record<s
   })
 }
 
-// ---- Wiki imports, unfiltered (P120): Honkai Impact 3rd's battlesuits and Punishing: Gray Raven's frames ----
+// ---- Wiki imports, unfiltered (P120): Honkai Impact 3rd's battlesuits ----
 
 /** A wiki page as the importer reads it through the MediaWiki API: its title, its categories, its wikitext. */
 export interface WikiPage { title: string; categories?: string[]; content?: string }
@@ -160,28 +160,3 @@ export function hi3Candidates(pages: WikiPage[], url: (file: string) => string |
   }))
 }
 
-/** The `{{Character}}` infobox on a Punishing: Gray Raven wiki page (grayravens.com), as name/value pairs. */
-export function pgrInfobox(content: string): Record<string, string> {
-  const box = /\{\{Character\s*\n([\s\S]*?)\n\}\}/.exec(content)?.[1] ?? ''
-  return Object.fromEntries(box.split('\n').flatMap((line) => {
-    const m = /^\|\s*([\w ]+?)\s*=\s*(.*)$/.exec(line)
-    return m ? [[m[1]!, m[2]!.trim()]] : []
-  }))
-}
-/** A frame's files on grayravens.com: the frame name without spaces or apostrophes. */
-export function pgrImages(frame: string): WikiImages {
-  const base = frame.replace(/[ ']/g, '')
-  return { face: { files: [`Dialogue-${base}-Icon.png`], cut: 'face' }, art: { files: [`Character-${base}-Portrait.png`], cut: 'trim-figure' } }
-}
-/** Every frame, one card each. A collaboration character has no frame name of her own ("2B"), and is tagged. */
-export function pgrCandidates(pages: WikiPage[], url: (file: string) => string | undefined): Candidate[] {
-  return unique([...pages].sort((a, b) => a.title.localeCompare(b.title)).flatMap((p): Candidate[] => {
-    const box = pgrInfobox(p.content ?? '')
-    if (!box.Name || !box.Frame) return []
-    const elements = [...(box.Element ?? '').replace(/\[\[[^\]]*\]\]/g, '').matchAll(/([A-Za-z]+)\s*\((\d+)%\)/g)].sort((a, b) => Number(b[2]) - Number(a[2]))
-    const collab = box.Frame === box.Name
-    return [{ key: slug(p.title), name: p.title, category: 'playable',
-      details: [box.Rank && `${box.Rank}-Rank`, box.Class, elements[0]?.[1], collab && 'Collab'].filter((d): d is string => typeof d === 'string' && d.length > 0).map((d) => d.slice(0, 40)),
-      images: resolved(pgrImages(box.Frame), url) }]
-  }))
-}

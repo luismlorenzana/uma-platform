@@ -7,33 +7,37 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import {
-  BOARDS, buildCatalog, emptyBoard, emptyLegacy, IMPORTED, parseBoard, parseEnemyCatalog, parseEnemyImport, parseLegacy, parseProfiles, tierPlan,
-  type BoardId, type BoardState, type BoardStates, type EnemyImport,
+  BOARDS, buildCatalog, CAST_GAMES, emptyBoard, emptyLegacy, IMPORTED, parseBoard, parseCast, parseEnemyCatalog, parseEnemyImport, parseLegacy, parseProfiles, parseRemoved,
+  retireTiers, tierPlan, type BoardId, type BoardState, type BoardStates, type EnemyImport,
 } from '@uma-platform/tiers'
 import { content, gcloud, localRelease, mirror, releaseInputs, REMOTE } from './lib.js'
 
 const work = mkdtempSync(join(tmpdir(), 'ranker-plan-'))
 try {
   // The bucket's side, as it is now: boards, profiles, the catalog files, and the plan's generation to replace.
-  for (const dir of ['boards', 'catalog', 'imports']) mkdirSync(join(work, dir))
+  for (const dir of ['boards', 'catalog', 'imports', 'casts']) mkdirSync(join(work, dir))
   gcloud(['cp', `${REMOTE}/boards/*.json`, `${join(work, 'boards')}/`])
   gcloud(['cp', `${REMOTE}/profiles.json`, `${work}/`])
   gcloud(['cp', `${REMOTE}/legacy.json`, `${work}/`], { allowFail: true })
   gcloud(['cp', `${REMOTE}/catalog/enemies.json`, `${join(work, 'catalog')}/`], { allowFail: true })
+  gcloud(['cp', `${REMOTE}/catalog/removed.json`, `${join(work, 'catalog')}/`], { allowFail: true })
+  gcloud(['cp', `${REMOTE}/casts/*.json`, `${join(work, 'casts')}/`], { allowFail: true })
   gcloud(['cp', `${REMOTE}/imports/*.json`, `${join(work, 'imports')}/`], { allowFail: true })
   const generation = gcloud(['objects', 'describe', `${REMOTE}/plan.json`, '--format=value(generation)'], { allowFail: true }).trim() || '0'
   const read = (path: string): unknown => JSON.parse(readFileSync(join(work, path), 'utf8')) as unknown
   const optional = (path: string): unknown => (existsSync(join(work, path)) ? read(path) : null)
 
   const release = await releaseInputs(localRelease())
-  const enemies = optional('catalog/enemies.json'), legacy = optional('legacy.json')
+  const enemies = optional('catalog/enemies.json'), legacy = optional('legacy.json'), removed = optional('catalog/removed.json')
   const imports = IMPORTED.map((f) => optional(`imports/${f}.json`)).filter((v) => v !== null).map((v) => parseEnemyImport(v)) as EnemyImport[]
-  const catalog = buildCatalog({ ...release, enemies: enemies === null ? null : parseEnemyCatalog(enemies), imports, legacy: legacy === null ? emptyLegacy() : parseLegacy(legacy) })
+  const catalog = buildCatalog({ ...release, enemies: enemies === null ? null : parseEnemyCatalog(enemies), imports, legacy: legacy === null ? emptyLegacy() : parseLegacy(legacy),
+    removed: removed === null ? [] : parseRemoved(removed).units.map((u) => u.id) })
   const boards = Object.fromEntries(BOARDS.map((b): [BoardId, BoardState] => {
     const raw = optional(`boards/${b.id}.json`)
-    return [b.id, raw === null ? emptyBoard(b.id) : parseBoard(raw, b.id)]
+    return [b.id, raw === null ? emptyBoard(b.id) : parseBoard(retireTiers(raw), b.id)]
   })) as BoardStates
-  const plan = tierPlan(catalog, boards, parseProfiles(read('profiles.json')), new Date().toISOString())
+  const casts = Object.fromEntries(CAST_GAMES.flatMap((g) => { const raw = optional(`casts/${g}.json`); return raw === null ? [] : [[g, parseCast(raw, g)]] }))
+  const plan = tierPlan(catalog, boards, parseProfiles(read('profiles.json')), new Date().toISOString(), casts)
 
   const out = resolve(mirror, 'plan.json')
   writeFileSync(out, `${JSON.stringify(plan, null, 2)}\n`)

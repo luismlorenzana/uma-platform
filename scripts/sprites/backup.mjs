@@ -11,8 +11,13 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 export const DESTINATION = 'gs://uma-platform-authoring/authoring'
 /** Folders at the top of `content/authoring/` that never leave this machine (the owner, 2026-11-13). */
 export const LOCAL_ONLY = ['character-universes', 'character-art', 'character-art-trials', 'splash-art']
+/**
+ * Removed sources that a stale copy must never send back (P195): Punishing: Gray Raven's import, board and pictures, in
+ * the Studio's enemies folder, the Ranker's mirror and the old tier boards.
+ */
+export const REMOVED = `(?:enemies|ranker|tiers)[/\\\\](?:.*[/\\\\])?(?:pgr-[^/\\\\]*|pgr\\.json)`
 /** One regex for gcloud's `--exclude`, matched against each file's path; either slash, so it holds on Windows too. */
-export const EXCLUDE = `.*(?:draw-things[/\\\\](?:models|bin)[/\\\\]|node_modules[/\\\\]|\\.cache[/\\\\]|(?:^|[/\\\\])(?:${LOCAL_ONLY.join('|')})[/\\\\]).*`
+export const EXCLUDE = `.*(?:draw-things[/\\\\](?:models|bin)[/\\\\]|node_modules[/\\\\]|\\.cache[/\\\\]|(?:^|[/\\\\])(?:${LOCAL_ONLY.join('|')})[/\\\\]).*|(?:.*[/\\\\])?${REMOVED}`
 
 /** The command that copies `source` to the bucket, for this platform. */
 export function backupCommand(source, platform = process.platform, extra = []) {

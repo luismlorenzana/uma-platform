@@ -1,5 +1,8 @@
 # More boss franchises: what else matches Genshin Impact and Wuthering Waves
 
+> **2026-11-16: Punishing: Gray Raven is removed (P195)** at the owner's word, its board, import and code with it, and
+> Honkai Impact 3rd keeps its 67 S-rank and owner-ranked battlesuits (P196). The rows below that name it are history.
+
 > **Status: 2026-11-09, research for the owner (P119); Honkai Impact 3rd and Punishing: Gray Raven built the same day
 > (P120).** The owner asked which franchises have art as good as Genshin Impact and Wuthering Waves, to grow the boss
 > boards. Honkai: Star Rail and Zenless Zone Zero were built straight away (P118). The owner then asked for Honkai Impact

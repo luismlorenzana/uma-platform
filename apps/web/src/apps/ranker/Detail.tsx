@@ -1,7 +1,7 @@
 // The card panel (RK1): the picture, the tier buttons, the moves, the note, and what the card is: an outfit with her
-// sister's profile and her other outfits, a character, or an enemy unit with its membership and Left out.
+// sister's profile and her other outfits, a character, or an enemy unit with Left out.
 import {
-  BOARDS, boardOf, defaultOutfit, identityByOutfit, importBoardOf, outfitIndex, ownOutfits, setDefaultOutfit, setMember, setOut, STYLES, tiersOf,
+  BOARDS, boardOf, defaultOutfit, identityByOutfit, importBoardOf, outfitIndex, ownOutfits, setDefaultOutfit, setOut, STYLES, tiersOf,
   type AnyTier, type BoardId, type BoardState,
 } from '@uma-platform/tiers'
 import { Button } from '@luismlorenzana/uma-kit/ui'
@@ -42,7 +42,6 @@ export function Detail({ board, item, tier, moves }: { board: BoardId; item: Ite
   const sisters = uma ? profiles.sisters.filter((s) => String(s.characterId) === uma.id) : []
 
   const editBoard = (id: BoardId, change: (s: BoardState) => BoardState) => edit(id, change(states[id]))
-  const member = unit?.franchise === 'azurlane' ? (states['azurlane-bosses'].members ?? []).includes(unit.id) : null
   const importBoard = unit ? importBoardOf(unit.franchise) : undefined
   const isOut = importBoard ? (states[importBoard.id].out ?? []).includes(item.id) : false
 
@@ -124,11 +123,6 @@ export function Detail({ board, item, tier, moves }: { board: BoardId; item: Ite
       {unit && (
         <section className="flex flex-col gap-2 text-sm">
           {unit.details.length > 0 && <p className="text-ink-soft">{unit.details.join(' · ')}</p>}
-          {member !== null && (
-            <Button size="sm" variant="secondary" onClick={() => editBoard('azurlane-bosses', (s) => setMember(s, unit.id, !member))}>
-              {member ? 'Take off Azur Lane bosses' : 'Add to Azur Lane bosses'}
-            </Button>
-          )}
           {importBoard && (
             <Button size="sm" variant={isOut ? 'secondary' : 'destructive'} onClick={() => editBoard(importBoard.id, (s) => setOut(s, unit.id, !isOut))}>
               {isOut ? 'Bring it back, unranked' : 'Leave out of every board'}

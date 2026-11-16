@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BOARDS, bestStyles, boardStats, buildCatalog, careerMath, defaultOutfit, emptyBoard, emptyLegacy, emptyProfiles, identities, leadOutfit, legacyCharacterTiers,
-  migrateUmasBoard, move, ordered, outfitPick, parseBoard, parseEnemyImport, parseLegacy, parseLegacyUmasBoard, parseProfiles, place, playstyleCounts, playstyleOf,
-  pools, profileProblems, profilesFromLegacy, rankedIdentities, seedBoards, setDefaultOutfit, setMember, setNote, setOut, setTier, shift, sisterId, tierPlan, tierStep,
-  tiersOf, wayOf, type BoardId, type BoardState, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type UmaProfiles, type Way,
+  BOARDS, bestStyles, boardStats, buildCatalog, careerMath, castCandidates, castPlan, castUnits, defaultOutfit, dropUma, emptyBoard, emptyCast, emptyLegacy, emptyProfiles,
+  identities, leadOutfit, legacyCharacterTiers, migrateUmasBoard, move, ordered, outfitPick, parseBoard, parseCast, parseEnemyImport, parseLegacy, parseLegacyUmasBoard,
+  parseProfiles, place, playstyleCounts, playstyleOf, pools, profileProblems, profilesFromLegacy, rankedIdentities, renameFaction, retireTiers, seedBoards, setDefaultOutfit,
+  setFaction, setNote, setOut, setSlot, setTier, shift, sisterId, tierPlan, tierStep, tiersOf, wayOf, withFactions,
+  type BoardId, type BoardState, type BoardStates, type EnemyUnit, type TierCatalog, type UmaCharacter, type UmaProfiles, type Way,
 } from './index.js'
 
 // Invented records only: no master data, no franchise names, no images.
@@ -21,7 +22,7 @@ const catalog: TierCatalog = {
   enemies: [
     unit('al-a', 'azurlane', 'boss'), unit('al-b', 'azurlane', 'boss'), unit('al-c', 'azurlane', 'key'), unit('al-d', 'azurlane'),
     unit('gi-1', 'genshin', 'playable'), unit('gi-2', 'genshin', 'playable'), unit('ww-1', 'wuwa', 'playable'), unit('hsr-1', 'hsr', 'playable'), unit('zzz-1', 'zzz', 'playable'),
-    unit('hi3-1', 'hi3', 'playable'), unit('hi3-2', 'hi3', 'playable'), unit('pgr-1', 'pgr', 'playable'), unit('nk-1', 'nikke'),
+    unit('hi3-1', 'hi3', 'playable'), unit('hi3-2', 'hi3', 'playable'), unit('nk-1', 'nikke'),
   ],
 }
 /** Runner 701's third look is her sister. */
@@ -30,10 +31,19 @@ const empty = (): BoardStates => Object.fromEntries(BOARDS.map((b) => [b.id, emp
 const ids = (states: BoardStates, board: BoardId, p = profiles) => pools(catalog, states, p)[board].map((m) => m.id)
 
 describe('the scales (P131)', () => {
-  it('gives Playable Umas ten straight tiers and F, Uma NPCs SSS to F, every other board SS to F', () => {
+  it('gives Playable Umas ten straight tiers and F, Uma NPCs SSS to F, the enemy boards SS, S and F (P192)', () => {
     expect(tiersOf('umas').map((t) => t.id)).toEqual(['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'F'])
     expect(tiersOf('npcs').map((t) => t.id)).toEqual(['SSS', 'SS', 'S', 'A', 'B', 'F'])
-    expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'A', 'B', 'F'])
+    expect(tiersOf('key-enemies').map((t) => t.id)).toEqual(['SS', 'S', 'F'])
+    expect(tiersOf('hi3-bosses').map((t) => `${t.id}:${t.label}`)).toEqual(['SS:Boss', 'S:Sub-boss', 'F:Won’t use'])
+    expect(BOARDS.map((b) => b.id)).not.toContain('pgr-bosses')
+  })
+  it('retires A and B on an enemy board saved before P192, keeping notes, and drops Azur Lane’s old members', () => {
+    const old = { ...emptyBoard('azurlane-bosses'), members: ['al-a'], entries: [{ id: 'al-a', tier: 'SS', note: '' }, { id: 'al-b', tier: 'A', note: 'keep' }, { id: 'al-c', tier: 'B', note: '' }, { id: 'al-d', tier: 'F', note: '' }] }
+    expect(parseBoard(retireTiers(old), 'azurlane-bosses')).toEqual({ ...emptyBoard('azurlane-bosses'), entries: [{ id: 'al-a', tier: 'SS', note: '' }, { id: 'al-b', tier: null, note: 'keep' }, { id: 'al-d', tier: 'F', note: '' }] })
+    const npcs = { ...emptyBoard('npcs'), entries: [{ id: '703', tier: 'A', note: '' }] }
+    expect(retireTiers(npcs)).toBe(npcs)
+    expect(() => parseBoard(old, 'azurlane-bosses')).toThrow()
   })
 })
 
@@ -48,15 +58,14 @@ describe('pools', () => {
     expect(ids(states, 'npcs')).toEqual(['701', '702', '703', '704'])
     expect(pools(catalog, states, profiles).npcs[0]).toEqual({ id: '701', via: 'umas', viaTier: null })
   })
-  it('puts the Azur Lane members on their board, every other Azur Lane unit on Key, and NIKKE on Regular', () => {
+  it('puts every Azur Lane unit on its board (P194), the boss boards’ unranked on Key, NIKKE on Regular, and keeps F where it is (P192)', () => {
     const states = empty()
-    states['azurlane-bosses'].members = ['al-a', 'al-b']
     states['azurlane-bosses'].entries = [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-b', tier: 'F', note: '' }]
     states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }]
-    expect(ids(states, 'azurlane-bosses')).toEqual(['al-a', 'al-b'])
-    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
-    states['key-enemies'].entries = [{ id: 'al-c', tier: 'A', note: '' }, { id: 'gi-2', tier: 'B', note: '' }]
-    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'al-b', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2', 'pgr-1'])
+    expect(ids(states, 'azurlane-bosses')).toEqual(['al-a', 'al-b', 'al-c', 'al-d'])
+    expect(ids(states, 'key-enemies')).toEqual(['al-c', 'al-d', 'gi-2', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2'])
+    states['key-enemies'].entries = [{ id: 'al-c', tier: 'S', note: '' }, { id: 'gi-2', tier: 'F', note: '' }]
+    expect(ids(states, 'regular-enemies')).toEqual(['nk-1', 'al-d', 'ww-1', 'hsr-1', 'zzz-1', 'hi3-1', 'hi3-2'])
   })
   it('takes a left-out unit off every board, and brings it back unranked', () => {
     const states = empty()
@@ -66,7 +75,7 @@ describe('pools', () => {
     states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-2', false)
     expect(ids(states, 'hi3-bosses')).toEqual(['hi3-1', 'hi3-2'])
   })
-  it('counts every Playable tier as cast, and only SSS to A elsewhere', () => {
+  it('counts every Playable tier as cast, SSS to A on Uma NPCs', () => {
     const states = empty()
     states.umas.entries = [{ id: '70101', tier: 'T1', note: '' }, { id: '70201', tier: 'T10', note: '' }]
     expect(boardStats(pools(catalog, states, profiles).umas, states.umas)).toMatchObject({ pool: 7, ranked: 2, cast: 2, tiers: { T1: 1, T10: 1, T5: 0 } })
@@ -126,24 +135,27 @@ describe('edits', () => {
     expect(order(tierStep(base, '70301', -1, all))).toEqual(['70101:T1', '70201:T1', '70301:T1'])
     expect(tierStep(base, '70101', -1, all)).toBe(base)
   })
-  it('keeps notes on unranked entries, and adds or removes Azur Lane members', () => {
+  it('keeps notes on unranked entries, and leaves an Azur Lane unit out like any boss board’s (P194)', () => {
     expect(setNote(emptyBoard('npcs'), '704', 'a townsperson').entries).toEqual([{ id: '704', tier: null, note: 'a townsperson' }])
-    const al = setMember({ ...emptyBoard('azurlane-bosses'), members: ['al-a'], entries: [{ id: 'al-a', tier: 'SS', note: '' }] }, 'al-a', false)
-    expect(al).toMatchObject({ members: [], entries: [] })
-    expect(setMember(al, 'al-c', true).members).toEqual(['al-c'])
+    const states = empty()
+    states['azurlane-bosses'] = setOut(setTier(states['azurlane-bosses'], 'al-d', 'S'), 'al-d', true)
+    expect(states['azurlane-bosses']).toMatchObject({ entries: [], out: ['al-d'] })
+    expect(ids(states, 'regular-enemies')).not.toContain('al-d')
   })
 })
 
 describe('files', () => {
   it('round-trips a board and rejects malformed ones', () => {
-    const board = { ...emptyBoard('azurlane-bosses'), members: ['al-a'], entries: [{ id: 'al-a', tier: 'S', note: '' }] }
+    const board = { ...emptyBoard('azurlane-bosses'), entries: [{ id: 'al-a', tier: 'S', note: '' }], out: ['al-d'] }
     expect(parseBoard(JSON.parse(JSON.stringify(board)) as unknown, 'azurlane-bosses')).toEqual(board)
+    expect(parseBoard({ ...board, members: ['al-a'] }, 'azurlane-bosses')).toEqual(board)
     for (const bad of [
-      { ...board, schemaVersion: 2 }, { ...board, board: 'elsewhere' }, { ...board, revision: -1 }, { ...board, members: undefined },
+      { ...board, schemaVersion: 2 }, { ...board, board: 'elsewhere' }, { ...board, revision: -1 },
       { ...board, entries: [{ id: 'al-a', tier: 'T1', note: '' }] }, { ...board, entries: [{ id: '../x', tier: 'S', note: '' }] },
-      { ...board, entries: [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-a', tier: 'B', note: '' }] },
+      { ...board, entries: [{ id: 'al-a', tier: 'S', note: '' }, { id: 'al-a', tier: 'F', note: '' }] }, { ...board, entries: [{ id: 'al-a', tier: 'A', note: '' }] },
     ]) expect(() => parseBoard(bad, 'azurlane-bosses')).toThrow()
-    expect(() => parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] })).toThrow(/Uma NPCs only/)
+    expect(() => parseBoard({ ...emptyBoard('genshin-bosses'), entries: [{ id: 'gi-1', tier: 'SSS', note: '' }] })).toThrow(/SS, S or F on an enemy board/)
+    expect(() => parseBoard({ ...emptyBoard('key-enemies'), out: [] }, 'key-enemies')).toThrow(/boss board/)
   })
   it('takes Playable Umas as schema 2, outfit ids and T1 to T10 only', () => {
     const board = { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T4', note: 'x' }] }
@@ -210,11 +222,11 @@ describe('moving the old boards (P131)', () => {
     expect(moved.entries).toEqual([{ id: '70102', tier: 'T1', note: 'lead' }, { id: '70201', tier: 'T4', note: '' }, { id: '70301', tier: 'T7', note: '' }])
     expect(parseBoard(moved, 'umas')).toEqual(moved)
   })
-  it('starts the enemy boards from the old enemy roster', () => {
-    const states = seedBoards(catalog, { enemies: [{ enemyId: 'al-a', bucket: 'boss', tier: 'SS', note: 'lead' }, { enemyId: 'al-c', bucket: 'elite', tier: 'A1', note: '' }, { enemyId: 'nk-1', bucket: 'elite', tier: 'B', note: '' }] })
-    expect(states['azurlane-bosses']).toMatchObject({ members: ['al-a', 'al-b'], entries: [{ id: 'al-a', tier: 'SS', note: 'lead' }] })
+  it('starts the enemy boards from the old enemy roster, an old A or B unranked (P192)', () => {
+    const states = seedBoards(catalog, { enemies: [{ enemyId: 'al-a', bucket: 'boss', tier: 'SS', note: 'lead' }, { enemyId: 'al-c', bucket: 'elite', tier: 'A1', note: '' }, { enemyId: 'nk-1', bucket: 'elite', tier: 'B', note: 'n' }, { enemyId: 'al-d', bucket: 'regular', tier: 'F', note: '' }] })
+    expect(states['azurlane-bosses'].entries).toEqual([{ id: 'al-a', tier: 'SS', note: 'lead' }])
     expect(states['key-enemies'].entries).toEqual([{ id: 'al-c', tier: 'S', note: '' }])
-    expect(states['regular-enemies'].entries).toEqual([{ id: 'nk-1', tier: 'B', note: '' }])
+    expect(states['regular-enemies'].entries).toEqual([{ id: 'nk-1', tier: null, note: 'n' }, { id: 'al-d', tier: 'F', note: '' }])
     expect(states.umas).toEqual(emptyBoard('umas'))
   })
 })
@@ -240,8 +252,8 @@ describe('careers and the plan', () => {
     expect(plan.careers).toMatchObject({ careers: 3, bosses: 1, bossesPerCareer: 3 })
     expect(plan.boards.find((b) => b.id === 'npcs')!.unranked.map((e) => e.id)).toEqual(['703', '704'])
     expect(playstyleCounts(catalog, states, profiles).umas.T1).toMatchObject({ front: 1, pace: 1 })
-    states['pgr-bosses'] = setOut(states['pgr-bosses'], 'pgr-1', true)
-    expect(tierPlan(catalog, states, profiles, 'x').boards.find((b) => b.id === 'pgr-bosses')).toMatchObject({ leftOut: [{ id: 'pgr-1', name: 'Foe pgr-1' }] })
+    states['hi3-bosses'] = setOut(states['hi3-bosses'], 'hi3-1', true)
+    expect(tierPlan(catalog, states, profiles, 'x').boards.find((b) => b.id === 'hi3-bosses')).toMatchObject({ leftOut: [{ id: 'hi3-1', name: 'Foe hi3-1' }] })
   })
 })
 
@@ -265,5 +277,72 @@ describe('the catalog', () => {
   it('reads a playstyle from the best running-style grades, ties included', () => {
     expect(bestStyles({ front: 'A', pace: 'S', late: 'S', end: 'B' })).toEqual(['pace', 'late'])
     expect(wayOf({ front: 'B', pace: 'B', late: 'A', end: 'A' })).toBe('late-end')
+  })
+})
+
+describe('Uma Cyberpunk’s enemy casting (P193)', () => {
+  const ranked = () => {
+    const states = empty()
+    states.umas.entries = [{ id: '70301', tier: 'T1', note: '' }, { id: '70103', tier: 'T1', note: '' }, { id: '70102', tier: 'T2', note: '' }, { id: '70201', tier: 'T2', note: '' }, { id: '70401', tier: 'F', note: '' }]
+    states['azurlane-bosses'].entries = [{ id: 'al-a', tier: 'SS', note: '' }, { id: 'al-b', tier: 'S', note: '' }, { id: 'al-c', tier: 'S', note: '' }]
+    states['genshin-bosses'].entries = [{ id: 'gi-1', tier: 'SS', note: '' }, { id: 'gi-2', tier: 'S', note: '' }]
+    states['hi3-bosses'].entries = [{ id: 'hi3-1', tier: 'SS', note: '' }, { id: 'hi3-2', tier: 'F', note: '' }]
+    states['key-enemies'].entries = [{ id: 'ww-1', tier: 'SS', note: '' }]
+    return { states, identities: rankedIdentities(catalog, states, profiles) }
+  }
+  it('gives each Uma in the batches the next of five factions, in ranking order, and keeps a faction once given', () => {
+    const { identities: list } = ranked()
+    const batch = list.filter((i) => i.tier && i.tier !== 'F')
+    const cast = withFactions(emptyCast('cyberpunk'), batch)
+    expect(cast.factions.map((f) => f.id)).toEqual(['f1', 'f2', 'f3', 'f4', 'f5'])
+    expect(cast.umas.map((e) => `${e.uma}:${e.faction}`)).toEqual(['703:f1', 's70103:f2', '701:f3', '702:f4'])
+    expect(cast.umas[0]!.subBosses).toEqual([null, null, null])
+    const moved = setFaction(cast, '703', 'f5')
+    expect(withFactions(moved, batch)).toBe(moved)
+    expect(setFaction(cast, '703', 'nope')).toBe(cast)
+    expect(renameFaction(cast, 'f1', '  The First  ').factions[0]!.title).toBe('The First')
+  })
+  it('offers a Boss slot the boss boards’ SS and a Sub-boss slot their S, every franchise, never Key enemies, never anyone cast', () => {
+    const { states, identities: list } = ranked()
+    let cast = withFactions(emptyCast('cyberpunk'), list.filter((i) => i.tier && i.tier !== 'F'))
+    expect(castCandidates(catalog, states, cast, 'boss').map((c) => c.id)).toEqual(['al-a', 'gi-1', 'hi3-1'])
+    expect(castCandidates(catalog, states, cast, 1).map((c) => `${c.franchise}:${c.id}`)).toEqual(['azurlane:al-b', 'azurlane:al-c', 'genshin:gi-2'])
+    cast = setSlot(cast, '703', 'boss', 'gi-1')
+    cast = setSlot(cast, '703', 0, 'al-c')
+    expect(castCandidates(catalog, states, cast, 'boss').map((c) => c.id)).toEqual(['al-a', 'hi3-1'])
+    expect(castCandidates(catalog, states, cast, 2).map((c) => c.id)).toEqual(['al-b', 'gi-2'])
+    // Cast once: another slot can't take her, and the same slot again changes nothing.
+    expect(setSlot(cast, '701', 'boss', 'gi-1')).toBe(cast)
+    expect(setSlot(cast, '703', 1, 'al-c')).toBe(cast)
+    expect(setSlot(cast, 'nobody', 'boss', 'al-a')).toBe(cast)
+    expect([...castUnits(cast).entries()]).toEqual([['gi-1', { uma: '703', slot: 'boss' }], ['al-c', { uma: '703', slot: 0 }]])
+    expect(castUnits(setSlot(cast, '703', 0, null)).has('al-c')).toBe(false)
+  })
+  it('round-trips the file and refuses an enemy twice, an unknown faction or a wrong slot count', () => {
+    const cast = setSlot(withFactions(emptyCast('cyberpunk'), [{ id: '703' }, { id: 's70103' }]), '703', 'boss', 'al-a')
+    expect(parseCast(JSON.parse(JSON.stringify(cast)) as unknown, 'cyberpunk')).toEqual(cast)
+    const entry = cast.umas[1]!
+    for (const bad of [
+      { ...cast, umas: [cast.umas[0], { ...entry, subBosses: ['al-a', null, null] }] }, { ...cast, umas: [{ ...entry, faction: 'f9' }] },
+      { ...cast, umas: [{ ...entry, subBosses: [null, null] }] }, { ...cast, umas: [{ ...entry, uma: '../x' }] }, { ...cast, factions: [] },
+      { ...cast, factions: [{ id: 'f1', title: 'A', color: 'red' }] }, { ...cast, game: 'elsewhere' },
+    ]) expect(() => parseCast(bad)).toThrow()
+  })
+  it('lays the casting out by tier and by faction for the plan, flags a pick re-ranked since, and keeps the picks of an Uma who left', () => {
+    const { states, identities: list } = ranked()
+    let cast = withFactions(emptyCast('cyberpunk'), list.filter((i) => i.tier && i.tier !== 'F'))
+    cast = setSlot(setSlot(setSlot(cast, '703', 'boss', 'al-a'), '703', 2, 'gi-2'), '701', 'boss', 'hi3-1')
+    cast = { ...cast, umas: [...cast.umas, { uma: '704', faction: 'f5', boss: 'gi-1', subBosses: [null, null, null] }] }
+    states['hi3-bosses'].entries = [{ id: 'hi3-1', tier: 'S', note: '' }]
+    const view = castPlan(catalog, states, list, cast)
+    expect(view.tiers.slice(0, 2).map((t) => [t.tier, t.umas.map((u) => u.uma)])).toEqual([['T1', ['703', 's70103']], ['T2', ['701', '702']]])
+    expect(view.tiers[0]!.umas[0]).toMatchObject({ faction: 'f1', boss: { id: 'al-a', franchise: 'azurlane', tier: 'SS', fits: true }, subBosses: [null, null, { id: 'gi-2', fits: true }] })
+    expect(view.tiers[1]!.umas[0]!.boss).toMatchObject({ id: 'hi3-1', tier: 'S', fits: false })
+    expect(view.byFaction.map((f) => `${f.id}:${f.umas.length}:${f.bosses}:${f.subBosses}`)).toEqual(['f1:1:1:1', 'f2:1:0:0', 'f3:1:1:0', 'f4:1:0:0', 'f5:0:0:0'])
+    expect(view.outside).toEqual([expect.objectContaining({ uma: '704', boss: expect.objectContaining({ id: 'gi-1' }) })])
+    expect(view.counts).toMatchObject({ umas: 4, bosses: 2, subBosses: 1, openBosses: 2, openSubBosses: 11, misfits: 1, available: { boss: 0, subBoss: 2 } })
+    expect(dropUma(cast, '704').umas.map((e) => e.uma)).not.toContain('704')
+    expect(tierPlan(catalog, states, profiles, 'x', { cyberpunk: cast }).enemyCasts.cyberpunk.counts.bosses).toBe(2)
+    expect(tierPlan(catalog, states, profiles, 'x').enemyCasts.cyberpunk.counts).toMatchObject({ umas: 4, bosses: 0 })
   })
 })

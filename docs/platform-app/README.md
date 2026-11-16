@@ -14,6 +14,12 @@
 > starts with the **Uma Ranker** (today's Studio boards) and **Uma Character Art** (uma-quest's Album, moved here).
 > Visual page: [previews/platform-app.html](previews/platform-app.html).
 >
+> **Uma Cyberpunk's enemy casting is live in the Ranker (EC1, P192–P196, 2026-11-16)** at
+> https://uma-platform.web.app/ranker/cyberpunk: each of the 100 Umas in the batches has one of five factions, a Boss
+> from the boss boards' SS and three Sub-bosses from their S, nobody cast twice ([below](#uma-cyberpunks-enemy-casting)).
+> The enemy boards now rank SS, S and F ("won't use"), Azur Lane's board holds every Azur Lane unit, Punishing: Gray Raven
+> is gone and Honkai Impact 3rd keeps 67 battlesuits.
+>
 > It builds on the cloud plan's IN1–IN26 ([uma-rpg's plan](https://github.com/luismlorenzana/uma-rpg/blob/main/docs/design/cloud/plan.md)),
 > uma-quest's [infrastructure](https://github.com/luismlorenzana/uma-quest/blob/main/docs/technical/infrastructure.md) and
 > [Album](https://github.com/luismlorenzana/uma-quest/blob/main/docs/game/album.md) (its Q52, Q53, D46, D47), and
@@ -38,7 +44,7 @@
 
   | Sub-app | What | Packets |
   |---|---|---|
-  | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live) | RK1 ✓, then RK2, the pass after your ranking |
+  | **Uma Ranker** | Every tier board online; Playable Umas per outfit on ten tiers, one art batch each, with sisters ranked as themselves (live); Uma Cyberpunk's enemy casting (live) | RK1 ✓, EC1 ✓, then RK2, the pass after your ranking |
   | **Uma Character Art** | uma-quest's Album, moved here; then every Uma's chibi sprite sets, support card art and authoring inputs; then her approved looks in other universes, on her own page | CA1–CA3 ✓, CA4 ✓ |
   | **Uma Enemy Art** | The enemies' approved looks, apart from Character Art: a tab per game with enemies (Uma Cyberpunk, then Uma Quest; Uma Farm has none), faction by faction | EA1 ✓, EA2 when Uma Quest's enemy authoring starts |
   | **Uma Story** | uma-quest's and uma-farm's Story Sandboxes, moved here as three books on one cast: Cast, Quest, Farm ([story.md](story.md)) | US1 ✓ (live); US2–US4 parked, local first (P150) |
@@ -140,6 +146,33 @@ All in project `uma-rpg`, following IN1–IN26, with app id `platform` (IN4's na
 | AP52 | **`pnpm ranker:plan`** (P138) rebuilds the bucket's plan as the Ranker does, for a change that went around the API (Claude's profile pushes); the Ranker's scripts run on Windows too |
 | AP36 | **RK2, the pass after your ranking:** lock the ten batches as the art queue, revisit the sisters, point the sprite queue (TA2) at the plan. A later re-rank or a bigger change is a manual pass with Claude |
 
+## Uma Cyberpunk's enemy casting
+
+The owner, 2026-11-16: "a single Enemy ranking and authoring page specifically for Uma Cyberpunk", with the Uma rankings
+by tier as read-only data, each Uma fighting one of five factions given "sequentially" first, and four slots each: one
+Boss from every franchise's SS and three Sub-bosses from their S, where an enemy once cast "will not show" again; stored
+"per rank/tier and also per faction". Live at https://uma-platform.web.app/ranker/cyberpunk (EC1, P193).
+
+```text
+ T1  ┌───────────────────────────────┐ ┌───────────────────────────────┐
+     ┃ [face] Almond Eye   Faction 1 ▾│ ┃ [face] Kitasan Black Faction 2 ▾│   ← her faction's colour on the edge
+     ┃ ┌──────┐ ┌────┐┌────┐┌────┐    │ ┃ ┌──────┐ ┌────┐┌────┐┌────┐     │
+     ┃ │♛ Boss│ │◆Sub││◆Sub││◆Sub│    │ ┃ │♛     │ │◆   ││◆   ││◆   │     │   ← crimson Boss (SS), teal Subs (S);
+     ┃ └──────┘ └────┘└────┘└────┘    │ ┃ └──────┘ └────┘└────┘└────┘     │     dashed while open
+ T2  …                                                     picker: every boss board's SS (or S), franchise by
+                                                           franchise, in board order, minus anyone cast
+```
+
+| Id | Call |
+|---|---|
+| AP103 | **One page in the Ranker** (`/ranker/cyberpunk`, a tile "Enemy casting" on its home with ♛ and ◆ counts): T1 to T10 as rows, the Umas of the ten batches in ranking order, read only (their tiers come from Playable Umas). Each card: her default outfit's face, her name, her place, her faction (a colour on the card's edge and a menu to change it), and four slots |
+| AP104 | **The slots tell themselves apart:** the Boss is a larger crimson frame with a gold ♛, each Sub-boss a smaller teal frame with a ◆; an open slot is dashed and says Boss or Sub; a filled one shows the enemy's face; a pick whose tier changed on its board since shows a "!" |
+| AP105 | **The picker:** a slot opens the boss boards' candidates, beside the rows on desktop and as a sheet on a phone: SS for a Boss, S for a Sub-boss, every franchise (Azur Lane, Genshin Impact, Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd), each in its board's authoring order, searchable; never Key or Regular enemies, never a left-out unit, never anyone already cast in any slot. A pick moves on to her next open slot; Clear frees a slot |
+| AP106 | **Five factions, neutral to start:** Faction 1 to 5, each with a colour, renamed on the page. Each Uma in ranking order took the next one (1, 2, 3, 4, 5, 1, …), 20 each; an Uma who joins the batches later gets hers the same way; one who leaves keeps her picks in "No longer in a batch" until freed. Uma Cyberpunk's story follows these factions later (the owner) |
+| AP107 | **The data:** `ranker/casts/cyberpunk.json` (`kind: enemy-cast`): `factions` (id, name, colour) and `umas` (`uma`, `faction`, `boss`, `subBosses` ×3), saved like a board (`PUT /api/ranker/casts/cyberpunk`, revision-checked, 409 on a stale save), refused when it names an unknown enemy or casts one twice. Private: the bucket, the local mirror (`ranker:pull`) and the backup only |
+| AP108 | **The plan carries it** (`enemyCasts.cyberpunk`): `tiers` (T1–T10, each Uma with her faction and her four picks, each pick's name, franchise, tier and fit), `byFaction` (the same Umas by faction, with Boss and Sub-boss counts), `outside`, and `counts` (cast, open, misfits, and SS and S left to cast) |
+| AP109 | **The enemy boards it reads** (P192, P194): SS, S and F on every enemy board, F "won't use" and never flowing down; the Azur Lane board holds every Azur Lane unit |
+
 ## Uma Character Art
 
 | Id | Call |
@@ -212,6 +245,7 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | SH2 | The cloud and the deploy: `infra/bootstrap.sh`, `deploy-app.yml`, the isolation checks, live | Claude | M | SH1 ✓, your go ✓, your console entries ✓ | **Done** (P130) |
 | RK1 | Uma Ranker: every board online, Playable Umas per outfit on ten tiers, sisters, the bucket store, `ranker:seed`, `ranker:push`, `ranker:pull`, the Studio's boards retired | Claude | L | SH2 ✓ | **Done** (P131) |
 | RK2 | The pass after your ranking: lock the ten batches as the art queue, revisit the sisters, TA2 reads the plan | Claude | M | RK1 ✓, your ranking | After your ranking |
+| EC1 | Uma Cyberpunk's enemy casting: the page, the casting file and route, the plan's `enemyCasts`; with the enemy boards on SS, S and F, Azur Lane's whole roster, Punishing: Gray Raven removed and Honkai Impact 3rd cleaned up | Claude | M | RK1 ✓, your ask ✓ | **Done** (P192–P196) |
 | CA1 | Uma Character Art: uma-quest's Album moved here, laid out by the Ranker | Claude | M | SH2 ✓, RK1 ✓ | **Done** (P135) |
 | CA2 | Chibi sprite sets, support card art, authoring inputs and source-art releases | Claude | M | CA1 ✓ | **Done** (P136) |
 | CA3 | Full body: the 3D render as master data's `outfit-renders`, shown in Character Art | Claude | S | CA2 ✓, your ask ✓ | **Done** (P137) |

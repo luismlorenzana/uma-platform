@@ -1,7 +1,7 @@
-// pnpm tiers:import <genshin|wuwa|hsr|zzz|hi3|pgr> [--offline]
+// pnpm tiers:import <genshin|wuwa|hsr|zzz|hi3> [--offline]
 //
 // The local import for the new boss boards (P115). It reads the franchise's public character list, keeps the female
-// characters (Honkai Impact 3rd and Punishing: Gray Raven come unfiltered from their wikis, P120), downloads each one's
+// characters (Honkai Impact 3rd comes unfiltered from its wiki, P120), downloads each one's
 // released face, portrait and splash once into the ignored download cache, re-encodes them as WebP beside the Azur Lane
 // and NIKKE references, and writes `content/authoring/enemies/imports/<franchise>.json`. Everything lands in the
 // gitignored content folder; nothing is published.
@@ -14,7 +14,7 @@ import { mkdir, readdir, readFile, rename, unlink, writeFile } from 'node:fs/pro
 import { extname, resolve } from 'node:path'
 import { content as defaultContent } from '@uma-platform/sprite-pipeline'
 import { CATEGORIES, IMPORT_PREFIX, IMPORTED, parseEnemyImport, type Category, type EnemyImport, type ImportedFranchise, type ImportUnit } from '@uma-platform/tiers'
-import { encode, genshinCandidates, hi3Candidates, hi3Images, HSR_GENDER, hsrCandidates, pgrCandidates, pgrImages, pgrInfobox, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type EnkaAgent, type Kind, type Source, type StarRailResCharacter, type WikiImages, type WikiPage, type YattaStarRail } from './tier-sources.js'
+import { encode, genshinCandidates, hi3Candidates, hi3Images, HSR_GENDER, hsrCandidates, pronounGender, wuwaCandidates, zzzCandidates, type AmberAvatar, type Candidate, type EncoreDetail, type EncoreRole, type EnkaAgent, type Kind, type Source, type StarRailResCharacter, type WikiImages, type WikiPage, type YattaStarRail } from './tier-sources.js'
 
 const AGENT = 'uma-studio-import/1.0 (local authoring tool)'
 
@@ -119,12 +119,6 @@ async function run(franchise: ImportedFranchise): Promise<void> {
     roster = hi3Candidates(pages, (f) => files.get(f))
     source = 'The Honkai Impact 3rd wiki (honkaiimpact3.fandom.com): every page in Category:Battlesuits'
     filter = 'every battlesuit, unfiltered'
-  } else if (franchise === 'pgr') {
-    const api = 'https://grayravens.com/w/api.php', pages = await wikiPages(api, 'Character', 'revisions', franchise)
-    const files = await wikiFiles(api, pages.flatMap((p) => { const frame = pgrInfobox(p.content ?? '').Frame; return frame ? [pgrImages(frame)] : [] }), franchise)
-    roster = pgrCandidates(pages, (f) => files.get(f))
-    source = 'GRAY RAVENS, the Punishing: Gray Raven wiki (grayravens.com): every page in Category:Character with a frame infobox'
-    filter = 'every frame, unfiltered'
   } else if (franchise === 'genshin') {
     const list = await json<{ data: { items: Record<string, AmberAvatar> } }>('https://gi.yatta.moe/api/v2/en/avatar', franchise)
     roster = genshinCandidates(Object.values(list.data.items))

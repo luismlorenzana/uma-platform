@@ -20,3 +20,25 @@
 .tier-row { border-left: 4px solid hsl(var(--tier, 0) var(--tier-sat, 70%) 55% / 0.7); }
 .tier-row.unranked { border-left-color: transparent; }
 .drop-target { outline: 2px dashed var(--color-accent); outline-offset: -2px; }
+
+/* Uma Cyberpunk's enemy casting (P193): each Uma card carries her faction's colour on its left edge; a Boss slot is a
+   larger crimson frame with a gold crown, a Sub-boss slot a smaller teal frame with a diamond; an open slot is dashed. */
+.cast-grid { grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); }
+.faction-grid { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+.cast-card { border-left: 4px solid var(--faction, transparent); }
+.faction-dot { background: var(--faction, currentColor); }
+.cast-faction { border-left: 4px solid var(--faction, transparent); }
+.cast-chip { display: inline-block; padding: 0 0.4rem; border-radius: 999px; border: 1px solid var(--faction, currentColor); }
+.slot { position: relative; flex-shrink: 0; overflow: hidden; border-radius: 6px; border-width: 2px; border-style: solid; background: hsl(0 0% 50% / 0.08); }
+.slot-boss { border-color: hsl(354 72% 50%); }
+.slot-sub { border-color: hsl(190 70% 42%); }
+.slot.empty { border-style: dashed; }
+.slot-empty-label { display: flex; height: 100%; align-items: flex-end; justify-content: center; padding-bottom: 3px; font-size: 10px; font-weight: 700; }
+.slot-boss .slot-empty-label { color: hsl(354 72% 50%); }
+.slot-sub .slot-empty-label { color: hsl(190 70% 42%); }
+.slot-mark { position: absolute; top: 1px; left: 3px; font-size: 12px; line-height: 1; text-shadow: 0 0 2px hsl(0 0% 0% / 0.9), 0 0 1px hsl(0 0% 0%); }
+.slot-boss .slot-mark { color: hsl(45 95% 58%); }
+.slot-sub .slot-mark { color: hsl(190 80% 70%); font-size: 10px; }
+.slot.misfit::after { content: '!'; position: absolute; right: 2px; bottom: 1px; width: 14px; height: 14px; border-radius: 999px; background: hsl(38 95% 50%); color: #000; font-size: 10px; font-weight: 800; line-height: 14px; text-align: center; }
+.pick-boss { box-shadow: inset 0 0 0 2px hsl(354 72% 50% / 0.55); }
+.pick-sub { box-shadow: inset 0 0 0 2px hsl(190 70% 42% / 0.55); }

@@ -1,5 +1,11 @@
 # Tier authoring: one local Studio, eleven boards, and a career for every Uma
 
+> **2026-11-16 (P192–P196):** the enemy boards rank **SS, S and F**, where F is "won't use" and never flows down (A and B
+> were retired to unranked, archived); the Azur Lane board holds **every** Azur Lane unit (the curated list is gone);
+> **Punishing: Gray Raven is removed** everywhere; Honkai Impact 3rd keeps **67** battlesuits (its lower-rarity and
+> look-alike ones removed). The boss boards' SS and S feed **Uma Cyberpunk's enemy casting** ([platform-app](../platform-app/README.md#uma-cyberpunks-enemy-casting),
+> P193). The page below is history where it says otherwise.
+
 > **Moved online on 2026-11-11 as the Uma Ranker (P131,** [platform-app](../platform-app/README.md) **AP25–AP36).** Playable
 > Umas now ranks every outfit on ten straight tiers, T1 to T10, one art batch each, and outfits that are another Uma (her
 > sister) rank as Umas of their own; the picks live in the profiles; the plan is schema 2. Everything below is the local

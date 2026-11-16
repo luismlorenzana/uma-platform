@@ -45,6 +45,12 @@
   The local album pages are built by code in git, `scripts/character-art/albums` (`pnpm art:albums`, P181); their words
   stay local in each page's `album.json`. Uma Cyberpunk has two separate authoring cycles (P182): characters
   (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, names local).
+- **Uma Cyberpunk's enemy casting (EC1, P192–P196):** https://uma-platform.web.app/ranker/cyberpunk, the Ranker's page
+  where each Uma in the batches gets one of five factions (Faction 1–5, the owner names them; the story follows later),
+  one Boss from the boss boards' SS and three Sub-bosses from their S, nobody cast twice. Private data in
+  `ranker/casts/cyberpunk.json`; the plan's `enemyCasts.cyberpunk` has it by tier and by faction. The enemy boards rank
+  SS, S and F ("won't use", never flows down); Punishing: Gray Raven is gone; `ranker/catalog/removed.json` keeps
+  removed units (Honkai Impact 3rd's cleanup) off the catalog.
 - **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
   `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
   franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's

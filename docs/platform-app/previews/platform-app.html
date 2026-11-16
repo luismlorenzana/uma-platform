@@ -71,6 +71,22 @@
   svg { display: block; width: 100%; height: auto; }
   svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
   .note { font-size: 12px; color: var(--ink-faint); }
+  .cast { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin: 12px 0; }
+  .uma { background: var(--raised); border-radius: 10px; padding: 10px 12px; border-left: 4px solid var(--f); }
+  .uma .who { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .uma .face { width: 36px; height: 36px; border-radius: 6px; background: var(--sunken); display: grid; place-items: center; font: 700 11px system-ui; color: var(--ink-faint); }
+  .uma .name { font-weight: 650; color: var(--ink); }
+  .uma .fac { font-size: 11px; color: var(--ink-soft); }
+  .uma .fac i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--f); margin-right: 4px; }
+  .slots { display: flex; align-items: flex-end; gap: 6px; }
+  .slot { position: relative; border: 2px solid; border-radius: 6px; display: grid; place-items: end center; font: 700 10px system-ui; padding-bottom: 3px; }
+  .slot.boss { width: 56px; height: 56px; border-color: #d4313f; color: #d4313f; }
+  .slot.sub { width: 42px; height: 42px; border-color: #1b8fa6; color: #1b8fa6; }
+  .slot.open { border-style: dashed; }
+  .slot.full { background: linear-gradient(160deg, var(--sunken), var(--hairline-strong)); }
+  .slot::before { position: absolute; top: 2px; left: 4px; font-size: 12px; }
+  .slot.boss::before { content: '♛'; color: #e0a92a; }
+  .slot.sub::before { content: '◆'; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -78,7 +94,7 @@
   <p class="eyebrow">uma-platform · the platform app · P127–P136 · live 2026-11-11</p>
   <h1>One signed-in home for the platform's tools<span>.</span></h1>
   <p class="lead">An Uma Platform website in the <code>uma-rpg</code> project, with Google sign-in and the games' shell. Each sub-app opens from its own tile: first the <b>Uma Ranker</b> (today's Studio boards, moved online), then <b>Uma Character Art</b> (uma-quest's Album, moved here). Live at <a href="https://uma-platform.web.app">uma-platform.web.app</a> since SH1 and SH2; Google sign-in is set up.</p>
-  <nav><a href="#apps">Sub-apps</a><a href="#map">How it fits</a><a href="#cloud">Cloud</a><a href="#cost">Cost</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../README.md">Markdown</a></nav>
+  <nav><a href="#apps">Sub-apps</a><a href="#map">How it fits</a><a href="#cloud">Cloud</a><a href="#cost">Cost</a><a href="#casting">Enemy casting</a><a href="#packets">Packets</a><a href="#calls">Calls</a><a href="#steps">Your steps</a><a href="../README.md">Markdown</a></nav>
   <div class="tiles">
     <div class="tile"><b>2</b><span>sub-apps first: Ranker, Character Art</span></div>
     <div class="tile"><b>10 + F</b><span>tiers on Playable Umas: ten art batches and F, not used</span></div>
@@ -99,6 +115,27 @@
       <div class="app later"><h3>Quest, Farm and Platform Art</h3><p>Every original asset each one uses, from uma-art and each game's private pack: kits, props, bubbles, icons, foes.</p><span class="pill later">GA1–GA3, later</span></div>
       <div class="app later"><h3>Publish</h3><p>Publish from your private authoring. It reads the files from the authoring backup or through a local helper, and moves the Studio's approval pages online.</p><span class="pill later">PB1, later</span></div>
     </div>
+  </section>
+
+  <section class="card" id="casting">
+    <h2>Uma Cyberpunk's enemy casting <span class="pill ready">live · EC1</span></h2>
+    <p>At <a href="https://uma-platform.web.app/ranker/cyberpunk"><code>/ranker/cyberpunk</code></a>, a page of the Ranker (P193). The Umas of the ten batches, tier by tier and read only, each with her faction and four slots: one <b>♛ Boss</b> from the boss boards' SS and three <b>◆ Sub-bosses</b> from their S. A slot opens a picker with every franchise's candidates in board order; anyone cast is gone from every picker.</p>
+    <div class="cast" aria-label="Two Uma cards, as the page draws them">
+      <div class="uma" style="--f:#d9485f"><div class="who"><span class="face">Uma</span><div><div class="name">T1 · her place 1</div><div class="fac"><i></i>Faction 1</div></div></div>
+        <div class="slots"><span class="slot boss full"></span><span class="slot sub full"></span><span class="slot sub open">Sub</span><span class="slot sub open">Sub</span></div></div>
+      <div class="uma" style="--f:#e0912b"><div class="who"><span class="face">Uma</span><div><div class="name">T1 · her place 2</div><div class="fac"><i></i>Faction 2</div></div></div>
+        <div class="slots"><span class="slot boss open">Boss</span><span class="slot sub open">Sub</span><span class="slot sub open">Sub</span><span class="slot sub open">Sub</span></div></div>
+    </div>
+    <div class="scroll"><table>
+      <thead><tr><th>What</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td><b>Factions</b></td><td>Five, Faction 1 to 5, each a colour on her card's edge; you name them on the page. Each Uma in ranking order took the next one (20 each); change one from her card. Uma Cyberpunk's story follows them later.</td></tr>
+        <tr><td><b>Who's offered</b></td><td>The six boss boards: Azur Lane, Genshin Impact, Wuthering Waves, Honkai: Star Rail, Zenless Zone Zero, Honkai Impact 3rd. SS for a Boss, S for a Sub-boss. Never Key or Regular enemies, a left-out unit or anyone already cast. A pick re-ranked since shows a "!".</td></tr>
+        <tr><td><b>The data</b></td><td><code>ranker/casts/cyberpunk.json</code> (private), saved like a board; the plan's <code>enemyCasts.cyberpunk</code> lays it out by tier and by faction, with the counts.</td></tr>
+        <tr><td><b>The boards it reads</b></td><td>The enemy boards rank <b>SS, S and F</b> ("won't use", never flows down; P192). Azur Lane's board holds all 344 units (P194). Punishing: Gray Raven is removed (P195). Honkai Impact 3rd keeps 67 battlesuits (P196).</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Calls AP103–AP109 in the README. The cards above are a sketch: no character art or names on this page.</p>
   </section>
 
   <section class="card" id="map">

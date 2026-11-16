@@ -1,7 +1,7 @@
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { parseEnemyImport } from '@uma-platform/tiers'
-import { encode, genshinCandidates, hi3Candidates, hsrCandidates, pgrCandidates, pronounGender, slug, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
+import { encode, genshinCandidates, hi3Candidates, hsrCandidates, pronounGender, slug, wuwaCandidates, zzzCandidates, type AmberAvatar, type EncoreDetail } from './tier-sources.js'
 
 // Invented records and generated pixels only.
 const avatar = (id: number, name: string, bodyType: string, release = 1_600_000_000): AmberAvatar =>
@@ -64,12 +64,6 @@ describe('the wiki imports (unfiltered)', () => {
       art: { url: 'https://wiki.example/Storm%20Lance%20-%20Dawn.png', fallbacks: ['https://wiki.example/Storm%20Lance%20-%20Dawn%20(Thumbnail).png'], cut: 'center-figure' },
     })
     expect(list[0]?.images).toEqual({})
-  })
-  it('keeps every frame from its infobox, and tags a collaboration character', () => {
-    const page = (title: string, name: string, frame: string, element: string) => ({ title, content: `{{Character Top Nav}}\n{{Character\n|Name=${name}\n|Frame=${frame}\n|Rank=S\n|Class=Attacker\n|Element=[[File:Element-Fire-Icon.png|25x25px|link=]]${element}\n}}\n` })
-    const list = pgrCandidates([page('Vela: Ember Song', 'Vela', "Ember Song", 'Physical (30%) Fire (70%)'), page('X9', 'X9', 'X9', 'Dark (100%)'), { title: 'Test:1', content: 'no infobox' }], url)
-    expect(list.map((c) => [c.key, c.details])).toEqual([['vela-ember-song', ['S-Rank', 'Attacker', 'Fire']], ['x9', ['S-Rank', 'Attacker', 'Dark', 'Collab']]])
-    expect(list[0]?.images).toMatchObject({ face: { url: 'https://wiki.example/Dialogue-EmberSong-Icon.png' }, art: { url: 'https://wiki.example/Character-EmberSong-Portrait.png', cut: 'trim-figure' } })
   })
 })
 

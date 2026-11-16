@@ -1,7 +1,7 @@
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { emptyBoard, emptyProfiles, type TierCatalog, type UmaCharacter } from '@uma-platform/tiers'
+import { emptyBoard, emptyCast, emptyProfiles, type TierCatalog, type UmaCharacter } from '@uma-platform/tiers'
 import { afterAll, describe, expect, it } from 'vitest'
 import { ABSENT, DirectoryBlobStore } from '../../store/blob-store'
 import { RankerConflict, RankerInvalid, RankerStore } from './ranker.store'
@@ -49,7 +49,7 @@ describe('the Ranker store', () => {
     await expect(store.saveBoard('umas', { ...emptyBoard('umas'), entries: [{ id: '99901', tier: 'T1', note: '' }] }, catalog)).rejects.toBeInstanceOf(RankerInvalid)
     await expect(store.saveBoard('npcs', { ...emptyBoard('npcs'), entries: [{ id: '70101', tier: 'S', note: '' }] }, catalog)).rejects.toBeInstanceOf(RankerInvalid)
     await expect(store.saveBoard('umas', { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'SS', note: '' }] }, catalog)).rejects.toThrow(/T1 to T10/)
-    await expect(store.saveBoard('azurlane-bosses', { ...emptyBoard('azurlane-bosses'), members: ['gi-1'] }, catalog)).rejects.toThrow(/Azur Lane/)
+    await expect(store.saveBoard('azurlane-bosses', { ...emptyBoard('azurlane-bosses'), out: ['gi-1'] }, catalog)).rejects.toThrow(/own units/)
     await expect(store.saveBoard('genshin-bosses', { ...emptyBoard('genshin-bosses'), out: ['al-a'] }, catalog)).rejects.toThrow(/own units/)
     expect((await store.saveBoard('genshin-bosses', { ...emptyBoard('genshin-bosses'), out: ['gi-1'] }, catalog)).out).toEqual(['gi-1'])
   })
@@ -68,5 +68,25 @@ describe('the Ranker store', () => {
     expect(written.batches[1]!.outfits).toEqual([70102])
     // A second plan overwrites the first.
     expect((await store.writePlan(catalog)).generatedAt).toBe(at.toISOString())
+  })
+  it('reads an enemy board saved before P192 on SS, S and F, its A and B unranked', async () => {
+    const { blobs } = await fresh(), store = new RankerStore(blobs, () => at)
+    const old = { ...emptyBoard('azurlane-bosses'), revision: 4, members: ['al-a'], entries: [{ id: 'al-a', tier: 'A', note: 'kept' }, { id: 'gi-1', tier: 'B', note: '' }] }
+    await blobs.write('boards/azurlane-bosses.json', new TextEncoder().encode(JSON.stringify(old)), ABSENT)
+    expect((await store.board('azurlane-bosses')).state).toEqual({ ...emptyBoard('azurlane-bosses'), revision: 4, entries: [{ id: 'al-a', tier: null, note: 'kept' }] })
+  })
+  it('saves Uma Cyberpunk’s casting from a revision, refuses an unknown enemy or one cast twice, and puts it in the plan (P193)', async () => {
+    const { blobs } = await fresh(), store = new RankerStore(blobs, () => at)
+    const empty = (await store.cast('cyberpunk')).cast
+    expect(empty).toEqual(emptyCast('cyberpunk'))
+    const entry = { uma: '701', faction: 'f1', boss: 'al-a', subBosses: ['gi-1', null, null] }
+    await expect(store.saveCast('cyberpunk', { ...empty, umas: [{ ...entry, boss: 'zz-9' }] }, catalog)).rejects.toThrow(/catalog/)
+    await expect(store.saveCast('cyberpunk', { ...empty, umas: [{ ...entry, boss: 'gi-1' }] }, catalog)).rejects.toThrow(/cast once/)
+    const saved = await store.saveCast('cyberpunk', { ...empty, umas: [entry] }, catalog)
+    expect(saved).toMatchObject({ revision: 1, updatedAt: at.toISOString(), umas: [entry] })
+    await expect(store.saveCast('cyberpunk', { ...empty, umas: [] }, catalog)).rejects.toBeInstanceOf(RankerConflict)
+    await store.saveBoard('umas', { ...emptyBoard('umas'), entries: [{ id: '70101', tier: 'T1', note: '' }] }, catalog)
+    const plan = await store.writePlan(catalog)
+    expect(plan.enemyCasts.cyberpunk.tiers[0]).toMatchObject({ tier: 'T1', umas: [{ uma: '701', faction: 'f1', boss: { id: 'al-a', fits: false }, subBosses: [{ id: 'gi-1' }, null, null] }] })
   })
 })
