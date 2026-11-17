@@ -7,7 +7,7 @@
   "scripts": {
     "push": "node --import tsx src/push.ts",
     "status": "node --import tsx src/status.ts",
-    "gallery": "node --import tsx src/gallery.ts",
+    "gallery": "node --import tsx gallery.mjs",
     "lint": "tsc --noEmit",
     "test": "node --test beach.check.mjs && vitest run",
     "albums": "node albums/build.mjs",
