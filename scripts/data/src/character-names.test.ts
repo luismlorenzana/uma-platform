@@ -7,7 +7,7 @@ const characters = [
   { id: 1116, name: { ja: 'ジェンティルドンナ', en: 'Gentildonna', global: null } },
 ]
 
-describe('finding a character by the name an author wrote (P205)', () => {
+describe('finding a character by the name an author wrote (P207)', () => {
   it('matches the way Uma Character Art does: punctuation, case and accents aside', () => {
     const idOf = characterLookup(characters)
     expect(idOf('Curren Bouquetd’or')).toBe(1134)

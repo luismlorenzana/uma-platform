@@ -1,4 +1,4 @@
-// How master data finds a character from the name an author wrote (P205): by the same key Uma Character Art matches with
+// How master data finds a character from the name an author wrote (P207): by the same key Uma Character Art matches with
 // (apps/api art.service.ts), so punctuation, case and accents never hide her. A splash scene signed "Curren Bouquetd’or"
 // (a curly apostrophe) is master data's "Curren Bouquetd'or", as it already is on her Character Art page.
 
