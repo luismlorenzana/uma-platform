@@ -15,9 +15,10 @@ wardrobe roles as the approved pilots, with the new Uma's own face, hair, markin
    [workflow.md](workflow.md).
 2. Read the local visual standard, `content/authoring/character-universes/cyberpunk/approved/style-guide.md`, and open the
    approved album (`cyberpunk/approved/review.html`, or `pnpm art:gallery`, http://127.0.0.1:4323).
-3. Copy [character-brief.md](templates/character-brief.md) into the new character's **gitignored** folder,
-   `content/authoring/character-universes/cyberpunk/characters/<key>/`, and fill it from the owner's instructions and the
-   inspected references.
+3. Open `cyberpunk/cast/review.html` for the playable crew in Ranker order. Use the existing `brief.md` and
+   `character.json` from her **gitignored** folder, `content/authoring/character-universes/cyberpunk/characters/<key>/`.
+   Fill the brief from the owner's instructions and the inspected references. Use the
+   [character brief template](templates/character-brief.md) if the folder has no brief yet.
 4. Keep a [handoff.md](templates/handoff.md) there, so another session can resume without chat history.
 
 The method, the templates and the album code are in git. References, filled briefs and prompts, generated images,
@@ -45,7 +46,8 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/`. They e
 | Path | What |
 | --- | --- |
 | `approved/` | The pilots' approved collection: `manifest.json` (approvals bound to each PNG's SHA-256), `style-guide.md`, `album.json` (the album's words), `review.html` (built) |
-| `characters/<key>/` | A new character's collection: `active-study.json` (her approved version), `v001/`, `v002/` … each with images, prompts, `manifest.json` and a review page |
+| `cast/` | The playable crew's reference and work album, grouped by Ranker tier. The Local Art Gallery renders it from the character folders on refresh, and `pnpm art:albums cyberpunk` writes a standalone copy |
+| `characters/<key>/` | One character's collection. `character.json` records her Ranker place and the original ranked outfit references from master data, with SHA-256. `references/` holds the images. Keep authored work in `v001/`, `v002/` … and the approved version pointer in `active-study.json` |
 | `characters/<key>/<version>/album.json` | Her own album's words; `pnpm art:albums cyberpunk` builds her `review.html` |
 | `enemies/` | The enemy initiative: [its own packet](../cyberpunk-enemies/README.md). Never put an enemy look in `approved/` or `characters/`: `art:push` would publish it as an Uma's look |
 

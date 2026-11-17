@@ -37,7 +37,7 @@ export interface GalleryRow {
   casual: EnemyRow | null
   /** The lieutenants' album (P200), counted the same way. */
   lieutenants: EnemyRow | null
-  /** Each enemy app's cast album (P200): how many characters are cast there, how many have pictures, and its page. */
+  /** Each character or enemy cast album: how many characters there have pictures, and its page. */
   casts: CastRow[]
   /** Each character's own collection (P174): her approved looks, how many are published, her portraits, her album. */
   characters: { key: string; name: string; approved: number; published: number; portraits: { state: string; states: number } | null; page: string | null }[]
@@ -50,25 +50,31 @@ function hasWork(folder: string, depth = 0): boolean {
   if (depth > 5) return false
   return readdirSync(folder, { withFileTypes: true }).some((e) => (e.isDirectory() ? !(depth === 0 && e.name === 'references') && !e.name.startsWith('.') && hasWork(join(folder, e.name), depth + 1) : PICTURE.test(e.name)))
 }
-/** The enemy apps' cast albums of a universe (P200): each app folder with a cast/album.json, its characters counted. */
+/** A universe's crew and enemy cast albums, with their character folders counted. */
 function castRows(base: string, universe: string): CastRow[] {
   const rows: CastRow[] = []
-  for (const app of ['enemies', 'enemies/casual', 'enemies/lieutenants']) {
-    const cast = join(base, universe, ...app.split('/'), 'cast')
+  for (const app of ['characters', 'enemies', 'enemies/casual', 'enemies/lieutenants']) {
+    const crew = app === 'characters'
+    const appDir = crew ? join(base, universe) : join(base, universe, ...app.split('/'))
+    const cast = join(appDir, 'cast')
     if (!existsSync(join(cast, 'album.json'))) continue
-    const words = JSON.parse(readFileSync(join(cast, 'album.json'), 'utf8')) as { title?: string; plural?: string }
+    const words = JSON.parse(readFileSync(join(cast, 'album.json'), 'utf8')) as { kind?: string; plural?: string }
+    if (crew && words.kind !== 'playable-cast-album') continue
     const folders: string[] = []
     const walk = (dir: string, depth: number) => {
-      if (depth > 4) return
+      if (depth > (crew ? 0 : 4) || !existsSync(dir)) return
       for (const e of readdirSync(dir, { withFileTypes: true })) {
         if (!e.isDirectory() || e.name.startsWith('.') || e.name === 'references') continue
         const folder = join(dir, e.name)
-        if (existsSync(join(folder, 'character.json'))) folders.push(folder)
+        const record = join(folder, 'character.json')
+        if (existsSync(record)) {
+          if (!crew || (JSON.parse(readFileSync(record, 'utf8')) as { kind?: string }).kind === 'playable-cast-character') folders.push(folder)
+        }
         else walk(folder, depth + 1)
       }
     }
-    walk(cast, 0)
-    rows.push({ app, title: words.plural ?? 'characters', characters: folders.length, withWork: folders.filter((f) => hasWork(f)).length, page: `/${universe}/${app}/cast/${GALLERY}` })
+    walk(crew ? join(appDir, 'characters') : cast, 0)
+    rows.push({ app, title: words.plural ?? 'characters', characters: folders.length, withWork: folders.filter((f) => hasWork(f)).length, page: `/${universe}/${crew ? '' : app + '/'}cast/${GALLERY}` })
   }
   return rows
 }
@@ -94,7 +100,7 @@ export function galleryRows(base: string): GalleryRow[] {
     const scenes = existsSync(splashManifest) ? JSON.parse(readFileSync(splashManifest, 'utf8')) as { assets?: unknown[] } : null
     const shown = existsSync(splashRecord) ? JSON.parse(readFileSync(splashRecord, 'utf8')) as Publication : null
     const studies = readdirSync(join(base, universe), { withFileTypes: true })
-      .filter((e) => e.isDirectory() && e.name !== 'approved' && !(p && e.name === 'dialogue-portraits') && !(scenes && e.name === 'splash-art') && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
+      .filter((e) => e.isDirectory() && !['approved', 'cast'].includes(e.name) && !(p && e.name === 'dialogue-portraits') && !(scenes && e.name === 'splash-art') && existsSync(join(base, universe, e.name, GALLERY))).map((e) => e.name).sort()
     return {
       universe, approved: Array.isArray(manifest.assets) ? manifest.assets.length : 0, published: record?.counts.published ?? 0,
       waiting: record ? record.counts.unpublished + record.counts.changed : 0, publishedAt: record?.publishedAt ?? null, studies,

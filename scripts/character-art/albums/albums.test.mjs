@@ -297,6 +297,34 @@ describe('a cast album (P200)', () => {
     const out = execFileSync(process.execPath, [join(here, 'build.mjs'), 'sky-city'], { env: { ...process.env, UNIVERSES_DIR: base }, encoding: 'utf8' })
     expect(out).toContain('enemies/lieutenants/cast/review.html')
   })
+
+  it('shows crew references, versioned studies and owner-approved looks in Ranker order', async () => {
+    const { u } = universe()
+    const add = (key, name, id, order) => {
+      const folder = join(u, 'characters', key)
+      put(join(folder, 'character.json'), { kind: 'playable-cast-character', id, name, uma: { id, name, tier: 'T1', order }, references: [{ kind: 'art', file: 'references/art.webp' }] })
+      put(join(folder, 'references', 'art.webp'), 'reference')
+      return folder
+    }
+    add('rider-one', 'Rider One', '701', 2)
+    const first = add('rider-two', 'Rider Two', '702', 1)
+    put(join(u, 'cast', 'album.json'), { kind: 'playable-cast-album', title: 'Crew', leadLook: 'street' })
+    const approval = { status: 'approved', by: 'owner' }
+    const studyHash = createHash('sha256').update('approved study').digest('hex')
+    put(join(u, 'approved', 'manifest.json'), { assets: [{ id: 'two-street', character: 'Rider Two', outfit: 'street', image: 'two/street.png', sha256: 'a'.repeat(64), approval }] })
+    put(join(u, 'approved', 'publication.json'), { looks: [{ id: 'two-street', state: 'published', sha256: 'b'.repeat(64) }] })
+    put(join(first, 'active-study.json'), { activeVersion: 'v001', ownerApproved: true })
+    put(join(first, 'v001', 'manifest.json'), { fullBodyAssets: [{ id: 'two-quarters', outfit: 'quarters', image: 'images/quarters.png', sha256: studyHash, approval }] })
+    put(join(first, 'v001', 'images', 'quarters.png'), 'approved study')
+    put(join(first, 'v002', 'images', 'new.png'), 'draft')
+    const { html } = await renderCastAlbum(u)
+    expect(html.indexOf('data-id="702"')).toBeLessThan(html.indexOf('data-id="701"'))
+    expect(html).toContain('data-id="702" data-state="approved" data-lead="look"')
+    expect(html).toContain('../characters/rider-two/references/art.webp')
+    expect(html).toContain('../characters/rider-two/v002/images/new.png')
+    expect(html).toContain('1 new picture · 2 approved')
+    expect(html).not.toContain('<span class="tag pub">Published</span>')
+  })
 })
 
 describe('the command', () => {

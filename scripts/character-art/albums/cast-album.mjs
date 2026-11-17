@@ -1,4 +1,4 @@
-// A cast album (P200): an enemy authoring app's cast, read from its folders, so a picture ChatGPT adds to a character's
+// A cast album: a crew or enemy cast read from its folders, so a picture an author adds to a character's
 // folder shows on her card at the next build, or at once through the Local Art Gallery, which builds this page fresh on
 // every visit. The folders are `pnpm art:cast`'s: <app>/cast/tier-<n>/<NN>-<uma>/<enemy>/ with a character.json (who she
 // is, the Uma she opposes, her references) and references/ (the Ranker's pictures of her). Every other picture under her
@@ -8,7 +8,7 @@
 // that key shows it as her card's picture, her Ranker reference one link away. The page's words come from cast/album.json
 // beside it (title, header, footer, noun, plural, empty, leadLook;
 // {characters}, {umas}, {withWork}, {approved}, {published}, {revision}); names come from each character.json. Nothing
-// here names a character, faction or franchise.
+// here names a character, faction or franchise. A playable-cast-album reads characters/<key>/ instead.
 import { createHash } from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -40,15 +40,15 @@ async function sha256Of(file, stat) {
   return hashes.get(key)
 }
 
-/** Every character folder under cast/, by its character.json. */
-async function characterFolders(dir, depth = 0) {
+/** Find the character records. Playable characters live directly under characters/. */
+async function characterFolders(dir, maxDepth = 4, depth = 0) {
   const out = []
-  if (depth > 4) return out
+  if (depth > maxDepth) return out
   for (const e of await fs.readdir(dir, { withFileTypes: true }).catch(() => [])) {
     if (!e.isDirectory() || e.name.startsWith('.') || e.name === 'references') continue
     const folder = path.join(dir, e.name), record = await readText(path.join(folder, 'character.json'))
     if (record !== null) out.push({ folder, record: JSON.parse(record) })
-    else out.push(...await characterFolders(folder, depth + 1))
+    else out.push(...await characterFolders(folder, maxDepth, depth + 1))
   }
   return out
 }
@@ -68,18 +68,42 @@ async function workOf(folder) {
   return out.sort((a, b) => b.stat.mtimeMs - a.stat.mtimeMs || a.file.localeCompare(b.file))
 }
 
+const ownerApproved = (a) => a.approval?.status === 'approved' && a.approval?.by === 'owner'
+
+/** Read approved looks from the active study, using the same version pointer as publishing. */
+async function studyLooks(folder, castDir) {
+  const activeText = await readText(path.join(folder, 'active-study.json'))
+  const active = activeText === null ? null : JSON.parse(activeText)
+  if (active?.ownerApproved !== true || !/^v\d{3}$/.test(active.activeVersion)) return []
+  const version = path.join(folder, active.activeVersion)
+  const manifest = await readText(path.join(version, 'manifest.json'))
+  if (manifest === null) return []
+  return (JSON.parse(manifest).fullBodyAssets ?? []).filter(ownerApproved).flatMap((a) => {
+    if (typeof a.image !== 'string') return []
+    const file = path.resolve(version, a.image)
+    if (!file.startsWith(folder + path.sep)) return []
+    return [{ ...a, src: path.relative(castDir, file).split(path.sep).join('/') }]
+  })
+}
+
 export async function renderCastAlbum(appDir) {
   const castDir = path.join(appDir, 'cast'), file = path.join(castDir, 'review.html')
   const text = await readJson(path.join(castDir, 'album.json'))
+  const playable = text.kind === 'playable-cast-album'
   const manifestText = await readText(path.join(appDir, 'approved', 'manifest.json'))
-  const approvedAssets = manifestText ? (JSON.parse(manifestText).assets ?? []).filter((a) => a.approval?.status === 'approved' && a.approval?.by === 'owner') : []
+  const approvedAssets = manifestText ? (JSON.parse(manifestText).assets ?? []).filter(ownerApproved) : []
   const recordText = await readText(path.join(appDir, 'approved', 'publication.json'))
-  const published = new Set(recordText ? (JSON.parse(recordText).looks ?? []).filter((l) => l.state === 'published').map((l) => l.id) : [])
-  const found = (await characterFolders(castDir)).filter((c) => c.record?.kind === 'enemy-cast-character')
+  const published = new Map(recordText ? (JSON.parse(recordText).looks ?? []).filter((l) => l.state === 'published').map((l) => [l.id, l.sha256]) : [])
+  const isPublished = (a) => published.has(a.id) && (!playable || published.get(a.id) === a.sha256)
+  const found = playable
+    ? (await characterFolders(path.join(appDir, 'characters'), 0)).filter((c) => c.record?.kind === 'playable-cast-character')
+    : (await characterFolders(castDir)).filter((c) => c.record?.kind === 'enemy-cast-character')
   const cards = []
   for (const { folder, record } of found) {
     const rel = path.relative(castDir, folder).split(path.sep).join('/')
-    const approved = approvedAssets.filter((a) => a.unitId === record.id)
+    const approved = approvedAssets.filter((a) => playable ? a.character === record.name : a.unitId === record.id)
+      .map((a) => ({ ...a, src: `../approved/${a.image}` }))
+    if (playable) approved.push(...await studyLooks(folder, castDir))
     const approvedHashes = new Set(approved.map((a) => a.sha256))
     const work = []
     for (const w of await workOf(folder)) {
@@ -87,15 +111,17 @@ export async function renderCastAlbum(appDir) {
       if (approved.length && approvedHashes.has(await sha256Of(w.file, w.stat))) continue
       work.push(path.relative(castDir, w.file).split(path.sep).join('/'))
     }
-    // Her lead look (the album's leadLook, her pilot suit), when one is approved, is her card's picture.
-    const lead = text.leadLook ? approved.find((a) => a.look === text.leadLook) ?? null : null
-    const badge = (a) => ({ tag: published.has(a.id) ? 'Published' : 'Approved', cls: published.has(a.id) ? 'tag pub' : 'tag' })
+    // The album can feature an approved look as the card's main image.
+    const lead = text.leadLook ? approved.find((a) => (a.look ?? a.outfit) === text.leadLook) ?? null : null
+    const badge = (a) => ({ tag: isPublished(a) ? 'Published' : 'Approved', cls: isPublished(a) ? 'tag pub' : 'tag' })
+    const titleOf = (a) => playable ? a.title ?? a.outfit ?? a.id : a.look ?? a.id
     const shown = [
-      ...approved.filter((a) => a !== lead).map((a) => ({ src: `../approved/${a.image}`, ...badge(a), title: a.look ?? a.id })),
+      ...approved.filter((a) => a !== lead).map((a) => ({ src: a.src, ...badge(a), title: titleOf(a) })),
       ...work.map((w) => ({ src: w, tag: 'New', cls: 'tag new', title: w.slice(rel.length + 1) })),
     ]
-    const state = approved.some((a) => published.has(a.id)) ? 'published' : approved.length ? 'approved' : work.length ? 'work' : 'empty'
-    cards.push({ record, rel, shown, state, approved: approved.length, published: approved.filter((a) => published.has(a.id)).length, work: work.length, lead: lead ? { src: `../approved/${lead.image}`, title: lead.look, ...badge(lead) } : null })
+    const publishedCount = approved.filter(isPublished).length
+    const state = publishedCount ? 'published' : approved.length ? 'approved' : work.length ? 'work' : 'empty'
+    cards.push({ record, rel, shown, state, approved: approved.length, published: publishedCount, work: work.length, lead: lead ? { src: lead.src, title: titleOf(lead), ...badge(lead) } : null })
   }
   // In the Ranker's order: tier, then the Uma's place in it.
   const tierNumber = (t) => Number(String(t).replace(/\D/g, '')) || 99
