@@ -78,11 +78,11 @@ the splash art's own pages, and a character's own album) are built by code in gi
 - **The code is generic.** It names no character and holds no words of an album. Everything a page says (title, intro,
   captions, footer, the default selection, the compare shortcuts, the overview sheets) is in the `album.json` beside the
   page, in the gitignored collection folder, with the manifests and pictures it shows.
-- **Rebuild** every page of a universe with `pnpm art:albums farm-life`; `--check` builds in memory and reports which pages
+- **Rebuild** every page of a universe with `pnpm -C ../uma-art-authoring albums farm-life`; `--check` builds in memory and reports which pages
   would change, writing nothing. The older local scripts (`approved/build-review.mjs`, `dialogue-portraits/build-review.mjs`,
   a character's `build-review.mjs`) are now short stubs that call it.
 - **A new character's own album:** add `album.json` to her active version (copy Satono Diamond's `v005/album.json` and
-  change its words); `pnpm art:albums` builds her page from her manifest.
+  change its words); `pnpm -C ../uma-art-authoring albums` builds her page from her manifest.
 - **Her approved splash art:** add `splashArt: { "dir": "../../../splash-art", "text": { "expectedCount": 9 } }`
   to that version's `album.json`. The optional Splash Art tab selects her scenes by the manifest's character name from
   the shared collection, checks approval against each exact image hash, and links its images, prompts and art records.

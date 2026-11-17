@@ -17,7 +17,7 @@ manifest and the albums' `album.json`.
    [workflow.md](workflow.md).
 2. Read the enemy baseline, `content/authoring/character-universes/cyberpunk/enemies/brief.md`: the drawing style and
    adult model, the colour roles, the ranks (a lieutenant is a **Key** or **Regular**, never a Boss) and the faction kits.
-3. Open the lieutenants' cast album (`enemies/lieutenants/cast/review.html`, or `pnpm art:gallery` and the Cyberpunk
+3. Open the lieutenants' cast album (`enemies/lieutenants/cast/review.html`, or `pnpm -C ../uma-art-authoring gallery` and the Cyberpunk
    card): every lieutenant cast, by tier and Uma, with her Ranker references and anything already authored.
 4. Copy [lieutenant-brief.md](templates/lieutenant-brief.md) into each study folder, and keep a
    [handoff.md](templates/handoff.md).
@@ -53,17 +53,17 @@ owner's machine.
 
 ```
 her folder ─► study (v00N) ─► cast album ─► owner's verdict ─► copied into approved/ ─► approved album rebuilt
-(art:cast)     (one main       (shows each    (exact words,      + manifest entry           (pnpm art:albums
+(art:cast)     (one main       (shows each    (exact words,      + manifest entry           (pnpm -C ../uma-art-authoring albums
                change a round)  picture)       date, scope)       (byte for byte, SHA-256)    cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm art:push cyberpunk
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring publish cyberpunk
 --enemies` sends the lieutenants' looks with the bosses' (EA4, P201), and Uma Enemy Art shows each lieutenant in her
 faction under her own name, labelled Lieutenant. Nothing here is backed up.
 
 ## The cast folders
 
-`pnpm art:cast cyberpunk` (Claude's) reads the Ranker's cast and keeps every app's folders in step: a new character gets
+`pnpm -C ../uma-art-authoring cast cyberpunk` (Claude's) reads the Ranker's cast and keeps every app's folders in step: a new character gets
 her folder and references, a character cast against another Uma moves with all her work, a changed Ranker picture is
 refreshed, and nobody's folder is ever deleted. Put every study inside her folder; the cast album finds it there.
 
@@ -80,4 +80,4 @@ refreshed, and nobody's folder is ever deleted. Put every study inside her folde
 > in the uma-platform repo, the local enemy baseline `content/authoring/character-universes/cyberpunk/enemies/brief.md` and
 > `enemies/lieutenants/README.md`. Start with Tier 1, Uma by Uma: one study folder per round inside each lieutenant's own
 > folder, `enemies/lieutenants/cast/tier-<n>/<NN>-<uma>/<lieutenant>/`; show me each round first; record my approvals
-> exactly in `enemies/lieutenants/approved/`; rebuild the albums with `pnpm art:albums cyberpunk`. Don't publish.
+> exactly in `enemies/lieutenants/approved/`; rebuild the albums with `pnpm -C ../uma-art-authoring albums cyberpunk`. Don't publish.

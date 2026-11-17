@@ -25,7 +25,7 @@ function ranker(): FileSource {
   return new DirectoryFileSource(resolve(cwd, process.env.RANKER_DIR ?? '../../content/authoring/ranker'))
 }
 /** What `pnpm art:push` publishes: `art/…` in the app's bucket, or its local copy in dev (`content/published/art`). */
-const published = (): BlobStore => blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'art/', dir: resolve(cwd, process.env.ART_DIR ?? '../../content/published/art') })
+const published = (): BlobStore => blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'art/', dir: resolve(cwd, process.env.ART_DIR ?? '../../../uma-art-authoring/content/published/art') })
 /** The pack route's two stores behind one path: `universes/…` from the app's bucket, everything else from uma-quest's. */
 function pack(): FileSource {
   const quest = keys(), own = published()

@@ -9,7 +9,7 @@ Update it after each round or verdict, and before any interruption, so a new ses
 - Guide: `docs/authoring/cyberpunk-enemies-casual/README.md`; baseline: `enemies/brief.md`, `enemies/casual/README.md`
 - Casual baseline: `<none yet / casual/approved/style-guide.md, from which look>`
 - Owner-authorized scope: `<...>`
-- Casual album: `enemies/casual/approved/review.html` (`pnpm art:albums cyberpunk`)
+- Casual album: `enemies/casual/approved/review.html` (`pnpm -C ../uma-art-authoring albums cyberpunk`)
 - Publication: none until EA3; then Uma Enemy Art, on the owner's word
 
 ## Progress, enemy by enemy

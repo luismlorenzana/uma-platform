@@ -33,8 +33,6 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `apps/web`, `apps/api` | **The Uma Platform app** at https://uma-platform.web.app: one signed-in site with a tile for each sub-app ([design](docs/platform-app/README.md), [infrastructure](docs/platform-app/infrastructure.md), P127) |
 | `packages/tiers` | `@uma-platform/tiers` (private): the tier boards' model, shared by the Ranker, its scripts and the sprite queue |
 | `scripts/ranker` | `pnpm ranker:seed`, `ranker:push`, `ranker:pull` (mirrors the whole live Ranker folder, P155), `ranker:plan`: the Ranker's files between this computer and its bucket, and its plan rebuilt after a profile push (P131, P138) |
-| `scripts/character-art` | `pnpm art:push <universe>… \| --all [--only <id\|outfit\|character>,…] [--portraits] [--dry-run] [--no-release]` (`--portraits`: the dialogue portraits as pieces, CA5; a universe's `splash-art/` publishes with its looks, P175; `--enemies`: its approved enemy looks to Uma Enemy Art, `enemy-art/<game>/`, EA1): the owner-approved universe looks (`content/authoring/character-universes/<universe>/approved/`) to Uma Character Art's folder in the app's bucket, approved entries only, nothing deleted there (CA4, P162); a push of looks or portraits then runs `pnpm art:release <universe>`, so Farm Life's art goes on to master data `latest` in the same step (P203; `--no-release` stops at Character Art); `pnpm art:status`: each look's published flag, refreshed where the local galleries show it; `pnpm art:gallery`: the Local Art Gallery's front page, http://127.0.0.1:4323; `pnpm art:albums [<universe>] [--check]`: rebuilds the local album pages (universe, character, enemy, casual and lieutenant enemy, and each enemy app's cast) from their manifests, folders and `album.json` files (P181, P182, P185, P200); `pnpm art:cast <universe> [--dry-run]`: one folder per boss and lieutenant cast in the Ranker, in each enemy app, with her Ranker references (P200) |
-| `scripts/story` | `pnpm story:push <cast\|quest\|farm>` and `story:pull <book>`: a book's story drafts to Uma Story's review copy in the app's bucket (text that changed only; nothing is deleted there), and the owner's verdicts back to the writer's folder; `story:pull <book> --drafts` rebuilds the drafts on another machine ([design](docs/platform-app/story.md), P149) |
 | `tools/studio` | Uma Studio (`pnpm studio`): the sprite queue, animation desk, gates and props; its tier boards moved online as the Uma Ranker (P131); `pnpm tiers:import <genshin\|wuwa\|hsr\|zzz\|hi3\|pgr>` |
 | `scripts/assets` | Art importer: icon atlases and per-record WebP art ([README](scripts/assets/README.md)) |
 | `scripts/pixel-art` | Original pixel art drawn from code: `pnpm art:draw` ([README](scripts/pixel-art/README.md)) |
@@ -42,10 +40,10 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `infra/` | GCP project and bucket runbook ([README](infra/README.md)); `bootstrap.sh`, the app's cloud in the `uma-rpg` project |
 | `content/` | **Gitignored.** Private inputs (`overrides/`) and the local release (`release/`). Never commit it |
 
-The Local Art Gallery and album builders live in [uma-art-authoring](https://github.com/luismlorenzana/uma-art-authoring).
-Clone it beside this checkout (or set `UMA_ART_AUTHORING_ROOT`). The commands above use that code with the same private
-authoring tree. The story preview launchers prefer the sibling [uma-story-authoring](https://github.com/luismlorenzana/uma-story-authoring)
-checkout (or `UMA_STORY_AUTHORING_ROOT`), with the individual game launchers available while machines are updated.
+Local previews, authoring data, and content publishing live in [uma-art-authoring](https://github.com/luismlorenzana/uma-art-authoring)
+and [uma-story-authoring](https://github.com/luismlorenzana/uma-story-authoring). Start the gallery with `pnpm gallery`
+in the Art repo or the three-book Story Sandbox with `pnpm start` in the Story repo. Each repo's `pnpm publish` command
+uses the existing private Platform content storage. Platform maintains the Ranker, hosted readers and master-data release pipeline.
 
 ## Develop
 

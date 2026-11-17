@@ -30,43 +30,6 @@
       "port": 4318
     },
     {
-      "name": "art-gallery",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": [
-        "art:gallery"
-      ],
-      "port": 4323
-    },
-    {
-      "name": "story-sandbox",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "scripts/local-story-preview.mjs",
-        "quest"
-      ],
-      "port": 4320
-    },
-    {
-      "name": "farm-story-sandbox",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "--experimental-strip-types",
-        "--no-warnings",
-        "scripts/local-story-preview.mjs",
-        "farm"
-      ],
-      "port": 4321
-    },
-    {
-      "name": "cyber-story-sandbox",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "scripts/local-story-preview.mjs",
-        "cyberpunk"
-      ],
-      "port": 4322
-    },
-    {
       "name": "look",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [

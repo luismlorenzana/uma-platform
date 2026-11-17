@@ -199,3 +199,7 @@ with `CLOUDSDK_ACTIVE_CONFIG_NAME` and `CLOUDSDK_CORE_PROJECT`, never `gcloud co
   `docs/decisions.md`.
 - A game session that needs a shared change writes it down for a uma-platform session instead of editing shared code
   in place.
+
+Local character and enemy art authoring lives in `uma-art-authoring`. Private story drafts and the common Story Sandbox
+live in `uma-story-authoring`. Each authoring repo publishes to the established private readers. The Platform owns the
+Ranker, shared packages and master-data releases, and each game owns its story parser and game release.

@@ -12,10 +12,10 @@ Use this packet in a new ChatGPT session to author the **nine Farm Life event il
 From the repository root, with Node 22:
 
 ```text
-node scripts/character-art/splash-study.mjs init "<Character Name>"
-node scripts/character-art/splash-study.mjs prepare-beach <character-key> <vNNN>
-node scripts/character-art/splash-study.mjs check <character-key>
-node scripts/character-art/splash-study.mjs check <character-key> --approved
+pnpm -C ../uma-art-authoring study init "<Character Name>"
+pnpm -C ../uma-art-authoring study prepare-beach <character-key> <vNNN>
+pnpm -C ../uma-art-authoring study check <character-key>
+pnpm -C ../uma-art-authoring study check <character-key> --approved
 ```
 
 `init` creates a resumable study under `content/authoring/splash-art/farm-life/<character-key>/`. `prepare-beach` creates a new private prompt/input attempt from the locked spec and verifies her approved references; it preserves all selections. The checks verify the full set, source hashes, dimensions and provenance; `--approved` also requires recorded owner approval for every selected image. These commands do not generate images, change the shared album, upload or publish. See [the workflow](workflow.md#4-record-a-selected-version) for the record format.
