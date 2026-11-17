@@ -55,7 +55,7 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/`. They e
 
 ```
 author a version ─► review page ─► owner's verdict ─► approved in her manifest ─► her album rebuilt ─► published on the owner's word
-   (v001, v002…)      (per study)     (exact words,      (approval + SHA-256,      (pnpm -C ../uma-art-authoring albums)     (pnpm -C ../uma-art-authoring publish cyberpunk,
+   (v001, v002…)      (per study)     (exact words,      (approval + SHA-256,      (pnpm -C ../uma-art-authoring albums)     (pnpm -C ../uma-art-authoring run publish cyberpunk,
                                        date, scope)        active-study.json)                              by the publishing session)
 ```
 
@@ -66,7 +66,7 @@ author a version ─► review page ─► owner's verdict ─► approved in he
    `approval: { status: "approved", by: "owner", date, evidence }`. Point `active-study.json` at it with
    `ownerApproved: true`.
 4. **Album:** `pnpm -C ../uma-art-authoring albums cyberpunk` builds her album from her manifest and her `album.json`.
-5. **Publish:** a separate session publishes, only when the owner asks (`pnpm -C ../uma-art-authoring publish cyberpunk --only <ids>`); the
+5. **Publish:** a separate session publishes, only when the owner asks (`pnpm -C ../uma-art-authoring run publish cyberpunk --only <ids>`); the
    approval in a manifest is not the go. The publish flags then show on her album.
 
 ## Album pages

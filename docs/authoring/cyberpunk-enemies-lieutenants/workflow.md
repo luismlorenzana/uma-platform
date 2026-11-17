@@ -37,7 +37,7 @@ them Approved. A faction appears under its key until `approved/album.json`'s `fa
 
 ## 6. Publishing, on the owner's word
 
-Claude publishes the lieutenants' looks with the bosses', `pnpm -C ../uma-art-authoring publish cyberpunk --enemies` (EA4, P201): Uma Enemy Art
+Claude publishes the lieutenants' looks with the bosses', `pnpm -C ../uma-art-authoring run publish cyberpunk --enemies` (EA4, P201): Uma Enemy Art
 shows each lieutenant in her faction under her own name, labelled Lieutenant, and the lieutenants' album gets its own
 flags. An authoring session only approves.
 

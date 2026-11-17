@@ -39,7 +39,7 @@ faction by faction. A faction appears under its key until `casual/approved/album
 
 ## 6. Publishing, on the owner's word
 
-Claude publishes the casual looks with the armour looks, `pnpm -C ../uma-art-authoring publish cyberpunk --enemies` (EA3, P186): Uma Enemy Art
+Claude publishes the casual looks with the armour looks, `pnpm -C ../uma-art-authoring run publish cyberpunk --enemies` (EA3, P186): Uma Enemy Art
 shows each one first in her group, under her name, with a "Casual" label, and the casual album gets its own flags. An
 authoring session only approves.
 
