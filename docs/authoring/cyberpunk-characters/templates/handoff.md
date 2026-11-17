@@ -10,7 +10,7 @@ interruption, so a new session can resume without chat history.
 - Guide: `docs/authoring/cyberpunk-characters/README.md`
 - Owner-authorized scope: `<...>`
 - Active version and its review page: `<...>`
-- Her album: `<characters/<key>/<version>/review.html; built with pnpm art:albums cyberpunk>`
+- Her album: `<characters/<key>/<version>/review.html; built with pnpm -C ../uma-art-authoring albums cyberpunk>`
 - Status: `<candidate / partial approval / complete approval; exact scope>`
 - Publication: `<not requested / requested; by the publishing session>`
 

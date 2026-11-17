@@ -12,7 +12,7 @@ in again.
 
 ## 2. A study
 
-Make a new versioned folder inside her cast folder (`cast/tier-<n>/<NN>-<uma>/<boss>/v00N/`, P200; `pnpm art:cast` made it, with her references), where the bosses' cast album shows every picture as it is saved. Fill [the brief](templates/enemy-brief.md):
+Make a new versioned folder inside her cast folder (`cast/tier-<n>/<NN>-<uma>/<boss>/v00N/`, P200; `pnpm -C ../uma-art-authoring cast` made it, with her references), where the bosses' cast album shows every picture as it is saved. Fill [the brief](templates/enemy-brief.md):
 what this study tries, and from which inputs. One generation per image, from her references (face first, then art, then
 splash) and one shared anchor, nothing else. Save each output unchanged and the exact prompt beside it; record each input
 and its hash in the study's `manifest.json`. Change one main thing per revision; never overwrite an earlier image.
@@ -34,14 +34,14 @@ rather than deleting it. Update `approved/style-guide.md` when an approval sets 
 
 ## 5. The enemy album
 
-Run `pnpm art:albums cyberpunk`: the enemy album (`approved/review.html`) shows every approved look, faction by faction.
+Run `pnpm -C ../uma-art-authoring albums cyberpunk`: the enemy album (`approved/review.html`) shows every approved look, faction by faction.
 When a new faction gets its first approved look, add its name (and its place in the order) to `approved/album.json`'s
 `factions`, and a caption for a new look to `looks`.
 
 ## 6. Publishing, on the owner's word
 
 Approved looks publish to **Uma Enemy Art** (https://uma-platform.web.app/enemy-art, EA1, P183), the app's own section for
-enemies, never Character Art. Claude runs `pnpm art:push cyberpunk --enemies --only <ids>` when the owner says which looks
+enemies, never Character Art. Claude runs `pnpm -C ../uma-art-authoring publish cyberpunk --enemies --only <ids>` when the owner says which looks
 go up: it sends each approved PNG byte for byte to `gs://uma-platform-content/enemy-art/cyberpunk/`, reads it back, writes
 the index last and flags the looks in the enemy album. An authoring session only approves.
 

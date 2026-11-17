@@ -20,7 +20,7 @@ const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? 
 const universe = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--channel') ?? 'farm-life'
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
 const channel = option('--channel') ?? 'latest'
-const mirror = resolve(process.env.ART_DIR ?? resolve(DEFAULT_CONTENT_DIR, 'published/art'), 'universes', universe, 'portraits')
+const mirror = resolve(process.env.ART_DIR ?? resolve(DEFAULT_CONTENT_DIR, '../../uma-art-authoring/content/published/art'), 'universes', universe, 'portraits')
 const appBucket = process.env.CONTENT_BUCKET ?? 'uma-platform-content'
 // The app's bucket is in the games' project; scoped to the owner's default configuration, never `config set`.
 const gcloud = (argv: string[]) => execFileSync('gcloud', argv, {

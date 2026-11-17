@@ -11,9 +11,9 @@ import { StoryConflict, StoryMissing, StoryStore, type RankerFiles } from './sto
 
 const cwd = process.cwd()
 const FOLDERS: Record<Book, { env: string; fallback: string }> = {
-  cast: { env: 'STORY_CAST_DIR', fallback: '../../content/authoring/story/cast' },
-  quest: { env: 'STORY_QUEST_DIR', fallback: '../../../uma-quest/content/stories' },
-  farm: { env: 'STORY_FARM_DIR', fallback: '../../../uma-farm/content/story' },
+  cast: { env: 'STORY_CAST_DIR', fallback: '../../../uma-story-authoring/content/cast' },
+  quest: { env: 'STORY_QUEST_DIR', fallback: '../../../uma-story-authoring/content/quest/stories' },
+  farm: { env: 'STORY_FARM_DIR', fallback: '../../../uma-story-authoring/content/farm/story' },
 }
 export const storyBlobs = (book: Book): BlobStore =>
   blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: `story/${book}/`, dir: resolve(cwd, process.env[FOLDERS[book].env] ?? FOLDERS[book].fallback) })

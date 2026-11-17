@@ -9,8 +9,8 @@ after each round or verdict, and before any interruption, so a new session can r
 - Guide: `docs/authoring/cyberpunk-enemies/README.md`; baseline: `enemies/brief.md`
 - Step in the baseline's order of work: `<...>`
 - Owner-authorized scope: `<...>`
-- Enemy album: `enemies/approved/review.html` (`pnpm art:albums cyberpunk`)
-- Publication: `<none / which looks, date>` in Uma Enemy Art (`pnpm art:push cyberpunk --enemies`, on the owner's word)
+- Enemy album: `enemies/approved/review.html` (`pnpm -C ../uma-art-authoring albums cyberpunk`)
+- Publication: `<none / which looks, date>` in Uma Enemy Art (`pnpm -C ../uma-art-authoring publish cyberpunk --enemies`, on the owner's word)
 
 ## Progress, faction by faction
 

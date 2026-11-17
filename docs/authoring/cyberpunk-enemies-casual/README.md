@@ -17,7 +17,7 @@ and the casual album's `album.json`.
    model (§2.1), the colour roles (§2.3), each faction's kit (`<faction>/kit.md`) and the calls. The casual look keeps the
    style, the model, her identity and her accent; it drops the armour.
 3. Open the casual album (`enemies/casual/approved/review.html`) and the enemy album (`enemies/approved/review.html`) for
-   her approved combat looks, or `pnpm art:gallery` (http://127.0.0.1:4323) and the Cyberpunk card.
+   her approved combat looks, or `pnpm -C ../uma-art-authoring gallery` (http://127.0.0.1:4323) and the Cyberpunk card.
 4. Copy [casual-brief.md](templates/casual-brief.md) into each study folder, and keep a [handoff.md](templates/handoff.md).
 
 ## The casual look
@@ -47,17 +47,17 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/enemies/`
 | `casual/approved/manifest.json` | **The approval record:** each approved casual look with `id`, `character`, `faction`, `unitId`, `look` (the outfit's key: `combat-station` for the pilot suits, `casual` for everyday clothes), `image`, `sha256`, `width`, `height`, `approval`, `source` |
 | `casual/approved/<faction>/<enemy>/casual.png` | The approved PNGs, byte for byte |
 | `casual/approved/album.json` | The casual album's words: title, header, footer, `noun`, `empty`, faction names in their order, look captions |
-| `casual/approved/review.html` | The casual album, built by `pnpm art:albums cyberpunk` |
+| `casual/approved/review.html` | The casual album, built by `pnpm -C ../uma-art-authoring albums cyberpunk` |
 
 ## The approval cycle
 
 ```
 her approved ─► study (v00N) ─► review page ─► owner's verdict ─► copied into casual/approved/ ─► casual album rebuilt
-combat look      (one main         (per study)    (exact words,      + manifest entry               (pnpm art:albums
+combat look      (one main         (per study)    (exact words,      + manifest entry               (pnpm -C ../uma-art-authoring albums
 (the anchor)      change a round)                  date, scope)       (byte for byte, SHA-256)        cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm art:push cyberpunk
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring publish cyberpunk
 --enemies` sends the casual looks with the armour looks (EA3, P186), and Uma Enemy Art shows each one first in her group,
 under her name, with a "Casual" label. The casual album and the Local Art Gallery then show it as **Published**. Nothing
 here is backed up.
@@ -66,7 +66,7 @@ here is backed up.
 
 The casual album is the enemy album's code (`scripts/character-art/albums/enemy-album.mjs`, P182) run on the casual
 collection (P185): the approved looks faction by faction, in `album.json`'s order, each card with the enemy's name, the
-look's caption and the approval's date and scope. `pnpm art:albums cyberpunk --check` compares without writing.
+look's caption and the approval's date and scope. `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing.
 
 ## Never
 
@@ -117,7 +117,7 @@ What to do:
 5. On my approval: record my exact words, the date and the scope; copy the PNG byte for byte to
    casual/approved/<faction>/<boss>/casual.png, using the faction key her pilot suit's entry already uses; add its entry
    to casual/approved/manifest.json (look "casual", with sha256, width, height, approval and source); then rebuild the
-   albums with pnpm art:albums cyberpunk.
+   albums with pnpm -C ../uma-art-authoring albums cyberpunk.
 6. Keep casual/handoff.md current: each boss's studies, verdicts and approved look, and the next boss.
 7. After the four, go on with the next cast boss whose pilot suit is approved; tell me when none is left, since the
    bosses' own cycle approves the pilot suits.

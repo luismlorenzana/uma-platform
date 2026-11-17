@@ -21,7 +21,7 @@ Describe the scene in a **fresh prompt** and regenerate from those two character
 After `init` (or when resuming a study), run:
 
 ```text
-node scripts/character-art/splash-study.mjs prepare-beach <character-key> <vNNN>
+pnpm -C ../uma-art-authoring study prepare-beach <character-key> <vNNN>
 ```
 
 The command reads the character's owner-approved active collection, verifies the exact swimsuit and Happy portrait hashes, and creates **only** a new `beach/vNNN/prompt.txt` and `inputs.json` under her private study. It refuses an existing attempt or missing/unapproved references. It does not generate an image, select it, approve it or change an album. If a pilot has no per-character active collection, resolve that reference layout explicitly before using this command; do not substitute another character's files.

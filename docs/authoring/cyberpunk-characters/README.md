@@ -14,7 +14,7 @@ wardrobe roles as the approved pilots, with the new Uma's own face, hair, markin
 1. Read [AGENTS.md](../../../AGENTS.md), the latest [decisions](../../decisions.md) (P162, P174, P181, P182) and
    [workflow.md](workflow.md).
 2. Read the local visual standard, `content/authoring/character-universes/cyberpunk/approved/style-guide.md`, and open the
-   approved album (`cyberpunk/approved/review.html`, or `pnpm art:gallery`, http://127.0.0.1:4323).
+   approved album (`cyberpunk/approved/review.html`, or `pnpm -C ../uma-art-authoring gallery`, http://127.0.0.1:4323).
 3. Open `cyberpunk/cast/review.html` for the playable crew in Ranker order. Use the existing `brief.md` and
    `character.json` from her **gitignored** folder, `content/authoring/character-universes/cyberpunk/characters/<key>/`.
    Fill the brief from the owner's instructions and the inspected references. Use the
@@ -46,16 +46,16 @@ Paths are relative to `content/authoring/character-universes/cyberpunk/`. They e
 | Path | What |
 | --- | --- |
 | `approved/` | The pilots' approved collection: `manifest.json` (approvals bound to each PNG's SHA-256), `style-guide.md`, `album.json` (the album's words), `review.html` (built) |
-| `cast/` | The playable crew's reference and work album, grouped by Ranker tier. The Local Art Gallery renders it from the character folders on refresh, and `pnpm art:albums cyberpunk` writes a standalone copy |
+| `cast/` | The playable crew's reference and work album, grouped by Ranker tier. The Local Art Gallery renders it from the character folders on refresh, and `pnpm -C ../uma-art-authoring albums cyberpunk` writes a standalone copy |
 | `characters/<key>/` | One character's collection. `character.json` records her Ranker place and the original ranked outfit references from master data, with SHA-256. `references/` holds the images. Keep authored work in `v001/`, `v002/` … and the approved version pointer in `active-study.json` |
-| `characters/<key>/<version>/album.json` | Her own album's words; `pnpm art:albums cyberpunk` builds her `review.html` |
+| `characters/<key>/<version>/album.json` | Her own album's words; `pnpm -C ../uma-art-authoring albums cyberpunk` builds her `review.html` |
 | `enemies/` | The enemy initiative: [its own packet](../cyberpunk-enemies/README.md). Never put an enemy look in `approved/` or `characters/`: `art:push` would publish it as an Uma's look |
 
 ## The approval cycle
 
 ```
 author a version ─► review page ─► owner's verdict ─► approved in her manifest ─► her album rebuilt ─► published on the owner's word
-   (v001, v002…)      (per study)     (exact words,      (approval + SHA-256,      (pnpm art:albums)     (pnpm art:push cyberpunk,
+   (v001, v002…)      (per study)     (exact words,      (approval + SHA-256,      (pnpm -C ../uma-art-authoring albums)     (pnpm -C ../uma-art-authoring publish cyberpunk,
                                        date, scope)        active-study.json)                              by the publishing session)
 ```
 
@@ -65,8 +65,8 @@ author a version ─► review page ─► owner's verdict ─► approved in he
    `fullBodyAssets`, each with `id`, `character`, `outfit`, `image`, `width`, `height`, `sha256` and
    `approval: { status: "approved", by: "owner", date, evidence }`. Point `active-study.json` at it with
    `ownerApproved: true`.
-4. **Album:** `pnpm art:albums cyberpunk` builds her album from her manifest and her `album.json`.
-5. **Publish:** a separate session publishes, only when the owner asks (`pnpm art:push cyberpunk --only <ids>`); the
+4. **Album:** `pnpm -C ../uma-art-authoring albums cyberpunk` builds her album from her manifest and her `album.json`.
+5. **Publish:** a separate session publishes, only when the owner asks (`pnpm -C ../uma-art-authoring publish cyberpunk --only <ids>`); the
    approval in a manifest is not the go. The publish flags then show on her album.
 
 ## Album pages
@@ -74,11 +74,11 @@ author a version ─► review page ─► owner's verdict ─► approved in he
 The album code is generic and lives in git, `scripts/character-art/albums/` (P181, P182). It names no character: every
 word a page shows is in its `album.json`. A character with only looks gets a **looks-only** album (her outfits, no tabs).
 To start hers, copy the shape of an existing `album.json` (title, eyebrow, heading, intro, summary, links, outfitsNote,
-leadOutfit, approvedVersions, footer) and change its words. `pnpm art:albums cyberpunk --check` compares without writing.
+leadOutfit, approvedVersions, footer) and change its words. `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing.
 
 ## Starter request for another ChatGPT session
 
 > Author a new Uma for Uma Cyberpunk. Follow `docs/authoring/cyberpunk-characters/README.md` and `workflow.md` in the
 > uma-platform repo, and the local style guide in `content/authoring/character-universes/cyberpunk/approved/`. Work in
 > `content/authoring/character-universes/cyberpunk/characters/<key>/`, one version folder per round. Show me each round
-> first; record my approvals exactly; build her album with `pnpm art:albums cyberpunk`. Don't publish.
+> first; record my approvals exactly; build her album with `pnpm -C ../uma-art-authoring albums cyberpunk`. Don't publish.

@@ -8,7 +8,7 @@ import { blobStore, type BlobStore } from '../../store/blob-store'
 import { ENEMY_PACK_ALLOW, enemyGames } from './enemy-art.games'
 
 /** What `pnpm art:push <universe> --enemies` publishes: `enemy-art/…` in the app's bucket, or its local copy in dev. */
-const published = (): BlobStore => blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'enemy-art/', dir: resolve(process.cwd(), process.env.ENEMY_ART_DIR ?? '../../content/published/enemy-art') })
+const published = (): BlobStore => blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'enemy-art/', dir: resolve(process.cwd(), process.env.ENEMY_ART_DIR ?? '../../../uma-art-authoring/content/published/enemy-art') })
 const pack = (store: BlobStore): FileSource => ({ read: async (path) => (await store.read(path))?.bytes ?? null })
 const PUBLISHED = Symbol('enemy-art-published')
 

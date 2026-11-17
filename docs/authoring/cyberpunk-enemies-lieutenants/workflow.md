@@ -32,12 +32,12 @@ Record the owner's verdict exactly, with the date and the precise scope. Copy ea
 
 ## 5. The albums
 
-Run `pnpm art:albums cyberpunk`: the approved album shows the approved looks faction by faction, and her cast card badges
+Run `pnpm -C ../uma-art-authoring albums cyberpunk`: the approved album shows the approved looks faction by faction, and her cast card badges
 them Approved. A faction appears under its key until `approved/album.json`'s `factions` names it.
 
 ## 6. Publishing, on the owner's word
 
-Claude publishes the lieutenants' looks with the bosses', `pnpm art:push cyberpunk --enemies` (EA4, P201): Uma Enemy Art
+Claude publishes the lieutenants' looks with the bosses', `pnpm -C ../uma-art-authoring publish cyberpunk --enemies` (EA4, P201): Uma Enemy Art
 shows each lieutenant in her faction under her own name, labelled Lieutenant, and the lieutenants' album gets its own
 flags. An authoring session only approves.
 

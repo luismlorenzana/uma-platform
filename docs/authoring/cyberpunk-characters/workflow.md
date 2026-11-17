@@ -35,8 +35,8 @@ Record the owner's verdict exactly, with the date and the precise scope (which i
 
 ## 6. Her album
 
-Write `characters/<key>/<version>/album.json` with her album's words and run `pnpm art:albums cyberpunk`. Check the page
-in the Local Art Gallery (`pnpm art:gallery`). Her looks also appear on the Cyberpunk card of its front page.
+Write `characters/<key>/<version>/album.json` with her album's words and run `pnpm -C ../uma-art-authoring albums cyberpunk`. Check the page
+in the Local Art Gallery (`pnpm -C ../uma-art-authoring gallery`). Her looks also appear on the Cyberpunk card of its front page.
 
 ## 7. Handoff
 
