@@ -57,7 +57,7 @@ her folder ─► study (v00N) ─► cast album ─► owner's verdict ─► c
                change a round)  picture)       date, scope)       (byte for byte, SHA-256)    cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring publish cyberpunk
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring run publish cyberpunk
 --enemies` sends the lieutenants' looks with the bosses' (EA4, P201), and Uma Enemy Art shows each lieutenant in her
 faction under her own name, labelled Lieutenant. Nothing here is backed up.
 

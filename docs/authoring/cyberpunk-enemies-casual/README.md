@@ -57,14 +57,14 @@ combat look      (one main         (per study)    (exact words,      + manifest 
 (the anchor)      change a round)                  date, scope)       (byte for byte, SHA-256)        cyberpunk)
 ```
 
-An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring publish cyberpunk
+An authoring session ends at **approved, locally**. Publishing is Claude's, on the owner's word: `pnpm -C ../uma-art-authoring run publish cyberpunk
 --enemies` sends the casual looks with the armour looks (EA3, P186), and Uma Enemy Art shows each one first in her group,
 under her name, with a "Casual" label. The casual album and the Local Art Gallery then show it as **Published**. Nothing
 here is backed up.
 
 ## Album
 
-The casual album is the enemy album's code (`scripts/character-art/albums/enemy-album.mjs`, P182) run on the casual
+The casual album is the enemy album's code (`uma-art-authoring/albums/enemy-album.mjs`, P182) run on the casual
 collection (P185): the approved looks faction by faction, in `album.json`'s order, each card with the enemy's name, the
 look's caption and the approval's date and scope. `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing.
 

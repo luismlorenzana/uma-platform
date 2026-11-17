@@ -2,7 +2,7 @@
 
 Fill the brackets privately. The [scene set](scene-set.json) supplies per-scene action, lighting, wardrobe and expression. Keep a copy of the **exact filled prompt** and the roles and hashes of the images actually used for each attempt.
 
-For **beach**, use the [locked baseline](beach-baseline.md) and `prepare-beach` command instead of filling the generic scene prompt below. [beach-spec.json](beach-spec.json) is its one prompt source: only the character name is filled automatically; her actual identity, proportions, bikini and markings come from her own approved references. Use exactly the two prepared inputs, with no existing beach render. Copy `intent`, `sceneSpec`, `promptSha256` and `references` into the generation record. Tail root and upper length stay hidden behind her toward viewer-right; limited visibility is preferable to an exposed or floating attachment.
+For **beach**, use the [locked baseline](beach-baseline.md) and `prepare-beach` command instead of filling the generic scene prompt below. [beach-spec.json](https://github.com/luismlorenzana/uma-art-authoring/blob/feat/initial-preview/docs/authoring/farm-life-splash-art/beach-spec.json) is its one prompt source: only the character name is filled automatically; her actual identity, proportions, bikini and markings come from her own approved references. Use exactly the two prepared inputs, with no existing beach render. Copy `intent`, `sceneSpec`, `promptSha256` and `references` into the generation record. Tail root and upper length stay hidden behind her toward viewer-right; limited visibility is preferable to an exposed or floating attachment.
 
 ## New scene
 

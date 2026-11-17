@@ -41,7 +41,7 @@ When a new faction gets its first approved look, add its name (and its place in 
 ## 6. Publishing, on the owner's word
 
 Approved looks publish to **Uma Enemy Art** (https://uma-platform.web.app/enemy-art, EA1, P183), the app's own section for
-enemies, never Character Art. Claude runs `pnpm -C ../uma-art-authoring publish cyberpunk --enemies --only <ids>` when the owner says which looks
+enemies, never Character Art. Claude runs `pnpm -C ../uma-art-authoring run publish cyberpunk --enemies --only <ids>` when the owner says which looks
 go up: it sends each approved PNG byte for byte to `gs://uma-platform-content/enemy-art/cyberpunk/`, reads it back, writes
 the index last and flags the looks in the enemy album. An authoring session only approves.
 

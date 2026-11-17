@@ -58,13 +58,13 @@ study (v00N) ─► review page ─► owner's verdict ─► copied into approv
 
 An authoring session ends at **approved, locally**. Publishing is a separate step, Claude's, on the owner's word: approved
 looks go to **Uma Enemy Art** (https://uma-platform.web.app/enemy-art, EA1, P183), the app's own section for enemies, never
-Character Art, with `pnpm -C ../uma-art-authoring publish cyberpunk --enemies --only <ids>`. The enemy album and the Local Art Gallery then show
+Character Art, with `pnpm -C ../uma-art-authoring run publish cyberpunk --enemies --only <ids>`. The enemy album and the Local Art Gallery then show
 each look as **Published** (or **Not published** until it goes up). Nothing here is backed up.
 
 ## Album
 
 The enemy album groups the approved looks faction by faction, in `album.json`'s order, each card with the enemy's name,
-the look's caption and the approval's date and scope. The code is generic and in git, `scripts/character-art/albums/
+the look's caption and the approval's date and scope. The code is generic and in git, `uma-art-authoring/albums/
 enemy-album.mjs` (P182); `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing. A new faction's looks appear under
 its key until `album.json` names it.
 

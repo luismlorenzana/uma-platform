@@ -1,6 +1,6 @@
 # Farm Life beach baseline
 
-The owner accepted this direction on 2026-11-16 (P187). It applies to every character's **beach** slot, including replacements of earlier beach scenes. The [version 1 spec](beach-spec.json) is the executable prompt source. The approved local staging baseline is the beach override in `content/authoring/character-universes/farm-life/splash-art/authoring-reference.json`; its exact image, prompt and approval stay private.
+The owner accepted this direction on 2026-11-16 (P187). It applies to every character's **beach** slot, including replacements of earlier beach scenes. The [version 1 spec](https://github.com/luismlorenzana/uma-art-authoring/blob/feat/initial-preview/docs/authoring/farm-life-splash-art/beach-spec.json) is the executable prompt source. The approved local staging baseline is the beach override in `content/authoring/character-universes/farm-life/splash-art/authoring-reference.json`; its exact image, prompt and approval stay private.
 
 ## Fixed scene
 

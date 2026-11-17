@@ -42,7 +42,7 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 
 Local previews, authoring data, and content publishing live in [uma-art-authoring](https://github.com/luismlorenzana/uma-art-authoring)
 and [uma-story-authoring](https://github.com/luismlorenzana/uma-story-authoring). Start the gallery with `pnpm gallery`
-in the Art repo or the three-book Story Sandbox with `pnpm start` in the Story repo. Each repo's `pnpm publish` command
+in the Art repo or the three-book Story Sandbox with `pnpm start` in the Story repo. Each repo's `pnpm run publish` command
 uses the existing private Platform content storage. Platform maintains the Ranker, hosted readers and master-data release pipeline.
 
 ## Develop

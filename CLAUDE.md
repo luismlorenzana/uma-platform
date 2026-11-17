@@ -31,19 +31,19 @@
   sisters in the private `ranker/profiles.json`; Uma Character Art is live, laid out by the Ranker (CA1, CA2, P135, P136); RK2
   after the owner's ranking. Claude owns Uma Studio and the app.
 - **Universe looks (CA4, P162, AP73–AP82):** ChatGPT's owner-approved pictures of an Uma in another world live in
-  `content/authoring/character-universes/<universe>/approved/` (private, local). `pnpm -C ../uma-art-authoring publish <universe>` publishes the
+  `content/authoring/character-universes/<universe>/approved/` (private, local). `pnpm -C ../uma-art-authoring run publish <universe>` publishes the
   approved ones to the app's bucket (`art/universes/`), where Character Art shows them **on her own page**, never in a tab
   of their own; it also flags each look as published (`approved/publication.json`), which the local galleries show
   (`pnpm -C ../uma-art-authoring gallery`, http://127.0.0.1:4323; `pnpm -C ../uma-art-authoring status` refreshes the flags). ChatGPT pushes after an approval;
   Claude pushes only on the owner's word, and only the looks or characters named (`--only <id|outfit|character>,…`, P168,
   P189; a character not on this machine stays live). **Dialogue portraits
   (CA5, P169)** go up as pieces (each outfit's neutral crop and each expression's face, with a recipe) by
-  `pnpm -C ../uma-art-authoring publish <universe> --portraits [--only <character>,…]`: her page shows the pieces, and the games compose the states from
+  `pnpm -C ../uma-art-authoring run publish <universe> --portraits [--only <character>,…]`: her page shows the pieces, and the games compose the states from
   `/api/art/portraits/<universe>`; Character Art never composes one. A Farm Life push (looks or portraits) ends in master
   data `latest`: `art:push` runs `pnpm art:release farm-life` (packs, candidate, check, promote, profile pictures; P203). A character authored on her own lives in
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
-  The local album pages are built by code in git, `uma-art-authoring/albums` (`pnpm -C ../uma-art-authoring albums`, P181); their words
+  The local album pages are built by `uma-art-authoring/albums` (`pnpm -C ../uma-art-authoring albums`, P181); their words
   stay local in each page's `album.json`. Uma Cyberpunk has two separate authoring cycles (P182): characters
   (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, names local).
 - **Uma Cyberpunk's enemy casting (EC1, P192–P196):** https://uma-platform.web.app/ranker/cyberpunk, the Ranker's page
@@ -55,9 +55,9 @@
 - **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
   `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
   franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's
-  `content/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
+  `../uma-story-authoring/content/cyberpunk/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
   would publish them as an Uma's looks). **Uma Enemy Art (EA1, P183, AP93–AP98)** is their own sub-app
-  (https://uma-platform.web.app/enemy-art): `pnpm -C ../uma-art-authoring publish cyberpunk --enemies` publishes the approved ones to
+  (https://uma-platform.web.app/enemy-art): `pnpm -C ../uma-art-authoring run publish cyberpunk --enemies` publishes the approved ones to
   `enemy-art/cyberpunk/`, on the owner's word only; Uma Quest's enemies join it later (EA2); Uma Farm has none.
   **Casual clothing (P185)** is the enemies' second cycle: `docs/authoring/cyberpunk-enemies-casual`, its own collection
   and album in `enemies/casual/` (approved/manifest.json), with the bosses' pilot suits as the base of both enemy albums (P191); the same
@@ -74,7 +74,7 @@
   written in its own session and repo, private; drafts are pushed here for reading, and each game publishes its own
   release. This repo's sessions never write a game's story. **Local first (P150):** the owner authors and
   reviews in the games' local Story Sandboxes, so the site is parked after US1 and US2–US4 are not being built; don't
-  move a sandbox's pages here unless the owner asks. `pnpm -C ../uma-story-authoring publish <book>` is an optional backup of a book's text.
+  move a sandbox's pages here unless the owner asks. `pnpm -C ../uma-story-authoring run publish <book>` is an optional backup of a book's text.
 - New decisions go in `docs/decisions.md` from P99 (fetch `main` first).
 
 ## Autonomy: what you do without asking

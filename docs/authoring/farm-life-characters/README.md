@@ -72,7 +72,7 @@ This packet ends at a verified, reviewed **local** collection and a handoff. **T
 ## Album pages
 
 The local review pages (each universe's approved album with its Dialogue Portraits and Splash Art tabs, the portraits' and
-the splash art's own pages, and a character's own album) are built by code in git: `scripts/character-art/albums/`
+the splash art's own pages, and a character's own album) are built by code in git: `uma-art-authoring/albums/`
 (P181). Use it; don't write a new page builder.
 
 - **The code is generic.** It names no character and holds no words of an album. Everything a page says (title, intro,

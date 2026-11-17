@@ -4,7 +4,7 @@ Use this packet in a new ChatGPT session to author the **nine Farm Life event il
 
 - [Workflow](workflow.md): find references, author, review, verify and hand off a set.
 - [Prompt kit](prompt-kit.md): reusable generation and revision prompts.
-- [Locked beach baseline](beach-baseline.md) and [prompt spec](beach-spec.json): the shared lounger/harbour composition, mostly hidden viewer-right tail, and fresh generation from each character's own approved bikini base and Happy portrait.
+- [Locked beach baseline](beach-baseline.md) and [prompt spec](https://github.com/luismlorenzana/uma-art-authoring/blob/feat/initial-preview/docs/authoring/farm-life-splash-art/beach-spec.json): the shared lounger/harbour composition, mostly hidden viewer-right tail, and fresh generation from each character's own approved bikini base and Happy portrait.
 - [Scene set](scene-set.json): ordered slots, outfit and expression keys, and runtime moments. Master data takes each published scene's moment from it (her scene's id, else her outfit's next slot, P203), so keep the scene ids and outfits as the set has them.
 - [Scene brief](templates/brief.md) and [handoff](templates/handoff.md): copy and fill under the character's private working folder.
 - [Character authoring](../farm-life-characters/README.md): use first when the character lacks the approved references.
