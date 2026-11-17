@@ -64,7 +64,7 @@ each look as **Published** (or **Not published** until it goes up). Nothing here
 ## Album
 
 The enemy album groups the approved looks faction by faction, in `album.json`'s order, each card with the enemy's name,
-the look's caption and the approval's date and scope. The code is generic and in git, `scripts/character-art/albums/
+the look's caption and the approval's date and scope. The code is generic and in git, `uma-art-authoring/albums/
 enemy-album.mjs` (P182); `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing. A new faction's looks appear under
 its key until `album.json` names it.
 

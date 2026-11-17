@@ -43,7 +43,7 @@
   data `latest`: `art:push` runs `pnpm art:release farm-life` (packs, candidate, check, promote, profile pictures; P203). A character authored on her own lives in
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
-  The local album pages are built by code in git, `uma-art-authoring/albums` (`pnpm -C ../uma-art-authoring albums`, P181); their words
+  The local album pages are built by `uma-art-authoring/albums` (`pnpm -C ../uma-art-authoring albums`, P181); their words
   stay local in each page's `album.json`. Uma Cyberpunk has two separate authoring cycles (P182): characters
   (`docs/authoring/cyberpunk-characters`) and enemies (`docs/authoring/cyberpunk-enemies`, names local).
 - **Uma Cyberpunk's enemy casting (EC1, P192–P196):** https://uma-platform.web.app/ranker/cyberpunk, the Ranker's page
@@ -55,7 +55,7 @@
 - **Cyberpunk enemy looks (P179, CE1–CE11):** the baseline ChatGPT authors enemies from is
   `content/authoring/character-universes/cyberpunk/enemies/` (private, local, never backed up): its `brief.md`, a kit per
   franchise, and one boss a franchise wired with her Ranker art by `tools/wire.py`, from `picks.json` and uma-cyberpunk's
-  `content/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
+  `../uma-story-authoring/content/cyberpunk/stories/foes/`. Approved enemy looks go to `enemies/approved/`, never the universe's `approved/` (`art:push`
   would publish them as an Uma's looks). **Uma Enemy Art (EA1, P183, AP93–AP98)** is their own sub-app
   (https://uma-platform.web.app/enemy-art): `pnpm -C ../uma-art-authoring publish cyberpunk --enemies` publishes the approved ones to
   `enemy-art/cyberpunk/`, on the owner's word only; Uma Quest's enemies join it later (EA2); Uma Farm has none.

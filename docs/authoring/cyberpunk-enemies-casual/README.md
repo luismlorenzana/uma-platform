@@ -64,7 +64,7 @@ here is backed up.
 
 ## Album
 
-The casual album is the enemy album's code (`scripts/character-art/albums/enemy-album.mjs`, P182) run on the casual
+The casual album is the enemy album's code (`uma-art-authoring/albums/enemy-album.mjs`, P182) run on the casual
 collection (P185): the approved looks faction by faction, in `album.json`'s order, each card with the enemy's name, the
 look's caption and the approval's date and scope. `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing.
 

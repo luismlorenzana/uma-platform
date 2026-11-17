@@ -71,7 +71,7 @@ author a version ─► review page ─► owner's verdict ─► approved in he
 
 ## Album pages
 
-The album code is generic and lives in git, `scripts/character-art/albums/` (P181, P182). It names no character: every
+The album code is generic and lives in git, `uma-art-authoring/albums/` (P181, P182). It names no character: every
 word a page shows is in its `album.json`. A character with only looks gets a **looks-only** album (her outfits, no tabs).
 To start hers, copy the shape of an existing `album.json` (title, eyebrow, heading, intro, summary, links, outfitsNote,
 leadOutfit, approvedVersions, footer) and change its words. `pnpm -C ../uma-art-authoring albums cyberpunk --check` compares without writing.
