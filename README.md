@@ -42,6 +42,11 @@ NestJS pieces both APIs share. See the [roadmap](docs/roadmap.md).
 | `infra/` | GCP project and bucket runbook ([README](infra/README.md)); `bootstrap.sh`, the app's cloud in the `uma-rpg` project |
 | `content/` | **Gitignored.** Private inputs (`overrides/`) and the local release (`release/`). Never commit it |
 
+The Local Art Gallery and album builders live in [uma-art-authoring](https://github.com/luismlorenzana/uma-art-authoring).
+Clone it beside this checkout (or set `UMA_ART_AUTHORING_ROOT`). The commands above use that code with the same private
+authoring tree. The story preview launchers prefer the sibling [uma-story-authoring](https://github.com/luismlorenzana/uma-story-authoring)
+checkout (or `UMA_STORY_AUTHORING_ROOT`), with the individual game launchers available while machines are updated.
+
 ## Develop
 
 Node 22 and pnpm 10 (`corepack enable`).

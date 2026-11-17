@@ -41,7 +41,8 @@
       "name": "story-sandbox",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "../uma-quest/tools/story-sandbox/server.mjs"
+        "scripts/local-story-preview.mjs",
+        "quest"
       ],
       "port": 4320
     },
@@ -51,7 +52,8 @@
       "runtimeArgs": [
         "--experimental-strip-types",
         "--no-warnings",
-        "../uma-farm/tools/story-sandbox/server.mjs"
+        "scripts/local-story-preview.mjs",
+        "farm"
       ],
       "port": 4321
     },
@@ -59,8 +61,8 @@
       "name": "cyber-story-sandbox",
       "runtimeExecutable": "node",
       "runtimeArgs": [
-        "../uma-cyberpunk/node_modules/tsx/dist/cli.mjs",
-        "../uma-cyberpunk/tools/story-sandbox/server.ts"
+        "scripts/local-story-preview.mjs",
+        "cyberpunk"
       ],
       "port": 4322
     },
