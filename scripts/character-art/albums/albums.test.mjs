@@ -6,6 +6,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSyn
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { Script } from 'node:vm'
 import { afterEach, describe, expect, it } from 'vitest'
 import { renderCharacterAlbum } from './character-album.mjs'
 import { renderEnemyAlbum } from './enemy-album.mjs'
@@ -104,6 +105,33 @@ describe('the universe albums', () => {
 })
 
 describe('a character’s own album', () => {
+  it('adds only her approved scenes from a shared collection, with working legacy record paths and hash navigation', async () => {
+    const { u, v } = universe()
+    const config = JSON.parse(readFileSync(join(v, 'album.json'), 'utf8'))
+    put(join(v, 'album.json'), { ...config, splashArt: { dir: '../../../splash-art', text: { expectedCount: 1, intro: 'Her approved scenes.' } } })
+    const manifest = JSON.parse(readFileSync(join(u, 'splash-art/manifest.json'), 'utf8'))
+    manifest.assets.push({ ...manifest.assets[0], character: 'Rider Three', id: 'arrival', image: 'images/arrival.png',
+      record: undefined, generation: 'records/arrival.json', expression: 'happy', expressionLabel: undefined })
+    put(join(u, 'splash-art/manifest.json'), manifest)
+    put(join(v, 'review.html'), `<html><body>old${FLAGS}</body></html>`)
+    const { html } = await renderCharacterAlbum(v)
+    expect(html).toContain('Splash Art · 1</button>')
+    expect(html).toContain('<section class="panel" id="panel-splash" hidden>')
+    expect(html.match(/data-splash-id=/g)).toHaveLength(1)
+    expect(html).toContain('data-splash-id="arrival"')
+    expect(html).not.toContain('data-splash-id="meeting"')
+    expect(html).not.toContain('data-splash-id="beach"')
+    expect(html).toContain('href="../../../splash-art/records/arrival.json"')
+    expect(html).toContain('src="../../../splash-art/images/arrival.png"')
+    expect(html).toContain('<p class="splash-expression">Happy</p>')
+    expect(html).toContain("openTab(['outfits','dialogue','overviews','splash'].includes(location.hash.slice(1))")
+    expect(html.split(FLAGS).length - 1).toBe(1)
+    for (const [, script] of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) expect(() => new Script(script)).not.toThrow()
+    manifest.assets.at(-1).approval = { ...APPROVED, imageSha256: 'b'.repeat(64) }
+    put(join(u, 'splash-art/manifest.json'), manifest)
+    await expect(renderCharacterAlbum(v)).rejects.toThrow(/Every scene carries/)
+  })
+
   it('builds her page from her manifest, verification and album.json, her lead outfit first', async () => {
     const { v } = universe()
     const page = await renderCharacterAlbum(v)
@@ -117,6 +145,7 @@ describe('a character’s own album', () => {
     expect(page.html).toContain("el(side+'-image').alt='Rider Three · '")
     expect(page.html).toContain('<footer>41 files kept</footer>')
     expect(page.html).toContain('All three expressions for this outfit')
+    expect(page.html).not.toContain('id="tab-splash"')
   })
 })
 

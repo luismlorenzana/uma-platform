@@ -83,6 +83,10 @@ the splash art's own pages, and a character's own album) are built by code in gi
   a character's `build-review.mjs`) are now short stubs that call it.
 - **A new character's own album:** add `album.json` to her active version (copy Satono Diamond's `v005/album.json` and
   change its words); `pnpm art:albums` builds her page from her manifest.
+- **Her approved splash art:** add `splashArt: { "dir": "../../../splash-art", "text": { "expectedCount": 9 } }`
+  to that version's `album.json`. The optional Splash Art tab selects her scenes by the manifest's character name from
+  the shared collection, checks approval against each exact image hash, and links its images, prompts and art records.
+  `dir` is relative to the character version; `text.intro` is optional. Albums without this setting keep their existing tabs.
 - **Compact portrait collections:** set `compactPortraits: true` in the character's `album.json` and provide
   `portraitSheets` as `[relative image path, label]` pairs for Spring and useful stress proofs. Each base records its
   decoded `rgbaSha256`, and each non-neutral state records its decoded `rgbaSha256`, shared face/mask and measured
