@@ -39,7 +39,8 @@
   P189; a character not on this machine stays live). **Dialogue portraits
   (CA5, P169)** go up as pieces (each outfit's neutral crop and each expression's face, with a recipe) by
   `pnpm art:push <universe> --portraits [--only <character>,…]`: her page shows the pieces, and the games compose the states from
-  `/api/art/portraits/<universe>`; Character Art never composes one. A character authored on her own lives in
+  `/api/art/portraits/<universe>`; Character Art never composes one. A Farm Life push (looks or portraits) ends in master
+  data `latest`: `art:push` runs `pnpm art:release farm-life` (packs, candidate, check, promote, profile pictures; P203). A character authored on her own lives in
   `<universe>/characters/<key>/` (`active-study.json` names the approved version); the same pushes read it (P174).
   Splash art (`<universe>/splash-art/`) publishes with the looks as its own kind, shown in her page's "Splash art" (P175).
   The local album pages are built by code in git, `scripts/character-art/albums` (`pnpm art:albums`, P181); their words

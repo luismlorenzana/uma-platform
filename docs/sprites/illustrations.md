@@ -60,16 +60,23 @@ Character 1068's:
 1. The art pipeline publishes a universe's approved splash art to the platform app's bucket with `pnpm art:push` (P175):
    each scene joins the universe's index, `art/universes/<universe>/index.json`, as `kind: "splash"`, its PNG under
    `images/`.
-2. Each scene's moment goes in the private moments map, `content/authoring/illustrations/<universe>.json`
-   (`{ universe, moments: { <the universe's id>: <moment> } }`), from the game's request. A scene it doesn't name stops
-   the pack, so a new scene never goes out without its moment.
+2. Each scene's moment comes from the universe's splash brief,
+   [`docs/authoring/<universe>-splash-art/scene-set.json`](../authoring/farm-life-splash-art/scene-set.json) (P203): the
+   slot whose id is her scene's own id (`greeting`, `confession-loving`…), else the next slot of its outfit, in the set's
+   order, whose moment she hasn't used. The private moments map, `content/authoring/illustrations/<universe>.json`
+   (`{ universe, moments: { <the universe's id>: <moment> } }`), overrides a scene when the game asks for another moment
+   (character 1068's ids predate the brief, so hers are named there). A scene neither gives a moment stops the pack, so a
+   new scene never goes out without one.
 3. `pnpm illustrations:pack [universe]` (default `farm-life`) fetches the universe's index and the splash PNGs it lacks
    (`content/published/art/universes/<universe>/`), matches each character to master data by name, checks every file
    against the index's SHA-256 and size and that it is opaque, encodes it, decodes it back at its size within the floor,
-   and writes the family into the local release.
+   and writes the family into the local release. A scene under the 38 dB floor at quality 92 steps up to 94, 96 and 98,
+   then lossless, which lossy WebP's subsampled colour sometimes can't reach on a detailed scene (P203); the pack prints
+   the quality each one took.
 4. `pnpm release:publish -- --illustrations-only` publishes latest plus the family to the `candidate` channel (with
    `--portraits-only` too, both families go in one release); `pnpm release:check -- --channel candidate --against latest`
    reads it back; `--promote <version>` moves latest.
 
-The next Umas join the same way: the art pipeline publishes their scenes, the moments map names them, then steps 3 and 4.
-Use the [Farm Life splash art authoring packet](../authoring/farm-life-splash-art/README.md) to prepare a character's local set and record her scene-to-moment mapping before this handoff.
+The next Umas join the same way: `pnpm art:push farm-life` publishes their scenes and runs `pnpm art:release farm-life`,
+which is steps 3 and 4, then the profile pictures (P203).
+Use the [Farm Life splash art authoring packet](../authoring/farm-life-splash-art/README.md) to prepare a character's local set; its scene set gives her scenes' moments, so only a scene that departs from it needs a line in the moments map.

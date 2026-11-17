@@ -92,6 +92,8 @@ export const encodePng = (image: Rgba): Promise<Buffer> => raw(image).png({ comp
 /** An opaque picture's lossy WebP (the illustrations, P176): its colour only, no alpha. */
 export const encodeLossyOpaque = (image: Rgba, quality: number): Promise<Buffer> =>
   raw(image).removeAlpha().webp({ quality, effort: 6, smartSubsample: true }).toBuffer()
+/** An opaque picture's lossless WebP, its colour only: an illustration lossy WebP can't keep within the floor (P203). */
+export const encodeLosslessOpaque = (image: Rgba): Promise<Buffer> => raw(image).removeAlpha().webp({ lossless: true, effort: 6 }).toBuffer()
 /** Every pixel's alpha is 255. */
 export function isOpaque(image: Rgba): boolean {
   for (let i = 3; i < image.data.length; i += 4) if (image.data[i] !== 255) return false

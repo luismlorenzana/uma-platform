@@ -1,7 +1,8 @@
 // CLI for `pnpm illustrations:pack [universe] [--no-fetch] [--release-dir <dir>]` (uma-farm F84, P176): mirrors the
 // universe's published index and its splash scenes from the app's bucket (read only), then writes every character's into
 // the local release's `illustrations` family. The universe defaults to farm-life; the moments come from
-// `content/authoring/illustrations/<universe>.json`. It prints ids, counts and sizes, never a picture.
+// `content/authoring/illustrations/<universe>.json`, and for a scene it doesn't name, from the universe's splash brief,
+// `docs/authoring/<universe>-splash-art/scene-set.json` (P203). It prints ids, counts and sizes, never a picture.
 
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -10,7 +11,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { parseSet } from '@luismlorenzana/uma-data'
 import { writeIllustrationRelease } from './illustration-release'
-import { packIllustrations, planIllustrations, readIllustrationMoments, readUniverseArtIndex } from './illustrations'
+import { ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex } from './illustrations'
 import { DEFAULT_CONTENT_DIR, readLocalManifest } from './release-dir'
 
 const args = process.argv.slice(2).filter((a) => a !== '--')
@@ -20,6 +21,7 @@ if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(universe)) throw new Error(`A universe is a
 const releaseDir = resolve(option('--release-dir') ?? resolve(DEFAULT_CONTENT_DIR, 'release'))
 const mirror = resolve(process.env.ART_DIR ?? resolve(DEFAULT_CONTENT_DIR, 'published/art'), 'universes', universe)
 const momentsFile = resolve(DEFAULT_CONTENT_DIR, 'authoring/illustrations', `${universe}.json`)
+const sceneSetFile = resolve(DEFAULT_CONTENT_DIR, '..', 'docs/authoring', `${universe}-splash-art`, 'scene-set.json')
 const bucket = process.env.CONTENT_BUCKET ?? 'uma-platform-content'
 // Scoped to the owner's default configuration and the games' project; never `config set`.
 const gcloud = (argv: string[]) => execFileSync('gcloud', argv, {
@@ -45,14 +47,17 @@ async function main(): Promise<void> {
   if (!local) throw new Error('No local release; run pnpm data:import first')
   const characters = parseSet('characters', JSON.parse(await readFile(resolve(releaseDir, ...local.sets.characters.split('/')), 'utf8')) as unknown)
   const byName = new Map(characters.map((c) => [c.name.en, c.id]))
-  const { plans, skipped } = planIllustrations(index, moments, (name) => byName.get(name) ?? null)
+  const slots = existsSync(sceneSetFile) ? readSceneSet(JSON.parse(await readFile(sceneSetFile, 'utf8')) as unknown) : []
+  const { plans, skipped, defaulted } = planIllustrations(index, moments, (name) => byName.get(name) ?? null, slots)
   for (const s of skipped) console.log(`skip ${s}`)
+  const fromSet = new Set(defaulted)
+  if (defaulted.length > 0) console.log(`${defaulted.length} scene(s) take their moment from the splash brief's scene set (marked *)`)
   const packed = []
   for (const plan of plans) {
     const p = await packIllustrations(mirror, universe, plan)
     const bytes = p.scenes.reduce((s, x) => s + x.bytes.byteLength, 0)
     console.log(`${p.characterId} (${plan.name}): ${p.scenes.length} scenes, ${(bytes / 2 ** 20).toFixed(1)} MB; worst ${Math.min(...p.quality.map((q) => q.psnr)).toFixed(1)} dB`)
-    for (const s of p.scenes) console.log(`  ${s.moment.padEnd(18)} ${s.id} (${s.outfit}, ${(s.bytes.byteLength / 1024).toFixed(0)} KB)`)
+    for (const [i, s] of p.scenes.entries()) console.log(`  ${s.moment.padEnd(18)} ${s.id} (${s.outfit}, ${(s.bytes.byteLength / 1024).toFixed(0)} KB)${p.quality[i]!.quality === ILLUSTRATION_QUALITY ? '' : p.quality[i]!.quality === 'lossless' ? ', lossless' : `, quality ${p.quality[i]!.quality}`}${fromSet.has(plan.scenes[i]!.universeId) ? ' *' : ''}`)
     packed.push(p)
   }
   const manifest = await writeIllustrationRelease(releaseDir, packed)

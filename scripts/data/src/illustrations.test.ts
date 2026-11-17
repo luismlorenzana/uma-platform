@@ -14,7 +14,7 @@ import { fixtureBase, fixtureFace } from './dialogue-portrait-fixture'
 import { writeDialoguePortraitRelease } from './dialogue-portrait-release'
 import { encodePng, type Rgba } from './enemy-images'
 import { writeIllustrationRelease } from './illustration-release'
-import { ILLUSTRATION_PSNR_FLOOR, packIllustrations, planIllustrations, readIllustrationMoments, readUniverseArtIndex, type UniverseArtIndex } from './illustrations'
+import { ILLUSTRATION_PSNR_FLOOR, ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex, type UniverseArtIndex } from './illustrations'
 import { LocalOverlayStorage } from './local-storage'
 import { writeDataSets, type MasterSets } from './pack'
 import { publishManifest } from './publish'
@@ -44,6 +44,19 @@ function scene(seed: number, { noise = false, clear = false } = {}): Rgba {
     data[i + 1] = noise ? (n * 7) % 256 : mix(90 + 60 * (y / H), 200)
     data[i + 2] = noise ? (n * 13) % 256 : mix(160 - 80 * t, 120)
     data[i + 3] = clear && x < 4 ? 0 : 255
+  }
+  return { data, width: W, height: H }
+}
+
+/** A smooth scene with ±`amount` of grain: ±10 decodes under the floor at the release's quality and within it at 96. */
+function grain(amount: number): Rgba {
+  const data = new Uint8Array(W * H * 4), clamp = (v: number) => Math.max(0, Math.min(255, Math.round(v)))
+  let r = 7
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 4
+    r = (r * 1103515245 + 12345) % 2 ** 31
+    const n = ((r % 256) / 255 - 0.5) * 2 * amount
+    data[i] = clamp(60 + 120 * x / W + n); data[i + 1] = clamp(90 + 60 * y / H + n); data[i + 2] = clamp(160 - 80 * x / W - n); data[i + 3] = 255
   }
   return { data, width: W, height: H }
 }
@@ -100,13 +113,45 @@ describe('a universe’s published splash art', () => {
     expect(() => planIllustrations(index, partial, idOf)).toThrow(/No moment for test-uma-splash-confession-flustered/)
     expect(() => readIllustrationMoments({ universe: 'test-life', moments: { a: 'Big Moment' } }, 'test-life')).toThrow(/lowercase/)
   })
-  it('refuses a file that isn’t the approved one, one with transparency, and one that encodes under the floor', async () => {
+  it('gives a scene the map doesn’t name the scene set’s moment: her own id first, then her outfit’s next free slot (P203)', async () => {
+    const { index } = await universe()
+    const slot = (id: string, outfit: string, moment: string) => ({ id, outfit, moment })
+    const beach = slot('beach', 'swimsuit', 'beach'), greeting = slot('greeting', 'spring', 'meeting')
+    const slots = readSceneSet({ scenes: [greeting, beach, slot('confession-loving', 'kimono', 'confession-yes'), slot('confession-flustered', 'kimono', 'confession')] })
+    const none = { universe: 'test-life', moments: {} }
+    const moments = (m: typeof none | Record<string, unknown>, s = slots) => planIllustrations(index, m as typeof none, idOf, s).plans[0]!.scenes.map((x) => [x.id, x.moment])
+    // Her own id wins over the set's order; an outfit's next free slot covers an id the set doesn't have.
+    const { defaulted } = planIllustrations(index, none, idOf, slots)
+    expect(moments(none)).toEqual([['first-meeting', 'meeting'], ['confession-flustered', 'confession'], ['confession-loving', 'confession-yes']])
+    expect([...defaulted].sort()).toEqual(['nobody-here-splash-beach', 'test-uma-splash-confession-flustered', 'test-uma-splash-confession-loving', 'test-uma-splash-first-meeting'])
+    // Ids the set doesn't know fall back to the outfit's order.
+    expect(moments(none, readSceneSet({ scenes: [greeting, beach, slot('x', 'kimono', 'confession'), slot('y', 'kimono', 'confession-yes')] })))
+      .toEqual([['first-meeting', 'meeting'], ['confession-flustered', 'confession'], ['confession-loving', 'confession-yes']])
+    // The map wins and uses up its moment: the other kimono scene takes the one left.
+    expect(moments({ universe: 'test-life', moments: { 'test-uma-splash-confession-flustered': 'confession-yes' } }))
+      .toEqual([['first-meeting', 'meeting'], ['confession-flustered', 'confession-yes'], ['confession-loving', 'confession']])
+    // A scene whose outfit has no free slot stops the pack; so does a slot that isn't kebab case.
+    expect(() => planIllustrations(index, none, idOf, readSceneSet({ scenes: [greeting, beach, slot('confession-flustered', 'kimono', 'confession')] })))
+      .toThrow(/No moment for test-uma-splash-confession-loving: the scene set has no free slot/)
+    expect(() => planIllustrations(index, none, idOf, readSceneSet({ scenes: [beach] }))).toThrow(/No moment for test-uma-splash-first-meeting/)
+    expect(() => readSceneSet({ scenes: [slot('greeting', 'Spring', 'meeting')] })).toThrow(/its outfit/)
+  })
+  it('refuses a file that isn’t the approved one and one with transparency; one lossy WebP can’t keep goes lossless', async () => {
     const { dir, index } = await universe({ 'confession-flustered': scene(1, { clear: true }), 'confession-loving': scene(2, { noise: true }) })
     const plan = planIllustrations(index, MOMENTS, idOf).plans[0]!
     await expect(packIllustrations(dir, 'test-life', { ...plan, scenes: [plan.scenes[1]!] })).rejects.toThrow(/isn't opaque/)
-    await expect(packIllustrations(dir, 'test-life', { ...plan, scenes: [plan.scenes[2]!] })).rejects.toThrow(new RegExp(`under the ${ILLUSTRATION_PSNR_FLOOR} dB floor`))
+    // Pure noise no lossy quality keeps within the floor goes out lossless, exact.
+    const noisy = await packIllustrations(dir, 'test-life', { ...plan, scenes: [plan.scenes[2]!] })
+    expect(noisy.quality).toEqual([{ scene: 'confession-loving', psnr: Infinity, quality: 'lossless' }])
     await writeFile(resolve(dir, plan.scenes[0]!.path), await encodePng(scene(7)))
     await expect(packIllustrations(dir, 'test-life', { ...plan, scenes: [plan.scenes[0]!] })).rejects.toThrow(/SHA-256 differs/)
+  })
+  it('steps a scene that decodes under the floor at the release’s quality up until it decodes within it (P203)', async () => {
+    const { dir, index } = await universe({ 'first-meeting': grain(10) })
+    const plan = planIllustrations(index, MOMENTS, idOf).plans[0]!
+    const p = await packIllustrations(dir, 'test-life', { ...plan, scenes: [plan.scenes[0]!, plan.scenes[1]!] })
+    expect(p.quality.map((q) => q.quality)).toEqual([96, ILLUSTRATION_QUALITY])
+    for (const q of p.quality) expect(q.psnr).toBeGreaterThanOrEqual(ILLUSTRATION_PSNR_FLOOR)
   })
   it('packs each scene as WebP within the quality floor', async () => {
     const [p] = await packed()
