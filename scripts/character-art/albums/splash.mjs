@@ -3,24 +3,25 @@
 // `album.json` (`intro`, `expectedCount`, and the standalone page's `pageTitle`, `heading` and `backLink`).
 import assert from 'node:assert/strict'
 import path from 'node:path'
-import { escape, readJson } from './lib.mjs'
+import { escape, readJson, title } from './lib.mjs'
 import { SPLASH_CSS, SPLASH_PAGE_CSS, SPLASH_TABS } from './styles.mjs'
 
 /** The scenes' cards for the collection in `dir`, their images seen through `prefix`. */
-export async function renderSplashContent({ dir, prefix = '', text = {} }) {
+export async function renderSplashContent({ dir, prefix = '', text = {}, character: selectedCharacter }) {
   const manifest = await readJson(path.join(dir, 'manifest.json'))
-  if (text.expectedCount !== undefined) assert.equal(manifest.assets.length, text.expectedCount, `album.json expects ${text.expectedCount} scenes`)
-  assert(manifest.assets.every((a) => a.approval.status === 'approved' && a.approval.imageSha256 === a.sha256), 'Every scene carries the owner’s approval of its exact image')
-  const groups = Map.groupBy(manifest.assets, (scene) => scene.character ?? manifest.character)
+  const assets = selectedCharacter === undefined ? manifest.assets : manifest.assets.filter((a) => (a.character ?? manifest.character) === selectedCharacter)
+  if (text.expectedCount !== undefined) assert.equal(assets.length, text.expectedCount, `album.json expects ${text.expectedCount} scenes`)
+  assert(assets.every((a) => a.approval.status === 'approved' && a.approval.imageSha256 === a.sha256), 'Every scene carries the owner’s approval of its exact image')
+  const groups = Map.groupBy(assets, (scene) => scene.character ?? manifest.character)
   const cards = (scenes, character) => scenes.map((a) => [
     '<figure class="splash-card" data-splash-id="' + escape(a.id) + '" data-splash-order="' + a.order + '">',
     '<a class="splash-image" href="' + escape(prefix + a.image) + '" target="_blank" rel="noopener" aria-label="Open ' + escape(a.title) + '">',
-    '<img src="' + escape(prefix + a.image) + '" width="' + a.width + '" height="' + a.height + '" alt="' + escape(character + ' · ' + a.title + ' · ' + a.expressionLabel) + '" loading="lazy"></a>',
+    '<img src="' + escape(prefix + a.image) + '" width="' + a.width + '" height="' + a.height + '" alt="' + escape(character + ' · ' + a.title + ' · ' + (a.expressionLabel ?? title(a.expression))) + '" loading="lazy"></a>',
     '<figcaption class="splash-caption"><div class="splash-title"><strong>' + a.order + '. ' + escape(a.title) + '</strong><span class="badge">Approved</span></div>',
-    '<p class="splash-expression">' + escape(a.expressionLabel) + '</p><div class="splash-links">',
+    '<p class="splash-expression">' + escape(a.expressionLabel ?? title(a.expression)) + '</p><div class="splash-links">',
     '<a href="' + escape(prefix + a.image) + '" target="_blank" rel="noopener">Full image</a>',
     '<a href="' + escape(prefix + a.prompt) + '" target="_blank" rel="noopener">Exact prompt</a>',
-    '<a href="' + escape(prefix + a.record) + '" target="_blank" rel="noopener">Art record</a>',
+    '<a href="' + escape(prefix + (a.record ?? a.generation)) + '" target="_blank" rel="noopener">Art record</a>',
     '</div></figcaption></figure>',
   ].join('')).join('\n')
   const intro = text.intro ? '<p class="splash-intro">' + text.intro + '</p>' : ''
@@ -34,11 +35,11 @@ export async function renderSplashContent({ dir, prefix = '', text = {} }) {
     }).join('\n')
     markup = '<section class="splash-library" aria-label="Splash Art">' + intro + sections + '</section>'
   } else {
-    const character = groups.keys().next().value ?? manifest.character
+    const character = groups.keys().next().value ?? selectedCharacter ?? manifest.character
     markup = '<section class="splash-library" aria-labelledby="splash-heading"><h2 id="splash-heading">'
-      + escape(character) + ' · Splash Art</h2>' + intro + grid(manifest.assets, character) + '</section>'
+      + escape(character) + ' · Splash Art</h2>' + intro + grid(assets, character) + '</section>'
   }
-  return { css: SPLASH_CSS, markup, count: manifest.assets.length }
+  return { css: SPLASH_CSS, markup, count: assets.length }
 }
 
 const clean = (html) => {
