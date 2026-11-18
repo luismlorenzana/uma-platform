@@ -87,6 +87,12 @@ describe('the universe looks (CA4)', () => {
     expect(extra.looks.map(({ category, kind }) => [category, kind])).toEqual([
       ['pajama-outfits', 'look'], ['wedding-anniversary-splash', 'splash'],
     ])
+    withSplash.set('universes/cyberpunk/index.json', index('cyberpunk', [
+      { ...look('rider-one-weapon', HASH), category: 'weapons' },
+      { ...look('rider-one-idle', OTHER), category: 'combat-sprites' },
+    ]))
+    const combat = (await universes(store(withSplash), () => 9001)).find((u) => u.id === 'cyberpunk')!
+    expect(combat.looks.map(({ category }) => category)).toEqual(['weapons', 'combat-sprites'])
   })
 
   it('drops a look whose entry isn’t a hash-named PNG of its own, another universe’s index, and a damaged file', async () => {
