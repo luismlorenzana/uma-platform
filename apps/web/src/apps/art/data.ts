@@ -86,6 +86,7 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
 
 /** A universe look (CA4, P162): an owner-approved picture of an Uma in another world, published by `pnpm art:push`. */
 export interface UniverseLook {
+  category?: import('./categories').ArtCategory
   id: string
   /** A full-body look, or a splash illustration (P175); absent from an older API, which means a look. */
   kind?: 'look' | 'splash'

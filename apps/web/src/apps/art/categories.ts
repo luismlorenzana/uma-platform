@@ -1,0 +1,8 @@
+export const artCategories = {
+  'pajama-outfits': 'Pajama Outfits',
+  'wedding-anniversary-outfits': 'Wedding Anniversary Outfits',
+  'pajama-splash': 'Pajama Splash',
+  'wedding-anniversary-splash': 'Wedding Anniversary Splash',
+} as const
+
+export type ArtCategory = keyof typeof artCategories

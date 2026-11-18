@@ -9,6 +9,7 @@ import { Button } from '@luismlorenzana/uma-kit/ui'
 import { useEffect, useRef, useState } from 'react'
 import { lookUrl } from './content'
 import type { PortraitPiece, Universe, UniverseLook } from './data'
+import { artCategories } from './categories'
 
 /** What a card and the viewer need of a picture: its pack path, hash and size, and its words. */
 type Shown = Pick<UniverseLook, 'id' | 'character' | 'title' | 'path' | 'bytes' | 'sha256' | 'width' | 'height' | 'approvedOn' | 'publishedAt'>
@@ -136,13 +137,21 @@ export function UmaUniverses({ groups }: { groups: readonly { universe: Universe
       {groups.map(({ universe, looks, splash = [], pieces = [], profiles = [] }) => (
         <div key={universe.id} className="flex flex-col gap-2">
           <p className="text-sm"><b className="font-semibold">{universe.title}</b> <span className="text-xs text-ink-soft">{universeLine(universe, looks.length)}</span></p>
-          {looks.length > 0 && <Looks looks={looks} universe={universe} />}
-          {splash.length > 0 && (
+          {looks.some((look) => !look.category) && <Looks looks={looks.filter((look) => !look.category)} universe={universe} />}
+          {splash.some((look) => !look.category) && (
             <div className="flex flex-col gap-2" data-testid="splash-art">
-              <p className="text-xs text-ink-soft"><b className="font-semibold text-ink">Splash art</b> · {splash.length} scene{splash.length === 1 ? '' : 's'}</p>
-              <Looks looks={splash} universe={universe} columns="grid-cols-1 sm:grid-cols-3" />
+              <p className="text-xs text-ink-soft"><b className="font-semibold text-ink">Splash art</b> · {splash.filter((look) => !look.category).length} scenes</p>
+              <Looks looks={splash.filter((look) => !look.category)} universe={universe} columns="grid-cols-1 sm:grid-cols-3" />
             </div>
           )}
+          {Object.entries(artCategories).map(([category, label]) => {
+            const images = [...looks, ...splash].filter((look) => look.category === category)
+            if (!images.length) return null
+            return <div key={category} className="flex flex-col gap-2" data-testid={category}>
+              <h4 className="text-sm font-semibold">{label} <span className="font-normal text-ink-soft">· {images.length}</span></h4>
+              <Looks looks={images} universe={universe} columns={category.endsWith('splash') ? 'grid-cols-1 sm:grid-cols-3' : undefined} />
+            </div>
+          })}
           {pieces.length > 0 && <Pieces pieces={pieces} universe={universe} />}
           {profiles.length > 0 && <Profiles profiles={profiles} universe={universe} />}
         </div>

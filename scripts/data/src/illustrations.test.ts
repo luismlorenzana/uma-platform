@@ -102,6 +102,7 @@ async function localRelease(withPortraits = false): Promise<string> {
 describe('a universe’s published splash art', () => {
   it('plans each character master data knows: her scenes in order, ids of her own, moments from the map; looks stay out', async () => {
     const { index } = await universe()
+    index.looks.push({ ...index.looks[1]!, id: 'extra-pajama-scene', category: 'pajama-splash' })
     const { plans, skipped } = planIllustrations(index, MOMENTS, idOf)
     expect(plans.map((p) => [p.characterId, p.scenes.map((s) => [s.id, s.outfit, s.moment])]))
       .toEqual([[ID, SCENES.map(([id, outfit, moment]) => [id, outfit, moment])]])

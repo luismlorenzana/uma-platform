@@ -79,6 +79,14 @@ describe('the universe looks (CA4)', () => {
     const withSplash = new Map(objects)
     withSplash.set('universes/sky-city/index.json', index('sky-city', [look('rider-one-street', HASH), { ...look('rider-one-splash-meeting', OTHER), kind: 'splash' }]))
     expect((await universes(store(withSplash), () => 9001)).find((u) => u.id === 'sky-city')!.looks.map((l) => [l.id, l.kind])).toEqual([['rider-one-street', 'look'], ['rider-one-splash-meeting', 'splash']])
+    withSplash.set('universes/farm-life/index.json', index('farm-life', [
+      { ...look('rider-one-extra', HASH), category: 'pajama-outfits' },
+      { ...look('rider-one-evening', OTHER), kind: 'splash', category: 'wedding-anniversary-splash' },
+    ]))
+    const extra = (await universes(store(withSplash), () => 9001)).find((u) => u.id === 'farm-life')!
+    expect(extra.looks.map(({ category, kind }) => [category, kind])).toEqual([
+      ['pajama-outfits', 'look'], ['wedding-anniversary-splash', 'splash'],
+    ])
   })
 
   it('drops a look whose entry isn’t a hash-named PNG of its own, another universe’s index, and a damaged file', async () => {
