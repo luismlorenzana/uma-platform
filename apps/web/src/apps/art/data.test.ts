@@ -70,6 +70,13 @@ describe('the universe looks (CA4)', () => {
     expect([...lookCounts([splashUniverse])]).toEqual([[9001, 1]])
     const onlySplash: Universe = universe('beach', [{ ...look('a-splash-beach', 'Rider One', 9001), kind: 'splash' }])
     expect(looksOf([onlySplash], 9001).map((g) => [g.universe.id, g.looks.length, g.splash.length])).toEqual([['beach', 0, 1]])
+    const additional: Universe = universe('farm-life', [
+      { ...look('a-extra', 'Rider One', 9001), category: 'pajama-outfits' },
+      { ...look('a-extra-scene', 'Rider One', 9001), kind: 'splash', category: 'pajama-splash' },
+    ])
+    const group = looksOf([additional], 9001)[0]!
+    expect(group.looks[0]?.category).toBe('pajama-outfits')
+    expect(group.splash[0]?.category).toBe('pajama-splash')
   })
   it('gives her page her dialogue portrait pieces too, crops before faces, even in a universe with none of her looks', () => {
     const piece = (kind: 'crop' | 'face', id: string, characterId: number | null): PortraitPiece => ({

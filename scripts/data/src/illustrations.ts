@@ -37,6 +37,7 @@ export interface UniverseArtEntry {
   height: number
   approvedOn: string | null
   kind?: string
+  category?: string
 }
 export interface UniverseArtIndex { schemaVersion: 1; kind: 'universe-art'; universe: string; revision: number; looks: UniverseArtEntry[] }
 /** The private moments map: each scene, by the universe's id, to its story moment. */
@@ -109,7 +110,7 @@ export const keyOf = (name: string) => name.normalize('NFKD').toLowerCase().repl
  * moment stops it (`momentsOf`).
  */
 export function planIllustrations(index: UniverseArtIndex, moments: IllustrationMoments, characterIdOf: (name: string) => number | null, slots: readonly SceneSlot[] = []): { plans: IllustrationPlan[]; skipped: string[]; defaulted: string[] } {
-  const splash = index.looks.filter((l) => l.kind === 'splash')
+  const splash = index.looks.filter((l) => l.kind === 'splash' && !l.category)
   const { moment, defaulted, unmapped } = momentsOf(splash, moments, slots)
   if (unmapped.length > 0) throw new Error(`No moment for ${unmapped.join(', ')}: the scene set has no free slot for its outfit; name each in content/authoring/illustrations/${index.universe}.json`)
   const plans = new Map<string, IllustrationPlan>(), skipped: string[] = []

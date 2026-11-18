@@ -272,3 +272,5 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | ~~Now~~ Done 2026-11-11 | Two entries on the OAuth client in [the Google Cloud console](https://console.cloud.google.com/apis/credentials?project=uma-rpg): the redirect URI `https://uma-platform.web.app/__/auth/handler` and the JavaScript origin `https://uma-platform.web.app` |
 | **Now** | **Rank** on [the Ranker](https://uma-platform.web.app/ranker): Playable Umas per outfit, T1–T10, and read the sisters on their cards |
 | When each lands | A look at the Ranker and at Character Art on your phone |
+
+Farm's additional art collections (P208) are Pajama Outfits, Wedding Anniversary Outfits, Pajama Splash, and Wedding Anniversary Splash. The art-authoring publisher adds a category key to their universe index entries. Each category has a heading on the character's published page and can be published independently using --category. Category splash art remains in Character Art for authoring review. The game's standard illustration release selects the standard scene set.
