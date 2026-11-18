@@ -52,6 +52,16 @@
         "docs"
       ],
       "port": 4401
+    },
+    {
+      "name": "art-gallery",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "-C",
+        "../uma-art-authoring",
+        "gallery"
+      ],
+      "port": 4323
     }
   ]
 }
