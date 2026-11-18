@@ -10,7 +10,7 @@
 import type { BlobStore } from '../../store/blob-store'
 
 export interface UniverseLook {
-  category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash'
+  category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites'
   id: string
   /** A full-body look, or a splash illustration (P175). */
   kind: 'look' | 'splash'
@@ -96,9 +96,11 @@ function lookOf(universe: string, raw: unknown, characterOf: (name: string) => n
   const bytes = whole(raw.bytes), width = whole(raw.width), height = whole(raw.height)
   if (!id || !character || !path || !sha256 || !bytes || !width || !height) return null
   if (!/^[a-f0-9]{64}$/.test(sha256) || path !== `images/${id}.${sha256.slice(0, 16)}.png` || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) return null
+  const farmCategory = universe === 'farm-life' && (raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash')
+  const cyberpunkCategory = universe === 'cyberpunk' && (raw.category === 'weapons' || raw.category === 'combat-sprites')
   return {
     id, kind: raw.kind === 'splash' ? 'splash' : 'look', character, characterId: characterOf(character), outfit: text(raw.outfit) ?? id, title: text(raw.title) ?? id,
-    ...(universe === 'farm-life' && (raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash') ? { category: raw.category } : {}),
+    ...(farmCategory || cyberpunkCategory ? { category: raw.category as UniverseLook['category'] } : {}),
     path: `universes/${universe}/${path}`, bytes, sha256, width, height, approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt),
   }
 }
