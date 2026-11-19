@@ -11,6 +11,8 @@ The numeric character remains the real master-data character. The outfit belongs
 
 `client.dialoguePortraits(manifest, art, characterId, outfitId?)` and `client.illustrations(manifest, art, characterId, outfitId?)` select the exact identity. They validate both IDs and every referenced image's release hash. An absent outfit entry returns null, with no fallback to another identity's art.
 
+Games using uma-kit's content client need uma-kit 0.20.1 as well as uma-data 1.10.0, so the client created by the kit supports the new selection arguments.
+
 ## Private authoring aliases
 
 The packers and profile publisher read optional `content/authoring/art-identities/<universe>.json`:
