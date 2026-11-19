@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { syntheticMasterData } from '@luismlorenzana/uma-data/testing'
-import { artIdentityLookup, artIdentityOfKey } from './art-identities'
+import { artIdentityLookup, artIdentityOfKey, scopedArtIdentityOverrides } from './art-identities'
 
 describe('private art identity aliases', () => {
   const data = syntheticMasterData()
   const original = data.characters.find(c => c.id === 9001)!
   const aliases = { identities: { 'invented-sister': { characterId: 9001, outfitId: 900101 } } }
+  it('ignores unrelated aliases when packing a selected character without an outfits set', () => {
+    expect(scopedArtIdentityOverrides(aliases, ['Another Character'])).toBeNull()
+    expect(scopedArtIdentityOverrides(aliases, ['Invented Sister'])).toEqual(aliases)
+    expect(scopedArtIdentityOverrides(null, ['Invented Sister'])).toBeNull()
+  })
   it('resolves a separate outfit identity and leaves the original name unchanged', () => {
     const lookup = artIdentityLookup(data.characters, data.outfits, aliases)
     expect(lookup('Invented Sister')).toEqual({ characterId: 9001, outfitId: 900101 })

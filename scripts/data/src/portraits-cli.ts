@@ -34,7 +34,7 @@ async function main(): Promise<void> {
   const index = readPortraitsIndex(JSON.parse(await readFile(resolve(mirror, 'index.json'), 'utf8')) as unknown, universe)
   const local = await readLocalManifest(releaseDir)
   if (!local) throw new Error('No local release; run pnpm data:import first')
-  const { plans, skipped } = planPortraits(index, await localArtIdentityLookup(universe, releaseDir, local))
+  const { plans, skipped } = planPortraits(index, await localArtIdentityLookup(universe, releaseDir, local, index.characters.map(c => c.name)))
   for (const s of skipped) console.log(`skip ${s}`)
   const overrides = existsSync(overridesFile) ? readProfileOverrides(JSON.parse(await readFile(overridesFile, 'utf8')) as unknown, universe) : null
   const packed = []

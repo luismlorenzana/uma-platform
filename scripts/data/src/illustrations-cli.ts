@@ -46,7 +46,7 @@ async function main(): Promise<void> {
   const local = await readLocalManifest(releaseDir)
   if (!local) throw new Error('No local release; run pnpm data:import first')
   const slots = existsSync(sceneSetFile) ? readSceneSet(JSON.parse(await readFile(sceneSetFile, 'utf8')) as unknown) : []
-  const { plans, skipped, defaulted } = planIllustrations(index, moments, await localArtIdentityLookup(universe, releaseDir, local), slots)
+  const { plans, skipped, defaulted } = planIllustrations(index, moments, await localArtIdentityLookup(universe, releaseDir, local, index.looks.filter(l => l.kind === 'splash').map(l => l.character)), slots)
   for (const s of skipped) console.log(`skip ${s}`)
   const fromSet = new Set(defaulted)
   if (defaulted.length > 0) console.log(`${defaulted.length} scene(s) take their moment from the splash brief's scene set (marked *)`)
