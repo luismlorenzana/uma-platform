@@ -1,13 +1,20 @@
 // The universe looks (CA4, P162): the owner-approved character art ChatGPT drew of an Uma in another world (Cyberpunk,
 // Farm Life, High Fantasy), published by `pnpm art:push` to the app's own bucket under `art/universes/<universe>/`: an
 // `index.json` and the approved PNGs, byte for byte, under hash names. Character Art shows exactly what each index lists,
-// read on every request; a look is tied to her character by name, from master data, so nothing here knows a game's ids.
+// read on every request; names resolve through master data and the Ranker's sister profiles, retaining outfit identity.
 // CA5 (P169) adds the dialogue portraits as pieces: `art/universes/<universe>/portraits/` holds each outfit's neutral crop,
 // each expression's face and a recipe (`index.json`). An Uma's page shows her pieces; the games compose the states from
 // the recipe at `/api/art/portraits/<universe>`. Nothing here composes a state. Her profile pictures (uma-farm F88, P180)
 // sit beside them: `art/universes/<universe>/profiles/` holds the square crops master data ships, published by
 // `pnpm profiles:push` with an `index.json` (`kind: universe-profiles`), for the owner's review on her page.
+import type { CharacterArtIdentity } from '@luismlorenzana/uma-data'
 import type { BlobStore } from '../../store/blob-store'
+
+type CharacterResolver = (name: string) => number | CharacterArtIdentity | null
+const identityOf = (name: string, resolve: CharacterResolver): { characterId: number | null; outfitId?: number } => {
+  const identity = resolve(name)
+  return typeof identity === 'number' || identity === null ? { characterId: identity } : identity
+}
 
 export interface UniverseLook {
   category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites'
@@ -15,8 +22,10 @@ export interface UniverseLook {
   /** A full-body look, or a splash illustration (P175). */
   kind: 'look' | 'splash'
   character: string
-  /** Her character in master data, by name; null when no character has that name. */
+  /** Her real character, resolved by a master or Ranker sister name; null for an unknown name. */
   characterId: number | null
+  /** A sister's neutral outfit identity; absent for the original character. */
+  outfitId?: number
   outfit: string
   title: string
   /** The picture's pack path, `universes/<universe>/images/<id>.<16 hex>.png`, read at `/api/art/content/…`. */
@@ -33,9 +42,10 @@ export interface UniverseLook {
 export interface PortraitPiece {
   kind: 'crop' | 'face' | 'profile'
   id: string
-  /** Her name, as the recipe gives it, and her character in master data by that name (null when none has it). */
+  /** Her authored name and real character, including names from the Ranker's sister profiles. */
   character: string
   characterId: number | null
+  outfitId?: number
   outfit: string | null
   expression: string | null
   /** The pack path, `universes/<universe>/portraits/(bases|faces)/<id>.<16 hex>.png` (a profile's
@@ -69,7 +79,7 @@ export interface PortraitRecipe {
   size: { width: number; height: number }
   faceSize: { width: number; height: number }
   blend: string
-  characters: { id: string; name: string; characterId: number | null }[]
+  characters: { id: string; name: string; characterId: number | null; outfitId?: number }[]
   outfits: string[]
   expressions: string[]
   bases: PortraitPiece[]
@@ -90,7 +100,7 @@ const text = (v: unknown): string | null => (typeof v === 'string' && v !== '' ?
 const whole = (v: unknown): number | null => (typeof v === 'number' && Number.isSafeInteger(v) && v > 0 ? v : null)
 
 /** One look of an index, or null when its entry isn't a hash-named PNG of this universe with its size and hash. */
-function lookOf(universe: string, raw: unknown, characterOf: (name: string) => number | null): UniverseLook | null {
+function lookOf(universe: string, raw: unknown, characterOf: CharacterResolver): UniverseLook | null {
   if (!object(raw)) return null
   const id = text(raw.id), character = text(raw.character), path = text(raw.path), sha256 = text(raw.sha256)
   const bytes = whole(raw.bytes), width = whole(raw.width), height = whole(raw.height)
@@ -99,7 +109,7 @@ function lookOf(universe: string, raw: unknown, characterOf: (name: string) => n
   const farmCategory = universe === 'farm-life' && (raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash')
   const cyberpunkCategory = universe === 'cyberpunk' && (raw.category === 'weapons' || raw.category === 'combat-sprites')
   return {
-    id, kind: raw.kind === 'splash' ? 'splash' : 'look', character, characterId: characterOf(character), outfit: text(raw.outfit) ?? id, title: text(raw.title) ?? id,
+    id, kind: raw.kind === 'splash' ? 'splash' : 'look', character, ...identityOf(character, characterOf), outfit: text(raw.outfit) ?? id, title: text(raw.title) ?? id,
     ...(farmCategory || cyberpunkCategory ? { category: raw.category as UniverseLook['category'] } : {}),
     path: `universes/${universe}/${path}`, bytes, sha256, width, height, approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt),
   }
@@ -114,12 +124,12 @@ const readJson = async (store: Pick<BlobStore, 'read'>, path: string): Promise<R
 }
 
 /** A universe's portrait recipe as published, its pieces at their pack paths; null when it has none or it doesn't hold. */
-export async function portraitRecipe(store: Pick<BlobStore, 'read'>, universe: string, characterOf: (name: string) => number | null): Promise<PortraitRecipe | null> {
+export async function portraitRecipe(store: Pick<BlobStore, 'read'>, universe: string, characterOf: CharacterResolver): Promise<PortraitRecipe | null> {
   if (!KEBAB.test(universe)) return null
   const index = await readJson(store, `universes/${universe}/portraits/index.json`)
   if (!index || index.kind !== 'universe-portraits' || index.universe !== universe) return null
   const characters = (Array.isArray(index.characters) ? index.characters as unknown[] : []).filter(object)
-    .flatMap((c) => (typeof c.id === 'string' && KEBAB.test(c.id) && typeof c.name === 'string' ? [{ id: c.id, name: c.name, characterId: characterOf(c.name) }] : []))
+    .flatMap((c) => (typeof c.id === 'string' && KEBAB.test(c.id) && typeof c.name === 'string' ? [{ id: c.id, name: c.name, ...identityOf(c.name, characterOf) }] : []))
   const nameOf = new Map(characters.map((c) => [c.id, c]))
   const piece = (kind: 'crop' | 'face', raw: unknown): PortraitPiece | null => {
     if (!object(raw)) return null
@@ -128,7 +138,7 @@ export async function portraitRecipe(store: Pick<BlobStore, 'read'>, universe: s
     if (!id || !KEBAB.test(id) || !who || !path || !sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !bytes || !width || !height) return null
     if (path !== `${kind === 'crop' ? 'bases' : 'faces'}/${id}.${sha256.slice(0, 16)}.png`) return null
     return {
-      kind, id, character: who.name, characterId: who.characterId, outfit: kind === 'crop' ? text(raw.outfit) : null, expression: kind === 'face' ? text(raw.expression) : null,
+      kind, id, character: who.name, characterId: who.characterId, ...(who.outfitId === undefined ? {} : { outfitId: who.outfitId }), outfit: kind === 'crop' ? text(raw.outfit) : null, expression: kind === 'face' ? text(raw.expression) : null,
       path: `universes/${universe}/portraits/${path}`, bytes, sha256, width, height,
     }
   }
@@ -152,7 +162,7 @@ export async function portraitRecipe(store: Pick<BlobStore, 'read'>, universe: s
 }
 
 /** A universe's profile pictures as published (P180), each tied to her character by name; null when it has none. */
-export async function profilePictures(store: Pick<BlobStore, 'read'>, universe: string, characterOf: (name: string) => number | null): Promise<UniverseProfiles | null> {
+export async function profilePictures(store: Pick<BlobStore, 'read'>, universe: string, characterOf: CharacterResolver): Promise<UniverseProfiles | null> {
   if (!KEBAB.test(universe)) return null
   const index = await readJson(store, `universes/${universe}/profiles/index.json`)
   if (!index || index.kind !== 'universe-profiles' || index.universe !== universe) return null
@@ -164,14 +174,14 @@ export async function profilePictures(store: Pick<BlobStore, 'read'>, universe: 
     const bytes = whole(raw.bytes), width = whole(raw.width), height = whole(raw.height)
     if (!id || !KEBAB.test(id) || !name || !path || !sha256 || !/^[a-f0-9]{64}$/.test(sha256) || !bytes || !width || !height) return []
     if (path !== `profiles/${id}.${sha256.slice(0, 16)}.webp`) return []
-    return [{ kind: 'profile', id, character: name, characterId: characterOf(name), outfit: text(raw.outfit), expression: null, path: `universes/${universe}/${path}`, bytes, sha256, width, height }]
+    return [{ kind: 'profile', id, character: name, ...identityOf(name, characterOf), outfit: text(raw.outfit), expression: null, path: `universes/${universe}/${path}`, bytes, sha256, width, height }]
   })
   if (pieces.length === 0) return null
   return { size: whole(index.size), release: text(index.release), publishedAt: text(index.publishedAt), pieces }
 }
 
 /** Every published universe, by name: the looks its index lists, in the index's order, and its portrait pieces (CA5). */
-export async function universes(store: Pick<BlobStore, 'read' | 'list'>, characterOf: (name: string) => number | null): Promise<Universe[]> {
+export async function universes(store: Pick<BlobStore, 'read' | 'list'>, characterOf: CharacterResolver): Promise<Universe[]> {
   const files = await store.list('universes')
   const ids = [...new Set(files.flatMap((p) => /^universes\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(?:portraits\/)?index\.json$/.exec(p)?.[1] ?? []))].sort()
   const out: Universe[] = []

@@ -1,7 +1,7 @@
 // What Character Art shows (CA1, adapted from uma-quest's album/data.ts at 6c572e6): every outfit in master data with her
 // name and title, the art master data holds for her, which have adult keys, and, from the Ranker (/api/art/order), the
 // Uma she is (a sister's name and profile) and her tier and place. Read at run time, never from git.
-import type { ArtIndex } from '@luismlorenzana/uma-data'
+import { characterArtKey, type ArtIndex } from '@luismlorenzana/uma-data'
 import { PLAYABLE_TIERS, type AnyTier } from '@uma-platform/tiers'
 import { request } from '../../api/client'
 import { CONTENT } from '../../content/client'
@@ -91,8 +91,10 @@ export interface UniverseLook {
   /** A full-body look, or a splash illustration (P175); absent from an older API, which means a look. */
   kind?: 'look' | 'splash'
   character: string
-  /** Her character in master data, found by name; null when no character has that name. */
+  /** Her real character, resolved by a master or Ranker sister name; null for an unknown name. */
   characterId: number | null
+  /** The selected outfit when this art belongs to a sister. */
+  outfitId?: number
   outfit: string
   title: string
   /** Her PNG's pack path, read at /api/art/content/…; `bytes` and `sha256` check it. */
@@ -111,6 +113,7 @@ export interface PortraitPiece {
   id: string
   character: string
   characterId: number | null
+  outfitId?: number
   outfit: string | null
   expression: string | null
   path: string
@@ -139,22 +142,31 @@ export function loadUniverses(fresh = false): Promise<Universe[]> {
 
 /** A character's looks, dialogue portrait pieces (crops before faces) and profile pictures in every universe that has one
  *  of hers. */
-export function looksOf(all: readonly Universe[], characterId: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[]; profiles: PortraitPiece[] }[] {
+export function looksOf(all: readonly Universe[], characterId: number, outfitId?: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[]; profiles: PortraitPiece[] }[] {
+  const hers = (piece: { characterId: number | null; outfitId?: number }) => piece.characterId === characterId && piece.outfitId === outfitId
   return all.map((universe) => {
-    const pieces = (universe.portraits?.pieces ?? []).filter((p) => p.characterId === characterId)
-    const hers = universe.looks.filter((l) => l.characterId === characterId)
+    const pieces = (universe.portraits?.pieces ?? []).filter(hers)
+    const looks = universe.looks.filter(hers)
     return {
-      universe, looks: hers.filter((l) => l.kind !== 'splash'), splash: hers.filter((l) => l.kind === 'splash'),
+      universe, looks: looks.filter((l) => l.kind !== 'splash'), splash: looks.filter((l) => l.kind === 'splash'),
       pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')],
-      profiles: (universe.profiles?.pieces ?? []).filter((p) => p.characterId === characterId),
+      profiles: (universe.profiles?.pieces ?? []).filter(hers),
     }
   }).filter((g) => g.looks.length > 0 || g.splash.length > 0 || g.pieces.length > 0 || g.profiles.length > 0)
 }
 
-/** How many looks each character has across the universes, for her tiles. */
-export function lookCounts(all: readonly Universe[]): Map<number, number> {
-  const counts = new Map<number, number>()
-  for (const universe of all) for (const look of universe.looks) if (look.characterId !== null && look.kind !== 'splash') counts.set(look.characterId, (counts.get(look.characterId) ?? 0) + 1)
+/** The same identity the release uses, keeping a sister's art apart from her original character's. */
+export function albumArtKey(entry: Pick<AlbumEntry, 'characterId' | 'outfitId' | 'sister'>): string {
+  return characterArtKey(entry.characterId, entry.sister ? entry.outfitId : undefined)
+}
+
+/** How many looks each character or sister has across the universes, for her tiles. */
+export function lookCounts(all: readonly Universe[]): Map<string, number> {
+  const counts = new Map<string, number>()
+  for (const universe of all) for (const look of universe.looks) if (look.characterId !== null && look.kind !== 'splash') {
+    const key = characterArtKey(look.characterId, look.outfitId)
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
   return counts
 }
 

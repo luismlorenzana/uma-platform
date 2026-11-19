@@ -1,6 +1,6 @@
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { describe, expect, it } from 'vitest'
-import { lookCounts, looksOf, type PortraitPiece, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
+import { albumArtKey, lookCounts, looksOf, type PortraitPiece, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
 
 // Invented records only (copied from uma-quest's album/data.test.ts at 6c572e6, then extended).
 const img = (path: string) => ({ path, width: 10, height: 10 })
@@ -67,7 +67,7 @@ describe('the universe looks (CA4)', () => {
   it('keeps her splash art apart from her looks, and counts only looks on her tiles (P175)', () => {
     const splashUniverse: Universe = { ...universe('farm', [look('a-spring', 'Rider One', 9001), { ...look('a-splash-meeting', 'Rider One', 9001), kind: 'splash' }]) }
     expect(looksOf([splashUniverse], 9001).map((g) => [g.looks.map((l) => l.id), g.splash.map((l) => l.id)])).toEqual([[['a-spring'], ['a-splash-meeting']]])
-    expect([...lookCounts([splashUniverse])]).toEqual([[9001, 1]])
+    expect([...lookCounts([splashUniverse])]).toEqual([['9001', 1]])
     const onlySplash: Universe = universe('beach', [{ ...look('a-splash-beach', 'Rider One', 9001), kind: 'splash' }])
     expect(looksOf([onlySplash], 9001).map((g) => [g.universe.id, g.looks.length, g.splash.length])).toEqual([['beach', 0, 1]])
     const additional: Universe = universe('farm-life', [
@@ -95,7 +95,29 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([farm], 9002)).toEqual([])
   })
   it('counts each character’s looks across the universes for her tiles, leaving out a look no character matches', () => {
-    expect([...lookCounts([sky, road])]).toEqual([[9001, 2], [9002, 2]])
+    expect([...lookCounts([sky, road])]).toEqual([['9001', 2], ['9002', 2]])
     expect(lookCounts([]).size).toBe(0)
+  })
+  it('shows and counts each sister’s own art, excluding the original and other sisters in every art section', () => {
+    const original = look('original-spring', 'Rider One', 9001)
+    const sister = { ...look('sister-spring', 'Sister One', 9001), outfitId: 900102 }
+    const other = { ...look('other-spring', 'Sister Two', 9001), outfitId: 900103 }
+    const piece = (look: UniverseLook, kind: PortraitPiece['kind']): PortraitPiece => ({ ...look, kind, expression: kind === 'face' ? 'happy' : null })
+    const farm: Universe = { ...universe('farm', [original, sister, other, { ...sister, id: 'sister-scene', kind: 'splash' }]),
+      portraits: { states: 6, approvedOn: null, publishedAt: null, pieces: [original, sister, other].flatMap(l => [piece(l, 'crop'), piece(l, 'face')]) },
+      profiles: { size: 192, release: null, publishedAt: null, pieces: [original, sister, other].map(l => piece(l, 'profile')) },
+    }
+    const hers = looksOf([farm], 9001, 900102)[0]!
+    expect(hers.looks.map(l => l.id)).toEqual(['sister-spring'])
+    expect(hers.splash.map(l => l.id)).toEqual(['sister-scene'])
+    expect(hers.pieces.map(p => p.id)).toEqual(['sister-spring', 'sister-spring'])
+    expect(hers.profiles.map(p => p.id)).toEqual(['sister-spring'])
+    expect(looksOf([farm], 9001)[0]!.looks.map(l => l.id)).toEqual(['original-spring'])
+    expect(looksOf([farm], 9001, 900103)[0]!.looks.map(l => l.id)).toEqual(['other-spring'])
+    expect(looksOf([farm], 9001, 900104)).toEqual([])
+    const counts = lookCounts([farm])
+    const identity = { relation: 'twin', age: 'an invented age', profile: 'Invented.' }
+    expect(counts.get(albumArtKey(entry(900102, { sister: identity })))).toBe(1)
+    expect(counts.get(albumArtKey(entry(900101)))).toBe(1)
   })
 })

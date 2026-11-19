@@ -115,8 +115,29 @@ describe('the universe looks (CA4)', () => {
   it('finds her character by any of her master data names, however the author wrote it', async () => {
     const d = data(); d.characters[0]!.name = { ...d.characters[0]!.name, en: 'Rider One', global: 'Rider One (Global)' }
     const release = await buildMemoryRelease(d)
-    const byName = await new ArtService(files(release.objects), files(new Map())).characterByName()
-    expect([byName('Rider One'), byName('rider-one'), byName('RIDER ONE (global)'), byName('Rider Two'), byName('')]).toEqual([9001, 9001, 9001, null, null])
+    const byName = await new ArtService(files(release.objects), files(new Map())).artIdentityByName()
+    expect([byName('Rider One'), byName('rider-one'), byName('RIDER ONE (global)'), byName('Rider Two'), byName('')]).toEqual([{ characterId: 9001 }, { characterId: 9001 }, { characterId: 9001 }, null, null])
+  })
+
+  it('resolves published sister names from fresh Ranker profiles without taking the original character’s art', async () => {
+    const d = data(); d.characters[0]!.name = { ...d.characters[0]!.name, en: 'Rider One', global: 'Rider One (Global)' }
+    const release = await buildMemoryRelease(d), ranker = new Map<string, Uint8Array>()
+    const service = new ArtService(files(release.objects), files(ranker))
+    expect((await service.artIdentityByName())('Sister One')).toBeNull()
+    const sister = { outfitId: 900102, characterId: 9001, name: 'Sister One', relation: 'twin', age: 'an invented age', profile: 'Invented.' }
+    ranker.set('profiles.json', json({ ...emptyProfiles(), sisters: [sister] }))
+    const resolver = await service.artIdentityByName()
+    expect(resolver('rider-one')).toEqual({ characterId: 9001 })
+    expect(resolver('SISTER-ONE')).toEqual({ characterId: 9001, outfitId: 900102 })
+    const published = new Map([['universes/sky-city/index.json', index('sky-city', [
+      look('rider-one-street', HASH), look('sister-one-street', OTHER, { character: 'Sister One' }),
+    ])]])
+    const world = (await universes(store(published), resolver))[0]!
+    expect(world.looks.map(({ characterId, outfitId }) => [characterId, outfitId])).toEqual([[9001, undefined], [9001, 900102]])
+    ranker.set('profiles.json', json({ ...emptyProfiles(), sisters: [{ ...sister, name: 'Sister Renamed' }] }))
+    const fresh = await service.artIdentityByName()
+    expect(fresh('Sister One')).toBeNull()
+    expect(fresh('Sister Renamed')).toEqual({ characterId: 9001, outfitId: 900102 })
   })
 
   it('serves only a look’s hash-named PNG beside the key pack’s files', () => {
@@ -201,6 +222,15 @@ describe('the dialogue portraits as pieces (CA5)', () => {
       { id: 'rider-one-png', character: 'rider-one', outfit: 'png', path: `profiles/rider-one-png.${B.slice(0, 16)}.png`, bytes: 9000, sha256: B, width: 192, height: 192 },
       { id: 'nobody-street', character: 'nobody', outfit: 'street', path: `profiles/nobody-street.${C.slice(0, 16)}.webp`, bytes: 9000, sha256: C, width: 192, height: 192 },
     ],
+  })
+  it('retains sister outfit identity on portrait recipes, every piece and profile pictures', async () => {
+    const s = store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')], ['universes/sky-city/profiles/index.json', profiles('sky-city')]]))
+    const resolver = () => ({ characterId: 9001, outfitId: 900102 })
+    const r = await portraitRecipe(s, 'sky-city', resolver)
+    expect(r!.characters[0]).toMatchObject({ characterId: 9001, outfitId: 900102 })
+    const world = (await universes(s, resolver))[0]!
+    const pieces = [...world.portraits!.pieces, ...world.profiles!.pieces]
+    expect(pieces.map(p => [p.characterId, p.outfitId])).toEqual([[9001, 900102], [9001, 900102], [9001, 900102]])
   })
   it('lists her profile pictures beside the pieces, each a hash-named WebP tied to her character', async () => {
     const s = store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')], ['universes/sky-city/profiles/index.json', profiles('sky-city')]]))

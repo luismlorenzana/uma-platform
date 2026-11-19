@@ -274,3 +274,5 @@ both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform
 | When each lands | A look at the Ranker and at Character Art on your phone |
 
 Farm's additional art collections (P208) are Pajama Outfits, Wedding Anniversary Outfits, Pajama Splash, and Wedding Anniversary Splash. The art-authoring publisher adds a category key to their universe index entries. Each category has a heading on the character's published page and can be published independently using --category. Category splash art remains in Character Art for authoring review. The game's standard illustration release selects the standard scene set.
+
+Character Art identity (P212, extending AP73/AP77): each Ranker sister can have her own published universe looks, splash art, dialogue pieces and profile pictures. Authored names resolve through master data and the current Ranker sister profiles. API rows retain the real character ID plus an optional outfit ID; pages and look-count badges select the complete identity. A sister's art appears on her own outfit page, separately from the original character and other sisters. Existing published files need no republishing.

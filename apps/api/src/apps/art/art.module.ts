@@ -49,12 +49,12 @@ class ArtController {
 
   /** The published universe looks, universe by universe, each tied to her character by name (CA4). */
   @Get('universes')
-  async universes() { return universes(this.published, await this.art.characterByName()) }
+  async universes() { return universes(this.published, await this.art.artIdentityByName()) }
 
   /** A universe's dialogue portraits for a game to compose (CA5): every crop and face at its pack path, and every state. */
   @Get('portraits/:universe')
   async portraits(@Param('universe') universe: string) {
-    const recipe = await portraitRecipe(this.published, universe, await this.art.characterByName())
+    const recipe = await portraitRecipe(this.published, universe, await this.art.artIdentityByName())
     if (!recipe) throw new NotFoundException(`No published dialogue portraits for ${universe}`)
     return recipe
   }
