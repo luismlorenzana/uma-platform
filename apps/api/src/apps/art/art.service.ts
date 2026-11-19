@@ -1,7 +1,7 @@
 // Uma Character Art's data (CA1, P135): every outfit in the Ranker's order. The Umas come from the master data release;
 // the order, the sisters and their profiles from the Ranker's own files in the app's bucket (`ranker/boards/umas.json`,
 // `ranker/profiles.json`), read on every request, so a re-rank shows on the next load. Files, never the Ranker's code (AP1).
-import { createReleaseClient, ReleaseSourceError } from '@luismlorenzana/uma-data'
+import { createReleaseClient, ReleaseSourceError, type CharacterArtIdentity } from '@luismlorenzana/uma-data'
 import type { FileSource } from '@luismlorenzana/uma-server/content'
 import {
   buildCatalog, emptyBoard, emptyLegacy, emptyProfiles, identityByOutfit, ordered, parseBoard, parseProfiles,
@@ -53,10 +53,15 @@ export class ArtService {
   }
   private async umas(): Promise<TierCatalog> { return (await this.load()).catalog }
 
-  /** Finds a character by any of her master data names (CA4): the universe looks name her, they don't carry her id. */
-  async characterByName(): Promise<(name: string) => number | null> {
-    const { names } = await this.load()
-    return (name) => names.get(nameKey(name)) ?? null
+  /** Published art names may belong to a Ranker sister: retain her real character and selected outfit together. */
+  async artIdentityByName(): Promise<(name: string) => CharacterArtIdentity | null> {
+    const [{ names }, order] = await Promise.all([this.load(), this.order()])
+    const identities = new Map<string, CharacterArtIdentity>([...names].map(([name, characterId]) => [name, { characterId }]))
+    for (const outfit of order.outfits) {
+      const key = nameKey(outfit.name)
+      if (outfit.sister && !identities.has(key)) identities.set(key, { characterId: outfit.characterId, outfitId: outfit.outfitId })
+    }
+    return (name) => identities.get(nameKey(name)) ?? null
   }
 
   async order(): Promise<ArtOrder> {

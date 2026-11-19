@@ -11,7 +11,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CONTENT } from '../../content/client'
 import { KEY_SETS, KEYS } from './content'
-import { byPlace, loadAlbum, loadUniverses, lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
+import { albumArtKey, byPlace, loadAlbum, loadUniverses, lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
 import { drawKeyFace, drawKeyPose } from './keyCanvas'
 import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
 import { SpritePlayer } from './SpritePlayer'
@@ -158,8 +158,7 @@ function UmaTile({ entry, path, looks, onOpen }: { entry: AlbumEntry; path: stri
 
 function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: AlbumData; universes: readonly Universe[]; onClose: () => void }) {
   const keys = useKeys(entry.adult ? entry.outfitId : null)
-  // Her universe looks sit on her own page: a sister is another Uma, so they aren't hers.
-  const worlds = useMemo(() => (entry.sister ? [] : looksOf(universes, entry.characterId)), [universes, entry])
+  const worlds = useMemo(() => looksOf(universes, entry.characterId, entry.sister ? entry.outfitId : undefined), [universes, entry])
   const pictures = useMemo(() => picturesOf(data.art, entry), [data.art, entry])
   const render = renderOf(data.art, entry.outfitId)
   return (
@@ -286,9 +285,8 @@ export default function ArtScreen() {
   useEffect(() => { loadAlbum(true).then(setData, () => setFailed(true)) }, [])
   useEffect(() => { loadUniverses(true).then(setUniverses, () => undefined) }, [])
   const tab = params.get('tab') === 'adult' ? 'adult' : 'all'
-  // Her looks are on her own pages, never a sister's.
   const counts = useMemo(() => lookCounts(universes), [universes])
-  const looksFor = (e: AlbumEntry) => (e.sister ? 0 : counts.get(e.characterId) ?? 0)
+  const looksFor = (e: AlbumEntry) => counts.get(albumArtKey(e)) ?? 0
   const openId = Number(params.get('o')) || null
   const adults = useMemo(() => (data?.entries.filter((e) => e.adult) ?? []).sort(byPlace), [data])
   const shown = useMemo(() => {
