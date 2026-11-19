@@ -4,7 +4,7 @@
 // by character id. The art index gains a `dialoguePortraits` map; every other file and index entry is kept as it is.
 // Deterministic: the same pictures write the same bytes.
 
-import { parseDialoguePortraits, type DialoguePortraits, type ReleaseManifest } from '@luismlorenzana/uma-data'
+import { characterArtKey, parseDialoguePortraits, type DialoguePortraits, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { writeCharacterFamilyRelease, type PutPicture } from './character-family-release'
 
 export const DIALOGUE_PORTRAITS_DIR = 'art/dialogue-portraits'
@@ -13,6 +13,7 @@ export interface PackedPortraitImage { bytes: Uint8Array; width: number; height:
 /** A character's portraits with their pictures still as bytes: their release paths depend on them. */
 export interface PackedDialoguePortraits {
   characterId: number
+  outfitId?: number
   revision: number
   approvedOn: string
   base: { width: number; height: number }
@@ -24,18 +25,21 @@ export interface PackedDialoguePortraits {
 export async function writeDialoguePortraitRelease(releaseDir: string, characters: readonly PackedDialoguePortraits[], now?: Date): Promise<ReleaseManifest> {
   return writeCharacterFamilyRelease(releaseDir, { dir: DIALOGUE_PORTRAITS_DIR, key: 'dialoguePortraits', parse: parseDialoguePortraits }, characters.map((packed) => ({
     characterId: packed.characterId,
+    outfitId: packed.outfitId,
     build: async (put: PutPicture) => {
+      const stem = characterArtKey(packed.characterId, packed.outfitId).replace(':', '-')
       const write = async (stem: string, img: PackedPortraitImage) => {
         const file = await put(stem, img.bytes)
         return { path: file.path, width: img.width, height: img.height, bytes: file.bytes, sha256: file.sha256 }
       }
       const out: DialoguePortraits = { characterId: packed.characterId, revision: packed.revision, approvedOn: packed.approvedOn, base: packed.base, faceSize: packed.faceSize, bases: {}, faces: {} }
+      if (packed.outfitId !== undefined) out.outfitId = packed.outfitId
       for (const name of Object.keys(packed.bases).sort()) {
         const b = packed.bases[name]!
-        out.bases[name] = { ...(await write(`${packed.characterId}-base-${name}`, b)), face: b.face }
-        if (b.profile) out.bases[name]!.profile = { ...(await write(`${packed.characterId}-profile-${name}`, b.profile)), crop: b.profile.crop }
+        out.bases[name] = { ...(await write(`${stem}-base-${name}`, b)), face: b.face }
+        if (b.profile) out.bases[name]!.profile = { ...(await write(`${stem}-profile-${name}`, b.profile)), crop: b.profile.crop }
       }
-      for (const name of Object.keys(packed.faces).sort()) out.faces[name] = await write(`${packed.characterId}-face-${name}`, packed.faces[name]!)
+      for (const name of Object.keys(packed.faces).sort()) out.faces[name] = await write(`${stem}-face-${name}`, packed.faces[name]!)
       return out
     },
   })), now)

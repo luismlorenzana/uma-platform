@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-kit
 
+## 0.20.1
+
+### Patch Changes
+
+- Use the outfit-aware uma-data release client for content loading.
+
 ## 0.20.0
 
 ### Minor Changes

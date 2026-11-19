@@ -11,7 +11,7 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { resolve, sep } from 'node:path'
-import { ILLUSTRATION_NAME } from '@luismlorenzana/uma-data'
+import { ILLUSTRATION_NAME, type CharacterArtIdentity } from '@luismlorenzana/uma-data'
 import { decodeRgba, encodeLosslessOpaque, encodeLossyOpaque, isOpaque, psnr } from './enemy-images'
 import type { PackedIllustrations } from './illustration-release'
 
@@ -47,6 +47,7 @@ export interface SceneSlot { id: string; outfit: string; moment: string }
 
 export interface IllustrationPlan {
   characterId: number
+  outfitId?: number
   /** Her name in the universe. */
   name: string
   scenes: { id: string; universeId: string; title: string; outfit: string; moment: string; approvedOn: string; path: string; sha256: string; width: number; height: number }[]
@@ -109,16 +110,17 @@ export const keyOf = (name: string) => name.normalize('NFKD').toLowerCase().repl
  * its `<her key>-splash-` prefix); and why any is left out. A scene neither the moments map nor the scene set gives a
  * moment stops it (`momentsOf`).
  */
-export function planIllustrations(index: UniverseArtIndex, moments: IllustrationMoments, characterIdOf: (name: string) => number | null, slots: readonly SceneSlot[] = []): { plans: IllustrationPlan[]; skipped: string[]; defaulted: string[] } {
+export function planIllustrations(index: UniverseArtIndex, moments: IllustrationMoments, characterIdOf: (name: string) => number | CharacterArtIdentity | null, slots: readonly SceneSlot[] = []): { plans: IllustrationPlan[]; skipped: string[]; defaulted: string[] } {
   const splash = index.looks.filter((l) => l.kind === 'splash' && !l.category)
   const { moment, defaulted, unmapped } = momentsOf(splash, moments, slots)
   if (unmapped.length > 0) throw new Error(`No moment for ${unmapped.join(', ')}: the scene set has no free slot for its outfit; name each in content/authoring/illustrations/${index.universe}.json`)
   const plans = new Map<string, IllustrationPlan>(), skipped: string[] = []
   for (const look of splash) {
     if (!plans.has(look.character)) {
-      const characterId = characterIdOf(look.character)
-      if (characterId === null) { if (!skipped.some((s) => s.startsWith(`${look.character}:`))) skipped.push(`${look.character}: no master data character has that name`); continue }
-      plans.set(look.character, { characterId, name: look.character, scenes: [] })
+      const found = characterIdOf(look.character)
+      if (found === null) { if (!skipped.some((s) => s.startsWith(`${look.character}:`))) skipped.push(`${look.character}: no master data character has that name`); continue }
+      const identity = typeof found === 'number' ? { characterId: found } : found
+      plans.set(look.character, { ...identity, name: look.character, scenes: [] })
     }
     if (!look.approvedOn) throw new Error(`${look.id} has no approval date`)
     const prefix = `${keyOf(look.character)}-splash-`
@@ -156,5 +158,5 @@ export async function packIllustrations(dir: string, universe: string, plan: Ill
     quality.push({ scene: s.id, psnr: db, quality: used })
     scenes.push({ id: s.id, title: s.title, outfit: s.outfit, moment: s.moment, approvedOn: s.approvedOn, bytes, width: s.width, height: s.height })
   }
-  return { characterId: plan.characterId, universe, scenes, quality }
+  return { characterId: plan.characterId, ...(plan.outfitId === undefined ? {} : { outfitId: plan.outfitId }), universe, scenes, quality }
 }

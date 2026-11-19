@@ -5,6 +5,7 @@
 import { parseSpriteSet, type SpriteSet } from './sprites.js'
 import { parseDialoguePortraits, type DialoguePortraits } from './dialogue-portraits.js'
 import { parseIllustrations, type Illustrations } from './illustrations.js'
+import { characterArtKey } from './character-art.js'
 import { enemyKeyPaths, parseEnemyKey, type EnemyKey } from './enemy-keys.js'
 import type { Enemy } from './sets/enemies.js'
 import { parseArtIndex, type ArtIndex } from './art.js'
@@ -101,10 +102,10 @@ export interface ReleaseClient {
   /** A character's dialogue portraits (`dialogue-portraits`, 1.7.0): her bases by outfit and faces by expression, each
    *  base with its face position; null when none is published. Checks the id and that every picture is in the manifest
    *  with its bytes and SHA-256. */
-  dialoguePortraits(manifest: ReleaseManifest, art: ArtIndex, characterId: number): Promise<DialoguePortraits | null>
+  dialoguePortraits(manifest: ReleaseManifest, art: ArtIndex, characterId: number, outfitId?: number): Promise<DialoguePortraits | null>
   /** A character's illustrations (`illustrations`, 1.8.0): her full-screen scenes in order, each with its moment; null
    *  when none is published. Checks the id and that every picture is in the manifest with its bytes and SHA-256. */
-  illustrations(manifest: ReleaseManifest, art: ArtIndex, characterId: number): Promise<Illustrations | null>
+  illustrations(manifest: ReleaseManifest, art: ArtIndex, characterId: number, outfitId?: number): Promise<Illustrations | null>
   /** Every set and the art index of one release (the channel's when no version is given). */
   load(version?: string): Promise<MasterRelease>
 }
@@ -204,11 +205,12 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return key
   }
 
-  async function dialoguePortraits(release: ReleaseManifest, index: ArtIndex, characterId: number): Promise<DialoguePortraits | null> {
-    const path = index.dialoguePortraits?.[String(characterId)]
+  async function dialoguePortraits(release: ReleaseManifest, index: ArtIndex, characterId: number, outfitId?: number): Promise<DialoguePortraits | null> {
+    const path = index.dialoguePortraits?.[characterArtKey(characterId, outfitId)]
     if (!path) return null
     const portraits = parseDialoguePortraits(json(await file(release, path), path), path)
     if (portraits.characterId !== characterId) throw new MasterDataError(`${path}.characterId`, String(characterId))
+    if (portraits.outfitId !== outfitId) throw new MasterDataError(`${path}.outfitId`, String(outfitId))
     const listed = new Map(release.files.map((entry) => [entry.path, entry]))
     for (const image of [...Object.values(portraits.bases), ...Object.values(portraits.bases).flatMap((b) => (b.profile ? [b.profile] : [])), ...Object.values(portraits.faces)]) {
       const entry = listed.get(image.path)
@@ -218,11 +220,12 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return portraits
   }
 
-  async function illustrations(release: ReleaseManifest, index: ArtIndex, characterId: number): Promise<Illustrations | null> {
-    const path = index.illustrations?.[String(characterId)]
+  async function illustrations(release: ReleaseManifest, index: ArtIndex, characterId: number, outfitId?: number): Promise<Illustrations | null> {
+    const path = index.illustrations?.[characterArtKey(characterId, outfitId)]
     if (!path) return null
     const ills = parseIllustrations(json(await file(release, path), path), path)
     if (ills.characterId !== characterId) throw new MasterDataError(`${path}.characterId`, String(characterId))
+    if (ills.outfitId !== outfitId) throw new MasterDataError(`${path}.outfitId`, String(outfitId))
     const listed = new Map(release.files.map((entry) => [entry.path, entry]))
     for (const scene of ills.scenes) {
       const entry = listed.get(scene.path)

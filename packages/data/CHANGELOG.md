@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.10.0
+
+### Minor Changes
+
+- Allow outfit-specific dialogue portraits and illustrations to coexist with a character's original art. Outfit entries retain their master-data character and validate the selected outfit identity.
+
 ## 1.9.0
 
 ### Minor Changes

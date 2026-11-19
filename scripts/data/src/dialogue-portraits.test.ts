@@ -1,7 +1,7 @@
 // uma-farm F75 (P170): a universe's published portraits → the dialogue-portraits family in the local release → the
 // portraits-only release on latest, read back as a game reads it. Code-drawn stand-ins only.
 import { createReleaseClient, dialoguePortraitFor, dialogueProfileFor, type ArtIndex } from '@luismlorenzana/uma-data'
-import { buildMemoryRelease, syntheticArtIndex, syntheticMasterData } from '@luismlorenzana/uma-data/testing'
+import { buildMemoryRelease, syntheticArtIndex, syntheticMasterData, syntheticDialoguePortraits } from '@luismlorenzana/uma-data/testing'
 import { createHash } from 'node:crypto'
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -28,6 +28,24 @@ function sets(data = syntheticMasterData()): MasterSets {
   return { characters: data.characters, outfits: data.outfits, 'support-cards': data.supportCards, skills: data.skills, scenarios: data.scenarios, races: data.races, tracks: data.tracks, courses: data.courses, objectives: data.objectives }
 }
 const sha = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
+
+it('adds an outfit identity while carrying the original character art byte for byte', async () => {
+  const source = await universe(['spring'], ['happy'])
+  const plan = planPortraits(source.index, () => ({ characterId: 9001, outfitId: 900101 })).plans[0]!
+  const packed = await packPortraits(source.dir, source.index, plan)
+  const local = await temp('uma-outfit-art-local-')
+  await writeDataSets({ releaseDir: local, sources: {}, sets: sets() })
+  await writeDialoguePortraitRelease(local, [packed])
+  const published = await buildMemoryRelease(undefined, { dialoguePortraits: [syntheticDialoguePortraits(9001)] })
+  const bucket = new FakeBucket(published.objects)
+  const staged = await temp('uma-outfit-art-staged-')
+  const next = await planCharacterFamiliesOnly({ releaseDir: local, storage: bucket, families: ['dialoguePortraits'], stagingDir: staged })
+  expect(Object.keys(next.maps.dialoguePortraits!)).toEqual(['9001', 'outfit:900101'])
+  const oldIndex = JSON.parse(Buffer.from(published.objects.get('files/' + published.manifest.art)!).toString('utf8')) as ArtIndex
+  expect(next.maps.dialoguePortraits!['9001']).toBe(oldIndex.dialoguePortraits!['9001'])
+  const byPath = new Map(next.manifest.files.map(f => [f.path, f]))
+  for (const f of published.manifest.files) if (f.path !== published.manifest.art) expect(byPath.get(f.path)).toEqual(f)
+})
 
 /** A published universe's portraits folder, as the art pipeline writes it: an index, bases/ and faces/. */
 async function universe(outfits = ['spring', 'kimono'], expressions = ['happy', 'sad'], at = FIXTURE_FACE_AT): Promise<{ dir: string; index: UniversePortraitsIndex }> {

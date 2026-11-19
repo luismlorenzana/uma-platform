@@ -42,6 +42,8 @@ export interface DialoguePortraitBase extends DialoguePortraitImage {
 }
 export interface DialoguePortraits {
   characterId: number
+  /** Optional master-data outfit identity, separate from the base character's art. */
+  outfitId?: number
   /** The universe's portrait revision these came from. */
   revision: number
   /** The day the owner approved them, as `YYYY-MM-DD`. */
@@ -91,6 +93,7 @@ export const parseDialoguePortraits: Parser<DialoguePortraits> = (value, path) =
   const f = fields(value, path)
   const p: DialoguePortraits = {
     characterId: f('characterId', id), revision: f('revision', positiveInteger), approvedOn: f('approvedOn', day),
+    ...((value as Record<string, unknown>).outfitId === undefined ? {} : { outfitId: f('outfitId', id) }),
     base: f('base', size), faceSize: f('faceSize', size),
     bases: named('an outfit', f('bases', recordOf(base)), `${path}.bases`),
     faces: named('an expression', f('faces', recordOf(image)), `${path}.faces`),

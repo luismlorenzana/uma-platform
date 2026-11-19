@@ -9,8 +9,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { parseSet } from '@luismlorenzana/uma-data'
-import { characterLookup } from './character-names'
+import { localArtIdentityLookup } from './art-identities'
 import { writeIllustrationRelease } from './illustration-release'
 import { ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex } from './illustrations'
 import { DEFAULT_CONTENT_DIR, readLocalManifest } from './release-dir'
@@ -46,9 +45,8 @@ async function main(): Promise<void> {
   const moments = readIllustrationMoments(JSON.parse(await readFile(momentsFile, 'utf8')) as unknown, universe)
   const local = await readLocalManifest(releaseDir)
   if (!local) throw new Error('No local release; run pnpm data:import first')
-  const characters = parseSet('characters', JSON.parse(await readFile(resolve(releaseDir, ...local.sets.characters.split('/')), 'utf8')) as unknown)
   const slots = existsSync(sceneSetFile) ? readSceneSet(JSON.parse(await readFile(sceneSetFile, 'utf8')) as unknown) : []
-  const { plans, skipped, defaulted } = planIllustrations(index, moments, characterLookup(characters), slots)
+  const { plans, skipped, defaulted } = planIllustrations(index, moments, await localArtIdentityLookup(universe, releaseDir, local), slots)
   for (const s of skipped) console.log(`skip ${s}`)
   const fromSet = new Set(defaulted)
   if (defaulted.length > 0) console.log(`${defaulted.length} scene(s) take their moment from the splash brief's scene set (marked *)`)

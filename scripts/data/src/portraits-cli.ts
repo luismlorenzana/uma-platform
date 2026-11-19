@@ -8,8 +8,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { parseSet } from '@luismlorenzana/uma-data'
-import { characterLookup } from './character-names'
+import { localArtIdentityLookup } from './art-identities'
 import { writeDialoguePortraitRelease } from './dialogue-portrait-release'
 import { packPortraits, planPortraits, readPortraitsIndex } from './portraits'
 import { readProfileOverrides } from './profiles'
@@ -35,8 +34,7 @@ async function main(): Promise<void> {
   const index = readPortraitsIndex(JSON.parse(await readFile(resolve(mirror, 'index.json'), 'utf8')) as unknown, universe)
   const local = await readLocalManifest(releaseDir)
   if (!local) throw new Error('No local release; run pnpm data:import first')
-  const characters = parseSet('characters', JSON.parse(await readFile(resolve(releaseDir, ...local.sets.characters.split('/')), 'utf8')) as unknown)
-  const { plans, skipped } = planPortraits(index, characterLookup(characters))
+  const { plans, skipped } = planPortraits(index, await localArtIdentityLookup(universe, releaseDir, local))
   for (const s of skipped) console.log(`skip ${s}`)
   const overrides = existsSync(overridesFile) ? readProfileOverrides(JSON.parse(await readFile(overridesFile, 'utf8')) as unknown, universe) : null
   const packed = []

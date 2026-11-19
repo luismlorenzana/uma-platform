@@ -9,7 +9,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
-import { characterLookup } from './character-names'
+import { artIdentityLookup, artIdentityOverrides } from './art-identities'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
 import { readPortraitsIndex } from './portraits'
 import { buildProfilesIndex } from './profiles-push'
@@ -40,12 +40,12 @@ async function main(): Promise<void> {
   const manifest = await client.manifest()
   const art = await client.art(manifest)
   if (!art) throw new Error(`Master data ${manifest.version} has no art index`)
-  const idOf = characterLookup(await client.set(manifest, 'characters'))
+  const idOf = artIdentityLookup(await client.set(manifest, 'characters'), await client.set(manifest, 'outfits'), await artIdentityOverrides(universe))
   const index = readPortraitsIndex(JSON.parse(await readFile(resolve(mirror, 'index.json'), 'utf8')) as unknown, universe)
   const characters = [], files = new Map<string, Uint8Array>()
   for (const c of index.characters) {
     const id = idOf(c.name)
-    const portraits = id === null ? null : await client.dialoguePortraits(manifest, art, id)
+    const portraits = id === null ? null : await client.dialoguePortraits(manifest, art, id.characterId, id.outfitId)
     if (!portraits) { console.log(`skip ${c.id}: no dialogue portraits in master data ${manifest.version}`); continue }
     const outfits = dialoguePortraitChoices(portraits).outfits
     characters.push({ key: c.id, name: c.name, portraits, outfits })
