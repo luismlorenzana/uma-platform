@@ -12,6 +12,7 @@ import { resolve, sep } from 'node:path'
 import { decodeRgba, encodeLossless, imageDistance, type Rgba } from './enemy-images'
 import { cropProblem, faceExtent, faceOnBase, packProfile, profileCrop, type ProfileCrop, type ProfileOverrides } from './profiles'
 import type { PackedDialoguePortraits, PackedPortraitImage } from './dialogue-portrait-release'
+import { characterArtKey, type CharacterArtIdentity } from '@luismlorenzana/uma-data'
 
 interface IndexImage { id: string; character: string; path: string; sha256: string; width: number; height: number; bytes?: number }
 export interface UniversePortraitsIndex {
@@ -29,6 +30,7 @@ export interface UniversePortraitsIndex {
 }
 export interface PortraitPlan {
   characterId: number
+  outfitId?: number
   /** The universe's id for her (`kitasan-black`). */
   key: string
   bases: { outfit: string; path: string; sha256: string; width: number; height: number; face: { left: number; top: number } }[]
@@ -44,11 +46,12 @@ export function readPortraitsIndex(value: unknown, universe: string): UniversePo
 }
 
 /** Each character's bases with their face positions and her faces, matched to master data; and why any is left out. */
-export function planPortraits(index: UniversePortraitsIndex, characterIdOf: (name: string) => number | null): { plans: PortraitPlan[]; skipped: string[] } {
+export function planPortraits(index: UniversePortraitsIndex, characterIdOf: (name: string) => number | CharacterArtIdentity | null): { plans: PortraitPlan[]; skipped: string[] } {
   const plans: PortraitPlan[] = [], skipped: string[] = []
   for (const c of index.characters) {
-    const characterId = characterIdOf(c.name)
-    if (characterId === null) { skipped.push(`${c.id}: no master data character is named ${c.name}`); continue }
+    const found = characterIdOf(c.name)
+    if (found === null) { skipped.push(`${c.id}: no master data character is named ${c.name}`); continue }
+    const identity = typeof found === 'number' ? { characterId: found } : found
     const positions = new Map<string, Set<string>>()
     for (const s of index.states) if (s.character === c.id && s.face && s.at) {
       const set = positions.get(s.base) ?? new Set<string>()
@@ -69,7 +72,7 @@ export function planPortraits(index: UniversePortraitsIndex, characterIdOf: (nam
     if (bases.length === 0) { skipped.push(`${c.id}: no base`); continue }
     const faces = index.faces.filter((f) => f.character === c.id && f.expression !== 'neutral')
       .map((f) => ({ expression: f.expression, path: f.path, sha256: f.sha256, width: f.width, height: f.height }))
-    plans.push({ characterId, key: c.id, bases, faces })
+    plans.push({ ...identity, key: c.id, bases, faces })
   }
   return { plans, skipped }
 }
@@ -107,7 +110,7 @@ export async function packPortraits(dir: string, index: UniversePortraitsIndex, 
   const bases: PackedDialoguePortraits['bases'] = {}, profiles: ProfileReport[] = []
   for (const b of plan.bases) {
     const { rgba, ...packed } = await image(b.path, b)
-    const label = `${plan.characterId}/${b.outfit}`, face = faceOnBase(extent, b.face)
+    const label = `${characterArtKey(plan.characterId, plan.outfitId)}/${b.outfit}`, face = faceOnBase(extent, b.face)
     const given = overrides?.crops[label]
     const crop = given ?? profileCrop(face, { width: rgba.width, height: rgba.height })
     if (crop.left + crop.size > rgba.width || crop.top + crop.size > rgba.height) throw new Error(`${label}: its profile crop runs past the ${rgba.width}x${rgba.height} base`)
@@ -118,5 +121,5 @@ export async function packPortraits(dir: string, index: UniversePortraitsIndex, 
     bases[b.outfit] = { ...packed, face: b.face, profile: { bytes: profile.bytes, width: profile.width, height: profile.height, crop } }
     profiles.push({ outfit: b.outfit, crop, override: !!given, bytes: profile.bytes.byteLength, psnr: profile.psnr })
   }
-  return { characterId: plan.characterId, revision: index.revision, approvedOn: index.approvedOn.slice(0, 10), base: index.size, faceSize: index.faceSize, bases, faces, profiles }
+  return { characterId: plan.characterId, ...(plan.outfitId === undefined ? {} : { outfitId: plan.outfitId }), revision: index.revision, approvedOn: index.approvedOn.slice(0, 10), base: index.size, faceSize: index.faceSize, bases, faces, profiles }
 }

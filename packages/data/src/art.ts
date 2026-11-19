@@ -74,10 +74,10 @@ export interface ArtIndex {
   sprites?: Record<string, string>
   /** Enemy id to her `enemy-keys` manifest (docs/sprites/enemy-keys.md). Absent before 1.6.0 and until one is published. */
   enemyKeys?: Record<string, string>
-  /** A character id to her `dialogue-portraits` manifest (docs/sprites/dialogue-portraits.md). Absent before 1.7.0 and
+  /** A character id, or `outfit:<id>` for outfit-specific art, to her `dialogue-portraits` manifest. Absent before 1.7.0 and
    *  until one is published. */
   dialoguePortraits?: Record<string, string>
-  /** A character id to her `illustrations` manifest (docs/sprites/illustrations.md). Absent before 1.8.0 and until one is
+  /** A character id, or `outfit:<id>` for outfit-specific art, to her `illustrations` manifest. Absent before 1.8.0 and until one is
    *  published. */
   illustrations?: Record<string, string>
 }

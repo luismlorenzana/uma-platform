@@ -34,7 +34,7 @@ export function readProfileOverrides(value: unknown, universe: string): ProfileO
   const v = value as Partial<ProfileOverrides> | null
   if (!v || v.universe !== universe || typeof v.crops !== 'object' || v.crops === null) throw new Error(`Not the ${universe} universe's profile overrides`)
   for (const [key, c] of Object.entries(v.crops)) {
-    if (!/^\d+\/[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(key)) throw new Error(`${key}: a profile override is keyed <character id>/<outfit>`)
+    if (!/^(?:outfit:)?[1-9]\d*\/[a-z][a-z0-9]*(-[a-z0-9]+)*$/.test(key)) throw new Error(`${key}: a profile override is keyed <character id>/<outfit> or outfit:<id>/<outfit>`)
     if (![c?.left, c?.top, c?.size].every((n) => Number.isSafeInteger(n) && (n as number) >= 0) || c.size < PROFILE_SIZE / 2) throw new Error(`${key}: a crop is { left, top, size } in whole pixels, at least ${PROFILE_SIZE / 2} square`)
   }
   return v as ProfileOverrides

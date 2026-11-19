@@ -3,7 +3,7 @@
 // family is replaced: every earlier file under its folder and its map go, the characters given are written, and every
 // other file and index entry is kept as it is. Deterministic: the same pictures write the same bytes.
 
-import type { ReleaseFile, ReleaseManifest } from '@luismlorenzana/uma-data'
+import { characterArtKey, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { readLocalManifest, readVerifiedFile, removeUnlisted, writeLocalManifest, writeReleaseFile } from './release-dir'
 
 export type CharacterFamilyKey = 'dialoguePortraits' | 'illustrations'
@@ -19,6 +19,7 @@ export interface CharacterFamilyLayout {
 export type PutPicture = (stem: string, bytes: Uint8Array) => Promise<ReleaseFile>
 export interface CharacterFamilyEntry {
   characterId: number
+  outfitId?: number
   /** Writes her pictures (WebP) with `put` and returns her manifest. */
   build: (put: PutPicture) => Promise<unknown>
 }
@@ -35,6 +36,8 @@ export async function writeCharacterFamilyRelease(releaseDir: string, layout: Ch
 
   const map: Record<string, string> = {}
   for (const character of [...characters].sort((a, b) => a.characterId - b.characterId)) {
+    const key = characterArtKey(character.characterId, character.outfitId)
+    if (map[key]) throw new Error(`Duplicate ${layout.key} identity ${key}`)
     const put: PutPicture = async (stem, bytes) => {
       const file = await writeReleaseFile(releaseDir, layout.dir, stem, 'webp', bytes)
       files.push(file)
@@ -42,9 +45,9 @@ export async function writeCharacterFamilyRelease(releaseDir: string, layout: Ch
     }
     const json = JSON.stringify(await character.build(put))
     layout.parse(JSON.parse(json) as unknown, `${layout.dir}/${character.characterId}`)
-    const file = await writeReleaseFile(releaseDir, layout.dir, String(character.characterId), 'json', json)
+    const file = await writeReleaseFile(releaseDir, layout.dir, key.replace(':', '-'), 'json', json)
     files.push(file)
-    map[String(character.characterId)] = file.path
+    map[key] = file.path
   }
 
   const { [layout.key]: _previous, ...rest } = index

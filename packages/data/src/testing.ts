@@ -2,6 +2,7 @@ import type { SpriteSet } from './sprites.js'
 import { enemyKeyPaths, type EnemyKey } from './enemy-keys.js'
 import type { DialoguePortraits } from './dialogue-portraits.js'
 import type { Illustrations } from './illustrations.js'
+import { characterArtKey } from './character-art.js'
 import type { Enemy } from './sets/enemies.js'
 // Test helpers for games and this repo: small synthetic master records (invented names and values in the right
 // shape, never copied from real data) and an in-memory release. Imported as `@luismlorenzana/uma-data/testing`.
@@ -390,9 +391,10 @@ export async function buildMemoryRelease(
         image.sha256 = await sha256Hex(bytes)
       }
       const bytes = encoder.encode(JSON.stringify(portraits))
-      const path = `art/dialogue-portraits/${portraits.characterId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      const key = characterArtKey(portraits.characterId, portraits.outfitId)
+      const path = `art/dialogue-portraits/${key.replace(':', '-')}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
       await addFile(files, objects, path, bytes)
-      artIndex.dialoguePortraits[String(portraits.characterId)] = path
+      artIndex.dialoguePortraits[key] = path
     }
   }
   if (artIndex && options.illustrations) {
@@ -406,9 +408,10 @@ export async function buildMemoryRelease(
         scene.sha256 = await sha256Hex(bytes)
       }
       const bytes = encoder.encode(JSON.stringify(ills))
-      const path = `art/illustrations/${ills.characterId}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
+      const key = characterArtKey(ills.characterId, ills.outfitId)
+      const path = `art/illustrations/${key.replace(':', '-')}.${(await sha256Hex(bytes)).slice(0, 16)}.json`
       await addFile(files, objects, path, bytes)
-      artIndex.illustrations[String(ills.characterId)] = path
+      artIndex.illustrations[key] = path
     }
   }
   if (artIndex && options.enemyKeys) {

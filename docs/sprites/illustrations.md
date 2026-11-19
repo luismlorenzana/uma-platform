@@ -1,5 +1,7 @@
 # Illustrations (`illustrations`)
 
+Outfit-specific identities can coexist with the original character since 1.10.0; see [identity keys and authoring aliases](character-art-identities.md).
+
 > **Status: 2026-11-14, live (P176): master data `e7cdecde7c15`, uma-data 1.8.0.** uma-farm's F84 opens its big
 > moments onto these. The first Uma is character 1068: her 9 Farm Life splash scenes, 1672 × 941. Private: they show
 > franchise characters, so they live in master data's private release only, never in git or uma-art.

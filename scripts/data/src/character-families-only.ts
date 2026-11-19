@@ -5,7 +5,7 @@
 // replaces them. A GameTora refresh, a sprite set or an enemy key in the local release never rides along, and older
 // uma-data clients ignore the maps, so the games stay pinned where they are.
 
-import { dialoguePortraitPaths, illustrationPaths, parseArtIndex, parseDialoguePortraits, parseIllustrations, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
+import { characterArtKey, dialoguePortraitPaths, illustrationPaths, parseArtIndex, parseDialoguePortraits, parseIllustrations, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { resolve } from 'node:path'
 import type { CharacterFamilyKey } from './character-family-release'
 import type { ReleaseStorageClient } from './publish'
@@ -18,21 +18,21 @@ interface CharacterFamily {
   /** The command that packs it into the local release. */
   pack: string
   /** Her manifest read as a game reads it: her id, every picture it names, and a line about it. */
-  read: (value: unknown, path: string) => { characterId: number; pictures: string[]; summary: string }
+  read: (value: unknown, path: string) => { characterId: number; outfitId?: number; pictures: string[]; summary: string }
 }
 export const CHARACTER_FAMILIES: Record<CharacterFamilyKey, CharacterFamily> = {
   dialoguePortraits: {
     name: 'dialogue portraits', pack: 'pnpm portraits:pack',
     read: (value, path) => {
       const p = parseDialoguePortraits(value, path)
-      return { characterId: p.characterId, pictures: dialoguePortraitPaths(p), summary: `${p.characterId} r${p.revision} (${Object.keys(p.bases).length} bases, ${Object.keys(p.faces).length} faces)` }
+      return { characterId: p.characterId, outfitId: p.outfitId, pictures: dialoguePortraitPaths(p), summary: `${characterArtKey(p.characterId, p.outfitId)} r${p.revision} (${Object.keys(p.bases).length} bases, ${Object.keys(p.faces).length} faces)` }
     },
   },
   illustrations: {
     name: 'illustrations', pack: 'pnpm illustrations:pack',
     read: (value, path) => {
       const i = parseIllustrations(value, path)
-      return { characterId: i.characterId, pictures: illustrationPaths(i), summary: `${i.characterId} (${i.scenes.length} scenes: ${i.scenes.map((s) => s.moment).join(', ')})` }
+      return { characterId: i.characterId, outfitId: i.outfitId, pictures: illustrationPaths(i), summary: `${characterArtKey(i.characterId, i.outfitId)} (${i.scenes.length} scenes: ${i.scenes.map((s) => s.moment).join(', ')})` }
     },
   },
 }
@@ -43,7 +43,7 @@ export interface CharacterFamiliesOnlyPlan {
   manifestPath: string
   localPaths: Map<string, string>
   /** Per family, the characters this release adds or replaces. */
-  added: Partial<Record<CharacterFamilyKey, { characterId: number; summary: string }[]>>
+  added: Partial<Record<CharacterFamilyKey, { characterId: number; outfitId?: number; summary: string }[]>>
   /** Per family, every character the new release's map lists, by id. */
   maps: Partial<Record<CharacterFamilyKey, Record<string, string>>>
   /** The bytes of the files it adds, the new art index aside. */
@@ -90,12 +90,12 @@ export async function planCharacterFamiliesOnly(options: PlanCharacterFamiliesOn
     added[key] = []
     for (const [id, path] of Object.entries(localMap)) {
       const read = family.read(json(await take(path)), path)
-      if (String(read.characterId) !== id) throw new Error(`${path} holds ${read.characterId}, not ${id}`)
+      if (characterArtKey(read.characterId, read.outfitId) !== id) throw new Error(`${path} holds ${characterArtKey(read.characterId, read.outfitId)}, not ${id}`)
       for (const picture of read.pictures) await take(picture)
-      added[key].push({ characterId: read.characterId, summary: read.summary })
+      added[key].push({ characterId: read.characterId, ...(read.outfitId === undefined ? {} : { outfitId: read.outfitId }), summary: read.summary })
     }
     const merged = { ...((baseIndex[key] as Record<string, string> | undefined) ?? {}), ...localMap }
-    maps[key] = Object.fromEntries(Object.entries(merged).sort(([a], [b]) => Number(a) - Number(b)))
+    maps[key] = Object.fromEntries(Object.entries(merged).sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true })))
     nextIndex[key] = maps[key]
   }
 

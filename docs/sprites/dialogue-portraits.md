@@ -9,6 +9,8 @@
 
 ## What a character has
 
+Outfit-specific identities can coexist with the original character since 1.10.0; see [identity keys and authoring aliases](character-art-identities.md).
+
 | Piece | One per | Size | Notes |
 |---|---|---|---|
 | **Base** | Outfit | 525 × 700, opaque | Her portrait in that outfit, her face neutral |

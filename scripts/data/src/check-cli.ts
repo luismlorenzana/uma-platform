@@ -14,6 +14,7 @@ import { clearBorder, decodeRgba, recomposites } from './enemy-images'
 import { DEFAULT_BUCKET, DEFAULT_PROJECT, GcloudStorageClient } from './gcloud-storage'
 import { LocalOverlayStorage } from './local-storage'
 import { changedSets, checkCarried } from './sprites-only'
+import { artIdentityOfKey } from './art-identities'
 
 function argument(name: string): string | null {
   const inline = process.argv.find((arg) => arg.startsWith(`${name}=`))
@@ -129,10 +130,11 @@ async function main(): Promise<void> {
   if (keyIds.length > 0) console.log(`Enemy images: ${images} decoded, ${(imageBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 
   // The dialogue-portraits family (uma-farm F75), read like a game reads it: every picture a WebP at its declared size.
-  const portraitIds = Object.keys(art?.dialoguePortraits ?? {}).map(Number).sort((a, b) => a - b)
+  const portraitIds = Object.keys(art?.dialoguePortraits ?? {}).sort()
   let portraitImages = 0, portraitBytes = 0
-  for (const characterId of portraitIds) {
-    const p = (await client.dialoguePortraits(manifest, art!, characterId))!
+  for (const key of portraitIds) {
+    const { characterId, outfitId } = artIdentityOfKey(key, data.characters, data.outfits)
+    const p = (await client.dialoguePortraits(manifest, art!, characterId, outfitId))!
     for (const [what, image] of [...Object.entries(p.bases).map(([o, i]) => [`base-${o}`, i] as const), ...Object.entries(p.faces).map(([e, i]) => [`face-${e}`, i] as const)]) {
       const bytes = await client.file(manifest, image.path)
       if ((await sharp(bytes).metadata()).format !== 'webp') failures.push(`${image.path} isn't a WebP`)
@@ -154,16 +156,17 @@ async function main(): Promise<void> {
       portraitImages += 1
       portraitBytes += bytes.byteLength
     }
-    console.log(`Dialogue portraits ${characterId} r${p.revision}: ${Object.keys(p.bases).length} base(s) on ${p.base.width}x${p.base.height}, ` +
+    console.log(`Dialogue portraits ${key} r${p.revision}: ${Object.keys(p.bases).length} base(s) on ${p.base.width}x${p.base.height}, ` +
       `${Object.keys(p.faces).length} face(s) at ${p.faceSize.width}x${p.faceSize.height}, ${profiles} profile picture(s)`)
   }
   if (portraitIds.length > 0) console.log(`Dialogue portrait images: ${portraitImages} decoded, ${(portraitBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 
   // The illustrations family (uma-farm F84), read like a game reads it: every scene an opaque WebP at its declared size.
-  const illustrationIds = Object.keys(art?.illustrations ?? {}).map(Number).sort((a, b) => a - b)
+  const illustrationIds = Object.keys(art?.illustrations ?? {}).sort()
   let sceneImages = 0, sceneBytes = 0
-  for (const characterId of illustrationIds) {
-    const ills = (await client.illustrations(manifest, art!, characterId))!
+  for (const key of illustrationIds) {
+    const { characterId, outfitId } = artIdentityOfKey(key, data.characters, data.outfits)
+    const ills = (await client.illustrations(manifest, art!, characterId, outfitId))!
     for (const scene of ills.scenes) {
       const bytes = await client.file(manifest, scene.path)
       const meta = await sharp(bytes).metadata()
@@ -173,7 +176,7 @@ async function main(): Promise<void> {
       sceneImages += 1
       sceneBytes += bytes.byteLength
     }
-    console.log(`Illustrations ${characterId} (${ills.universe}): ${ills.scenes.map((s) => `${s.moment} ${s.id}`).join(', ')}`)
+    console.log(`Illustrations ${key} (${ills.universe}): ${ills.scenes.map((s) => `${s.moment} ${s.id}`).join(', ')}`)
   }
   if (illustrationIds.length > 0) console.log(`Illustration images: ${sceneImages} decoded, ${(sceneBytes / 1024 / 1024).toFixed(2)} MB, every hash checked`)
 

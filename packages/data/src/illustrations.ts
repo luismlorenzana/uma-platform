@@ -30,6 +30,8 @@ export interface Illustration {
 }
 export interface Illustrations {
   characterId: number
+  /** Optional master-data outfit identity, separate from the base character's art. */
+  outfitId?: number
   /** The universe the art was published in (`farm-life`). */
   universe: string
   /** In the art pipeline's order: the order a gallery shows them. */
@@ -57,6 +59,7 @@ const scene: Parser<Illustration> = (value, path) => {
 export const parseIllustrations: Parser<Illustrations> = (value, path) => {
   const f = fields(value, path)
   const ills: Illustrations = { characterId: f('characterId', id), universe: f('universe', name('a universe', 40)), scenes: f('scenes', arrayOf(scene)) }
+  if ((value as Record<string, unknown>).outfitId !== undefined) ills.outfitId = f('outfitId', id)
   if (ills.scenes.length === 0) fail(`${path}.scenes`, 'at least one scene')
   const seen = new Set<string>()
   ills.scenes.forEach((s, i) => {
