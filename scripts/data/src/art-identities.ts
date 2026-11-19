@@ -33,13 +33,24 @@ export async function artIdentityOverrides(universe: string): Promise<unknown> {
   return input
 }
 
-export async function localArtIdentityLookup(universe: string, releaseDir: string, manifest: ReleaseManifest): Promise<(name: string) => CharacterArtIdentity | null> {
+/** An unrelated alias must not add a set dependency to a selected-only packing stage. */
+export function scopedArtIdentityOverrides(value: unknown, names: readonly string[]): unknown {
+  if (value === null) return null
+  const input = value as { identities?: unknown }
+  if (!input || typeof input !== 'object' || !input.identities || typeof input.identities !== 'object' || Array.isArray(input.identities)) throw new Error('Art identities must contain an identities object')
+  const wanted = new Set(names.map(nameKey))
+  const identities = Object.fromEntries(Object.entries(input.identities).filter(([name]) => wanted.has(nameKey(name))))
+  return Object.keys(identities).length ? { ...input, identities } : null
+}
+
+export async function localArtIdentityLookup(universe: string, releaseDir: string, manifest: ReleaseManifest, names?: readonly string[]): Promise<(name: string) => CharacterArtIdentity | null> {
   const bytes = async (name: 'characters' | 'outfits') => {
     const entry = manifest.files.find(f => f.path === manifest.sets[name])
     if (!entry) throw new Error(`No ${name} set in the local manifest`)
     return JSON.parse((await readVerifiedFile(releaseDir, entry)).toString('utf8')) as unknown
   }
-  const aliases = await artIdentityOverrides(universe)
+  const all = await artIdentityOverrides(universe)
+  const aliases = names === undefined ? all : scopedArtIdentityOverrides(all, names)
   const characters = parseSet('characters', await bytes('characters'))
   return artIdentityLookup(characters, aliases === null ? [] : parseSet('outfits', await bytes('outfits')), aliases)
 }
