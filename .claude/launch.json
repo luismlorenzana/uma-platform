@@ -62,6 +62,20 @@
         "gallery"
       ],
       "port": 4323
+    },
+    {
+      "name": "art-reviews",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4330",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "../uma-art-authoring/content/reviews"
+      ],
+      "port": 4330
     }
   ]
 }
