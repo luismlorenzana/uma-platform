@@ -17,8 +17,12 @@ const here = dirname(fileURLToPath(import.meta.url)), tool = resolve(here, '..')
 /** The tier boards moved online as the Uma Ranker (P127, P131); the Studio's old board links go there. */
 const RANKER = 'https://uma-platform.web.app/ranker'
 const content = resolve(process.env.UMA_CONTENT_DIR ?? defaultContent), release = resolve(content, 'release'), root = resolve(content, 'authoring/sprites')
-const farmStory = resolve(process.env.UMA_FARM_STORY_DIR ?? resolve(content, '../../uma-story-authoring/content/farm/story'))
+const canonicalFarmStory = resolve(process.env.UMA_FARM_CANONICAL_STORY_DIR ?? resolve(content, '../../uma-story-authoring/content/farm/story'))
+const farmStory = resolve(process.env.UMA_FARM_STORY_DIR ?? canonicalFarmStory)
+const farmRepo = resolve(process.env.UMA_FARM_ROOT ?? resolve(content, '../../uma-farm'))
 const port = Number(process.env.UMA_STUDIO_PORT ?? 4318)
+const storyPort = Number(process.env.UMA_STORY_PORT ?? 4322)
+if (!Number.isSafeInteger(storyPort) || storyPort < 1 || storyPort > 65535) throw new Error('Invalid Story Sandbox port')
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('Invalid Studio port')
 async function body(request: IncomingMessage): Promise<unknown> {
   const chunks: Buffer[] = []; let size = 0
@@ -35,7 +39,12 @@ async function serve(response: ServerResponse, file: string) {
 }
 async function main() {
   const catalog = await loadCatalog(release), reviews = new ReviewStore(root)
-  const farmDuos = new FarmDuoStore(farmStory, catalog)
+  const farmDuos = new FarmDuoStore(farmStory, catalog, canonicalFarmStory, async () => {
+    const { stdout } = await promisify(execFile)(process.execPath, ['--no-warnings', resolve(farmRepo, 'scripts/story/duos.mjs'), '--roster'])
+    const roster: unknown = JSON.parse(stdout)
+    if (!Array.isArray(roster) || !roster.length || roster.some(id => typeof id !== 'string')) throw new Error('Farm did not return a launch roster.')
+    return roster as string[]
+  })
   const backups = new BackupQueue(async () => { await promisify(execFile)(process.execPath, [resolve(tool, '../../scripts/sprites/backup.mjs')], { env: { ...process.env, UMA_CONTENT_DIR: content }, maxBuffer: 16 * 1024 * 1024 }) })
   const images = new Set(catalog.umas.flatMap(u => [u.portrait, u.face, ...(u.references?.map(r => r.path) ?? [])]).filter((p): p is string => !!p))
   let queueWrite: Promise<unknown> = Promise.resolve()
@@ -54,7 +63,7 @@ async function main() {
       if (request.method !== 'PUT') { send(response, 405, { error: 'Method not allowed' }); return }
       if (path.startsWith('/api/tiers')) { send(response, 410, { error: `The tier boards moved to the Uma Ranker: ${RANKER}` }); return }
       if (path === '/api/reviews') { const saved = await reviews.save(await body(request)); await buildProgress(content); void backups.schedule(); send(response, 200, saved); return }
-      if (path === '/api/farm-duos') { send(response, 200, await farmDuos.save(await body(request))); return }
+      if (path === '/api/farm-duos') { send(response, 200, { ...await farmDuos.save(await body(request)), storyPort }); return }
       if (path === '/api/queue') {
         const input = await body(request) as { stamp?: string; value?: QueueOverride }
         const work = queueWrite.then(async () => {
@@ -69,7 +78,7 @@ async function main() {
       }
       send(response, 404, { error: 'Unknown write route' }); return
     }
-    if (path === '/api/farm-duos') { send(response, 200, await farmDuos.read()); return }
+    if (path === '/api/farm-duos') { send(response, 200, { ...await farmDuos.read(), storyPort }); return }
     if (path === '/api/prop-art') { send(response, 200, await propArt()); return }
     if (path === '/api/catalog') { send(response, 200, catalog); return }
     if (path.startsWith('/api/tiers')) { send(response, 410, { error: `The tier boards moved to the Uma Ranker: ${RANKER}; pnpm ranker:pull writes content/authoring/tiers/plan.json` }); return }
