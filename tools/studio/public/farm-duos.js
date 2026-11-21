@@ -2,6 +2,8 @@ const api = '/api/farm-duos'
 const $ = id => document.getElementById(id)
 const editor = $('duo-editor')
 const saveButton = $('save-duos')
+const applyButton = $('apply-duos')
+const rebaseButton = $('rebase-duos')
 const errorLine = $('duo-error')
 const roster = new Map()
 const pairInfo = new Map()
@@ -45,7 +47,7 @@ function pairKey(a, b) {
 }
 
 function info(a, b) {
-  return pairInfo.get(pairKey(a, b)) ?? { scenes: [], scripted: false }
+  return pairInfo.get(pairKey(a, b)) ?? { scenes: [], nights: {} }
 }
 
 function matches(uma, query) {
@@ -90,6 +92,23 @@ function renderRoster() {
   list.replaceChildren(...(items.length ? items : [element('p', 'No matching Umas.', 'duo-note')]))
 }
 
+function preview(a, b) {
+  const { scenes, nights } = info(a, b)
+  const node = element('div')
+  const levels = [1, 2, 3, 4, 5].filter(level => scenes.some(scene => scene.hearts === level))
+  node.append(element('small', `Bond levels ${levels.join(', ') || '—'}`, 'duo-note'))
+  for (const id of [a, b]) {
+    const beats = nights[id] ?? []
+    node.append(element('small', `${roster.get(id).name} · ${beats.join(', ') || 'No night beats'}`, 'duo-note'))
+  }
+  if (scenes.length || Object.keys(nights).length) {
+    const link = element('a', 'Preview in Story Sandbox')
+    link.href = `http://127.0.0.1:${model.storyPort}/farm/#/duo/${encodeURIComponent(a)}/${encodeURIComponent(b)}`
+    node.append(link)
+  }
+  return node
+}
+
 function renderSlots() {
   const current = partners(selected)
   const slots = Array.from({ length: model.maxPartners }, (_, i) => {
@@ -97,16 +116,13 @@ function renderSlots() {
     if (!partner) return element('li', 'Open slot', 'duo-slot empty')
     const tile = element('li', '', 'duo-slot')
     tile.append(person(partner))
-    if (info(selected, partner.id).scripted) {
-      tile.append(element('small', 'Visit script attached', 'duo-note'))
-    } else {
-      const remove = button('Remove', () => {
-        draft = draft.filter(pair => !(pair.includes(selected) && pair.includes(partner.id)))
-        render()
-      })
-      remove.setAttribute('aria-label', `Remove ${partner.name}`)
-      tile.append(remove)
-    }
+    tile.append(preview(selected, partner.id))
+    const remove = button('Remove', () => {
+      draft = draft.filter(pair => !(pair.includes(selected) && pair.includes(partner.id)))
+      render()
+    })
+    remove.setAttribute('aria-label', `Remove ${partner.name}`)
+    tile.append(remove)
     return tile
   })
   $('duo-slots').replaceChildren(...slots)
@@ -121,7 +137,7 @@ function renderCandidates() {
     .map(uma => ({ uma, filled: partners(uma.id).length, ...info(selected, uma.id) }))
     .filter(row => !withScenes || row.scenes.length)
     .sort((a, b) => a.filled - b.filled || b.scenes.length - a.scenes.length || a.uma.name.localeCompare(b.uma.name))
-  $('duo-candidates').replaceChildren(...rows.map(({ uma, filled, scenes, scripted }) => {
+  $('duo-candidates').replaceChildren(...rows.map(({ uma, filled, scenes, nights }) => {
     const card = element('li', '', 'duo-candidate')
     const line = element('div')
     const add = button('Add duo', () => {
@@ -131,7 +147,7 @@ function renderCandidates() {
     add.setAttribute('aria-label', `Add ${uma.name}`)
     add.disabled = current.length >= model.maxPartners || filled >= model.maxPartners
     line.append(person(uma), add)
-    card.append(line, element('p', `${filled}/${model.maxPartners} partners · ${scenes.length} bond scene${scenes.length === 1 ? '' : 's'}${scripted ? ' · Visit script' : ''}`))
+    card.append(line, element('p', `${filled}/${model.maxPartners} partners · ${scenes.length} bond scene${scenes.length === 1 ? '' : 's'}${Object.keys(nights).length ? ' · Visit script' : ''}`))
     if (scenes.length) {
       const details = element('details')
       const levels = element('ol')
@@ -160,7 +176,19 @@ function render() {
   renderSlots()
   renderCandidates()
   saveButton.disabled = saving || !pending
-  status(pending ? 'Unsaved choices. Each duo uses one slot for both Umas.' : 'Changes save to the Farm story’s household.json.')
+  const stale = model.base !== model.canonicalStamp
+  applyButton.disabled = saving || pending || stale || !model.differs
+  rebaseButton.hidden = !stale
+  rebaseButton.disabled = saving
+  const gap = draft.filter(([a, b]) => {
+    const { scenes, nights } = info(a, b)
+    return ![1, 2, 3, 4, 5].every(level => scenes.some(scene => scene.hearts === level)) ||
+      [a, b].some(id => (nights[id]?.length ?? 0) < model.nightBeats.length)
+  }).length
+  $('duo-coverage').textContent = gap ? `${gap} selected duos need bond scenes or night dialogue.` : 'All selected duos have five bond levels and both night scripts.'
+  $('duo-revision').textContent = `Story revision ${model.canonicalStamp.slice(0, 12)} · ${model.differs ? 'Saved draft differs from story' : 'Saved draft matches story'}`
+  status(pending ? 'Unsaved choices. Each duo uses one slot for both Umas.' :
+    stale ? 'The canonical story changed since this draft was saved.' : `Draft saves to ${model.draftPath}. Apply writes to ${model.canonicalPath}.`)
 }
 
 async function request(options) {
@@ -170,46 +198,50 @@ async function request(options) {
   return data
 }
 
-async function load() {
-  model = await request()
+function open(next) {
+  model = next
+  roster.clear()
+  pairInfo.clear()
   for (const uma of model.roster) roster.set(uma.id, uma)
-  for (const key of new Set([...Object.keys(model.scenes), ...model.scripted])) {
-    pairInfo.set(pairKey(...key.split(':')), { scenes: model.scenes[key] ?? [], scripted: model.scripted.includes(key) })
+  for (const key of new Set([...Object.keys(model.scenes), ...Object.keys(model.nights)])) {
+    pairInfo.set(pairKey(...key.split(':')), { scenes: model.scenes[key] ?? [], nights: model.nights[key] ?? {} })
   }
   draft = model.duos
-  selected = model.roster[0].id
+  if (!roster.has(selected)) selected = model.roster[0].id
   editor.hidden = false
-  render()
 }
 
-async function save() {
+async function save(action) {
   editor.disabled = saving = true
-  saveButton.disabled = true
+  render()
   showError('')
-  status('Saving duo assignments…')
+  status(action === 'apply' ? 'Applying the approved draft…' : 'Saving the duo draft…')
   try {
-    const saved = await request({ method: 'PUT', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ stamp: model.stamp, duos: draft }) })
-    model = { ...model, ...saved }
-    draft = saved.duos
-    status('Saved to household.json.')
+    if (action === 'rebase') model = await request()
+    open(await request({ method: 'PUT', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action, stamp: model.stamp, duos: draft }) }))
   } catch (error) {
-    showError(error.message)
-    status('Your choices are still in this page.')
+    showError(`${error.message} Your choices are still in this page.`)
+    if (action === 'apply') {
+      const latest = await request().catch(() => null)
+      if (latest) model = latest
+    }
   } finally {
     editor.disabled = saving = false
-    saveButton.disabled = !dirty()
+    render()
   }
 }
 
 $('roster-search').addEventListener('input', renderRoster)
 $('candidate-search').addEventListener('input', renderCandidates)
 $('duo-with-scenes').addEventListener('change', renderCandidates)
-saveButton.addEventListener('click', save)
+saveButton.addEventListener('click', () => void save('draft'))
+applyButton.addEventListener('click', () => void save('apply'))
+rebaseButton.addEventListener('click', () => void save('rebase'))
 window.addEventListener('beforeunload', event => {
   if (model && dirty()) event.preventDefault()
 })
-void load().catch(error => {
+void request().then(next => { open(next); render() }).catch(error => {
   status('')
   showError(error.message)
 })

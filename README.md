@@ -72,6 +72,12 @@ pnpm release:publish             # files → manifest → channels/v1/latest.jso
 For a new banner, [docs/new-umas.md](docs/new-umas.md) has the whole path: `pnpm uma:check`, `pnpm uma:import`, review,
 publish, and how to undo it.
 
+**Farm Duos** in Uma Studio uses the playable roster from the sibling `uma-farm` checkout
+(`UMA_FARM_ROOT` can point at a worktree). It saves to a separate `duo-draft.json` and checks the current story revision
+when you apply the saved draft. `UMA_FARM_STORY_DIR` can select a review copy. `UMA_FARM_CANONICAL_STORY_DIR` points to
+the story that receives approved edits and supplies the scene coverage. Start Story Sandbox to preview the pair's
+bond levels and both nightly speakers (`UMA_STORY_PORT`, default 4322).
+
 **Sprite sets** publish on their own, on top of the published `latest`, once the owner approves a batch in the Studio
 ([pipeline.md](docs/sprites/pipeline.md) §7, "Publishing a batch"):
 

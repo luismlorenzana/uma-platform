@@ -16,13 +16,19 @@
   <main>
     <header class="duo-header">
       <div><h1>Farm Duos</h1><p id="duo-total"></p></div>
-      <div class="duo-save"><button type="button" id="save-duos" disabled>Save changes</button></div>
+      <div class="duo-save">
+        <button type="button" id="save-duos" disabled>Save draft</button>
+        <button type="button" id="rebase-duos" hidden>Review against latest story</button>
+        <button type="button" id="apply-duos" disabled>Apply draft to story</button>
+      </div>
     </header>
     <p id="duo-status" role="status">Loading Farm story…</p>
+    <p id="duo-revision"></p>
+    <p id="duo-coverage"></p>
     <p id="duo-error" role="alert" hidden></p>
     <fieldset id="duo-editor" class="duo-editor" aria-label="Farm Duo editor" hidden>
       <aside class="duo-panel duo-roster" aria-labelledby="duo-roster-title">
-        <h2 id="duo-roster-title">Farm story cast</h2>
+        <h2 id="duo-roster-title">Playable Farm roster</h2>
         <label for="roster-search">Find an Uma</label>
         <input type="search" id="roster-search" placeholder="Search by name">
         <div id="duo-roster-list"></div>
