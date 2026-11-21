@@ -69,12 +69,16 @@ function showError(message) {
 function renderRoster() {
   const query = $('roster-search').value.trim().toLocaleLowerCase()
   const list = $('duo-roster-list')
-  const items = [...roster.values()].filter(uma => matches(uma, query)).map(uma => {
+  const rows = [...roster.values()]
+    .filter(uma => matches(uma, query))
+    .map(uma => ({ uma, filled: partners(uma.id).length }))
+    .sort((a, b) => a.filled - b.filled)
+  const items = rows.map(({ uma, filled }) => {
     const node = person(uma, 'button')
     node.type = 'button'
     node.dataset.uma = uma.id
     node.setAttribute('aria-pressed', String(uma.id === selected))
-    node.append(element('small', `${partners(uma.id).length}/${model.maxPartners}`))
+    node.append(element('small', `${filled}/${model.maxPartners}`))
     node.addEventListener('click', () => {
       selected = uma.id
       $('candidate-search').value = ''
@@ -114,13 +118,12 @@ function renderCandidates() {
   const withScenes = $('duo-with-scenes').checked
   const rows = [...roster.values()]
     .filter(uma => uma.id !== selected && !current.includes(uma.id) && matches(uma, search))
-    .map(uma => ({ uma, ...info(selected, uma.id) }))
+    .map(uma => ({ uma, filled: partners(uma.id).length, ...info(selected, uma.id) }))
     .filter(row => !withScenes || row.scenes.length)
-    .sort((a, b) => b.scenes.length - a.scenes.length || a.uma.name.localeCompare(b.uma.name))
-  $('duo-candidates').replaceChildren(...rows.map(({ uma, scenes, scripted }) => {
+    .sort((a, b) => a.filled - b.filled || b.scenes.length - a.scenes.length || a.uma.name.localeCompare(b.uma.name))
+  $('duo-candidates').replaceChildren(...rows.map(({ uma, filled, scenes, scripted }) => {
     const card = element('li', '', 'duo-candidate')
     const line = element('div')
-    const filled = partners(uma.id).length
     const add = button('Add duo', () => {
       draft = [...draft, [selected, uma.id]]
       render()
