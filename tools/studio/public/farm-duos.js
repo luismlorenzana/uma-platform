@@ -150,7 +150,8 @@ function renderCandidates() {
 
 function render() {
   const pending = dirty()
-  $('duo-total').textContent = `${roster.size} Umas · ${draft.length} duo${draft.length === 1 ? '' : 's'} · ${Object.keys(model.scenes).length} pairs with scenes`
+  const scenePairs = Object.keys(model.scenes).length
+  $('duo-total').textContent = `${roster.size} Umas · ${draft.length} duo${draft.length === 1 ? '' : 's'} · ${scenePairs} pair${scenePairs === 1 ? '' : 's'} with scenes`
   $('duo-character').replaceChildren(person(roster.get(selected)))
   renderRoster()
   renderSlots()
