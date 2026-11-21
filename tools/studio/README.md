@@ -8,8 +8,9 @@ Pages:
 
 - **Home** (`/`): the local authoring tools and a link to the Uma Ranker.
 - **Farm Duos** (`/farm-duos`): choose a character from the local Farm story cast, preview the openings of
-  authored bond scenes, and assign up to three reciprocal True Love partners per Uma. Uncheck **With
-  authored scenes** to choose from the whole cast. **Save changes** updates only the duo assignments in
+  authored bond scenes, and assign up to three reciprocal True Love partners per Uma. Both search lists
+  put Umas with the fewest assigned partners first. Uncheck **With authored scenes** to choose from the
+  whole cast. **Save changes** updates only the duo assignments in
   the private Farm story's `household.json`. A pairing with an attached visit script stays assigned while
   that script references it. The game's story release workflow publishes these defaults.
   The page opens the sibling `uma-story-authoring/content/farm/story` directory. Set `UMA_FARM_STORY_DIR`
