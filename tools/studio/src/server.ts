@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url'
 import { atomicJson, buildProgress, content as defaultContent, hash, maybeJson, queue, readJson, type QueueOverride, type Ranking } from '@uma-platform/sprite-pipeline'
 import { inside, loadCatalog } from './catalog.js'
 import { ReviewStore, ReviewConflict } from './review-store.js'
+import { FarmDuoStore } from './farm-duos.js'
 import { spriteReview } from './sprite-review.js'
 import { boardOf } from '@uma-platform/tiers'
 
@@ -16,6 +17,7 @@ const here = dirname(fileURLToPath(import.meta.url)), tool = resolve(here, '..')
 /** The tier boards moved online as the Uma Ranker (P127, P131); the Studio's old board links go there. */
 const RANKER = 'https://uma-platform.web.app/ranker'
 const content = resolve(process.env.UMA_CONTENT_DIR ?? defaultContent), release = resolve(content, 'release'), root = resolve(content, 'authoring/sprites')
+const farmStory = resolve(process.env.UMA_FARM_STORY_DIR ?? resolve(content, '../../uma-story-authoring/content/farm/story'))
 const port = Number(process.env.UMA_STUDIO_PORT ?? 4318)
 if (!Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('Invalid Studio port')
 async function body(request: IncomingMessage): Promise<unknown> {
@@ -33,6 +35,7 @@ async function serve(response: ServerResponse, file: string) {
 }
 async function main() {
   const catalog = await loadCatalog(release), reviews = new ReviewStore(root)
+  const farmDuos = new FarmDuoStore(farmStory, catalog)
   const backups = new BackupQueue(async () => { await promisify(execFile)(process.execPath, [resolve(tool, '../../scripts/sprites/backup.mjs')], { env: { ...process.env, UMA_CONTENT_DIR: content }, maxBuffer: 16 * 1024 * 1024 }) })
   const images = new Set(catalog.umas.flatMap(u => [u.portrait, u.face, ...(u.references?.map(r => r.path) ?? [])]).filter((p): p is string => !!p))
   let queueWrite: Promise<unknown> = Promise.resolve()
@@ -51,6 +54,7 @@ async function main() {
       if (request.method !== 'PUT') { send(response, 405, { error: 'Method not allowed' }); return }
       if (path.startsWith('/api/tiers')) { send(response, 410, { error: `The tier boards moved to the Uma Ranker: ${RANKER}` }); return }
       if (path === '/api/reviews') { const saved = await reviews.save(await body(request)); await buildProgress(content); void backups.schedule(); send(response, 200, saved); return }
+      if (path === '/api/farm-duos') { send(response, 200, await farmDuos.save(await body(request))); return }
       if (path === '/api/queue') {
         const input = await body(request) as { stamp?: string; value?: QueueOverride }
         const work = queueWrite.then(async () => {
@@ -65,6 +69,7 @@ async function main() {
       }
       send(response, 404, { error: 'Unknown write route' }); return
     }
+    if (path === '/api/farm-duos') { send(response, 200, await farmDuos.read()); return }
     if (path === '/api/prop-art') { send(response, 200, await propArt()); return }
     if (path === '/api/catalog') { send(response, 200, catalog); return }
     if (path.startsWith('/api/tiers')) { send(response, 410, { error: `The tier boards moved to the Uma Ranker: ${RANKER}; pnpm ranker:pull writes content/authoring/tiers/plan.json` }); return }
@@ -81,7 +86,7 @@ async function main() {
       await serve(response, await inside(content, key)); return
     }
     if (images.has(path)) { await serve(response, await inside(release, path.slice(1))); return }
-    const pages: Record<string, string> = { '/': 'public/home.html', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/sprites/placement.js': 'dist/held-placement.js' }
+    const pages: Record<string, string> = { '/': 'public/home.html', '/farm-duos': 'public/farm-duos.html', '/props': 'public/props.html', '/queue': 'public/queue.html', '/authoring': 'public/queue.html', '/gates': 'public/gates.html', '/sprites/placement.js': 'dist/held-placement.js' }
     if (pages[path]) { await serve(response, resolve(tool, pages[path])); return }
     // The tier boards live online now (P131): each old board link opens the same board in the Ranker.
     if (path.startsWith('/tiers/') && boardOf(path.slice(7))) { response.writeHead(302, { location: `${RANKER}/${path.slice(7)}` }); response.end(); return }

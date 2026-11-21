@@ -1,0 +1,46 @@
+.duos main { max-width: 1180px; margin: 0 auto; padding: 24px clamp(12px, 3vw, 32px) 40px }
+.duo-header, .duo-candidate-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px }
+.duo-header h1 { margin: 0; font-size: clamp(32px, 6vw, 54px); font-family: Georgia, serif; line-height: 1.1 }
+.duo-header p, #duo-status { color: var(--muted); margin: 8px 0 }
+#save-duos { background: #325e4c; color: white; border-color: #325e4c; font-weight: 650 }
+#duo-error { margin: 10px 0; padding: 8px 12px; border-radius: 7px; color: #852b23; background: #fae7dd }
+.duo-editor { display: grid; grid-template-columns: minmax(225px, .85fr) minmax(0, 2fr); align-items: start; gap: 14px; border: 0; padding: 0; margin: 14px 0 0; min-width: 0 }
+.duo-editor[hidden] { display: none }
+.duo-panel { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 14px; min-width: 0 }
+.duo-panel h2 { margin: 0 0 6px; font: 650 21px/1.25 Georgia, serif }
+.duo-panel label { font-size: 13px; color: var(--muted) }
+.duo-panel input[type=search] { width: 100%; min-height: 44px; padding: 6px 10px; margin: 3px 0 8px }
+.duo-roster { position: sticky; top: 12px }
+#duo-roster-list { display: grid; gap: 3px; max-height: min(62vh, 720px); overflow: auto; padding: 3px }
+.duo-person { display: flex; min-width: 0; align-items: center; text-align: start; gap: 8px }
+.duo-person strong { overflow-wrap: anywhere }
+.duo-person small { margin-left: auto; color: var(--muted); white-space: nowrap }
+#duo-roster-list button { padding: 5px 8px; font-size: 13px }
+#duo-roster-list button[aria-pressed=true] { border-color: #557665; background: #edf4eb }
+.duo-face { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 6px; background: #eaf0e7; object-fit: contain; flex: none; font-weight: 700; color: #365844 }
+#duo-character { margin-bottom: 15px }
+#duo-character .duo-face { width: 56px; height: 56px }
+#duo-character strong { font: 650 26px/1.1 Georgia, serif }
+#duo-slots, #duo-candidates { padding: 0; margin: 0 0 18px; list-style: none; display: grid; gap: 6px }
+#duo-slots { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+.duo-slot, .duo-candidate { border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: #fafaf5 }
+.duo-slot { display: grid; align-content: space-between; gap: 5px; min-height: 76px }
+.duo-slot.empty { border-style: dashed; color: var(--muted); place-items: center }
+.duo-slot .duo-person { font-size: 13px }
+.duo-slot button { justify-self: start }
+.duo-candidate > div { display: flex; align-items: center; justify-content: space-between; gap: 8px }
+.duo-candidate p { color: var(--muted); margin: 4px 0; font-size: 13px }
+.duo-candidate details { margin-top: 4px; border-top: 1px solid var(--line) }
+.duo-candidate summary { cursor: pointer; padding: 10px 0; font-size: 14px; font-weight: 650 }
+.duo-candidate ol { margin: 0; padding-left: 26px }
+.duo-candidate li { margin: 0 0 6px }
+.duo-note { color: var(--muted); font-size: 13px }
+@media (max-width: 760px) {
+  .duo-editor { grid-template-columns: minmax(0, 1fr) }
+  .duo-roster { position: static }
+  #duo-roster-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 170px }
+}
+@media (max-width: 470px) {
+  #duo-slots { grid-template-columns: minmax(0, 1fr) }
+  #duo-roster-list { grid-template-columns: minmax(0, 1fr) }
+}

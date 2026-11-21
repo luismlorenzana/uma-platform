@@ -6,7 +6,14 @@ for isolated verification. The client builds before startup; the server loads pr
 
 Pages:
 
-- **Home** (`/`): the sprite tools, and a link to the Uma Ranker.
+- **Home** (`/`): the local authoring tools and a link to the Uma Ranker.
+- **Farm Duos** (`/farm-duos`): choose a character from the local Farm story cast, preview the openings of
+  authored bond scenes, and assign up to three reciprocal True Love partners per Uma. Uncheck **With
+  authored scenes** to choose from the whole cast. **Save changes** updates only the duo assignments in
+  the private Farm story's `household.json`. A pairing with an attached visit script stays assigned while
+  that script references it. The game's story release workflow publishes these defaults.
+  The page opens the sibling `uma-story-authoring/content/farm/story` directory. Set `UMA_FARM_STORY_DIR`
+  to use another copy of the Farm story.
 - **Tier boards: moved online (P131).** The boards are the Uma Ranker in the Uma Platform app,
   https://uma-platform.web.app/ranker ([design](../../docs/platform-app/README.md), AP25–AP36). `/tiers/<board>` opens the
   same board there, and `/api/tiers` answers 410. `pnpm ranker:pull` brings the live plan to
