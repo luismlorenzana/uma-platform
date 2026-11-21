@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Farm Duos · Uma Studio</title>
+  <link rel="stylesheet" href="/tiers.css">
+  <link rel="stylesheet" href="/farm-duos.css">
+  <script type="module" src="/farm-duos.js"></script>
+</head>
+<body class="duos">
+  <header class="topbar">
+    <a href="/" class="brand"><span class="brand-mark" aria-hidden="true">u.</span><span>UMA <span>STUDIO</span></span></a>
+    <span class="local">LOCAL AUTHORING</span>
+  </header>
+  <main>
+    <header class="duo-header">
+      <div><h1>Farm Duos</h1><p id="duo-total"></p></div>
+      <div class="duo-save"><button type="button" id="save-duos" disabled>Save changes</button></div>
+    </header>
+    <p id="duo-status" role="status">Loading Farm story…</p>
+    <p id="duo-error" role="alert" hidden></p>
+    <fieldset id="duo-editor" class="duo-editor" aria-label="Farm Duo editor" hidden>
+      <aside class="duo-panel duo-roster" aria-labelledby="duo-roster-title">
+        <h2 id="duo-roster-title">Farm story cast</h2>
+        <label for="roster-search">Find an Uma</label>
+        <input type="search" id="roster-search" placeholder="Search by name">
+        <div id="duo-roster-list"></div>
+      </aside>
+      <section class="duo-panel" aria-label="Selected Uma">
+        <header id="duo-character"></header>
+        <h2>True Love partners</h2>
+        <ol id="duo-slots"></ol>
+        <div class="duo-candidate-head">
+          <h2>Choose a partner</h2>
+          <label><input type="checkbox" id="duo-with-scenes" checked> With authored scenes</label>
+        </div>
+        <label for="candidate-search">Find a partner</label>
+        <input type="search" id="candidate-search" placeholder="Search by name">
+        <ul id="duo-candidates"></ul>
+      </section>
+    </fieldset>
+  </main>
+</body>
+</html>
