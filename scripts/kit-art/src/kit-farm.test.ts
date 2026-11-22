@@ -141,7 +141,7 @@ describe('kit-farm wave 1 (F9, P147)', () => {
     const walk = (d: string) => {
       for (const f of readdirSync(d).sort()) {
         const p = join(d, f)
-        if (statSync(p).isDirectory()) { if (!LATER.has(f) && f !== 'items' && f !== 'node_modules') walk(p) }
+        if (statSync(p).isDirectory()) { if (!LATER.has(f) && f !== 'items' && f !== 'farm-items' && f !== 'farm-scenes' && f !== 'node_modules') walk(p) }
         else if (/\.(png|json)$/.test(f) && f !== 'package.json') now[relative(ART, p)] = sha(readFileSync(p))
       }
     }
