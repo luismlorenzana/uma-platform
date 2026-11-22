@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-art
 
+## 2.31.0
+
+### Minor Changes
+
+- Add original Farm conversation plates with phase and seasonal variants, ten wedding ring close-ups, and a dedicated 32px atlas for Farm rings, heirlooms, tools, conversions, map icons and 120 Restaurant dishes. Existing art families retain their coordinates.
+
 ## 2.30.0
 
 ### Minor Changes

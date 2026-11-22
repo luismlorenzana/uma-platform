@@ -1,0 +1,756 @@
+{
+  "schemaVersion": 1,
+  "cell": 32,
+  "width": 384,
+  "height": 512,
+  "frames": {
+    "ring-g1": {
+      "x": 0,
+      "y": 0
+    },
+    "ring-g2": {
+      "x": 32,
+      "y": 0
+    },
+    "ring-g3": {
+      "x": 64,
+      "y": 0
+    },
+    "ring-g4": {
+      "x": 96,
+      "y": 0
+    },
+    "ring-g5": {
+      "x": 128,
+      "y": 0
+    },
+    "ring-g6": {
+      "x": 160,
+      "y": 0
+    },
+    "ring-g7": {
+      "x": 192,
+      "y": 0
+    },
+    "ring-g8": {
+      "x": 224,
+      "y": 0
+    },
+    "ring-g9": {
+      "x": 256,
+      "y": 0
+    },
+    "ring-g10": {
+      "x": 288,
+      "y": 0
+    },
+    "cultured-yogurt": {
+      "x": 320,
+      "y": 0
+    },
+    "butter": {
+      "x": 352,
+      "y": 0
+    },
+    "farm-cheese": {
+      "x": 0,
+      "y": 32
+    },
+    "goat-cheese": {
+      "x": 32,
+      "y": 32
+    },
+    "carrot-pickles": {
+      "x": 64,
+      "y": 32
+    },
+    "preserved-egg": {
+      "x": 96,
+      "y": 32
+    },
+    "preserved-duck-egg": {
+      "x": 128,
+      "y": 32
+    },
+    "tomato-sauce": {
+      "x": 160,
+      "y": 32
+    },
+    "strawberry-jam": {
+      "x": 192,
+      "y": 32
+    },
+    "raspberry-jam": {
+      "x": 224,
+      "y": 32
+    },
+    "blueberry-jam": {
+      "x": 256,
+      "y": 32
+    },
+    "persimmon-preserve": {
+      "x": 288,
+      "y": 32
+    },
+    "tool/watering-can/tier-1": {
+      "x": 320,
+      "y": 32
+    },
+    "tool/watering-can/tier-2": {
+      "x": 352,
+      "y": 32
+    },
+    "tool/watering-can/tier-3": {
+      "x": 0,
+      "y": 64
+    },
+    "tool/watering-can/tier-4": {
+      "x": 32,
+      "y": 64
+    },
+    "tool/watering-can/tier-5": {
+      "x": 64,
+      "y": 64
+    },
+    "tool/hoe/tier-1": {
+      "x": 96,
+      "y": 64
+    },
+    "tool/hoe/tier-2": {
+      "x": 128,
+      "y": 64
+    },
+    "tool/hoe/tier-3": {
+      "x": 160,
+      "y": 64
+    },
+    "tool/hoe/tier-4": {
+      "x": 192,
+      "y": 64
+    },
+    "tool/hoe/tier-5": {
+      "x": 224,
+      "y": 64
+    },
+    "tool/brush/tier-1": {
+      "x": 256,
+      "y": 64
+    },
+    "tool/brush/tier-2": {
+      "x": 288,
+      "y": 64
+    },
+    "tool/brush/tier-3": {
+      "x": 320,
+      "y": 64
+    },
+    "tool/brush/tier-4": {
+      "x": 352,
+      "y": 64
+    },
+    "tool/brush/tier-5": {
+      "x": 0,
+      "y": 96
+    },
+    "tool/pick/tier-1": {
+      "x": 32,
+      "y": 96
+    },
+    "tool/pick/tier-2": {
+      "x": 64,
+      "y": 96
+    },
+    "tool/pick/tier-3": {
+      "x": 96,
+      "y": 96
+    },
+    "tool/pick/tier-4": {
+      "x": 128,
+      "y": 96
+    },
+    "tool/pick/tier-5": {
+      "x": 160,
+      "y": 96
+    },
+    "tool/hammer/tier-1": {
+      "x": 192,
+      "y": 96
+    },
+    "tool/hammer/tier-2": {
+      "x": 224,
+      "y": 96
+    },
+    "tool/hammer/tier-3": {
+      "x": 256,
+      "y": 96
+    },
+    "tool/hammer/tier-4": {
+      "x": 288,
+      "y": 96
+    },
+    "tool/hammer/tier-5": {
+      "x": 320,
+      "y": 96
+    },
+    "tool/rod/tier-1": {
+      "x": 352,
+      "y": 96
+    },
+    "tool/rod/tier-2": {
+      "x": 0,
+      "y": 128
+    },
+    "tool/rod/tier-3": {
+      "x": 32,
+      "y": 128
+    },
+    "tool/rod/tier-4": {
+      "x": 64,
+      "y": 128
+    },
+    "tool/rod/tier-5": {
+      "x": 96,
+      "y": 128
+    },
+    "tool/axe/tier-1": {
+      "x": 128,
+      "y": 128
+    },
+    "tool/axe/tier-2": {
+      "x": 160,
+      "y": 128
+    },
+    "tool/axe/tier-3": {
+      "x": 192,
+      "y": 128
+    },
+    "tool/axe/tier-4": {
+      "x": 224,
+      "y": 128
+    },
+    "tool/axe/tier-5": {
+      "x": 256,
+      "y": 128
+    },
+    "heirloom/earrings": {
+      "x": 288,
+      "y": 128
+    },
+    "heirloom/necklace": {
+      "x": 320,
+      "y": 128
+    },
+    "heirloom/bracelet": {
+      "x": 352,
+      "y": 128
+    },
+    "heirloom/brooch": {
+      "x": 0,
+      "y": 160
+    },
+    "dish-restaurant-001": {
+      "x": 32,
+      "y": 160
+    },
+    "dish-restaurant-002": {
+      "x": 64,
+      "y": 160
+    },
+    "dish-restaurant-003": {
+      "x": 96,
+      "y": 160
+    },
+    "dish-restaurant-004": {
+      "x": 128,
+      "y": 160
+    },
+    "dish-restaurant-005": {
+      "x": 160,
+      "y": 160
+    },
+    "dish-restaurant-006": {
+      "x": 192,
+      "y": 160
+    },
+    "dish-restaurant-007": {
+      "x": 224,
+      "y": 160
+    },
+    "dish-restaurant-008": {
+      "x": 256,
+      "y": 160
+    },
+    "dish-restaurant-009": {
+      "x": 288,
+      "y": 160
+    },
+    "dish-restaurant-010": {
+      "x": 320,
+      "y": 160
+    },
+    "dish-restaurant-011": {
+      "x": 352,
+      "y": 160
+    },
+    "dish-restaurant-012": {
+      "x": 0,
+      "y": 192
+    },
+    "dish-restaurant-013": {
+      "x": 32,
+      "y": 192
+    },
+    "dish-restaurant-014": {
+      "x": 64,
+      "y": 192
+    },
+    "dish-restaurant-015": {
+      "x": 96,
+      "y": 192
+    },
+    "dish-restaurant-016": {
+      "x": 128,
+      "y": 192
+    },
+    "dish-restaurant-017": {
+      "x": 160,
+      "y": 192
+    },
+    "dish-restaurant-018": {
+      "x": 192,
+      "y": 192
+    },
+    "dish-restaurant-019": {
+      "x": 224,
+      "y": 192
+    },
+    "dish-restaurant-020": {
+      "x": 256,
+      "y": 192
+    },
+    "dish-restaurant-021": {
+      "x": 288,
+      "y": 192
+    },
+    "dish-restaurant-022": {
+      "x": 320,
+      "y": 192
+    },
+    "dish-restaurant-023": {
+      "x": 352,
+      "y": 192
+    },
+    "dish-restaurant-024": {
+      "x": 0,
+      "y": 224
+    },
+    "dish-restaurant-025": {
+      "x": 32,
+      "y": 224
+    },
+    "dish-restaurant-026": {
+      "x": 64,
+      "y": 224
+    },
+    "dish-restaurant-027": {
+      "x": 96,
+      "y": 224
+    },
+    "dish-restaurant-028": {
+      "x": 128,
+      "y": 224
+    },
+    "dish-restaurant-029": {
+      "x": 160,
+      "y": 224
+    },
+    "dish-restaurant-030": {
+      "x": 192,
+      "y": 224
+    },
+    "dish-restaurant-031": {
+      "x": 224,
+      "y": 224
+    },
+    "dish-restaurant-032": {
+      "x": 256,
+      "y": 224
+    },
+    "dish-restaurant-033": {
+      "x": 288,
+      "y": 224
+    },
+    "dish-restaurant-034": {
+      "x": 320,
+      "y": 224
+    },
+    "dish-restaurant-035": {
+      "x": 352,
+      "y": 224
+    },
+    "dish-restaurant-036": {
+      "x": 0,
+      "y": 256
+    },
+    "dish-restaurant-037": {
+      "x": 32,
+      "y": 256
+    },
+    "dish-restaurant-038": {
+      "x": 64,
+      "y": 256
+    },
+    "dish-restaurant-039": {
+      "x": 96,
+      "y": 256
+    },
+    "dish-restaurant-040": {
+      "x": 128,
+      "y": 256
+    },
+    "dish-restaurant-041": {
+      "x": 160,
+      "y": 256
+    },
+    "dish-restaurant-042": {
+      "x": 192,
+      "y": 256
+    },
+    "dish-restaurant-043": {
+      "x": 224,
+      "y": 256
+    },
+    "dish-restaurant-044": {
+      "x": 256,
+      "y": 256
+    },
+    "dish-restaurant-045": {
+      "x": 288,
+      "y": 256
+    },
+    "dish-restaurant-046": {
+      "x": 320,
+      "y": 256
+    },
+    "dish-restaurant-047": {
+      "x": 352,
+      "y": 256
+    },
+    "dish-restaurant-048": {
+      "x": 0,
+      "y": 288
+    },
+    "dish-restaurant-049": {
+      "x": 32,
+      "y": 288
+    },
+    "dish-restaurant-050": {
+      "x": 64,
+      "y": 288
+    },
+    "dish-restaurant-051": {
+      "x": 96,
+      "y": 288
+    },
+    "dish-restaurant-052": {
+      "x": 128,
+      "y": 288
+    },
+    "dish-restaurant-053": {
+      "x": 160,
+      "y": 288
+    },
+    "dish-restaurant-054": {
+      "x": 192,
+      "y": 288
+    },
+    "dish-restaurant-055": {
+      "x": 224,
+      "y": 288
+    },
+    "dish-restaurant-056": {
+      "x": 256,
+      "y": 288
+    },
+    "dish-restaurant-057": {
+      "x": 288,
+      "y": 288
+    },
+    "dish-restaurant-058": {
+      "x": 320,
+      "y": 288
+    },
+    "dish-restaurant-059": {
+      "x": 352,
+      "y": 288
+    },
+    "dish-restaurant-060": {
+      "x": 0,
+      "y": 320
+    },
+    "dish-restaurant-061": {
+      "x": 32,
+      "y": 320
+    },
+    "dish-restaurant-062": {
+      "x": 64,
+      "y": 320
+    },
+    "dish-restaurant-063": {
+      "x": 96,
+      "y": 320
+    },
+    "dish-restaurant-064": {
+      "x": 128,
+      "y": 320
+    },
+    "dish-restaurant-065": {
+      "x": 160,
+      "y": 320
+    },
+    "dish-restaurant-066": {
+      "x": 192,
+      "y": 320
+    },
+    "dish-restaurant-067": {
+      "x": 224,
+      "y": 320
+    },
+    "dish-restaurant-068": {
+      "x": 256,
+      "y": 320
+    },
+    "dish-restaurant-069": {
+      "x": 288,
+      "y": 320
+    },
+    "dish-restaurant-070": {
+      "x": 320,
+      "y": 320
+    },
+    "dish-restaurant-071": {
+      "x": 352,
+      "y": 320
+    },
+    "dish-restaurant-072": {
+      "x": 0,
+      "y": 352
+    },
+    "dish-restaurant-073": {
+      "x": 32,
+      "y": 352
+    },
+    "dish-restaurant-074": {
+      "x": 64,
+      "y": 352
+    },
+    "dish-restaurant-075": {
+      "x": 96,
+      "y": 352
+    },
+    "dish-restaurant-076": {
+      "x": 128,
+      "y": 352
+    },
+    "dish-restaurant-077": {
+      "x": 160,
+      "y": 352
+    },
+    "dish-restaurant-078": {
+      "x": 192,
+      "y": 352
+    },
+    "dish-restaurant-079": {
+      "x": 224,
+      "y": 352
+    },
+    "dish-restaurant-080": {
+      "x": 256,
+      "y": 352
+    },
+    "dish-restaurant-081": {
+      "x": 288,
+      "y": 352
+    },
+    "dish-restaurant-082": {
+      "x": 320,
+      "y": 352
+    },
+    "dish-restaurant-083": {
+      "x": 352,
+      "y": 352
+    },
+    "dish-restaurant-084": {
+      "x": 0,
+      "y": 384
+    },
+    "dish-restaurant-085": {
+      "x": 32,
+      "y": 384
+    },
+    "dish-restaurant-086": {
+      "x": 64,
+      "y": 384
+    },
+    "dish-restaurant-087": {
+      "x": 96,
+      "y": 384
+    },
+    "dish-restaurant-088": {
+      "x": 128,
+      "y": 384
+    },
+    "dish-restaurant-089": {
+      "x": 160,
+      "y": 384
+    },
+    "dish-restaurant-090": {
+      "x": 192,
+      "y": 384
+    },
+    "dish-restaurant-091": {
+      "x": 224,
+      "y": 384
+    },
+    "dish-restaurant-092": {
+      "x": 256,
+      "y": 384
+    },
+    "dish-restaurant-093": {
+      "x": 288,
+      "y": 384
+    },
+    "dish-restaurant-094": {
+      "x": 320,
+      "y": 384
+    },
+    "dish-restaurant-095": {
+      "x": 352,
+      "y": 384
+    },
+    "dish-restaurant-096": {
+      "x": 0,
+      "y": 416
+    },
+    "dish-restaurant-097": {
+      "x": 32,
+      "y": 416
+    },
+    "dish-restaurant-098": {
+      "x": 64,
+      "y": 416
+    },
+    "dish-restaurant-099": {
+      "x": 96,
+      "y": 416
+    },
+    "dish-restaurant-100": {
+      "x": 128,
+      "y": 416
+    },
+    "dish-restaurant-101": {
+      "x": 160,
+      "y": 416
+    },
+    "dish-restaurant-102": {
+      "x": 192,
+      "y": 416
+    },
+    "dish-restaurant-103": {
+      "x": 224,
+      "y": 416
+    },
+    "dish-restaurant-104": {
+      "x": 256,
+      "y": 416
+    },
+    "dish-restaurant-105": {
+      "x": 288,
+      "y": 416
+    },
+    "dish-restaurant-106": {
+      "x": 320,
+      "y": 416
+    },
+    "dish-restaurant-107": {
+      "x": 352,
+      "y": 416
+    },
+    "dish-restaurant-108": {
+      "x": 0,
+      "y": 448
+    },
+    "dish-restaurant-109": {
+      "x": 32,
+      "y": 448
+    },
+    "dish-restaurant-110": {
+      "x": 64,
+      "y": 448
+    },
+    "dish-restaurant-111": {
+      "x": 96,
+      "y": 448
+    },
+    "dish-restaurant-112": {
+      "x": 128,
+      "y": 448
+    },
+    "dish-restaurant-113": {
+      "x": 160,
+      "y": 448
+    },
+    "dish-restaurant-114": {
+      "x": 192,
+      "y": 448
+    },
+    "dish-restaurant-115": {
+      "x": 224,
+      "y": 448
+    },
+    "dish-restaurant-116": {
+      "x": 256,
+      "y": 448
+    },
+    "dish-restaurant-117": {
+      "x": 288,
+      "y": 448
+    },
+    "dish-restaurant-118": {
+      "x": 320,
+      "y": 448
+    },
+    "dish-restaurant-119": {
+      "x": 352,
+      "y": 448
+    },
+    "dish-restaurant-120": {
+      "x": 0,
+      "y": 480
+    },
+    "building/coop": {
+      "x": 32,
+      "y": 480
+    },
+    "building/board": {
+      "x": 64,
+      "y": 480
+    },
+    "building/dock": {
+      "x": 96,
+      "y": 480
+    },
+    "building/expeditions": {
+      "x": 128,
+      "y": 480
+    },
+    "building/town": {
+      "x": 160,
+      "y": 480
+    },
+    "building/boat": {
+      "x": 192,
+      "y": 480
+    }
+  }
+}

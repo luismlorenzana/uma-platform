@@ -103,7 +103,7 @@ describe('uma-art 2.27.0 (Q32, Q33)', () => {
   it('leaves every file published before byte-identical, kit-farm included', () => {
     // The cabin families came after 2.27.0 and are frozen by scripts/pixel-art's cabins.test.ts (CY14); the items sheet
     // grew a row in uma-farm's F83 (2.30.0) and scripts/pixel-art's ranch.test.ts freezes its earlier frames.
-    const now: Record<string, string> = {}, skip = new Set([...NEW.map((k) => k.id), 'cabin-icons', 'cabin-room', 'items', 'node_modules'])
+    const now: Record<string, string> = {}, skip = new Set([...NEW.map((k) => k.id), 'cabin-icons', 'cabin-room', 'items', 'farm-items', 'farm-scenes', 'node_modules'])
     const walk = (d: string) => {
       for (const f of readdirSync(d).sort()) {
         const p = join(d, f)
