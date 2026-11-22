@@ -113,7 +113,7 @@ function nightWardrobeScene(look: UniverseArtEntry, looks: readonly UniverseArtE
   if (!label) throw new Error(`${look.id}: invalid night wardrobe slot label`)
   const category = pajamas ? 'pajama-outfits' : 'wedding-anniversary-outfits'
   const base = looks.find(entry => entry.category === category && entry.character === look.character && entry.outfit === look.outfit &&
-    entry.approvedOn && entry.title.startsWith(`${label[1]} · `))
+    entry.approvedOn && (entry.title === label[1] || entry.title.startsWith(`${label[1]} · `)))
   if (!base) throw new Error(`${look.id}: no approved ${label[1]} look for this scene`)
   const slot = Number(label[2])
   const outfit = pajamas ? `pajamas-${slot}` : `wedding-anniversary-${slot}`

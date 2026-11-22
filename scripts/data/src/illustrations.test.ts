@@ -118,7 +118,7 @@ describe('a universe’s published splash art', () => {
     const { index } = await universe()
     const [template] = index.looks
     index.looks.push(
-      { ...template!, id: 'new-pajamas', outfit: 'pajama-design', title: 'PJM01 · Cotton pajamas', category: 'pajama-outfits' },
+      { ...template!, id: 'new-pajamas', outfit: 'pajama-design', title: 'PJM01', category: 'pajama-outfits' },
       { ...template!, id: 'new-sitting', kind: 'splash', outfit: 'pajama-design', title: 'PJM01-COUCH', category: 'pajama-splash' },
       { ...template!, id: 'new-bedside', kind: 'splash', outfit: 'pajama-design', title: 'PJM01-BED', category: 'pajama-splash' },
       { ...template!, id: 'new-formal', outfit: 'formal-design', title: 'AN05 · Silk robe', category: 'wedding-anniversary-outfits' },
