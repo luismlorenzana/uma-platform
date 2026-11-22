@@ -40,6 +40,12 @@ Original art for the Uma games. Pixel families come from `scripts/pixel-art` (`p
 
 A bundler imports the files directly, e.g. Vite: `import atlasUrl from '@luismlorenzana/uma-art/items/atlas.png?url'`.
 
+## Farm conversations and inventory (F112)
+
+- `farm-items/atlas.png` and `atlas.json` contain 187 native 32px frames. The ten ring IDs, twelve processed-good IDs and 120 Restaurant dish IDs match Farm stock. Tools use `tool/<tool>/tier-<1…5>`, heirlooms `heirloom/<piece>`, and the six map props `building/<place>`.
+- `farm-scenes/manifest.json` indexes 52 original location plates at 896 and 1600 px and ten 384 px `ring-gN.webp` close-ups. A plate records light, eligible season, focal position, and exact source and export hashes. Request images on demand. Game aliases and selection stay in Farm.
+- `pnpm art:draw` rebuilds the atlas. `python scripts/authored-art/farm-scenes.py <art-authoring-repo>` (Pillow 11.3.0) encodes selected plates and checks source hashes and image budgets. The Art Authoring source index, masters and prompts stay private.
+
 ## Cabin furniture, keepsakes and gifts (uma-cyberpunk CY14)
 
 Two original pixel families for uma-cyberpunk's cabins (P164), keyed by the game's item ids (`neon-bed`,

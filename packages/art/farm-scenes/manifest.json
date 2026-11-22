@@ -1,0 +1,1327 @@
+{
+  "schemaVersion": 1,
+  "scenes": {
+    "fields": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "ebf9590c86fafa7a5e3e934b743759d807e899ee47d5d2e3b9d623330bba5226",
+      "files": [
+        {
+          "file": "fields-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "26dd3d3c771c305784143620bf968885a6da3b8f5d0bed042c6e05cd9d7b05ac"
+        },
+        {
+          "file": "fields-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "88bf7963467eb46226f3451cd312bdba704381e43215f9b8c6ba433f03375f84"
+        }
+      ]
+    },
+    "fishery": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "e058f76808db4e676b60630f6cf36edc2b7bac799a10922bbfdc105d1d48ca2e",
+      "files": [
+        {
+          "file": "fishery-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "c6596b452c9b3646d4569f555370d5800d2d2e4c9ad5a0cea1f7d14b7311200d"
+        },
+        {
+          "file": "fishery-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "556ce1e1892902f5d9b7c1c3d06883d472fd72e87035ca844f391cfafc7b8c0f"
+        }
+      ]
+    },
+    "forest": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "6684a270d3303bf77ae54815ccebb42c527bbae89a5d72350e753541cca7605a",
+      "files": [
+        {
+          "file": "forest-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "ede50a8e1210bedf75bb4ed755964088c10a7504ae20d80d07aeea8d3f957a88"
+        },
+        {
+          "file": "forest-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "bcadd815d171f3a58a1bae04a47df12697bf05a3558f505fd8a0cd234ae1b1ac"
+        }
+      ]
+    },
+    "orchard-bench": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "5231b1c0e697d7f75e917a58971bc06d17a32024615b8f64f928d55ce2e01d12",
+      "files": [
+        {
+          "file": "orchard-bench-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "f1ee39c1b007e7527c6eb1ed5935c0516c110c5304db021905a13a8e01957af9"
+        },
+        {
+          "file": "orchard-bench-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "0c1fcc844c10a757ff38156dfecae3c673c8f30dbe13cece84e78dd1509e24be"
+        }
+      ]
+    },
+    "plaza": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "454729e83d19ca924f986146f53316463b1dff84d89473b0c8b52af34c3cc19e",
+      "files": [
+        {
+          "file": "plaza-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "adafa150919cac1f0c0dfc307fdacd1189d96e226eab115f2f2fa3a7d4def53e"
+        },
+        {
+          "file": "plaza-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "c8f7d8878bfd8f7e040f26de822c0974ca194392292233d2f9e90c18c356ad1d"
+        }
+      ]
+    },
+    "market": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "1f92028c354724a63bb6558fa17ff9f7cd6686254f71a5e97e635504356cb86d",
+      "files": [
+        {
+          "file": "market-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "375f86b0bd7ae66baaa381d73346be0ed3c92ef1a1a2dc7299cdbafe4f01eeb9"
+        },
+        {
+          "file": "market-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a94609bded3be5fe33f3df213bbf79c0fedc0908ae9a8b9f2c9c6c39f1f3d8e1"
+        }
+      ]
+    },
+    "library": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "7908bae8ea0ca5fbd06e9a402e2bce6af3992bb28707ba2db04f1036a0082fec",
+      "files": [
+        {
+          "file": "library-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "a03341a9932dcb64ec295d41faf9df550f87b8d681fbd25b57fad59c252834d8"
+        },
+        {
+          "file": "library-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "c467e2736ffa79536ab3babd4f0afc1c3387ad4959688b3ca6ffdc58042322a3"
+        }
+      ]
+    },
+    "track": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "5e2afed99ebd3a9c8216d1baacb48dee0979cfefd0f64afc1d012f472bb8c06d",
+      "files": [
+        {
+          "file": "track-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "c0119c6e2165f257a0740a541f546f3075ea937c67ae8f402e821391bc620164"
+        },
+        {
+          "file": "track-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "ba62f1cd1c6f601b8f4beaf38d39c2bcb5d3d952d91f3b21f01b43c80967877f"
+        }
+      ]
+    },
+    "harbour": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "9ffc70787eb67e90ca346e6183b7945cb92efeaa7afdd22f96b54e3e963ce3ea",
+      "files": [
+        {
+          "file": "harbour-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "a4c32971f2d8110b8100794082dd1ad42df8306918e2d763a7215fb023c53a7d"
+        },
+        {
+          "file": "harbour-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "6c82868d54c822e70dd0b6f412fbea980adad10c0f57e3a08f965a0b0735b14d"
+        }
+      ]
+    },
+    "harbour-wall": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "6d5727c0c48c94c87218dfb8a1c9cf21d4d205c8d83f9855cc9b8eb69f337433",
+      "files": [
+        {
+          "file": "harbour-wall-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "31d595b27feb691b453c2fa7510c9cff2f7c19db801cfa381fca9237d9130b53"
+        },
+        {
+          "file": "harbour-wall-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "67fc04eb5c0352241fdf6fe82647d65829485e50680f17999fb75a37617db4ce"
+        }
+      ]
+    },
+    "hilltop-track": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "7906d829acd59231d2641e2f4da2f1954827e3500aafdab0999cbb6a358c4751",
+      "files": [
+        {
+          "file": "hilltop-track-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "d1b27b52a162d65a8eaed2ca5f3cdd2dbcbd0c57d056fd3a46d4b32c4cdefad3"
+        },
+        {
+          "file": "hilltop-track-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "e44817bc3f05f7ea901993fd59a403e322eae2c804018237a20cae6eb7e65838"
+        }
+      ]
+    },
+    "overlook": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "fc24789b6c5e5ef47c34285059f251b304be249e91ad419416dac50c207fd3eb",
+      "files": [
+        {
+          "file": "overlook-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "332377a81fdb8d8f8c55976da8a609dbf68af2d06cf15458b66db4d04195520a"
+        },
+        {
+          "file": "overlook-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "9ef3eeecca32ff2859a29d8844627cfecd66c282d2d6b2afd468e3f1c7d9f6c3"
+        }
+      ]
+    },
+    "sea-pier": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "0ef6b14647570b975d6e71704f7754e9ba360f2758fdb2ddb5f9f2753574ba26",
+      "files": [
+        {
+          "file": "sea-pier-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "d97191b3c1e7bb6ba836278a8d0edad352fae46bc62e573de36328e1c4e504d0"
+        },
+        {
+          "file": "sea-pier-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "7c6f760c713ed9c9c5b56dbb83309ece88f6abcfea1a1cb58120b23a2d436883"
+        }
+      ]
+    },
+    "home-table": {
+      "kind": "interior",
+      "phase": "morning",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "27682e6b1416664c7551ec661fc34fdda020862719d2fb298274fa663fd900b7",
+      "files": [
+        {
+          "file": "home-table-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "26f07993faf84ed5a93ffaefa7089b35fa9d9daa6aff0bf48a973d33e17f5102"
+        },
+        {
+          "file": "home-table-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a52fb3d7047d6904c291e2168ac62f186a5e7190e6f870f1b495496d2ba56a6e"
+        }
+      ]
+    },
+    "home-threshold": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "5b4cf17767638239d0db425bab679d962fa86482c77e9f97a37cfcc13ff47105",
+      "files": [
+        {
+          "file": "home-threshold-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "533db57639bd52de74b61658524bb3aa8eb71d7f8ea415f0284ad6ebcebb8694"
+        },
+        {
+          "file": "home-threshold-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "1f6940dc890e49928c9969f911315871b3a043560e03f5cc1142b4c3b228a92d"
+        }
+      ]
+    },
+    "bedroom": {
+      "kind": "interior",
+      "phase": "night",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "f2d61dce53b3448dfe72d0543990d86cd306b89fcff6a3f8fbedccd4e98612ba",
+      "files": [
+        {
+          "file": "bedroom-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "26ff4e59c8efa8bb3db81b41bb7cdd280c6ee4ee862d2a716078d3d4350fa906"
+        },
+        {
+          "file": "bedroom-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "e7c31ad3dff6ecc49ec99196f84e9f0a6ad5661fdeb892184018e769d206aad4"
+        }
+      ]
+    },
+    "forge": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "8d795a2e258646550da8d863cdd4b1e43bd87b88140a0ec896c4e354de55e21f",
+      "files": [
+        {
+          "file": "forge-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "d3ea45b226f4a969acec9268621245f493dc625a4f4e88047359069a813db820"
+        },
+        {
+          "file": "forge-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "ba9658416f2806271399bde51b852c6f1449d893aa5bcfbabc9af22126ba746e"
+        }
+      ]
+    },
+    "restaurant": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "8fa5ff9e065f491c0e8bbdc6570cdb84a6dc2875d32895d5169dd2c632a3b94a",
+      "files": [
+        {
+          "file": "restaurant-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "ac26338a84e7e60ed28a213aae8ec67de038ec4bf243a3d55688ce9ddc659340"
+        },
+        {
+          "file": "restaurant-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a976723591657f50d23da456e095c121e4131e20910b20718000dd3daaabf478"
+        }
+      ]
+    },
+    "festival": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "77873ac8902605533f866abcb7e0ae04041eb5f3484207502f003fa17c2d62bf",
+      "files": [
+        {
+          "file": "festival-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "6d0347acc3971f609fd89a53bcf19820aecf6fb145495711eb72e5ed0b0704ca"
+        },
+        {
+          "file": "festival-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "88baf09454f022b29f15b21e46ad7ff5479d23e65ebd7fc2a413bba904df39e4"
+        }
+      ]
+    },
+    "chapel-bell": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "b1b360c077d06775f63bf4f92dab6e0f1e3c5677a02cbba18e74a9530d744267",
+      "files": [
+        {
+          "file": "chapel-bell-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "0edf1e42d7c092f11a9da988075d2fc9b5b1db7cb62431c4fffcf9835e2d17f4"
+        },
+        {
+          "file": "chapel-bell-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "87489ecbbf12bb51c16bf42f414ba8982e64c9b34a931ef7598d9bb8b2e5bde1"
+        }
+      ]
+    },
+    "mill": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "76a4fb649e7cb66d78109da797ac48a39ab7f933846f668e534f03d0ed15aeae",
+      "files": [
+        {
+          "file": "mill-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "7d667fd868547622a63989e8c9afae951337aadd7d796b19763c53b85b317c58"
+        },
+        {
+          "file": "mill-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a1555b471ea64efb428c0b9ef0f6197f4fbdfe20a824eef2f03c3a8f8d8e4594"
+        }
+      ]
+    },
+    "coop": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "313626dba4e9b1c9fe71643a7a517dc0958670ae6ba6b665737c89468711021e",
+      "files": [
+        {
+          "file": "coop-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "82a25f478edbfdaa7065101e0adbefc7eb2d262eb9f2448652f8f9e48d3386c1"
+        },
+        {
+          "file": "coop-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "afefdc62803309a649ca827d637266bb02edfe4ab992ff8d6135ba3a1ee7bd84"
+        }
+      ]
+    },
+    "barn": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "9eb75df93d1b6312afe4bdb143baf8d47cfdbae41798d12a05d98da1767dd5dd",
+      "files": [
+        {
+          "file": "barn-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "163fff224bfa50c747296c95b4a1a8a47cf4af1a5164c39bf3dc54c33611cdd2"
+        },
+        {
+          "file": "barn-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "e7e245c734757206d51b7de37b409130f8905eeb32a297f68cd1a1389265334d"
+        }
+      ]
+    },
+    "sawmill": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "7c1d3ea25c1bb9bf4540561f4ffed857bb0e04db7b0fc993af215154e29b54a7",
+      "files": [
+        {
+          "file": "sawmill-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "ee807395a91afb072720a893bb5d41b783b0855d542fdce86a4eeffe65726b29"
+        },
+        {
+          "file": "sawmill-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a5445a222883efec814e5c73943e3a9f471e9be9223f00eaa39b88ed788e6c0b"
+        }
+      ]
+    },
+    "smokehouse": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "1e62ee15fade346bf73e2a81c8a87fac7296d2524d9908054a5c534f3baa8267",
+      "files": [
+        {
+          "file": "smokehouse-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "91f814cec6dabb4f6d085a2f44b6b25490f846a35fb7caa4f19c53f95df6f550"
+        },
+        {
+          "file": "smokehouse-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "28ead33a98ff4dc5d76ed92e2fd4b6798f5a4b2528429875ebff6f52c75a5409"
+        }
+      ]
+    },
+    "kitchen": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "7dae1d873a27db53ada2c3443bd83ca09908b22e826188abd02b2d723644f6b4",
+      "files": [
+        {
+          "file": "kitchen-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "4b7e8a10111578561d187c03a16d4dc3d7d4b34b66e676e670d071b415670df7"
+        },
+        {
+          "file": "kitchen-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "dc9ca0f8461ab98850960c08d17bb4b08b9c5c0f0ede16ac839c760cbfc9478e"
+        }
+      ]
+    },
+    "mine": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "26b29239d74abe265c6e44ce6ff9db764659086b5a6b26651ab0cb7fd3eba426",
+      "files": [
+        {
+          "file": "mine-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "de9e4a4a69499891480b730d6c547ffc51e64577457dcfdd3077c19bf30804ab"
+        },
+        {
+          "file": "mine-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "40fe5df83f6b29e2f2f0ae5b5022f1a7cd12096f4d9a5c0425bf9a97324423df"
+        }
+      ]
+    },
+    "smelter": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "4ae42df91af3bd5a6cb938f8da31e201b59981003d899b21c7c41c861f94b0a2",
+      "files": [
+        {
+          "file": "smelter-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "e8932324e97c47bbf85a5698f7bcbef4ae828592a48f65b8b191f9e49f913182"
+        },
+        {
+          "file": "smelter-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "46087aee507bd618debc67c05ab2b0e20a4b742c1bddddc020f2d38bb71092db"
+        }
+      ]
+    },
+    "quarry": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "020f2e9e1a81ff37153726002406a3971a8447e4b3386681eeb1275d394d9502",
+      "files": [
+        {
+          "file": "quarry-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "c47ee9304e8a11602e97b8da15814952b6b16211b16206cceb32dd2b2b55ad27"
+        },
+        {
+          "file": "quarry-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "74c4262fece7de26d5d7547c398b4536841d756b3227a0bc7b279693645a2378"
+        }
+      ]
+    },
+    "cutter": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "71ac77af97e0a825907c0f0788181c7a16978951f59169f19dd3096162dd7c79",
+      "files": [
+        {
+          "file": "cutter-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "5fac2fccf4a06fdd4ebad8aa2fe3c54f4f03188fbf3f79d8db86af2e500ee9d6"
+        },
+        {
+          "file": "cutter-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "def5772241f3d0894f82fada0a7f4b4462550b1419e5317fead48725b9b3ed73"
+        }
+      ]
+    },
+    "bin": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "93333f087d411936f7ba772ca3568ec485683ae584442fadd2f607c6d3da0aab",
+      "files": [
+        {
+          "file": "bin-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "95ebcf82c8d45e7570fbe9757bd572745c9fd23fb486eb64acec2c5b42d8c372"
+        },
+        {
+          "file": "bin-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "2dc73b0874af51017cc1136be734552a87dd1fb2db979f01ddce1b38a45fd8b8"
+        }
+      ]
+    },
+    "warehouse": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "4cd7fa5aa349d8e8330e16e88a597cd056460e5ce88e7ce053966ed2bf726f5c",
+      "files": [
+        {
+          "file": "warehouse-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "71a3d9fbeff8f3d7d2714432878fcca494016160dec3a2bb388b8264aa5e1e09"
+        },
+        {
+          "file": "warehouse-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "6f7e9924e02604dace8d033f3d0128331074b2cd7152bd3b7277cf6b7654331a"
+        }
+      ]
+    },
+    "board": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "b6df45936a9b06d7bd705218098ceec9aab97002da25212f258ebe0cd694b3cb",
+      "files": [
+        {
+          "file": "board-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "74b22bd3cee568f217f05e780311ae74e955c0ebf09720fdb1e667a149ca7f92"
+        },
+        {
+          "file": "board-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "0bec8b62ff70c5006ab51190618412b64cd5adbd5f80cdf2cabdd879c2ba0cd7"
+        }
+      ]
+    },
+    "dock": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "6f1d74a9fe05d734ab987b57e24d05a301dc38334949de4ef5c06db3bb117db3",
+      "files": [
+        {
+          "file": "dock-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "68b1523ffa18375c7e944a76eec01947312cbf5b44fc4cfed2681b480e042df4"
+        },
+        {
+          "file": "dock-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "5de9e18b26197763d3d8a8a88fe14a7f24be97021306b22539628d55597a6b94"
+        }
+      ]
+    },
+    "boat": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "aafc2805992edfe161817158605226f1bc2b7d957695f15d559548c7ebe1815f",
+      "files": [
+        {
+          "file": "boat-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "0bc09e02497dc490fd4eeddd1216d38743d8c0c1b7b39eda74095f389555b199"
+        },
+        {
+          "file": "boat-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "15a900f32c72ce3d55e794ef586b13e0acaae81ada127a0573e0d3e1e3b0a648"
+        }
+      ]
+    },
+    "store": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "a7979bf61d54ab7e46d98ec51cbdf6841bc7e2aab34ae51d705bf9388dea2d02",
+      "files": [
+        {
+          "file": "store-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "7bb56071d03e7f3c8684ae95b7e611c4c9f87bc1efd6ca258e364f9ab3f0d299"
+        },
+        {
+          "file": "store-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "d915c951edbdceb8b76d1cd7d92f6f65e56a2cb13cb3422fef88ca2902a7d0ed"
+        }
+      ]
+    },
+    "rancher": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "4e51020f7ff963783fb1cfca2cca2c3f3a94df6873a866982594719d649b2541",
+      "files": [
+        {
+          "file": "rancher-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "f791058f5d7d5a1a39124d25923da1f6bb39ed7168c47eed004f0967d6ac9588"
+        },
+        {
+          "file": "rancher-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "7d2e0d1d987ce68d7b32f2278a58673a49fdee18f1ec2324e4c95ccb6b3bfb8e"
+        }
+      ]
+    },
+    "mayor": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "a700b1c59d66ba46a2feb815d7585d7780e4a14f7b21f18c6c55e011e2115263",
+      "files": [
+        {
+          "file": "mayor-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "61cd16cbfc4f2669b6a37ad9e7b05b70ef8cb30d86be2fee28730fcad2b595e6"
+        },
+        {
+          "file": "mayor-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "49ee7f0e113cb9aa5bffcb1f4722f54a37c6f3f59e6ad6bdbcd32fe7df3db90a"
+        }
+      ]
+    },
+    "smith": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "6d6d39640356b9d00e324489d059b665a76b1e7c8da90cc36090df6b66834016",
+      "files": [
+        {
+          "file": "smith-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "28dccaa3a5244af5fdf56ef4873eab52cd077f890f28b929505823ac12662616"
+        },
+        {
+          "file": "smith-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "7e011c7f3309619bcf1c454da1ed7d3eaf5beb0a50058384a8a18a8e7be3aee4"
+        }
+      ]
+    },
+    "expeditions": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "03c0ca11b26e1f49d80be78c7f69ec5d9bc61dc8acbcb9363883289318047bf0",
+      "files": [
+        {
+          "file": "expeditions-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "c4ab96ad50f1916e7d694d6da0a9ea69a6df9527ebe4dc589fe4da8d15194170"
+        },
+        {
+          "file": "expeditions-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "5bc9e5ab175fcacd5d6ff23fa37fe308d3a682c0d5c3a359dd5c20d1885d7131"
+        }
+      ]
+    },
+    "dorm": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "5b4c843357bd4983d45a1d4217beed2944be04e441eeab08696b20abd8fe1810",
+      "files": [
+        {
+          "file": "dorm-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "8ccc53289e8a049470e4ee1a4aff23dac31a2a868f94bd7168a6446567ba5ece"
+        },
+        {
+          "file": "dorm-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "5cb3605d30d32527fa437bfbf13de95fd749394805c24ebca9584351962a5f4a"
+        }
+      ]
+    },
+    "dorm-porch": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "37c2e51d85a5d12887079e7d339e7ce375598f97ebbdd70fb3a51034f60e3019",
+      "files": [
+        {
+          "file": "dorm-porch-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "4bcb26d8a27c0dbde02998323f56826e337451a89fe30af408ada32c25bc93c3"
+        },
+        {
+          "file": "dorm-porch-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "adb4c314387967ec249fd8ed607323b146f64c9c5c13b4279178a495f7ddbf5c"
+        }
+      ]
+    },
+    "cafe-morning": {
+      "kind": "interior",
+      "phase": "morning",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "d42784f7e43fbaae67c954ee8ad704718b3a17ece104250f86fa2ef4c396a6b4",
+      "files": [
+        {
+          "file": "cafe-morning-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "f0c3c6560fcc57d6426353da04bfa6c2d0ae12f98774fd98370d92503dfb981e"
+        },
+        {
+          "file": "cafe-morning-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "dc15349dcdddd729729af4b101dafc3b88975f8d285604635a28fbc22e24efd8"
+        }
+      ]
+    },
+    "festival-night": {
+      "kind": "exterior",
+      "phase": "night",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "b1254db6d07f1c67f7e709d3129009c87637d8a1f306817ffe6708099ded962a",
+      "files": [
+        {
+          "file": "festival-night-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "a44160ca5fc6e73ccad4529828c4cfd98190f026a6a2223b5e109c013a79d44e"
+        },
+        {
+          "file": "festival-night-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "28067fe39fea0294051f1d77d4da14b805e2a3978b90bd4f552bc322957a0b41"
+        }
+      ]
+    },
+    "bedroom-morning": {
+      "kind": "interior",
+      "phase": "morning",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "3154c7843cf42960eb7fb95c3aecee6ea75deefceaf9aee5c85b75f8b0a65e68",
+      "files": [
+        {
+          "file": "bedroom-morning-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "5d78035627afed4fafbde622ac07ed7263b0adcef003ba39ad5b8b05bb8e4bcf"
+        },
+        {
+          "file": "bedroom-morning-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "2b7f61ec13358aa9b0b53de888d617f2c024e901d4b8a020984a73c338acb172"
+        }
+      ]
+    },
+    "town-work": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "e411e5f6189b592fb8c604d1e712867a927ee9822e431a69ec6660187947a261",
+      "files": [
+        {
+          "file": "town-work-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "95bb3e94a36826fb8f106884ac5bda15e989d64f7026fc4d23fa38d54d5ed940"
+        },
+        {
+          "file": "town-work-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "87d332b1b568d3e742154b04e88053a207e6579bbc66f3b04dcec8b59da508b4"
+        }
+      ]
+    },
+    "fields-winter": {
+      "kind": "exterior",
+      "phase": "day",
+      "seasons": [
+        "winter"
+      ],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "da94a3a3fc2ce8b71435ef709cf0255356bb9e7033cd090524a0870abf9015ce",
+      "files": [
+        {
+          "file": "fields-winter-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "a3e600b9eb688ae9ae6b82dd171877bdcace8fdc67418952c4624a6b2c55dba1"
+        },
+        {
+          "file": "fields-winter-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "84f8cf64b015df6f1483c3b9ad0814e4bc7022e7604fa7a594c7a227af4fd05e"
+        }
+      ]
+    },
+    "gate": {
+      "kind": "exterior",
+      "phase": "morning",
+      "seasons": [],
+      "focal": [
+        0.55,
+        0.48
+      ],
+      "sourceSha256": "3629fa400a15e038417c27ed8dcf17df9a4f84f28bce735e72e7e6e26ead2cc0",
+      "files": [
+        {
+          "file": "gate-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "fc0cada41b5381b2f0a09cfb2cb9442de3ff1c9cd4629f95bdee57236040b1f6"
+        },
+        {
+          "file": "gate-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "148eb6e6986734c0ff875bb1b2b193718536a77e1b1b55b34a893cb937f6c778"
+        }
+      ]
+    },
+    "cafe": {
+      "kind": "interior",
+      "phase": "day",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "3f7deb1b51fbb389177557d869ffeefeefd5620b4948a301c37e99daffb858cd",
+      "files": [
+        {
+          "file": "cafe-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "cf333a7764d72ebfdfd657a6f8cfedf9f05aa7d71f75d7cd6dd5a8c30bfe9705"
+        },
+        {
+          "file": "cafe-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "74cba9b024994faf9befd122b2808e71ce0f12314058ce2314517f11274a120f"
+        }
+      ]
+    },
+    "pond-night": {
+      "kind": "exterior",
+      "phase": "night",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "bba2023891661b8d5f51621681886218a605769604fdd529eb784c09b99e61eb",
+      "files": [
+        {
+          "file": "pond-night-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "827f0436b68bfbcec2ba296c5078470b403bd85e8d5929c15610a06deae60a8b"
+        },
+        {
+          "file": "pond-night-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "a87c48ddd66e1ef523c9c98065eb8a7ebe37f8e86fab9adc2b9df47752eb9e04"
+        }
+      ]
+    },
+    "sitting-solo": {
+      "kind": "interior",
+      "phase": "night",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "9f6f007fa8530902b660a63aa169cfad0ee56de6917cb14d9bf5552959c1de92",
+      "files": [
+        {
+          "file": "sitting-solo-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "cc056fe34fc00a823a824bfac15518d2548d22d18717b1b210778e7e383f16d6"
+        },
+        {
+          "file": "sitting-solo-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "6876c7e2ac972f54178c1a590e1b5d4a32b5abe736999d9173d7f1967bee539d"
+        }
+      ]
+    },
+    "sitting-duo": {
+      "kind": "interior",
+      "phase": "night",
+      "seasons": [],
+      "focal": [
+        0.5,
+        0.48
+      ],
+      "sourceSha256": "57bb9d044f251f691a1421ff260eca1848244585232a05ec671499acf9983645",
+      "files": [
+        {
+          "file": "sitting-duo-896.webp",
+          "width": 896,
+          "height": 504,
+          "sha256": "42eaba0297a9602b1de2cb8ecbc1e2937ce1237ce40a91dba2d81211556f793e"
+        },
+        {
+          "file": "sitting-duo-1600.webp",
+          "width": 1600,
+          "height": 900,
+          "sha256": "6f22cf70400c3afa615bcb0efc91693119ba5a5b656ad3990cc6f1baf53c9c5a"
+        }
+      ]
+    }
+  },
+  "rings": {
+    "ring-g1": {
+      "sourceSha256": "5b9f1a828c575a28de571ec540d1d0c8eaeaa33520bdeb8be609cf7dd986d912",
+      "file": "ring-g1.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "f4d65aa2f06cecb30700e577a68eb863befc93f85c99f8486bfc08ee0bd38da2"
+    },
+    "ring-g2": {
+      "sourceSha256": "7e0dc44e967fbcbfe417e40016f46cc4ff6cd612be31b8a36db9e2f08ace4d2a",
+      "file": "ring-g2.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "8457d10843bf559c1379c31cc230bf5440c810405dfcfda59be15234569e5206"
+    },
+    "ring-g3": {
+      "sourceSha256": "6f449242486637d8299b530c16731baf42f0a6aa6776b963925827ee04a68386",
+      "file": "ring-g3.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "ba89a7f1ac68c4d53587a7838fdc6adc8595fda97ddfc53ac4a78523b3bddfa7"
+    },
+    "ring-g4": {
+      "sourceSha256": "a98849044aa71e17854ca2b4e46f26a3597b7a165f74b3021a0b583104f2c25a",
+      "file": "ring-g4.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "d85cf1736efe63c2ddc85c8e5c23b93d75c30ecc9b723e0f711d2224aa3243d0"
+    },
+    "ring-g5": {
+      "sourceSha256": "22e6f406a20a40b57d08c40528f2f87602971001754080c55e335ca2a13a970e",
+      "file": "ring-g5.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "88762e6d8b53949554534ca9992f3dd37df017dc311ca501141387162346148e"
+    },
+    "ring-g6": {
+      "sourceSha256": "4357cd3f19403fdd2e41772f7c26b975e9544a5f769b844d033b3476212ee63a",
+      "file": "ring-g6.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "fe3442caea18a600b5355603348259930bf1738cfbb8ac7085b5508edfcb6449"
+    },
+    "ring-g7": {
+      "sourceSha256": "e8cd917c7c10107be29dc8bab138e0dd8ddfb0f2384a4410de9a5131ed443227",
+      "file": "ring-g7.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "b4146f15fc5154edb58bc1928ceaff726f8f48d13d2dfe884a44b2f2a4211d5b"
+    },
+    "ring-g8": {
+      "sourceSha256": "cfab256f75d0dca2e69a7697bb7783df0f3d3f57100f04cce7e50820f7b84c14",
+      "file": "ring-g8.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "9080b17f1eade68783efbaeb830ee320837c16baf6d5020657b1b85469138a25"
+    },
+    "ring-g9": {
+      "sourceSha256": "2a9f5c90d119ee724450d98b5fa0e633708684ffea23a6eaf755923b8d476382",
+      "file": "ring-g9.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "24bfac7d8ca3989a03ac3c01941b1813a2fb8d61a4d03dd918c53e55d5365cb2"
+    },
+    "ring-g10": {
+      "sourceSha256": "44662ce02c3058534e8f11f3111d90dfa09389c9670e7fb5c9551e114c662c0b",
+      "file": "ring-g10.webp",
+      "width": 384,
+      "height": 384,
+      "sha256": "58608cbfe50dea870860c597a357c400020ce8ec237fda8fff428cdf31399400"
+    }
+  }
+}

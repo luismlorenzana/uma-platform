@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-art",
-  "version": "2.30.0",
+  "version": "2.31.0",
   "description": "Original game art: pixel families and full-colour props, emotes and HD-2D world kits exported from authored masters.",
   "license": "UNLICENSED",
   "repository": {
@@ -63,7 +63,10 @@
     "./cabin-icons/atlas.json": "./cabin-icons/atlas.json",
     "./cabin-room/atlas.png": "./cabin-room/atlas.png",
     "./cabin-room/atlas.json": "./cabin-room/atlas.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./farm-items/atlas.json": "./farm-items/atlas.json",
+    "./farm-items/atlas.png": "./farm-items/atlas.png",
+    "./farm-scenes/*": "./farm-scenes/*"
   },
   "files": [
     "items",
@@ -90,6 +93,8 @@
     "kit-marsh",
     "kit-coast",
     "cabin-icons",
-    "cabin-room"
+    "cabin-room",
+    "farm-items",
+    "farm-scenes"
   ]
 }
