@@ -114,6 +114,29 @@ describe('a universe’s published splash art', () => {
     expect(() => planIllustrations(index, partial, idOf)).toThrow(/No moment for test-uma-splash-confession-flustered/)
     expect(() => readIllustrationMoments({ universe: 'test-life', moments: { a: 'Big Moment' } }, 'test-life')).toThrow(/lowercase/)
   })
+  it('packs Farm wardrobe scenes by approved slot without changing older scene ids', async () => {
+    const { index } = await universe()
+    const [template] = index.looks
+    index.looks.push(
+      { ...template!, id: 'new-pajamas', outfit: 'pajama-design', title: 'PJM01 · Cotton pajamas', category: 'pajama-outfits' },
+      { ...template!, id: 'new-sitting', kind: 'splash', outfit: 'pajama-design', title: 'PJM01-COUCH', category: 'pajama-splash' },
+      { ...template!, id: 'new-bedside', kind: 'splash', outfit: 'pajama-design', title: 'PJM01-BED', category: 'pajama-splash' },
+      { ...template!, id: 'new-formal', outfit: 'formal-design', title: 'AN05 · Silk robe', category: 'wedding-anniversary-outfits' },
+      { ...template!, id: 'new-formal-bedside', kind: 'splash', outfit: 'formal-design', title: 'AN05 · Bedside', category: 'wedding-anniversary-splash' },
+    )
+    index.universe = 'farm-life'
+    const moments = { ...MOMENTS, universe: 'farm-life' }
+    const [plan] = planIllustrations(index, moments, idOf).plans
+    expect(plan!.scenes.map(({ id, outfit, moment }) => [id, outfit, moment])).toEqual([
+      ...SCENES,
+      ['night-pajamas-1-couch', 'pajamas-1', 'night-pajamas-1-couch'],
+      ['night-pajamas-1-bed', 'pajamas-1', 'night-pajamas-1-bed'],
+      ['night-anniversary-5-bed', 'wedding-anniversary-5', 'night-anniversary-5-bed'],
+    ])
+    const base = index.looks.find(look => look.id === 'new-formal')!
+    base.outfit = 'another-design'
+    expect(() => planIllustrations(index, moments, idOf)).toThrow(/no approved AN05 look/)
+  })
   it('gives a scene the map doesn’t name the scene set’s moment: her own id first, then her outfit’s next free slot (P203)', async () => {
     const { index } = await universe()
     const slot = (id: string, outfit: string, moment: string) => ({ id, outfit, moment })

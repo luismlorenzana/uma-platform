@@ -69,6 +69,9 @@ Character 1068's:
    (`{ universe, moments: { <the universe's id>: <moment> } }`), overrides a scene when the game asks for another moment
    (character 1068's ids predate the brief, so hers are named there). A scene neither gives a moment stops the pack, so a
    new scene never goes out without one.
+   Farm's numbered wardrobe splashes use the approved album slot as their scene ID and moment. A pajama slot has
+   `night-pajamas-<slot>-couch` and `night-pajamas-<slot>-bed`, and each anniversary slot has `night-anniversary-<slot>-bed`.
+   The packer checks that the approved garment in the same character's album matches the slot and outfit of the scene.
 3. `pnpm illustrations:pack [universe]` (default `farm-life`) fetches the universe's index and the splash PNGs it lacks
    (`content/published/art/universes/<universe>/`), matches each character to master data by name, checks every file
    against the index's SHA-256 and size and that it is opaque, encodes it, decodes it back at its size within the floor,

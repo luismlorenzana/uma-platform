@@ -105,6 +105,22 @@ export function momentsOf(splash: readonly UniverseArtEntry[], moments: Illustra
 /** A name as the art pipeline's key: "Kitasan Black" is `kitasan-black`. */
 export const keyOf = (name: string) => name.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 
+/** Wardrobe albums use selection labels independent of the garment's source id. Bind each scene to its approved look. */
+function nightWardrobeScene(look: UniverseArtEntry, looks: readonly UniverseArtEntry[]): SceneSlot | undefined {
+  const pajamas = look.category === 'pajama-splash'
+  if (!pajamas && look.category !== 'wedding-anniversary-splash') return undefined
+  const label = pajamas ? /^(PJM(0[1-9]|10))-(COUCH|BED)$/.exec(look.title) : /^(AN0([1-5])) · /.exec(look.title)
+  if (!label) throw new Error(`${look.id}: invalid night wardrobe slot label`)
+  const category = pajamas ? 'pajama-outfits' : 'wedding-anniversary-outfits'
+  const base = looks.find(entry => entry.category === category && entry.character === look.character && entry.outfit === look.outfit &&
+    entry.approvedOn && entry.title.startsWith(`${label[1]} · `))
+  if (!base) throw new Error(`${look.id}: no approved ${label[1]} look for this scene`)
+  const slot = Number(label[2])
+  const outfit = pajamas ? `pajamas-${slot}` : `wedding-anniversary-${slot}`
+  const id = pajamas ? `night-pajamas-${slot}-${label[3]!.toLowerCase()}` : `night-anniversary-${slot}-bed`
+  return { id, moment: id, outfit }
+}
+
 /**
  * Each character's splash scenes, in the index's order, with their moments and ids of her own (the universe's id without
  * its `<her key>-splash-` prefix); and why any is left out. A scene neither the moments map nor the scene set gives a
@@ -115,7 +131,11 @@ export function planIllustrations(index: UniverseArtIndex, moments: Illustration
   const { moment, defaulted, unmapped } = momentsOf(splash, moments, slots)
   if (unmapped.length > 0) throw new Error(`No moment for ${unmapped.join(', ')}: the scene set has no free slot for its outfit; name each in content/authoring/illustrations/${index.universe}.json`)
   const plans = new Map<string, IllustrationPlan>(), skipped: string[] = []
-  for (const look of splash) {
+  const wardrobe = index.universe === 'farm-life' ? index.looks.flatMap(look => {
+    const scene = look.kind === 'splash' ? nightWardrobeScene(look, index.looks) : undefined
+    return scene ? [{ look, scene }] : []
+  }) : []
+  for (const { look, scene } of [...splash.map(look => ({ look, scene: undefined })), ...wardrobe]) {
     if (!plans.has(look.character)) {
       const found = characterIdOf(look.character)
       if (found === null) { if (!skipped.some((s) => s.startsWith(`${look.character}:`))) skipped.push(`${look.character}: no master data character has that name`); continue }
@@ -124,10 +144,10 @@ export function planIllustrations(index: UniverseArtIndex, moments: Illustration
     }
     if (!look.approvedOn) throw new Error(`${look.id} has no approval date`)
     const prefix = `${keyOf(look.character)}-splash-`
-    const id = look.id.startsWith(prefix) ? look.id.slice(prefix.length) : look.id
+    const id = scene?.id ?? (look.id.startsWith(prefix) ? look.id.slice(prefix.length) : look.id)
     const plan = plans.get(look.character)!
     if (plan.scenes.some((s) => s.id === id)) throw new Error(`${look.id}: ${look.character} has two scenes named ${id}`)
-    plan.scenes.push({ id, universeId: look.id, title: look.title, outfit: look.outfit, moment: moment.get(look.id)!, approvedOn: look.approvedOn.slice(0, 10), path: look.path, sha256: look.sha256, width: look.width, height: look.height })
+    plan.scenes.push({ id, universeId: look.id, title: look.title, outfit: scene?.outfit ?? look.outfit, moment: scene?.moment ?? moment.get(look.id)!, approvedOn: look.approvedOn.slice(0, 10), path: look.path, sha256: look.sha256, width: look.width, height: look.height })
   }
   return { plans: [...plans.values()], skipped, defaulted }
 }
