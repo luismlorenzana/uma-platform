@@ -62,6 +62,25 @@ describe('the universe looks (CA4)', () => {
     json({ schemaVersion: 1, kind: 'universe-art', universe, title: 'Sky City', style: 'Invented Style', revision: 2, publishedAt: '2026-01-03T10:00:00.000Z', looks, ...extra })
   const nobody = () => null
 
+  it('keeps one shared duo image with outfit-aware participants and never assigns a Boss Ally a playable identity', async () => {
+    const members = [
+      { id: '9001', name: 'Rider One', role: 'character' },
+      { id: 's900102', name: 'Sister One', role: 'character' },
+    ]
+    const shared = { ...look('duo-farm-shared', HASH), kind: 'splash', category: 'duo-splash', duo: { id: 'farm-shared', members } }
+    const objects = new Map<string, Uint8Array>([['universes/farm-life/index.json', index('farm-life', [shared])]])
+    const identity = (name: string) => name === 'Sister One' ? { characterId: 9001, outfitId: 900102 } : 9001
+    const farm = (await universes(store(objects), identity))[0]!
+    expect(farm.looks).toHaveLength(1)
+    expect(farm.looks[0]!.category).toBe('duo-splash')
+    expect(farm.looks[0]!.duo?.members.map(member => [member.characterId, member.outfitId])).toEqual([[9001, undefined], [9001, 900102]])
+    objects.set('universes/cyberpunk/index.json', index('cyberpunk', [{ ...shared, duo: { id: 'cyberpunk-shared', members: [members[0], { ...members[1], role: 'boss-ally' }] } }]))
+    const cyberpunk = (await universes(store(objects), identity)).find(universe => universe.id === 'cyberpunk')!
+    expect(cyberpunk.looks[0]!.duo?.members[1]!.characterId).toBeNull()
+    objects.set('universes/farm-life/index.json', index('farm-life', [{ ...shared, duo: { id: 'invalid', members: [members[0]] } }]))
+    expect((await universes(store(objects), identity)).find(universe => universe.id === 'farm-life')).toBeUndefined()
+  })
+
   it('lists each published universe by name with its looks in the index’s order, each at her pack path', async () => {
     const objects = new Map<string, Uint8Array>([
       ['universes/sky-city/index.json', index('sky-city', [look('rider-one-street', HASH), look('rider-one-pilot', OTHER)])],

@@ -20,6 +20,19 @@ const entry = (outfitId: number, over: Partial<AlbumEntry> = {}): AlbumEntry => 
 })
 
 describe('Character Art (CA1)', () => {
+  it('shows a shared duo splash under both Farm identities while excluding unrelated sisters and Boss Ally participants', () => {
+    const shared: UniverseLook = { id: 'shared', character: 'Pilot One', characterId: 9001, kind: 'splash', category: 'duo-splash', outfit: 'duo', title: 'Together', path: 'shared.png', bytes: 24, sha256: 'ab'.repeat(32), width: 2, height: 1, approvedOn: null, publishedAt: null,
+      duo: { id: 'pair-one', members: [
+        { castId: '9001', character: 'Pilot One', characterId: 9001, role: 'character' },
+        { castId: 's900102', character: 'Pilot Two', characterId: 9001, outfitId: 900102, role: 'character' },
+      ] } }
+    const world: Universe = { id: 'farm-life', title: 'Farm', style: null, revision: null, publishedAt: null, looks: [shared], portraits: null }
+    expect(looksOf([world], 9001)[0]!.splash).toHaveLength(1)
+    expect(looksOf([world], 9001, 900102)[0]!.splash).toHaveLength(1)
+    expect(looksOf([world], 9001, 900103)).toEqual([])
+    shared.duo!.members[1] = { castId: 'ally-one', character: 'Ally One', characterId: 9002, role: 'boss-ally' }
+    expect(looksOf([{ ...world, id: 'cyberpunk' }], 9002)).toEqual([])
+  })
   it('lists every picture master data has for her, in order, and skips what it lacks', () => {
     expect(picturesOf(art, entry(900101)).map((p) => p.label)).toEqual(['Portrait', 'Face', 'Chibi A', 'Chibi B', 'Character face', 'Summer dress'])
     expect(picturesOf(null, entry(900101))).toEqual([])

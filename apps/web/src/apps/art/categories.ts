@@ -1,4 +1,5 @@
 export const artCategories = {
+  'duo-splash': 'Duo Splash Art',
   'pajama-outfits': 'Pajama Outfits',
   'wedding-anniversary-outfits': 'Wedding Anniversary Outfits',
   'pajama-splash': 'Pajama Splash',

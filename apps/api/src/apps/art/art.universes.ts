@@ -17,7 +17,9 @@ const identityOf = (name: string, resolve: CharacterResolver): { characterId: nu
 }
 
 export interface UniverseLook {
-  category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites'
+  category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites' | 'duo-splash'
+  /** One shared image, visible on each participating character's own identity. */
+  duo?: { id: string; members: { castId: string; character: string; role: 'character' | 'boss-ally'; characterId: number | null; outfitId?: number }[] }
   id: string
   /** A full-body look, or a splash illustration (P175). */
   kind: 'look' | 'splash'
@@ -100,6 +102,19 @@ const text = (v: unknown): string | null => (typeof v === 'string' && v !== '' ?
 const whole = (v: unknown): number | null => (typeof v === 'number' && Number.isSafeInteger(v) && v > 0 ? v : null)
 
 /** One look of an index, or null when its entry isn't a hash-named PNG of this universe with its size and hash. */
+function duoOf(universe: string, raw: unknown, characterOf: CharacterResolver): UniverseLook['duo'] | null {
+  if (!object(raw) || !text(raw.id) || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(raw.id as string) || !Array.isArray(raw.members) || raw.members.length !== 2) return null
+  const members: NonNullable<UniverseLook['duo']>['members'] = []
+  for (const member of raw.members) {
+    if (!object(member) || !text(member.id) || !text(member.name) || (member.role !== 'character' && member.role !== 'boss-ally')) return null
+    members.push({ castId: member.id as string, character: member.name as string, role: member.role,
+      ...(member.role === 'character' ? identityOf(member.name as string, characterOf) : { characterId: null }) })
+  }
+  if (members[0]!.castId === members[1]!.castId) return null
+  if (universe === 'farm-life' ? members.some(member => member.role !== 'character') : universe === 'cyberpunk' ? members.filter(member => member.role === 'character').length !== 1 : true) return null
+  return { id: raw.id as string, members }
+}
+
 function lookOf(universe: string, raw: unknown, characterOf: CharacterResolver): UniverseLook | null {
   if (!object(raw)) return null
   const id = text(raw.id), character = text(raw.character), path = text(raw.path), sha256 = text(raw.sha256)
@@ -108,9 +123,12 @@ function lookOf(universe: string, raw: unknown, characterOf: CharacterResolver):
   if (!/^[a-f0-9]{64}$/.test(sha256) || path !== `images/${id}.${sha256.slice(0, 16)}.png` || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) return null
   const farmCategory = universe === 'farm-life' && (raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash')
   const cyberpunkCategory = universe === 'cyberpunk' && (raw.category === 'weapons' || raw.category === 'combat-sprites')
+  const duo = raw.category === 'duo-splash' ? duoOf(universe, raw.duo, characterOf) : null
+  if (raw.category === 'duo-splash' && (!duo || raw.kind !== 'splash' || !duo.members.some(member => member.role === 'character' && member.character === character))) return null
   return {
     id, kind: raw.kind === 'splash' ? 'splash' : 'look', character, ...identityOf(character, characterOf), outfit: text(raw.outfit) ?? id, title: text(raw.title) ?? id,
-    ...(farmCategory || cyberpunkCategory ? { category: raw.category as UniverseLook['category'] } : {}),
+    ...(farmCategory || cyberpunkCategory || duo ? { category: raw.category as UniverseLook['category'] } : {}),
+    ...(duo ? { duo } : {}),
     path: `universes/${universe}/${path}`, bytes, sha256, width, height, approvedOn: text(raw.approvedOn), publishedAt: text(raw.publishedAt),
   }
 }
