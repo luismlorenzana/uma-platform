@@ -86,6 +86,7 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
 
 /** A universe look (CA4, P162): an owner-approved picture of an Uma in another world, published by `pnpm art:push`. */
 export interface UniverseLook {
+  duo?: { id: string; members: { castId: string; character: string; role: 'character' | 'boss-ally'; characterId: number | null; outfitId?: number }[] }
   category?: import('./categories').ArtCategory
   id: string
   /** A full-body look, or a splash illustration (P175); absent from an older API, which means a look. */
@@ -146,7 +147,7 @@ export function looksOf(all: readonly Universe[], characterId: number, outfitId?
   const hers = (piece: { characterId: number | null; outfitId?: number }) => piece.characterId === characterId && piece.outfitId === outfitId
   return all.map((universe) => {
     const pieces = (universe.portraits?.pieces ?? []).filter(hers)
-    const looks = universe.looks.filter(hers)
+    const looks = universe.looks.filter(look => hers(look) || look.duo?.members.some(member => member.role === 'character' && hers(member)))
     return {
       universe, looks: looks.filter((l) => l.kind !== 'splash'), splash: looks.filter((l) => l.kind === 'splash'),
       pieces: [...pieces.filter((p) => p.kind === 'crop'), ...pieces.filter((p) => p.kind === 'face')],
