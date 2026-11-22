@@ -64,6 +64,16 @@
       "port": 4323
     },
     {
+      "name": "story-sandbox",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "-C",
+        "../uma-story-authoring",
+        "start"
+      ],
+      "port": 4322
+    },
+    {
       "name": "art-reviews",
       "runtimeExecutable": "python3",
       "runtimeArgs": [
