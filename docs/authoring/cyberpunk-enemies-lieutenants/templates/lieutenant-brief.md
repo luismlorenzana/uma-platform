@@ -26,6 +26,7 @@ Save the filled brief in the study folder,
 | --- | --- | --- |
 | Her | `<face, hair, eyes, head ornaments, accent>` | `<...>` |
 | Her rank | `<key / regular marks>` | — |
+| Her ears | Elf ears, always (P215) | `<how they sit with her helmet or hair>` |
 | The faction | `<base, trim, emblem from the kit>` | `<...>` |
 
 ## Outputs

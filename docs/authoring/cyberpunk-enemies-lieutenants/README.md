@@ -29,6 +29,7 @@ manifest and the albums' `album.json`.
 | Who | A lieutenant cast against an Uma: her `character.json` names her, the Uma she opposes, her tier and faction (Faction 1–5 until the owner names them), and her references |
 | Base | **The pilot suit**, as for the bosses (P191): the shared combat-station construction in her own colours, the first look of every lieutenant. A default: the owner's first lieutenant approval can change it |
 | Rank | Below her boss: the baseline's Key or Regular marks (helmet, rank bars), never the boss's mantle or signature weapon |
+| **Elf** | **Every lieutenant is an elf (P215):** pointed elf ears in every look, through the helmet or beside it, whatever her source outfit. Her boss is not an elf. The approved looks so far predate this; their next round adds the ears |
 | Her colours | Her accent from her source outfit; her faction in base and trim, as the kits say |
 | Style | The baseline's drawing style and adult model, the same framing as the bosses, so a boss and her lieutenants stand together |
 | Image | One transparent RGBA PNG, **1024 × 1536**, full body, neutral stance, straight on at eye level, visible hands |
