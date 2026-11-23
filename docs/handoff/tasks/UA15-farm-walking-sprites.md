@@ -41,6 +41,8 @@ Use the native **64 × 88** cell and its **(32, 84)** foot anchor. Match the app
 
 Pack 32 native cells into one padded atlas page per variant. Start with a 512 × 512 lossless atlas and measure it during the pilot. Two pixels of padding on every side leave room for all cells. Preserve original frame offsets. Use lossless WebP if the decoded pixels match the approved crops, and PNG if the encoder cannot preserve them. Round-trip every crop against `sha256Rgba` when provided. Compare transparent pixels consistently at both ends of any encode. Derive any missing summary fields from verified frames and record the derivation. Trimming is optional after measuring. Leave per-variant pages separate so a town visit needs only Spring.
 
+The intake trial decoded all 960 source crops and matched every recorded RGBA hash. All 30 proposed 512 × 512 pages round-tripped through lossless WebP. They totalled 3,485,814 bytes, with the largest page at 142,304 bytes. This measured the page encoding in memory. Publishing still needs hashed descriptors, the candidate composer and end-to-end readback.
+
 The candidate must contain 30 independently loadable sets for Tier 1. The full roster is 150 sets. Record source and packed hashes, page bytes, dimensions, decoded size, and the exact active version and runtime identity for each. Rerunning the selection against the same source should yield identical runtime assets.
 
 ### Identity and shared code
