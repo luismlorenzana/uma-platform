@@ -17,7 +17,7 @@ const identityOf = (name: string, resolve: CharacterResolver): { characterId: nu
 }
 
 export interface UniverseLook {
-  category?: 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites' | 'duo-splash'
+  category?: 'character-sprites' | 'pajama-outfits' | 'wedding-anniversary-outfits' | 'pajama-splash' | 'wedding-anniversary-splash' | 'weapons' | 'combat-sprites' | 'duo-splash'
   /** One shared image, visible on each participating character's own identity. */
   duo?: { id: string; members: { castId: string; character: string; role: 'character' | 'boss-ally'; characterId: number | null; outfitId?: number }[] }
   id: string
@@ -121,7 +121,7 @@ function lookOf(universe: string, raw: unknown, characterOf: CharacterResolver):
   const bytes = whole(raw.bytes), width = whole(raw.width), height = whole(raw.height)
   if (!id || !character || !path || !sha256 || !bytes || !width || !height) return null
   if (!/^[a-f0-9]{64}$/.test(sha256) || path !== `images/${id}.${sha256.slice(0, 16)}.png` || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) return null
-  const farmCategory = universe === 'farm-life' && (raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash')
+  const farmCategory = universe === 'farm-life' && (raw.category === 'character-sprites' || raw.category === 'pajama-outfits' || raw.category === 'wedding-anniversary-outfits' || raw.category === 'pajama-splash' || raw.category === 'wedding-anniversary-splash')
   const cyberpunkCategory = universe === 'cyberpunk' && (raw.category === 'weapons' || raw.category === 'combat-sprites')
   const duo = raw.category === 'duo-splash' ? duoOf(universe, raw.duo, characterOf) : null
   if (raw.category === 'duo-splash' && (!duo || raw.kind !== 'splash' || !duo.members.some(member => member.role === 'character' && member.character === character))) return null

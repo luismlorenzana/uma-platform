@@ -86,10 +86,12 @@ describe('the universe looks (CA4)', () => {
     const additional: Universe = universe('farm-life', [
       { ...look('a-extra', 'Rider One', 9001), category: 'pajama-outfits' },
       { ...look('a-extra-scene', 'Rider One', 9001), kind: 'splash', category: 'pajama-splash' },
+      { ...look('a-idle', 'Rider One', 9001), category: 'character-sprites' },
     ])
     const group = looksOf([additional], 9001)[0]!
     expect(group.looks[0]?.category).toBe('pajama-outfits')
     expect(group.splash[0]?.category).toBe('pajama-splash')
+    expect(group.looks.find(look => look.id === 'a-idle')?.category).toBe('character-sprites')
   })
   it('gives her page her dialogue portrait pieces too, crops before faces, even in a universe with none of her looks', () => {
     const piece = (kind: 'crop' | 'face', id: string, characterId: number | null): PortraitPiece => ({
