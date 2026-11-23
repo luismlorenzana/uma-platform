@@ -28,6 +28,10 @@
         "default": "./dist/cjs/formats/index.js"
       }
     },
+    "./character-player": {
+      "types": "./dist/esm/sprites/character-player.d.ts",
+      "default": "./dist/esm/sprites/character-player.js"
+    },
     "./look": {
       "types": "./dist/esm/look/index.d.ts",
       "default": "./dist/esm/look/index.js"
@@ -38,6 +42,9 @@
     "*": {
       "formats": [
         "./dist/cjs/formats/index.d.ts"
+      ],
+      "character-player": [
+        "./dist/esm/sprites/character-player.d.ts"
       ],
       "look": [
         "./dist/esm/look/index.d.ts"
