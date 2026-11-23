@@ -58,18 +58,26 @@ export async function selectedSpriteStudies(root: string, keys: readonly string[
       }
     }
     if (files.size !== 15 || new Set(selection.sheets.map(sheet => sheet.image)).size !== 15) throw new Error(`${key}: duplicate sheet`)
-    return { key, version: active.activeVersion, source, study, files }
+    return { key, version: active.activeVersion, directory, source, study, files }
   }))
 }
 
 type SelectedStudy = Awaited<ReturnType<typeof selectedSpriteStudies>>[number]
+
+// WebP may pick arbitrary RGB for fully transparent pixels. The alpha and every visible sample are exact.
+function visibleRgba(bytes: Buffer): Buffer {
+  for (let alpha = 3; alpha < bytes.length; alpha += CHANNELS) {
+    if (bytes[alpha] === 0) bytes.fill(0, alpha - 3, alpha)
+  }
+  return bytes
+}
 
 export async function verifyAtlasFrames(bytes: Buffer, proof: readonly FrameProof[]): Promise<void> {
   const meta = await sharp(bytes).metadata()
   if (meta.format !== 'webp' || !meta.hasAlpha || meta.width !== EDGE || meta.height !== EDGE) throw new Error('Expected a transparent 512 × 512 WebP atlas')
   for (const { at, sha256Rgba } of proof) {
     const crop = await sharp(bytes).extract({ left: at.x, top: at.y, ...CELL }).ensureAlpha().raw().toBuffer()
-    if (sha256(crop) !== sha256Rgba) throw new Error(`Atlas crop differs at ${at.x},${at.y}`)
+    if (sha256(visibleRgba(crop)) !== sha256Rgba) throw new Error(`Atlas crop differs at ${at.x},${at.y}`)
   }
 }
 
@@ -83,7 +91,8 @@ async function atlas(study: SelectedStudy, outfit: Study['results'][number], ste
     const expected = study.files.get(path)
     if (!expected || seen.has(path)) throw new Error(`${stem}: missing or repeated approved sheet ${path}`)
     seen.add(path)
-    const bytes = await readFile(under(study.source, path))
+    // An approved revision can reuse a verified sheet from an older revision of the same character.
+    const bytes = await readFile(under(study.directory, resolve(study.source, path)))
     const meta = await sharp(bytes).metadata()
     if (sha256(bytes) !== expected.sha256 || meta.format !== 'png' || !meta.hasAlpha || meta.width !== expected.width || meta.height !== expected.height) {
       throw new Error(`${stem}: sheet failed hash or image validation ${path}`)
@@ -94,10 +103,7 @@ async function atlas(study: SelectedStudy, outfit: Study['results'][number], ste
     if (rect.width !== CELL.width || rect.height !== CELL.height) throw new Error(`${stem}: invalid frame rectangle`)
     const input = await sharp(bytes).extract({ left: rect.x, top: rect.y, ...CELL }).ensureAlpha().raw().toBuffer()
     if (sha256(input) !== hash) throw new Error(`${stem}: an approved frame differs from the source`)
-    // RGB under completely transparent pixels is discarded by WebP. Canonicalize only those bytes.
-    for (let alpha = 3; alpha < input.length; alpha += CHANNELS) {
-      if (input[alpha] === 0) input.fill(0, alpha - 3, alpha)
-    }
+    visibleRgba(input)
     const i = proofs.length
     const at = { x: 1 + i % COLUMNS * PITCH.x, y: 1 + Math.floor(i / COLUMNS) * PITCH.y }
     proofs.push({ at, sourceSha256Rgba: hash, sha256Rgba: sha256(input) })
@@ -126,7 +132,8 @@ async function atlas(study: SelectedStudy, outfit: Study['results'][number], ste
   }
   const bytes = await sharp(pixels, { raw: { width: EDGE, height: EDGE, channels: CHANNELS } })
     .webp({ lossless: true }).toBuffer()
-  await verifyAtlasFrames(bytes, proofs)
+  try { await verifyAtlasFrames(bytes, proofs) }
+  catch (error) { throw new Error(`${stem}: ${error instanceof Error ? error.message : String(error)}`, { cause: error }) }
   const entry = await put(stem, bytes)
   const variant: CharacterSpriteVariant = { cell: CELL, foot: FOOT, page: { path: entry.path, width: EDGE, height: EDGE }, standing, walking }
   return { variant, proof: { path: entry.path, sha256: entry.sha256, bytes: entry.bytes, frames: proofs }, sheets: seen }

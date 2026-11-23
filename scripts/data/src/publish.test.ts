@@ -119,6 +119,30 @@ describe('publishRelease', () => {
     await expect(moveChannel({ storage: bucket, channel: 'latest', version: 'bbbbbbbbbbbb' })).rejects.toThrow("isn't in the bucket")
   })
 
+  it('uses the captured generation for a guarded promotion and refuses the wrong parent', async () => {
+    const dir = await localRelease()
+    const bucket = new FakeBucket()
+    const { version } = await publishRelease({ releaseDir: dir, storage: bucket })
+    const channel = releasePaths.channel('latest')
+    const anEarlierVersion = 'aaaaaaaaaaaa'
+    const pointer = JSON.parse(bucket.objects.get(channel)!.toString('utf8'))
+    bucket.objects.set(channel, Buffer.from(JSON.stringify({ ...pointer, version: anEarlierVersion, manifest: releasePaths.manifest(anEarlierVersion) })))
+    const replace = bucket.replace.bind(bucket)
+    const generations: (string | undefined)[] = []
+    const storage = Object.assign(bucket, {
+      async generation() { return '73' },
+      async replace(entry: Parameters<typeof replace>[0], _cache: string, generation?: string) {
+        generations.push(generation)
+        await replace(entry)
+      },
+    })
+    await expect(moveChannel({ storage, channel: 'latest', version, expectedBase: 'bbbbbbbbbbbb' })).rejects.toThrow('Expected latest bbbbbbbbbbbb')
+    expect(generations).toEqual([])
+    await moveChannel({ storage, channel: 'latest', version, expectedBase: anEarlierVersion })
+    expect(generations).toEqual(['73'])
+    expect((await createReleaseClient({ source: bucket.source() }).channel()).version).toBe(version)
+  })
+
   it('refuses to publish over a different manifest with the same version', async () => {
     const dir = await localRelease()
     const manifest = (await readLocalManifest(dir))!
