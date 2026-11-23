@@ -33,7 +33,7 @@ async function main(): Promise<void> {
   const bucket = argument('--bucket') ?? process.env.UMA_RELEASE_BUCKET ?? DEFAULT_BUCKET
   const enemiesOnly = process.argv.includes('--enemies-only')
   // The per-character families (P170, P176), alone or together in one release.
-  const characterFamilies = ([['--portraits-only', 'dialoguePortraits'], ['--illustrations-only', 'illustrations']] as const)
+  const characterFamilies = ([['--portraits-only', 'dialoguePortraits'], ['--illustrations-only', 'illustrations'], ['--character-sprites-only', 'characterSprites']] as const)
     .filter(([flag]) => process.argv.includes(flag)).map(([, key]): CharacterFamilyKey => key)
   // The enemies-only and character-family releases go to the candidate channel unless told otherwise; `--promote` then moves latest.
   const channel = argument('--channel') ?? (enemiesOnly || characterFamilies.length > 0 ? 'candidate' : 'latest')
@@ -44,9 +44,10 @@ async function main(): Promise<void> {
   const storage = localDir ? new LocalOverlayStorage(resolve(localDir), bucketStorage) : bucketStorage
   const recording = channel === 'latest' && !dryRun && !localDir
   // `--promote` and `--rollback` are the same move: point a channel at a release already in the bucket.
+  const expectedBase = argument('--expected-base') ?? undefined
   const target = argument('--promote') ?? argument('--rollback')
   if (target) {
-    const moved = await moveChannel({ storage, channel, version: target, dryRun })
+    const moved = await moveChannel({ storage, channel, version: target, dryRun, expectedBase })
     console.log(`Channel ${channel}: ${moved.before ?? 'none'} → ${moved.after}${dryRun ? ' (unchanged; dry run)' : ''}`)
     if (recording) console.log(`Published sprite sets recorded: ${await recordPublished(storage, target, PUBLISHED_SPRITES)}`)
     return
@@ -80,6 +81,7 @@ async function main(): Promise<void> {
     const staging = await mkdtemp(resolve(tmpdir(), 'uma-character-families-'))
     try {
       const plan = await planCharacterFamiliesOnly({ releaseDir, storage, families: characterFamilies, stagingDir: staging })
+      if (expectedBase && plan.base.version !== expectedBase) throw new Error(`Expected latest ${expectedBase}, got ${plan.base.version}`)
       const name = (key: CharacterFamilyKey) => CHARACTER_FAMILIES[key].name
       console.log(`Character-family release (${characterFamilies.map(name).join(' and ')}) on ${plan.base.version}: ${plan.base.files.length - (plan.base.art ? 1 : 0)} files carried byte for byte; ` +
         `${characterFamilies.map((key) => `${name(key)} ${plan.added[key]!.map((a) => a.summary).join(', ')}`).join('; ')} added, ${bytes(plan.addedBytes)}; ` +

@@ -342,6 +342,12 @@ dark glass otherwise. `litWindow` in `scripts/assets/src/glass.ts` is the refere
 bust has only 307 real pixels, so 512 px is the honest size. [new-umas.md](new-umas.md) has the import of a new outfit
 end to end.
 
+### Character walking sprites
+
+`ArtIndex.characterSprites` is optional. Its keys match dialogue portraits and illustrations. Original character IDs and `outfit:<id>` entries coexist. `characterSprites()` verifies the descriptor's identity and that the release lists every atlas page. It returns `null` for an absent key. Load a selected page with `file()` for the standard SHA-256 and byte checks.
+
+Each variant has one atlas page, a rectangular cell, a foot anchor and four authored directions for standing and walking. Standing stores atlas positions. Walking stores ordered positions and positive millisecond durations for a looping clip. The anchor and all rectangles are validated against their respective cell and page bounds. A consuming game chooses variants and decides what a character does in its world.
+
 ### Sprites
 
 Since uma-data 1.4.0, the art index may include `sprites: { <outfitId>: <releasePath> }`.

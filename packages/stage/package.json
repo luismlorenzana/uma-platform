@@ -1,6 +1,6 @@
 {
   "name": "@luismlorenzana/uma-stage",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "The Uma games' HD-2D stage: a three.js world built from 2D kits, pixel sprites, lights and fog, and the kit and design formats (uma-platform ST1, P140). Private; personal use only.",
   "license": "UNLICENSED",
   "type": "module",
@@ -28,6 +28,10 @@
         "default": "./dist/cjs/formats/index.js"
       }
     },
+    "./character-player": {
+      "types": "./dist/esm/sprites/character-player.d.ts",
+      "default": "./dist/esm/sprites/character-player.js"
+    },
     "./look": {
       "types": "./dist/esm/look/index.d.ts",
       "default": "./dist/esm/look/index.js"
@@ -38,6 +42,9 @@
     "*": {
       "formats": [
         "./dist/cjs/formats/index.d.ts"
+      ],
+      "character-player": [
+        "./dist/esm/sprites/character-player.d.ts"
       ],
       "look": [
         "./dist/esm/look/index.d.ts"
@@ -61,7 +68,7 @@
     "look": "vite --config review/look/vite.config.mjs"
   },
   "peerDependencies": {
-    "@luismlorenzana/uma-data": "^1.4.0",
+    "@luismlorenzana/uma-data": "^1.11.0",
     "@luismlorenzana/uma-kit": ">=0.18.0 <1.0.0",
     "react": "^19.3.0",
     "three": "0.187.0"

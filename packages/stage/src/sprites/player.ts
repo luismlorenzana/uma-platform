@@ -1,6 +1,6 @@
 // The atlas player (Q6, format.md §6–§7): plays a set's action at its frames' times (1×, or faster for a fight's 2× and
 // 4×), loops or ends, holds, repeats for extra hits, and emits the format's events. Pure: Q9 drives fights through it.
-import type { SpriteAction, SpriteFrame, SpriteSet } from '@luismlorenzana/uma-data'
+import type { SpriteAction, SpriteFrame } from '@luismlorenzana/uma-data'
 
 export type SpriteEvent = { kind: 'impact' | 'release' | 'end'; frame: number } | { kind: 'hold'; frame: number }
 
@@ -16,8 +16,10 @@ export interface PlayOptions {
 /** A still frame (a turnaround) shows until another action plays. */
 const STILL_MS = Number.POSITIVE_INFINITY
 
-export class AtlasPlayer {
-  private action: SpriteAction | null = null
+export type AtlasAction<Frame> = Omit<SpriteAction, 'frames'> & { frames: readonly Frame[] }
+
+export class AtlasPlayer<Frame extends { ms?: number | null } = SpriteFrame> {
+  private action: AtlasAction<Frame> | null = null
   private name = ''
   private index = 0
   private elapsed = 0
@@ -28,7 +30,7 @@ export class AtlasPlayer {
   private reverse = false
   private events: SpriteEvent[] = []
 
-  constructor(private readonly set: Pick<SpriteSet, 'actions'>) {}
+  constructor(private readonly set: { actions: Record<string, AtlasAction<Frame>> }) {}
 
   get actionName(): string { return this.name }
   get frameIndex(): number { return this.index }
@@ -75,7 +77,7 @@ export class AtlasPlayer {
     this.step(hold[1] + 1)
   }
 
-  get frame(): SpriteFrame | null { return this.action?.frames[this.index] ?? null }
+  get frame(): Frame | null { return this.action?.frames[this.index] ?? null }
 
   /** How far into the current frame (0–1); 0 on a still or a held frame. */
   get progress(): number {

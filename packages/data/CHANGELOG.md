@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.11.0
+
+### Minor Changes
+
+- Read character-scoped walking sprite atlases with separately loadable wardrobe variants.
+
 ## 1.10.0
 
 ### Minor Changes

@@ -5,7 +5,7 @@
 // replaces them. A GameTora refresh, a sprite set or an enemy key in the local release never rides along, and older
 // uma-data clients ignore the maps, so the games stay pinned where they are.
 
-import { characterArtKey, dialoguePortraitPaths, illustrationPaths, parseArtIndex, parseDialoguePortraits, parseIllustrations, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
+import { characterArtKey, characterSpritePaths, parseCharacterSprites, dialoguePortraitPaths, illustrationPaths, parseArtIndex, parseDialoguePortraits, parseIllustrations, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { resolve } from 'node:path'
 import type { CharacterFamilyKey } from './character-family-release'
 import type { ReleaseStorageClient } from './publish'
@@ -26,6 +26,13 @@ export const CHARACTER_FAMILIES: Record<CharacterFamilyKey, CharacterFamily> = {
     read: (value, path) => {
       const p = parseDialoguePortraits(value, path)
       return { characterId: p.characterId, outfitId: p.outfitId, pictures: dialoguePortraitPaths(p), summary: `${characterArtKey(p.characterId, p.outfitId)} r${p.revision} (${Object.keys(p.bases).length} bases, ${Object.keys(p.faces).length} faces)` }
+    },
+  },
+  characterSprites: {
+    name: 'walking sprites', pack: 'pnpm character-sprites:pack',
+    read: (value, path) => {
+      const set = parseCharacterSprites(value, path)
+      return { characterId: set.characterId, outfitId: set.outfitId, pictures: characterSpritePaths(set), summary: `${characterArtKey(set.characterId, set.outfitId)} (${Object.keys(set.variants).length} variants)` }
     },
   },
   illustrations: {

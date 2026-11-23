@@ -5,6 +5,7 @@
 import { parseSpriteSet, type SpriteSet } from './sprites.js'
 import { parseDialoguePortraits, type DialoguePortraits } from './dialogue-portraits.js'
 import { parseIllustrations, type Illustrations } from './illustrations.js'
+import { characterSpritePaths, parseCharacterSprites, type CharacterSprites } from './character-sprites.js'
 import { characterArtKey } from './character-art.js'
 import { enemyKeyPaths, parseEnemyKey, type EnemyKey } from './enemy-keys.js'
 import type { Enemy } from './sets/enemies.js'
@@ -106,6 +107,8 @@ export interface ReleaseClient {
   /** A character's illustrations (`illustrations`, 1.8.0): her full-screen scenes in order, each with its moment; null
    *  when none is published. Checks the id and that every picture is in the manifest with its bytes and SHA-256. */
   illustrations(manifest: ReleaseManifest, art: ArtIndex, characterId: number, outfitId?: number): Promise<Illustrations | null>
+  /** Walking atlases for this exact character or outfit identity. Page bytes are fetched independently through file(). */
+  characterSprites(manifest: ReleaseManifest, art: ArtIndex, characterId: number, outfitId?: number): Promise<CharacterSprites | null>
   /** Every set and the art index of one release (the channel's when no version is given). */
   load(version?: string): Promise<MasterRelease>
 }
@@ -174,7 +177,7 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
         if (!listed.has(page.path)) throw new MasterDataError(release.art, `${page.path} to be in the manifest`)
       }
     }
-    for (const path of [...Object.values(index.sprites ?? {}), ...Object.values(index.enemyKeys ?? {}), ...Object.values(index.dialoguePortraits ?? {}), ...Object.values(index.illustrations ?? {})]) {
+    for (const path of [...Object.values(index.sprites ?? {}), ...Object.values(index.enemyKeys ?? {}), ...Object.values(index.dialoguePortraits ?? {}), ...Object.values(index.illustrations ?? {}), ...Object.values(index.characterSprites ?? {})]) {
       if (!listed.has(path)) throw new MasterDataError(release.art, `${path} to be in the manifest`)
     }
     return index
@@ -220,6 +223,17 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return portraits
   }
 
+  async function characterSprites(release: ReleaseManifest, index: ArtIndex, characterId: number, outfitId?: number): Promise<CharacterSprites | null> {
+    const key = characterArtKey(characterId, outfitId)
+    const path = index.characterSprites?.[key]
+    if (!path) return null
+    const set = parseCharacterSprites(json(await file(release, path), path), path)
+    if (set.characterId !== characterId || set.outfitId !== outfitId) throw new MasterDataError(path, `sprite identity ${key}`)
+    const listed = new Set(release.files.map(entry => entry.path))
+    for (const page of characterSpritePaths(set)) if (!listed.has(page)) throw new MasterDataError(path, `${page} to be in the manifest`)
+    return set
+  }
+
   async function illustrations(release: ReleaseManifest, index: ArtIndex, characterId: number, outfitId?: number): Promise<Illustrations | null> {
     const path = index.illustrations?.[characterArtKey(characterId, outfitId)]
     if (!path) return null
@@ -241,5 +255,5 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     return { manifest: release, data: Object.fromEntries(entries) as unknown as MasterData, art: await art(release) }
   }
 
-  return { channel, manifest, set, art, spriteSet, enemies, enemyKey, dialoguePortraits, illustrations, file, load }
+  return { channel, manifest, set, art, spriteSet, enemies, enemyKey, dialoguePortraits, illustrations, characterSprites, file, load }
 }
