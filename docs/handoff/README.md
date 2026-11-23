@@ -105,6 +105,8 @@ and bubbles are uma-art.
 | [UA13](tasks/UA13-townsfolk-t2.md), [UA14](tasks/UA14-townsfolk-t3.md) | Art: townsfolk T2 and T3, ten each, for uma-quest's Q23 towns (P153) | ChatGPT | M each | UA10 ✓, UA2 ✓ | **Ready, after Q16 B** |
 | [CY14](tasks/CY14-cabin-furniture.md) | Art: uma-cyberpunk's cabins, 48 item icons (64 px) and the 30 furniture pieces at room size, two new uma-art families (P164) | Claude (code-drawn) | M | — | **Done**: uma-art **2.29.0** ([#86](https://github.com/luismlorenzana/uma-platform/pull/86)); pinned and drawn in uma-cyberpunk (2ff1087, its D32) |
 
+**Farm walking sprites:** [UA15](tasks/UA15-farm-walking-sprites.md) specifies the three in-world outfits, the approved Tier 1 intake, the private atlas release and the rollout into Farm. The existing Character Art category is live. Runtime packaging and the Farm reader are queued.
+
 **Order:** UA1–UA8, UA10 and UA12 are complete. UA5 first published batch 1 in `4757517816a0` (P100). After the owner’s feedback, P105 added independent left field cycles, and release `7c34dbe2c8de` now holds all five at 130 frames plus T1’s three townsfolk at 45 frames (P108).
 
 **For uma-quest:** Q6’s existing loader receives the new traveler revisions through `latest`; its D17 already plays `walk-left` and `run-left` and stands left on the left turnaround. No pin is needed. Q12 can cast townsfolk outfits 101401, 100103 and 109701. Every non-sprite master-data file is unchanged.
