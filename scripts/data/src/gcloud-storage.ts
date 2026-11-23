@@ -3,14 +3,26 @@
 // owner's work account) is never read or changed.
 
 import { execFile } from 'node:child_process'
-import { basename, extname, posix } from 'node:path'
+import { existsSync } from 'node:fs'
+import { basename, delimiter, extname, posix, resolve } from 'node:path'
 import { promisify } from 'node:util'
 import { IMMUTABLE_CACHE_CONTROL, type ReleaseStorageClient, type UploadEntry } from './publish'
 
 const execute = promisify(execFile)
+
+function gcloudCommand(): [command: string, ...prefix: string[]] {
+  if (process.platform !== 'win32') return ['gcloud']
+  // Windows installs gcloud as a batch launcher. Run the SDK entry point directly so paths stay argv values.
+  const bin = process.env.PATH?.split(delimiter).find(at => at && existsSync(resolve(at, 'gcloud.cmd')))
+  if (!bin) throw new Error('Add Google Cloud SDK bin to PATH')
+  const sdk = resolve(bin, '..')
+  const bundled = resolve(sdk, 'platform/bundledpython/python.exe')
+  const python = process.env.CLOUDSDK_PYTHON || (existsSync(bundled) ? bundled : 'python.exe')
+  return [python, resolve(sdk, 'lib/gcloud.py')]
+}
 const BUCKET_PATTERN = /^[a-z0-9][a-z0-9._-]{1,220}[a-z0-9]$/
 /** Paths per `gcloud storage cp` call, well under the OS argument limit. */
-const UPLOAD_BATCH = 200
+const UPLOAD_BATCH = process.platform === 'win32' ? 64 : 200
 
 export const GCLOUD_CONFIGURATION = 'default'
 /** The platform's GCP project (`uma-platform` was taken) and private release bucket (infra/README.md, P34). */
@@ -61,7 +73,8 @@ export class GcloudStorageClient implements ReleaseStorageClient {
 
   private async run(args: readonly string[]): Promise<Buffer> {
     try {
-      const result = await execute('gcloud', [...args], {
+      const [command, ...prefix] = gcloudCommand()
+      const result = await execute(command, [...prefix, ...args], {
         env: {
           ...process.env,
           CLOUDSDK_ACTIVE_CONFIG_NAME: GCLOUD_CONFIGURATION,
@@ -132,8 +145,14 @@ export class GcloudStorageClient implements ReleaseStorageClient {
     }
   }
 
-  async replace(entry: UploadEntry, cacheControl: string): Promise<void> {
+  async generation(objectPath: string): Promise<string> {
+    const generation = (await this.run(['storage', 'objects', 'describe', this.uri(objectPath), '--format=value(generation)'])).toString('utf8').trim()
+    if (!/^\d+$/.test(generation)) throw new Error('Invalid storage generation')
+    return generation
+  }
+
+  async replace(entry: UploadEntry, cacheControl: string, generation?: string): Promise<void> {
     const contentType = CONTENT_TYPES[extname(entry.objectPath)] ?? 'application/octet-stream'
-    await this.run(['storage', 'cp', `--cache-control=${cacheControl}`, `--content-type=${contentType}`, entry.localPath, this.uri(entry.objectPath)])
+    await this.run(['storage', 'cp', ...(generation === undefined ? [] : [`--if-generation-match=${generation}`]), `--cache-control=${cacheControl}`, `--content-type=${contentType}`, entry.localPath, this.uri(entry.objectPath)])
   }
 }

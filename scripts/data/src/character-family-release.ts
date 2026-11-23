@@ -6,7 +6,7 @@
 import { characterArtKey, type ReleaseFile, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { readLocalManifest, readVerifiedFile, removeUnlisted, writeLocalManifest, writeReleaseFile } from './release-dir'
 
-export type CharacterFamilyKey = 'dialoguePortraits' | 'illustrations'
+export type CharacterFamilyKey = 'dialoguePortraits' | 'illustrations' | 'characterSprites'
 export interface CharacterFamilyLayout {
   /** The release folder, `art/dialogue-portraits`. */
   dir: string

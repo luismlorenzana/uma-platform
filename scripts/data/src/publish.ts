@@ -42,7 +42,9 @@ export interface ReleaseStorageClient {
   /** Uploads files that must not exist yet (immutable); an existing object is left alone. */
   uploadImmutable(entries: readonly UploadEntry[]): Promise<void>
   /** Uploads one object, replacing it when present (the channel pointer). */
-  replace(entry: UploadEntry, cacheControl: string): Promise<void>
+  replace(entry: UploadEntry, cacheControl: string, generation?: string): Promise<void>
+  /** Cloud object generation for an atomic guarded pointer update. */
+  generation?(objectPath: string): Promise<string>
 }
 
 export interface VerifiedRelease {
@@ -219,13 +221,13 @@ export async function publishManifest(options: PublishManifestOptions): Promise<
   }
 }
 
-async function writeChannel(storage: ReleaseStorageClient, channel: string, version: string, manifest: string, at: Date): Promise<void> {
+async function writeChannel(storage: ReleaseStorageClient, channel: string, version: string, manifest: string, at: Date, generation?: string): Promise<void> {
   const pointer: ReleaseChannel = { schemaMajor: SCHEMA_MAJOR, channel, version, manifest, updatedAt: at.toISOString() }
   const scratch = await mkdtemp(resolve(tmpdir(), 'uma-release-'))
   try {
     const pointerPath = resolve(scratch, `${channel}.json`)
     await writeFile(pointerPath, JSON.stringify(pointer), 'utf8')
-    await storage.replace({ localPath: pointerPath, objectPath: releasePaths.channel(channel) }, CHANNEL_CACHE_CONTROL)
+    await storage.replace({ localPath: pointerPath, objectPath: releasePaths.channel(channel) }, CHANNEL_CACHE_CONTROL, generation)
   } finally {
     await rm(scratch, { recursive: true, force: true })
   }
@@ -237,6 +239,7 @@ export interface MoveChannelOptions {
   version: string
   dryRun?: boolean
   now?: () => Date
+  expectedBase?: string
 }
 
 /** Points a channel at a release already in the bucket: the undo for a bad publish. Files are immutable, so it's only the pointer. */
@@ -248,9 +251,12 @@ export async function moveChannel(options: MoveChannelOptions): Promise<{ before
   if (!raw) throw new Error(`${manifestObject} isn't in the bucket`)
   const manifest = parseReleaseManifest(JSON.parse(raw.toString('utf8')) as unknown, manifestObject)
   await verifyReleaseVersion(manifest)
+  const generation = options.expectedBase ? await storage.generation?.(channelPath) : undefined
+  if (options.expectedBase && generation === undefined) throw new Error('Storage does not support guarded channel updates')
   const before = parseRemoteChannel(await storage.read(channelPath), channelPath)?.version ?? null
+  if (options.expectedBase && before !== options.expectedBase) throw new Error(`Expected ${channel} ${options.expectedBase}, got ${before ?? 'nothing'}`)
   if (!options.dryRun && before !== version) {
-    await writeChannel(storage, channel, version, manifestObject, (options.now ?? (() => new Date()))())
+    await writeChannel(storage, channel, version, manifestObject, (options.now ?? (() => new Date()))(), generation)
     const after = parseRemoteChannel(await storage.read(channelPath), channelPath)?.version ?? null
     if (after !== version) throw new Error(`Channel verification failed: ${channelPath} points at ${after ?? 'nothing'}, expected ${version}`)
   }

@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-stage
 
+## 0.8.0
+
+### Minor Changes
+
+- Play neutral four-direction character walks with the shared atlas clock and field facing rules.
+
 ## 0.7.0
 
 ### Minor Changes

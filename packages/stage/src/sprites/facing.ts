@@ -2,8 +2,6 @@
 // for the facing. Left: a set's own `walk-left` and `run-left` when it has them (requested from uma-platform after the
 // owner's 2026-11-08 feedback, D17), standing on the left turnaround still; until then the battle set's `walk`, `run`
 // and `idle`, as format.md §7.2 has it. Nothing is mirrored (DN25).
-import type { SpriteSet } from '@luismlorenzana/uma-data'
-
 export type Facing = 'left' | 'right' | 'front' | 'back'
 
 /** The facing a move gives, by its larger axis; stage up (−y) walks into the scene, away from the camera. */
@@ -16,7 +14,7 @@ export function facingOf(x: number, y: number, current: Facing): Facing {
 /** What to play: an action looping, or a still frame of an action. */
 export type FieldPose = { kind: 'play'; action: string } | { kind: 'still'; action: string; frame: number }
 
-export function fieldPose(set: Pick<SpriteSet, 'actions'>, facing: Facing, moving: boolean, running: boolean): FieldPose {
+export function fieldPose(set: { actions: Record<string, { frames: readonly { view?: string }[] }> }, facing: Facing, moving: boolean, running: boolean): FieldPose {
   const fieldLeft = !!set.actions['walk-left']
   if (moving) {
     const base = running ? 'run' : 'walk'

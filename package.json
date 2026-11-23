@@ -39,6 +39,7 @@
     "enemies:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/sprite-pipeline run enemies-pack",
     "portraits:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run portraits-pack",
     "profiles:push": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run profiles-push",
+    "character-sprites:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run character-sprites-pack",
     "illustrations:pack": "turbo run build --filter=@luismlorenzana/uma-data --output-logs=errors-only && pnpm --filter @uma-platform/data-pipeline run illustrations-pack",
     "studio": "pnpm --filter @uma-platform/studio... run build && pnpm --filter @uma-platform/studio run start",
     "tiers:import": "pnpm --filter @uma-platform/studio run import",

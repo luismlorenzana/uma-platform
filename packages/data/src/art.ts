@@ -80,6 +80,8 @@ export interface ArtIndex {
   /** A character id, or `outfit:<id>` for outfit-specific art, to her `illustrations` manifest. Absent before 1.8.0 and until one is
    *  published. */
   illustrations?: Record<string, string>
+  /** A character art identity to its animated sprite wardrobe descriptor. */
+  characterSprites?: Record<string, string>
 }
 
 const parseFrame: Parser<AtlasFrame> = (value, path) => {
@@ -136,11 +138,12 @@ export const parseArtIndex: Parser<ArtIndex> = (value, path) => {
       images[family] = recordOf(parseArtImage)(rawImages[family], `${path}.images.${family}`)
     }
   }
-  const { sprites, enemyKeys, dialoguePortraits, illustrations } = object(value, path)
+  const { sprites, enemyKeys, dialoguePortraits, illustrations, characterSprites } = object(value, path)
   return { atlases, images, ...(sprites === undefined ? {} : { sprites: recordOf(releasePath)(sprites, `${path}.sprites`) }),
     ...(enemyKeys === undefined ? {} : { enemyKeys: recordOf(releasePath)(enemyKeys, `${path}.enemyKeys`) }),
     ...(dialoguePortraits === undefined ? {} : { dialoguePortraits: recordOf(releasePath)(dialoguePortraits, `${path}.dialoguePortraits`) }),
-    ...(illustrations === undefined ? {} : { illustrations: recordOf(releasePath)(illustrations, `${path}.illustrations`) }) }
+    ...(illustrations === undefined ? {} : { illustrations: recordOf(releasePath)(illustrations, `${path}.illustrations`) }),
+    ...(characterSprites === undefined ? {} : { characterSprites: recordOf(releasePath)(characterSprites, `${path}.characterSprites`) }) }
 }
 
 /** Every release file path the index points at. */
@@ -152,5 +155,6 @@ export function artPaths(index: ArtIndex): string[] {
   paths.push(...Object.values(index.enemyKeys ?? {}))
   paths.push(...Object.values(index.dialoguePortraits ?? {}))
   paths.push(...Object.values(index.illustrations ?? {}))
+  paths.push(...Object.values(index.characterSprites ?? {}))
   return paths
 }
