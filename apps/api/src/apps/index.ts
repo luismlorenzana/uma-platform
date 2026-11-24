@@ -4,7 +4,8 @@ import { EnemyArtModule } from './enemy-art/enemy-art.module'
 import { LookModule } from './look/look.module'
 import { RankerModule } from './ranker/ranker.module'
 import { StoryModule } from './story/story.module'
+import { StorageModule } from './storage/storage.module'
 
 // The sub-apps' API modules (AP1): each serves /api/<id>/… from its own folder, src/apps/<id>/, and imports nothing from
 // another sub-app's folder (checked by scripts/check-sub-apps.test.mjs).
-export const SUB_APP_MODULES: Type[] = [RankerModule, ArtModule, EnemyArtModule, StoryModule, LookModule]
+export const SUB_APP_MODULES: Type[] = [RankerModule, ArtModule, EnemyArtModule, StoryModule, LookModule, StorageModule]

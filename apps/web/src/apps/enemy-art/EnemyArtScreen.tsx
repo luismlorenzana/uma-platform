@@ -110,12 +110,17 @@ export default function EnemyArtScreen() {
   const [params, setParams] = useSearchParams()
   const [games, setGames] = useState<EnemyGame[] | null>(null)
   const [failed, setFailed] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [open, setOpen] = useState<{ look: EnemyLook; faction: EnemyFaction } | null>(null)
   useEffect(() => {
     let live = true
     loadGames().then((g) => { if (live) setGames(g) }, () => { if (live) setFailed(true) })
     return () => { live = false }
   }, [])
+  const refresh = async () => {
+    setRefreshing(true)
+    try { setGames(await loadGames(true)); setFailed(false) } catch { setFailed(true) } finally { setRefreshing(false) }
+  }
   const tabs = useMemo(() => gameTabs(games ?? []), [games])
   const tab = chosenTab(tabs, params.get('game'))
   const choose = (id: string) => { const p = new URLSearchParams(params); p.set('game', id); setParams(p); setOpen(null) }
@@ -123,13 +128,16 @@ export default function EnemyArtScreen() {
     <AppFrame top={<PlaceHeader title="Uma Enemy Art" onBack={() => void navigate('/')} words={{ back: 'Uma Platform', about: 'About' }}
       about={<p>The approved Uma Cyberpunk enemy looks, grouped by faction, boss and lieutenant.</p>} />}>
       <main className="pb-safe h-full overflow-y-auto bg-page" data-testid="enemy-art">
-        <div className="sticky top-0 z-10 flex gap-2 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur" role="tablist">
+        <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur">
+          <div className="flex flex-1 gap-2" role="tablist">
           {tabs.map((t) => (
             <button key={t.id} type="button" role="tab" aria-selected={tab?.id === t.id} onClick={() => choose(t.id)}
               className={`min-h-10 rounded-full px-4 text-sm font-semibold ${tab?.id === t.id ? 'bg-accent text-accent-ink' : 'bg-sunken text-ink'}`}>
               {t.title}{games ? ` · ${t.looks}` : ''}
             </button>
           ))}
+          </div>
+          <Button variant="secondary" size="sm" disabled={refreshing} onClick={() => void refresh()}>{refreshing ? 'Refreshing…' : 'Refresh'}</Button>
         </div>
         <div className="mx-auto max-w-5xl px-4 py-4">
           {!games && !failed && <p className="text-center text-ink-soft">Loading</p>}

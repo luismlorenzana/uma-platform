@@ -110,12 +110,20 @@ export default function ArtScreen() {
   const [params, setParams] = useSearchParams()
   const [data, setData] = useState<AlbumData | null>(null)
   const [failed, setFailed] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [query, setQuery] = useState('')
   const [showF, setShowF] = useState(false)
   // The universe looks load beside the album: without them every page still shows the rest.
   const [universes, setUniverses] = useState<Universe[]>([])
   useEffect(() => { loadAlbum(true).then(setData, () => setFailed(true)) }, [])
   useEffect(() => { loadUniverses(true).then(setUniverses, () => undefined) }, [])
+  const refresh = async () => {
+    setRefreshing(true)
+    try {
+      const [album, worlds] = await Promise.all([loadAlbum(true), loadUniverses(true, { refresh: true })])
+      setData(album); setUniverses(worlds); setFailed(false)
+    } catch { setFailed(true) } finally { setRefreshing(false) }
+  }
   const counts = useMemo(() => {
     if (!data) return new Map<number, WorldImageCount[]>()
     return new Map(data.entries.map(entry => [entry.outfitId, imageCountsOf(data, universes, entry)]))
@@ -137,7 +145,10 @@ export default function ArtScreen() {
       about={<p>In the Ranker’s order: each outfit sits in her tier on Playable Umas; a sister is listed by her own name. Release {data?.release ?? '…'}.</p>} />}>
       <main className="pb-safe h-full overflow-y-auto bg-page" data-testid="art">
         <div className="sticky top-0 z-10 flex flex-col gap-2 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur">
-          <p className="text-sm font-semibold">Every Uma{data ? ` · ${data.entries.length}` : ''}</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold">Every Uma{data ? ` · ${data.entries.length}` : ''}</p>
+            <Button variant="secondary" size="sm" disabled={refreshing} onClick={() => void refresh()}>{refreshing ? 'Refreshing…' : 'Refresh'}</Button>
+          </div>
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name, outfit or id" aria-label="Search"
             className="min-h-10 rounded-sm bg-sunken px-3 text-sm text-ink outline-none ring-accent focus:ring-2" />
         </div>

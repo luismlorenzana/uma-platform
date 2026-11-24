@@ -200,17 +200,19 @@ export async function profilePictures(store: Pick<BlobStore, 'read'>, universe: 
 
 /** Every published universe, by name: the looks its index lists, in the index's order, and its portrait pieces (CA5). */
 export async function universes(store: Pick<BlobStore, 'read' | 'list'>, characterOf: CharacterResolver): Promise<Universe[]> {
-  const files = await store.list('universes')
-  const ids = [...new Set(files.flatMap((p) => /^universes\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(?:portraits\/)?index\.json$/.exec(p)?.[1] ?? []))].sort()
+  const files = await store.list('universes', { indexesOnly: true })
+  const ids = [...new Set(files.flatMap((p) => /^universes\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(?:(?:portraits|profiles)\/)?index\.json$/.exec(p)?.[1] ?? []))].sort()
   const out: Universe[] = []
   for (const id of ids) {
     if (['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy'].includes(id)) continue
     const index = await readJson(store, `universes/${id}/index.json`)
     const valid = !!index && index.kind === 'universe-art' && index.universe === id && Array.isArray(index.looks)
     const looks = valid ? (index.looks as unknown[]).flatMap((raw) => lookOf(id, raw, characterOf) ?? []) : []
-    const recipe = files.includes(`universes/${id}/portraits/index.json`) ? await portraitRecipe(store, id, characterOf) : null
-    const profiles = files.includes(`universes/${id}/profiles/index.json`) ? await profilePictures(store, id, characterOf) : null
-    if (looks.length === 0 && !recipe) continue
+    const [recipe, profiles] = await Promise.all([
+      files.includes(`universes/${id}/portraits/index.json`) ? portraitRecipe(store, id, characterOf) : null,
+      files.includes(`universes/${id}/profiles/index.json`) ? profilePictures(store, id, characterOf) : null,
+    ])
+    if (looks.length === 0 && !recipe && !profiles) continue
     out.push({
       id, title: (valid ? text(index.title) : null) ?? words(id), style: valid ? text(index.style) : null, revision: valid && typeof index.revision === 'number' ? index.revision : null,
       publishedAt: valid ? text(index.publishedAt) : null, looks,

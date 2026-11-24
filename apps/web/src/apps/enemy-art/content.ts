@@ -4,6 +4,7 @@
 import { idToken } from '@luismlorenzana/uma-kit/auth'
 import { createContentClient } from '@luismlorenzana/uma-kit/content'
 import { FIREBASE } from '../../app/firebase-config'
+import { assetDownloads } from '../../content/asset-downloads'
 
 export const ENEMIES = createContentClient({ base: '/api/enemy-art', token: () => idToken(FIREBASE), cacheName: 'platform-enemy-art' })
 
@@ -12,7 +13,7 @@ const urls = new Map<string, Promise<string>>()
 export function lookUrl(look: { path: string; bytes: number; sha256: string }): Promise<string> {
   let url = urls.get(look.path)
   if (!url) {
-    url = ENEMIES.pack(look.path, { path: look.path, bytes: look.bytes, sha256: look.sha256 }).then((b) => URL.createObjectURL(new Blob([b as BlobPart], { type: 'image/png' })))
+    url = assetDownloads.run(() => ENEMIES.pack(look.path, { path: look.path, bytes: look.bytes, sha256: look.sha256 })).then((b) => URL.createObjectURL(new Blob([b as BlobPart], { type: 'image/png' })))
     url.catch(() => urls.delete(look.path))
     urls.set(look.path, url)
   }

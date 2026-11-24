@@ -257,4 +257,11 @@ describe('the dialogue portraits as pieces (CA5)', () => {
     for (const bad of ['universes/sky-city/profiles/index.json', `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.png`, 'universes/sky-city/profiles/rider-one-street.webp'])
       expect(safePackPath(bad, allow)).toBeNull()
   })
+  it('includes a universe with only profile pictures when listing catalog files', async () => {
+    const s = store(new Map([['universes/sky-city/profiles/index.json', profiles('sky-city')]]))
+    const all = await universes(s, riderOne)
+    expect(all.map(world => world.id)).toEqual(['sky-city'])
+    expect(all[0]!.looks).toEqual([])
+    expect(all[0]!.profiles!.pieces).toHaveLength(1)
+  })
 })

@@ -60,4 +60,9 @@ export const SUB_APPS: readonly SubApp[] = checkRegistry([
     load: () => import('./look'),
     summary: () => request<SummaryLine[]>('/api/look/summary'),
   },
+  {
+    id: 'storage', title: 'Storage Report', blurb: 'Cloud storage by universe and purpose, with retained history and daily growth.',
+    load: () => import('./storage'),
+    summary: () => request<SummaryLine[]>('/api/storage/summary'),
+  },
 ])

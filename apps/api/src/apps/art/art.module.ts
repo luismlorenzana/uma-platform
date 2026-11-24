@@ -1,10 +1,11 @@
 // Character Art: Ranker order, published universe images and portrait recipes.
 import { resolve } from 'node:path'
 import { BucketFileSource, DirectoryFileSource, DirectoryReleaseSource, fileSource, PrivatePackModule, type FileSource } from '@luismlorenzana/uma-server/content'
-import { Controller, Get, Inject, Module, NotFoundException, Param } from '@nestjs/common'
+import { Controller, Get, Header, Inject, Module, NotFoundException, Param, Query } from '@nestjs/common'
+import { CatalogCache } from '../../store/catalog-cache'
 import { blobStore, type BlobStore } from '../../store/blob-store'
 import { ArtService } from './art.service'
-import { PORTRAIT_PACK_ALLOW, portraitRecipe, PROFILE_PACK_ALLOW, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
+import { PORTRAIT_PACK_ALLOW, portraitRecipe, PROFILE_PACK_ALLOW, UNIVERSE_PACK_ALLOW, universes, type Universe } from './art.universes'
 
 export const ART_PACK_ALLOW = [UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW, PROFILE_PACK_ALLOW]
 
@@ -26,6 +27,7 @@ const ART = Symbol('art-service'), PUBLISHED = Symbol('art-published')
 
 @Controller('art')
 class ArtController {
+  private readonly catalog = new CatalogCache<Universe[]>()
   constructor(
     @Inject(ART) private readonly art: ArtService,
     @Inject(PUBLISHED) private readonly published: BlobStore,
@@ -36,7 +38,10 @@ class ArtController {
 
   /** The published universe looks, universe by universe, each tied to her character by name (CA4). */
   @Get('universes')
-  async universes() { return universes(this.published, await this.art.artIdentityByName()) }
+  @Header('Cache-Control', 'private, no-cache')
+  universes(@Query('refresh') refresh?: string) {
+    return this.catalog.get(async () => universes(this.published, await this.art.artIdentityByName()), refresh === '1')
+  }
 
   /** A universe's dialogue portraits for a game to compose (CA5): every crop and face at its pack path, and every state. */
   @Get('portraits/:universe')
@@ -47,6 +52,7 @@ class ArtController {
   }
 
   @Get('summary')
+  @Header('Cache-Control', 'private, no-cache')
   async summary() {
     const [order, worlds] = await Promise.all([this.art.order(), this.universes().catch(() => [])])
     const batched = order.outfits.filter((o) => o.tier && o.tier !== 'F').length
