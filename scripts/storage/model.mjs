@@ -55,7 +55,7 @@ export function summarizeBucket(config, metadata, objects, softDeleted) {
   }
 }
 
-export function buildReport(results, previous = null, generatedAt = new Date().toISOString()) {
+export function buildReport(results, previous = null, generatedAt = new Date().toISOString(), automaticUpdates = false) {
   const totals = usage(), buckets = results.map(result => result.bucket), groups = results.flatMap(result => result.groups)
   for (const bucket of buckets) addUsage(totals, bucket.usage)
   const oldGroups = new Map((previous?.groups ?? []).map(group => [group.id, group]))
@@ -65,6 +65,6 @@ export function buildReport(results, previous = null, generatedAt = new Date().t
   const worldBytes = {}
   for (const group of groups) worldBytes[group.world] = (worldBytes[group.world] ?? 0) + totalBytes(group.usage)
   const history = [...(previous?.history ?? []).filter(point => point.generatedAt.slice(0, 10) !== generatedAt.slice(0, 10)), { generatedAt, totalBytes: totalBytes(totals), worldBytes }].slice(-31)
-  return { schemaVersion: 1, generatedAt, previousGeneratedAt: previous?.generatedAt ?? null, totals, buckets, groups, history,
+  return { schemaVersion: 1, generatedAt, automaticUpdates, previousGeneratedAt: previous?.generatedAt ?? null, totals, buckets, groups, history,
     deltaBytes: previous ? totalBytes(totals) - totalBytes(previous.totals) : null }
 }

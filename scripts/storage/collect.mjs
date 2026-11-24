@@ -6,7 +6,7 @@ import { realpathSync } from 'node:fs'
 import { cloudClient, bucketURL, query, listObjects, mapLimit } from './cloud.mjs'
 import { BUCKETS, REPORT_BUCKET, REPORT_PREFIX, summarizeBucket, buildReport, totalBytes } from './model.mjs'
 
-export async function collect(cloud, progress = () => undefined) {
+export async function collect(cloud, progress = () => undefined, { automaticUpdates = false } = {}) {
   const results = await mapLimit(BUCKETS, 3, async config => {
     const metadata = await cloud(query(bucketURL(config.name), { fields: 'name,location,storageClass,versioning,softDeletePolicy,lifecycle' }))
     const [objects, softDeleted] = await Promise.all([listObjects(cloud, config.name, { versions: 'true' }),
@@ -19,7 +19,7 @@ export async function collect(cloud, progress = () => undefined) {
   const latest = snapshots.map(object => object.name).filter(name => /^reports\/storage\/snapshots\/[0-9TZ.:_-]+\.[a-f0-9-]+\.json$/.test(name)).sort().at(-1)
   const previous = latest ? await cloud(query(`${bucketURL(REPORT_BUCKET)}/o/${encodeURIComponent(latest)}`, { alt: 'media' })) : null
   if (previous && previous.schemaVersion !== 1) throw new Error('Previous storage snapshot has an unsupported format')
-  return buildReport(results, previous)
+  return buildReport(results, previous, new Date().toISOString(), automaticUpdates)
 }
 
 export async function publishReport(cloud, report) {
@@ -30,7 +30,7 @@ export async function publishReport(cloud, report) {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === realpathSync(resolve(process.argv[1]))) {
   try {
-    const cloud = cloudClient(), report = await collect(cloud, value => console.log(JSON.stringify(value)))
+    const cloud = cloudClient(), report = await collect(cloud, value => console.log(JSON.stringify(value)), { automaticUpdates: process.env.STORAGE_REPORT_ENABLED === 'true' })
     const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
     const path = resolve(root, 'content/reports/storage/latest.json')
     await mkdir(dirname(path), { recursive: true }); await writeFile(path, JSON.stringify(report, null, 2) + '\n')

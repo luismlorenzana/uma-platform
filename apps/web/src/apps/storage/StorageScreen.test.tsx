@@ -5,7 +5,7 @@ import { bytes, growth, trendPoints, type StorageReport } from './data'
 
 const usage = { liveBytes: 1024 ** 3, liveObjects: 2, noncurrentBytes: 100, noncurrentObjects: 1, softDeletedBytes: 10, softDeletedObjects: 1 }
 const report: StorageReport = {
-  schemaVersion: 1, generatedAt: '2026-01-01T00:00:00.000Z', previousGeneratedAt: null, totals: usage, deltaBytes: null,
+  schemaVersion: 1, generatedAt: '2026-01-01T00:00:00.000Z', automaticUpdates: false, previousGeneratedAt: null, totals: usage, deltaBytes: null,
   buckets: [{ name: 'invented-bucket', project: 'test', location: 'TEST', storageClass: 'STANDARD', versioned: true, softDeleteDays: 7, lifecycleRuleCount: 1, usage, repeatedLiveBytes: 0, deltaBytes: null }],
   groups: [{ id: 'farm', bucket: 'invented-bucket', world: 'farm', purpose: 'character-art', usage, deltaBytes: null }], history: [],
 }
@@ -14,6 +14,8 @@ describe('Storage Report', () => {
     const html = renderToStaticMarkup(<StorageDashboard report={report} now={Date.parse(report.generatedAt)} />)
     for (const text of ['Total stored', 'Live data', 'Retained history', 'Soft-deleted', 'Uma Farm', 'Character art', 'invented-bucket', 'baseline is now recorded', 'remain local']) expect(html).toContain(text)
     expect(html).not.toContain('older than expected')
+    expect(html).toContain('awaiting activation')
+    expect(renderToStaticMarkup(<StorageDashboard report={{ ...report, automaticUpdates: true }} now={Date.parse(report.generatedAt)} />)).toContain('Updates daily')
     expect(renderToStaticMarkup(<StorageDashboard report={report} now={Date.parse(report.generatedAt) + 48 * 3600_000} />)).toContain('older than expected')
   })
   it('formats binary units, zero and signed growth without inventing a first-run delta', () => {

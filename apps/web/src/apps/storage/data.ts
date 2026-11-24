@@ -3,7 +3,7 @@ import { request } from '../../api/client'
 export interface Usage { liveBytes: number; liveObjects: number; noncurrentBytes: number; noncurrentObjects: number; softDeletedBytes: number; softDeletedObjects: number }
 export interface BucketReport { name: string; project: string; location: string; storageClass: string; versioned: boolean; softDeleteDays: number; lifecycleRuleCount: number; usage: Usage; repeatedLiveBytes: number; deltaBytes: number | null }
 export interface GroupReport { id: string; bucket: string; world: string; purpose: string; usage: Usage; deltaBytes: number | null }
-export interface StorageReport { schemaVersion: 1; generatedAt: string; previousGeneratedAt: string | null; totals: Usage; buckets: BucketReport[]; groups: GroupReport[]; deltaBytes: number | null; history: { generatedAt: string; totalBytes: number; worldBytes: Record<string, number> }[] }
+export interface StorageReport { schemaVersion: 1; generatedAt: string; automaticUpdates: boolean; previousGeneratedAt: string | null; totals: Usage; buckets: BucketReport[]; groups: GroupReport[]; deltaBytes: number | null; history: { generatedAt: string; totalBytes: number; worldBytes: Record<string, number> }[] }
 export const worlds: Readonly<Record<string, string>> = { farm: 'Uma Farm', cyberpunk: 'Uma Cyberpunk', quest: 'Uma Quest', rpg: 'Uma RPG', shared: 'Shared' }
 export const purposes: Readonly<Record<string, string>> = { 'character-art': 'Character art', 'enemy-art': 'Enemy art', campaign: 'Campaign assets', stories: 'Stories',
   'master-data': 'Master data', 'source-archives': 'Source archives', 'authoring-backup': 'Authoring backup', 'game-content': 'Game content', ranker: 'Ranker', reporting: 'Storage reports', other: 'Other' }

@@ -1,7 +1,7 @@
 export interface Usage { liveBytes: number; liveObjects: number; noncurrentBytes: number; noncurrentObjects: number; softDeletedBytes: number; softDeletedObjects: number }
 export interface BucketReport { name: string; project: string; location: string; storageClass: string; versioned: boolean; softDeleteDays: number; lifecycleRuleCount: number; usage: Usage; repeatedLiveBytes: number; deltaBytes: number | null }
 export interface GroupReport { id: string; bucket: string; world: string; purpose: string; usage: Usage; deltaBytes: number | null }
-export interface StorageReport { schemaVersion: 1; generatedAt: string; previousGeneratedAt: string | null; totals: Usage; buckets: BucketReport[]; groups: GroupReport[]; deltaBytes: number | null; history: { generatedAt: string; totalBytes: number; worldBytes: Record<string, number> }[] }
+export interface StorageReport { schemaVersion: 1; generatedAt: string; automaticUpdates: boolean; previousGeneratedAt: string | null; totals: Usage; buckets: BucketReport[]; groups: GroupReport[]; deltaBytes: number | null; history: { generatedAt: string; totalBytes: number; worldBytes: Record<string, number> }[] }
 
 const object = (value: unknown): Record<string, unknown> => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid storage report')
@@ -43,6 +43,6 @@ export function parseReport(value: unknown): StorageReport {
     const row = object(value), worldBytes = Object.fromEntries(Object.entries(object(row.worldBytes)).map(([key, value]) => [key, integer(value)]))
     return { generatedAt: date(row.generatedAt), totalBytes: integer(row.totalBytes), worldBytes }
   })
-  return { schemaVersion: 1, generatedAt: date(report.generatedAt), previousGeneratedAt: report.previousGeneratedAt === null ? null : date(report.previousGeneratedAt),
+  return { schemaVersion: 1, generatedAt: date(report.generatedAt), automaticUpdates: report.automaticUpdates === true, previousGeneratedAt: report.previousGeneratedAt === null ? null : date(report.previousGeneratedAt),
     totals, buckets, groups, history, deltaBytes: delta(report.deltaBytes) }
 }

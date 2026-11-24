@@ -12,7 +12,7 @@ export function StorageDashboard({ report, now = Date.now() }: { report: Storage
   return (
     <div className="flex flex-col gap-6">
       <div className="text-sm text-ink-soft">
-        <p>Collected {new Date(report.generatedAt).toLocaleString()}. Updates daily.</p>
+        <p>Collected {new Date(report.generatedAt).toLocaleString()}. {report.automaticUpdates ? 'Updates daily.' : 'Automatic updates are awaiting activation.'}</p>
         {stale && <p role="status" className="mt-1 font-semibold text-ink">This report is older than expected. The last successful collection is shown.</p>}
         <p className="mt-1">Cloud storage only. Private universe-authoring workspaces remain local.</p>
       </div>

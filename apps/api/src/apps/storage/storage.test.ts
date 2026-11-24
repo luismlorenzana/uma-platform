@@ -6,7 +6,7 @@ const value = (bytes: number): Usage => ({ liveBytes: bytes, liveObjects: 1, non
 function sample(): StorageReport {
   const buckets = Array.from({ length: 6 }, (_, id) => ({ name: `invented-${id}`, project: 'test', location: 'TEST', storageClass: 'STANDARD', versioned: false, softDeleteDays: 7,
     lifecycleRuleCount: 0, usage: value(1), repeatedLiveBytes: 0, deltaBytes: null }))
-  return { schemaVersion: 1, generatedAt: '2026-01-01T00:00:00Z', previousGeneratedAt: null, totals: { ...value(6), liveObjects: 6 }, buckets,
+  return { schemaVersion: 1, generatedAt: '2026-01-01T00:00:00Z', automaticUpdates: false, previousGeneratedAt: null, totals: { ...value(6), liveObjects: 6 }, buckets,
     groups: buckets.map(bucket => ({ id: bucket.name, bucket: bucket.name, world: 'shared', purpose: 'master-data', usage: value(1), deltaBytes: null })), history: [], deltaBytes: null }
 }
 describe('storage snapshots', () => {

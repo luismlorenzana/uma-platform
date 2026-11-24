@@ -22,6 +22,11 @@ on main. It uses `platform-storage-report`, an account separate from the API and
 to the report snapshot prefix. The workflow verifies that source-object reads are denied before publishing. It cannot
 overwrite or delete existing report snapshots, modify lifecycle policies, read source contents or publish art.
 
+The schedule is gated by repository variable `STORAGE_REPORT_ENABLED=true`. Keep it disabled until the identity is
+provisioned and a manually dispatched workflow has verified source-read denials and report publication. Then enable
+the variable with `gh variable set STORAGE_REPORT_ENABLED --body true` and run once more to publish the active status.
+Snapshots explicitly say whether automatic updates are active; manual reports do not claim a daily refresh.
+
 Provision the identity with `pwsh -File infra/storage-reporting.ps1` to review, then `-Apply` to provision. The existing
 main-only Uma Platform Workload Identity provider supplies GitHub authentication. Every gcloud call specifies its
 configuration and project; no active account or project is changed.

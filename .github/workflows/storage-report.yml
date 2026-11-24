@@ -15,13 +15,14 @@ concurrency:
 jobs:
   collect:
     name: Collect aggregate storage metadata
-    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true' && (github.event_name == 'workflow_dispatch' || vars.STORAGE_REPORT_ENABLED == 'true')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     env:
       GCP_PROJECT_ID: uma-rpg
+      STORAGE_REPORT_ENABLED: ${{ vars.STORAGE_REPORT_ENABLED }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
