@@ -5,10 +5,10 @@ import { imageCountsOf } from './imageCounts'
 
 // Invented identities and file paths only.
 const entry: AlbumEntry = {
-  outfitId: 900101, characterId: 9001, name: 'Rider One', title: 'Test', adult: false,
-  sisterOf: null, sister: null, tier: null, order: null, sprite: false,
+  outfitId: 900101, characterId: 9001, name: 'Rider One', title: 'Test',
+  sisterOf: null, sister: null, tier: null, order: null,
 }
-const empty: Pick<AlbumData, 'art' | 'cards'> = { art: null, cards: new Map() }
+const empty: Pick<AlbumData, 'art'> = { art: null }
 const look = (id: string, over: Partial<UniverseLook> = {}): UniverseLook => ({
   id, character: 'Rider One', characterId: 9001, outfit: id, title: id, path: `${id}.png`,
   bytes: 1, sha256: '0'.repeat(64), width: 1, height: 1, approvedOn: null, publishedAt: null, ...over,
@@ -27,26 +27,22 @@ describe('published image counts by game-world', () => {
     }
     const cyberpunk = world('cyberpunk', [look('weapon', { category: 'weapons' }), look('combat', { category: 'combat-sprites' })])
     expect(imageCountsOf(empty, [world('high-fantasy', [look('quest')]), cyberpunk, farm], entry)).toEqual([
-      { world: 'uma-farm', count: 7 }, { world: 'uma-cyberpunk', count: 2 }, { world: 'uma-quest', count: 1 },
+      { world: 'uma-farm', count: 7 }, { world: 'uma-cyberpunk', count: 2 },
     ])
   })
 
-  it('counts unique base reference files, including the full-body render and available support art', () => {
+  it('counts unique master-data references, including the full-body render and excluding support-card art', () => {
     const image = (path: string) => ({ path, width: 1, height: 1 })
-    const data: Pick<AlbumData, 'art' | 'cards'> = {
+    const data: Pick<AlbumData, 'art'> = {
       art: { atlases: {}, images: {
         'outfit-portraits': { 900101: image('portrait.webp') },
         'outfit-faces': { 900101: image('portrait.webp') },
         'outfit-renders': { 900101: image('render.webp'), 900201: image('unrelated.webp') },
         'character-faces': { 9001: image('face.webp') },
+        'support-card-art': { 1: image('support.webp') },
       } } as unknown as ArtIndex,
-      cards: new Map([[9001, [
-        { id: 1, title: 'Test One', rarity: 1, type: 'test', art: 'support.webp' },
-        { id: 2, title: 'Test Two', rarity: 1, type: 'test', art: 'support.webp' },
-        { id: 3, title: 'Test Three', rarity: 1, type: 'test', art: null },
-      ]]]),
     }
-    expect(imageCountsOf(data, [], entry)).toEqual([{ world: 'base-ref', count: 4 }])
+    expect(imageCountsOf(data, [], entry)).toEqual([{ world: 'master-data', count: 3 }])
   })
 
   it('keeps originals, sisters and unrelated identities apart, including portrait-only and profile-only worlds', () => {
@@ -55,12 +51,12 @@ describe('published image counts by game-world', () => {
     const cyberpunk: Universe = { ...world('cyberpunk'), portraits: {
       states: 50, approvedOn: null, publishedAt: null, pieces: [{ ...piece('crop', 'crop'), outfitId: 900102 }],
     } }
-    const quest: Universe = { ...world('high-fantasy'), profiles: {
+    const profilesWorld: Universe = { ...world('new-world'), profiles: {
       size: 192, release: null, publishedAt: null, pieces: [{ ...piece('profile', 'profile'), outfitId: 900102 }],
     } }
-    expect(imageCountsOf(empty, [farm, cyberpunk, quest], entry)).toEqual([{ world: 'uma-farm', count: 1 }])
-    expect(imageCountsOf(empty, [farm, cyberpunk, quest], sister)).toEqual([
-      { world: 'uma-farm', count: 1 }, { world: 'uma-cyberpunk', count: 1 }, { world: 'uma-quest', count: 1 },
+    expect(imageCountsOf(empty, [farm, cyberpunk, profilesWorld], entry)).toEqual([{ world: 'uma-farm', count: 1 }])
+    expect(imageCountsOf(empty, [farm, cyberpunk, profilesWorld], sister)).toEqual([
+      { world: 'uma-farm', count: 1 }, { world: 'uma-cyberpunk', count: 1 }, { world: 'new-world', count: 1 },
     ])
   })
 
@@ -79,5 +75,10 @@ describe('published image counts by game-world', () => {
   it('omits empty worlds, handles missing releases and preserves future world IDs', () => {
     expect(imageCountsOf(empty, [], entry)).toEqual([])
     expect(imageCountsOf(empty, [world('farm-life'), world('future-world', [look('new')])], entry)).toEqual([{ world: 'future-world', count: 1 }])
+  })
+
+  it('excludes all RPG and Quest gallery worlds, including older cached results', () => {
+    const hidden = ['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy'].map(id => world(id, [look(id)]))
+    expect(imageCountsOf(empty, hidden, entry)).toEqual([])
   })
 })

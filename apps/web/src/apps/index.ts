@@ -41,7 +41,7 @@ export const SUB_APPS: readonly SubApp[] = checkRegistry([
     summary: () => request<SummaryLine[]>('/api/ranker/summary'),
   },
   {
-    id: 'art', title: 'Uma Character Art', blurb: 'Every Uma’s pictures and the adult travelers’ keys, in the Ranker’s order.',
+    id: 'art', title: 'Uma Character Art', blurb: 'Approved universe pictures and master-data references, in the Ranker’s order.',
     load: () => import('./art'),
     summary: () => request<SummaryLine[]>('/api/art/summary'),
   },
