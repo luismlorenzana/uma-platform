@@ -24,7 +24,7 @@ class StorageController {
 }
 @Module({
   controllers: [StorageController],
-  providers: [{ provide: REPORT, useFactory: () => new StorageService(blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'reports/storage/',
+  providers: [{ provide: REPORT, useFactory: () => new StorageService(blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'reports/storage/', allowUppercasePaths: true,
     dir: resolve(process.cwd(), process.env.STORAGE_REPORT_DIR ?? '../../content/reports/storage') })) }],
 })
 export class StorageModule {}

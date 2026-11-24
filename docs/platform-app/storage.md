@@ -35,6 +35,8 @@ configuration and project; no active account or project is changed.
 a cloud snapshot. `STORAGE_REPORT_DIR` can point the local API at the `content/reports/storage` directory; the API reads
 immutable snapshots from its `snapshots/` child in the same layout as the cloud. The report API is behind the existing
 owner guard and has a bounded 60-second cache. Check for updates bypasses that cache; it does not start a new inventory.
+The report's blob store explicitly allows uppercase letters in snapshot timestamps while retaining path traversal
+checks. Other stores retain the default lowercase-only paths.
 
 ## Targeted retention
 

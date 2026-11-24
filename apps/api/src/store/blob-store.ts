@@ -22,9 +22,13 @@ export interface BlobStore {
   list(prefix: string, options?: { indexesOnly?: boolean }): Promise<string[]>
 }
 
-const safe = (path: string): string => {
-  // Preserve case in object names, including the ISO timestamp's T/Z in storage snapshots.
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,299}$/.test(path) || path.split('/').some((p) => p === '' || p === '.' || p === '..')) throw new Error(`Unsafe store path: ${path}`)
+interface BlobPathOptions {
+  /** Opt in for stores with case-bearing object names, such as ISO timestamped report snapshots. */
+  allowUppercasePaths?: boolean
+}
+const safe = (path: string, options: BlobPathOptions): string => {
+  const pattern = options.allowUppercasePaths ? /^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,299}$/ : /^[a-z0-9][a-z0-9._/-]{0,299}$/
+  if (!pattern.test(path) || path.split('/').some((p) => p === '' || p === '.' || p === '..')) throw new Error(`Unsafe store path: ${path}`)
   return path
 }
 const hash = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
@@ -33,9 +37,9 @@ const hash = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('h
 export class DirectoryBlobStore implements BlobStore {
   private readonly root: string
   private queue: Promise<unknown> = Promise.resolve()
-  constructor(dir: string) { this.root = resolve(dir) }
+  constructor(dir: string, private readonly pathOptions: BlobPathOptions = {}) { this.root = resolve(dir) }
   private full(path: string) {
-    const file = resolve(this.root, safe(path))
+    const file = resolve(this.root, safe(path, this.pathOptions))
     if (!file.startsWith(this.root + sep)) throw new Error('Path outside the store')
     return file
   }
@@ -94,14 +98,14 @@ const contentTypeOf = (path: string) =>
 /** The app's private bucket, under a prefix, read and written with the runtime account. */
 export class BucketBlobStore implements BlobStore {
   private bucket: Promise<GcsBucket> | undefined
-  constructor(private readonly name: string, private readonly prefix: string, private readonly factory?: () => Promise<GcsBucket>) {}
+  constructor(private readonly name: string, private readonly prefix: string, private readonly factory?: () => Promise<GcsBucket>, private readonly pathOptions: BlobPathOptions = {}) {}
   private open(): Promise<GcsBucket> {
     this.bucket ??= this.factory ? this.factory() : import('@google-cloud/storage').then(({ Storage }) => new Storage().bucket(this.name) as unknown as GcsBucket)
     this.bucket.catch(() => { this.bucket = undefined })
     return this.bucket
   }
   async read(path: string): Promise<StoredBlob | null> {
-    const bucket = await this.open(), key = this.prefix + safe(path)
+    const bucket = await this.open(), key = this.prefix + safe(path, this.pathOptions)
     try {
       const [meta] = await bucket.file(key).getMetadata()
       const generation = String(meta.generation)
@@ -114,7 +118,7 @@ export class BucketBlobStore implements BlobStore {
     }
   }
   async write(path: string, bytes: Uint8Array, ifGeneration: string): Promise<string | null> {
-    const bucket = await this.open(), file = bucket.file(this.prefix + safe(path))
+    const bucket = await this.open(), file = bucket.file(this.prefix + safe(path, this.pathOptions))
     try {
       await file.save(bytes, { resumable: false, contentType: contentTypeOf(path), preconditionOpts: { ifGenerationMatch: ifGeneration === ABSENT ? 0 : ifGeneration } })
       return String(file.metadata.generation)
@@ -125,7 +129,7 @@ export class BucketBlobStore implements BlobStore {
   }
   async list(prefix: string, options: { indexesOnly?: boolean } = {}): Promise<string[]> {
     const folder = prefix.replace(/\/+$/, '')
-    const fullPrefix = folder === '' ? this.prefix : `${this.prefix}${safe(folder)}/`
+    const fullPrefix = folder === '' ? this.prefix : `${this.prefix}${safe(folder, this.pathOptions)}/`
     const [files] = await (await this.open()).getFiles({ prefix: fullPrefix, fields: 'items(name),nextPageToken',
       ...(options.indexesOnly ? { matchGlob: `${fullPrefix}**/index.json` } : {}) })
     return files.map((f) => f.name.slice(this.prefix.length)).filter(path => !options.indexesOnly || path.endsWith('/index.json')).sort()
@@ -133,9 +137,9 @@ export class BucketBlobStore implements BlobStore {
 }
 
 /** The bucket's folder (`prefix`, ending in a slash) when a bucket is named, else the local folder. */
-export function blobStore(options: { bucket?: string; prefix: string; dir?: string }): BlobStore {
+export function blobStore(options: { bucket?: string; prefix: string; dir?: string } & BlobPathOptions): BlobStore {
   if (!/^([a-z0-9][a-z0-9-]*\/)+$/.test(options.prefix)) throw new Error(`A store's prefix is a folder path ending in a slash: ${options.prefix}`)
-  if (options.bucket) return new BucketBlobStore(options.bucket, options.prefix)
-  if (options.dir) return new DirectoryBlobStore(options.dir)
+  if (options.bucket) return new BucketBlobStore(options.bucket, options.prefix, undefined, options)
+  if (options.dir) return new DirectoryBlobStore(options.dir, options)
   throw new Error(`The store ${options.prefix} needs CONTENT_BUCKET or a local folder`)
 }

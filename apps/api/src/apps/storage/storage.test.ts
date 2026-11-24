@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { BucketBlobStore, DirectoryBlobStore } from '../../store/blob-store'
+import { blobStore, BucketBlobStore } from '../../store/blob-store'
 import { parseReport, type StorageReport, type Usage } from './report'
 import { StorageService } from './storage.service'
 
@@ -20,7 +20,8 @@ describe('storage snapshots', () => {
     try {
       await mkdir(join(root, 'snapshots'))
       await writeFile(join(root, snapshot), JSON.stringify(sample()))
-      const store = new DirectoryBlobStore(root)
+      await expect(new StorageService(blobStore({ dir: root, prefix: 'reports/storage/' })).report()).rejects.toThrow('Unsafe store path')
+      const store = blobStore({ dir: root, prefix: 'reports/storage/', allowUppercasePaths: true })
       expect(await new StorageService(store).report()).toEqual(sample())
       await expect(store.read('snapshots/../private.json')).rejects.toThrow('Unsafe store path')
     } finally { await rm(root, { recursive: true, force: true }) }
@@ -40,7 +41,7 @@ describe('storage snapshots', () => {
           save: async () => { throw new Error('The report reader must not write') },
         }
       },
-    }))
+    }), { allowUppercasePaths: true })
     expect(await new StorageService(store).report()).toEqual(sample())
     await expect(store.read('snapshots/../private.json')).rejects.toThrow('Unsafe store path')
   })
