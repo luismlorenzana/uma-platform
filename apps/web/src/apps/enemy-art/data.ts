@@ -23,9 +23,8 @@ export interface EnemyLook {
 export interface EnemyFaction { id: string; title: string; looks: EnemyLook[] }
 export interface EnemyGame { id: string; title: string; publishedAt: string | null; factions: EnemyFaction[] }
 
-/** The games that have enemies, in the tabs' order (the owner, 2026-11-15): Uma Cyberpunk first, then Uma Quest. Uma Farm
- *  has no enemy authoring. */
-export const GAMES: readonly { id: string; title: string }[] = [{ id: 'cyberpunk', title: 'Uma Cyberpunk' }, { id: 'quest', title: 'Uma Quest' }]
+/** The owner's current Enemy Art gallery selection (P219). */
+export const GAMES: readonly { id: string; title: string }[] = [{ id: 'cyberpunk', title: 'Uma Cyberpunk' }]
 
 export interface GameTab { id: string; title: string; game: EnemyGame | null; looks: number; factions: number }
 
@@ -49,11 +48,10 @@ export function bossesOf(faction: EnemyFaction): Boss[] {
 export const bossCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).filter((b) => b.role === 'boss').length, 0)
 export const lieutenantCount = (game: EnemyGame): number => game.factions.reduce((n, f) => n + bossesOf(f).filter((b) => b.role === 'lieutenant').length, 0)
 
-/** A tab for each game with enemies, published or not, then one for any other game that is published. */
+/** Only the selected gallery games, including an empty Cyberpunk tab before any looks are published. */
 export function gameTabs(games: readonly EnemyGame[]): GameTab[] {
   const tab = (id: string, title: string, game: EnemyGame | null): GameTab => ({ id, title: game?.title ?? title, game, looks: game ? lookCount(game) : 0, factions: game?.factions.length ?? 0 })
-  const planned = GAMES.map((g) => tab(g.id, g.title, games.find((p) => p.id === g.id) ?? null))
-  return [...planned, ...games.filter((g) => !GAMES.some((p) => p.id === g.id)).map((g) => tab(g.id, g.title, g))]
+  return GAMES.map((g) => tab(g.id, g.title, games.find((p) => p.id === g.id) ?? null))
 }
 
 /** The tab a link names, else the first with looks, else the first. */
@@ -67,7 +65,7 @@ let loading: Promise<EnemyGame[]> | null = null
 /** The published games, once a visit. */
 export function loadGames(): Promise<EnemyGame[]> {
   if (!loading) {
-    loading = request<EnemyGame[]>('/api/enemy-art/games')
+    loading = request<EnemyGame[]>('/api/enemy-art/games').then(games => games.filter(game => GAMES.some(selected => selected.id === game.id)))
     loading.catch(() => { loading = null })
   }
   return loading

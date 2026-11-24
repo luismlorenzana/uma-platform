@@ -216,6 +216,8 @@ Current gallery (P218): Farm and Cyberpunk universe pictures appear beside maste
 
 ## Uma Enemy Art
 
+Current gallery (P219): only Uma Cyberpunk is listed. The API, gallery tabs and landing-summary counts exclude Quest and other games. Old Quest links open Cyberpunk. Published files and private originals remain available to their existing consumers.
+
 The owner, 2026-11-15: "approved enemy looks should go into a completely new section in the platform maps, maybe you
 build out a new Uma Enemy Art, and then we start by adding the Cyberpunk ones first. Uma Farm won't have enemy authoring,
 both Uma Cyberpunk and Uma quest will have though." Live at https://uma-platform.web.app/enemy-art (EA1, P183).

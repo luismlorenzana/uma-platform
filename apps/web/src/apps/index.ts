@@ -46,7 +46,7 @@ export const SUB_APPS: readonly SubApp[] = checkRegistry([
     summary: () => request<SummaryLine[]>('/api/art/summary'),
   },
   {
-    id: 'enemy-art', title: 'Uma Enemy Art', blurb: 'The enemies’ approved looks, game by game and faction by faction: Uma Cyberpunk first, then Uma Quest.',
+    id: 'enemy-art', title: 'Uma Enemy Art', blurb: 'Uma Cyberpunk’s approved enemy looks, grouped by faction, boss and lieutenant.',
     load: () => import('./enemy-art'),
     summary: () => request<SummaryLine[]>('/api/enemy-art/summary'),
   },

@@ -121,7 +121,7 @@ export default function EnemyArtScreen() {
   const choose = (id: string) => { const p = new URLSearchParams(params); p.set('game', id); setParams(p); setOpen(null) }
   return (
     <AppFrame top={<PlaceHeader title="Uma Enemy Art" onBack={() => void navigate('/')} words={{ back: 'Uma Platform', about: 'About' }}
-      about={<p>The enemy looks the owner approved, published game by game and faction by faction: Uma Cyberpunk’s first, Uma Quest’s when its enemy authoring starts. Uma Farm has no enemies.</p>} />}>
+      about={<p>The approved Uma Cyberpunk enemy looks, grouped by faction, boss and lieutenant.</p>} />}>
       <main className="pb-safe h-full overflow-y-auto bg-page" data-testid="enemy-art">
         <div className="sticky top-0 z-10 flex gap-2 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur" role="tablist">
           {tabs.map((t) => (

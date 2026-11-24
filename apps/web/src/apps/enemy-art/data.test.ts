@@ -25,17 +25,18 @@ describe('Uma Enemy Art’s bosses (P186)', () => {
 })
 
 describe('Uma Enemy Art’s tabs (EA1)', () => {
-  it('shows Uma Cyberpunk and Uma Quest first, published or not, then any other published game', () => {
-    expect(gameTabs([]).map((t) => [t.id, t.title, t.game, t.looks])).toEqual([['cyberpunk', 'Uma Cyberpunk', null, 0], ['quest', 'Uma Quest', null, 0]])
-    const tabs = gameTabs([game('neon-city', 'Uma Neon City'), game('cyberpunk', 'Uma Cyberpunk')])
-    expect(tabs.map((t) => [t.id, t.looks, t.factions])).toEqual([['cyberpunk', 3, 2], ['quest', 0, 0], ['neon-city', 3, 2]])
+  it('shows only Uma Cyberpunk, excluding Quest and other worlds from older published results', () => {
+    expect(gameTabs([]).map((t) => [t.id, t.title, t.game, t.looks])).toEqual([['cyberpunk', 'Uma Cyberpunk', null, 0]])
+    const tabs = gameTabs([game('quest', 'Excluded Quest'), game('neon-city', 'Uma Neon City'), game('cyberpunk', 'Uma Cyberpunk')])
+    expect(tabs.map((t) => [t.id, t.looks, t.factions])).toEqual([['cyberpunk', 3, 2]])
     expect(lookCount(game('cyberpunk', 'Uma Cyberpunk'))).toBe(3)
   })
 
-  it('opens the tab a link names, else the first with looks', () => {
-    const tabs = gameTabs([game('neon-city', 'Uma Neon City')])
-    expect(chosenTab(tabs, null)?.id).toBe('neon-city')
-    expect(chosenTab(tabs, 'quest')?.id).toBe('quest')
+  it('falls back to Cyberpunk for old Quest links and when only excluded art is published', () => {
+    const tabs = gameTabs([game('quest', 'Excluded Quest')])
+    expect(tabs[0]?.game).toBeNull()
+    expect(chosenTab(tabs, null)?.id).toBe('cyberpunk')
+    expect(chosenTab(tabs, 'quest')?.id).toBe('cyberpunk')
     expect(chosenTab(gameTabs([]), 'nowhere')?.id).toBe('cyberpunk')
     expect([plural(1, 'look'), plural(2, 'look')]).toEqual(['1 look', '2 looks'])
   })
