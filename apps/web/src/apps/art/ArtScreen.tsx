@@ -11,7 +11,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CONTENT } from '../../content/client'
 import { KEY_SETS, KEYS } from './content'
-import { albumArtKey, byPlace, loadAlbum, loadUniverses, lookCounts, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
+import { byPlace, loadAlbum, loadUniverses, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
+import { imageCountsOf, type WorldImageCount } from './imageCounts'
 import { drawKeyFace, drawKeyPose } from './keyCanvas'
 import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
 import { SpritePlayer } from './SpritePlayer'
@@ -123,35 +124,43 @@ function FaceCanvas({ keys, expression }: { keys: Keys; expression: string }) {
   return <canvas ref={ref} className="h-20 w-auto" aria-label={expression} />
 }
 
-/** How many universe looks her page holds (CA4), on her tile. */
-function LooksBadge({ count, className }: { count: number; className: string }) {
-  return <span data-looks={count} title={`${count} universe look${count === 1 ? '' : 's'} on her page`} className={`absolute rounded-full bg-ink px-1.5 text-[10px] font-bold leading-4 text-page ${className}`}>{count} look{count === 1 ? '' : 's'}</span>
+function ImageCounts({ counts }: { counts: readonly WorldImageCount[] }) {
+  return (
+    <span role="list" aria-label="Published images by game-world" className="flex w-full flex-col gap-1">
+      {counts.map(({ world, count }) => (
+        <span role="listitem" key={world} data-world={world} aria-label={`${world}: ${count} images`} title={`${count} published image${count === 1 ? '' : 's'} · ${world}`}
+          className="flex items-center justify-between gap-1 rounded-full bg-sunken px-1.5 text-[10px] leading-4 text-ink">
+          <span>{world}</span><span className="font-bold tabular-nums">{count}</span>
+        </span>
+      ))}
+    </span>
+  )
 }
 
-function AdultTile({ entry, looks, onOpen }: { entry: AlbumEntry; looks: number; onOpen: () => void }) {
+function AdultTile({ entry, counts, onOpen }: { entry: AlbumEntry; counts: readonly WorldImageCount[]; onOpen: () => void }) {
   const keys = useKeys(entry.outfitId)
   return (
     <button type="button" onClick={onOpen} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-2 text-center shadow-1">
       <span className="absolute left-1.5 top-1.5"><Tier tier={entry.tier} /></span>
-      {looks > 0 && <LooksBadge count={looks} className="right-1.5 top-1.5" />}
       <div className="flex h-44 items-end justify-center">
         {keys?.set.stills ? <StillImg still={keys.set.stills.stand} alt={entry.name} className="max-h-44 w-auto" />
           : keys ? <PoseCanvas keys={keys} pose="ready" className="max-h-44 w-auto" /> : <span className="text-sm text-ink-soft">Loading</span>}
       </div>
       <span className="text-sm font-semibold leading-tight">{entry.name}</span>
       <span className="text-[11px] leading-tight text-ink-soft">{entry.title}</span>
+      <ImageCounts counts={counts} />
     </button>
   )
 }
 
-function UmaTile({ entry, path, looks, onOpen }: { entry: AlbumEntry; path: string | null; looks: number; onOpen: () => void }) {
+function UmaTile({ entry, path, counts, onOpen }: { entry: AlbumEntry; path: string | null; counts: readonly WorldImageCount[]; onOpen: () => void }) {
   return (
     <button type="button" onClick={onOpen} title={`${entry.name} · ${entry.title}`} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-1.5 text-center">
       {path ? <ArtImg path={path} alt={entry.name} box="size-16" className="size-16 rounded-md object-cover" /> : <div className="size-16 rounded-md bg-sunken" />}
       {entry.adult && <span className="absolute right-1 top-1 rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-ink">Adult</span>}
       {entry.sister && <span aria-label="Sister" className="absolute left-1 top-1 size-2.5 rounded-full bg-accent ring-1 ring-panel" />}
-      {looks > 0 && <LooksBadge count={looks} className="left-1 top-[3.2rem]" />}
       <span className="line-clamp-2 text-[11px] font-semibold leading-tight">{entry.name}</span>
+      <ImageCounts counts={counts} />
     </button>
   )
 }
@@ -285,8 +294,10 @@ export default function ArtScreen() {
   useEffect(() => { loadAlbum(true).then(setData, () => setFailed(true)) }, [])
   useEffect(() => { loadUniverses(true).then(setUniverses, () => undefined) }, [])
   const tab = params.get('tab') === 'adult' ? 'adult' : 'all'
-  const counts = useMemo(() => lookCounts(universes), [universes])
-  const looksFor = (e: AlbumEntry) => counts.get(albumArtKey(e)) ?? 0
+  const counts = useMemo(() => {
+    if (!data) return new Map<number, WorldImageCount[]>()
+    return new Map(data.entries.map(entry => [entry.outfitId, imageCountsOf(data, universes, entry)]))
+  }, [data, universes])
   const openId = Number(params.get('o')) || null
   const adults = useMemo(() => (data?.entries.filter((e) => e.adult) ?? []).sort(byPlace), [data])
   const shown = useMemo(() => {
@@ -322,8 +333,8 @@ export default function ArtScreen() {
           {!data && !failed && <p className="text-center text-ink-soft">Loading</p>}
           {failed && <p className="text-center text-ink-soft">The art didn’t load. Check you’re signed in and online.</p>}
           {data && tab === 'adult' && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-              {adults.map((e) => <AdultTile key={e.outfitId} entry={e} looks={looksFor(e)} onOpen={() => go({ o: String(e.outfitId) })} />)}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {adults.map((e) => <AdultTile key={e.outfitId} entry={e} counts={counts.get(e.outfitId) ?? []} onOpen={() => go({ o: String(e.outfitId) })} />)}
               {adults.length === 0 && <p className="col-span-full text-center text-ink-soft">No adult keys reached this device.</p>}
             </div>
           )}
@@ -341,8 +352,8 @@ export default function ArtScreen() {
                       <span className="ml-auto text-xs text-ink-soft">{umaCount(s.entries)} Umas · {s.entries.length} outfits</span>
                     </header>
                     {!folded && (
-                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
-                        {s.entries.map((e) => <UmaTile key={e.outfitId} entry={e} path={tileOf(data.art, e.outfitId)} looks={looksFor(e)} onOpen={() => go({ o: String(e.outfitId) })} />)}
+                      <div className="grid grid-cols-2 gap-2 min-[420px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-8">
+                        {s.entries.map((e) => <UmaTile key={e.outfitId} entry={e} path={tileOf(data.art, e.outfitId)} counts={counts.get(e.outfitId) ?? []} onOpen={() => go({ o: String(e.outfitId) })} />)}
                       </div>
                     )}
                   </section>
