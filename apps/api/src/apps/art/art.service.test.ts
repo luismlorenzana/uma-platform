@@ -2,9 +2,8 @@ import { buildMemoryRelease, syntheticMasterData } from '@luismlorenzana/uma-dat
 import { safePackPath, type FileSource } from '@luismlorenzana/uma-server/content'
 import { emptyBoard, emptyProfiles } from '@uma-platform/tiers'
 import { describe, expect, it } from 'vitest'
-import { KEY_PACK_ALLOW } from './art.module'
+import { ART_PACK_ALLOW } from './art.module'
 import { ArtService } from './art.service'
-import { sourceReleases } from './art.sources'
 import { PORTRAIT_PACK_ALLOW, portraitRecipe, profilePictures, PROFILE_PACK_ALLOW, UNIVERSE_PACK_ALLOW, universes } from './art.universes'
 
 // Invented records only: uma-data's synthetic release, with a second, invented outfit for character 9001.
@@ -27,23 +26,6 @@ describe('Character Art’s order (CA1)', () => {
       expect.objectContaining({ outfitId: 900101, identity: '9001', sister: null, tier: 'F', order: 2 }),
       expect.objectContaining({ outfitId: 900102, identity: 's900102', name: 'Sister 9001', sister: { relation: 'twin', age: 'an invented age', profile: 'Invented.' }, tier: 'T2', order: 1 }),
     ])
-  })
-})
-
-describe('the adult sets’ source-art records (CA2)', () => {
-  it('reads each batch from its channel, counts her files and the shared ones, and stops at the first missing batch', async () => {
-    const root = 'source-art/adult-travelers/batch-1'
-    const objects = new Map<string, Uint8Array>([
-      [`${root}/channels/latest.json`, json({ manifest: `gs://bucket/${root}/releases/v1/manifest.json`, outfitIds: [900101], version: 'v1' })],
-      [`${root}/releases/v1/manifest.json`, json({ version: 'v1', archive: { bytes: 99, sha256: 'ab' }, deliveryCatalog: [{ outfitId: 900101, revision: 'set-r1', personality: 'calm', ownerWord: 'Approve it', recordedAt: '2026-01-01' }] })],
-      [`${root}/releases/v1/inventory.json`, json({ files: [{ file: '900101/a.png', bytes: 10 }, { file: '900101/b.png', bytes: 5 }, { file: 'references/r.png', bytes: 7 }] })],
-      [`${root}/releases/v1/publication-receipt.json`, json({ publishedAt: '2026-01-02' })],
-    ])
-    const releases = await sourceReleases(files(objects))
-    expect(releases).toEqual([{
-      batch: 'batch-1', version: 'v1', publishedAt: '2026-01-02', approvedAt: null, ownerWord: null, archive: { bytes: 99, sha256: 'ab' }, files: 3, bytes: 22,
-      shared: { files: 1, bytes: 7 }, outfits: { '900101': { revision: 'set-r1', personality: 'calm', ownerWord: 'Approve it', recordedAt: '2026-01-01', files: 2, bytes: 15 } },
-    }])
   })
 })
 
@@ -116,6 +98,12 @@ describe('the universe looks (CA4)', () => {
     expect(combat.looks.map(({ category }) => category)).toEqual(['weapons', 'combat-sprites'])
   })
 
+  it('excludes every RPG and Quest gallery world while retaining Farm and Cyberpunk', async () => {
+    const ids = ['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy', 'farm-life', 'cyberpunk']
+    const objects = new Map(ids.map(id => [`universes/${id}/index.json`, index(id, [look('rider-one-street', HASH)])]))
+    expect((await universes(store(objects), () => 9001)).map(world => world.id)).toEqual(['cyberpunk', 'farm-life'])
+  })
+
   it('drops a look whose entry isn’t a hash-named PNG of its own, another universe’s index, and a damaged file', async () => {
     const objects = new Map<string, Uint8Array>([
       ['universes/sky-city/index.json', index('sky-city', [
@@ -161,12 +149,12 @@ describe('the universe looks (CA4)', () => {
     expect(fresh('Sister Renamed')).toEqual({ characterId: 9001, outfitId: 900102 })
   })
 
-  it('serves only a look’s hash-named PNG beside the key pack’s files', () => {
-    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW]
+  it('serves published image files and excludes the retired key pack', () => {
+    const allow = [...ART_PACK_ALLOW, UNIVERSE_PACK_ALLOW]
     expect(safePackPath(`universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`, allow)).toEqual({ path: `universes/sky-city/images/rider-one-street.${HASH.slice(0, 16)}.png`, immutable: true })
     for (const path of ['universes/sky-city/index.json', 'universes/sky-city/images/rider-one-street.png', `universes/sky-city/prompts/street.${HASH.slice(0, 16)}.txt`, `universes/../ranker/x.${HASH.slice(0, 16)}.png`, 'ranker/profiles.json'])
       expect(safePackPath(path, allow)).toBeNull()
-    expect(safePackPath('traveler-keys/index.json', allow)).toEqual({ path: 'traveler-keys/index.json', immutable: false })
+    expect(safePackPath('traveler-keys/index.json', allow)).toBeNull()
   })
 })
 
@@ -227,7 +215,7 @@ describe('the dialogue portraits as pieces (CA5)', () => {
   })
 
   it('serves only a piece’s hash-named PNG, never the recipe through the pack route', () => {
-    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW]
+    const allow = [...ART_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW]
     for (const path of [`universes/sky-city/portraits/bases/rider-one-street.${A.slice(0, 16)}.png`, `universes/sky-city/portraits/faces/rider-one-happy.${B.slice(0, 16)}.png`])
       expect(safePackPath(path, allow)).toEqual({ path, immutable: true })
     for (const path of ['universes/sky-city/portraits/index.json', `universes/sky-city/portraits/masks/rider-one-happy.${B.slice(0, 16)}.png`, 'universes/sky-city/portraits/faces/rider-one-happy.png'])
@@ -263,7 +251,7 @@ describe('the dialogue portraits as pieces (CA5)', () => {
     expect((await universes(store(new Map([['universes/sky-city/portraits/index.json', recipe('sky-city')]])), riderOne))[0]!.profiles).toBeNull()
   })
   it('serves only a profile\'s hash-named WebP, never its index', () => {
-    const allow = [...KEY_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW, PROFILE_PACK_ALLOW]
+    const allow = [...ART_PACK_ALLOW, UNIVERSE_PACK_ALLOW, PORTRAIT_PACK_ALLOW, PROFILE_PACK_ALLOW]
     const path = `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.webp`
     expect(safePackPath(path, allow)).toEqual({ path, immutable: true })
     for (const bad of ['universes/sky-city/profiles/index.json', `universes/sky-city/profiles/rider-one-street.${A.slice(0, 16)}.png`, 'universes/sky-city/profiles/rider-one-street.webp'])

@@ -204,6 +204,7 @@ export async function universes(store: Pick<BlobStore, 'read' | 'list'>, charact
   const ids = [...new Set(files.flatMap((p) => /^universes\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(?:portraits\/)?index\.json$/.exec(p)?.[1] ?? []))].sort()
   const out: Universe[] = []
   for (const id of ids) {
+    if (['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy'].includes(id)) continue
     const index = await readJson(store, `universes/${id}/index.json`)
     const valid = !!index && index.kind === 'universe-art' && index.universe === id && Array.isArray(index.looks)
     const looks = valid ? (index.looks as unknown[]).flatMap((raw) => lookOf(id, raw, characterOf) ?? []) : []

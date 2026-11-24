@@ -1,62 +1,14 @@
-// Uma Character Art (CA1, P135), moved from uma-quest's Album (its AlbumScreen.tsx at 6c572e6) and laid out by the Ranker.
-// Two tabs: every Uma, in the Ranker's tiers (T1 to T10, then the unranked, then F, collapsed), each outfit as the Uma
-// she is (a sister by her own name); and the adult travelers, with all twelve battle keys put together as the fight
-// draws them and her ten expressions. An Uma's page also shows her universe looks (CA4): the approved pictures of her in
-// another world, beside her full-body render and the rest of her input data. Everything is read at run time from the private releases, hash-checked and kept on
-// the device; nothing of it is in git.
+// Character Art: published universe pictures and master-data references in the Ranker’s order.
+// Private images load at runtime through the authenticated content clients.
 import './art.css'
 import { AppFrame, PlaceHeader } from '@luismlorenzana/uma-kit/shell'
 import { Button } from '@luismlorenzana/uma-kit/ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { CONTENT } from '../../content/client'
-import { KEY_SETS, KEYS } from './content'
-import { byPlace, loadAlbum, loadUniverses, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
+import { loadAlbum, loadUniverses, looksOf, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumData, type AlbumEntry, type Universe } from './data'
 import { imageCountsOf, type WorldImageCount } from './imageCounts'
-import { drawKeyFace, drawKeyPose } from './keyCanvas'
-import { KEY_POSES, type KeyPage, type LoadedKeys } from './keys'
-import { SpritePlayer } from './SpritePlayer'
 import { UmaUniverses } from './Universes'
-import { request } from '../../api/client'
-
-type Keys = LoadedKeys<HTMLImageElement>
-const RARITY = { 1: 'R', 2: 'SR', 3: 'SSR' } as const
-
-/** An adult set's source-art record (CA2): its batch's release and her own entry in it. */
-interface SourceOutfit { revision: string | null; personality: string | null; ownerWord: string | null; recordedAt: string | null; files: number; bytes: number }
-interface SourceRelease {
-  batch: string; version: string; publishedAt: string | null; approvedAt: string | null; ownerWord: string | null
-  archive: { bytes: number; sha256: string }; files: number; bytes: number; shared: { files: number; bytes: number }; outfits: Record<string, SourceOutfit>
-}
-let sourcesLoading: Promise<SourceRelease[]> | null = null
-const loadSources = (): Promise<SourceRelease[]> => {
-  sourcesLoading ??= request<SourceRelease[]>('/api/art/sources')
-  sourcesLoading.catch(() => { sourcesLoading = null })
-  return sourcesLoading
-}
-const mb = (bytes: number) => `${(bytes / 1_000_000).toFixed(1)} MB`
-const day = (iso: string | null) => (iso ? iso.slice(0, 10) : '—')
-
-function SourceRecord({ outfitId }: { outfitId: number }) {
-  const [releases, setReleases] = useState<SourceRelease[] | null>(null)
-  useEffect(() => { let live = true; loadSources().then((r) => { if (live) setReleases(r) }, () => { if (live) setReleases([]) }); return () => { live = false } }, [])
-  if (!releases) return <p className="text-sm text-ink-soft">Loading</p>
-  const release = releases.find((r) => r.outfits[String(outfitId)])
-  const own = release?.outfits[String(outfitId)]
-  if (!release || !own) return <p className="text-sm text-ink-soft">Not in a source-art release yet.</p>
-  return (
-    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 rounded-lg bg-panel p-3 text-sm">
-      <dt className="text-ink-soft">Release</dt><dd><code className="text-xs">{release.version}</code> · {release.batch}</dd>
-      <dt className="text-ink-soft">Approved</dt><dd>“{own.ownerWord ?? release.ownerWord ?? '—'}” · {day(own.recordedAt ?? release.approvedAt)}</dd>
-      <dt className="text-ink-soft">Set</dt><dd>{own.revision ?? '—'} · {own.personality ?? '—'}</dd>
-      <dt className="text-ink-soft">Her files</dt><dd>{own.files} · {mb(own.bytes)}</dd>
-      <dt className="text-ink-soft">Shared</dt><dd>{release.shared.files} files (references, body standard) · {mb(release.shared.bytes)}</dd>
-      <dt className="text-ink-soft">Archive</dt><dd>{release.files} files · {mb(release.archive.bytes)} · published {day(release.publishedAt)}</dd>
-    </dl>
-  )
-}
-const EXPRESSIONS = ['default', 'blink-half', 'blink-closed', 'focus', 'shout', 'hurt', 'weary', 'smile', 'surprise', 'worried'] as const
-const POSE_LABEL: Record<string, string> = { 'cast-charge': 'cast · charge', 'cast-release': 'cast · release' }
 
 function Tier({ tier }: { tier: AlbumEntry['tier'] }) {
   return <span className={`art-tier tier-${tier ?? 'none'} inline-flex min-w-9 items-center justify-center rounded-xs px-1.5 py-0.5 font-display text-[12px] font-bold text-ink`}>{tier ?? '—'}</span>
@@ -82,48 +34,6 @@ function ArtImg({ path, alt, className, box }: { path: string; alt: string; clas
   return <div ref={ref} className={box}>{src && <img src={src} alt={alt} className={className} />}</div>
 }
 
-const stillUrls = new Map<string, Promise<string>>()
-/** A baseline still from the key pack, hash-checked, as an object URL kept for the visit. */
-function stillUrl(still: KeyPage): Promise<string> {
-  let url = stillUrls.get(still.path)
-  if (!url) {
-    url = KEYS.pack(still.path, still).then((b) => URL.createObjectURL(new Blob([b as BlobPart], { type: 'image/webp' })))
-    url.catch(() => stillUrls.delete(still.path))
-    stillUrls.set(still.path, url)
-  }
-  return url
-}
-
-function StillImg({ still, alt, className }: { still: KeyPage; alt: string; className?: string }) {
-  const [src, setSrc] = useState<string | null>(null)
-  useEffect(() => { let live = true; stillUrl(still).then((u) => { if (live) setSrc(u) }, () => undefined); return () => { live = false } }, [still])
-  return src ? <img src={src} alt={alt} className={className} /> : <div className={className} />
-}
-
-/** A traveler's adult keys while she's on screen. */
-function useKeys(outfitId: number | null): Keys | null {
-  const [keys, setKeys] = useState<Keys | null>(null)
-  useEffect(() => {
-    if (!outfitId) return
-    let live = true
-    void KEY_SETS.hold(outfitId).then((k) => { if (live) setKeys(k) }, () => undefined)
-    return () => { live = false; setKeys(null); KEY_SETS.release(outfitId, performance.now()) }
-  }, [outfitId])
-  return keys
-}
-
-function PoseCanvas({ keys, pose, expression, className }: { keys: Keys; pose: string; expression?: string; className?: string }) {
-  const ref = useRef<HTMLCanvasElement>(null)
-  useEffect(() => { if (ref.current) drawKeyPose(ref.current, keys, pose, expression ?? null) }, [keys, pose, expression])
-  return <canvas ref={ref} className={className} aria-label={pose} />
-}
-
-function FaceCanvas({ keys, expression }: { keys: Keys; expression: string }) {
-  const ref = useRef<HTMLCanvasElement>(null)
-  useEffect(() => { if (ref.current) drawKeyFace(ref.current, keys, expression) }, [keys, expression])
-  return <canvas ref={ref} className="h-20 w-auto" aria-label={expression} />
-}
-
 function ImageCounts({ counts }: { counts: readonly WorldImageCount[] }) {
   return (
     <span role="list" aria-label="Published images by game-world" className="flex w-full flex-col gap-1">
@@ -137,27 +47,10 @@ function ImageCounts({ counts }: { counts: readonly WorldImageCount[] }) {
   )
 }
 
-function AdultTile({ entry, counts, onOpen }: { entry: AlbumEntry; counts: readonly WorldImageCount[]; onOpen: () => void }) {
-  const keys = useKeys(entry.outfitId)
-  return (
-    <button type="button" onClick={onOpen} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-2 text-center shadow-1">
-      <span className="absolute left-1.5 top-1.5"><Tier tier={entry.tier} /></span>
-      <div className="flex h-44 items-end justify-center">
-        {keys?.set.stills ? <StillImg still={keys.set.stills.stand} alt={entry.name} className="max-h-44 w-auto" />
-          : keys ? <PoseCanvas keys={keys} pose="ready" className="max-h-44 w-auto" /> : <span className="text-sm text-ink-soft">Loading</span>}
-      </div>
-      <span className="text-sm font-semibold leading-tight">{entry.name}</span>
-      <span className="text-[11px] leading-tight text-ink-soft">{entry.title}</span>
-      <ImageCounts counts={counts} />
-    </button>
-  )
-}
-
-function UmaTile({ entry, path, counts, onOpen }: { entry: AlbumEntry; path: string | null; counts: readonly WorldImageCount[]; onOpen: () => void }) {
+export function UmaTile({ entry, path, counts, onOpen }: { entry: AlbumEntry; path: string | null; counts: readonly WorldImageCount[]; onOpen: () => void }) {
   return (
     <button type="button" onClick={onOpen} title={`${entry.name} · ${entry.title}`} className="relative flex flex-col items-center gap-1 rounded-lg bg-panel p-1.5 text-center">
       {path ? <ArtImg path={path} alt={entry.name} box="size-16" className="size-16 rounded-md object-cover" /> : <div className="size-16 rounded-md bg-sunken" />}
-      {entry.adult && <span className="absolute right-1 top-1 rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-ink">Adult</span>}
       {entry.sister && <span aria-label="Sister" className="absolute left-1 top-1 size-2.5 rounded-full bg-accent ring-1 ring-panel" />}
       <span className="line-clamp-2 text-[11px] font-semibold leading-tight">{entry.name}</span>
       <ImageCounts counts={counts} />
@@ -165,8 +58,7 @@ function UmaTile({ entry, path, counts, onOpen }: { entry: AlbumEntry; path: str
   )
 }
 
-function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: AlbumData; universes: readonly Universe[]; onClose: () => void }) {
-  const keys = useKeys(entry.adult ? entry.outfitId : null)
+export function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: AlbumData; universes: readonly Universe[]; onClose: () => void }) {
   const worlds = useMemo(() => looksOf(universes, entry.characterId, entry.sister ? entry.outfitId : undefined), [universes, entry])
   const pictures = useMemo(() => picturesOf(data.art, entry), [data.art, entry])
   const render = renderOf(data.art, entry.outfitId)
@@ -189,69 +81,13 @@ function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: 
         )}
         {render && (
           <section className="flex flex-col gap-3">
-            <h3 className="font-display text-base font-bold">Full body <span className="text-sm font-normal text-ink-soft">3D render · {render.width}×{render.height} · lossless</span></h3>
+            <h3 className="font-display text-base font-bold">Full body <span className="text-sm font-normal text-ink-soft">Master data · 3D render · {render.width}×{render.height} · lossless</span></h3>
             <figure className="flex justify-center rounded-lg bg-panel p-3">
               <ArtImg path={render.path} alt={`${entry.name}: full body`} box="flex min-h-96 items-end justify-center" className="max-h-[36rem] w-auto object-contain" />
             </figure>
           </section>
         )}
         {worlds.length > 0 && <UmaUniverses groups={worlds} />}
-        {entry.adult && (
-          <section className="flex flex-col gap-3">
-            {keys && <p className="text-xs text-ink-soft">Adult set {keys.set.revision} · {keys.set.archetype} · {keys.set.weapon}</p>}
-            {!keys && <p className="text-sm text-ink-soft">Loading her keys</p>}
-            {keys?.set.stills && (
-              <>
-                <h3 className="font-display text-base font-bold">Baseline</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  {([['stand', 'Standing'], ['head', 'Head'], ['face', 'Face']] as const).map(([k, label]) => {
-                    const st = keys.set.stills![k]
-                    return (
-                      <figure key={k} className="flex flex-col items-center justify-end gap-1 rounded-lg bg-panel p-2">
-                        <StillImg still={st} alt={`${entry.name}: ${label}`} className={k === 'stand' ? 'max-h-72 w-auto' : 'w-full max-w-40'} />
-                        <figcaption className="text-xs font-semibold">{label} <span className="font-normal text-ink-soft">{st.width}×{st.height}</span></figcaption>
-                      </figure>
-                    )
-                  })}
-                </div>
-              </>
-            )}
-            {keys && (
-              <>
-                <h3 className="font-display text-base font-bold">Battle keys</h3>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {KEY_POSES.map((p) => (
-                    <figure key={p} className="flex flex-col items-center gap-1 rounded-lg bg-panel p-2">
-                      <div className="flex h-56 items-end"><PoseCanvas keys={keys} pose={p} className="max-h-56 max-w-full" /></div>
-                      <figcaption className="text-xs font-semibold">{POSE_LABEL[p] ?? p}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-                <h3 className="font-display text-base font-bold">Faces</h3>
-                <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
-                  {EXPRESSIONS.map((e) => (
-                    <figure key={e} className="flex flex-col items-center gap-1 rounded-lg bg-panel p-1">
-                      <FaceCanvas keys={keys} expression={e} />
-                      <figcaption className="text-[10px]">{e}</figcaption>
-                    </figure>
-                  ))}
-                </div>
-              </>
-            )}
-          </section>
-        )}
-        {entry.sprite && (
-          <section className="flex flex-col gap-3">
-            <h3 className="font-display text-base font-bold">Chibi sprites</h3>
-            <SpritePlayer outfitId={entry.outfitId} name={entry.name} />
-          </section>
-        )}
-        {entry.adult && (
-          <section className="flex flex-col gap-3">
-            <h3 className="font-display text-base font-bold">Source art</h3>
-            <SourceRecord outfitId={entry.outfitId} />
-          </section>
-        )}
         <section className="flex flex-col gap-3">
           <h3 className="font-display text-base font-bold">Master data</h3>
           {pictures.length === 0 && <p className="text-sm text-ink-soft">No pictures in this release.</p>}
@@ -264,19 +100,6 @@ function Detail({ entry, data, universes, onClose }: { entry: AlbumEntry; data: 
             ))}
           </div>
         </section>
-        {(data.cards.get(entry.characterId)?.length ?? 0) > 0 && (
-          <section className="flex flex-col gap-3">
-            <h3 className="font-display text-base font-bold">{entry.sisterOf ? `${entry.sisterOf}’s support cards` : 'Support cards'} <span className="text-sm font-normal text-ink-soft">{data.cards.get(entry.characterId)!.length}</span></h3>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {data.cards.get(entry.characterId)!.map((c) => (
-                <figure key={c.id} className="flex flex-col items-center gap-1 rounded-lg bg-panel p-2">
-                  {c.art ? <ArtImg path={c.art} alt={c.title} box="flex min-h-24 items-center" className="max-h-56 max-w-full rounded-md object-contain" /> : <div className="h-24 w-full rounded-md bg-sunken" />}
-                  <figcaption className="text-center text-xs"><b>{RARITY[c.rarity]}</b> <span className="text-ink-soft">{c.type}</span><br />{c.title}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
     </div>
   )
@@ -293,13 +116,11 @@ export default function ArtScreen() {
   const [universes, setUniverses] = useState<Universe[]>([])
   useEffect(() => { loadAlbum(true).then(setData, () => setFailed(true)) }, [])
   useEffect(() => { loadUniverses(true).then(setUniverses, () => undefined) }, [])
-  const tab = params.get('tab') === 'adult' ? 'adult' : 'all'
   const counts = useMemo(() => {
     if (!data) return new Map<number, WorldImageCount[]>()
     return new Map(data.entries.map(entry => [entry.outfitId, imageCountsOf(data, universes, entry)]))
   }, [data, universes])
   const openId = Number(params.get('o')) || null
-  const adults = useMemo(() => (data?.entries.filter((e) => e.adult) ?? []).sort(byPlace), [data])
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase()
     return (data?.entries ?? []).filter((e) => !q || e.name.toLowerCase().includes(q) || e.title.toLowerCase().includes(q) || String(e.outfitId).includes(q))
@@ -316,29 +137,14 @@ export default function ArtScreen() {
       about={<p>In the Ranker’s order: each outfit sits in her tier on Playable Umas; a sister is listed by her own name. Release {data?.release ?? '…'}.</p>} />}>
       <main className="pb-safe h-full overflow-y-auto bg-page" data-testid="art">
         <div className="sticky top-0 z-10 flex flex-col gap-2 border-b border-hairline bg-page/95 px-4 py-3 backdrop-blur">
-          <div className="flex gap-2" role="tablist">
-            {(['all', 'adult'] as const).map((t) => (
-              <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => go({ tab: t === 'adult' ? 'adult' : null })}
-                className={`min-h-10 rounded-full px-4 text-sm font-semibold ${tab === t ? 'bg-accent text-accent-ink' : 'bg-sunken text-ink'}`}>
-                {t === 'adult' ? `Adult travelers${data ? ` · ${adults.length}` : ''}` : `Every Uma${data ? ` · ${data.entries.length}` : ''}`}
-              </button>
-            ))}
-          </div>
-          {tab === 'all' && (
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name, outfit or id" aria-label="Search"
-              className="min-h-10 rounded-sm bg-sunken px-3 text-sm text-ink outline-none ring-accent focus:ring-2" />
-          )}
+          <p className="text-sm font-semibold">Every Uma{data ? ` · ${data.entries.length}` : ''}</p>
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name, outfit or id" aria-label="Search"
+            className="min-h-10 rounded-sm bg-sunken px-3 text-sm text-ink outline-none ring-accent focus:ring-2" />
         </div>
         <div className="mx-auto max-w-5xl px-4 py-4">
           {!data && !failed && <p className="text-center text-ink-soft">Loading</p>}
           {failed && <p className="text-center text-ink-soft">The art didn’t load. Check you’re signed in and online.</p>}
-          {data && tab === 'adult' && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {adults.map((e) => <AdultTile key={e.outfitId} entry={e} counts={counts.get(e.outfitId) ?? []} onOpen={() => go({ o: String(e.outfitId) })} />)}
-              {adults.length === 0 && <p className="col-span-full text-center text-ink-soft">No adult keys reached this device.</p>}
-            </div>
-          )}
-          {data && tab === 'all' && (
+          {data && (
             <div className="flex flex-col gap-4">
               {layout.map((s) => {
                 if (s.entries.length === 0 && s.id !== 'F') return null

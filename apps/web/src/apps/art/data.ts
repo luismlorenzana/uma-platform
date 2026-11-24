@@ -1,12 +1,8 @@
-// What Character Art shows (CA1, adapted from uma-quest's album/data.ts at 6c572e6): every outfit in master data with her
-// name and title, the art master data holds for her, which have adult keys, and, from the Ranker (/api/art/order), the
-// Uma she is (a sister's name and profile) and her tier and place. Read at run time, never from git.
+// Character Art's master-data references, published universe pictures and exact Ranker identities.
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { PLAYABLE_TIERS, type AnyTier } from '@uma-platform/tiers'
 import { request } from '../../api/client'
 import { CONTENT } from '../../content/client'
-import { KEYS } from './content'
-import { keyOutfitIds } from './keys'
 
 export interface AlbumEntry {
   outfitId: number
@@ -15,27 +11,18 @@ export interface AlbumEntry {
   name: string
   /** The outfit's title, e.g. her original or a seasonal dress. */
   title: string
-  /** She has an adult battle set (uma-quest's Q44, Q46) in the key pack. */
-  adult: boolean
   /** Her character's name, when she is a sister. */
   sisterOf: string | null
   sister: { relation: string; age: string; profile: string } | null
   /** Her tier on Playable Umas, and her place in the whole ranking. */
   tier: AnyTier | null
   order: number | null
-  /** She has a chibi sprite set in master data (`outfit-sprites`, CA2). */
-  sprite: boolean
 }
-
-/** A support card of her character's, with its art (CA2). */
-export interface SupportCard { id: number; title: string; rarity: 1 | 2 | 3; type: string; art: string | null }
 
 export interface AlbumData {
   entries: AlbumEntry[]
   art: ArtIndex | null
   release: string
-  /** Each character's support cards, SSR first (CA2). */
-  cards: Map<number, SupportCard[]>
 }
 
 interface Order {
@@ -51,34 +38,24 @@ export function loadAlbum(fresh = false): Promise<AlbumData> {
   album ??= (async () => {
     const client = await CONTENT.release()
     const manifest = await CONTENT.manifest()
-    const [outfits, characters, supports, art, adult, order] = await Promise.all([
-      client.set(manifest, 'outfits'), client.set(manifest, 'characters'), client.set(manifest, 'support-cards'), client.art(manifest),
-      keyOutfitIds(KEYS).catch(() => [] as number[]), request<Order>('/api/art/order'),
+    const [outfits, characters, art, order] = await Promise.all([
+      client.set(manifest, 'outfits'), client.set(manifest, 'characters'), client.art(manifest), request<Order>('/api/art/order'),
     ])
     // Names and titles as the Ranker shows them (the Global text first), so both pages say the same.
     const names = new Map(characters.map((c) => [c.id as number, c.name.global ?? c.name.en ?? c.name.ja]))
     const ranked = new Map(order.outfits.map((o) => [o.outfitId, o]))
-    const keyed = new Set(adult)
     const entries = outfits
-      .filter((o) => art?.images['outfit-portraits']?.[String(o.id)] || keyed.has(o.id as number))
+      .filter((o) => art?.images['outfit-portraits']?.[String(o.id)] || art?.images['outfit-renders']?.[String(o.id)])
       .map((o): AlbumEntry => {
         const r = ranked.get(o.id as number), character = names.get(o.characterId as number) ?? `#${o.characterId}`
         return {
           outfitId: o.id as number, characterId: o.characterId as number, name: r?.name ?? character,
-          title: (o.title.global ?? o.title.en ?? o.title.ja).replace(/^\[(.*)\]$/, '$1'), adult: keyed.has(o.id as number),
+          title: (o.title.global ?? o.title.en ?? o.title.ja).replace(/^\[(.*)\]$/, '$1'),
           sisterOf: r?.sister ? character : null, sister: r?.sister ?? null, tier: r?.tier ?? null, order: r?.order ?? null,
-          sprite: !!art?.sprites?.[String(o.id)],
         }
       })
       .sort(byPlace)
-    const cards = new Map<number, SupportCard[]>()
-    for (const c of supports) {
-      const list = cards.get(c.characterId as number) ?? []
-      list.push({ id: c.id as number, title: (c.title.global ?? c.title.en ?? c.title.ja).replace(/^\[(.*)\]$/, '$1'), rarity: c.rarity as 1 | 2 | 3, type: c.type, art: art?.images['support-card-art']?.[String(c.id)]?.path ?? null })
-      cards.set(c.characterId as number, list)
-    }
-    for (const list of cards.values()) list.sort((a, b) => b.rarity - a.rarity || a.id - b.id)
-    return { entries, art, release: manifest.version, cards }
+    return { entries, art, release: manifest.version }
   })()
   album.catch(() => { album = null })
   return album
@@ -133,10 +110,11 @@ export interface Universe {
 }
 
 let universes: Promise<Universe[]> | null = null
+const hiddenWorlds = new Set(['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy'])
 /** Every published universe, loaded once a visit; `fresh` reads them again. */
 export function loadUniverses(fresh = false): Promise<Universe[]> {
   if (fresh) universes = null
-  universes ??= request<Universe[]>('/api/art/universes')
+  universes ??= request<Universe[]>('/api/art/universes').then(all => all.filter(world => !hiddenWorlds.has(world.id)))
   universes.catch(() => { universes = null })
   return universes
 }
@@ -145,7 +123,7 @@ export function loadUniverses(fresh = false): Promise<Universe[]> {
  *  of hers. */
 export function looksOf(all: readonly Universe[], characterId: number, outfitId?: number): { universe: Universe; looks: UniverseLook[]; splash: UniverseLook[]; pieces: PortraitPiece[]; profiles: PortraitPiece[] }[] {
   const hers = (piece: { characterId: number | null; outfitId?: number }) => piece.characterId === characterId && piece.outfitId === outfitId
-  return all.map((universe) => {
+  return all.filter(universe => !hiddenWorlds.has(universe.id)).map((universe) => {
     const pieces = (universe.portraits?.pieces ?? []).filter(hers)
     const looks = universe.looks.filter(look => hers(look) || look.duo?.members.some(member => member.role === 'character' && hers(member)))
     return {
