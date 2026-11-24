@@ -13,6 +13,7 @@ import { planCharacterFamiliesOnly } from './character-families-only'
 import { fixtureBase, fixtureFace } from './dialogue-portrait-fixture'
 import { writeDialoguePortraitRelease } from './dialogue-portrait-release'
 import { encodePng, type Rgba } from './enemy-images'
+import { planFarmDuoArt, writeFarmDuoArt } from './farm-duo-illustrations'
 import { writeIllustrationRelease } from './illustration-release'
 import { ILLUSTRATION_PSNR_FLOOR, ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex, type UniverseArtIndex } from './illustrations'
 import { LocalOverlayStorage } from './local-storage'
@@ -30,6 +31,37 @@ function sets(data = syntheticMasterData()): MasterSets {
 }
 const sha = (b: Uint8Array) => createHash('sha256').update(b).digest('hex')
 const W = 160, H = 90, ID = 9999
+
+it('packs each shared bedtime image once for a base Uma and an outfit-specific partner', async () => {
+  const dir = await temp('duo-illustrations-')
+  await writeDataSets({ releaseDir: dir, sources: { 'synthetic/test': '1' }, sets: sets() })
+  await writeIllustrationRelease(dir, [{
+    characterId: ID, universe: 'farm-life', scenes: [{
+      id: 'solo', title: 'Solo', outfit: 'pajamas-1', moment: 'night-in',
+      approvedOn: '2026-01-01', width: W, height: H, bytes: new Uint8Array([1, 2]),
+    }],
+  }])
+  const png = await encodePng(scene(1))
+  await writeFile(join(dir, 'duo.png'), png)
+  const index: UniverseArtIndex = {
+    schemaVersion: 1, kind: 'universe-art', universe: 'farm-life', revision: 1,
+    looks: [{
+      id: 'duo-farm-9999-s990002-pjm01-bed-recline', character: 'Pilot One', kind: 'splash', category: 'duo-splash',
+      title: 'Bed Recline', outfit: 'duo', path: 'duo.png', bytes: png.length, sha256: sha(png), width: W, height: H, approvedOn: '2026-01-01',
+      duo: { id: 'farm-9999-s990002', members: [
+        { id: '9999', role: 'character', characterId: ID, outfitId: 999901 },
+        { id: 's990002', role: 'character', characterId: 9900, outfitId: 990002 },
+      ] },
+    }],
+  }
+  const release = await writeFarmDuoArt(dir, dir, planFarmDuoArt(index))
+  const art = JSON.parse(await readFile(join(dir, release.art!), 'utf8')) as ArtIndex
+  const base = JSON.parse(await readFile(join(dir, art.illustrations!['9999']!), 'utf8'))
+  const sister = JSON.parse(await readFile(join(dir, art.illustrations!['outfit:990002']!), 'utf8'))
+  expect(base.scenes.map((entry: { id: string }) => entry.id)).toEqual(['solo', 'duo-s990002-recline'])
+  expect(sister.scenes[0]).toMatchObject({ id: 'duo-9999-recline', path: base.scenes[1].path })
+  expect(release.files.filter(file => file.path === sister.scenes[0].path)).toHaveLength(1)
+})
 
 /** A soft scene: a two-colour gradient with a disc, opaque. `noise` fills it with noise instead, which no lossy WebP keeps. */
 function scene(seed: number, { noise = false, clear = false } = {}): Rgba {

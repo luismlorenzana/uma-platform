@@ -85,3 +85,12 @@ Character 1068's:
 The next Umas join the same way: `pnpm art:push farm-life` publishes their scenes and runs `pnpm art:release farm-life`,
 which is steps 3 and 4, then the profile pictures (P203).
 Use the [Farm Life splash art authoring packet](../authoring/farm-life-splash-art/README.md) to prepare a character's local set; its scene set gives her scenes' moments, so only a scene that departs from it needs a line in the moments map.
+
+### Farm duo bedtime illustrations
+
+The packer takes the approved `duo-splash` PJM01 bedtime poses from Farm Life and checks both participants' cast identities.
+Each shared WebP appears under `duo-<partner cast ID>-<pose>` in both illustration manifests. The four pose IDs are
+`recline`, `kiss`, `kneel` and `crawl-kiss`. The installed master-data format stays the same.
+To update only these images, seed a working release from live and run
+`pnpm illustrations:pack farm-life --duos-only --release-dir <working release>`. It preserves the individual scenes.
+The candidate still needs release read-back before promotion.

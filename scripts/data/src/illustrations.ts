@@ -38,6 +38,7 @@ export interface UniverseArtEntry {
   approvedOn: string | null
   kind?: string
   category?: string
+  duo?: { id: string; members: { id: string; role: string; characterId?: number; outfitId?: number }[] }
 }
 export interface UniverseArtIndex { schemaVersion: 1; kind: 'universe-art'; universe: string; revision: number; looks: UniverseArtEntry[] }
 /** The private moments map: each scene, by the universe's id, to its story moment. */

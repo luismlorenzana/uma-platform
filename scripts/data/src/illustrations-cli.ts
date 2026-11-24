@@ -10,6 +10,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { localArtIdentityLookup } from './art-identities'
+import { planFarmDuoArt, writeFarmDuoArt } from './farm-duo-illustrations'
 import { writeIllustrationRelease } from './illustration-release'
 import { ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex } from './illustrations'
 import { DEFAULT_CONTENT_DIR, readLocalManifest } from './release-dir'
@@ -18,6 +19,8 @@ const args = process.argv.slice(2).filter((a) => a !== '--')
 const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1] }
 const universe = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--release-dir') ?? 'farm-life'
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
+const duosOnly = args.includes('--duos-only')
+if (duosOnly && universe !== 'farm-life') throw new Error('--duos-only is for farm-life')
 const releaseDir = resolve(option('--release-dir') ?? resolve(DEFAULT_CONTENT_DIR, 'release'))
 const mirror = resolve(process.env.ART_DIR ?? resolve(DEFAULT_CONTENT_DIR, '../../uma-art-authoring/content/published/art'), 'universes', universe)
 const momentsFile = resolve(DEFAULT_CONTENT_DIR, 'authoring/illustrations', `${universe}.json`)
@@ -36,10 +39,17 @@ async function main(): Promise<void> {
     writeFileSync(resolve(mirror, 'index.json'), gcloud(['storage', 'cat', `${remote}/index.json`]))
   }
   const index = readUniverseArtIndex(JSON.parse(await readFile(resolve(mirror, 'index.json'), 'utf8')) as unknown, universe)
+  const duoArt = planFarmDuoArt(index)
   if (!args.includes('--no-fetch')) {
     // Only the splash scenes, and only those not already mirrored with their approved bytes.
-    const want = index.looks.filter((l) => l.kind === 'splash' && !(existsSync(resolve(mirror, l.path)) && sha256(readFileSync(resolve(mirror, l.path))) === l.sha256))
+    const sources = duosOnly ? duoArt.map(entry => entry.look) : index.looks.filter(look => look.kind === 'splash')
+    const want = sources.filter((l) => !(existsSync(resolve(mirror, l.path)) && sha256(readFileSync(resolve(mirror, l.path))) === l.sha256))
     if (want.length > 0) gcloud(['storage', 'cp', ...want.map((l) => `${remote}/${l.path}`), resolve(mirror, 'images')])
+  }
+  if (duosOnly) {
+    const manifest = await writeFarmDuoArt(releaseDir, mirror, duoArt)
+    console.log(`Release: ${manifest.version} (${duoArt.length} shared Farm duo pictures from ${universe} r${index.revision})`)
+    return
   }
   if (!existsSync(momentsFile)) throw new Error(`No moments map for ${universe}: write ${momentsFile} (docs/sprites/illustrations.md)`)
   const moments = readIllustrationMoments(JSON.parse(await readFile(momentsFile, 'utf8')) as unknown, universe)
@@ -58,8 +68,10 @@ async function main(): Promise<void> {
     for (const [i, s] of p.scenes.entries()) console.log(`  ${s.moment.padEnd(18)} ${s.id} (${s.outfit}, ${(s.bytes.byteLength / 1024).toFixed(0)} KB)${p.quality[i]!.quality === ILLUSTRATION_QUALITY ? '' : p.quality[i]!.quality === 'lossless' ? ', lossless' : `, quality ${p.quality[i]!.quality}`}${fromSet.has(plan.scenes[i]!.universeId) ? ' *' : ''}`)
     packed.push(p)
   }
-  const manifest = await writeIllustrationRelease(releaseDir, packed)
+  const individual = await writeIllustrationRelease(releaseDir, packed)
+  const manifest = duoArt.length ? await writeFarmDuoArt(releaseDir, mirror, duoArt) : individual
   console.log(`Release: ${manifest.version} (${packed.length} character(s) in the illustrations family, from ${universe} r${index.revision})`)
+  if (duoArt.length) console.log(`${duoArt.length} shared Farm duo pictures`)
 }
 
 main().catch((error: unknown) => { console.error(error instanceof Error ? error.message : error); process.exitCode = 1 })
