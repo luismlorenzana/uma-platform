@@ -60,10 +60,8 @@ function lookOf(game: string, raw: unknown): EnemyLook | null {
 
 /** Cyberpunk's published looks grouped by faction, in the index's order. No valid looks means an empty gallery. */
 export async function enemyGames(store: Pick<BlobStore, 'read' | 'list'>): Promise<EnemyGame[]> {
-  const files = await store.list('cyberpunk')
-  const ids = [...new Set(files.flatMap((p) => /^([a-z0-9]+(?:-[a-z0-9]+)*)\/index\.json$/.exec(p)?.[1] ?? []))].filter(id => id === 'cyberpunk')
   const out: EnemyGame[] = []
-  for (const id of ids) {
+  for (const id of ['cyberpunk']) {
     const blob = await store.read(`${id}/index.json`)
     let index: unknown = null
     try { index = blob ? JSON.parse(decoder.decode(blob.bytes)) : null } catch { index = null }

@@ -3,9 +3,10 @@
 // app's own bucket (`enemy-art/`), or its local copy in dev (`content/published/enemy-art`).
 import { resolve } from 'node:path'
 import { PrivatePackModule, type FileSource } from '@luismlorenzana/uma-server/content'
-import { Controller, Get, Inject, Module } from '@nestjs/common'
+import { Controller, Get, Header, Inject, Module, Query } from '@nestjs/common'
+import { CatalogCache } from '../../store/catalog-cache'
 import { blobStore, type BlobStore } from '../../store/blob-store'
-import { ENEMY_PACK_ALLOW, enemyGames } from './enemy-art.games'
+import { ENEMY_PACK_ALLOW, enemyGames, type EnemyGame } from './enemy-art.games'
 
 /** What `pnpm art:push <universe> --enemies` publishes: `enemy-art/…` in the app's bucket, or its local copy in dev. */
 const published = (): BlobStore => blobStore({ bucket: process.env.CONTENT_BUCKET, prefix: 'enemy-art/', dir: resolve(process.cwd(), process.env.ENEMY_ART_DIR ?? '../../../uma-art-authoring/content/published/enemy-art') })
@@ -14,13 +15,16 @@ const PUBLISHED = Symbol('enemy-art-published')
 
 @Controller('enemy-art')
 class EnemyArtController {
+  private readonly catalog = new CatalogCache<EnemyGame[]>()
   constructor(@Inject(PUBLISHED) private readonly published: BlobStore) {}
 
   /** Every published game's enemy looks, faction by faction. */
   @Get('games')
-  games() { return enemyGames(this.published) }
+  @Header('Cache-Control', 'private, no-cache')
+  games(@Query('refresh') refresh?: string) { return this.catalog.get(() => enemyGames(this.published), refresh === '1') }
 
   @Get('summary')
+  @Header('Cache-Control', 'private, no-cache')
   async summary() {
     const games = await this.games().catch(() => [])
     const factions = games.reduce((n, g) => n + g.factions.length, 0), looks = games.reduce((n, g) => n + g.factions.reduce((m, f) => m + f.looks.length, 0), 0)

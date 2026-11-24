@@ -206,3 +206,7 @@ accepts every newer release, so new characters, cards and skills arrive without 
 | [Farm Life splash art authoring](docs/authoring/farm-life-splash-art/README.md) | A new character's nine event illustrations from approved outfits and expressions; starter prompt, private study commands and review workflow |
 | [docs/racer-mapping.md](docs/racer-mapping.md) | uma-racer's current packs → master data, for the Phase 3 refactor |
 | [AGENTS.md](AGENTS.md) | Rules for any agent working here |
+
+### Cloud storage reporting
+
+[Storage Report](https://uma-platform.web.app/storage) shows daily cloud usage by universe, purpose and retained history. The [runbook](docs/platform-app/storage.md) documents `pnpm storage:collect`, scoped retention plans and the metadata-only reporting identity.

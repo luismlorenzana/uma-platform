@@ -1,0 +1,42 @@
+name: Collect storage report
+
+on:
+  schedule:
+    - cron: '17 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uma-storage-report
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    name: Collect aggregate storage metadata
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GCP_PROJECT_ID: uma-rpg
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Verify inventory and retention tests
+        run: node --test scripts/storage/model.test.mjs scripts/storage/retention.test.mjs
+      - name: Authenticate the metadata collector
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: platform-storage-report@uma-rpg.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Verify source objects cannot be read
+        run: node scripts/storage/check-access.mjs
+      - name: Collect and publish aggregate report
+        run: node scripts/storage/collect.mjs --publish

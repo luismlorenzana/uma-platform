@@ -19,7 +19,7 @@ export interface BlobStore {
   /** Writes when the file is still at `ifGeneration` (ABSENT: not there yet). The new generation, or null on a lost race. */
   write(path: string, bytes: Uint8Array, ifGeneration: string): Promise<string | null>
   /** Every file path under a folder, relative to the store; '' lists the whole store. */
-  list(prefix: string): Promise<string[]>
+  list(prefix: string, options?: { indexesOnly?: boolean }): Promise<string[]>
 }
 
 const safe = (path: string): string => {
@@ -62,14 +62,14 @@ export class DirectoryBlobStore implements BlobStore {
     this.queue = work.catch(() => undefined)
     return work
   }
-  async list(prefix: string): Promise<string[]> {
+  async list(prefix: string, options: { indexesOnly?: boolean } = {}): Promise<string[]> {
     const folder = prefix.replace(/\/+$/, ''), base = folder === '' ? this.root : this.full(folder), out: string[] = []
     const walk = async (dir: string): Promise<void> => {
       const entries = await readdir(dir, { withFileTypes: true }).catch((error: NodeJS.ErrnoException) => { if (error.code === 'ENOENT') return []; throw error })
       for (const entry of entries) {
         const path = join(dir, entry.name)
         if (entry.isDirectory()) await walk(path)
-        else if (!entry.name.endsWith('.tmp')) out.push(relative(this.root, path).split(sep).join('/'))
+        else if (!entry.name.endsWith('.tmp') && (!options.indexesOnly || entry.name === 'index.json')) out.push(relative(this.root, path).split(sep).join('/'))
       }
     }
     await walk(base)
@@ -85,7 +85,7 @@ interface GcsFile {
 }
 interface GcsBucket {
   file(path: string, options?: { generation?: string | number }): GcsFile
-  getFiles(options: { prefix: string }): Promise<[{ name: string }[]]>
+  getFiles(options: { prefix: string; fields: string; matchGlob?: string }): Promise<[{ name: string }[]]>
 }
 const contentTypeOf = (path: string) =>
   path.endsWith('.json') ? 'application/json' : path.endsWith('.md') ? 'text/markdown; charset=utf-8' : path.endsWith('.webp') ? 'image/webp' : 'application/octet-stream'
@@ -93,9 +93,9 @@ const contentTypeOf = (path: string) =>
 /** The app's private bucket, under a prefix, read and written with the runtime account. */
 export class BucketBlobStore implements BlobStore {
   private bucket: Promise<GcsBucket> | undefined
-  constructor(private readonly name: string, private readonly prefix: string) {}
+  constructor(private readonly name: string, private readonly prefix: string, private readonly factory?: () => Promise<GcsBucket>) {}
   private open(): Promise<GcsBucket> {
-    this.bucket ??= import('@google-cloud/storage').then(({ Storage }) => new Storage().bucket(this.name) as unknown as GcsBucket)
+    this.bucket ??= this.factory ? this.factory() : import('@google-cloud/storage').then(({ Storage }) => new Storage().bucket(this.name) as unknown as GcsBucket)
     this.bucket.catch(() => { this.bucket = undefined })
     return this.bucket
   }
@@ -122,10 +122,12 @@ export class BucketBlobStore implements BlobStore {
       throw error
     }
   }
-  async list(prefix: string): Promise<string[]> {
+  async list(prefix: string, options: { indexesOnly?: boolean } = {}): Promise<string[]> {
     const folder = prefix.replace(/\/+$/, '')
-    const [files] = await (await this.open()).getFiles({ prefix: folder === '' ? this.prefix : `${this.prefix}${safe(folder)}/` })
-    return files.map((f) => f.name.slice(this.prefix.length)).sort()
+    const fullPrefix = folder === '' ? this.prefix : `${this.prefix}${safe(folder)}/`
+    const [files] = await (await this.open()).getFiles({ prefix: fullPrefix, fields: 'items(name),nextPageToken',
+      ...(options.indexesOnly ? { matchGlob: `${fullPrefix}**/index.json` } : {}) })
+    return files.map((f) => f.name.slice(this.prefix.length)).filter(path => !options.indexesOnly || path.endsWith('/index.json')).sort()
   }
 }
 

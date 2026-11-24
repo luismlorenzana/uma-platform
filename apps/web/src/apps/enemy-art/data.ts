@@ -63,9 +63,10 @@ export const plural = (n: number, noun: string): string => `${n} ${noun}${n === 
 
 let loading: Promise<EnemyGame[]> | null = null
 /** The published games, once a visit. */
-export function loadGames(): Promise<EnemyGame[]> {
+export function loadGames(refresh = false): Promise<EnemyGame[]> {
+  if (refresh) loading = null
   if (!loading) {
-    loading = request<EnemyGame[]>('/api/enemy-art/games').then(games => games.filter(game => GAMES.some(selected => selected.id === game.id)))
+    loading = request<EnemyGame[]>(`/api/enemy-art/games${refresh ? '?refresh=1' : ''}`).then(games => games.filter(game => GAMES.some(selected => selected.id === game.id)))
     loading.catch(() => { loading = null })
   }
   return loading

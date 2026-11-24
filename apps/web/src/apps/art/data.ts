@@ -112,9 +112,9 @@ export interface Universe {
 let universes: Promise<Universe[]> | null = null
 const hiddenWorlds = new Set(['rpg', 'uma-rpg', 'quest', 'uma-quest', 'high-fantasy'])
 /** Every published universe, loaded once a visit; `fresh` reads them again. */
-export function loadUniverses(fresh = false): Promise<Universe[]> {
-  if (fresh) universes = null
-  universes ??= request<Universe[]>('/api/art/universes').then(all => all.filter(world => !hiddenWorlds.has(world.id)))
+export function loadUniverses(fresh = false, options: { refresh?: boolean } = {}): Promise<Universe[]> {
+  if (fresh || options.refresh) universes = null
+  universes ??= request<Universe[]>(`/api/art/universes${options.refresh ? '?refresh=1' : ''}`).then(all => all.filter(world => !hiddenWorlds.has(world.id)))
   universes.catch(() => { universes = null })
   return universes
 }
