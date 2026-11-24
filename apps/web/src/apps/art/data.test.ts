@@ -1,6 +1,6 @@
 import type { ArtIndex } from '@luismlorenzana/uma-data'
 import { describe, expect, it } from 'vitest'
-import { albumArtKey, lookCounts, looksOf, type PortraitPiece, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
+import { looksOf, type PortraitPiece, picturesOf, renderOf, sections, tileOf, umaCount, type AlbumEntry, type Universe, type UniverseLook } from './data'
 
 // Invented records only (copied from uma-quest's album/data.test.ts at 6c572e6, then extended).
 const img = (path: string) => ({ path, width: 10, height: 10 })
@@ -77,10 +77,9 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([sky, road], 9002).map((g) => g.universe.id)).toEqual(['sky-city', 'old-road'])
     expect(looksOf([sky, road], 9003)).toEqual([])
   })
-  it('keeps her splash art apart from her looks, and counts only looks on her tiles (P175)', () => {
+  it('keeps her splash art apart from her looks (P175)', () => {
     const splashUniverse: Universe = { ...universe('farm', [look('a-spring', 'Rider One', 9001), { ...look('a-splash-meeting', 'Rider One', 9001), kind: 'splash' }]) }
     expect(looksOf([splashUniverse], 9001).map((g) => [g.looks.map((l) => l.id), g.splash.map((l) => l.id)])).toEqual([[['a-spring'], ['a-splash-meeting']]])
-    expect([...lookCounts([splashUniverse])]).toEqual([['9001', 1]])
     const onlySplash: Universe = universe('beach', [{ ...look('a-splash-beach', 'Rider One', 9001), kind: 'splash' }])
     expect(looksOf([onlySplash], 9001).map((g) => [g.universe.id, g.looks.length, g.splash.length])).toEqual([['beach', 0, 1]])
     const additional: Universe = universe('farm-life', [
@@ -109,11 +108,7 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([farm], 9003).map((g) => [g.universe.id, g.profiles.map((p) => p.id)])).toEqual([['farm', ['spring']]])
     expect(looksOf([farm], 9002)).toEqual([])
   })
-  it('counts each character’s looks across the universes for her tiles, leaving out a look no character matches', () => {
-    expect([...lookCounts([sky, road])]).toEqual([['9001', 2], ['9002', 2]])
-    expect(lookCounts([]).size).toBe(0)
-  })
-  it('shows and counts each sister’s own art, excluding the original and other sisters in every art section', () => {
+  it('shows each sister’s own art, excluding the original and other sisters in every art section', () => {
     const original = look('original-spring', 'Rider One', 9001)
     const sister = { ...look('sister-spring', 'Sister One', 9001), outfitId: 900102 }
     const other = { ...look('other-spring', 'Sister Two', 9001), outfitId: 900103 }
@@ -130,9 +125,5 @@ describe('the universe looks (CA4)', () => {
     expect(looksOf([farm], 9001)[0]!.looks.map(l => l.id)).toEqual(['original-spring'])
     expect(looksOf([farm], 9001, 900103)[0]!.looks.map(l => l.id)).toEqual(['other-spring'])
     expect(looksOf([farm], 9001, 900104)).toEqual([])
-    const counts = lookCounts([farm])
-    const identity = { relation: 'twin', age: 'an invented age', profile: 'Invented.' }
-    expect(counts.get(albumArtKey(entry(900102, { sister: identity })))).toBe(1)
-    expect(counts.get(albumArtKey(entry(900101)))).toBe(1)
   })
 })
