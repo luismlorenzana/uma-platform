@@ -1,4 +1,8 @@
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { BucketBlobStore, DirectoryBlobStore } from '../../store/blob-store'
 import { parseReport, type StorageReport, type Usage } from './report'
 import { StorageService } from './storage.service'
 
@@ -10,6 +14,36 @@ function sample(): StorageReport {
     groups: buckets.map(bucket => ({ id: bucket.name, bucket: bucket.name, world: 'shared', purpose: 'master-data', usage: value(1), deltaBytes: null })), history: [], deltaBytes: null }
 }
 describe('storage snapshots', () => {
+  const snapshot = 'snapshots/2026-01-01T00-00-00.000Z.aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.json'
+  it('reads a published timestamp filename through the local store', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'uma-storage-report-'))
+    try {
+      await mkdir(join(root, 'snapshots'))
+      await writeFile(join(root, snapshot), JSON.stringify(sample()))
+      const store = new DirectoryBlobStore(root)
+      expect(await new StorageService(store).report()).toEqual(sample())
+      await expect(store.read('snapshots/../private.json')).rejects.toThrow('Unsafe store path')
+    } finally { await rm(root, { recursive: true, force: true }) }
+  })
+  it('preserves the published timestamp case when reading its exact cloud generation', async () => {
+    const store = new BucketBlobStore('invented', 'reports/storage/', async () => ({
+      getFiles: async () => [[{ name: `reports/storage/${snapshot}` }]],
+      file: (path, options) => {
+        expect(path).toBe(`reports/storage/${snapshot}`)
+        return {
+          metadata: {},
+          getMetadata: async () => [{ generation: '123' }],
+          download: async () => {
+            expect(options).toEqual({ generation: '123' })
+            return [new TextEncoder().encode(JSON.stringify(sample()))]
+          },
+          save: async () => { throw new Error('The report reader must not write') },
+        }
+      },
+    }))
+    expect(await new StorageService(store).report()).toEqual(sample())
+    await expect(store.read('snapshots/../private.json')).rejects.toThrow('Unsafe store path')
+  })
   it('serves aggregate fields only and rejects incomplete or inconsistent totals', () => {
     expect(parseReport({ ...sample(), objectPaths: ['private-test.png'] })).not.toHaveProperty('objectPaths')
     expect(() => parseReport({ ...sample(), buckets: [] })).toThrow('Incomplete')

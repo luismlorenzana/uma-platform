@@ -23,7 +23,8 @@ export interface BlobStore {
 }
 
 const safe = (path: string): string => {
-  if (!/^[a-z0-9][a-z0-9._/-]{0,299}$/.test(path) || path.split('/').some((p) => p === '' || p === '.' || p === '..')) throw new Error(`Unsafe store path: ${path}`)
+  // Preserve case in object names, including the ISO timestamp's T/Z in storage snapshots.
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,299}$/.test(path) || path.split('/').some((p) => p === '' || p === '.' || p === '..')) throw new Error(`Unsafe store path: ${path}`)
   return path
 }
 const hash = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
