@@ -1,7 +1,7 @@
 // The post layer for the look slice (the look bible's rules 6 and 7): ambient occlusion, depth of field by depth,
 // bloom, tone mapping, then a grade (saturation, contrast, warm light over cool shadow, a vignette). three.js r187's
 // EffectComposer passes, so it runs on WebGL 2 today.
-import { Vector2, type PerspectiveCamera, type Scene, type WebGLRenderer } from 'three'
+import { Vector2, type Material, type Mesh, type PerspectiveCamera, type Scene, type WebGLRenderer, type WebGLRenderTarget } from 'three'
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
@@ -46,6 +46,25 @@ export interface PostSettings { ao: boolean; dof: boolean; focus: number; apertu
 export const POST_DEFAULTS: PostSettings = { ao: true, dof: true, focus: 48, aperture: 0.0008, maxblur: 0.005, bloom: true, bloomStrength: 0.5, bloomRadius: 0.55, bloomThreshold: 0.78,
   grade: true, vignette: 0.42, saturation: 1.14, contrast: 1.3, split: 0.2, aberration: 0.003 }
 
+/** Give transparent standees the same alpha-tested silhouette in the focus pass as in the color and shadow passes. */
+class MaskedBokeh extends BokehPass {
+  constructor(private readonly world: Scene, camera: PerspectiveCamera, settings: { focus: number; aperture: number; maxblur: number }) {
+    super(world, camera, settings)
+  }
+
+  override render(renderer: WebGLRenderer, write: WebGLRenderTarget, read: WebGLRenderTarget, delta: number, mask: boolean): void {
+    const restored: [Mesh, Material | Material[]][] = []
+    this.world.traverseVisible(node => {
+      const mesh = node as Mesh
+      if (mesh.userData['lookAlphaDepth'] !== true || !mesh.customDepthMaterial) return
+      restored.push([mesh, mesh.material])
+      mesh.material = mesh.customDepthMaterial
+    })
+    try { super.render(renderer, write, read, delta, mask) }
+    finally { for (const [mesh, material] of restored) mesh.material = material }
+  }
+}
+
 export class Post {
   readonly composer: EffectComposer
   private readonly ao: GTAOPass
@@ -58,7 +77,7 @@ export class Post {
     this.ao = new GTAOPass(scene, camera, 1, 1)
     this.ao.updateGtaoMaterial({ radius: 0.6, distanceExponent: 1.4, thickness: 1.2, scale: 1.1 })
     this.composer.addPass(this.ao)
-    this.bokeh = new BokehPass(scene, camera, { focus: POST_DEFAULTS.focus, aperture: POST_DEFAULTS.aperture, maxblur: POST_DEFAULTS.maxblur })
+    this.bokeh = new MaskedBokeh(scene, camera, { focus: POST_DEFAULTS.focus, aperture: POST_DEFAULTS.aperture, maxblur: POST_DEFAULTS.maxblur })
     this.composer.addPass(this.bokeh)
     this.bloom = new UnrealBloomPass(new Vector2(1, 1), POST_DEFAULTS.bloomStrength, POST_DEFAULTS.bloomRadius, POST_DEFAULTS.bloomThreshold)
     this.composer.addPass(this.bloom)
@@ -82,5 +101,15 @@ export class Post {
     this.composer.setSize(w, h)
     this.ao.setSize(w * ratio, h * ratio)
   }
+  focus(distance: number): void {
+    const uniforms = this.bokeh.uniforms as Record<string, { value: number }>
+    uniforms.focus!.value = distance
+  }
+
   render(): void { this.composer.render() }
+
+  dispose(): void {
+    for (const pass of this.composer.passes) pass.dispose()
+    this.composer.dispose()
+  }
 }
