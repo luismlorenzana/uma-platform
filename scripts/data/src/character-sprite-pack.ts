@@ -8,9 +8,18 @@ import { sha256 } from './release-dir'
 const OUTFITS = { spring: 'spring', 'pajama-07': 'pajamas', 'farm-work': 'farm-work' } as const
 const EDGE = 512
 const CELL = { width: 64, height: 88 }
-const FOOT = { x: 32, y: 84 }
-const PITCH = { x: CELL.width + 2, y: CELL.height + 2 }
-const COLUMNS = Math.floor(EDGE / PITCH.x)
+const PAGES = [512, 768, 1024] as const
+
+type Size = { width: number; height: number }
+export function characterAtlasLayout(cell: Size, foot: CharacterSpriteCell, frames: number) {
+  if (![cell.width, cell.height, foot.x, foot.y, frames].every(Number.isInteger)
+    || cell.width < 1 || cell.height < 1 || cell.width > 128 || cell.height > 176
+    || foot.x < 0 || foot.x >= cell.width || foot.y < 0 || foot.y >= cell.height || frames < 1) throw new Error('Invalid native sprite geometry')
+  const pitch = { x: cell.width + 2, y: cell.height + 2 }
+  const edge = PAGES.find(n => Math.floor(n / pitch.x) * Math.floor(n / pitch.y) >= frames)
+  if (!edge) throw new Error('Native sprite atlas exceeds 1024 pixels')
+  return { edge, pitch, columns: Math.floor(edge / pitch.x) }
+}
 const CHANNELS = 4
 type SourceRect = CharacterSpriteCell & typeof CELL
 type Approval = { status: string; by: string }
@@ -21,7 +30,7 @@ interface Study {
     outfit: string
     standing: { sheet: string; directions: (SourceRect & { direction: CharacterFacing; sha256Rgba: string })[] }
     clips: Record<CharacterFacing, { sheet: string; loop: boolean; durationMs?: number; frames: { rect: SourceRect; durationMs: number; sha256Rgba: string }[] }>
-    styleVersions: { frame: typeof CELL; anchor: typeof FOOT }
+    styleVersions: { frame: Size; anchor: CharacterSpriteCell }
   }[]
 }
 interface Active { activeVersion: string; ownerApproved: boolean; approval: Approval; approvalRecord: string }
@@ -72,20 +81,22 @@ function visibleRgba(bytes: Buffer): Buffer {
   return bytes
 }
 
-export async function verifyAtlasFrames(bytes: Buffer, proof: readonly FrameProof[]): Promise<void> {
+export async function verifyAtlasFrames(bytes: Buffer, proof: readonly FrameProof[], cell: Size = CELL, page: Size = { width: EDGE, height: EDGE }): Promise<void> {
   const meta = await sharp(bytes).metadata()
-  if (meta.format !== 'webp' || !meta.hasAlpha || meta.width !== EDGE || meta.height !== EDGE) throw new Error('Expected a transparent 512 × 512 WebP atlas')
+  if (meta.format !== 'webp' || !meta.hasAlpha || meta.width !== page.width || meta.height !== page.height) throw new Error('Atlas differs from the declared transparent WebP geometry')
   for (const { at, sha256Rgba } of proof) {
-    const crop = await sharp(bytes).extract({ left: at.x, top: at.y, ...CELL }).ensureAlpha().raw().toBuffer()
+    if (at.x < 0 || at.y < 0 || at.x + cell.width > page.width || at.y + cell.height > page.height) throw new Error('Frame outside atlas')
+    const crop = await sharp(bytes).extract({ left: at.x, top: at.y, ...cell }).ensureAlpha().raw().toBuffer()
     if (sha256(visibleRgba(crop)) !== sha256Rgba) throw new Error(`Atlas crop differs at ${at.x},${at.y}`)
   }
 }
 
 async function atlas(study: SelectedStudy, outfit: Study['results'][number], stem: string, put: PutPicture) {
   const { frame, anchor } = outfit.styleVersions
-  if (frame.width !== CELL.width || frame.height !== CELL.height || anchor.x !== FOOT.x || anchor.y !== FOOT.y) throw new Error(`${stem}: unexpected geometry`)
+  const total = outfit.standing.directions.length + Object.values(outfit.clips).reduce((sum, clip) => sum + clip.frames.length, 0)
+  const { edge, columns, pitch } = characterAtlasLayout(frame, anchor, total)
   const proofs: FrameProof[] = []
-  const pixels = Buffer.alloc(EDGE * EDGE * CHANNELS)
+  const pixels = Buffer.alloc(edge * edge * CHANNELS)
   const seen = new Set<string>()
   async function sheet(path: string) {
     const expected = study.files.get(path)
@@ -100,16 +111,18 @@ async function atlas(study: SelectedStudy, outfit: Study['results'][number], ste
     return bytes
   }
   async function take(bytes: Buffer, rect: SourceRect, hash: string): Promise<CharacterSpriteCell> {
-    if (rect.width !== CELL.width || rect.height !== CELL.height) throw new Error(`${stem}: invalid frame rectangle`)
-    const input = await sharp(bytes).extract({ left: rect.x, top: rect.y, ...CELL }).ensureAlpha().raw().toBuffer()
+    const meta = await sharp(bytes).metadata()
+    if (![rect.x, rect.y].every(Number.isInteger) || rect.x < 0 || rect.y < 0 || rect.width !== frame.width || rect.height !== frame.height
+      || rect.x + rect.width > (meta.width ?? 0) || rect.y + rect.height > (meta.height ?? 0)) throw new Error(`${stem}: invalid frame rectangle`)
+    const input = await sharp(bytes).extract({ left: rect.x, top: rect.y, ...frame }).ensureAlpha().raw().toBuffer()
     if (sha256(input) !== hash) throw new Error(`${stem}: an approved frame differs from the source`)
     visibleRgba(input)
     const i = proofs.length
-    const at = { x: 1 + i % COLUMNS * PITCH.x, y: 1 + Math.floor(i / COLUMNS) * PITCH.y }
+    const at = { x: 1 + i % columns * pitch.x, y: 1 + Math.floor(i / columns) * pitch.y }
     proofs.push({ at, sourceSha256Rgba: hash, sha256Rgba: sha256(input) })
-    const stride = CELL.width * CHANNELS
-    for (let row = 0; row < CELL.height; row++) {
-      input.copy(pixels, ((at.y + row) * EDGE + at.x) * CHANNELS, row * stride, (row + 1) * stride)
+    const stride = frame.width * CHANNELS
+    for (let row = 0; row < frame.height; row++) {
+      input.copy(pixels, ((at.y + row) * edge + at.x) * CHANNELS, row * stride, (row + 1) * stride)
     }
     return at
   }
@@ -130,12 +143,12 @@ async function atlas(study: SelectedStudy, outfit: Study['results'][number], ste
     walking[facing] = []
     for (const frame of walk.frames) walking[facing].push({ ...await take(bytes, frame.rect, frame.sha256Rgba), durationMs: frame.durationMs })
   }
-  const bytes = await sharp(pixels, { raw: { width: EDGE, height: EDGE, channels: CHANNELS } })
+  const bytes = await sharp(pixels, { raw: { width: edge, height: edge, channels: CHANNELS } })
     .webp({ lossless: true }).toBuffer()
-  try { await verifyAtlasFrames(bytes, proofs) }
+  try { await verifyAtlasFrames(bytes, proofs, frame, { width: edge, height: edge }) }
   catch (error) { throw new Error(`${stem}: ${error instanceof Error ? error.message : String(error)}`, { cause: error }) }
   const entry = await put(stem, bytes)
-  const variant: CharacterSpriteVariant = { cell: CELL, foot: FOOT, page: { path: entry.path, width: EDGE, height: EDGE }, standing, walking }
+  const variant: CharacterSpriteVariant = { cell: frame, foot: anchor, page: { path: entry.path, width: edge, height: edge }, standing, walking }
   return { variant, proof: { path: entry.path, sha256: entry.sha256, bytes: entry.bytes, frames: proofs }, sheets: seen }
 }
 

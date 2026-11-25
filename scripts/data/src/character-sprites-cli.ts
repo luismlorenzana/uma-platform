@@ -54,11 +54,12 @@ async function main() {
       const variants = set && Object.values(set.variants)
       if (!set || !variants || Object.keys(set.variants).sort().join(',') !== 'farm-work,pajamas,spring') throw new Error(`Wrong wardrobe for ${proof.key}`)
       for (const atlas of proof.atlases) {
-        if (!variants.some(variant => variant.page.path === atlas.path)) throw new Error(`Descriptor does not use approved atlas for ${proof.key}`)
+        const variant = variants.find(variant => variant.page.path === atlas.path)
+        if (!variant) throw new Error(`Descriptor does not use approved atlas for ${proof.key}`)
         const file = next.get(atlas.path)
         if (!file || file.sha256 !== atlas.sha256 || file.bytes !== atlas.bytes) throw new Error(`Manifest does not match approved atlas for ${proof.key}`)
         const packed = Buffer.from(await client.file(candidate, atlas.path))
-        await verifyAtlasFrames(packed, atlas.frames)
+        await verifyAtlasFrames(packed, atlas.frames, variant.cell, variant.page)
         atlasCount += 1
         frameCount += atlas.frames.length
         bytes += packed.length

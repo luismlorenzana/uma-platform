@@ -38,6 +38,13 @@ export interface LookStageOptions {
   readonly devicePixelRatio?: number
 }
 
+export interface LookMountProfile {
+  camera?: CameraName
+  tier?: TierName
+  life?: Partial<LookLife>
+  look?: Partial<PostSettings>
+}
+
 export class LookStage {
   readonly renderer: WebGLRenderer
   readonly scene = new Scene()
@@ -67,6 +74,9 @@ export class LookStage {
   private last = 0
   private elapsed = 0
   private readonly dpr: number
+  private loadRequest = 0
+  private disposed = false
+  private size: readonly [number, number, number] | null = null
 
   constructor(private readonly options: LookStageOptions) {
     installHeightFog()
@@ -88,22 +98,39 @@ export class LookStage {
 
   /** Loads a scene (the kit and cast once) and shows it. */
   async load(id: LookSceneId): Promise<void> {
+    const request = ++this.loadRequest
     const { assets } = this.options
     this.index ??= await assets.index()
-    this.kit ??= await LookKit.parse(await assets.kit(this.index.kit.path))
+    if (this.disposed || request !== this.loadRequest) return
+    const kit = this.kit ?? await LookKit.parse(await assets.kit(this.index.kit.path))
+    if (this.disposed || request !== this.loadRequest) { if (kit !== this.kit) kit.dispose(); return }
+    this.kit = kit
     const spots: CastSpot[] = (this.index.cast[id] ?? []).map(([outfitId, x, z, action]) => (action ? { outfitId, x, z, action } : { outfitId, x, z }))
     const loaded = await Promise.all(spots.map(async (spot) => ({ spot, sprite: await this.sprite(spot.outfitId) })))
     const cast = loaded.filter((c): c is { spot: CastSpot; sprite: LookSprite } => !!c.sprite)
+    if (this.disposed || request !== this.loadRequest) return
     const spritePixels = this.options.spritePixels ?? null
     const next = id === 'tavern' ? buildTavern(this.kit, cast, spritePixels) : buildSquare(this.kit, cast, spritePixels)
-    if (this.current) { this.scene.remove(this.current.root); this.current.dispose() }
-    this.current = next
     this.sceneId = id
+    this.mount(next)
+  }
+
+  /** Takes ownership of an authored scene, including its lighting and camera, until replaced or disposed. */
+  mount(next: LookScene, profile: LookMountProfile = {}): void {
+    if (this.disposed) throw new Error('The look stage is disposed')
+    this.loadRequest++
+    if (this.current && this.current !== next) {
+      this.scene.remove(this.current.root)
+      this.current.dispose()
+    }
+    this.current = next
     this.scene.add(next.root)
+    if (profile.tier) this.useTier(profile.tier)
     this.light(next.light)
-    this.useCamera(this.cameraName)
+    if (profile.life) Object.assign(this.life, profile.life)
+    this.useCamera(profile.camera ?? this.cameraName)
+    if (profile.look) Object.assign(this.look, profile.look)
     this.apply()
-    // One update, so figures face the camera before the first frame.
     next.update(this.elapsed, 0.016, this.camera)
   }
 
@@ -180,6 +207,8 @@ export class LookStage {
   resize(): void {
     const canvas = this.options.canvas, w = canvas.clientWidth || 1, h = canvas.clientHeight || 1
     const r = Math.min(this.dpr, this.life.renderScale)
+    if (this.size?.[0] === w && this.size[1] === h && this.size[2] === r) return
+    this.size = [w, h, r]
     this.renderer.setPixelRatio(r)
     this.renderer.setSize(w, h, false)
     this.camera.aspect = w / h
@@ -244,9 +273,15 @@ export class LookStage {
   }
 
   dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.loadRequest++
     this.stop()
-    this.current?.dispose()
+    if (this.current) { this.scene.remove(this.current.root); this.current.dispose(); this.current = null }
     this.kit?.dispose()
+    ;(this.scene.background as Texture | null)?.dispose?.()
+    this.key.shadow.dispose()
+    this.post.dispose()
     this.renderer.dispose()
   }
 }

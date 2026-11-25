@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-stage
 
+## 0.9.0
+
+### Minor Changes
+
+- Mount caller-built look scenes with a camera and quality profile. Share pixel atlas textures across lit standees and keep their alpha mask in the focus and shadow buffers.
+
 ## 0.8.0
 
 ### Minor Changes

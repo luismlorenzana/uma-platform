@@ -1,6 +1,7 @@
 // @luismlorenzana/uma-stage/look (LK1, LR8): the opt-in look path, beside `StageEngine` and `BandStage`. No game uses it
 // until LK3; the review app (`pnpm --filter @luismlorenzana/uma-stage look`) and the platform app's Look sub-app do.
 export * from './assets.js'
+export * from './atlas-figure.js'
 export * from './batch.js'
 export * from './bench.js'
 export * from './figures.js'
