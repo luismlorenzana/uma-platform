@@ -4,13 +4,13 @@ import { packIllustrations, type UniverseArtEntry, type UniverseArtIndex } from 
 import { readLocalManifest, readVerifiedFile, writeLocalManifest, writeReleaseFile } from './release-dir'
 
 const BED_POSES = ['recline', 'kiss', 'kneel', 'crawl-kiss'] as const
-type BedPose = typeof BED_POSES[number]
+type DuoPose = 'couch' | typeof BED_POSES[number]
 type Participant = CharacterArtIdentity & { id: string }
 
 interface DuoArt {
   look: UniverseArtEntry
   people: [Participant, Participant]
-  pose: BedPose
+  pose: DuoPose
   approvedOn: string
 }
 
@@ -27,13 +27,14 @@ export function planFarmDuoArt(index: UniverseArtIndex): DuoArt[] {
   const planned: DuoArt[] = [], claimed = new Set<string>()
   for (const look of index.looks) {
     if (look.category !== 'duo-splash') continue
-    const pose = BED_POSES.find(value => look.id.endsWith(`-pjm01-bed-${value}`))
+    const pose = look.id.endsWith('-pjm01-couch') ? 'couch' : BED_POSES.find(value => look.id.endsWith(`-pjm01-bed-${value}`))
     if (!pose) continue
+    const suffix = pose === 'couch' ? 'couch' : `bed-${pose}`
     const pair = look.duo
     const people = Array.isArray(pair?.members) ? pair.members.map(participant) : []
     const [a, b] = people
     if (look.kind !== 'splash' || !pair || !a || !b || people.length !== 2 || a.id === b.id
-      || pair.id !== `farm-${a.id}-${b.id}` || look.id !== `duo-${pair.id}-pjm01-bed-${pose}`
+      || pair.id !== `farm-${a.id}-${b.id}` || look.id !== `duo-${pair.id}-pjm01-${suffix}`
       || !look.approvedOn || !/^\d{4}-\d{2}-\d{2}$/.test(look.approvedOn)) {
       throw new Error(`${look.id}: expected an approved Farm duo scene with two cast identities`)
     }
