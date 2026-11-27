@@ -12,7 +12,7 @@ import { FakeBucket } from './__fixtures__/bucket'
 import { planCharacterFamiliesOnly } from './character-families-only'
 import { fixtureBase, fixtureFace } from './dialogue-portrait-fixture'
 import { writeDialoguePortraitRelease } from './dialogue-portrait-release'
-import { encodePng, type Rgba } from './enemy-images'
+import { encodeLossless, encodePng, type Rgba } from './enemy-images'
 import { planFarmDuoArt, writeFarmDuoArt } from './farm-duo-illustrations'
 import { writeIllustrationRelease } from './illustration-release'
 import { ILLUSTRATION_PSNR_FLOOR, ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex, type UniverseArtIndex } from './illustrations'
@@ -38,7 +38,7 @@ it('packs each shared bedtime image once for a base Uma and an outfit-specific p
   await writeIllustrationRelease(dir, [{
     characterId: ID, universe: 'farm-life', scenes: [{
       id: 'solo', title: 'Solo', outfit: 'pajamas-1', moment: 'night-in',
-      approvedOn: '2026-01-01', width: W, height: H, bytes: new Uint8Array([1, 2]),
+      approvedOn: '2026-01-01', width: W, height: H, bytes: await encodeLossless(scene(0)),
     }],
   }])
   const png = await encodePng(scene(1))
@@ -59,8 +59,9 @@ it('packs each shared bedtime image once for a base Uma and an outfit-specific p
   const base = JSON.parse(await readFile(join(dir, art.illustrations!['9999']!), 'utf8'))
   const sister = JSON.parse(await readFile(join(dir, art.illustrations!['outfit:990002']!), 'utf8'))
   expect(base.scenes.map((entry: { id: string }) => entry.id)).toEqual(['solo', 'duo-s990002-recline'])
-  expect(sister.scenes[0]).toMatchObject({ id: 'duo-9999-recline', path: base.scenes[1].path })
+  expect(sister.scenes[0]).toMatchObject({ id: 'duo-9999-recline', path: base.scenes[1].path, thumbnail: base.scenes[1].thumbnail })
   expect(release.files.filter(file => file.path === sister.scenes[0].path)).toHaveLength(1)
+  expect(release.files.filter(file => file.path === sister.scenes[0].thumbnail.path)).toHaveLength(1)
 })
 
 /** A soft scene: a two-colour gradient with a disc, opaque. `noise` fills it with noise instead, which no lossy WebP keeps. */
@@ -123,7 +124,6 @@ async function localRelease(withPortraits = false): Promise<string> {
   await writeDataSets({ releaseDir: dir, sources: { 'synthetic/test': '2' }, sets: sets() })
   await writeIllustrationRelease(dir, await packed())
   if (withPortraits) {
-    const { encodeLossless } = await import('./enemy-images')
     const image = async (rgba: Rgba) => ({ bytes: await encodeLossless(rgba), width: rgba.width, height: rgba.height })
     await writeDialoguePortraitRelease(dir, [{ characterId: ID, revision: 1, approvedOn: '2026-11-14', base: { width: 525, height: 700 }, faceSize: { width: 224, height: 224 },
       bases: { spring: { ...(await image(fixtureBase('spring'))), face: { left: 150, top: 150 } } }, faces: { happy: await image(fixtureFace('happy')) } }])
@@ -228,6 +228,9 @@ describe('the illustrations family in the local release', () => {
     expect(ills.universe).toBe('test-life')
     expect(illustrationFor(ills, 'confession-yes')).toMatchObject({ id: 'confession-loving', outfit: 'kimono', title: 'Title of test-uma-splash-confession-loving', width: W, height: H })
     expect(illustrationFor(ills, 'confession-yes')!.path).toMatch(/^art\/illustrations\/9999-confession-loving\.[0-9a-f]{16}\.webp$/)
+    expect(illustrationFor(ills, 'confession-yes')!.thumbnail).toMatchObject({
+      path: expect.stringMatching(/^art\/illustrations\/9999-confession-loving-thumb\.[0-9a-f]{16}\.webp$/), width: W, height: H,
+    })
   })
   it('writes the same bytes from the same pictures, and keeps the portraits beside it', async () => {
     const a = await localRelease(), b = await localRelease()

@@ -5,6 +5,7 @@
 
 import { characterArtKey, parseIllustrations, type Illustrations, type ReleaseManifest } from '@luismlorenzana/uma-data'
 import { writeCharacterFamilyRelease } from './character-family-release'
+import { writeIllustrationThumbnail } from './illustration-thumbnail'
 
 export const ILLUSTRATIONS_DIR = 'art/illustrations'
 
@@ -25,8 +26,11 @@ export async function writeIllustrationRelease(releaseDir: string, characters: r
       const out: Illustrations = { characterId: packed.characterId, universe: packed.universe, scenes: [] }
       if (packed.outfitId !== undefined) out.outfitId = packed.outfitId
       for (const s of packed.scenes) {
-        const file = await put(`${stem}-${s.id}`, s.bytes)
-        out.scenes.push({ id: s.id, title: s.title, outfit: s.outfit, moment: s.moment, approvedOn: s.approvedOn, path: file.path, width: s.width, height: s.height, bytes: file.bytes, sha256: file.sha256 })
+        const name = `${stem}-${s.id}`
+        const file = await put(name, s.bytes)
+        const thumbnail = await writeIllustrationThumbnail(put, name, s.bytes)
+        out.scenes.push({ id: s.id, title: s.title, outfit: s.outfit, moment: s.moment, approvedOn: s.approvedOn,
+          ...file, width: s.width, height: s.height, thumbnail })
       }
       return out
     },

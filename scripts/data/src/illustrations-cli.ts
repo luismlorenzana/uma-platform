@@ -12,6 +12,7 @@ import { resolve } from 'node:path'
 import { localArtIdentityLookup } from './art-identities'
 import { planFarmDuoArt, writeFarmDuoArt } from './farm-duo-illustrations'
 import { writeIllustrationRelease } from './illustration-release'
+import { backfillIllustrationThumbnails } from './illustration-thumbnail-backfill'
 import { ILLUSTRATION_QUALITY, packIllustrations, planIllustrations, readIllustrationMoments, readSceneSet, readUniverseArtIndex } from './illustrations'
 import { DEFAULT_CONTENT_DIR, readLocalManifest } from './release-dir'
 
@@ -20,6 +21,8 @@ const option = (name: string) => { const i = args.indexOf(name); return i < 0 ? 
 const universe = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--release-dir') ?? 'farm-life'
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(universe)) throw new Error(`A universe is a lowercase name joined by hyphens: ${universe}`)
 const duosOnly = args.includes('--duos-only')
+const thumbnailsOnly = args.includes('--thumbnails-only')
+if (thumbnailsOnly && duosOnly) throw new Error('Choose either --thumbnails-only or --duos-only')
 if (duosOnly && universe !== 'farm-life') throw new Error('--duos-only is for farm-life')
 const releaseDir = resolve(option('--release-dir') ?? resolve(DEFAULT_CONTENT_DIR, 'release'))
 const mirror = resolve(process.env.ART_DIR ?? resolve(DEFAULT_CONTENT_DIR, '../../uma-art-authoring/content/published/art'), 'universes', universe)
@@ -33,6 +36,11 @@ const gcloud = (argv: string[]) => execFileSync('gcloud', argv, {
 const sha256 = (bytes: Uint8Array) => createHash('sha256').update(bytes).digest('hex')
 
 async function main(): Promise<void> {
+  if (thumbnailsOnly) {
+    const { release, thumbnails } = await backfillIllustrationThumbnails(releaseDir, universe)
+    console.log(`Release: ${release.version} (${thumbnails} new illustration thumbnails from ${universe})`)
+    return
+  }
   const remote = `gs://${bucket}/art/universes/${universe}`
   if (!args.includes('--no-fetch')) {
     mkdirSync(resolve(mirror, 'images'), { recursive: true })

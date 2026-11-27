@@ -1,5 +1,6 @@
 import { characterArtKey, parseIllustrations, type CharacterArtIdentity, type Illustration, type Illustrations, type ReleaseFile } from '@luismlorenzana/uma-data'
 import { ILLUSTRATIONS_DIR } from './illustration-release'
+import { writeIllustrationThumbnail } from './illustration-thumbnail'
 import { packIllustrations, type UniverseArtEntry, type UniverseArtIndex } from './illustrations'
 import { readLocalManifest, readVerifiedFile, writeLocalManifest, writeReleaseFile } from './release-dir'
 
@@ -72,6 +73,8 @@ export async function writeFarmDuoArt(releaseDir: string, mirror: string, planne
     })
     const image = packed.scenes[0]!
     const file = keep(await writeReleaseFile(releaseDir, ILLUSTRATIONS_DIR, look.id, 'webp', image.bytes))
+    const thumbnail = await writeIllustrationThumbnail(async (stem, bytes) =>
+      keep(await writeReleaseFile(releaseDir, ILLUSTRATIONS_DIR, stem, 'webp', bytes)), look.id, image.bytes)
     for (const [who, partner] of [[first, second], [second, first]] as const) {
       const key = characterArtKey(who.characterId, who.outfitId)
       let current = pending.get(key)
@@ -83,7 +86,7 @@ export async function writeFarmDuoArt(releaseDir: string, mirror: string, planne
         pending.set(key, current)
       }
       const scene: Illustration = { id: `duo-${partner.id}-${pose}`, title: image.title, outfit: image.outfit, moment: image.moment,
-        approvedOn, path: file.path, width: image.width, height: image.height, bytes: file.bytes, sha256: file.sha256 }
+        approvedOn, ...file, width: image.width, height: image.height, thumbnail }
       current.scenes = [...current.scenes.filter(other => other.id !== scene.id), scene]
     }
   }

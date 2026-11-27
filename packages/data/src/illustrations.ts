@@ -4,6 +4,7 @@
 // art's own size. Private: it shows franchise characters.
 
 import { arrayOf, fail, fields, id, positiveInteger, text, type Parser } from './parse.js'
+import type { ReleaseFile } from './release.js'
 
 /** The moments Farm Life's story opens onto an illustration, in story order. A release may add more (the parser is open). */
 export const ILLUSTRATION_MOMENTS = ['meeting', 'beach', 'confession', 'confession-yes', 'wedding', 'wedding-night', 'wedding-night-end', 'night-in', 'companion'] as const
@@ -27,6 +28,8 @@ export interface Illustration {
   height: number
   bytes: number
   sha256: string
+  /** A separately published preview for a gallery, when the release provides one. */
+  thumbnail?: ReleaseFile & { width: number; height: number }
 }
 export interface Illustrations {
   characterId: number
@@ -47,12 +50,23 @@ const releasePath: Parser<string> = (value, path) => {
 const sha: Parser<string> = (value, path) => (typeof value === 'string' && /^[a-f0-9]{64}$/.test(value) ? value : fail(path, 'a lowercase hex SHA-256'))
 const day: Parser<string> = (value, path) =>
   typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)) ? value : fail(path, 'a date as YYYY-MM-DD')
-const scene: Parser<Illustration> = (value, path) => {
+const picture: Parser<ReleaseFile & { width: number; height: number }> = (value, path) => {
   const f = fields(value, path)
   return {
-    id: f('id', name('an id', 80)), title: f('title', text), outfit: f('outfit', name('an outfit', 40)), moment: f('moment', name('a moment', 40)),
-    approvedOn: f('approvedOn', day), path: f('path', releasePath), width: f('width', positiveInteger), height: f('height', positiveInteger),
+    path: f('path', releasePath), width: f('width', positiveInteger), height: f('height', positiveInteger),
     bytes: f('bytes', positiveInteger), sha256: f('sha256', sha),
+  }
+}
+const scene: Parser<Illustration> = (value, path) => {
+  const f = fields(value, path)
+  const full = picture(value, path)
+  const thumbnail = (value as Record<string, unknown>).thumbnail === undefined ? undefined : f('thumbnail', picture)
+  if (thumbnail && (thumbnail.path === full.path || thumbnail.width > full.width || thumbnail.height > full.height)) {
+    fail(`${path}.thumbnail`, 'a separate picture no larger than the full illustration')
+  }
+  return {
+    id: f('id', name('an id', 80)), title: f('title', text), outfit: f('outfit', name('an outfit', 40)), moment: f('moment', name('a moment', 40)),
+    approvedOn: f('approvedOn', day), ...full, ...(thumbnail ? { thumbnail } : {}),
   }
 }
 
@@ -70,7 +84,7 @@ export const parseIllustrations: Parser<Illustrations> = (value, path) => {
 }
 
 /** Every release file a character's illustrations point at. */
-export const illustrationPaths = (ills: Illustrations): string[] => ills.scenes.map((s) => s.path)
+export const illustrationPaths = (ills: Illustrations): string[] => ills.scenes.flatMap((s) => s.thumbnail ? [s.path, s.thumbnail.path] : [s.path])
 
 /** Her illustration for a story moment: the first in her order with that moment, or null when she has none. */
 export const illustrationFor = (ills: Illustrations, moment: string): Illustration | null => ills.scenes.find((s) => s.moment === moment) ?? null
