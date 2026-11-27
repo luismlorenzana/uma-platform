@@ -1,5 +1,11 @@
 # @luismlorenzana/uma-data
 
+## 1.12.0
+
+### Minor Changes
+
+- Add optional illustration thumbnails. The release client verifies both the gallery preview and the full-size illustration against the signed-in release.
+
 ## 1.11.0
 
 ### Minor Changes

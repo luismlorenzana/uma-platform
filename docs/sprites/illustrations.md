@@ -19,6 +19,7 @@ Her full-screen scenes, in the art pipeline's order (the order a gallery shows t
 | `moment` | `confession-yes` | The story moment it opens onto. |
 | `approvedOn` | `2026-11-14` | The owner's approval. |
 | `path`, `width`, `height`, `bytes`, `sha256` | | The release file, an opaque WebP at the art's own size. |
+| `thumbnail` (optional, uma-data 1.12.0) | | A second WebP with its own path, size, bytes and SHA-256. The packer derives it from the full picture at up to 320 pixels wide, quality 82, preserving aspect ratio. |
 
 The moments, in story order: `meeting`, `beach`, `confession`, `confession-yes`, `wedding`, `wedding-night`,
 `wedding-night-end`, `night-in`, `companion` (`ILLUSTRATION_MOMENTS`). The parser accepts new names in the same form
@@ -42,7 +43,7 @@ Character 1068's:
 
 - `illustrationFor(ills, moment)`: her scene for a moment, the first in her order with it, or null.
 - `illustrationById(ills, id)`: her scene by id, or null.
-- `illustrationPaths(ills)`: every picture's release path.
+- `illustrationPaths(ills)`: every full image and thumbnail release path.
 
 ## In master data
 
@@ -94,3 +95,11 @@ Each shared WebP appears under `duo-<partner cast ID>-<pose>` in both illustrati
 To update only these images, seed a working release from live and run
 `pnpm illustrations:pack farm-life --duos-only --release-dir <working release>`. It preserves the individual scenes.
 The candidate still needs release read-back before promotion.
+
+### Backfilling gallery previews
+
+The normal illustration and duo packers both write previews. To add previews to a live release without re-encoding
+its full-size files, mirror the release manifest, art index, illustration indexes and their full-size WebPs under an
+ignored working release folder. Run `pnpm illustrations:pack farm-life --thumbnails-only --release-dir <working release>`,
+then use the illustrations-only candidate and promotion steps above. Verify that full-size hashes still match the
+base, and that both participants in a duo reference the same preview. Older releases still open in the games.

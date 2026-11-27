@@ -242,9 +242,13 @@ export function createReleaseClient(options: ReleaseClientOptions): ReleaseClien
     if (ills.outfitId !== outfitId) throw new MasterDataError(`${path}.outfitId`, String(outfitId))
     const listed = new Map(release.files.map((entry) => [entry.path, entry]))
     for (const scene of ills.scenes) {
-      const entry = listed.get(scene.path)
-      if (!entry) throw new MasterDataError(path, `${scene.path} to be in the manifest`)
-      if (entry.sha256 !== scene.sha256 || entry.bytes !== scene.bytes) throw new MasterDataError(path, `${scene.path}'s bytes and SHA-256 as the manifest lists them`)
+      for (const picture of scene.thumbnail ? [scene, scene.thumbnail] : [scene]) {
+        const entry = listed.get(picture.path)
+        if (!entry) throw new MasterDataError(path, `${picture.path} to be in the manifest`)
+        if (entry.sha256 !== picture.sha256 || entry.bytes !== picture.bytes) {
+          throw new MasterDataError(path, `${picture.path}'s bytes and SHA-256 as the manifest lists them`)
+        }
+      }
     }
     return ills
   }

@@ -59,6 +59,21 @@ describe('reading a character’s illustrations through a release', () => {
     scene.sha256 = 'f'.repeat(64)
     await expect(client.illustrations(manifest, art, 1068)).rejects.toThrow(/bytes and SHA-256/)
   })
+  it('verifies the optional thumbnail separately from the full-size artwork', async () => {
+    const character = syntheticIllustrations(1068)
+    const scene = character.scenes[0]!
+    scene.thumbnail = { ...scene, path: 'art/illustrations/1068-meeting-thumb.test.webp', width: 160, height: 90 }
+    const release = await buildMemoryRelease(undefined, { illustrations: [character] })
+    const client = createReleaseClient({ source: createMemorySource(release.objects) })
+    const manifest = await client.manifest()
+    const art = (await client.art(manifest))!
+    const read = (await client.illustrations(manifest, art, 1068))!
+    expect(illustrationPaths(read)).toContain(scene.thumbnail.path)
+    expect(read.scenes[0]!.path).toBe(scene.path)
+    const listed = manifest.files.find(file => file.path === scene.thumbnail!.path)!
+    listed.bytes += 1
+    await expect(client.illustrations(manifest, art, 1068)).rejects.toThrow(/thumb.*bytes and SHA-256/)
+  })
   it('an older index without the map parses as before', () => {
     expect(parseArtIndex({ atlases: {}, images: {} }, 'a').illustrations).toBeUndefined()
   })

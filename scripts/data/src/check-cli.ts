@@ -164,17 +164,21 @@ async function main(): Promise<void> {
   // The illustrations family (uma-farm F84), read like a game reads it: every scene an opaque WebP at its declared size.
   const illustrationIds = Object.keys(art?.illustrations ?? {}).sort()
   let sceneImages = 0, sceneBytes = 0
+  const checkedScenes = new Set<string>()
   for (const key of illustrationIds) {
     const { characterId, outfitId } = artIdentityOfKey(key, data.characters, data.outfits)
     const ills = (await client.illustrations(manifest, art!, characterId, outfitId))!
     for (const scene of ills.scenes) {
-      const bytes = await client.file(manifest, scene.path)
-      const meta = await sharp(bytes).metadata()
-      if (meta.format !== 'webp') failures.push(`${scene.path} isn't a WebP`)
-      if (meta.hasAlpha) failures.push(`${characterId} ${scene.id} has an alpha channel; a scene is opaque`)
-      if (meta.width !== scene.width || meta.height !== scene.height) failures.push(`${characterId} ${scene.id} doesn't decode at ${scene.width}x${scene.height}`)
-      sceneImages += 1
-      sceneBytes += bytes.byteLength
+      for (const picture of scene.thumbnail ? [scene, scene.thumbnail] : [scene]) {
+        if (checkedScenes.has(picture.path)) continue
+        const bytes = await client.file(manifest, picture.path)
+        const meta = await sharp(bytes).metadata()
+        if (meta.format !== 'webp' || meta.hasAlpha) failures.push(`${picture.path} isn't an opaque WebP`)
+        if (meta.width !== picture.width || meta.height !== picture.height) failures.push(`${picture.path} doesn't decode at ${picture.width}x${picture.height}`)
+        checkedScenes.add(picture.path)
+        sceneImages += 1
+        sceneBytes += bytes.byteLength
+      }
     }
     console.log(`Illustrations ${key} (${ills.universe}): ${ills.scenes.map((s) => `${s.moment} ${s.id}`).join(', ')}`)
   }

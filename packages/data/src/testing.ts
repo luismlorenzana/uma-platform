@@ -402,10 +402,12 @@ export async function buildMemoryRelease(
     for (const given of options.illustrations) {
       const ills = structuredClone(given)
       for (const scene of ills.scenes) {
-        const bytes = encoder.encode(`webp:${scene.path}`)
-        if (!files.some((f) => f.path === scene.path)) await addFile(files, objects, scene.path, bytes)
-        scene.bytes = bytes.byteLength
-        scene.sha256 = await sha256Hex(bytes)
+        for (const picture of scene.thumbnail ? [scene, scene.thumbnail] : [scene]) {
+          const bytes = encoder.encode(`webp:${picture.path}`)
+          if (!files.some((f) => f.path === picture.path)) await addFile(files, objects, picture.path, bytes)
+          picture.bytes = bytes.byteLength
+          picture.sha256 = await sha256Hex(bytes)
+        }
       }
       const bytes = encoder.encode(JSON.stringify(ills))
       const key = characterArtKey(ills.characterId, ills.outfitId)
